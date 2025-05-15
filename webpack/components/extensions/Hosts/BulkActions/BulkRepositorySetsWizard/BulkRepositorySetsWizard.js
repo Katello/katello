@@ -11,6 +11,7 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
+import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
 import { useTableIndexAPIResponse, useSetParamsAndApiAndSearch } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
 
@@ -23,10 +24,12 @@ import { BulkRepositorySetsReviewFooter } from './03_ReviewFooter';
 
 const DEFAULT_PER_PAGE = 5;
 export const BulkRepositorySetsWizardContext = createContext({});
-export const REPO_SETS_URL = katelloApi.getApiUrl(`/repository_sets?per_page=${DEFAULT_PER_PAGE}&include_permissions=true&enabled=true&with_custom=true&organization_id=1`);
+export const repoSetsUrlForOrg = orgId =>
+  katelloApi.getApiUrl(`/repository_sets?per_page=${DEFAULT_PER_PAGE}&include_permissions=true&enabled=true&with_custom=true&organization_id=${orgId}`);
 
 const BulkRepositorySetsWizard = () => {
   const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
+  const orgId = useForemanOrganization()?.id;
   const [pendingOverrides, setPendingOverrides] = useState({}); // { repo_label: 1 }
   const [shouldValidateStep2, setShouldValidateStep2] = useState(false);
   const [shouldValidateStep1, setShouldValidateStep1] = useState(false);
@@ -44,7 +47,7 @@ const BulkRepositorySetsWizard = () => {
       = useContext(ForemanActionsBarContext);
   const repoSetsResponse = useTableIndexAPIResponse({
     replacementResponse, // don't fetch data if modal is closed
-    apiUrl: REPO_SETS_URL,
+    apiUrl: repoSetsUrlForOrg(orgId),
     apiOptions,
     defaultParams: { per_page: DEFAULT_PER_PAGE },
   });

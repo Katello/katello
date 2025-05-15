@@ -8,6 +8,7 @@ import {
   Tr, Td, Tbody,
 } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
+import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { getPageStats, getColumnHelpers } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
 import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
@@ -18,7 +19,7 @@ import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/
 import { noop } from 'foremanReact/common/helpers';
 
 import katelloApi from '../../../../../services/api';
-import { REPO_SETS_URL, BulkRepositorySetsWizardContext } from './BulkRepositorySetsWizard';
+import { repoSetsUrlForOrg, BulkRepositorySetsWizardContext } from './BulkRepositorySetsWizard';
 
 export const dropdownValues = {
   0: __('No change'),
@@ -111,6 +112,7 @@ export const BulkRepositorySetsTable = ({
     setShouldValidateStep1, repoSetsSelectionIsValid,
     setRepoSetsParamsAndAPI,
   } = repoSetsWizardContext;
+  const orgId = useForemanOrganization()?.id;
   const [actionDropdownValue, setActionDropdownValue] = useState(0);
   const [actionToggleOpen, setActionToggleOpen] = useState(false);
 
@@ -256,7 +258,7 @@ export const BulkRepositorySetsTable = ({
         metadata={repoSetsMetadata}
         response={repoSetsResponse}
         tableType="repository_sets"
-        apiUrl={REPO_SETS_URL}
+        apiUrl={repoSetsUrlForOrg(orgId)}
         apiOptions={apiOptions}
         selectedCount={selectedCount}
         selectPage={selectPage}
