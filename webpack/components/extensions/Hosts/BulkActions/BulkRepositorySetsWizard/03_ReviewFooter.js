@@ -37,7 +37,7 @@ export const BulkRepositorySetsReviewFooter = () => {
       content_overrides: apiParams,
     };
     dispatch(bulkUpdateHostContentOverrides(
-      requestBody, hostsBulkSelect.fetchBulkParams(),
+      requestBody,
       closeModal, closeModal,
     ));
   };
