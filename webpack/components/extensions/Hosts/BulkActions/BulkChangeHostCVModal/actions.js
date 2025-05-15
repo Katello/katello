@@ -5,11 +5,10 @@ import { foremanApi } from '../../../../../services/api';
 import HOST_CV_AND_ENV_KEY from '../../../HostDetails/Cards/ContentViewDetailsCard/HostContentViewConstants';
 
 export const bulkUpdateHostContentViewAndEnvironment =
-  (params, bulkParams, handleSuccess, handleError) => put({
+  (params, handleSuccess, handleError) => put({
     type: API_OPERATIONS.PUT,
     key: HOST_CV_AND_ENV_KEY,
     url: foremanApi.getApiUrl('/hosts/bulk/environment_content_view'),
-    ...bulkParams,
     successToast: () => __('Host content view environments updating.'),
     handleSuccess: (response) => {
       if (handleSuccess) handleSuccess(response);

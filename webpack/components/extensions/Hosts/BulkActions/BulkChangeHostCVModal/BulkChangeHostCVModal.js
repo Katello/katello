@@ -83,7 +83,7 @@ const BulkChangeHostCVModal = ({
       },
     };
     dispatch(bulkUpdateHostContentViewAndEnvironment(
-      requestBody, fetchBulkParams(),
+      requestBody,
       handleModalClose, handleModalClose,
     ));
   };
