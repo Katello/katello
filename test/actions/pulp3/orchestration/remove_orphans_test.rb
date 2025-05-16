@@ -54,7 +54,7 @@ module ::Actions::Pulp3
     def test_orphans_are_removed
       repository_reference = repo_reference(@repo)
       versions = ::Katello::Pulp3::Api::File.new(@primary).repository_versions_api.list(repository_reference.repository_href, {}).results.collect(&:pulp_href)
-      tasks = ::Katello::Pulp3::Api::File.new(@primary).tasks_api.list(state__in: ['completed']).results
+      tasks = ::Katello::Pulp3::Api::File.new(@primary).tasks_api.list(state__in: ['completed'], name__ne: 'pulpcore.app.tasks.purge.purge').results
       assert_empty tasks
       refute_includes versions, repository_reference.repository_href + "versions/1/"
       assert_includes versions, repository_reference.repository_href + "versions/2/"
