@@ -13,6 +13,16 @@ module Katello
           end
           process_response(true, { :message => _("Deleted %{host_count} %{hosts}") % { :host_count => destroyed_count, :hosts => 'host'.pluralize(destroyed_count) }})
         end
+
+        def assign_organization
+          registered_host = find_editable_hosts.where.not(organization_id: params[:id]).joins(:subscription_facet).first
+          if registered_host
+            render_error :custom_error, :status => :bad_request, :locals => { :message => _("Unregister host %s before assigning an organization.") % registered_host.name }
+            return
+          end
+
+          super
+        end
       end
 
       included do
