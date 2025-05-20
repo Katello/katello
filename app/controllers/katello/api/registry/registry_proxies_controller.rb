@@ -5,12 +5,13 @@ module Katello
     before_action :disable_strong_params
     before_action :confirm_settings
     skip_before_action :authorize
+    before_action :token_request_type_check, only: [:token]
     before_action :optional_authorize, only: [:token, :catalog]
     before_action :registry_authorize, except: [:token, :v1_search, :catalog, :static_index]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list, :check_blob, :pull_blob]
     before_action :container_push_prop_validation, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     before_action :create_container_repo_if_needed, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
-    skip_before_action :check_media_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
+    skip_before_action :check_media_type, only: [:start_upload_blob, :token, :upload_blob, :finish_upload_blob,
                                                  :push_manifest]
 
     wrap_parameters false
@@ -54,6 +55,12 @@ module Katello
           @host = Katello::Host::ContentFacet.find_by(uuid: uuid)&.host
         end
       end
+    end
+
+    def token_request_type_check
+       if request.post?
+         head :not_found and return
+       end
     end
 
     def redirect_authorization_headers
