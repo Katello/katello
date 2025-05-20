@@ -36,6 +36,8 @@ module BastionKatello
             'defaultDownloadPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_download_policy'],
             'remoteExecutionPresent' => true,
             'hostToolingEnabled' => true,
+            'defaultRpmMirroringPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_rpm_mirroring_policy'],
+            'defaultNonRpmMirroringPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_non_rpm_mirroring_policy'],
           }
         end
       )
