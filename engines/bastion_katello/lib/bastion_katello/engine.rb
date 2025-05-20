@@ -36,6 +36,8 @@ module BastionKatello
             'defaultDownloadPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_download_policy'],
             'remoteExecutionPresent' => true,
             'hostToolingEnabled' => true,
+            'defaultYumMirroringPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_yum_mirroring_policy'],
+            'defaultNonYumMirroringPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_non_yum_mirroring_policy'],
           }
         end
       )

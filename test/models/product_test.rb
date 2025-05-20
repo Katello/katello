@@ -285,4 +285,45 @@ module Katello
       end
     end
   end
+
+  class ProductAddRepoTest
+    def setup
+      super
+      set_user
+      @product = build(:katello_product,
+                       :organization => get_organization,
+                       :provider => katello_providers(:anonymous)
+      )
+    end
+
+    def teardown
+      @product&.destroy
+    end
+
+    def test_add_non_yum_repo
+      repo_params = {
+        name: 'test',
+        label: 'test',
+        product_id: @product.id,
+        content_type: 'file',
+      }
+      root_repo = @product.add_repo(repo_params)
+      assert_equal root_repo.name, repo_params[:name]
+      assert_equal root_repo.label, repo_params[:label]
+      assert_equal root_repo.mirroring_policy, Setting[:default_non_yum_mirroring_policy]
+    end
+
+    def test_add_yum_repo
+      repo_params = {
+        name: 'test',
+        label: 'test',
+        product_id: @product.id,
+        content_type: 'yum',
+      }
+      root_repo = @product.add_repo(repo_params)
+      assert_equal root_repo.name, repo_params[:name]
+      assert_equal root_repo.label, repo_params[:label]
+      assert_equal root_repo.mirroring_policy, Setting[:default_yum_mirroring_policy]
+    end
+  end
 end
