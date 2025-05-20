@@ -65,9 +65,12 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             };
 
             $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
-                'checksum_type': null, 'verify_ssl_on_sync': true,
-                'download_policy': BastionConfig.defaultDownloadPolicy, 'arch': null,
-                'mirroring_policy': MirroringPolicy.defaultMirroringPolicy, 'include_tags': '', 'exclude_tags': '*-source'});
+                'checksum_type': null,
+                'verify_ssl_on_sync': true,
+                'download_policy': BastionConfig.defaultDownloadPolicy,
+                'arch': null,
+                'mirroring_policy': null,
+                'include_tags': '', 'exclude_tags': '*-source'});
 
             $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
                 $scope.page.loading = false;
@@ -99,6 +102,13 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                         option.value = "";
                     });
                 }
+                /* eslint-disable camelcase */
+                if ($scope.repository.content_type === 'yum') {
+                    $scope.repository.mirroring_policy = BastionConfig.defaultYumMirroringPolicy;
+                } else {
+                    $scope.repository.mirroring_policy = BastionConfig.defaultNonYumMirroringPolicy;
+                }
+                /* eslint-enable camelcase */
             });
 
             $scope.handleFiles = function (element) {

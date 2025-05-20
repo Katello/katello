@@ -142,7 +142,7 @@ module Katello
           repo_param[:download_policy] = Setting[:default_download_policy]
         end
 
-        repo_param[:mirroring_policy] = Katello::RootRepository::MIRRORING_POLICY_ADDITIVE if repo_param[:mirroring_policy].blank?
+        repo_param[:mirroring_policy] ||= Katello::Repository::YUM_TYPE == repo_param[:content_type] ? Setting[:default_yum_mirroring_policy] : Setting[:default_non_yum_mirroring_policy]
 
         repo_param = repo_param.merge(:product_id => self.id)
 
