@@ -26,9 +26,9 @@ const Hosts = ({
           { __('Some hosts are not registered as content hosts and will be ignored.') }
         </p>
 }
-        {contentHosts.length > 0 && (<Label color="green" href="#" onClick={() => setModalHosts(true)}>{titleHosts}: {contentHosts.length}</Label>)}
+        {contentHosts.length > 0 && (<Label as="button" color="green" onClick={() => setModalHosts(true)}>{titleHosts}: {contentHosts.length}</Label>)}
         {' '}
-        {hostsWithoutContent.length > 0 && (<Label color="orange" href="#" onClick={() => setModalIgnored(true)}>{titleIgnored}: {hostsWithoutContent.length}</Label>)}
+        {hostsWithoutContent.length > 0 && (<Label as="button" color="orange" onClick={() => setModalIgnored(true)}>{titleIgnored}: {hostsWithoutContent.length}</Label>)}
 
         <HostsModal
           hosts={contentHosts}
