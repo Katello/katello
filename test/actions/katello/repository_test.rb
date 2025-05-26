@@ -102,7 +102,7 @@ module ::Actions::Katello::Repository
       plan = plan_action action, repository, clone: true
       run_action plan
       assert_nil plan.run
-      refute_action_planed action, candlepin_action_class
+      refute_action_planned action, candlepin_action_class
     end
   end
 
@@ -265,7 +265,7 @@ module ::Actions::Katello::Repository
         in_use_repository, proxy
 
       refute_action_planned action, ::Actions::BulkAction
-      refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
+      refute_action_planned action, ::Actions::Katello::Product::ContentDestroy
     end
 
     it 'plans when passed in remove_from_content_view_versions: true' do
@@ -289,6 +289,46 @@ module ::Actions::Katello::Repository
         in_use_repository.library_instances_inverse
 
       assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository
+    end
+
+    it 'Removes content for structured apt' do
+      library_instance_repository = katello_repositories(:debian_9_amd64)
+      assert library_instance_repository.deb_using_structured_apt?
+      content_view = katello_content_views(:library_dev_view)
+      clone = library_instance_repository.build_clone(:environment => katello_environments(:library), :content_view => content_view)
+      clone.save!
+      action = create_action action_class
+      action.stubs(:action_subject).with(clone)
+      action.expects(:plan_self)
+      assert_not clone.root.repositories.where.not(id: clone.id).empty?
+      plan_action action, clone, remove_from_content_view_versions: false
+      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, clone
+    end
+
+    it 'Retains content for rolling structured apt' do
+      library_instance_repository = katello_repositories(:debian_9_amd64)
+      assert library_instance_repository.deb_using_structured_apt?
+      content_view = katello_content_views(:rolling_view)
+      clone = library_instance_repository.build_clone(:environment => katello_environments(:library), :content_view => content_view)
+      clone.save!
+      action = create_action action_class
+      action.stubs(:action_subject).with(clone)
+      action.expects(:plan_self)
+      plan_action action, clone
+      refute_action_planned action, ::Actions::Katello::Product::ContentDestroy
+    end
+
+    it 'Retains content for rolling structured apt with remove_from_content_view_versions' do
+      library_instance_repository = katello_repositories(:debian_9_amd64)
+      assert library_instance_repository.deb_using_structured_apt?
+      content_view = katello_content_views(:rolling_view)
+      clone = library_instance_repository.build_clone(:environment => katello_environments(:library), :content_view => content_view)
+      clone.save!
+      action = create_action action_class
+      action.stubs(:action_subject).with(clone)
+      action.expects(:plan_self)
+      plan_action action, clone, remove_from_content_view_versions: true
+      refute_action_planned action, ::Actions::Katello::Product::ContentDestroy
     end
 
     it 'It removes repo generated content views' do
@@ -365,7 +405,7 @@ module ::Actions::Katello::Repository
       action.expects(:plan_self)
       plan_action action, clone
 
-      refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
+      refute_action_planned action, ::Actions::Katello::Product::ContentDestroy
     end
 
     it 'plan fails if repository is not deletable' do
@@ -684,7 +724,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(docker_repository)
       plan_action action, docker_repository
 
-      refute_action_planed action, ::Actions::Katello::Applicability::Repository::Regenerate
+      refute_action_planned action, ::Actions::Katello::Applicability::Repository::Regenerate
     end
 
     it 'plans verify checksum when validate_contents is passed' do
@@ -750,7 +790,7 @@ module ::Actions::Katello::Repository
       action = create_action pulp3_metadata_generate_action_class
       action.stubs(:action_subject).with(repository_ansible_collection_pulp3)
       plan_action action, repository_ansible_collection_pulp3, proxy, :contents_changed => true
-      refute_action_planed action, ::Actions::Pulp3::Repository::CreatePublication
+      refute_action_planned action, ::Actions::Pulp3::Repository::CreatePublication
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_ansible_collection_pulp3, proxy, :contents_changed => true)
     end
 
