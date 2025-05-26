@@ -291,6 +291,33 @@ module ::Actions::Katello::Repository
       assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository
     end
 
+    it 'Removes content for structured apt' do
+      library_instance_repository = katello_repositories(:debian_9_amd64)
+      assert library_instance_repository.deb_using_structured_apt?
+      content_view = katello_content_views(:library_dev_view)
+      clone = library_instance_repository.build_clone(:environment => katello_environments(:library), :content_view => content_view)
+      clone.save!
+      action = create_action action_class
+      action.stubs(:action_subject).with(clone)
+      action.expects(:plan_self)
+      assert_not clone.root.repositories.where.not(id: clone.id).empty?
+      plan_action action, clone, remove_from_content_view_versions: false
+      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, clone
+    end
+
+    it 'Retains content for rolling structured apt' do
+      library_instance_repository = katello_repositories(:debian_9_amd64)
+      assert library_instance_repository.deb_using_structured_apt?
+      content_view = katello_content_views(:rolling_view)
+      clone = library_instance_repository.build_clone(:environment => katello_environments(:library), :content_view => content_view)
+      clone.save!
+      action = create_action action_class
+      action.stubs(:action_subject).with(clone)
+      action.expects(:plan_self)
+      plan_action action, clone
+      refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
+    end
+
     it 'It removes repo generated content views' do
       action = create_action action_class
       action.stubs(:action_subject).with(in_use_repository)
