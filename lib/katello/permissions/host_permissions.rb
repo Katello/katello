@@ -38,6 +38,7 @@ Foreman::AccessControl.permission(:edit_hosts).actions.concat [
   'katello/api/rhsm/candlepin_proxies/async_hypervisors_update',
   'katello/api/rhsm/candlepin_proxies/hypervisors_heartbeat',
   'katello/api/rhsm/candlepin_proxies/upload_tracer_profile',
+  'katello/api/rhsm/candlepin_proxies/facts',
   'hosts/change_content_source_data',
 ]
 
