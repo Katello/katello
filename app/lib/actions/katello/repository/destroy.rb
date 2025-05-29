@@ -87,7 +87,7 @@ module Actions
 
         def handle_custom_content(repository, remove_from_content_view_versions)
           #if this is the last instance of a custom repo or a deb repo using structured APT, destroy the content
-          if remove_from_content_view_versions || repository.root.repositories.where.not(id: repository.id).empty? || repository.deb_using_structured_apt?
+          if remove_from_content_view_versions || repository.root.repositories.where.not(id: repository.id).empty? || (repository.deb_using_structured_apt? && !repository.content_view.rolling?)
             plan_action(::Actions::Katello::Product::ContentDestroy, repository)
           end
         end
