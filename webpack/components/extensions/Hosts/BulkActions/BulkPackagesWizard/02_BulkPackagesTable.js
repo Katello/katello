@@ -16,6 +16,7 @@ import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
 import { getPageStats } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
 import { BulkPackagesWizardContext, getPackagesUrl } from './BulkPackagesWizard';
 import katelloApi from '../../../../../services/api';
+import BULK_ACTIONS_OSFAMILY from '../BulkActionsConstants';
 
 export const BulkPackagesUpgradeTable = props => <BulkPackagesTable {...props} tableType="upgrade" />;
 export const BulkPackagesInstallTable = props => <BulkPackagesTable {...props} tableType="install" />;
@@ -23,6 +24,9 @@ export const BulkPackagesRemoveTable = props => <BulkPackagesTable {...props} ta
 
 const BulkPackagesTable = ({
   tableType,
+  warningBanner,
+  OSFamilyMismatch,
+  OSFamily,
 }) => {
   const {
     setShouldValidateStep2,
@@ -42,12 +46,12 @@ const BulkPackagesTable = ({
     upgrade: __('Select packages to upgrade to the latest version. Packages may have different versions on different hosts.'),
   };
 
-  const origSearchProps = getControllerSearchProps('packages', 'searchBar-packages');
+  const origSearchProps = getControllerSearchProps(OSFamily, 'searchBar-packages');
   const customSearchProps = {
     ...origSearchProps,
     autocomplete: {
       ...origSearchProps.autocomplete,
-      url: katelloApi.getApiUrl('/packages/auto_complete_search'),
+      url: katelloApi.getApiUrl(`/${OSFamily}/auto_complete_search`),
     },
   };
 
@@ -93,7 +97,7 @@ const BulkPackagesTable = ({
     name: {
       title: __('Package'),
       wrapper: ({ name, id }) => (
-        <a target="_blank" href={tableType === 'remove' ? `/packages?search=${name}` : `/packages/${id}`} rel="noreferrer">{name}</a>
+        <a target="_blank" href={tableType === 'remove' ? `/${OSFamily}?search=${name}` : `/${OSFamily}/${id}`} rel="noreferrer">{name}</a>
       ),
       isSorted: true,
       weight: 50,
@@ -110,6 +114,7 @@ const BulkPackagesTable = ({
           {packageActionsDescriptions[tableType]}
         </Text>
       </TextContent>
+      {(warningBanner)}
       {selectedCount === 0 && hasInteracted && (
         <Alert
           ouiaId="no-packages-alert"
@@ -119,7 +124,7 @@ const BulkPackagesTable = ({
           style={{ marginBottom: '1rem' }}
         />
       )}
-      {tableType === 'upgrade' && !results?.length && (
+      {tableType === 'upgrade' && !results?.length && !OSFamilyMismatch && (
         <Alert
           ouiaId="no-packages-found-alert"
           variant="info"
@@ -128,7 +133,7 @@ const BulkPackagesTable = ({
           style={{ marginBottom: '1rem' }}
         />
       )}
-      <TableIndexPage
+      {!OSFamilyMismatch && (<TableIndexPage
         columns={columns}
         showCheckboxes
         apiUrl={PACKAGES_URL}
@@ -145,11 +150,19 @@ const BulkPackagesTable = ({
         idColumn="name"
         updateParamsByUrl={false}
         bookmarksPosition="right"
-      />
+      />)}
     </>
   );
 };
 
 BulkPackagesTable.propTypes = {
   tableType: PropTypes.string.isRequired,
+  OSFamilyMismatch: PropTypes.bool.isRequired,
+  OSFamily: PropTypes.string,
+  warningBanner: PropTypes.element,
+};
+
+BulkPackagesTable.defaultProps = {
+  OSFamily: BULK_ACTIONS_OSFAMILY.REDHAT,
+  warningBanner: <></>,
 };
