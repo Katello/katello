@@ -31,6 +31,7 @@ module Katello
             param :activation_keys, Array, desc: N_('Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys or if you do not provide a host group.')
             param :force, :bool, required: false, desc: N_('Clear any previous registration and run subscription-manager with --force.')
             param :ignore_subman_errors, :bool, required: false, desc: N_('Ignore subscription-manager errors for `subscription-manager register` command')
+            param :setup_container_registry_certs, :bool, required: false, desc: N_('Use container certificates for container registry authentication. If it is set to true, container registry certificates will be installed on the host')
           end
         end
       end
