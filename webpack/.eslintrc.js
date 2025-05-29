@@ -1,8 +1,6 @@
 const path = require('path');
 const { foremanLocation, foremanRelativePath } = require('@theforeman/find-foreman');
 const foremanFull = foremanLocation();
-const foremanLintingRelative = './node_modules/@theforeman/vendor-dev/eslint.extends.js'
-const foremanLintingConfig = foremanRelativePath(foremanLintingRelative);
 const foremanVendorRelative = './node_modules/@theforeman/vendor-core/';
 const foremanVendorDir = foremanRelativePath(foremanVendorRelative);
 
@@ -14,7 +12,6 @@ module.exports = {
   'extends': [
     'airbnb',
     'plugin:jest/recommended',
-    `${foremanLintingConfig}`,
   ],
   plugins: [
     'jest',
