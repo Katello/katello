@@ -316,7 +316,7 @@ Foreman::Plugin.register :katello do
   extend_allowed_registration_vars :lifecycle_environment_id
   extend_allowed_registration_vars :force
   extend_allowed_registration_vars :ignore_subman_errors
-
+  extend_allowed_registration_vars :setup_container_registry_certs
   extend_page "smart_proxies/show" do |cx|
     cx.add_pagelet :details_content,
                    :name => _('Storage'),
