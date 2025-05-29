@@ -414,7 +414,7 @@ module Katello
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
 
       expected_repo_list_args = {
-        :repositories => [{:repository => "empty_organization-puppet_product-busybox", :auth_required => true}, {:repository => "busybox", :auth_required => true}],
+        :repositories => [{:repository => "empty_organization-puppet_product-busybox", :auth_required => true}, {:repository => "busybox", :auth_required => true}, {:repository => "id/1/2/container-push-repo", :auth_required => true}],
       }
       repo_list_update_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:repository_list).with do |value|
         Set.new(value[:repositories]) == Set.new(expected_repo_list_args[:repositories])
