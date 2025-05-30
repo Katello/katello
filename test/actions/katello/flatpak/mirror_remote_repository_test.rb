@@ -32,7 +32,7 @@ module ::Actions::Katello::Flatpak
                                           upstream_username: nil,
                                           upstream_password: nil,
                                           unprotected: true,
-                                          mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_CONTENT,
+                                          mirroring_policy: Setting[:default_non_yum_mirroring_policy],
                                         }).returns(random_root)
         plan_action action, remote_repository, product
         assert_action_planned_with(action, ::Actions::Katello::Repository::CreateRoot, random_root)
