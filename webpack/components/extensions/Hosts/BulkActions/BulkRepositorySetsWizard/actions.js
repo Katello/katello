@@ -2,14 +2,15 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { API_OPERATIONS, put } from 'foremanReact/redux/API';
 import { errorToast, renderTaskStartedToast } from '../../../../../scenes/Tasks/helpers';
 import { foremanApi } from '../../../../../services/api';
-import HOST_CV_AND_ENV_KEY from '../../../HostDetails/Cards/ContentViewDetailsCard/HostContentViewConstants';
 
-export const bulkUpdateHostContentViewAndEnvironment =
+const BULK_HOST_CONTENT_OVERRIDES_KEY = 'BULK_HOST_CONTENT_OVERRIDES';
+
+export const bulkUpdateHostContentOverrides =
   (params, handleSuccess, handleError) => put({
     type: API_OPERATIONS.PUT,
-    key: HOST_CV_AND_ENV_KEY,
-    url: foremanApi.getApiUrl('/hosts/bulk/environment_content_view'),
-    successToast: () => __('Host content view environments updating.'),
+    key: BULK_HOST_CONTENT_OVERRIDES_KEY,
+    url: foremanApi.getApiUrl('/hosts/bulk/content_overrides'),
+    successToast: () => __('Content overrides updating.'),
     handleSuccess: (response) => {
       if (handleSuccess) handleSuccess(response);
       return renderTaskStartedToast(response.data);
@@ -19,4 +20,4 @@ export const bulkUpdateHostContentViewAndEnvironment =
     params,
   });
 
-export default bulkUpdateHostContentViewAndEnvironment;
+export default bulkUpdateHostContentOverrides;
