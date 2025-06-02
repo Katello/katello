@@ -15,7 +15,7 @@ module Actions
             upstream_username: remote_repository.flatpak_remote.username,
             upstream_password: remote_repository.flatpak_remote.token,
             unprotected: true,
-            mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_CONTENT,
+            mirroring_policy: Setting[:default_non_yum_mirroring_policy],
           }
           root = product.add_repo(repo_params)
           plan_action(::Actions::Katello::Repository::CreateRoot, root)

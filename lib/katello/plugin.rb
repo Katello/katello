@@ -358,6 +358,8 @@ Foreman::Plugin.register :katello do
         text_method: 'name_and_url',
       }]
       download_policies = proc { hashify_parameters(::Katello::RootRepository::DOWNLOAD_POLICIES) }
+      mirroring_policies = proc { hashify_parameters(::Katello::RootRepository::MIRRORING_POLICIES) }
+      non_yum_mirroring_policies = proc { hashify_parameters(::Katello::RootRepository::NON_YUM_MIRRORING_POLICIES) }
       proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }
       export_formats = proc { hashify_parameters(::Katello::Pulp3::ContentViewVersion::Export::FORMATS) }
 
@@ -522,6 +524,20 @@ Foreman::Plugin.register :katello do
         full_name: N_('Default Smart Proxy download policy'),
         description: N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"),
         collection: proxy_download_policies
+
+      setting 'default_yum_mirroring_policy',
+        type: :string,
+        default: "mirror_content_only",
+        full_name: N_('Default custom yum repository mirroring policy'),
+        description: N_("Default mirroring policy for custom yum repositories (either 'mirror_content_only', 'additive' or 'mirror_complete')"),
+        collection: mirroring_policies
+
+      setting 'default_non_yum_mirroring_policy',
+        type: :string,
+        default: "mirror_content_only",
+        full_name: N_('Default custom non-yum repository mirroring policy'),
+        description: N_("Default mirroring policy for custom non-yum repositories (either 'mirror_content_only' or 'additive')"),
+        collection: non_yum_mirroring_policies
 
       setting 'validate_host_lce_content_source_coherence',
         type: :boolean,

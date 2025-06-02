@@ -304,6 +304,7 @@ module Katello
         :content_type => 'yum',
         :arch => 'noarch',
         :unprotected => true,
+        :mirroring_policy => Setting[:default_yum_mirroring_policy],
         :gpg_key => nil,
         :ssl_ca_cert => nil,
         :ssl_client_cert => nil,
@@ -339,6 +340,7 @@ module Katello
         :content_type => 'yum',
         :arch => 'noarch',
         :unprotected => true,
+        :mirroring_policy => Setting[:default_yum_mirroring_policy],
         :gpg_key => nil,
         :ssl_ca_cert => nil,
         :ssl_client_cert => nil,
@@ -372,6 +374,7 @@ module Katello
         :content_type => 'yum',
         :arch => 'x86_64',
         :unprotected => false,
+        :mirroring_policy => Setting[:default_yum_mirroring_policy],
         :ssl_ca_cert => nil,
         :ssl_client_cert => cert,
         :ssl_client_key => nil,
@@ -409,6 +412,17 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
     end
 
+    def test_create_with_default_mirroring_policy
+      create_task = @controller.expects(:sync_task).with do |action_class, repository|
+        assert_equal ::Actions::Katello::Repository::CreateRoot, action_class
+        assert_valid repository
+        assert_equal Setting[:default_yum_mirroring_policy], repository.mirroring_policy
+      end
+      create_task.returns(build_task_stub)
+
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
+    end
+
     def stub_editable_product_find(product)
       Katello::Product.expects(:editable).returns(stub(:find_by => product))
     end
@@ -429,12 +443,6 @@ module Katello
       post :create, params: params
       assert_response :success
       assert_template 'api/v2/common/create'
-    end
-
-    def test_create_with_mirroring_policy
-      run_test_individual_attribute(:mirroring_policy => ::Katello::RootRepository::MIRRORING_POLICY_CONTENT) do |_, repo|
-        repo.root.expects(:mirroring_policy=).with(::Katello::RootRepository::MIRRORING_POLICY_CONTENT)
-      end
     end
 
     def test_create_with_ignorable_content

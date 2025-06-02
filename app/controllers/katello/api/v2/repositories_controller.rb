@@ -311,6 +311,8 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
         repo_params[:package_types] = repo_params[:package_types].map(& :strip)
       end
 
+      repo_params[:mirroring_policy] ||= Katello::Repository::YUM_TYPE == repo_params[:content_type] ? Setting[:default_yum_mirroring_policy] : Setting[:default_non_yum_mirroring_policy]
+
       root = construct_repo_from_params(repo_params)
       sync_task(::Actions::Katello::Repository::CreateRoot, root)
       @repository = root.reload.library_instance
@@ -635,9 +637,8 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
                                                             :checksum_type, :download_policy, :http_proxy_policy,
-                                                            :metadata_expire, :sync_dependencies).to_h.with_indifferent_access)
+                                                            :metadata_expire, :sync_dependencies, :mirroring_policy).to_h.with_indifferent_access)
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
-      root.mirroring_policy = repo_params[:mirroring_policy] || Katello::RootRepository::MIRRORING_POLICY_CONTENT
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       root.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
