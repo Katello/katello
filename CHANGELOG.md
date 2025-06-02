@@ -1,4 +1,4 @@
-# 4.17.0 Fallingwater (2025-05-15)
+# 4.17.0.rc2 Fallingwater (2025-06-02)
 
 ## Features
 
@@ -19,6 +19,12 @@
  * Add hammer support for flatpak remotes ([#38019](https://projects.theforeman.org/issues/38019), [4eab7ae1](https://github.com/Katello/hammer-cli-katello.git/commit/4eab7ae1f91bc21d8dfe0cd8baa62cce5d0d8527))
 
 ## Bug Fixes
+
+### Hosts
+ * subscription-manager environments --set raises Forbidden error until the user is Admin ([#38448](https://projects.theforeman.org/issues/38448), [72f7a98f](https://github.com/Katello/katello.git/commit/72f7a98f7cfaebba46c4dbf6838a399b3c9d131f))
+ * Move of Ansible-based job templates to "Katello via Ansible" through seeds may not be propagated on already existing installations ([#38366](https://projects.theforeman.org/issues/38366), [70498359](https://github.com/Katello/katello.git/commit/70498359db942bce6439757b86c5872bc40baae4))
+ * New Host UI Bulk wizards fail to render ([#38342](https://projects.theforeman.org/issues/38342), [0a9a4a32](https://github.com/Katello/katello.git/commit/0a9a4a32543d95af989809d71203e74be0b46afb))
+ * Add unit test cases to image mode card. ([#38323](https://projects.theforeman.org/issues/38323), [1c4e1cfb](https://github.com/Katello/katello.git/commit/1c4e1cfb4d5d0adf03f055415daa8a59da452f16))
 
 ### Content Views
  * rolling attribute is missing from activation key API response ([#38411](https://projects.theforeman.org/issues/38411), [d934b0f6](https://github.com/Katello/katello.git/commit/d934b0f6eb614d916092e5d0129e3719433c333b))
@@ -41,11 +47,6 @@
  * Syncing rolling content views to smart proxies does not update proxy content counts ([#38284](https://projects.theforeman.org/issues/38284), [0b7fed99](https://github.com/Katello/katello.git/commit/0b7fed99cb06d565879d9e6db8a98f96e75ca36b))
  * Refresh content counts action on Smart proxy fails when content_counts is set to {} ([#38056](https://projects.theforeman.org/issues/38056), [fa899c07](https://github.com/Katello/katello.git/commit/fa899c07b9da9ad085f9ba5b68850c952cb299ee))
  * Smart proxy content page console error when count is {} ([#38015](https://projects.theforeman.org/issues/38015), [257c4ca8](https://github.com/Katello/katello.git/commit/257c4ca89b063d57b211afd285c1b48f93c37eac))
-
-### Hosts
- * Move of Ansible-based job templates to "Katello via Ansible" through seeds may not be propagated on already existing installations ([#38366](https://projects.theforeman.org/issues/38366), [70498359](https://github.com/Katello/katello.git/commit/70498359db942bce6439757b86c5872bc40baae4))
- * New Host UI Bulk wizards fail to render ([#38342](https://projects.theforeman.org/issues/38342), [0a9a4a32](https://github.com/Katello/katello.git/commit/0a9a4a32543d95af989809d71203e74be0b46afb))
- * Add unit test cases to image mode card. ([#38323](https://projects.theforeman.org/issues/38323), [1c4e1cfb](https://github.com/Katello/katello.git/commit/1c4e1cfb4d5d0adf03f055415daa8a59da452f16))
 
 ### Organizations and Locations
  * download_debug_certificate doesn't accept org label ([#38365](https://projects.theforeman.org/issues/38365), [87b62c21](https://github.com/Katello/katello.git/commit/87b62c2124b7d09fdbfba659827aaf09974c6711))
