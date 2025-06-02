@@ -13,6 +13,42 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class CreateTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::Create }
+    view_params = {name: "foo", label: "foo", organization: Organization.first}
+    it 'plans' do
+      content_view = Katello::ContentView.create!(**view_params, rolling: false)
+      content_view.expects(:save!)
+
+      plan_action(action, content_view)
+
+      refute_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
+      refute_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
+    end
+    it 'plans rolling' do
+      content_view = Katello::ContentView.create!(**view_params, rolling: true, repository_ids: [])
+      content_view.expects(:save!)
+      content_view.expects(:create_new_version)
+
+      plan_action(action, content_view)
+
+      assert_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
+      refute_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
+    end
+    it 'plans rolling with repo' do
+      repository = katello_repositories(:fedora_17_x86_64)
+      content_view = Katello::ContentView.create!(**view_params, rolling: true, repository_ids: [repository.id])
+      content_view.expects(:save!)
+      content_view.expects(:create_new_version)
+      content_view.expects(:reload)
+
+      plan_action(action, content_view)
+
+      assert_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
+      assert_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
+    end
+  end
+
   class PublishTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::Publish }
     let(:content_view) { katello_content_views(:no_environment_view) }
