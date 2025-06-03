@@ -61,5 +61,20 @@ module Katello
         get :show_all, params: { content_view_id: @view.id }
       end
     end
+
+    def test_show_all_rolling
+      @view = katello_content_views(:rolling_view)
+      @container_push_repo = katello_repositories(:container_push)
+      get :show_all, params: { content_view_id: @view.id }
+
+      assert_response :success
+      results = JSON.parse(response.body, symbolize_names: true)[:results]
+      added_ids = results.select { |r| r[:added_to_content_view] }.pluck(:id)
+      not_added_ids = results.reject { |r| r[:added_to_content_view] }.pluck(:id)
+
+      assert_includes added_ids, @fedora_repo.id
+      assert_not_includes added_ids, @container_push_repo.id
+      assert_not_includes not_added_ids, @container_push_repo.id
+    end
   end
 end

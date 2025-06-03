@@ -719,6 +719,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       if is_available_for
         params[:library] = true
         sub_query = ContentViewRepository.where(:content_view_id => content_view_id).pluck(:repository_id)
+        sub_query += Repository.where(root: RootRepository.where(is_container_push: true)).pluck(:id) if ContentView.find(content_view_id).rolling
         query = query.where("#{Repository.table_name}.id not in (#{sub_query.join(',')})") unless sub_query.empty?
       elsif environment_id
         version = ContentViewVersion.in_environment(environment_id).where(:content_view_id => content_view_id)
