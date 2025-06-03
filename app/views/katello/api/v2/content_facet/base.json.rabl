@@ -31,6 +31,9 @@ child :content_view_environments => :content_view_environments do
   node :label do |cve|
     cve.label
   end
+  node :id do |cve|
+    cve.id
+  end
 end
 
 attributes :content_view_environment_labels
