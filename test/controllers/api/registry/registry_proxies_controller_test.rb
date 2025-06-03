@@ -275,7 +275,8 @@ module Katello
         assert_equal(body['repositories'].compact.sort,
                      ["busybox",
                       "empty_organization/dev_label/published_dev_view/puppet_product/busybox",
-                      "#{org.label.downcase}-puppet_product-busybox"].sort)
+                      "#{org.label.downcase}-puppet_product-busybox",
+                      "id/1/2/container-push-repo"].sort)
       end
 
       it "shows only available images for unauthenticated requests" do
@@ -291,7 +292,7 @@ module Katello
         get :catalog
         assert_response 200
         body = JSON.parse(response.body)
-        assert_equal(["busybox", "empty_organization-puppet_product-busybox"], body['repositories'].compact.sort)
+        assert_equal(["busybox", "empty_organization-puppet_product-busybox", "id/1/2/container-push-repo"], body['repositories'].compact.sort)
       end
     end
 

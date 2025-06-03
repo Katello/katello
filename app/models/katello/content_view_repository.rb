@@ -18,6 +18,7 @@ module Katello
     validates_lengths_from_database
     validates :repository_id, :uniqueness => {:scope => :content_view_id, :message => N_("already belongs to the content view") }
     validate :content_view_composite
+    validate :content_view_rolling
     validate :ensure_repository_type
     validate :check_repo_membership
 
@@ -26,6 +27,12 @@ module Katello
     def content_view_composite
       if content_view.composite?
         errors.add(:base, _("Cannot add repositories to a composite content view"))
+      end
+    end
+
+    def content_view_rolling
+      if content_view.rolling? && repository.root.is_container_push?
+        errors.add(:base, _("Cannot add container push repositories to a rolling content view"))
       end
     end
 
