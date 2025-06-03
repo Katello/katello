@@ -422,3 +422,12 @@ product_host_count_repo2:
   relative_path:        'default_organization/library/my-product-host-count-repo2'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
+container_push:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:container_push_root) %>
+  pulp_id:              "09b10114-74d7-4d0b-b7f2-e2b7eebd2bfe"
+  relative_path:        'id/1/2/container-push-repo'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+  container_repository_name: 'id/1/2/container-push-repo'
+
