@@ -6,7 +6,7 @@ module Katello
     filter_parameters :token
 
     before_action :find_authorized_katello_resource, :except => [:index, :create, :auto_complete_search]
-    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+    before_action :find_organization, :only => [:index, :auto_complete_search]
 
     resource_description do
       name 'Flatpak Remotes'
@@ -20,7 +20,7 @@ module Katello
 
     api :GET, "/organizations/:organization_id/flatpak_remotes", N_("List flatpak remotes")
     api :GET, "/flatpak_remotes", N_("List flatpak remotes")
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("Name of the flatpak remote"), :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(FlatpakRemote)
