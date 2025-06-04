@@ -3,6 +3,7 @@ extends 'katello/api/v2/common/identifier'
 
 extends 'katello/api/v2/common/timestamps'
 attributes :default_environment? => :default
+attributes :id
 
 child :organization => :organization do
   attributes :name, :label, :id
