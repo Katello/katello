@@ -10,7 +10,11 @@
             ng-click="goToNextStep()"
             ng-hide="denied('edit_hosts')"
             ng-disabled="table.numSelected == 0 || incrementalUpdates.length > 0">
-      <span translate>Apply Errata</span>
+            
+
+      <span>{{table.numSelected &gt 1? 'Apply Errata' : 'Apply Erratum' | translate }}</span>
+    
+
     </button>
   </div>
 
