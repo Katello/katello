@@ -36,7 +36,6 @@ module Katello
     scoped_search :relation => :content_view, :on => :label, :rename => :content_view
     scoped_search :relation => :lifecycle_environment, :on => :label, :rename => :lifecycle_environment
 
-
     alias :lifecycle_environment :environment
     has_one :organization, :through => :environment
 
