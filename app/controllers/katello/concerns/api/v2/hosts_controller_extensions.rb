@@ -36,11 +36,11 @@ module Katello
 
         def set_content_view_environments
           content_facet_attributes = params.dig(:host, :content_facet_attributes)
+          return if content_facet_attributes.blank? ||
+          (cve_params[:content_view_id].present? && cve_params[:lifecycle_environment_id].present?)
           if @host.present? && @host&.content_facet.blank?
             @host.content_facet = Katello::Host::ContentFacet.create!(host: @host)
           end
-          return if content_facet_attributes.blank? || @host&.content_facet.blank? ||
-            (cve_params[:content_view_id].present? && cve_params[:lifecycle_environment_id].present?)
           cves = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
             labels: cve_params[:content_view_environments],
             ids: cve_params[:content_view_environment_ids],
