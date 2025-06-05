@@ -30,6 +30,7 @@ module Actions
           end
 
           if content_view.rolling?
+            environment_ids_for_new_repos = content_view.environment_ids
             repo_ids_to_add = repo_ids_to_remove = []
             retained_repo_ids = content_view.repository_ids
             if content_view_params.key?(:repository_ids)
@@ -38,6 +39,7 @@ module Actions
               retained_repo_ids -= repo_ids_to_remove
             end
             unless environment_ids.nil?
+              environment_ids_for_new_repos = environment_ids
               environment_ids_to_add = environment_ids - content_view.environment_ids
               environment_ids_to_remove = content_view.environment_ids - environment_ids
 
@@ -50,8 +52,9 @@ module Actions
                 plan_action(RemoveFromEnvironment, content_view, environment)
               end
             end
-            plan_action(AddRollingRepoClone, content_view, repo_ids_to_add, environment_ids) if repo_ids_to_add.any?
-            plan_action(RemoveRollingRepoClone, content_view, repo_ids_to_remove, environment_ids) if repo_ids_to_remove.any?
+            
+            plan_action(AddRollingRepoClone, content_view, repo_ids_to_add, environment_ids_for_new_repos) if repo_ids_to_add.any?
+            plan_action(RemoveRollingRepoClone, content_view, repo_ids_to_remove, content_view.environment_ids) if repo_ids_to_remove.any?
           end
 
           content_view.update!(content_view_params)
