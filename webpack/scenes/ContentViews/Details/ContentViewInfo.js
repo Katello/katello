@@ -50,6 +50,7 @@ const ContentViewInfo = ({ cvId, details }) => {
     permissions,
   } = details;
   const [selectedEnvs, setSelectedEnvs] = useState([]);
+  const [buttonLoading, setButtonLoading] = useState(false);
   const generatedContentView = generatedFor !== 'none';
   const onEdit = (val, attribute) => {
     if (val === details[attribute]) return;
@@ -78,8 +79,12 @@ const ContentViewInfo = ({ cvId, details }) => {
 
 
   const updateEnvs = (optedEnvs) => {
+    setButtonLoading(true);
     const checkedEnvIds = optedEnvs?.map(env => env.id) ?? [];
-    dispatch(updateContentView(cvId, { environment_ids: checkedEnvIds }));
+    dispatch(updateContentView(cvId, { environment_ids: checkedEnvIds }, () => {
+    // This callback runs only on success
+      setButtonLoading(false);
+    }));
   };
   return (
     <TextContent className="margin-0-24">
@@ -196,7 +201,13 @@ const ContentViewInfo = ({ cvId, details }) => {
               />
               <Flex>
                 <FlexItem spacer={{ default: 'spacerXs' }}>
-                  <Button ouiaId="save-button" onClick={() => updateEnvs(selectedEnvs)} style={{ marginTop: '1rem' }}>
+                  <Button
+                    ouiaId="save-button"
+                    isLoading={buttonLoading}
+                    isDisabled={buttonLoading}
+                    onClick={() => updateEnvs(selectedEnvs)}
+                    style={{ marginTop: '1rem' }}
+                  >
                     Save Environments
                   </Button>
 	        </FlexItem>
