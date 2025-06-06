@@ -79,6 +79,18 @@ module Katello
       assert_response :success
     end
 
+    def test_update_file
+      id = '1'
+      offset = '0'
+      test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
+      content = Rack::Test::UploadedFile.new(test_document, '')
+      file_content = File.read(test_document)
+      @repo.backend_content_service(SmartProxy.pulp_primary).expects(:upload_chunk).with(id, offset, file_content, nil)
+      put :update, params: { :id => id, :offset => offset, :content => content, :repository_id => @repo.id }
+
+      assert_response :success
+    end
+
     def test_update_protected
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
