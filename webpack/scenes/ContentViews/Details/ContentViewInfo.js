@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  Button,
   Flex,
   FlexItem,
   TextContent,
@@ -11,6 +12,7 @@ import {
   Switch,
 } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
+import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import { updateContentView } from './ContentViewDetailActions';
@@ -20,9 +22,18 @@ import ActionableDetail from '../../../components/ActionableDetail';
 import './contentViewInfo.scss';
 import { dependenciesHelpText, autoPublishHelpText, hasPermission } from '../helpers';
 import { LabelImportOnly, LabelGenerated } from '../Create/ContentViewFormComponents';
+import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathActions';
+import {
+  selectEnvironmentPaths,
+  selectEnvironmentPathsStatus,
+} from '../components/EnvironmentPaths/EnvironmentPathSelectors';
+import EnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPaths';
 
 const ContentViewInfo = ({ cvId, details }) => {
   const dispatch = useDispatch();
+  const environmentPathResponse = useSelector(selectEnvironmentPaths);
+  const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
+  const environmentPathLoading = environmentPathStatus === STATUS.PENDING;
   const [currentAttribute, setCurrentAttribute] = useState();
   const updating = useSelector(state => selectIsCVUpdating(state));
   const {
@@ -35,8 +46,11 @@ const ContentViewInfo = ({ cvId, details }) => {
     auto_publish: autoPublish,
     import_only: importOnly,
     generated_for: generatedFor,
+    environments,
     permissions,
   } = details;
+  const [selectedEnvs, setSelectedEnvs] = useState([]);
+  const [buttonLoading, setButtonLoading] = useState(false);
   const generatedContentView = generatedFor !== 'none';
   const onEdit = (val, attribute) => {
     if (val === details[attribute]) return;
@@ -44,7 +58,34 @@ const ContentViewInfo = ({ cvId, details }) => {
   };
   let iconText = __('Content view');
   if (composite) { iconText = __('Composite content view'); } else if (rolling) { iconText = __('Rolling content view'); }
+  useEffect(
+    () => {
+      dispatch(getEnvironmentPaths());
+    },
+    [dispatch, cvId],
+  );
+  useEffect(() => {
+    if (environments?.length) {
+      setSelectedEnvs(environments);
+    }
+  }, [environments, setSelectedEnvs]);
+  useMemo(() => {
+    if (!environmentPathLoading) {
+      const { results } = environmentPathResponse || {};
+      return results.map(result => result.environments).flatten();
+    }
+    return [];
+  }, [environmentPathResponse, environmentPathLoading]);
 
+
+  const updateEnvs = (optedEnvs) => {
+    setButtonLoading(true);
+    const checkedEnvIds = optedEnvs?.map(env => env.id) ?? [];
+    dispatch(updateContentView(cvId, { environment_ids: checkedEnvIds }, () => {
+    // This callback runs only on success
+      setButtonLoading(false);
+    }));
+  };
   return (
     <TextContent className="margin-0-24">
       <TextList component={TextListVariants.dl}>
@@ -146,6 +187,34 @@ const ContentViewInfo = ({ cvId, details }) => {
               />
             </TextListItem>
           </>}
+        {rolling &&
+          <>
+            <TextListItem component={TextListItemVariants.dt}>
+              {__('Lifecycle Environments')}
+            </TextListItem>
+            <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
+              <EnvironmentPaths
+                headerText=""
+                publishing={false}
+                userCheckedItems={selectedEnvs}
+                setUserCheckedItems={setSelectedEnvs}
+              />
+              <Flex>
+                <FlexItem spacer={{ default: 'spacerXs' }}>
+                  <Button
+                    ouiaId="save-button"
+                    isLoading={buttonLoading}
+                    isDisabled={buttonLoading}
+                    onClick={() => updateEnvs(selectedEnvs)}
+                    style={{ marginTop: '1rem' }}
+                  >
+                    Save Environments
+                  </Button>
+	        </FlexItem>
+	      </Flex>
+            </TextListItem>
+          </>
+         }
       </TextList>
     </TextContent>
   );
@@ -163,6 +232,7 @@ ContentViewInfo.propTypes = {
     auto_publish: PropTypes.bool,
     import_only: PropTypes.bool,
     generated_for: PropTypes.string,
+    environments: PropTypes.arrayOf(PropTypes.shape({})),
     permissions: PropTypes.shape({}),
   }).isRequired,
 };
