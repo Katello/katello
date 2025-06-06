@@ -33,8 +33,9 @@ module Katello
     param :offset, :number, :required => true, :desc => N_("The offset in the file where the content starts")
     param :content, File, :required => true, :desc => N_("The actual file contents")
     def update
+      content = params[:content].respond_to?(:read) ? params[:content].read : params[:content]
       @repository.backend_content_service(::SmartProxy.pulp_primary)
-        .upload_chunk(params[:id], params[:offset], params[:content], params[:size])
+        .upload_chunk(params[:id], params[:offset], content, params[:size])
       head :no_content
     end
 
