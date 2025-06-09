@@ -1,4 +1,4 @@
-# 4.17.0.rc2 Fallingwater (2025-06-02)
+# 4.17.0 Fallingwater (2025-06-09)
 
 ## Features
 
@@ -27,14 +27,16 @@
  * Add unit test cases to image mode card. ([#38323](https://projects.theforeman.org/issues/38323), [1c4e1cfb](https://github.com/Katello/katello.git/commit/1c4e1cfb4d5d0adf03f055415daa8a59da452f16))
 
 ### Content Views
+ * When creating a rolling content view with repository_ids no rolling repo clones are created ([#38413](https://projects.theforeman.org/issues/38413), [eff2f62a](https://github.com/Katello/katello.git/commit/eff2f62a0aa67010657828ba5ad337f83493718b))
  * rolling attribute is missing from activation key API response ([#38411](https://projects.theforeman.org/issues/38411), [d934b0f6](https://github.com/Katello/katello.git/commit/d934b0f6eb614d916092e5d0129e3719433c333b))
  * PF5 issue: Bad icon spacing ([#38337](https://projects.theforeman.org/issues/38337), [1e37a44c](https://github.com/Katello/katello.git/commit/1e37a44c6ea3f0f1fae74b05b98b4f2baebe81c6))
+ * Disallow pushing containers to rolling content views ([#38285](https://projects.theforeman.org/issues/38285), [197bf2f2](https://github.com/Katello/katello.git/commit/197bf2f27f3c08dac970b1833d14c7725e36994e))
  * Remove version from environment wizard still makes you choose a replacement cv/lce even if it will be ignored ([#38191](https://projects.theforeman.org/issues/38191), [87dc8cfc](https://github.com/Katello/katello.git/commit/87dc8cfc18dedbea67c59233392a6528e14a979e))
  * needs_publish is incorrect before page refresh ([#38007](https://projects.theforeman.org/issues/38007))
 
 ### Repositories
  * Add organization to the Katello repositories API  response ([#38399](https://projects.theforeman.org/issues/38399), [cb3c9bf8](https://github.com/Katello/katello.git/commit/cb3c9bf84e59158f5a786c9471413606cd008ecb))
- * Updating file type repository fails due to Downlaod Policy not being set ([#38369](https://projects.theforeman.org/issues/38369), [658c07aa](https://github.com/Katello/katello.git/commit/658c07aa8e4e46a789682cad01225aff1c18e04a))
+ * Updating file type repository fails due to Download Policy not being set ([#38369](https://projects.theforeman.org/issues/38369), [658c07aa](https://github.com/Katello/katello.git/commit/658c07aa8e4e46a789682cad01225aff1c18e04a))
  * APT repos using path prefixes for components will be misconfigured on consuming hosts ([#38359](https://projects.theforeman.org/issues/38359), [c26a27b7](https://github.com/Katello/katello.git/commit/c26a27b7d090a62af59f8151c427eca80406c3d2))
  * Duplicity in recommended RH repos ([#38308](https://projects.theforeman.org/issues/38308), [871b862a](https://github.com/Katello/katello.git/commit/871b862a1daf09bde35cebaf34228ea3084e57ac))
  * Debian repos are not displayed in the Repository Set Management on the Content Hosts page ([#38296](https://projects.theforeman.org/issues/38296), [d6cf242d](https://github.com/Katello/katello.git/commit/d6cf242d01e1fea3cdfdf64262c8282b4e87b038))
