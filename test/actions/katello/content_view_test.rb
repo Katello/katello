@@ -81,12 +81,65 @@ module ::Actions::Katello::ContentView
       end
     end
 
-    it 'uses override_components properly' do
+    it 'adds newest components for major update' do
+      override_comp = mock('mock_component_1')
+      override_comp.stubs(:content_view_id).returns(1)
+      old_comp_1 = mock('mock_component_2')
+      old_comp_1.stubs(:content_view_id).returns(2)
+      old_comp_2 = mock('mock_component_3')
+      old_comp_2.stubs(:content_view_id).returns(3)
+      new_comp_1 = mock('mock_component_4')
+      new_comp_1.stubs(:content_view_id).returns(4)
+      new_comp_2 = mock('mock_component_5')
+      new_comp_2.stubs(:content_view_id).returns(5)
+
+      override_components = [override_comp]
+      old_components = [old_comp_1, old_comp_2]
+      new_components = [new_comp_1, new_comp_2]
+
+      mock_old_version = mock('previous_minor_version')
+      mock_old_version.stubs(:components).returns(old_components)
+      mock_versions = mock('versions')
+      mock_versions.stubs(:find_by).with(major: 1, minor: 0).returns(mock_old_version)
+      content_view.stubs(:versions).returns(mock_versions)
+      content_view.stubs(:components).returns(new_components)
+
+      result = action.send(:include_other_components, content_view, override_components, 1, 0)
+      assert_same_elements [override_comp, new_comp_1, new_comp_2], result
+    end
+
+    it 'adds previous components for minor update' do
+      override_comp = mock('mock_component_1')
+      override_comp.stubs(:content_view_id).returns(1)
+      old_comp_1 = mock('mock_component_2')
+      old_comp_1.stubs(:content_view_id).returns(2)
+      old_comp_2 = mock('mock_component_3')
+      old_comp_2.stubs(:content_view_id).returns(3)
+      new_comp_1 = mock('mock_component_4')
+      new_comp_1.stubs(:content_view_id).returns(4)
+      new_comp_2 = mock('mock_component_5')
+      new_comp_2.stubs(:content_view_id).returns(5)
+
+      override_components = [override_comp]
+      old_components = [old_comp_1, old_comp_2]
+      new_components = [new_comp_1, new_comp_2]
+
+      mock_old_version = mock('previous_minor_version')
+      mock_old_version.stubs(:components).returns(old_components)
+      mock_versions = mock('versions')
+      mock_versions.stubs(:find_by).with(major: 1, minor: 0).returns(mock_old_version)
+      content_view.stubs(:versions).returns(mock_versions)
+      content_view.stubs(:components).returns(new_components)
+
+      result = action.send(:include_other_components, content_view, override_components, 1, 1)
+      assert_same_elements [override_comp, old_comp_1, old_comp_2], result
+    end
+
+    it 'throws error when previous minor version is not found ' do
       action.stubs(:task).returns(success_task)
-      action.expects(:include_other_components).with('mock', content_view).returns('mock')
-      content_view.expects(:publish_repositories).with.returns([])
-      content_view.expects(:publish_repositories).with('mock').returns([])
-      plan_action action, content_view, nil, override_components: 'mock', importing: false
+      assert_raises(RuntimeError) do
+        plan_action action, content_view, nil, override_components: ["mock"], importing: false, major: 1, minor: 1
+      end
     end
 
     context 'run phase' do

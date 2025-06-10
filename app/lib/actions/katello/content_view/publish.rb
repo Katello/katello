@@ -32,8 +32,7 @@ module Actions
             end
           end
 
-          # Add non-override components back in
-          options[:override_components] = include_other_components(options[:override_components], content_view)
+          options[:override_components] = include_other_components(content_view, options[:override_components], options[:major], options[:minor])
 
           version = version_for_publish(content_view, options)
           self.version = version
@@ -161,9 +160,25 @@ module Actions
 
         private
 
-        def include_other_components(override_components, content_view)
+        # On an upgrade with component overrides, include components from the old content view version that
+        # wouldn't have been carried over otherwise.
+        def include_other_components(content_view, override_components, major, minor)
           if override_components.present?
-            content_view.components.each do |component|
+            # For incremental updates, we need to get components from the content view version immediately prior to this
+            # version. We do not upgrade components to the latest version on incremental updates.
+            if major.present? && minor.to_i > 0
+              prev_minor_version = content_view.versions.find_by(major: major, minor: (minor - 1))
+              unless prev_minor_version
+                fail _("During incremental update, the previous content view version '%s' could not be found.") % "#{content_view.name} #{major}.#{minor - 1}"
+              end
+              components_to_test = prev_minor_version.components
+
+            # For major versions, fetch the latest component versions from the content view.
+            else
+              components_to_test = content_view.components
+            end
+
+            components_to_test.each do |component|
               component_has_override = override_components.detect do |override_component|
                 component.content_view_id == override_component.content_view_id
               end
