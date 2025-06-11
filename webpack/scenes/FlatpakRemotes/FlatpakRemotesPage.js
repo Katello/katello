@@ -1,0 +1,155 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
+import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
+import {
+  useSetParamsAndApiAndSearch,
+  useTableIndexAPIResponse,
+} from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
+import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
+import EmptyPage from 'foremanReact/routes/common/EmptyPage';
+import Pagination from 'foremanReact/components/Pagination';
+import { translate as __ } from 'foremanReact/common/I18n';
+import { STATUS } from 'foremanReact/constants';
+import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
+import { truncate } from '../../utils/helpers';
+
+const FlatpakRemotesPage = () => {
+  const response = useSelector(selectFlatpakRemotes);
+  const error = useSelector(selectFlatpakRemotesError);
+  const status = useSelector(selectFlatpakRemotesStatus);
+
+  const {
+    results = [], subtotal, page, per_page: perPage,
+  } = response || {};
+
+  const columnHeaders = [__('Name'), __('URL')];
+  const COLUMNS_TO_SORT_PARAMS = {
+    [columnHeaders[0]]: 'name',
+    [columnHeaders[1]]: 'url',
+  };
+
+  const apiOptions = {
+    key: 'FLATPAK_REMOTES',
+  };
+
+  const defaultParams = {
+    page: page || 1,
+    per_page: perPage || 20,
+  };
+
+  const apiUrl = '/katello/api/v2/flatpak_remotes';
+
+  const apiResponse = useTableIndexAPIResponse({
+    apiUrl,
+    apiOptions,
+    defaultParams,
+  });
+
+  const actionsWithPermissions = () => [
+    { title: __('Scan'), isDisabled: true },
+    { title: __('Edit'), isDisabled: true },
+    { title: __('Delete'), isDisabled: true },
+  ];
+
+  const {
+    setParamsAndAPI,
+    params,
+  } = useSetParamsAndApiAndSearch({
+    defaultParams,
+    apiOptions,
+    setAPIOptions: apiResponse.setAPIOptions,
+  });
+
+  const onSort = (_event, index, direction) => {
+    const sortBy = Object.values(COLUMNS_TO_SORT_PARAMS)[index];
+    setParamsAndAPI({
+      ...params,
+      order: `${sortBy} ${direction}`,
+    });
+  };
+
+  const { pfSortParams } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    onSort,
+  });
+
+  const onPaginationChange = (newPagination) => {
+    setParamsAndAPI({
+      ...params,
+      ...newPagination,
+    });
+  };
+
+  return (
+    <TableIndexPage
+      apiUrl={apiUrl}
+      apiOptions={apiOptions}
+      header={__('Flatpak Remotes')}
+      creatable={false}
+      controller="/katello/api/v2/flatpak_remotes"
+    >
+      <>
+        {results.length === 0 && !error && status === STATUS.PENDING && (
+          <EmptyPage
+            message={{
+              type: 'loading',
+              text: __('Loading...'),
+            }}
+          />
+        )}
+        {results.length === 0 && !error && status === STATUS.RESOLVED && (
+          <EmptyPage message={{ type: 'empty' }} />
+        )}
+        {error && (
+          <EmptyPage message={{ type: 'error', text: error }} />
+        )}
+        {results.length > 0 && (
+          <Table variant="compact" ouiaId="flatpak-remotes-table" isStriped>
+            <Thead>
+              <Tr ouiaId="fltpakRemotesTableHeaderRow">
+                {columnHeaders.map(col => (
+                  <Th key={col} sort={pfSortParams(col)}>
+                    {col}
+                  </Th>
+                ))}
+                <Th key="action-menu" aria-label="action menu table header" />
+              </Tr>
+            </Thead>
+            <Tbody>
+              {results.map((remote) => {
+                const {
+                  id, name, url,
+                } = remote;
+                return (
+                  <Tr key={id} ouiaId={`flatpak-remote-row-${id}`}>
+                    <Td>{truncate(name)}</Td>
+                    <Td>
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        {truncate(url)}
+                      </a>
+                    </Td>
+                    <Td actions={{ items: actionsWithPermissions(remote) }} />
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        )}
+        {results.length > 0 && (
+          <Pagination
+            key="table-bottom-pagination"
+            page={page}
+            perPage={perPage}
+            itemCount={subtotal}
+            onChange={onPaginationChange}
+            updateParamsByUrl
+          />
+        )}
+      </>
+    </TableIndexPage>
+  );
+};
+
+export default FlatpakRemotesPage;
