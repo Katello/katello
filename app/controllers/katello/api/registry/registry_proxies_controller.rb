@@ -560,6 +560,8 @@ module Katello
 
     def check_blob
       pulp_response = Resources::Registry::Proxy.get(@_request.fullpath, 'Accept' => request.headers['Accept'])
+      response.headers['Content-Type'] = pulp_response.headers[:content_type] if pulp_response.headers[:content_type]
+      response.headers['Content-Length'] = pulp_response.headers[:content_length] if pulp_response.headers[:content_length]
       head pulp_response.code
     end
 
