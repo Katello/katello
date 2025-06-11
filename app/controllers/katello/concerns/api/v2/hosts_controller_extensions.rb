@@ -14,11 +14,23 @@ module Katello
             super
           end
         end
+
+        def create
+          super        # host + facets are created here
+          set_content_view_environments
+          render 'katello/api/v2/host', status: :created
+        end
+
+        def update
+          super
+          set_content_view_environments
+          head :no_content
+        end
       end
 
       included do
         prepend Overrides
-        after_action :set_content_view_environments, only: [:create, :update]
+        # after_action :set_content_view_environments, only: [:create, :update]
 
         def destroy
           Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
