@@ -10,8 +10,8 @@ module Actions
         execution_plan_hooks.use :trigger_capsule_sync, :on => :success
         execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 
-        # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
-        def plan(content_view, description = "", options = {importing: false, syncable: false}) # rubocop:disable Metrics/PerceivedComplexity
+        # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        def plan(content_view, description = "", options = {importing: false, syncable: false})
           action_subject(content_view)
 
           content_view.check_ready_to_publish!(**options.slice(:importing, :syncable))
@@ -57,13 +57,24 @@ module Actions
             separated_repo_map = separated_repo_mapping(repository_mapping, content_view.solve_dependencies)
 
             if options[:importing]
-              handle_import(version, **options.slice(:path, :metadata))
-            else
+              handle_importing_content(version, options[:path], options[:metadata])
+            elsif options[:syncable]
               if separated_repo_map[:pulp3_deb_multicopy].keys.flatten.present?
-                plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_deb_multicopy], version)
+                plan_action(::Actions::Katello::Repository::MultiCloneToVersion, separated_repo_map[:pulp3_deb_multicopy], version)
               end
               if separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
-                plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_multicopy], version)
+                plan_action(::Actions::Katello::Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_multicopy], version)
+              end
+
+              # Create import history for syncable imports so they display under hammer's content-import list command.
+              if options[:path] && options[:metadata]
+                plan_action(
+                  ::Actions::Pulp3::ContentViewVersion::CreateImportHistory,
+                  content_view_version_id: version.id,
+                  path: options[:path],
+                  metadata: options[:metadata],
+                  content_view_name: version.content_view.name
+                )
               end
             end
 
@@ -94,6 +105,7 @@ module Actions
                       environment_id: library.id, user_id: ::User.current.id, skip_promotion: options[:skip_promotion])
           end
         end
+        # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
         def humanized_name
           _("Publish")
@@ -222,14 +234,14 @@ module Actions
           ::Katello::KTEnvironment.where(:id => environment_ids)
         end
 
-        def handle_import(version, path:, metadata:)
+        def handle_importing_content(version, path = nil, metadata = nil)
           sequence do
             plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, { path: path, metadata: metadata })
             concurrence do
               version.importable_repositories.pluck(:id).each do |id|
                 # need to force full_indexing for these version repositories
                 # on import. This will then help us correctly copy version units to the library
-                plan_action(Katello::Repository::IndexContent, id: id, full_index: true)
+                plan_action(::Actions::Katello::Repository::IndexContent, id: id, full_index: true)
               end
             end
             concurrence do
