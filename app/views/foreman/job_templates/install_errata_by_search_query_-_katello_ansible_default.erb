@@ -7,7 +7,7 @@ feature: katello_errata_install_by_search
 provider_type: Ansible
 template_inputs:
 - name: Errata search query
-  description: Filter criteria for errata to be installed.
+  description: Filter criteria for errata to be installed. IMPORTANT- If left blank, the job will attempt to install all applicable errata.
   input_type: user
   required: false
 %>
