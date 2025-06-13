@@ -39,7 +39,7 @@ module Katello
           # validations should occur before the action so that the request can fail and not render multiple responses
           cves = validate_content_view_environment_params
           yield
-          # the actual setting needs to wait until the host is created
+          # the actual assigning needs to wait until the host is created
           set_content_view_environments(cves)
         end
 
