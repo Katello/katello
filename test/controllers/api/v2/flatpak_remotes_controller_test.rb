@@ -22,14 +22,14 @@ module Katello
     end
 
     def test_index
-      get :index
+      get :index, params: { :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/flatpak_remotes/index'
     end
 
     def test_index_with_name
-      response = get :index, params: { name: @remote.name }
+      response = get :index, params: { name: @remote.name, organization_id: @organization.id }
 
       assert_response :success
       assert_template 'api/v2/flatpak_remotes/index'
