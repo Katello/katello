@@ -89,6 +89,34 @@ module ::Actions::Katello::ContentView
       plan_action action, content_view, nil, override_components: 'mock', importing: false
     end
 
+    it 'handles content import for importing non-syncable' do
+
+    end
+
+    it 'handles content import for non-importing syncable' do
+      version = mock("version")
+      version.stubs(:id).returns(1)
+      multicopy = {a: "foo", b: "bar"}
+      separated_repo_map = {
+        pulp3_deb_multicopy: multicopy,
+        pulp3_yum_multicopy: multicopy
+      }
+      options = {
+        importing: false,
+        syncable: true,
+        path: "path",
+        metadata: "metadata"
+      }
+
+      # TODO - add assertions here
+
+      action.send(:handle_content_import, content_view, separated_repo_map, **options.slice(:importing, :syncable, :path, :metadata))
+    end
+
+    it 'handles content import for non-importing non-syncable' do
+
+    end
+
     context 'run phase' do
       it 'creates auto-publish events for non-composite views' do
         composite_view = katello_content_views(:composite_view)
