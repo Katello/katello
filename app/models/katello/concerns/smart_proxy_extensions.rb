@@ -234,7 +234,19 @@ module Katello
           update_container_repo_list
           users = container_gateway_users
           update_user_container_repo_mapping(users) if users.any?
+          update_container_gateway_hosts if content_facets.any?
+          update_host_container_repo_mapping(content_facets)
         end
+      end
+
+      def update_container_gateway_hosts
+        # This method updates the hosts that are registered with the container gateway.
+        hosts = self.content_facets.map do |facet|
+          {
+            uuid: facet.uuid,
+          }
+        end
+        ProxyAPI::ContainerGateway.new(url: self.url).update_hosts({ hosts: hosts })
       end
 
       def update_container_repo_list
@@ -269,6 +281,28 @@ module Katello
           user_repo_map[:users] << { user.login => inner_repo_list }
         end
         ProxyAPI::ContainerGateway.new(url: self.url).user_repository_mapping(user_repo_map)
+      end
+
+      def update_host_container_repo_mapping(content_facets)
+        # Example host-repo mapping:
+        # { hosts:
+        #   [
+        #     'host_uuid a' => [{ repository: 'repo 1', auth_required: true }]
+        #   ]
+        # }
+
+        host_repo_map = { hosts: [] }
+        content_facets.each do |facet|
+          inner_repo_list = []
+          repositories = ::Katello::Repository.readable_docker_catalog(facet.host)
+          repositories.each do |repo|
+            next if repo.container_repository_name.nil?
+            inner_repo_list << { repository: repo.container_repository_name,
+                                 auth_required: !unauthenticated_container_repositories.include?(repo.id) }
+          end
+          host_repo_map[:hosts] << { facet.uuid => inner_repo_list }
+        end
+        ProxyAPI::ContainerGateway.new(url: self.url).host_repository_mapping(host_repo_map)
       end
 
       def unauthenticated_container_repositories

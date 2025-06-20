@@ -28,5 +28,21 @@ module ProxyAPI
     rescue => e
       raise ::ProxyAPI::ProxyException.new(url, e, N_("Unable to get users"))
     end
+
+    def update_hosts(args)
+      # put '/v2/update_hosts/?'
+      @url += "/update_hosts"
+      parse put(args)
+    rescue => e
+      raise ::ProxyAPI::ProxyException.new(url, e, N_("Unable to update hosts"))
+    end
+
+    def host_repository_mapping(args)
+      # put '/v2/update_host_repository_mapping/?'
+      @url += "/host_repository_mapping"
+      parse put(args)
+    rescue => e
+      raise ::ProxyAPI::ProxyException.new(url, e, N_("Unable to update host-repository mapping"))
+    end
   end
 end

@@ -77,11 +77,12 @@ module Katello
           redirect_authorization_headers if redirect_on_failure
           return false
         end
+      elsif request.headers['HostUUID']
+        @host = Katello::Host::ContentFacet.find_by(uuid: request.headers['HostUUID'])&.host
       else
         authenticate_cert_request
-        return true if @host
       end
-      false
+      return @host.presence
     end
 
     def optional_authorize
