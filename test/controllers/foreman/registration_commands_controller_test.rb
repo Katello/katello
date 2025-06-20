@@ -86,6 +86,12 @@ class Api::V2::RegistrationCommandsControllerTest < ActionController::TestCase
     assert_includes(JSON.parse(@response.body)['registration_command'], 'ignore_subman_errors=true')
   end
 
+  def test_with_setup_container_registry_certs
+    post :create, params: { setup_container_registry_certs: true, activation_keys: ['key1'] }
+    assert_response :success
+    assert_includes(JSON.parse(@response.body)['registration_command'], 'setup_container_registry_certs=true')
+  end
+
   def test_hostgroup_with_ack
     hostgroup = FactoryBot.create(:hostgroup)
     FactoryBot.create(:hostgroup_parameter, hostgroup: hostgroup, name: 'kt_activation_keys', value: 'key1')
