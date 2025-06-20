@@ -15,12 +15,13 @@ module ::Actions::Katello::ContentView
 
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::Create }
+    let(:library) { katello_environments(:library) }
     view_params = {name: "foo", label: "foo", organization: Organization.first}
     it 'plans' do
       content_view = Katello::ContentView.create!(**view_params, rolling: false)
       content_view.expects(:save!)
 
-      plan_action(action, content_view)
+      plan_action(action, content_view, nil)
 
       refute_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
       refute_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
@@ -30,7 +31,7 @@ module ::Actions::Katello::ContentView
       content_view.expects(:save!)
       content_view.expects(:create_new_version)
 
-      plan_action(action, content_view)
+      plan_action(action, content_view, [library.id])
 
       assert_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
       refute_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
@@ -42,7 +43,7 @@ module ::Actions::Katello::ContentView
       content_view.expects(:create_new_version)
       content_view.expects(:reload)
 
-      plan_action(action, content_view)
+      plan_action(action, content_view, [library.id])
 
       assert_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
       assert_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
@@ -268,7 +269,7 @@ module ::Actions::Katello::ContentView
 
       Katello::Repository.any_instance.expects(:build_clone).returns(clone_deb)
       Katello::Repository.any_instance.expects(:build_clone).returns(clone_rpm)
-      plan_action(action, content_view, [repository_rpm.id, repository_deb.id])
+      plan_action(action, content_view, [repository_rpm.id, repository_deb.id], [library.id])
 
       assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone_rpm, false
       assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone_deb, false
@@ -288,7 +289,7 @@ module ::Actions::Katello::ContentView
       refute_equal repository_deb.version_href, clone_deb.version_href
       refute_equal repository_deb.publication_href, clone_deb.publication_href
       # double-add
-      plan_action(action, content_view, [repository_deb.id])
+      plan_action(action, content_view, [repository_deb.id], [library.id])
 
       assert_equal 1, content_view.get_repo_clone(library, repository_deb).count
       assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone_deb, false
@@ -297,7 +298,7 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans nothing' do
-      plan_action(action, content_view, [])
+      plan_action(action, content_view, [], [])
 
       refute_action_planned action, ::Actions::Katello::ContentView::RefreshRollingRepo
       refute_action_planned action, ::Actions::Candlepin::Environment::AddContentToEnvironment
@@ -338,7 +339,7 @@ module ::Actions::Katello::ContentView
       clone_rpm.save!
       clone_deb.save!
 
-      plan_action(action, content_view, [repository_rpm.id, repository_deb.id])
+      plan_action(action, content_view, [repository_rpm.id, repository_deb.id], [library.id])
 
       assert_action_planned_with action, ::Actions::Pulp3::Repository::DeleteDistributions, clone_rpm.id, primary
       assert_action_planned_with action, ::Actions::Pulp3::Repository::DeleteDistributions, clone_deb.id, primary
@@ -350,7 +351,7 @@ module ::Actions::Katello::ContentView
     it 'plan ignores gone repo' do
       clone_rpm.destroy
 
-      plan_action(action, content_view, [repository_rpm.id])
+      plan_action(action, content_view, [repository_rpm.id], [library.id])
 
       refute_action_planned action, ::Actions::Pulp3::Repository::DeleteDistributions
 
@@ -359,7 +360,7 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans nothing' do
-      plan_action(action, content_view, [])
+      plan_action(action, content_view, [], [library.id])
       refute_action_planned action, ::Actions::Pulp3::Repository::DeleteDistributions
       assert_action_planned action, ::Actions::Candlepin::Environment::SetContent
     end
@@ -451,7 +452,7 @@ module ::Actions::Katello::ContentView
 
     it 'plans' do
       content_view.expects(:save!)
-      plan_action(action, content_view)
+      plan_action(action, content_view, nil)
     end
   end
 
@@ -617,7 +618,7 @@ module ::Actions::Katello::ContentView
 
     it 'plans' do
       action.expects(:action_subject).with(content_view)
-      plan_action action, content_view, 'repository_ids' => [repository.id]
+      plan_action action, content_view, {'repository_ids' => [repository.id]}, nil
     end
 
     it 'deletes old filter rules' do
@@ -638,7 +639,7 @@ module ::Actions::Katello::ContentView
       package_group_rule = ::Katello::ContentViewPackageGroupFilterRule.create(content_view_filter_id: package_group_filter.id, uuid: package_group.pulp_id)
 
       action.expects(:action_subject).with(content_view)
-      plan_action action, content_view, 'repository_ids' => []
+      plan_action action, content_view, {'repository_ids' => []}, nil
 
       assert_raises ActiveRecord::RecordNotFound do
         module_stream_rule.reload
@@ -655,7 +656,7 @@ module ::Actions::Katello::ContentView
 
     it 'raises error when validation fails' do
       ::Actions::Katello::ContentView::Update.any_instance.expects(:action_subject).with(content_view)
-      assert_raises(ActiveRecord::RecordInvalid) { create_and_plan_action action_class, content_view, :name => '' }
+      assert_raises(ActiveRecord::RecordInvalid) { create_and_plan_action action_class, content_view, {:name => ''}, nil }
     end
   end
 
@@ -666,15 +667,16 @@ module ::Actions::Katello::ContentView
     let(:content_view) { katello_content_views(:rolling_view) }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
     let(:action) { create_action action_class }
+    let(:library) { katello_environments(:library) }
 
     it 'plans add/remove repo' do
       action.expects(:action_subject).with(content_view)
       old_repo_ids = content_view.repository_ids
 
-      plan_action action, content_view, 'repository_ids' => [repository.id]
+      plan_action action, content_view, {'repository_ids' => [repository.id]}, [library.id]
 
-      assert_action_planned_with action, add_rolling_repo_action_class, content_view, [repository.id]
-      assert_action_planned_with action, remove_rolling_repo_action_class, content_view, old_repo_ids
+      assert_action_planned_with action, add_rolling_repo_action_class, content_view, [repository.id], [library.id]
+      assert_action_planned_with action, remove_rolling_repo_action_class, content_view, old_repo_ids, [library.id]
     end
   end
 
