@@ -9,6 +9,7 @@ module Katello
         begin
           options = resource_class.respond_to?(:completer_scope_options) ? resource_class.completer_scope_options(params[:search]) : {}
           items = resource_class.where(:id => self.index_relation).complete_for(params[:search], options)
+          items = filter_autocomplete_items(items)
           items = items.map do |item|
             category = ['and', 'or', 'not', 'has'].include?(item.to_s.sub(/^.*\s+/, '')) ? _('Operators') : ''
             part = item.to_s.sub(/^.*\b(and|or)\b/i) { |match| match.sub(/^.*\s+/, '') }
@@ -19,6 +20,22 @@ module Katello
           items = [{:error => e.to_s}]
         end
         render :json => items
+      end
+
+      protected
+
+      def filter_autocomplete_items(items)
+        rejected_patterns = rejected_autocomplete_items
+        return items if rejected_patterns.empty?
+
+        items.reject do |item|
+          item_string = item.to_s.downcase
+          rejected_patterns.any? { |pattern| item_string.include?(pattern.downcase) }
+        end
+      end
+
+      def rejected_autocomplete_items
+        []
       end
     end
   end

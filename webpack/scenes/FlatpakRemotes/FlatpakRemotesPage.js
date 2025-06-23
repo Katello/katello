@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
@@ -10,6 +11,7 @@ import {
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import EmptyPage from 'foremanReact/routes/common/EmptyPage';
 import Pagination from 'foremanReact/components/Pagination';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
 import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
 import { truncate } from '../../utils/helpers';
@@ -129,7 +131,7 @@ const FlatpakRemotesPage = () => {
                 } = remote;
                 return (
                   <Tr key={id} ouiaId={`flatpak-remote-row-${id}`}>
-                    <Td>{truncate(name)}</Td>
+                    <Td><Link to={`${urlBuilder('flatpak_remotes', '')}${id}`}>{truncate(name)}</Link></Td>
                     <Td>
                       <a href={url} target="_blank" rel="noopener noreferrer">
                         {truncate(url)}
