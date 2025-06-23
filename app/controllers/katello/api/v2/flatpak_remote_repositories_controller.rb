@@ -77,5 +77,11 @@ module Katello
       throw_resource_not_found(name: 'product', id: params[:product_id]) unless @product
       @product
     end
+
+    protected
+
+    def rejected_autocomplete_items
+      ['flatpak_remote_id', 'flatpak_remote']
+    end
   end
 end

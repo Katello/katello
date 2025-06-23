@@ -1,6 +1,7 @@
 module Katello
   class FlatpakRemoteRepository < Katello::Model
     include Ext::LabelFromName
+    include ForemanTasks::Concerns::ActionSubject
 
     belongs_to :flatpak_remote, inverse_of: :remote_repositories
     has_many :remote_repository_manifests, dependent: :destroy, class_name: 'Katello::FlatpakRemoteRepositoryManifest'
@@ -25,6 +26,20 @@ module Katello
 
     def repository_dependencies
       manifest_dependencies&.map(&:remote_repository)
+    end
+
+    def last_mirrored_task
+      label = ::Actions::Katello::Flatpak::MirrorRemoteRepository.name
+      type = ::Katello::FlatpakRemoteRepository.name
+      ForemanTasks::Task.search_for("label = #{label} and resource_type = #{type} and resource_id = #{self.id}")
+        .order("started_at desc")
+        .first
+    end
+
+    def last_mirrored_status
+      task = last_mirrored_task
+      presenter = Katello::FlatpakRemoteMirrorStatusPresenter.new(self, task)
+      presenter.mirror_progress.slice(:mirror_id, :result, :started_at, :last_mirror_words)
     end
   end
 end
