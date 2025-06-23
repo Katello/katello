@@ -3,7 +3,7 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_action :find_remote_repository, :except => [:index, :auto_complete_search]
-    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+    before_action :find_organization, :only => [:index, :auto_complete_search]
     before_action :find_product, :only => [:mirror]
 
     resource_description do
@@ -76,6 +76,12 @@ module Katello
       @product = Product.editable.find(params[:product_id])
       throw_resource_not_found(name: 'product', id: params[:product_id]) unless @product
       @product
+    end
+
+    protected
+
+    def rejected_autocomplete_items
+      ['flatpak_remote_id', 'flatpak_remote']
     end
   end
 end
