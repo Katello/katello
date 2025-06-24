@@ -11,7 +11,7 @@
       <span translate>Export</span>
     </a>
     <a class="btn btn-default" href="/hosts/register" ng-show="permitted('create_hosts')" translate>
-      Register Content Host
+      <span> {{table.numSelected &gt 1? 'Register Content Hosts':'Register Content Host' | translate}} </span>
     </a>
 
     <span select-action-dropdown>

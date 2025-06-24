@@ -18,6 +18,7 @@ import {
   SelectOption,
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
+import { FormattedMessage } from 'react-intl';
 import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText, ActionsColumn } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -402,7 +403,11 @@ export const PackagesTab = () => {
       component="button"
       onClick={handleInstallPackagesClick}
     >
-      {__('Install packages')}
+      <FormattedMessage
+        id="install-packages"
+        defaultMessage="{count, plural, one {Install package} other {Install packages}}"
+        values={{ count: selectedCount }}
+      />
     </DropdownItem>,
     <DropdownItem
       aria-label="refresh_applicability"
