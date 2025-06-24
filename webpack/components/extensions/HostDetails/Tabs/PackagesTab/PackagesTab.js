@@ -18,6 +18,7 @@ import {
   SelectOption,
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
+import { FormattedMessage } from 'react-intl';
 import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText, ActionsColumn } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -52,6 +53,7 @@ import SortableColumnHeaders from '../../../../Table/components/SortableColumnHe
 import { useRexJobPolling } from '../RemoteExecutionHooks';
 import { runSubmanRepos } from '../../Cards/ContentViewDetailsCard/HostContentViewActions';
 import ImageModeHostAlert from '../../../Hosts/ImageModeHostAlert';
+
 
 const invokeRexJobs = ['create_job_invocations'];
 const createBookmarks = ['create_bookmarks'];
@@ -402,7 +404,11 @@ export const PackagesTab = () => {
       component="button"
       onClick={handleInstallPackagesClick}
     >
-      {__('Install packages')}
+      <FormattedMessage
+        id="install-packages"
+        defaultMessage="{count, plural, one {Install package} other {Install packages}}"
+        values={{ count: selectedCount }}
+      />
     </DropdownItem>,
     <DropdownItem
       aria-label="refresh_applicability"
