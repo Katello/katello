@@ -1,5 +1,23 @@
 class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
+  def fix_installed_package_dupes
+    # Remove duplicate installed packages and host installed packages.
+    duplicated_nvreas = ::Katello::InstalledPackage.group(:nvrea).having('count(*) > 1').pluck(:nvrea)
+    duplicated_nvreas.each do |nvrea|
+      packages_relation = ::Katello::InstalledPackage.where(nvrea: nvrea).order(:id)
+      original_package = packages_relation.first
+      duplicate_package_ids = packages_relation.offset(1).pluck(:id)
+      hosts_with_original_package = ::Katello::HostInstalledPackage.where(installed_package_id: original_package.id).pluck(:host_id)
+      if hosts_with_original_package.any?
+        ::Katello::HostInstalledPackage.where(host_id: hosts_with_original_package, installed_package_id: duplicate_package_ids).delete_all
+      end
+      ::Katello::HostInstalledPackage.where(installed_package_id: duplicate_package_ids).update_all(installed_package_id: original_package.id)
+      ::Katello::InstalledPackage.where(id: duplicate_package_ids).delete_all
+    end
+  end
+
   def up
+    fix_installed_package_dupes
+
     if !extension_enabled?('evr')
       return
     else
