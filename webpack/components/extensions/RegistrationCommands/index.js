@@ -7,6 +7,7 @@ import { determineInitialAKSelection } from './helpers';
 import ActivationKeys from './fields/ActivationKeys';
 import IgnoreSubmanErrors from './fields/IgnoreSubmanErrors';
 import Force from './fields/Force';
+import SetupContainerRegistryCerts from './fields/SetupContainerRegistryCerts';
 
 export const RegistrationCommands = ({
   pluginValues,
@@ -22,6 +23,12 @@ export const RegistrationCommands = ({
     />
     <Force
       value={pluginValues?.force}
+      pluginValues={pluginValues}
+      onChange={onChange}
+      isLoading={isLoading}
+    />
+    <SetupContainerRegistryCerts
+      value={pluginValues?.setupContainerRegistryCerts}
       pluginValues={pluginValues}
       onChange={onChange}
       isLoading={isLoading}
