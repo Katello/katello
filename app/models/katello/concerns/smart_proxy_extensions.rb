@@ -234,7 +234,21 @@ module Katello
           update_container_repo_list
           users = container_gateway_users
           update_user_container_repo_mapping(users) if users.any?
+          if content_facets.any?
+            update_container_gateway_hosts
+            update_host_container_repo_mapping(content_facets)
+          end
         end
+      end
+
+      def update_container_gateway_hosts
+        # This method updates the hosts that are registered with the container gateway.
+        hosts = self.content_facets.map do |facet|
+          {
+            uuid: facet.uuid,
+          }
+        end
+        ProxyAPI::ContainerGateway.new(url: self.url).update_hosts({ hosts: hosts })
       end
 
       def update_container_repo_list
@@ -269,6 +283,31 @@ module Katello
           user_repo_map[:users] << { user.login => inner_repo_list }
         end
         ProxyAPI::ContainerGateway.new(url: self.url).user_repository_mapping(user_repo_map)
+      end
+
+      def update_host_container_repo_mapping(content_facets)
+        host_repo_map = { hosts: [] }
+        content_facets.each do |facet|
+          repositories = ::Katello::Repository.readable_docker_catalog(facet.host)
+          host_repo_map[:hosts] << { facet.uuid => build_repo_list(repositories) }
+        end
+        ProxyAPI::ContainerGateway.new(url: self.url).host_repository_mapping(host_repo_map)
+      end
+
+      def update_host_repositories(host)
+        return unless host&.content_facet&.uuid
+        host_repos = { hosts: [] }
+        repositories = ::Katello::Repository.readable_docker_catalog(host)
+        host_repos[:hosts] << { host.content_facet.uuid => build_repo_list(repositories) }
+        ProxyAPI::ContainerGateway.new(url: self.url).update_host_repositories(host_repos)
+      end
+
+      def build_repo_list(repositories)
+        unauthenticated_repositories = unauthenticated_container_repositories
+        repositories.filter_map do |repo|
+          next if repo.container_repository_name.nil? || unauthenticated_repositories.include?(repo.id)
+          { repository: repo.container_repository_name, auth_required: true }
+        end
       end
 
       def unauthenticated_container_repositories
