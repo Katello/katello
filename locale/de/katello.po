@@ -19,19 +19,19 @@
 # Wiederoder <stefanwiederoder@googlemail.com>, 2022
 # Lukas Kallies <github.com@luke-web.de>, 2022
 # Lukáš Zapletal, 2022
-# Markus Bucher <bucher@atix.de>, 2022
-# Bryan Kearney <bryan.kearney@gmail.com>, 2022
-# Crited <Alexander.Stoll@netways.de>, 2022
-# Patrick Dolinic, 2022
 # Ettore Atalan <atalanttore@googlemail.com>, 2023
+# Crited <Alexander.Stoll@netways.de>, 2023
+# pdolinic, 2024
+# Bryan Kearney <bryan.kearney@gmail.com>, 2024
+# Markus Bucher <bucher@atix.de>, 2025
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 2.4.0-RC1\n"
+"Project-Id-Version: katello 4.16.1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
-"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2023\n"
-"Language-Team: German (https://www.transifex.com/foreman/teams/114/de/)\n"
+"Last-Translator: Markus Bucher <bucher@atix.de>, 2025\n"
+"Language-Team: German (https://app.transifex.com/foreman/teams/114/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -531,7 +531,7 @@ msgid "Activation key ID"
 msgstr "Aktivierungsschlüssel-ID"
 
 msgid "Activation key deleted"
-msgstr ""
+msgstr "Aktivierungsschlüssel gelöscht"
 
 msgid "Activation key details"
 msgstr ""
@@ -1502,7 +1502,7 @@ msgid "Components"
 msgstr "Komponenten"
 
 msgid "Composite"
-msgstr "Verbund"
+msgstr ""
 
 msgid "Composite Content View"
 msgstr "Zusammengesetzte Inhaltsansicht"
@@ -2186,7 +2186,7 @@ msgid "Default System SLA"
 msgstr "Standardmäßige SLA des Systems"
 
 msgid "Default content view versions cannot be promoted"
-msgstr "Standardmäßige Inhaltsansichtsversionen können nicht übertragen werden"
+msgstr ""
 
 msgid "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"
 msgstr ""
@@ -2441,7 +2441,7 @@ msgid "Determining settings for ${truncate(name)}"
 msgstr ""
 
 msgid "Digest"
-msgstr ""
+msgstr "Digest"
 
 msgid "Directly setting package lists on composite content views is not allowed. Please update the components, then re-publish the composite."
 msgstr "Das direkte Festlegen von Paketlisten für zusammengesetzte Inhaltsansichten ist nicht zulässig. Bitte aktualisieren Sie die Komponenten und veröffentlichen Sie dann das Composite erneut."
@@ -3183,7 +3183,7 @@ msgid "Host ID"
 msgstr "Host-ID"
 
 msgid "Host Limit"
-msgstr ""
+msgstr "Hostgrenze"
 
 msgid "Host Profile Assume"
 msgstr "Hostprofil annehmen"
@@ -3736,7 +3736,7 @@ msgstr "Installierbar"
 msgid "Installable bugfix/enhancement errata"
 msgstr ""
 
-msgid "Installable errata are applicable errata that are available in the host's content view and lifecycle environment."
+msgid "Installable errata are applicable errata that are available in the host's assigned content view environments."
 msgstr ""
 
 msgid "Installable security errata"
@@ -4007,7 +4007,7 @@ msgid "Last seen"
 msgstr ""
 
 msgid "Last sync"
-msgstr ""
+msgstr "Letzte Synchronisierung"
 
 msgid "Last task"
 msgstr "Letzte Aufgabe"
@@ -4927,7 +4927,7 @@ msgstr ""
 msgid "No packages available to install"
 msgstr ""
 
-msgid "No packages available to install on this host. Please check the host's content view and lifecycle environment."
+msgid "No packages available to install on this host. Please check the host's assigned content view environments."
 msgstr ""
 
 msgid "No packages removed"
@@ -5081,7 +5081,7 @@ msgid "Number to Allocate"
 msgstr "Zuzuweisende Nummer"
 
 msgid "OS"
-msgstr ""
+msgstr "Betriebssystem"
 
 msgid "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host."
 msgstr ""
@@ -6162,7 +6162,7 @@ msgid "Repository '%(repoName)s' has been enabled."
 msgstr "Repository '%(repoName)s' wurde aktiviert."
 
 msgid "Repository ID"
-msgstr ""
+msgstr "Repository-Kennung"
 
 msgid "Repository Id associated with the kickstart repo used for provisioning"
 msgstr "Repository-ID, die mit dem Kickstart-Repository verknüpft ist, das für die Bereitstellung verwendet wird"
@@ -7738,7 +7738,7 @@ msgstr ""
 msgid "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details."
 msgstr ""
 
-msgid "This erratum is not installable because it is not in this host's content view and lifecycle environment."
+msgid "This erratum is not installable because it is not in this host's assigned content view environments."
 msgstr ""
 
 msgid "This host does not have any Module streams."
@@ -7781,9 +7781,6 @@ msgid "This is not a linked repository"
 msgstr "Dies ist kein verlinktes Repository"
 
 msgid "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}."
-msgstr ""
-
-msgid "This repository has pending tasks in associated content views. Please wait for the tasks: "
 msgstr ""
 
 msgid "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use."
@@ -9050,7 +9047,7 @@ msgid "here"
 msgstr ""
 
 msgid "host"
-msgstr ""
+msgstr "Host"
 
 msgid "host collection name to filter by"
 msgstr "Name der Hostsammlung, nach der gefiltert werden soll"
@@ -9113,7 +9110,7 @@ msgid "interpret specified object to return only Repositories that can be associ
 msgstr "interpretiert das angegebene Objekt so, dass nur Repositorys zurückgegeben werden, die dem angegebenen Objekt zugeordnet werden können. Nur 'content_view' und 'content_view_version' werden unterstützt."
 
 msgid "invalid container image name"
-msgstr "Ungültiger Container-Image-Name"
+msgstr ""
 
 msgid "invalid: Repositories can only require one OS version."
 msgstr "ungültig: Repositorys können nur eine Betriebssystemversion erfordern."
