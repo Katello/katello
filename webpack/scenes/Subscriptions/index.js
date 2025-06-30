@@ -1,6 +1,5 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as settingActions from 'foremanReact/components/Settings/SettingsActions';
 import * as foremanModalActions from 'foremanReact/components/ForemanModal/ForemanModalActions';
 import * as subscriptionActions from './SubscriptionActions';
 import * as taskActions from '../Tasks/TaskActions';
@@ -51,7 +50,6 @@ const actions = {
   pingUpstreamSubscriptions,
   ...subscriptionActions,
   ...taskActions,
-  ...settingActions,
   ...tableActions,
   ...manifestActions,
   ...foremanModalActions,
