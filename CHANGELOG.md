@@ -1,3 +1,13 @@
+# 4.16.2 Taliesin (2025-06-30)
+
+## Bug Fixes
+
+### Container
+ * Second container push set manifest size fields to -1, which breaks bootc ([#38488](https://projects.theforeman.org/issues/38488), [b627df79](https://github.com/Katello/katello.git/commit/b627df79739a64df535a5a2cc0329b633d262ea8))
+
+### Other
+ * Satellite 6.17 upgrade fails with ERROR:  duplicate key value violates unique constraint "index_katello_installed_packages_on_nvrea" ([#38504](https://projects.theforeman.org/issues/38504), [89d7c24e](https://github.com/Katello/katello.git/commit/89d7c24e2e3e8caf3510678691815c63dd1c8dbc))
+
 # 4.16.1 Taliesin (2025-04-30)
 
 ### Repositories
