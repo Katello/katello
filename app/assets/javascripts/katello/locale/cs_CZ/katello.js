@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.16.0.pre.master",
+        "Project-Id-Version": "katello 4.16.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Pavel Borecki <pavel.borecki@gmail.com>, 2024",
@@ -2155,7 +2155,7 @@
         ""
       ],
       "Default content view versions cannot be promoted": [
-        "Výchozí verzi pohledu na obsah není možné povýšit"
+        ""
       ],
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
@@ -3699,7 +3699,7 @@
       "Installable bugfix/enhancement errata": [
         ""
       ],
-      "Installable errata are applicable errata that are available in the host's content view and lifecycle environment.": [
+      "Installable errata are applicable errata that are available in the host's assigned content view environments.": [
         ""
       ],
       "Installable security errata": [
@@ -4878,7 +4878,7 @@
       "No packages available to install": [
         ""
       ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+      "No packages available to install on this host. Please check the host's assigned content view environments.": [
         ""
       ],
       "No packages removed": [
@@ -7677,7 +7677,7 @@
       "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
-      "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
+      "This erratum is not installable because it is not in this host's assigned content view environments.": [
         ""
       ],
       "This host does not have any Module streams.": [
@@ -7720,9 +7720,6 @@
         "Toto není připojený repozitář"
       ],
       "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        ""
-      ],
-      "This repository has pending tasks in associated content views. Please wait for the tasks: ": [
         ""
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
@@ -9052,7 +9049,7 @@
         ""
       ],
       "invalid container image name": [
-        "neplatný název obrazu kontejneru"
+        ""
       ],
       "invalid: Repositories can only require one OS version.": [
         ""

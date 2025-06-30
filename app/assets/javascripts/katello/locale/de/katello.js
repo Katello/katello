@@ -3,11 +3,11 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 2.4.0-RC1",
+        "Project-Id-Version": "katello 4.16.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ettore Atalan <atalanttore@googlemail.com>, 2023",
-        "Language-Team": "German (https://www.transifex.com/foreman/teams/114/de/)",
+        "Last-Translator": "Markus Bucher <bucher@atix.de>, 2025",
+        "Language-Team": "German (https://app.transifex.com/foreman/teams/114/de/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
@@ -505,7 +505,7 @@
         "Aktivierungsschlüssel-ID"
       ],
       "Activation key deleted": [
-        ""
+        "Aktivierungsschlüssel gelöscht"
       ],
       "Activation key details": [
         ""
@@ -1469,7 +1469,7 @@
         "Komponenten"
       ],
       "Composite": [
-        "Verbund"
+        ""
       ],
       "Composite Content View": [
         "Zusammengesetzte Inhaltsansicht"
@@ -2153,7 +2153,7 @@
         "Standardmäßige SLA des Systems"
       ],
       "Default content view versions cannot be promoted": [
-        "Standardmäßige Inhaltsansichtsversionen können nicht übertragen werden"
+        ""
       ],
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
@@ -2408,7 +2408,7 @@
         ""
       ],
       "Digest": [
-        ""
+        "Digest"
       ],
       "Directly setting package lists on composite content views is not allowed. Please update the components, then re-publish the composite.": [
         "Das direkte Festlegen von Paketlisten für zusammengesetzte Inhaltsansichten ist nicht zulässig. Bitte aktualisieren Sie die Komponenten und veröffentlichen Sie dann das Composite erneut."
@@ -3146,7 +3146,7 @@
         "Host-ID"
       ],
       "Host Limit": [
-        ""
+        "Hostgrenze"
       ],
       "Host Profile Assume": [
         "Hostprofil annehmen"
@@ -3697,7 +3697,7 @@
       "Installable bugfix/enhancement errata": [
         ""
       ],
-      "Installable errata are applicable errata that are available in the host's content view and lifecycle environment.": [
+      "Installable errata are applicable errata that are available in the host's assigned content view environments.": [
         ""
       ],
       "Installable security errata": [
@@ -3968,7 +3968,7 @@
         ""
       ],
       "Last sync": [
-        ""
+        "Letzte Synchronisierung"
       ],
       "Last task": [
         "Letzte Aufgabe"
@@ -4876,7 +4876,7 @@
       "No packages available to install": [
         ""
       ],
-      "No packages available to install on this host. Please check the host's content view and lifecycle environment.": [
+      "No packages available to install on this host. Please check the host's assigned content view environments.": [
         ""
       ],
       "No packages removed": [
@@ -5030,7 +5030,7 @@
         "Zuzuweisende Nummer"
       ],
       "OS": [
-        ""
+        "Betriebssystem"
       ],
       "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.": [
         ""
@@ -6107,7 +6107,7 @@
         "Repository '%(repoName)s' wurde aktiviert."
       ],
       "Repository ID": [
-        ""
+        "Repository-Kennung"
       ],
       "Repository Id associated with the kickstart repo used for provisioning": [
         "Repository-ID, die mit dem Kickstart-Repository verknüpft ist, das für die Bereitstellung verwendet wird"
@@ -7675,7 +7675,7 @@
       "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
         ""
       ],
-      "This erratum is not installable because it is not in this host's content view and lifecycle environment.": [
+      "This erratum is not installable because it is not in this host's assigned content view environments.": [
         ""
       ],
       "This host does not have any Module streams.": [
@@ -7718,9 +7718,6 @@
         "Dies ist kein verlinktes Repository"
       ],
       "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        ""
-      ],
-      "This repository has pending tasks in associated content views. Please wait for the tasks: ": [
         ""
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
@@ -8987,7 +8984,7 @@
         ""
       ],
       "host": [
-        ""
+        "Host"
       ],
       "host collection name to filter by": [
         "Name der Hostsammlung, nach der gefiltert werden soll"
@@ -9050,7 +9047,7 @@
         "interpretiert das angegebene Objekt so, dass nur Repositorys zurückgegeben werden, die dem angegebenen Objekt zugeordnet werden können. Nur 'content_view' und 'content_view_version' werden unterstützt."
       ],
       "invalid container image name": [
-        "Ungültiger Container-Image-Name"
+        ""
       ],
       "invalid: Repositories can only require one OS version.": [
         "ungültig: Repositorys können nur eine Betriebssystemversion erfordern."
