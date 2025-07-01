@@ -7,9 +7,7 @@ module Katello
       generic_repo_wrap_params << option.name
     end
 
-    repo_wrap_params = RootRepository.attribute_names + generic_repo_wrap_params
-
-    wrap_parameters :repository, :include => repo_wrap_params
+    wrap_parameters RootRepository, name: :repository, :include => generic_repo_wrap_params
 
     CONTENT_CREDENTIAL_GPG_KEY_TYPE = "gpg_key".freeze
     CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE = "ssl_ca_cert".freeze
@@ -493,7 +491,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
     param :async, :bool, desc: N_("Do not wait for the ImportUpload action to finish. Default: false")
     param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
-    param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')")
+    param :content_type, :callable_enum, of: -> { RepositoryTypeManager.uploadable_content_types(false).map(&:label) }, :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')")
     param :uploads, Array, :desc => N_("Array of uploads to import") do
       param 'id', String, :required => true
       param 'content_unit_id', String
@@ -501,12 +499,6 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       param 'checksum', String
       param 'name', String, :desc => N_("Needs to only be set for file repositories or docker tags"), :required => true
       param 'digest', String, :desc => N_("Needs to only be set for docker tags")
-    end
-    Katello::RepositoryTypeManager.generic_repository_types.each_pair do |_, repo_type|
-      repo_type.import_attributes.each do |import_attribute|
-        param import_attribute.api_param, import_attribute.type,
-            :desc => N_(import_attribute.description)
-      end
     end
     def import_uploads
       generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
