@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -25,7 +26,7 @@ export const dropdownOptions = [
   __('via customized remote execution'),
 ];
 
-export const BulkPackagesReview = () => {
+export const BulkPackagesReview = ({ warningBanner }) => {
   const { goToStepById } = useWizardContext();
   const {
     selectedAction,
@@ -127,6 +128,7 @@ export const BulkPackagesReview = () => {
           />
         </Text>
       </TextContent>
+      {(warningBanner)}
       <div style={{ width: '70%', maxHeight: '50%', marginBottom: '2rem' }}>
         <TreeView
           data={treeViewData}
@@ -177,6 +179,14 @@ export const BulkPackagesReview = () => {
       </Flex>
     </>
   );
+};
+
+BulkPackagesReview.propTypes = {
+  warningBanner: PropTypes.element,
+};
+
+BulkPackagesReview.defaultProps = {
+  warningBanner: <></>,
 };
 
 export default BulkPackagesReview;
