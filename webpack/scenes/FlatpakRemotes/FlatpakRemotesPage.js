@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector } from 'react-redux';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
@@ -9,15 +10,17 @@ import {
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import EmptyPage from 'foremanReact/routes/common/EmptyPage';
 import Pagination from 'foremanReact/components/Pagination';
-import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
 import { truncate } from '../../utils/helpers';
+import CreateFlatpakModal from './CreateEdit/CreateFlatpakRemoteModal';
 
 const FlatpakRemotesPage = () => {
   const response = useSelector(selectFlatpakRemotes);
   const error = useSelector(selectFlatpakRemotesError);
   const status = useSelector(selectFlatpakRemotesStatus);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   const {
     results = [], subtotal, page, per_page: perPage,
@@ -48,7 +51,7 @@ const FlatpakRemotesPage = () => {
 
   const actionsWithPermissions = () => [
     { title: __('Scan'), isDisabled: true },
-    { title: __('Edit'), isDisabled: true },
+    { title: __('Edit'), isDisabled: false, onClick: () => { setEditModalOpen(!isEditModalOpen); } },
     { title: __('Delete'), isDisabled: true },
   ];
 
@@ -81,13 +84,15 @@ const FlatpakRemotesPage = () => {
       ...newPagination,
     });
   };
+  const openCreateModal = () => setIsModalOpen(true);
 
   return (
     <TableIndexPage
       apiUrl={apiUrl}
       apiOptions={apiOptions}
       header={__('Flatpak Remotes')}
-      creatable={false}
+      creatable
+      customCreateAction={() => openCreateModal}
       controller="/katello/api/v2/flatpak_remotes"
     >
       <>
@@ -147,6 +152,10 @@ const FlatpakRemotesPage = () => {
             updateParamsByUrl
           />
         )}
+        <CreateFlatpakModal
+          show={isModalOpen}
+          setIsOpen={setIsModalOpen}
+        />
       </>
     </TableIndexPage>
   );
