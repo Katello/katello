@@ -1,3 +1,10 @@
 const FLATPAK_REMOTES_KEY = 'FLATPAK_REMOTES';
 
+export const UPDATE_FLATPAK_REMOTE = 'UPDATE_FLATPAK_REMOTE';
+export const UPDATE_FLATPAK_REMOTE_SUCCESS = 'UPDATE_FLATPAK_REMOTE_SUCCESS';
+export const UPDATE_FLATPAK_REMOTE_FAILURE = 'UPDATE_FLATPAK_REMOTE_FAILURE';
+
+export const flatpakRemoteDetailsKey = id => `${FLATPAK_REMOTES_KEY}/DETAILS/${id}`;
+export const flatpakRemoteRepositoriesKey = id => `${FLATPAK_REMOTES_KEY}/REPOSITORIES/${id}`;
+
 export default FLATPAK_REMOTES_KEY;
