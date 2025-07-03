@@ -2,6 +2,8 @@ module Actions
   module Katello
     module ContentView
       class AddRollingRepoClone < Actions::EntryAction
+        include Helpers::SmartProxySyncHelper
+
         def plan(content_view, repository_ids)
           library = content_view.organization.library
           clone_ids = []
@@ -27,10 +29,8 @@ module Actions
         end
 
         def run
-          if Setting[:foreman_proxy_content_auto_sync]
-            ::Katello::Repository.where(id: input[:repository_ids]).each do |repo|
-              ForemanTasks.async_task(::Actions::Katello::Repository::CapsuleSync, repo)
-            end
+          ::Katello::Repository.where(id: input[:repository_ids]).each do |repository|
+            schedule_async_repository_proxy_sync(repository)
           end
         end
       end

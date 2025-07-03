@@ -7,6 +7,7 @@ module Actions
     module Repository
       class UploadFiles < Actions::EntryAction
         include Helpers::RollingCVRepos
+        include Helpers::SmartProxySyncHelper
 
         def plan(repository, files, content_type = nil, options = {})
           action_subject(repository)
@@ -52,7 +53,7 @@ module Actions
 
         def run
           repository = ::Katello::Repository.find(input[:repository][:id])
-          ForemanTasks.async_task(Repository::CapsuleSync, repository) if Setting[:foreman_proxy_content_auto_sync]
+          schedule_async_repository_proxy_sync(repository)
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
