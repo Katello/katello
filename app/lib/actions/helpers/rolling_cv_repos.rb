@@ -20,6 +20,12 @@ module Actions
           ForemanTasks.async_task(::Actions::Katello::ContentView::RefreshRollingRepo, rolling_repo, contents_changed)
         end
       end
+
+      def schedule_async_repository_proxy_sync(repository)
+        if SmartProxy.unscoped.pulpcore_proxies_with_environment(repository.environment).exists?
+          ForemanTasks.async_task(::Actions::Katello::Repository::CapsuleSync, repository)
+        end
+      end
     end
   end
 end
