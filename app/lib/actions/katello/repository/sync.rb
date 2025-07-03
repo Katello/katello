@@ -6,6 +6,7 @@ module Actions
         extend ApipieDSL::Class
         include Helpers::Presenter
         include Helpers::RollingCVRepos
+        include Helpers::SmartProxySyncHelper
         include ::Actions::ObservableAction
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
@@ -72,7 +73,7 @@ module Actions
             update_rolling_content_views_async(repo, input[:contents_changed])
           end
           repo.clear_smart_proxy_sync_histories if input[:contents_changed]
-          ForemanTasks.async_task(Repository::CapsuleSync, repo) if Setting[:foreman_proxy_content_auto_sync]
+          schedule_async_repository_proxy_sync(repo)
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
