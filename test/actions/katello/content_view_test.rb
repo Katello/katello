@@ -313,6 +313,9 @@ module ::Actions::Katello::ContentView
       Katello::Repository.any_instance.expects(:clear_smart_proxy_sync_histories)
       ForemanTasks.expects(:async_task).with(::Actions::Katello::ContentView::RefreshRollingRepo,
                                             clone_rpm, true)
+      mocked_query = mock
+      mocked_query.stubs(:exists?).returns(true)
+      SmartProxy.expects(:pulpcore_proxies_with_environment).with(clone_rpm.environment).returns(mocked_query)
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Repository::CapsuleSync, clone_rpm)
       action.finalize
     end
