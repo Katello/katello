@@ -4,6 +4,7 @@ module Actions
     module Repository
       class ImportUpload < Actions::EntryAction
         include Helpers::RollingCVRepos
+        include Helpers::SmartProxySyncHelper
 
         # rubocop:disable Metrics/MethodLength
         def plan(repository, uploads, options = {})
@@ -63,9 +64,7 @@ module Actions
 
         def run
           repository = ::Katello::Repository.find(input[:repository_id])
-          if input[:sync_capsule] && (Setting[:foreman_proxy_content_auto_sync])
-            ForemanTasks.async_task(Katello::Repository::CapsuleSync, repository)
-          end
+          schedule_async_repository_proxy_sync(repository) if input[:sync_capsule]
           output[:upload_results] = results_to_json(input[:upload_results])
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
