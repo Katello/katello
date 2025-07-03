@@ -1,5 +1,4 @@
 import { testReducerSnapshotWithFixtures } from 'react-redux-test-utils';
-import { GET_SETTING_SUCCESS } from 'foremanReact/components/Settings/SettingsConstants';
 
 import {
   SUBSCRIPTIONS_REQUEST,
@@ -34,8 +33,6 @@ import {
   UPLOAD_MANIFEST_SUCCESS,
   REFRESH_MANIFEST_SUCCESS,
 } from '../Manifest/ManifestConstants';
-
-jest.mock('foremanReact/components/Settings/SettingsConstants');
 
 const mockTask = {
   id: '12345',
@@ -181,24 +178,6 @@ const fixtures = {
   'should handle SUBSCRIPTIONS_ENABLE_DELETE_BUTTON': {
     action: {
       type: SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
-    },
-  },
-  'should handle GET_SETTING_SUCCESS with content_disconnected response': {
-    action: {
-      type: GET_SETTING_SUCCESS,
-      response: {
-        name: 'content_disconnected',
-        value: 'some-value',
-      },
-    },
-  },
-  'should handle GET_SETTING_SUCCESS without content_disconnected response': {
-    action: {
-      type: GET_SETTING_SUCCESS,
-      response: {
-        name: 'some-name',
-        value: 'some-value',
-      },
     },
   },
   'should handle SUBSCRIPTIONS_RESET_TASKS': {
