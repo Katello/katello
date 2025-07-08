@@ -42,7 +42,7 @@ module Katello
 
     def self.for_content_facets(content_facets)
       joins(:content_facets).
-        where("#{Katello::ContentViewEnvironmentContentFacet.table_name}.content_facet_id" => content_facets)
+        where("#{Katello::ContentViewEnvironmentContentFacet.table_name}.content_facet_id" => content_facets).distinct
     end
 
     def self.with_label_and_org(label, organization: Organization.current)
