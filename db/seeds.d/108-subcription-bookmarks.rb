@@ -8,6 +8,8 @@ User.as_anonymous_admin do
   Bookmark.without_auditing do
     bookmarks = [
       {:name => "list hypervisors", :query => 'hypervisor = true', :controller => "hosts"},
+      {:name => "Registered hosts", :query => 'set? subscription_uuid', :controller => "hosts"},
+      {:name => "Unregistered hosts", :query => 'null? subscription_uuid', :controller => "hosts"},
       {:name => "future", :query => 'starts > Today', :controller => "katello_subscriptions"},
       {:name => "expiring soon", :query => 'expires 30 days from now', :controller => "katello_subscriptions"},
     ]
