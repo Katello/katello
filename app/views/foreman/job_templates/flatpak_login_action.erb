@@ -9,21 +9,35 @@ template_inputs:
   description: URL of container registry
   input_type: user
   required: true
+- name: Set up certificate authentication
+  description: Set up certificate authentication for the registry. You can ignore username/password if using certificate authentication.
+  input_type: user
+  required: false
+  options: "true\r\nfalse"
+  advanced: false
+  value_type: plain
+  default: 'false'
 - name: Username
   description: Username for container registry login
   input_type: user
-  required: true
+  required: false
 - name: Password
   description: Password/Access token for container registry login
   input_type: user
-  required: true
+  required: false
   hidden_value: true
 %>
 
 <%
   server_url = input('Flatpak registry URL')
+  setup_cert_auth = input('Set up certificate authentication')
   username = input('Username')
   password = input('Password')
 %>
 
-echo <%= shell_escape(password) %> | sudo podman login <%= server_url %> --username <%= username %> --password-stdin --authfile /etc/flatpak/oci-auth.json
+<% if truthy?(setup_cert_auth) -%>
+  <% server_hostname = server_url.gsub(/https?:\/\//, '').split('/').first %>
+  <%= snippet('container_certs_setup', variables: { registration_host: server_hostname }) -%>
+<% else -%>
+  echo <%= shell_escape(password) %> | sudo podman login <%= server_url %> --username <%= username %> --password-stdin --authfile /etc/flatpak/oci-auth.json
+<% end -%>
