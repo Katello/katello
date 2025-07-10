@@ -117,7 +117,7 @@ class HostsControllerTest < ActionController::TestCase
       delete :destroy, params: { :id => host.name }
       assert_nil flash[:error]
       assert_not_nil flash[:success]
-      assert_redirected_to hosts_url
+      assert_redirected_to new_hosts_index_page_url
     end
 
     test 'shows an error when host can not be destroyed' do
