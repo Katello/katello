@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector } from 'react-redux';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
@@ -9,15 +10,16 @@ import {
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import EmptyPage from 'foremanReact/routes/common/EmptyPage';
 import Pagination from 'foremanReact/components/Pagination';
-import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
 import { truncate } from '../../utils/helpers';
+import CreateFlatpakModal from './Create/CreateFlatpakRemoteModal';
 
 const FlatpakRemotesPage = () => {
   const response = useSelector(selectFlatpakRemotes);
   const error = useSelector(selectFlatpakRemotesError);
   const status = useSelector(selectFlatpakRemotesStatus);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     results = [], subtotal, page, per_page: perPage,
@@ -87,7 +89,8 @@ const FlatpakRemotesPage = () => {
       apiUrl={apiUrl}
       apiOptions={apiOptions}
       header={__('Flatpak Remotes')}
-      creatable={false}
+      creatable
+      customCreateAction={() => { setIsModalOpen(!isModalOpen); }}
       controller="/katello/api/v2/flatpak_remotes"
     >
       <>
@@ -147,6 +150,10 @@ const FlatpakRemotesPage = () => {
             updateParamsByUrl
           />
         )}
+        <CreateFlatpakModal
+          show={isModalOpen}
+          setIsOpen={setIsModalOpen}
+        />
       </>
     </TableIndexPage>
   );
