@@ -16,7 +16,7 @@ import {
   selectIsTaskPending,
   selectHasUpstreamConnection,
 } from './SubscriptionsSelectors';
-import { selectTableSettings } from '../../scenes/Settings/SettingsSelectors';
+import selectTableSettings from '../../scenes/Settings/SettingsSelectors';
 import { selectIsPollingTask } from '../Tasks/TaskSelectors';
 import { selectOrganizationState, selectIsManifestImported } from '../Organizations/OrganizationSelectors';
 import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
