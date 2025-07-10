@@ -1,0 +1,24 @@
+_fixture:
+  model_class: Katello::ContentViewDebFilterRule
+
+deb_test_package:
+  name:                    debpkg
+  version:                 1.0
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_deb_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>
+
+deb_arch_rule:
+  name:                    archpkg
+  architecture:            amd64
+  min_version:             1.0
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_deb_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>
+
+deb_other_filter_rule:
+  name:                    otherpkg
+  version:                 2.0
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:another_deb_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>

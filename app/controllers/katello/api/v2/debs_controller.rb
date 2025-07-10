@@ -13,15 +13,15 @@ module Katello
     def auto_complete(search)
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
       debs = Deb.in_repositories(@repositories)
-      col = ''
-      case search
-      when 'name'
-        col = "#{Deb.table_name}.name"
-      when 'arch'
-        col = "#{Deb.table_name}.architecture"
-      end
-      debs = debs.where("#{col} ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
-      render :json => debs.pluck(col)
+      col = case search
+            when 'name' then "#{Deb.table_name}.name"
+            when 'arch' then "#{Deb.table_name}.architecture"
+            end
+      return render json: [] if col.blank?
+
+      scope = debs.select(col).group(col).order(col).limit(page_size)
+      scope = scope.where("#{col} ILIKE ?", "%#{params[:term]}%") if params[:term].present?
+      render json: scope.pluck(Arel.sql(col))
     end
 
     def auto_complete_name
@@ -29,7 +29,7 @@ module Katello
     end
 
     def auto_complete_arch
-      auto_complete('architecture')
+      auto_complete('arch')
     end
 
     api :GET, "/debs", N_("List deb packages")
