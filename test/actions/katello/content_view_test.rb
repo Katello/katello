@@ -142,6 +142,36 @@ module ::Actions::Katello::ContentView
       end
     end
 
+    it 'handles content import for syncable repositories' do
+      content_view = Katello::ContentView.create!(name: "Test View", label: "test_view", organization: Organization.first)
+      version = Katello::ContentViewVersion.create!(content_view: content_view, major: 1, minor: 0)
+      separated_repo_map = { pulp3_deb_multicopy: {}, pulp3_yum_multicopy: {}, other: {} }
+      options = {
+        importing: false,
+        syncable: true,
+        path: "path",
+        metadata: "metadata",
+        skip_promotion: true,
+      }
+
+      action.stubs(:task).returns(success_task)
+      action.stubs(:version_for_publish).returns(version)
+      action.stubs(:include_other_components).returns(nil)
+      action.stubs(:separated_repo_mapping).returns(separated_repo_map)
+      action.stubs(:plan_self)
+      action.stubs(:find_environments).returns([])
+      action.stubs(:auto_publish_composite_ids).returns([])
+      action.stubs(:repos_to_delete).returns([])
+      ::Katello::ContentViewHistory.stubs(:create!).returns(mock('history', id: 99))
+      content_view.stubs(:publish_repositories).yields([])
+
+      action.expects(:handle_importing_content).never
+
+      plan_action action, content_view, nil, options
+      assert_action_planned_with action, ::Actions::Pulp3::ContentViewVersion::CreateImportHistory, content_view_version_id: version.id,
+        path: "path", metadata: "metadata", content_view_name: "Test View"
+    end
+
     context 'run phase' do
       it 'creates auto-publish events for non-composite views' do
         composite_view = katello_content_views(:composite_view)
