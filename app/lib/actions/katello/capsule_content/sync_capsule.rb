@@ -2,7 +2,6 @@ module Actions
   module Katello
     module CapsuleContent
       class SyncCapsule < ::Actions::EntryAction
-        include Helpers::RollingCVRepos
         # rubocop:disable Metrics/MethodLength
         execution_plan_hooks.use :update_content_counts, :on => :success
         def plan(smart_proxy, options = {})
@@ -59,11 +58,7 @@ module Actions
           smart_proxy_helper.lifecycle_environment_check(environment, repository)
           if repository
             if skip_metatadata_check || !repository.smart_proxy_sync_histories.where(:smart_proxy_id => smart_proxy).any? { |sph| !sph.finished_at.nil? }
-              if repository.library_instance?
-                [repository] + find_related_rolling_repos(repository)
-              else
-                [repository]
-              end
+              [repository]
             end
           else
             repositories = smart_proxy_helper.repositories_available_to_capsule(environment, content_view).by_rpm_count

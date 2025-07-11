@@ -2,7 +2,7 @@ module Actions
   module Helpers
     module RollingCVRepos
       def find_related_rolling_repos(repo)
-        repo.root.repositories.in_environment(repo.environment).where(
+        repo.root.repositories.where(
           content_view_version: ::Katello::ContentViewVersion.where(content_view: ::Katello::ContentView.rolling)
         )
       end
@@ -18,6 +18,12 @@ module Actions
       def update_rolling_content_views_async(repo, contents_changed)
         find_related_rolling_repos(repo).each do |rolling_repo|
           ForemanTasks.async_task(::Actions::Katello::ContentView::RefreshRollingRepo, rolling_repo, contents_changed)
+        end
+      end
+
+      def schedule_async_repository_proxy_sync(repository)
+        if SmartProxy.unscoped.pulpcore_proxies_with_environment(repository.environment).exists?
+          ForemanTasks.async_task(::Actions::Katello::Repository::CapsuleSync, repository)
         end
       end
     end
