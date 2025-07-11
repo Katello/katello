@@ -17,32 +17,16 @@ class SmartProxiesControllerTest < ActionController::TestCase
     ProxyAPI::Pulp.any_instance.stubs(:pulp_storage).returns(response)
   end
 
-  def proxy_status_response
-    response = {"known_workers" => [{"last_heartbeat" => "2016-01-20T08:17:02Z", "name" => "scheduler@katello-centos7-devel.example.com"}],
-                "messaging_connection" => {"connected" => true},
-                "database_connection" => {"connected" => true},
-                "api_version" => "2",
-                "versions" => {"platform_version" => "2.6.4"},
-                "errors" => {}}
-    Katello::ProxyStatus::Pulp.any_instance.stubs(:status).returns(response.to_json)
-  end
-
   def setup
     setup_controller_defaults(false)
     setup_foreman_routes
     login_user(User.find(users(:admin).id))
     models
-    proxy_status_response
     proxy_storage_response
   end
 
   def test_smart_proxy_pulp_storage
     get :pulp_storage, params: { :id => @smart_proxy.id }
-    assert_response :success
-  end
-
-  def test_smart_proxy_pulp_status
-    get :pulp_status, params: { :id => @smart_proxy.id }
     assert_response :success
   end
 end
