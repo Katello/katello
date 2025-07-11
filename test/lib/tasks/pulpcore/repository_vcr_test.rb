@@ -21,7 +21,7 @@ module Katello
 
         @primary = SmartProxy.pulp_primary
         @library_repo = katello_repositories(:fedora_17_x86_64_duplicate)
-        @library_repo.root.update(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+        @library_repo.root.update(:url => 'https://fixtures.pulpproject.org/rpm-no-comps/')
         @backend_service = ::Katello::Pulp3::Repository::Yum.new(@library_repo, @primary)
 
         ENV['COMMIT'] = nil
