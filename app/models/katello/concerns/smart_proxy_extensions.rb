@@ -650,14 +650,13 @@ module Katello
       end
 
       def rhsm_url
-        # Since Foreman 3.1 this setting is set
-        if (rhsm_url = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url'))
-          URI(rhsm_url)
-          # Compatibility fall back
-        elsif pulp_primary?
-          URI("https://#{URI.parse(url).host}/rhsm")
-        elsif pulp_mirror?
-          URI("https://#{URI.parse(url).host}:8443/rhsm")
+        if (rhsm_url_setting = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url').presence)
+          URI(rhsm_url_setting)
+        else
+          # TODO: get this from routes
+          uri = URI.parse(Setting[:foreman_url])
+          uri.path = '/rhsm'
+          uri
         end
       end
 
