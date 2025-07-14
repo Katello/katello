@@ -165,6 +165,8 @@ class KatelloRecreateEvrConstructs < ActiveRecord::Migration[6.1]
                                                          rpmver_array(coalesce(release,'empty'))::evr_array_item[])::evr_t);
       SQL
 
+      add_index :katello_rpms, [:name, :arch, :evr]
+
       create_trigger :evr_insert_trigger_katello_rpms, on: :katello_rpms
       create_trigger :evr_update_trigger_katello_rpms, on: :katello_rpms
       create_trigger :evr_insert_trigger_katello_installed_packages, on: :katello_installed_packages
