@@ -331,6 +331,7 @@ Katello::Engine.routes.draw do
           end
           collection do
             get :auto_complete_search
+            get :auto_complete_name
           end
           api_resources :repository_sets, :only => [:index, :show] do
             get :auto_complete_search, :on => :collection

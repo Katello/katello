@@ -52,7 +52,9 @@ module Katello
 
     api :POST, "/flatpak_remote_repositories/:id/mirror", N_("Mirror a flatpak remote repository")
     param :id, :number, :desc => N_("Flatpak remote repository numeric identifier"), :required => true
-    param :product_id, :number, :desc => N_("Product ID to mirror the remote repository to"), :required => true
+    param :product_id, :number, :desc => N_("Product ID to mirror the remote repository to")
+    param :product_name, String, :desc => N_("Name of the product to mirror the remote repository to")
+    param :organization_id, :number, :desc => N_("organization identifier")
     def mirror
       task = async_task(::Actions::Katello::Flatpak::MirrorRemoteRepository, @flatpak_remote_repository, @product)
       respond_for_async :resource => task
@@ -73,8 +75,17 @@ module Katello
     end
 
     def find_product
-      @product = Product.editable.find(params[:product_id])
-      throw_resource_not_found(name: 'product', id: params[:product_id]) unless @product
+      if params[:product_id]
+        @product = Product.editable.find(params[:product_id])
+        throw_resource_not_found(name: 'product', id: params[:product_id]) unless @product
+      elsif params[:product_name] && params[:organization_id]
+        @product = Product.editable.find_by(name: params[:product_name], organization_id: params[:organization_id])
+        unless @product
+          msg = _("Could not find product with name '%{name}' in organization id %{org_id}.") %
+                  { name: params[:product_name], org_id: params[:organization_id] }
+          fail HttpErrors::NotFound, msg
+        end
+      end
       @product
     end
 

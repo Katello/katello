@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
 import { Button } from '@patternfly/react-core';
@@ -14,8 +14,11 @@ import {
 } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
 import LastSync from '../../../ContentViews/Details/Repositories/LastSync';
 import { flatpakRemoteRepositoriesKey } from '../../FlatpakRemotesConstants';
+import MirrorRepositoryModal from '../Mirror/MirrorRepositoryModal';
 
 const RemoteRepositoriesTable = ({ frId }) => {
+  const [selectedRepo, setSelectedRepo] = useState(null);
+
   const columnHeaders = [__('Name'), __('ID'), __('Last mirrored'), __('Mirror')];
 
   const COLUMNS_TO_SORT_PARAMS = {
@@ -62,6 +65,14 @@ const RemoteRepositoriesTable = ({ frId }) => {
 
   const onPaginationChange = (newPagination) => {
     setParamsAndAPI({ ...params, ...newPagination });
+  };
+
+  const openMirrorModal = (repo) => {
+    setSelectedRepo(repo);
+  };
+
+  const closeMirrorModal = () => {
+    setSelectedRepo(null);
   };
 
   return (
@@ -115,6 +126,7 @@ const RemoteRepositoriesTable = ({ frId }) => {
                       variant="link"
                       isInline
                       ouiaId={`mirror-button-${repo.id}`}
+                      onClick={() => openMirrorModal(repo)}
                     >
                       {__('Mirror')}
                     </Button>
@@ -133,6 +145,14 @@ const RemoteRepositoriesTable = ({ frId }) => {
             itemCount={subtotal}
             onChange={onPaginationChange}
             updateParamsByUrl
+          />
+        )}
+
+        {selectedRepo && (
+          <MirrorRepositoryModal
+            frId={frId}
+            repo={selectedRepo}
+            closeModal={closeMirrorModal}
           />
         )}
       </>

@@ -128,6 +128,24 @@ module Katello
       respond_for_async(:resource => task)
     end
 
+    def auto_complete_name
+      page_size = params[:per_page].to_i.positive? ? params[:per_page].to_i : Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
+
+      query = Product.readable
+                    .where(organization_id: params.require(:organization_id))
+                    .enabled
+
+      query = query.custom if Foreman::Cast.to_bool(params[:custom])
+
+      product_names = query
+                        .where("#{Product.table_name}.name ILIKE ?", "#{params[:term]}%")
+                        .order("#{Product.table_name}.name")
+                        .limit(page_size)
+                        .pluck(:name)
+
+      render json: product_names
+    end
+
     protected
 
     def find_product(options = {})
