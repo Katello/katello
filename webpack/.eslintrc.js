@@ -1,8 +1,6 @@
 const path = require('path');
 const { foremanLocation, foremanRelativePath } = require('@theforeman/find-foreman');
 const foremanFull = foremanLocation();
-const foremanVendorRelative = './node_modules/@theforeman/vendor-core/';
-const foremanVendorDir = foremanRelativePath(foremanVendorRelative);
 
 module.exports = {
   env: {
@@ -39,7 +37,7 @@ module.exports = {
       "error",
       {
         // Need to check Katello, Foreman, and Foreman's meta package for dependencies
-        "packageDir": [path.join(__dirname, '../../katello'), foremanFull, foremanVendorDir]
+        "packageDir": [path.join(__dirname, '../../katello'), foremanFull]
       }
     ],
     'jsx-a11y/anchor-is-valid': [
