@@ -24,7 +24,6 @@ module.exports = {
   ],
   moduleDirectories: [
     `${foremanFull}/node_modules`,
-    `${foremanFull}/node_modules/@theforeman/vendor-core/node_modules`,
     'node_modules',
     'webpack/test-utils',
   ],
