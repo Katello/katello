@@ -198,5 +198,7 @@ module Katello
         end
       end
     end
+
+    load 'katello/repository_types.rb'
   end
 end

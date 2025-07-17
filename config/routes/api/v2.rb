@@ -311,7 +311,6 @@ Katello::Engine.routes.draw do
           end
         end
 
-        load 'katello/repository_types.rb' if Katello::RepositoryTypeManager.defined_repository_types.empty?
         Katello::RepositoryTypeManager.generic_content_types(false).each do |type|
           api_resources type.pluralize.to_sym, :only => [:index, :show], :controller => 'generic_content_units', :content_type => type do
             collection do

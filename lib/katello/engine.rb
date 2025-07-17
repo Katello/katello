@@ -220,7 +220,6 @@ module Katello
 
       ::RemoteExecutionProxySelector.prepend Katello::Concerns::RemoteExecutionProxySelectorExtensions
 
-      load 'katello/repository_types.rb'
       load 'katello/scheduled_jobs.rb'
 
       Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
