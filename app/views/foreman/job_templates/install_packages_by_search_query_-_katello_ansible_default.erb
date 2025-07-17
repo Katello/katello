@@ -19,23 +19,15 @@ template_inputs:
 - hosts: all
   tasks:
 <%= indent(4) { snippet('check_bootc_status') } %>
-    - name: Enable bootc overlay
-      shell:
-        cmd: 'bootc usr-overlay'
-      register: out
-      ignore_errors: true
-      when: is_bootc_host
-    - debug: var=out
-    - name: Install packages via dnf for image mode machines
-      package:
-        use: 'dnf'
 <% if package_names.empty? -%>
-        name: []
-<% else -%>
-        name: <%= indent(10) { to_yaml(package_names).gsub(/---/, "") } -%>
-        state: present
-<% end -%>
+    - name: Install all packages transiently for image mode machines
+      shell: "dnf --transient install -y '*'"
       when: is_bootc_host
+<% else -%>
+    - name: Install packages transiently for image mode machines
+      shell: "dnf --transient install -y <%= package_names.join(' ') %>"
+      when: is_bootc_host
+<% end -%>
     - name: Install packages normally
       package:
 <% if package_names.empty? -%>
