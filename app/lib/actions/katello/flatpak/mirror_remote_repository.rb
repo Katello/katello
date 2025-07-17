@@ -3,6 +3,7 @@ module Actions
     module Flatpak
       class MirrorRemoteRepository < Actions::EntryAction
         def plan(remote_repository, product)
+          action_subject(remote_repository)
           repo_params = {
             name: remote_repository.name,
             label: remote_repository.label,

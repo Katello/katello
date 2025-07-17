@@ -9,6 +9,7 @@ module ::Actions::Katello::Flatpak
     let(:remote_repository) { katello_flatpak_remote_repositories(:rhel9_flatpak_runtime) }
     let(:product) { katello_products(:empty_product) }
     let(:random_root) { katello_root_repositories(:busybox_root) }
+    let(:success_task) { ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good") }
 
     class MirrorRemoteRepositoryTest < MirrorRemoteRepositoryTest
       let(:action_class) { ::Actions::Katello::Flatpak::MirrorRemoteRepository }
@@ -20,6 +21,8 @@ module ::Actions::Katello::Flatpak
       end
 
       it 'plans' do
+        action = create_action(action_class)
+        action.stubs(:task).returns(success_task)
         product.expects(:add_repo).with({
                                           name: remote_repository.name,
                                           label: remote_repository.label,
