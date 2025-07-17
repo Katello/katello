@@ -72,7 +72,9 @@ module Actions
             update_rolling_content_views_async(repo, input[:contents_changed])
           end
           repo.clear_smart_proxy_sync_histories if input[:contents_changed]
-          ForemanTasks.async_task(Repository::CapsuleSync, repo) if Setting[:foreman_proxy_content_auto_sync]
+          if Setting[:foreman_proxy_content_auto_sync]
+            schedule_async_repository_proxy_sync(repo)
+          end
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
