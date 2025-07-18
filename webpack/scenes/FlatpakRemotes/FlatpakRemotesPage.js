@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
@@ -15,6 +15,7 @@ import { STATUS } from 'foremanReact/constants';
 import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
 import { truncate } from '../../utils/helpers';
 import CreateFlatpakModal from './CreateEdit/CreateFlatpakRemoteModal';
+import { deleteFlatpakRemote } from './Details/FlatpakRemoteDetailActions';
 
 const FlatpakRemotesPage = () => {
   const response = useSelector(selectFlatpakRemotes);
@@ -22,9 +23,16 @@ const FlatpakRemotesPage = () => {
   const status = useSelector(selectFlatpakRemotesStatus);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const {
-    results = [], subtotal, page, per_page: perPage,
+    results = [],
+    subtotal,
+    page,
+    perPage,
+    can_edit: canEdit = false,
+    can_delete: canDelete = false,
+    can_create: canCreate = false,
   } = response || {};
 
   const columnHeaders = [__('Name'), __('URL')];
@@ -50,12 +58,6 @@ const FlatpakRemotesPage = () => {
     defaultParams,
   });
 
-  const actionsWithPermissions = () => [
-    { title: __('Scan'), isDisabled: true },
-    { title: __('Edit'), isDisabled: false, onClick: () => { setEditModalOpen(!isEditModalOpen); } },
-    { title: __('Delete'), isDisabled: true },
-  ];
-
   const {
     setParamsAndAPI,
     params,
@@ -73,26 +75,33 @@ const FlatpakRemotesPage = () => {
     });
   };
 
-  const { pfSortParams } = useTableSort({
-    allColumns: columnHeaders,
-    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
-    onSort,
-  });
-
   const onPaginationChange = (newPagination) => {
     setParamsAndAPI({
       ...params,
       ...newPagination,
     });
   };
+
+  const { pfSortParams } = useTableSort({
+    allColumns: columnHeaders,
+    columnsToSortParams: COLUMNS_TO_SORT_PARAMS,
+    onSort,
+  });
+
   const openCreateModal = () => setIsModalOpen(true);
+
+  const actionsWithPermissions = remote => [
+    { title: __('Scan'), isDisabled: true },
+    { title: __('Edit'), isDisabled: !canEdit, onClick: () => { setEditModalOpen(!isEditModalOpen); } },
+    { title: __('Delete'), isDisabled: !canDelete, onClick: () => { dispatch(deleteFlatpakRemote(remote.id, () => { onPaginationChange(); })); } },
+  ];
 
   return (
     <TableIndexPage
       apiUrl={apiUrl}
       apiOptions={apiOptions}
       header={__('Flatpak Remotes')}
-      creatable
+      creatable={canCreate}
       customCreateAction={() => openCreateModal}
       controller="/katello/api/v2/flatpak_remotes"
     >

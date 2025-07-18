@@ -1,10 +1,11 @@
-import { API_OPERATIONS, get, post, put } from 'foremanReact/redux/API';
+import { API_OPERATIONS, APIActions, get, post, put } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { flatpakRemoteDetailsKey,
   flatpakRemoteRepositoriesKey,
   UPDATE_FLATPAK_REMOTE,
   UPDATE_FLATPAK_REMOTE_SUCCESS,
-  UPDATE_FLATPAK_REMOTE_FAILURE } from '../FlatpakRemotesConstants';
+  UPDATE_FLATPAK_REMOTE_FAILURE,
+  DELETE_FLATPAK_REMOTE_KEY } from '../FlatpakRemotesConstants';
 import api, { orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
 
@@ -55,5 +56,14 @@ export const mirrorFlatpakRepository = (
     successToast: () => __('Repository mirroring task started in the background'),
     errorToast: error => getResponseErrorMsgs(error.response),
   });
+
+export const deleteFlatpakRemote = (id, handleSuccess) => APIActions.delete({
+  type: API_OPERATIONS.DELETE,
+  key: DELETE_FLATPAK_REMOTE_KEY,
+  url: api.getApiUrl(`/flatpak_remotes/${id}`),
+  handleSuccess,
+  successToast: () => __('Flatpak remote deleted'),
+  errorToast: error => __('Flatpak remote could not be deleted: ') + getResponseErrorMsgs(error.response),
+});
 
 export default getFlatpakRemoteDetails;
