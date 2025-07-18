@@ -16,6 +16,7 @@ import { STATUS } from 'foremanReact/constants';
 import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
 import { truncate } from '../../utils/helpers';
 import CreateFlatpakModal from './CreateEdit/CreateFlatpakRemoteModal';
+import EditFlatpakModal from './CreateEdit/EditFlatpakRemotesModal';
 
 const FlatpakRemotesPage = () => {
   const response = useSelector(selectFlatpakRemotes);
@@ -23,6 +24,7 @@ const FlatpakRemotesPage = () => {
   const status = useSelector(selectFlatpakRemotesStatus);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [editingRemoteData, setEditingRemoteData] = useState(null);
 
   const {
     results = [], subtotal, page, per_page: perPage,
@@ -51,9 +53,16 @@ const FlatpakRemotesPage = () => {
     defaultParams,
   });
 
-  const actionsWithPermissions = () => [
+  const actionsWithPermissions = remote => [
     { title: __('Scan'), isDisabled: true },
-    { title: __('Edit'), isDisabled: false, onClick: () => { setEditModalOpen(!isEditModalOpen); } },
+    {
+      title: __('Edit'),
+      isDisabled: false,
+      onClick: () => {
+        setEditModalOpen(!isEditModalOpen);
+        setEditingRemoteData(remote);
+      },
+    },
     { title: __('Delete'), isDisabled: true },
   ];
 
@@ -157,6 +166,11 @@ const FlatpakRemotesPage = () => {
         <CreateFlatpakModal
           show={isModalOpen}
           setIsOpen={setIsModalOpen}
+        />
+        <EditFlatpakModal
+          show={isEditModalOpen}
+          setIsOpen={setEditModalOpen}
+          remoteData={editingRemoteData}
         />
       </>
     </TableIndexPage>
