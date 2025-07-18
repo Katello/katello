@@ -1,4 +1,4 @@
-import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
+import { API_OPERATIONS, APIActions, get, put } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { flatpakRemoteDetailsKey,
   UPDATE_FLATPAK_REMOTE,
@@ -29,5 +29,14 @@ export const updateFlatpakRemote = (frId, params, handleSuccess) => put({
     FAILURE: UPDATE_FLATPAK_REMOTE_FAILURE,
   },
 });
+
+export const deleteFlatpakRemote = (id, handleSuccess) => APIActions.delete({
+  type: API_OPERATIONS.DELETE,
+  key: flatpakRemoteDetailsKey(id),
+  url: api.getApiUrl(`/flatpak_remotes/${id}`),
+  handleSuccess,
+  successToast: () => __('Alternate content source deleted'),
+  errorToast: error => acsErrorToast(error),
+})
 
 export default getFlatpakRemoteDetails;

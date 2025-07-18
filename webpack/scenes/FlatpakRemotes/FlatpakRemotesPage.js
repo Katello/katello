@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
@@ -16,6 +16,7 @@ import { STATUS } from 'foremanReact/constants';
 import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
 import { truncate } from '../../utils/helpers';
 import CreateFlatpakModal from './CreateEdit/CreateFlatpakRemoteModal';
+import { deleteFlatpakRemote } from './Details/FlatpakRemoteDetailActions';
 
 const FlatpakRemotesPage = () => {
   const response = useSelector(selectFlatpakRemotes);
@@ -23,6 +24,7 @@ const FlatpakRemotesPage = () => {
   const status = useSelector(selectFlatpakRemotesStatus);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const {
     results = [], subtotal, page, per_page: perPage,
@@ -51,10 +53,10 @@ const FlatpakRemotesPage = () => {
     defaultParams,
   });
 
-  const actionsWithPermissions = () => [
+  const actionsWithPermissions = (remote) => [
     { title: __('Scan'), isDisabled: true },
     { title: __('Edit'), isDisabled: false, onClick: () => { setEditModalOpen(!isEditModalOpen); } },
-    { title: __('Delete'), isDisabled: true },
+    { title: __('Delete'), isDisabled: false, onClick: () => { dispatch( deleteFlatpakRemote(remote.id, () => { onPaginationChange(); }) ); } },
   ];
 
   const {
