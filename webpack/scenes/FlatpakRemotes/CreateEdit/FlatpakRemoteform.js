@@ -21,17 +21,19 @@ import {
   selectCreateFlatpakRemotesStatus,
   selectCreateFlatpakRemotesError,
 } from '../FlatpakRemotesSelectors';
+import { updateFlatpakRemote } from '../Details/FlatpakRemoteDetailActions';
 
 // eslint-disable-next-line react/prop-types
 const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
   const {
+    id: editingId,
     name: editingName,
     url: editingUrl,
     username: editingUsername,
     password: editingPassword,
   } = remoteData || {};
 
-
+  const isEditing = !!editingName;
   const dispatch = useDispatch();
   const [name, setName] = useState(editingName || '');
   const [url, seturl] = useState(editingUrl || '');
@@ -68,12 +70,22 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
 
   const onSave = () => {
     setSaving(true);
-    dispatch(createFlatpakRemote({
-      name,
-      url,
-      username,
-      password,
-    }));
+    dispatch(isEditing ?
+      updateFlatpakRemote(
+        editingId, {
+          name,
+          url,
+          username,
+          token: password,
+        }, () => window.location.assign('/flatpak_remotes/'),
+        () => setModalOpen(false),
+      ) :
+      createFlatpakRemote({
+        name,
+        url,
+        username,
+        token: password,
+      }));
   };
 
   if (redirect) {
@@ -171,7 +183,7 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
           isLoading={saving || redirect}
           type="submit"
         >
-          {__('Create')}
+          {isEditing ? __('Update') : __('Create')}
         </Button>
         <Button
           ouiaId="create-flatpakcancel"
