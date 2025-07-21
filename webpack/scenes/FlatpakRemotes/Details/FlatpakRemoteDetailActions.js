@@ -5,7 +5,8 @@ import { flatpakRemoteDetailsKey,
   UPDATE_FLATPAK_REMOTE,
   UPDATE_FLATPAK_REMOTE_SUCCESS,
   UPDATE_FLATPAK_REMOTE_FAILURE,
-  DELETE_FLATPAK_REMOTE_KEY } from '../FlatpakRemotesConstants';
+  DELETE_FLATPAK_REMOTE_KEY,
+  SCAN_FLATPAK_REMOTE_KEY } from '../FlatpakRemotesConstants';
 import api, { orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
 
@@ -65,6 +66,15 @@ export const deleteFlatpakRemote = (id, handleSuccess) => APIActions.delete({
   handleSuccess,
   successToast: () => __('Flatpak remote deleted'),
   errorToast: error => __('Flatpak remote could not be deleted: ') + getResponseErrorMsgs(error.response),
+});
+
+export const scanFlatpakRemote = id => post({
+  type: API_OPERATIONS.POST,
+  key: SCAN_FLATPAK_REMOTE_KEY,
+  url: api.getApiUrl(`/flatpak_remotes/${id}/scan`),
+  successToast: () => __('Flatpak remote scanning task started in the background'),
+  errorToast: error => __('Flatpak remote scan could not be started: ') +
+    getResponseErrorMsgs(error.response),
 });
 
 export default getFlatpakRemoteDetails;

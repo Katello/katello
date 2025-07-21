@@ -15,8 +15,8 @@ import { STATUS } from 'foremanReact/constants';
 import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
 import { truncate } from '../../utils/helpers';
 import CreateFlatpakModal from './CreateEdit/CreateFlatpakRemoteModal';
-import { deleteFlatpakRemote } from './Details/FlatpakRemoteDetailActions';
 import EditFlatpakModal from './CreateEdit/EditFlatpakRemotesModal';
+import { deleteFlatpakRemote, scanFlatpakRemote } from './Details/FlatpakRemoteDetailActions';
 
 const FlatpakRemotesPage = () => {
   const response = useSelector(selectFlatpakRemotes);
@@ -92,7 +92,7 @@ const FlatpakRemotesPage = () => {
   const openCreateModal = () => setIsModalOpen(true);
 
   const actionsWithPermissions = remote => [
-    { title: __('Scan'), isDisabled: true },
+    { title: __('Scan'), isDisabled: !canEdit, onClick: () => { dispatch(scanFlatpakRemote(remote.id)); } },
     {
       title: __('Edit'),
       isDisabled: !canEdit,
