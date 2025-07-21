@@ -24,11 +24,12 @@ export const getRemoteRepositories = frId => () =>
     params: { organization_id: orgId() },
   });
 
-export const updateFlatpakRemote = (frId, params, handleSuccess) => put({
+export const updateFlatpakRemote = (frId, params, handleSuccess, handleError) => put({
   type: API_OPERATIONS.PUT,
   key: flatpakRemoteDetailsKey(frId),
   url: api.getApiUrl(`/flatpak_remotes/${frId}`),
   handleSuccess,
+  handleError,
   params: { include_permissions: true, ...params },
   successToast: () => __('Flatpak remote updated'),
   errorToast: error => getResponseErrorMsgs(error.response),
