@@ -68,13 +68,15 @@ export const deleteFlatpakRemote = (id, handleSuccess) => APIActions.delete({
   errorToast: error => __('Flatpak remote could not be deleted: ') + getResponseErrorMsgs(error.response),
 });
 
-export const scanFlatpakRemote = id => post({
+export const scanFlatpakRemote = (id, handleSuccess, handleError) => post({
   type: API_OPERATIONS.POST,
   key: SCAN_FLATPAK_REMOTE_KEY,
   url: api.getApiUrl(`/flatpak_remotes/${id}/scan`),
+  handleSuccess,
+  handleError,
   successToast: () => __('Flatpak remote scanning task started in the background'),
   errorToast: error => __('Flatpak remote scan could not be started: ') +
-    getResponseErrorMsgs(error.response),
+        getResponseErrorMsgs(error.response),
 });
 
 export default getFlatpakRemoteDetails;

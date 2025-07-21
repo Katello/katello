@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbItem,
+  Button,
   Title,
   Grid,
   GridItem,
@@ -11,16 +12,32 @@ import {
   TextContent,
   TextList,
   TextListVariants,
+  Flex,
+  FlexItem,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+  DropdownPosition,
+} from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectFlatpakRemoteDetails } from './FlatpakRemoteDetailSelectors';
-import getFlatpakRemoteDetails, { updateFlatpakRemote } from './FlatpakRemoteDetailActions';
+import getFlatpakRemoteDetails, {
+  deleteFlatpakRemote,
+  scanFlatpakRemote,
+  updateFlatpakRemote,
+} from './FlatpakRemoteDetailActions';
 import ActionableDetail from '../../../components/ActionableDetail';
 import RemoteRepositoriesTable from './RemoteRepositories/RemoteRepositoriesTable';
+import EditFlatpakRemotesModal from '../CreateEdit/EditFlatpakRemotesModal';
 
 export default function FlatpakRemoteDetails() {
   const { id } = useParams();
   const frId = Number(id);
+  const [dropDownOpen, setDropdownOpen] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
 
   const [currentAttribute, setCurrentAttribute] = useState(null);
@@ -39,6 +56,11 @@ export default function FlatpakRemoteDetails() {
     dispatch(updateFlatpakRemote(frId, { [attribute]: val }));
   };
 
+  const dropDownItems = [
+    <DropdownItem key="edit" ouiaId="fr-edit" onClick={() => { setIsEditing(true); }}> {__('Edit')}</DropdownItem>,
+    <DropdownItem key="delete" ouiaId="cv-delete" onClick={() => { dispatch(deleteFlatpakRemote(frId, () => window.location.assign('/flatpak_remotes/'))); }} > {__('Delete')}</DropdownItem>,
+  ];
+
   return (
     <Grid hasGutter span={12} style={{ padding: '24px' }}>
       <GridItem span={12}>
@@ -49,7 +71,41 @@ export default function FlatpakRemoteDetails() {
       </GridItem>
 
       <GridItem span={12}>
-        <Title headingLevel="h1" size="2xl" ouiaId="flatpak-remote-title">{name}</Title>
+        <Flex>
+          <FlexItem>
+            <Title headingLevel="h1" size="2xl" ouiaId="flatpak-remote-title">{name}</Title>
+          </FlexItem>
+          <FlexItem align={{ default: 'alignRight' }}>
+            <Button
+              ouiaId="fr-details-scan-button"
+              style={{ marginLeft: 'auto' }}
+              onClick={() => {
+                setIsScanning(true);
+                dispatch(scanFlatpakRemote(
+                  frId,
+                  () => { setIsScanning(false); },
+                  () => setIsScanning(false),
+                ));
+              }
+            }
+              variant="primary"
+              aria-label="scan_flatpak_remote"
+              isLoading={isScanning}
+              isDisabled={isScanning}
+            >
+              {__('Scan')}
+            </Button>
+            <Dropdown
+              position={DropdownPosition.right}
+              ouiaId="fr-details-actions"
+              style={{ marginLeft: 'auto' }}
+              toggle={<KebabToggle onToggle={(_event, val) => setDropdownOpen(val)} id="toggle-dropdown" />}
+              isOpen={dropDownOpen}
+              isPlain
+              dropdownItems={dropDownItems}
+            />
+          </FlexItem>
+        </Flex>
       </GridItem>
 
       <GridItem span={12}>
@@ -81,7 +137,9 @@ export default function FlatpakRemoteDetails() {
       <GridItem span={12}>
         <RemoteRepositoriesTable frId={frId} />
       </GridItem>
-
+      { isEditing &&
+      <EditFlatpakRemotesModal show={isEditing} remoteData={frDetails} setIsOpen={setIsEditing} />
+      }
     </Grid>
   );
 }
