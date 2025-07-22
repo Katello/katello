@@ -82,6 +82,7 @@ Foreman::Application.routes.draw do
             match '/bulk/change_content_source' => 'hosts_bulk_actions#change_content_source', :via => :put
             match '/subscriptions/' => 'host_subscriptions#create', :via => :post
             match '/host_packages/installed_packages' => 'host_packages#installed_packages', :via => :get
+            match '/host_debs/installed_debs' => 'host_debs#installed_debs', :via => :get
           end
 
           resources :packages, :only => [:index], :controller => :host_packages do
