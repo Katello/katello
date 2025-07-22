@@ -77,7 +77,7 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
           url,
           username,
           token: password,
-        }, () => window.location.assign('/flatpak_remotes/'),
+        }, () => window.location.assign(`/flatpak_remotes/${editingId}`),
         () => setModalOpen(false),
       ) :
       createFlatpakRemote({
