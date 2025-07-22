@@ -86,6 +86,13 @@ const HostReview = ({
       isSorted: true,
       weight: 100,
     },
+    cv_environments: {
+      title: __('Content view environments'),
+      wrapper: hostDetails =>
+        hostDetails?.content_facet_attributes?.content_view_environment_labels,
+      isSorted: false,
+      weight: 100,
+    },
   };
 
   // restrict search query to only selected hosts
