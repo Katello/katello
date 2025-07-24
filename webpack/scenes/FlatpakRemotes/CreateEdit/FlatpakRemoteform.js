@@ -30,27 +30,27 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
     name: editingName,
     url: editingUrl,
     username: editingUsername,
-    password: editingPassword,
+    upstream_password_exists: passwordExists,
   } = remoteData || {};
 
   const isEditing = !!editingName;
   const dispatch = useDispatch();
   const [name, setName] = useState(editingName || '');
-  const [url, seturl] = useState(editingUrl || '');
+  const [url, setUrl] = useState(editingUrl || '');
   const [username, setUsername] = useState(editingUsername || '');
-  const [password, setpassword] = useState(editingPassword || '');
+  const [password, setPassword] = useState(passwordExists ? '*****' : '');
   const [redirect, setRedirect] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const [urlValidated, seturlValidated] = useState('default');
+  const [urlValidated, setUrlValidated] = useState('default');
   const handleUrlChange = (newurl, _event) => {
-    seturl(newurl);
+    setUrl(newurl);
     if (newurl === '') {
-      seturlValidated('default');
+      setUrlValidated('default');
     } else if (/^(http(s):\/\/.)[-a-zA-Z0-9@:%._~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_.~#?&//=]*)$/g.test(newurl)) {
-      seturlValidated('success');
+      setUrlValidated('success');
     } else {
-      seturlValidated('error');
+      setUrlValidated('error');
     }
   };
 
@@ -70,14 +70,24 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
 
   const onSave = () => {
     setSaving(true);
+    let editingParams = {};
+    if (isEditing && password === '*****') {
+      editingParams = {
+        name,
+        url,
+        username,
+      };
+    } else {
+      editingParams = {
+        name,
+        url,
+        username,
+        token: password,
+      };
+    }
     dispatch(isEditing ?
       updateFlatpakRemote(
-        editingId, {
-          name,
-          url,
-          username,
-          token: password,
-        }, () => window.location.assign(`/flatpak_remotes/${editingId}`),
+        editingId, editingParams, () => window.location.assign(`/flatpak_remotes/${editingId}`),
         () => setModalOpen(false),
       ) :
       createFlatpakRemote({
@@ -168,9 +178,9 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
           id="password"
           ouiaId="input_password"
           name="password"
-          aria-label="password"
+          aria-label="input_password"
           value={password}
-          onChange={(_event, value) => setpassword(value)}
+          onChange={(_event, value) => setPassword(value)}
         />
       </FormGroup>
 
