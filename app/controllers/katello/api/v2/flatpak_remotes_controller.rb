@@ -85,5 +85,9 @@ module Katello
     def flatpak_remote_params
       params.require(:flatpak_remote).permit(:name, :url, :description, :organization_id, :username, :token)
     end
+
+    def rejected_autocomplete_items
+      ['organization_id']
+    end
   end
 end
