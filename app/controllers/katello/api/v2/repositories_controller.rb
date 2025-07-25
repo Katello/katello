@@ -502,7 +502,8 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
       param 'name', String, :desc => N_("Needs to only be set for file repositories or docker tags"), :required => true
       param 'digest', String, :desc => N_("Needs to only be set for docker tags")
     end
-    Katello::RepositoryTypeManager.generic_repository_types.each_pair do |_, repo_type|
+
+    Katello::RepositoryTypeManager.generic_repository_types(false).each_pair do |_, repo_type|
       repo_type.import_attributes.each do |import_attribute|
         param import_attribute.api_param, import_attribute.type,
             :desc => N_(import_attribute.description)

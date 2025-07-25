@@ -1,5 +1,4 @@
 require 'katello/permission_creator'
-require 'katello/repository_types'
 # rubocop:disable Metrics/BlockLength
 
 Foreman::Plugin.register :katello do
