@@ -254,7 +254,7 @@ module Katello
                            'katello/api/v2/repositories' => [:index, :show, :repository_types, :content_types, :auto_complete_search, :cancel],
                            'katello/api/v2/packages' => [:index, :thindex, :show, :auto_complete_search, :auto_complete_name, :auto_complete_arch, :compare],
                            'katello/api/v2/srpms' => [:index, :show, :auto_complete_search, :compare],
-                           'katello/api/v2/debs' => [:index, :show, :auto_complete_search, :auto_complete_name, :auto_complete_arch, :compare],
+                           'katello/api/v2/debs' => [:index, :thindex, :show, :auto_complete_search, :auto_complete_name, :auto_complete_arch, :compare],
                            'katello/api/v2/package_groups' => [:index, :show, :auto_complete_search, :compare],
                            'katello/api/v2/docker_manifests' => [:index, :show, :auto_complete_search, :compare],
                            'katello/api/v2/docker_manifest_lists' => [:index, :show, :auto_complete_search, :compare],
@@ -289,6 +289,7 @@ module Katello
                                                         :repo_compare_packages],
                            'katello/api/v2/repository_sets' => [:index, :show, :available_repositories, :auto_complete_search],
                            'katello/api/v2/host_packages' => [:installed_packages],
+                           'katello/api/v2/host_debs' => [:installed_debs],
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :readable
