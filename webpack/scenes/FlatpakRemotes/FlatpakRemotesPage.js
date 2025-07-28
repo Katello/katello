@@ -13,7 +13,7 @@ import Pagination from 'foremanReact/components/Pagination';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
 import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesStatus } from './FlatpakRemotesSelectors';
-import { truncate } from '../../utils/helpers';
+import { getResponseErrorMsgs, truncate } from '../../utils/helpers';
 import CreateFlatpakModal from './CreateEdit/CreateFlatpakRemoteModal';
 import EditFlatpakModal from './CreateEdit/EditFlatpakRemotesModal';
 import { deleteFlatpakRemote, scanFlatpakRemote } from './Details/FlatpakRemoteDetailActions';
@@ -126,7 +126,7 @@ const FlatpakRemotesPage = () => {
           <EmptyPage message={{ type: 'empty' }} />
         )}
         {error && (
-          <EmptyPage message={{ type: 'error', text: error }} />
+          <EmptyPage message={{ type: 'error', text: getResponseErrorMsgs(error?.response) }} />
         )}
         {results.length > 0 && (
           <Table variant="compact" ouiaId="flatpak-remotes-table" isStriped>
