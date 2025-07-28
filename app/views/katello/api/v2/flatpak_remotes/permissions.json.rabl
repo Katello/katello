@@ -7,5 +7,6 @@ if ::Foreman::Cast.to_bool(params.fetch(:include_permissions, false))
     node(:can_edit) { user.can?("edit_flatpak_remotes") }
     node(:can_delete) { user.can?("destroy_flatpak_remotes") }
     node(:can_view) { user.can?("view_flatpak_remotes") }
+    node(:can_mirror) { user.can?("edit_products") && user.can?("view_products") }
   end
 end

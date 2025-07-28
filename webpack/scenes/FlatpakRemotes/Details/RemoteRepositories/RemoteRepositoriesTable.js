@@ -16,7 +16,7 @@ import LastSync from '../../../ContentViews/Details/Repositories/LastSync';
 import { flatpakRemoteRepositoriesKey } from '../../FlatpakRemotesConstants';
 import MirrorRepositoryModal from '../Mirror/MirrorRepositoryModal';
 
-const RemoteRepositoriesTable = ({ frId }) => {
+const RemoteRepositoriesTable = ({ frId, canMirror }) => {
   const [selectedRepo, setSelectedRepo] = useState(null);
 
   const columnHeaders = [__('Name'), __('ID'), __('Last mirrored'), __('Mirror')];
@@ -121,6 +121,7 @@ const RemoteRepositoriesTable = ({ frId }) => {
                       emptyMessage={__('Never')}
                     />
                   </Td>
+                  {canMirror &&
                   <Td>
                     <Button
                       variant="link"
@@ -131,6 +132,7 @@ const RemoteRepositoriesTable = ({ frId }) => {
                       {__('Mirror')}
                     </Button>
                   </Td>
+                  }
                 </Tr>
               ))}
             </Tbody>
@@ -162,6 +164,7 @@ const RemoteRepositoriesTable = ({ frId }) => {
 
 RemoteRepositoriesTable.propTypes = {
   frId: PropTypes.number.isRequired,
+  canMirror: PropTypes.bool.isRequired,
 };
 
 export default RemoteRepositoriesTable;

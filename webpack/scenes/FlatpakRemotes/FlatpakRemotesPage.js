@@ -16,7 +16,8 @@ import { selectFlatpakRemotes, selectFlatpakRemotesError, selectFlatpakRemotesSt
 import { truncate } from '../../utils/helpers';
 import CreateFlatpakModal from './CreateEdit/CreateFlatpakRemoteModal';
 import EditFlatpakModal from './CreateEdit/EditFlatpakRemotesModal';
-import { deleteFlatpakRemote, scanFlatpakRemote } from './Details/FlatpakRemoteDetailActions';
+import { scanFlatpakRemote } from './Details/FlatpakRemoteDetailActions';
+import DeleteFlatpakModal from './Delete/DeleteFlatpakModal';
 
 const FlatpakRemotesPage = () => {
   const response = useSelector(selectFlatpakRemotes);
@@ -25,6 +26,8 @@ const FlatpakRemotesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [editingRemoteData, setEditingRemoteData] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [remoteIdToDelete, setRemoteIdToDelete] = useState('');
   const dispatch = useDispatch();
   const {
     results = [],
@@ -101,7 +104,14 @@ const FlatpakRemotesPage = () => {
         setEditingRemoteData(remote);
       },
     },
-    { title: __('Delete'), isDisabled: !canDelete, onClick: () => { dispatch(deleteFlatpakRemote(remote.id, () => { onPaginationChange(); })); } },
+    {
+      title: __('Delete'),
+      isDisabled: !canDelete,
+      onClick: () => {
+        setRemoteIdToDelete(remote.id);
+        setIsDeleteModalOpen(true);
+      },
+    },
   ];
 
   return (
@@ -178,6 +188,11 @@ const FlatpakRemotesPage = () => {
           show={isEditModalOpen}
           setIsOpen={setEditModalOpen}
           remoteData={editingRemoteData}
+        />
+        <DeleteFlatpakModal
+          isModalOpen={isDeleteModalOpen}
+          handleModalToggle={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
+          remoteId={remoteIdToDelete}
         />
       </>
     </TableIndexPage>

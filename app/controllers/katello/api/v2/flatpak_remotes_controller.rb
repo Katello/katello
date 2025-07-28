@@ -68,7 +68,7 @@ module Katello
     api :DELETE, "/flatpak_remotes/:id", N_("Delete a flatpak remote")
     param :id, :number, :desc => N_("Flatpak remote numeric identifier"), :required => true
     def destroy
-      @flatpak_remote.destroy
+      @flatpak_remote.destroy!
     end
 
     api :POST, "/flatpak_remotes/:id/scan", N_("Scan a flatpak remote")
