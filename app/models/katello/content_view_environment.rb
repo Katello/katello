@@ -32,6 +32,9 @@ module Katello
     scope :non_generated, -> { where(content_view: ::Katello::ContentView.ignore_generated) }
 
     scoped_search :on => :id, :complete_value => true
+    scoped_search :on => :label, :complete_value => true
+    scoped_search :relation => :content_view, :on => :label, :rename => :content_view
+    scoped_search :relation => :lifecycle_environment, :on => :label, :rename => :lifecycle_environment
 
     alias :lifecycle_environment :environment
     has_one :organization, :through => :environment
