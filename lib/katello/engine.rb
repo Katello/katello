@@ -77,6 +77,14 @@ module Katello
       ForemanTasks.dynflow.eager_load_actions!
     end
 
+    initializer "katello.start_katello_events", before: :finisher_hook do
+      unless Rails.env.test?
+        ForemanTasks.dynflow.config.post_executor_init do |world|
+          Actions::Katello::EventQueue::Monitor.launch(world)
+        end
+      end
+    end
+
     # make sure the Katello plugin is initialized before `after_initialize`
     # hook so that the resumed Dynflow tasks can rely on everything ready.
     initializer 'katello.register_plugin', :before => :finisher_hook, :after => 'foreman_remote_execution.register_plugin' do |app|
@@ -147,7 +155,6 @@ module Katello
       end
 
       Katello::EventDaemon::Runner.register_service(:candlepin_events, Katello::CandlepinEventListener)
-      Katello::EventDaemon::Runner.register_service(:katello_events, Katello::EventMonitor::PollerThread)
 
       # Lib Extensions
       ::Foreman::Renderer::Scope::Variables::Base.include Katello::Concerns::RendererExtensions
