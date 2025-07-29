@@ -31,7 +31,16 @@ module Katello
     scoped_search :on => :title, :rename => :synopsis, :complete_value => true, :only_explicit => true
     scoped_search :on => :severity, :complete_value => true
     scoped_search :on => :errata_type, :only_explicit => true
-    scoped_search :on => :errata_type, :rename => :type, :complete_value => true
+    scoped_search :on => :errata_type,
+                  :rename => :type,
+                  :operators => ['=', '!='],
+                  :complete_value => {
+                    'security' => 'security',
+                    'bugfix' => 'bugfix',
+                    'enhancement' => 'enhancement',
+                    'other' => 'other',
+                  },
+                  :ext_method => :filter_errata_type
     scoped_search :on => :issued, :complete_value => true
     scoped_search :on => :updated, :complete_value => true
     scoped_search :on => :reboot_suggested, :complete_value => true
@@ -55,6 +64,22 @@ module Katello
           ).or(where(:errata_type => type))
       else
         where(:errata_type => type)
+      end
+    end
+
+    def self.filter_errata_type(_key, operator, value)
+      if value.downcase == "other"
+        if ['!=', '<>'].include?(operator)
+          { conditions: sanitize_sql_for_conditions(["errata_type IN (?)", TYPES]) }
+        else
+          { conditions: sanitize_sql_for_conditions(["errata_type NOT IN (?)", TYPES]) }
+        end
+      else
+        if ['!=', '<>'].include?(operator)
+          { conditions: sanitize_sql_for_conditions(["errata_type != ?", value]) }
+        else
+          { conditions: sanitize_sql_for_conditions(["errata_type = ?", value]) }
+        end
       end
     end
 

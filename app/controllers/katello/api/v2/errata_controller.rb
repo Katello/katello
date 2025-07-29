@@ -6,6 +6,8 @@ module Katello
     before_action :find_host, :only => [:index]
     before_action :find_optional_organization, :only => [:index, :auto_complete_search]
 
+    after_action :strip_errata_type, only: :auto_complete_search
+
     api :GET, "/errata", N_("List errata")
     param :organization_id, :number, :desc => N_("Organization identifier")
     param :content_view_version_id, :number, :desc => N_("Content View Version identifier")
@@ -97,6 +99,20 @@ module Katello
 
     def filter_by_content_view_filter(filter, collection)
       collection.where(:errata_id => filter.erratum_rules.pluck(:errata_id))
+    end
+
+    def strip_errata_type
+      return if response.body.blank?
+
+      begin
+        items = JSON.parse(response.body)
+      rescue JSON::ParserError
+        return
+      end
+
+      filtered = items.reject { |h| h['part'].to_s.strip == 'errata_type' }
+
+      response.body = filtered.to_json
     end
 
     def default_sort
