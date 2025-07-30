@@ -74,7 +74,7 @@ module Katello
           # You are trying to export between an incrementally updated content view version and regular version
           if from_content_view_version.incrementally_updated? != content_view_version.incrementally_updated?
             fail ExportValidationError,
-                 _("Cannot incrementally export from a incrementally exported version and a regular version or vice-versa. "\
+                 _("Cannot incrementally export from a incrementally updated version and a regular version or vice-versa. "\
                    " The exported Content View Version '%{content_view} %{current}' "\
                    "cannot be incrementally exported from version '%{from}.'"\
                                " Please do a full export." % { content_view: content_view_version.content_view.name,
