@@ -105,14 +105,8 @@ module Katello
           it 'finds the library export view correctly' do
             format = ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
             org = get_organization
-            assert_nil ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
-                                                            create_by_default: false,
-                                                            destination_server: nil,
-                                                            format: format)
-            # now create it
             destination_server = "example.com"
-            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
-                                                        create_by_default: true,
+            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_or_create_library_export_view(organization: org,
                                                         destination_server: destination_server,
                                                         format: format)
             assert cv.generated_for_library_export?
@@ -122,14 +116,8 @@ module Katello
           it 'finds the library export view correctly for syncable' do
             format = ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
             org = get_organization
-            assert_nil ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
-                                                            create_by_default: false,
-                                                            destination_server: nil,
-                                                            format: format)
-            # now create it
             destination_server = "example.com"
-            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
-                                                        create_by_default: true,
+            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_or_create_library_export_view(organization: org,
                                                         destination_server: destination_server,
                                                         format: format)
             assert cv.generated_for_library_export_syncable?
@@ -139,13 +127,7 @@ module Katello
           it 'finds the repository export view correctly for syncable' do
             repo = katello_repositories(:rhel_6_x86_64)
             format = ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
-            assert_nil ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(repository: repo,
-                                                            create_by_default: false,
-                                                            format: format)
-            # now create it
-            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(repository: repo,
-                                                        create_by_default: true,
-                                                        format: format)
+            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_or_create_repository_export_view(repository: repo, format: format)
             assert cv.generated_for_repository_export_syncable?
             assert_match(/^Export-SYNCABLE-#{repo.label}/, cv.name)
           end
