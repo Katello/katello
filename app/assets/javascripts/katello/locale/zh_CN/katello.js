@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.16.1",
+        "Project-Id-Version": "katello 4.16.2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025",
@@ -463,6 +463,9 @@
       ],
       "About page": [
         "About 页面"
+      ],
+      "Abstract async task": [
+        ""
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "禁止访问红帽订阅管理。如果要更改这个设置，请更新内容设置\\\"订阅连接已启用\\\"。"
@@ -971,6 +974,9 @@
       "Auto Publish - Triggered by '%s'": [
         "自动发布 - 由 '%s' 触发"
       ],
+      "Auto attach subscriptions": [
+        ""
+      ],
       "Auto publish": [
         "自动发布"
       ],
@@ -1448,6 +1454,9 @@
       "Comma-separated list of tags to sync for a container image repository": [
         "逗号分隔的标签列表，以同步容器镜像仓库"
       ],
+      "Commit upload": [
+        ""
+      ],
       "Compare": [
         "比较"
       ],
@@ -1802,14 +1811,26 @@
       "Copy": [
         "复制"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "复制激活码"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "复制内容视图"
       ],
       "Copy to clipboard": [
         "复制到剪贴板"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        ""
       ],
       "Cores per socket": [
         "每個插槽的核心數"
@@ -2018,11 +2039,20 @@
       "Create content view": [
         "创建內容视图"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "创建过滤器"
       ],
       "Create host collection": [
         "创建主机集"
+      ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
+        ""
       ],
       "Create new activation key": [
         "创建新的激活码"
@@ -2032,6 +2062,12 @@
       ],
       "Create package filter rule": [
         "创建软件包过滤规则"
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
       ],
       "Create rule": [
         "创建规则"
@@ -2282,11 +2318,35 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         "删除将此存储库作为最后一个关联的存储库的内容视图过滤器。默认为 true。如果为 false，则此类过滤器现在应用到内容视图中的所有存储库。"
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "從 Red Hat 供應者中刪除清單"
       ],
       "Delete multiple filters from a content view": [
         "从内容视图中删除多个过滤器"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete orphaned migrated repositories": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         "删除版本"
@@ -2387,6 +2447,12 @@
       "Destroy an environment in an organization": [
         "銷毀組織中的一個環境"
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         "销毁一个或多个备用内容源"
       ],
@@ -2434,6 +2500,9 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         "为 '%{subject}' 禁用简单内容访问失败。"
+      ],
+      "Discover": [
+        ""
       ],
       "Discover Repositories": [
         "发现软件仓库"
@@ -2630,6 +2699,9 @@
       "Environment cannot be in its own promotion path": [
         "環境不能位於自己的推送路徑上"
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "环境标识符"
       ],
@@ -2668,6 +2740,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "勘误的勘误ID（RHSA-2012:108）"
+      ],
+      "Errata mail": [
+        ""
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "删除的 UUID 为 %s 的内容方面的勘误状态没有被更新"
@@ -2828,6 +2903,9 @@
       "Fetch installable errata for one or more hosts.": [
         "为一台或多台主机获取可安装的勘误。"
       ],
+      "Fetch pxe files": [
+        ""
+      ],
       "Fetch traces for one or more hosts": [
         "为一个或多个主机获取跟踪"
       ],
@@ -2921,6 +2999,9 @@
       "Filter versions that are components in the specified composite version": [
         "过滤在指定复合版本中作为组件的版本"
       ],
+      "Filtered index content": [
+        ""
+      ],
       "Filters": [
         "过滤器"
       ],
@@ -3010,6 +3091,9 @@
       ],
       "Generate host applicability": [
         "产生主机适用性"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "生成仓库适用性"
@@ -3247,6 +3331,12 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "如何排序結果的順序（比方說 ASC 從下到上）"
+      ],
+      "Hypervisors": [
+        ""
+      ],
+      "Hypervisors update": [
+        ""
       ],
       "ID of a HTTP Proxy": [
         "HTTP 代理的 ID"
@@ -3566,6 +3656,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "导入订阅清单，为主机授予红帽内容的访问权限。"
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         "导入新清单"
       ],
@@ -3574,6 +3667,12 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "仅导入不能直接发布的内容视图。内容只能通过导入至视图来更新。"
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "将上传文件导入仓库"
@@ -3641,6 +3740,9 @@
       "Incremental Update incomplete.": [
         "增量更新不完整。"
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        ""
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 内容视图版本的增量更新 "
       ],
@@ -3653,11 +3755,26 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "为复合 %{name} 版本 %{version} 指定了增量更新，但没有更新的组件。"
       ],
+      "Index content": [
+        ""
+      ],
+      "Index errata": [
+        ""
+      ],
+      "Index module streams": [
+        ""
+      ],
+      "Index package groups": [
+        ""
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "信息类型需要是 [ %{list} ] 之一"
       ],
       "Inherit from Repository": [
         "从仓库继承"
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "启动同步计划中附加产品的同步"
@@ -3733,6 +3850,9 @@
       ],
       "Installing Package...": [
         "正在安裝套件..."
+      ],
+      "Instance update": [
+        ""
       ],
       "Instance-based": [
         "基于实例"
@@ -4460,6 +4580,9 @@
       "Messaging connection": [
         "訊息連線"
       ],
+      "Metadata generate": [
+        ""
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "元数据重新发布会面临\\\"完成镜像\\\"存储库的风险。更改镜像策略并重试。 \\n 或者，使用 'force' 参数在本地重新生成元数据。在下一次同步中，上游存储库的元数据将覆盖 'Complete Mirroring' 存储库的本地元数据。"
       ],
@@ -4513,6 +4636,15 @@
       ],
       "Multi Content View Environment": [
         "多内容视图环境"
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
+        ""
       ],
       "Multi-entitlement": [
         "多权利"
@@ -5681,6 +5813,9 @@
       "Pulp task error": [
         "Pulp 任务错误"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         "Python 软件包"
       ],
@@ -5789,6 +5924,9 @@
       "Reclaim Space": [
         "重新声明空间"
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         "重新声明来自 On Demand 软件仓库的空间"
       ],
@@ -5852,6 +5990,9 @@
       "Refresh all alternate content sources": [
         "刷新所有备用内容源"
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         "销毁备用内容源"
       ],
@@ -5864,14 +6005,26 @@
       "Refresh counts": [
         "刷新计数"
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
         "刷新勘误适用性"
+      ],
+      "Refresh if needed": [
+        ""
       ],
       "Refresh package applicability": [
         "刷新软件包适用性"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "為 Red Hat 供應者更新之前匯入的清單"
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         "刷新源"
@@ -5914,6 +6067,9 @@
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
         "Registry 名称特征将导致成员仓库的容器镜像名称无效"
+      ],
+      "Reindex subscriptions": [
+        ""
       ],
       "Related composite content views": [
         "相关的复合内容视图"
@@ -6011,6 +6167,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "从上游清单中删除一个或多个订阅"
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "通过 Katello 接口删除软件包组"
       ],
@@ -6038,6 +6197,12 @@
       "Remove subscriptions from one or more hosts": [
         "从一个或多个主机上删除订阅"
       ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
+      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "从内容视图中删除版本和/或环境，并重新分配系统和密钥"
       ],
@@ -6062,6 +6227,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "从所有环境中移出此版本不会删除此版本。版本仍可用于以后的提升。"
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         "替换目标机器上的内容源"
       ],
@@ -6080,11 +6248,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "当 CDN 配置设置为 Air-gapped（断开连接）时，仓库不可用。"
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "所选内容视图版本常见的存储库将合并，生成复合内容视图，该视图是每个内容视图版本中的所有内容。"
       ],
       "Repositories from published Content Views are not allowed.": [
         "不允许来自发布的内容视图中的仓库。"
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repository": [
         "仓库"
@@ -6428,11 +6602,32 @@
       "Save": [
         "保存"
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "更新备用内容源..."
       ],
       "Scan a flatpak remote": [
         "扫描 flatpak 远程"
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
+        ""
       ],
       "Schema version 1": [
         "Schema 版本 1"
@@ -7223,6 +7418,9 @@
       "Supported Content Types": [
         "支持的内容类型"
       ],
+      "Sync": [
+        ""
+      ],
       "Sync Canceled": [
         "已取消同步"
       ],
@@ -7277,6 +7475,9 @@
       "Sync all repositories for a product": [
         "为一个产品同步所有存储库"
       ],
+      "Sync capsule": [
+        ""
+      ],
       "Sync complete.": [
         "完成同步。"
       ],
@@ -7294,6 +7495,9 @@
       ],
       "Sync state": [
         "同步状态"
+      ],
+      "Syncable export": [
+        ""
       ],
       "Synced": [
         "同步的"
@@ -7796,6 +8000,9 @@
       "To manage packages, select an action.": [
         "要管理软件包，选择一个操作。"
       ],
+      "Toggle": [
+        ""
+      ],
       "Token/password for the flatpak remote": [
         "flatpak 远程的令牌/密码"
       ],
@@ -8087,14 +8294,26 @@
       "Update content counts for the smart proxy": [
         "更新智能代理的内容计数"
       ],
+      "Update content urls": [
+        ""
+      ],
       "Update content view environments for host": [
         "为主机更新内容视图环境"
       ],
       "Update content view environments for host %s": [
         "为主机 %s 更新内容视图环境"
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         "手动更新主机"
+      ],
+      "Update http proxy": [
+        ""
+      ],
+      "Update http proxy details": [
+        ""
       ],
       "Update installed packages, enabled repos, module inventory": [
         "更新安装的软件包，已启用的仓库，模块清单"
@@ -8111,11 +8330,20 @@
       "Update packages via Katello interface": [
         "通过 Katello 接口更新软件包"
       ],
+      "Update redhat repository": [
+        ""
+      ],
       "Update release version for host": [
         "为主机更新发行版本"
       ],
       "Update release version for host %s": [
         "为主机 %s 更新发行版本"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "更新服务需要重启"
@@ -8207,6 +8435,12 @@
       "Upload a subscription manifest": [
         "上载订阅清单"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "上传到"
       ],
@@ -8215,6 +8449,9 @@
       ],
       "Upload request id": [
         "上传请求 ID"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "上游 Candlepin"
@@ -8329,6 +8566,9 @@
       ],
       "Verify SSL": [
         "验证 SSL"
+      ],
+      "Verify checksum": [
+        ""
       ],
       "Verify checksum for content on smart proxy": [
         "为智能代理中的内容验证校验和"
