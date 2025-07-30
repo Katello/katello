@@ -13,9 +13,8 @@ module Actions
             }.merge(opts)
             action_subject(organization)
             validate_repositories_immediate!(organization) if options[:fail_on_missing_content]
-            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: options[:destination_server],
+            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_or_create_library_export_view(destination_server: options[:destination_server],
                                                                            organization: organization,
-                                                                           create_by_default: true,
                                                                            format: options[:format])
             repo_ids_in_library = organization.default_content_view_version.repositories.exportable(format: options[:format]).immediate_or_none.pluck(:id)
             content_view.update!(repository_ids: repo_ids_in_library)

@@ -8,9 +8,8 @@ module Actions
             action_subject(repository)
             validate_repositories_immediate!(repository)
             validate_export_types!(repository, opts[:format])
-            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
+            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_or_create_repository_export_view(
                                                                            repository: repository,
-                                                                           create_by_default: true,
                                                                            format: opts[:format])
             content_view.update!(repository_ids: [repository.library_instance_or_self.id])
 
