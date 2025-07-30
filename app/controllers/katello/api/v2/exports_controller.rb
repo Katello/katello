@@ -75,7 +75,9 @@ module Katello
     end
 
     def find_export_format
-      if params[:format]
+      if @export_format.present?
+        @export_format
+      elsif params[:format]
         unless ::Katello::Pulp3::ContentViewVersion::Export::FORMATS.include?(params[:format])
           fail HttpErrors::UnprocessableEntity, _('Invalid export format provided. Format must be one of  %s ') %
                                             ::Katello::Pulp3::ContentViewVersion::Export::FORMATS.join(',')
@@ -113,20 +115,25 @@ module Katello
       end
     end
 
-    def find_history
+    def find_incremental_history
       if params[:from_history_id].present?
-        @history = ::Katello::ContentViewVersionExportHistory.find(params[:from_history_id])
-        if @history.blank?
-          throw_resource_not_found(name: 'export history',
-                                   id: params[:from_history_id])
-        end
+        find_incremental_history_from_id
       else
+        # Use the latest export
         @history = ::Katello::ContentViewVersionExportHistory.
                       latest(@view, destination_server: params[:destination_server])
         if @history.blank?
           msg = _("No existing export history was found to perform an incremental export. A full export must be performed")
           fail HttpErrors::NotFound, msg
         end
+      end
+    end
+
+    def find_incremental_history_from_id
+      @history = ::Katello::ContentViewVersionExportHistory.find(params[:from_history_id])
+      if @history.blank?
+        throw_resource_not_found(name: 'export history',
+                                  id: params[:from_history_id])
       end
     end
   end
