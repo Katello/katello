@@ -5,6 +5,9 @@ module Katello
         include ImportExportCommon
         SYNCABLE = "syncable".freeze
         IMPORTABLE = "importable".freeze
+        UNDEFINED = "undefined".freeze
+
+        # Available formats for export (UNDEFINED excluded)
         FORMATS = [SYNCABLE, IMPORTABLE].freeze
 
         attr_reader :smart_proxy, :content_view_version, :destination_server, :from_content_view_version, :repository, :base_path
@@ -160,19 +163,29 @@ module Katello
         end
 
         def self.find_repository_export_view(repository:, create_by_default: false,
-                                              format: IMPORTABLE)
-          if format == IMPORTABLE
-            generated_for = :repository_export
-            name = "Export-#{repository.label}-#{repository.library_instance_or_self.id}"
+                                              format: UNDEFINED, is_incremental: false)
+          name_importable = "Export-#{repository.label}-#{repository.library_instance_or_self.id}"
+          name_syncable = "Export-SYNCABLE-#{repository.label}-#{repository.library_instance_or_self.id}"
+
+          if format == UNDEFINED && is_incremental
+            # If format is undefined on an incremental export, we can infer format from the newest export view
+            Rails.logger.info "Format undefined for incremental export '#{repository.label}'. Inferring format from existing exports."
+            possible_a = find_generated_export_view(create_by_default: false, destination_server: nil, organization: repository.organization,
+              name: name_importable, generated_for: :repository_export)
+            possible_b = find_generated_export_view(create_by_default: false, destination_server: nil, organization: repository.organization,
+              name: name_syncable, generated_for: :repository_export_syncable)
+            return [possible_a, possible_b].compact.max_by(&:updated_at)
+          elsif format == UNDEFINED
+            fail ::Katello::Errors::InvalidExportFormat, _("Export format must be specified for non-incremental repository exports.")
+          elsif format == IMPORTABLE
+            return find_generated_export_view(create_by_default: create_by_default, destination_server: nil, organization: repository.organization,
+              name: name_importable, generated_for: :repository_export)
+          elsif format == SYNCABLE
+            return find_generated_export_view(create_by_default: create_by_default, destination_server: nil, organization: repository.organization,
+              name: name_syncable, generated_for: :repository_export_syncable)
           else
-            generated_for = :repository_export_syncable
-            name = "Export-SYNCABLE-#{repository.label}-#{repository.library_instance_or_self.id}"
+            fail ::Katello::Errors::InvalidExportFormat, _("Unknown repository export format '%s'.") % format
           end
-          find_generated_export_view(create_by_default: create_by_default,
-                                     destination_server: nil,
-                                     organization: repository.organization,
-                                     name: name,
-                                     generated_for: generated_for)
         end
 
         def self.generate_product_repo_strings(repositories:)
