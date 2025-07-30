@@ -1,3 +1,10 @@
+# 4.16.3 Taliesin (2025-07-30)
+
+## Bug Fixes
+
+### Hosts
+ * Post 4.15 upgrade katello is affected with high CPU usage and Actions::Katello::Applicability::Hosts::BulkGenerate tasks getting stuck ([#38576](https://projects.theforeman.org/issues/38576), [fc7085e6](https://github.com/Katello/katello.git/commit/fc7085e6a6378b9796e9e1f9ff1941304006c9b2))
+
 # 4.16.2 Taliesin (2025-06-30)
 
 ## Bug Fixes
