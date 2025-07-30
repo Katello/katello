@@ -70,7 +70,7 @@ module ::Actions::Pulp3
       ::Katello::Pulp3::Repository.any_instance.stubs(:generate_backend_object_name).returns(@yum_simplified_acs.name)
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_simplified_acs.name)
       repo = katello_repositories(:fedora_17_x86_64_duplicate)
-      repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      repo.root.update!(url: 'https://fixtures.pulpproject.org/rpm-no-comps/')
       smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_simplified_acs.id, smart_proxy_id: @primary.id, repository_id: repo.id)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
