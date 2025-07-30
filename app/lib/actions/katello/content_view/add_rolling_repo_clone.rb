@@ -24,7 +24,6 @@ module Actions
               end
             end
           end
-          plan_self(repository_ids: clone_ids)
         end
       end
     end
