@@ -1,3 +1,16 @@
+# 4.17.1 Fallingwater (2025-07-31)
+
+## Bug Fixes
+
+### Hammer
+ * Remove rolling CVs from hammer host info commands in hammer-cli-katello 1.17 ([#38612](https://projects.theforeman.org/issues/38612))
+
+### Hosts
+ * After installing a package via the --transient flag on an image mode host, any template that uses bootc usr-overlay will fail to perform package actions ([#38508](https://projects.theforeman.org/issues/38508), [5053686f](https://github.com/Katello/katello.git/commit/5053686f91483d25fc32a8164ce293385d84ff18))
+
+### Repositories
+ * Do not delete candlepin content when deleting a rolling repo clone of a structured apt deb repository ([#38440](https://projects.theforeman.org/issues/38440), [1a793acb](https://github.com/Katello/katello.git/commit/1a793acb30116340e3446cdb86610536386ca531))
+
 # 4.17.0 Fallingwater (2025-06-09)
 
 ## Features
