@@ -70,7 +70,6 @@ module ::Actions::Katello::ContentViewVersion
     def setup_proxy
       proxy = SmartProxy.pulp_primary
       SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
-      proxy.smart_proxy_features.where(:feature_id => Feature.find_by(:name => SmartProxy::PULP_FEATURE)).delete_all
     end
 
     before do
