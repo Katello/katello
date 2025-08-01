@@ -62,9 +62,9 @@ module Actions
         # rubocop:enable Metrics/MethodLength
 
         def run
-          repository = ::Katello::Repository.find(input[:repository_id])
           if input[:sync_capsule] && (Setting[:foreman_proxy_content_auto_sync])
-            ForemanTasks.async_task(Katello::Repository::CapsuleSync, repository)
+            repository = ::Katello::Repository.find(input[:repository_id])
+            schedule_async_repository_proxy_sync(repository)
           end
           output[:upload_results] = results_to_json(input[:upload_results])
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
