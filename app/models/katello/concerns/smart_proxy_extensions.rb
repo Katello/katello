@@ -1,4 +1,3 @@
-require 'proxy_api'
 require 'proxy_api/container_gateway'
 
 module Katello
@@ -89,6 +88,10 @@ module Katello
 
         def self.pulp_primary!
           pulp_primary || fail(_("Could not find a smart proxy with pulp feature."))
+        end
+
+        def self.default_capsule
+          pulp_primary
         end
 
         def self.with_environment(environment)

@@ -23,9 +23,9 @@ module Katello
         helper 'bastion/layout'
 
         append_view_path('app/views/foreman')
-        before_action :find_resource, :only => [:pulp_storage]
 
         def pulp_storage
+          find_resource
           @storage = @smart_proxy.pulp_disk_usage
           respond_to do |format|
             format.html { render :layout => false }
