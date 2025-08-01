@@ -20,7 +20,22 @@ module Actions
         end
 
         def run
-          ::Katello::Repository.where(id: input[:repository_ids]).destroy_all
+          delete_repo_from_smartproxy = []
+          output[:delete_repo_from_smartproxy] = []
+          repos_to_delete = ::Katello::Repository.where(id: input[:repository_ids])
+          repos_to_delete.each do |repo|
+            SmartProxy.with_repo(repo).each do |proxy|
+              delete_repo_from_smartproxy << { proxy: proxy.id, repo: repo.id } unless proxy.pulp_primary?
+            end
+          end
+          repos_to_delete.destroy_all
+          input[:delete_repo_from_smartproxy] = delete_repo_from_smartproxy
+        end
+
+        def finalize
+          input[:delete_repo_from_smartproxy].each do |entry|
+            ForemanTasks.async_task(::Actions::Katello::CapsuleContent::UpdateContentCounts, SmartProxy.find(entry[:proxy]), repository_id: entry[:repo])
+          end
         end
       end
     end
