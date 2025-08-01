@@ -59,6 +59,12 @@ test('Can open mirror repository modal', async () => {
     expect(getByText(frDetailData.repositories[0].name)).toBeInTheDocument();
   });
 
+  await patientlyWaitFor(() => {
+    expect(getByText('Mirror', {
+      selector: '[data-ouia-component-id="mirror-button-1"]',
+    })).toBeInTheDocument();
+  });
+
   getByText('Mirror', {
     selector: '[data-ouia-component-id="mirror-button-1"]',
   }).click();
@@ -121,6 +127,13 @@ test('Can successfully mirror a repository', async () => {
   await patientlyWaitFor(() => {
     expect(getByText(selectedRepo.name)).toBeInTheDocument();
   });
+
+  await patientlyWaitFor(() => {
+    expect(getByText('Mirror', {
+      selector: '[data-ouia-component-id="mirror-button-1"]',
+    })).toBeInTheDocument();
+  });
+
 
   getByText('Mirror', {
     selector: '[data-ouia-component-id="mirror-button-1"]',

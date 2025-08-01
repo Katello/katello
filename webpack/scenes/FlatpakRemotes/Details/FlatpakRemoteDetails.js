@@ -24,13 +24,13 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectFlatpakRemoteDetails } from './FlatpakRemoteDetailSelectors';
 import getFlatpakRemoteDetails, {
-  deleteFlatpakRemote,
   scanFlatpakRemote,
   updateFlatpakRemote,
 } from './FlatpakRemoteDetailActions';
 import ActionableDetail from '../../../components/ActionableDetail';
 import RemoteRepositoriesTable from './RemoteRepositories/RemoteRepositoriesTable';
 import EditFlatpakRemotesModal from '../CreateEdit/EditFlatpakRemotesModal';
+import DeleteFlatpakModal from '../Delete/DeleteFlatpakModal';
 
 export default function FlatpakRemoteDetails() {
   const { id } = useParams();
@@ -41,6 +41,7 @@ export default function FlatpakRemoteDetails() {
   const dispatch = useDispatch();
 
   const [currentAttribute, setCurrentAttribute] = useState(null);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getFlatpakRemoteDetails(frId));
@@ -51,15 +52,24 @@ export default function FlatpakRemoteDetails() {
   const name = frDetails.name || '';
   const url = frDetails.url || '';
 
+  const {
+    can_edit: canEdit = false,
+    can_delete: canDelete = false,
+    can_mirror: canMirror = false,
+  } = frDetails || {};
+
   const onEdit = (val, attribute) => {
     if (val === frDetails[attribute]) return;
     dispatch(updateFlatpakRemote(frId, { [attribute]: val }));
   };
 
-  const dropDownItems = [
-    <DropdownItem key="edit" ouiaId="fr-edit" onClick={() => { setIsEditing(true); }}> {__('Edit')}</DropdownItem>,
-    <DropdownItem key="delete" ouiaId="cv-delete" onClick={() => { dispatch(deleteFlatpakRemote(frId, () => window.location.assign('/flatpak_remotes/'))); }} > {__('Delete')}</DropdownItem>,
-  ];
+  const dropDownItems = [];
+  if (canEdit) {
+    dropDownItems.push(<DropdownItem key="edit" ouiaId="fr-edit" onClick={() => { setIsEditing(true); }}> {__('Edit')}</DropdownItem>);
+  }
+  if (canDelete) {
+    dropDownItems.push(<DropdownItem key="delete" ouiaId="cv-delete" onClick={() => setDeleteModalOpen(true)}>{__('Delete')}</DropdownItem>);
+  }
 
   return (
     <Grid hasGutter span={12} style={{ padding: '24px' }}>
@@ -76,6 +86,7 @@ export default function FlatpakRemoteDetails() {
             <Title headingLevel="h1" size="2xl" ouiaId="flatpak-remote-title">{name}</Title>
           </FlexItem>
           <FlexItem align={{ default: 'alignRight' }}>
+            {canEdit &&
             <Button
               ouiaId="fr-details-scan-button"
               style={{ marginLeft: 'auto' }}
@@ -87,7 +98,7 @@ export default function FlatpakRemoteDetails() {
                   () => setIsScanning(false),
                 ));
               }
-            }
+              }
               variant="primary"
               aria-label="scan_flatpak_remote"
               isLoading={isScanning}
@@ -95,6 +106,8 @@ export default function FlatpakRemoteDetails() {
             >
               {__('Scan')}
             </Button>
+            }
+            {dropDownItems.length > 0 &&
             <Dropdown
               position={DropdownPosition.right}
               ouiaId="fr-details-actions"
@@ -104,6 +117,7 @@ export default function FlatpakRemoteDetails() {
               isPlain
               dropdownItems={dropDownItems}
             />
+            }
           </FlexItem>
         </Flex>
       </GridItem>
@@ -116,6 +130,7 @@ export default function FlatpakRemoteDetails() {
               label={__('URL:')}
               attribute="url"
               onEdit={onEdit}
+              disabled={!canEdit}
               value={url}
               {...{ currentAttribute, setCurrentAttribute }}
             />
@@ -135,11 +150,18 @@ export default function FlatpakRemoteDetails() {
       </GridItem>
 
       <GridItem span={12}>
-        <RemoteRepositoriesTable frId={frId} />
+        <RemoteRepositoriesTable frId={frId} canMirror={canMirror} />
       </GridItem>
       { isEditing &&
-      <EditFlatpakRemotesModal show={isEditing} remoteData={frDetails} setIsOpen={setIsEditing} />
+        <EditFlatpakRemotesModal show={isEditing} remoteData={frDetails} setIsOpen={setIsEditing} />
       }
+      { isDeleteModalOpen &&
+        <DeleteFlatpakModal
+          isModalOpen={isDeleteModalOpen}
+          handleModalToggle={() => setDeleteModalOpen(!isDeleteModalOpen)}
+          remoteId={frId}
+        />
+        }
     </Grid>
   );
 }

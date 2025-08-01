@@ -9,6 +9,7 @@ import { flatpakRemoteDetailsKey,
   SCAN_FLATPAK_REMOTE_KEY } from '../FlatpakRemotesConstants';
 import api, { orgId } from '../../../services/api';
 import { getResponseErrorMsgs } from '../../../utils/helpers';
+import { renderTaskStartedToast } from '../../Tasks/helpers';
 
 const getFlatpakRemoteDetails = (id, extraParams = {}) => get({
   type: API_OPERATIONS.GET,
@@ -53,9 +54,11 @@ export const mirrorFlatpakRepository = (
     key: flatpakRemoteRepositoriesKey(flatpakRepoId),
     url: api.getApiUrl(`/flatpak_remote_repositories/${flatpakRepoId}/mirror`),
     params: { product_name: productName, organization_id: orgId() },
-    handleSuccess,
+    handleSuccess: (response) => {
+      if (handleSuccess) handleSuccess(response);
+      return renderTaskStartedToast(response.data);
+    },
     handleError,
-    successToast: () => __('Repository mirroring task started in the background'),
     errorToast: error => getResponseErrorMsgs(error.response),
   });
 
@@ -72,9 +75,11 @@ export const scanFlatpakRemote = (id, handleSuccess, handleError) => post({
   type: API_OPERATIONS.POST,
   key: SCAN_FLATPAK_REMOTE_KEY,
   url: api.getApiUrl(`/flatpak_remotes/${id}/scan`),
-  handleSuccess,
+  handleSuccess: (response) => {
+    if (handleSuccess) handleSuccess(response);
+    return renderTaskStartedToast(response.data);
+  },
   handleError,
-  successToast: () => __('Flatpak remote scanning task started in the background'),
   errorToast: error => __('Flatpak remote scan could not be started: ') +
         getResponseErrorMsgs(error.response),
 });

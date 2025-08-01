@@ -15,6 +15,7 @@ const flatpakCreateSuccessToast = (response) => {
 };
 
 export const flatpakCreateErrorToast = error => getResponseErrorMsgs(error.response);
+
 export const createFlatpakRemote = params => post({
   type: API_OPERATIONS.POST,
   key: CREATE_FLATPAK_REMOTES_KEY,
