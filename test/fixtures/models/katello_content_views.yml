@@ -211,6 +211,18 @@ rolling_view:
   label:          'rolling_cv'
   default:        false
   rolling:        true
+  next_version:   3
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+
+debian_cv:
+  name:           Debian Default Content View
+  description:    Debian Repo content view
+  label:          debian_default_contentview_label
+  default:        true
+  rolling:        false
+  composite:      false
   next_version:   2
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
