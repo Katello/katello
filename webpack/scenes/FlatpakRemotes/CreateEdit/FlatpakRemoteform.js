@@ -47,7 +47,7 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
     setUrl(newurl);
     if (newurl === '') {
       setUrlValidated('default');
-    } else if (/^(http(s):\/\/.)[-a-zA-Z0-9@:%._~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_.~#?&//=]*)$/g.test(newurl)) {
+    } else if (/^(http(s)?:\/\/)[-a-zA-Z0-9@:%._~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_.~#?&//=]*)$/g.test(newurl)) {
       setUrlValidated('success');
     } else {
       setUrlValidated('error');
