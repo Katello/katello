@@ -4,7 +4,7 @@ module Katello
   class Api::V2::PackagesControllerTest < ActionController::TestCase
     def models
       @repo = katello_repositories(:fedora_17_x86_64_dev)
-      @version = ContentViewVersion.first
+      @version = katello_content_view_versions(:library_view_version_1)
       @rpm = katello_rpms(:one)
       @rpm2 = katello_rpms(:two)
       @rpm3 = katello_rpms(:one_two)

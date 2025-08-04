@@ -6,7 +6,7 @@ module Katello
       ::Katello::Product.any_instance.stubs(:as_json).returns([])
       @test_repo = Repository.find(katello_repositories(:rhel_6_x86_64).id)
       @errata_filter = katello_content_view_filters(:populated_erratum_filter)
-      @content_view_version = ContentViewVersion.first
+      @content_view_version = katello_content_view_versions(:library_view_version_1)
       @host = FactoryBot.create(:host)
     end
 

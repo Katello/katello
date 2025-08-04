@@ -26,9 +26,17 @@ module Katello
       structured_apt_roots = roots.where(:content_id => nil)
       if structured_apt_roots.any?
         deb_repos_query = Katello::Repository.where(root: structured_apt_roots)
-        environment = consumable.respond_to?(:environment) ? consumable.environment : consumable.content_view_environments.select(:environment_id).map(&:environment_id)
-        deb_repos = match_environment ? deb_repos_query.where(content_view_version: versions, environment: environment) : deb_repos_query.where(:library_instance_id => nil)
-        content_ids += deb_repos.pluck(:content_id)
+        deb_repos_library = Set.new
+        deb_repos_batch = []
+        if match_environment
+          consumable.content_view_environments.each do |cve|
+            deb_repos_batch = deb_repos_query.where("content_view_version_id = ? AND environment_id = ?", cve.content_view_version_id, cve.environment_id).where.not(library_instance_id: deb_repos_library.to_a)
+            deb_repos_library.merge(deb_repos_batch.pluck(:library_instance_id))
+            content_ids += deb_repos_batch.pluck(:content_id)
+          end
+        else
+          content_ids += deb_repos_query.where(:library_instance_id => nil).pluck(:content_id)
+        end
       end
 
       consumable.organization.enabled_product_content_for(content_ids)

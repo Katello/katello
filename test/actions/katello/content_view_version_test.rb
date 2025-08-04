@@ -66,7 +66,8 @@ module ::Actions::Katello::ContentViewVersion
         stub_remote_user
 
         repository_mapping = {}
-        new_repo.update(content_view_version_id: ::Katello::ContentViewVersion.first.id, relative_path: "blah")
+        cv_version = katello_content_view_versions(:library_view_version_2)
+        new_repo.update(content_view_version_id: cv_version.id, relative_path: "blah")
         new_repo.update(version_href: "/test/versions/1/")
         library_repo.update(version_href: "/library_test/versions/1/")
         new_repo.save!
