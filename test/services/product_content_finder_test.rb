@@ -92,5 +92,29 @@ module Katello
       refute product_content.any? { |pc| pc.content.cp_content_id == @repo4.content_id }
       assert product_content.any? { |pc| pc.content.cp_content_id == repo5.content_id }
     end
+
+    def test_debian_return_only_one_content_id_for_the_same_library_instance
+      repo_dev = katello_repositories(:debian_10_dev_view)
+      repo_test = katello_repositories(:debian_10_test_view)
+      cves = ::Katello::ContentViewEnvironment.where(
+        environment_id: [repo_dev.environment_id, repo_test.environment_id],
+        content_view_version_id: [repo_dev.content_view_version_id, repo_test.content_view_version_id])
+
+      @key.stubs(:content_view_environments).returns(cves)
+      pcf = Katello::ProductContentFinder.new(:consumable => @key, :match_environment => true)
+      product_content = pcf.product_content
+
+      # repo_dev and repo_test have the same library instance
+      # ensure that only one of the repos is in the product content
+      refute product_content.any? { |pc| pc.content.cp_content_id == repo_test.content_id }
+      assert product_content.any? { |pc| pc.content.cp_content_id == repo_dev.content_id }
+
+      # Assert that only one product_content item is returned
+      assert_equal 1, product_content.length, "Expected only one product_content item to be returned"
+
+      # Assert that there is only one unique content_id in product_content
+      unique_content_ids = product_content.map { |pc| pc.content.cp_content_id }.uniq
+      assert_equal 1, unique_content_ids.length, "Expected only one unique content_id in product_content"
+    end
   end
 end
