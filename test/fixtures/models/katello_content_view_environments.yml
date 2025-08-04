@@ -108,3 +108,23 @@ rolling_view_library:
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:rolling_view_library_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+
+dev_debian_cv:
+  name:           Debian content view dev environment
+  label:          'debian_cv_dev'
+  cp_id:          15
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:debian_cv) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:debian_view_dev_version) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+test_debian_cv:
+  name:           Debian content view test environment
+  label:          'debian_cv_test'
+  cp_id:          16
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:test) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:debian_cv) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:debian_view_test_version) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

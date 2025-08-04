@@ -4,7 +4,7 @@ module Katello
   class Api::V2::DebsControllerTest < ActionController::TestCase
     def models
       @repo = katello_repositories(:debian_10_amd64)
-      @version = ContentViewVersion.first
+      @version = katello_content_view_versions(:library_view_version_1)
       @deb = katello_debs(:one)
       @host = hosts(:one)
       Pulp3::Deb.any_instance.stubs(:backend_data).returns({ })
