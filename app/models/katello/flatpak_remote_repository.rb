@@ -42,5 +42,13 @@ module Katello
       presenter = Katello::FlatpakRemoteMirrorStatusPresenter.new(self, task)
       presenter.mirror_progress.slice(:mirror_id, :result, :started_at, :last_mirror_words)
     end
+
+    def application_name
+      ref = self.manifests.first&.flatpak_ref
+      return nil if ref.blank?
+
+      match = ref.match(%r{\b(?:app|runtime)/([a-zA-Z0-9_.]+)})
+      match ? match[1] : nil
+    end
   end
 end

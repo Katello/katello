@@ -19,7 +19,7 @@ import MirrorRepositoryModal from '../Mirror/MirrorRepositoryModal';
 const RemoteRepositoriesTable = ({ frId, canMirror }) => {
   const [selectedRepo, setSelectedRepo] = useState(null);
 
-  const columnHeaders = [__('Name'), __('ID'), __('Last mirrored'), __('Mirror')];
+  const columnHeaders = [__('Name'), __('ID'), __('Application name'), __('Last mirrored'), __('Mirror')];
 
   const COLUMNS_TO_SORT_PARAMS = {
     [columnHeaders[0]]: 'name',
@@ -110,6 +110,7 @@ const RemoteRepositoriesTable = ({ frId, canMirror }) => {
                 <Tr key={repo.id} ouiaId={`remote-repo-row-${repo.id}`}>
                   <Td>{repo.name}</Td>
                   <Td>{repo.id}</Td>
+                  <Td>{repo.application_name}</Td>
                   <Td>
                     <LastSync
                       lastSyncWords={repo.last_mirrored?.last_mirror_words}
