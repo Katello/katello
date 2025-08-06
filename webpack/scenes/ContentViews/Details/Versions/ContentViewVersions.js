@@ -127,7 +127,7 @@ const ContentViewVersions = ({ cvId, details }) => {
     [dispatch],
   );
 
-  const buildCells = (cvVersion) => {
+  const buildCells = (cvVersion, rowIndex) => {
     const {
       version,
       description,
@@ -157,7 +157,7 @@ const ContentViewVersions = ({ cvId, details }) => {
 
     return [
       <Checkbox
-        ouiaId={`select-version-${versionId}`}
+        ouiaId={`select-version-row-${rowIndex}`}
         id={versionId}
         aria-label={`Select version ${versionId}`}
         isChecked={isSelected(versionId)}
@@ -208,10 +208,11 @@ const ContentViewVersions = ({ cvId, details }) => {
     version,
     id: versionId,
     environments,
-  }) =>
+  }, rowIndex) =>
     [
       {
         title: __('Promote'),
+        ouiaId: `promote-version-row-${rowIndex}`,
         onClick: () => {
           onPromote({
             cvVersionId: versionId,
@@ -222,6 +223,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       },
       {
         title: __('Remove from environments'),
+        ouiaId: `remove-version-row-${rowIndex}`,
         onClick: () => {
           onRemoveFromEnv({
             cvVersionId: versionId,
@@ -233,6 +235,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       },
       {
         title: __('Delete'),
+        ouiaId: `delete-version-row-${rowIndex}`,
         onClick: () => {
           selectionSet.clear();
           selectOne(true, versionId);
@@ -381,9 +384,9 @@ const ContentViewVersions = ({ cvId, details }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {results?.map((cvVersion) => {
+        {results?.map((cvVersion, rowIndex) => {
           const hasHistory = !!cvVersion?.active_history?.length;
-          const cells = buildCells(cvVersion);
+          const cells = buildCells(cvVersion, rowIndex);
           return (
             <Tr key={`row-${cvVersion.id}`} ouiaId={`row-${cvVersion.id}`}>
               {cells.map((cell, index) => {
@@ -399,7 +402,7 @@ const ContentViewVersions = ({ cvId, details }) => {
               {(!hasHistory && hasActionPermissions) &&
                 <Td
                   actions={{
-                    items: rowDropdownItems(cvVersion),
+                    items: rowDropdownItems(cvVersion, rowIndex),
                   }}
                 />}
             </Tr>);

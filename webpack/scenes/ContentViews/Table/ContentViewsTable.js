@@ -90,18 +90,21 @@ const ContentViewTable = () => {
 
     const publishAction = {
       title: __('Publish'),
+      ouiaId: 'publish-action',
       isDisabled: generatedFor !== 'none',
       onClick: () => openPublishModal(cvInfo),
     };
 
     const promoteAction = {
       title: __('Promote'),
+      ouiaId: 'promote-action',
       isDisabled: !cvVersionCount,
       onClick: () => openPromoteModal(cvInfo),
     };
 
     const copyAction = {
       title: __('Copy'),
+      ouiaId: 'copy-action',
       onClick: () => {
         setCopy(true);
         setActionableCvId(cvInfo.id.toString());
@@ -111,6 +114,7 @@ const ContentViewTable = () => {
 
     const deleteAction = {
       title: __('Delete'),
+      ouiaId: 'delete-action',
       onClick: () => openDeleteModal(cvInfo),
     };
 
