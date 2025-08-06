@@ -212,6 +212,7 @@ const ContentViewVersions = ({ cvId, details }) => {
     [
       {
         title: __('Promote'),
+        ouiaId: `promote-version-${versionId}`,
         onClick: () => {
           onPromote({
             cvVersionId: versionId,
@@ -222,6 +223,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       },
       {
         title: __('Remove from environments'),
+        ouiaId: `remove-version-${versionId}`,
         onClick: () => {
           onRemoveFromEnv({
             cvVersionId: versionId,
@@ -233,6 +235,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       },
       {
         title: __('Delete'),
+        ouiaId: `delete-version-${versionId}`,
         onClick: () => {
           selectionSet.clear();
           selectOne(true, versionId);
