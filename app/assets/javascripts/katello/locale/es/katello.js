@@ -802,6 +802,9 @@
       "Application": [
         "Aplicación"
       ],
+      "Application name": [
+        ""
+      ],
       "Apply": [
         "Solicitar"
       ],
@@ -1044,6 +1047,9 @@
       "Below are the repository sets currently available for this content host. For Red Hat subscriptions, additional content can be made available through the {rhrp}. Changing default settings requires subscription-manager 1.10 or newer to be installed on this host.": [
         ""
       ],
+      "Below you can add content overrides, which change whether a repository is enabled or disabled. Change their state one by one, or use the checkboxes and select an action to perform.": [
+        ""
+      ],
       "Beta": [
         "Beta"
       ],
@@ -1202,6 +1208,9 @@
       ],
       "Cannot add composite versions to another composite content view": [
         "No se pueden agregar versiones compuestas a una vista de contenido compuesta"
+      ],
+      "Cannot add container push repositories to a rolling content view": [
+        ""
       ],
       "Cannot add content view environments from a different organization": [
         ""
@@ -1378,6 +1387,12 @@
         ""
       ],
       "Change host content source": [
+        ""
+      ],
+      "Change the status of at least one repository.": [
+        ""
+      ],
+      "Changed status": [
         ""
       ],
       "Changing a host's content source will change the Smart Proxy from which the host gets its content.": [
@@ -1674,6 +1689,9 @@
       "Content override search parameters": [
         ""
       ],
+      "Content overrides updating.": [
+        ""
+      ],
       "Content source": [
         ""
       ],
@@ -1857,6 +1875,9 @@
       "Could not find environments for promotion": [
         "No se encontraron entornos para la promoción"
       ],
+      "Could not find product with name '%{name}' in organization id %{org_id}.": [
+        ""
+      ],
       "Could not locate Pulp distribution.": [
         ""
       ],
@@ -1967,6 +1988,9 @@
       ],
       "Create Export History": [
         "Crear historial de exportación"
+      ],
+      "Create Flatpak Remote": [
+        ""
       ],
       "Create Import History": [
         "Crear historial de importaciones"
@@ -2160,6 +2184,12 @@
       "Default and Rolling content view versions cannot be promoted": [
         ""
       ],
+      "Default custom non-yum repository mirroring policy": [
+        ""
+      ],
+      "Default custom yum repository mirroring policy": [
+        ""
+      ],
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         ""
       ],
@@ -2185,6 +2215,12 @@
         "Plantilla de kexec por defecto para los nuevos sistemas operativos creados a partir de contenido sincronizado"
       ],
       "Default location for subscribed hosts": [
+        ""
+      ],
+      "Default mirroring policy for custom non-yum repositories (either 'mirror_content_only' or 'additive')": [
+        ""
+      ],
+      "Default mirroring policy for custom yum repositories (either 'mirror_content_only', 'additive' or 'mirror_complete')": [
         ""
       ],
       "Default partitioning table for new Operating Systems created from synced content": [
@@ -2240,6 +2276,9 @@
       ],
       "Delete Activation Key": [
         "Borrar llave de activación"
+      ],
+      "Delete Flatpak remote?": [
+        ""
       ],
       "Delete Host upon unregister": [
         "Eliminar el host al darse de baja"
@@ -2484,11 +2523,17 @@
       "Duration": [
         "Duración"
       ],
+      "During incremental update, the previous content view version '%s' could not be found.": [
+        ""
+      ],
       "ERRATA ADVISORY": [
         "AVISO DE ERRATAS"
       ],
       "Edit": [
         "Editar"
+      ],
+      "Edit Flatpak Remote": [
+        ""
       ],
       "Edit RPM rule": [
         ""
@@ -2949,13 +2994,31 @@
       "Finished": [
         "Finalizado"
       ],
+      "Flatpak Remote ${name} created": [
+        ""
+      ],
+      "Flatpak Remote Details": [
+        ""
+      ],
       "Flatpak Remotes": [
+        ""
+      ],
+      "Flatpak remote could not be deleted: ": [
+        ""
+      ],
+      "Flatpak remote deleted": [
         ""
       ],
       "Flatpak remote numeric identifier": [
         ""
       ],
       "Flatpak remote repository numeric identifier": [
+        ""
+      ],
+      "Flatpak remote scan could not be started: ": [
+        ""
+      ],
+      "Flatpak remote updated": [
         ""
       ],
       "Force": [
@@ -3254,6 +3317,9 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Cómo ordenar los resultados clasificados (p. ej., ASC para orden ascendente)"
+      ],
+      "ID": [
+        ""
       ],
       "ID of a HTTP Proxy": [
         "ID de un proxy HTTP"
@@ -3981,6 +4047,9 @@
       "Last checkin": [
         ""
       ],
+      "Last mirrored": [
+        ""
+      ],
       "Last published": [
         "Última publicación"
       ],
@@ -4395,6 +4464,9 @@
       "Manage packages": [
         ""
       ],
+      "Manage repository sets": [
+        ""
+      ],
       "Manifest": [
         "Manifiesto"
       ],
@@ -4497,10 +4569,19 @@
       "Minimum version": [
         ""
       ],
+      "Mirror": [
+        ""
+      ],
       "Mirror Remote Repository": [
         ""
       ],
+      "Mirror Repository": [
+        ""
+      ],
       "Mirror a flatpak remote repository": [
+        ""
+      ],
+      "Mirroring will import the remote flatpak repository": [
         ""
       ],
       "Missing activation key!": [
@@ -4545,7 +4626,16 @@
       "Multi-entitlement": [
         "Multiderecho"
       ],
+      "Multi-environment activation key(s) affected": [
+        ""
+      ],
+      "Multi-environment host(s) affected": [
+        ""
+      ],
       "Must be Ascii alphanumeric, '_' or '-'": [
+        ""
+      ],
+      "Must be a vaild URL": [
         ""
       ],
       "N/A": [
@@ -4604,6 +4694,9 @@
       ],
       "Name of the host": [
         "Nombre del host"
+      ],
+      "Name of the product to mirror the remote repository to": [
+        ""
       ],
       "Name of the repository": [
         "Nombre del repositorio"
@@ -4711,6 +4804,9 @@
         ""
       ],
       "No available repository or filter updates": [
+        ""
+      ],
+      "No change": [
         ""
       ],
       "No content": [
@@ -5139,6 +5235,9 @@
       "Organization ID is required": [
         "Se requiere el ID de organización"
       ],
+      "Organization ID or title": [
+        ""
+      ],
       "Organization Information not provided.": [
         ""
       ],
@@ -5436,6 +5535,9 @@
       "Physical": [
         "Físico"
       ],
+      "Place symlinks to entitlement certificates on the host, enabling container/flatpak registry access without a username or password.": [
+        ""
+      ],
       "Plan numeric identifier": [
         "Identificador numérico del plan"
       ],
@@ -5482,9 +5584,6 @@
         ""
       ],
       "Policy to set for mirroring content.  Must be one of %s.": [
-        ""
-      ],
-      "Possible values: %s": [
         ""
       ],
       "Prefer registered through Smart Proxy for remote execution": [
@@ -6393,6 +6492,9 @@
       "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot.": [
         ""
       ],
+      "Review and then click 'Set content overrides.' Status will be changed for the selected repository sets on the selected hosts.": [
+        ""
+      ],
       "Review and then click {submitBtnText}.": [
         ""
       ],
@@ -6475,6 +6577,9 @@
         "Guardar"
       ],
       "Saving alternate content source...": [
+        ""
+      ],
+      "Scan": [
         ""
       ],
       "Scan a flatpak remote": [
@@ -6576,6 +6681,9 @@
       "Select a lifecycle environment from the available promotion paths to promote new version.": [
         ""
       ],
+      "Select a product to mirror the repository into": [
+        ""
+      ],
       "Select a provider to install katello-host-tools-tracer": [
         ""
       ],
@@ -6669,6 +6777,9 @@
       "Select products to associate to this source.": [
         ""
       ],
+      "Select repository sets": [
+        ""
+      ],
       "Select row": [
         "Seleccionar fila"
       ],
@@ -6717,6 +6828,9 @@
       "Service level to be used for autoheal": [
         "Nivel de servicio que se utilizará para la autocuración"
       ],
+      "Set content overrides": [
+        ""
+      ],
       "Set content overrides for the host": [
         "Establecer anulaciones de contenido para el host"
       ],
@@ -6731,6 +6845,9 @@
       ],
       "Set true to remove an override and reset it to 'default'": [
         "Establecer como verdadero para eliminar una anulación y volver a establecerla como 'por defecto'"
+      ],
+      "Set up container registry certs": [
+        ""
       ],
       "Sets the system purpose usage": [
         "Establece el uso del propósito del sistema"
@@ -7677,6 +7794,9 @@
       "This Content View must be set to Import-only before performing an import": [
         ""
       ],
+      "This Flatpak remote will be deleted. Repositories mirrored from this remote will remain available and functional for use": [
+        ""
+      ],
       "This Host is not currently registered with subscription-manager.": [
         "Este host no está registrado actualmente en el gestor de suscripciones."
       ],
@@ -7839,6 +7959,9 @@
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
         ""
       ],
+      "To manage host content overrides, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "To manage host packages, a specific organization must be selected from the organization context.": [
         ""
       ],
@@ -7941,6 +8064,9 @@
       "URL of an OSTree repository.": [
         ""
       ],
+      "URL:": [
+        ""
+      ],
       "UUID": [
         "UUID"
       ],
@@ -8016,6 +8142,9 @@
       "Unable to refresh any alternate content source. You either do not have the permission to refresh, or none of the alternate content sources exist.": [
         ""
       ],
+      "Unable to refresh host-repository mapping": [
+        ""
+      ],
       "Unable to send errata e-mail notification: %{error}": [
         "No se puede enviar la notificación de errata por correo electrónico: %{error}"
       ],
@@ -8027,6 +8156,12 @@
       ],
       "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url.": [
         "No se puede sincronizar ningún repositorio. Es posible que usted no tenga permiso para sincronizar o que los repositorios seleccionados no tengan una URL de fuente.  "
+      ],
+      "Unable to update host-repository mapping": [
+        ""
+      ],
+      "Unable to update hosts": [
+        ""
       ],
       "Unable to update the repository list": [
         ""
@@ -8063,6 +8198,9 @@
       ],
       "Unregister host %s before assigning an organization": [
         "Anular el registro del host %s antes de asignar una organización"
+      ],
+      "Unregister host %s before assigning an organization.": [
+        ""
       ],
       "Unregister the host as a subscription consumer": [
         "Cancelar el registro del host como consumidor de suscripción"
@@ -8332,6 +8470,9 @@
         ""
       ],
       "Use HTTP proxies": [
+        ""
+      ],
+      "Use container certificates for container registry authentication. If it is set to true, container registry certificates will be installed on the host": [
         ""
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
@@ -9104,6 +9245,9 @@
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         "interpretar que el objeto especificado muestra solo los repositorios que pueden asociarse con el objeto especificado. Solo se admiten 'content_view' y 'content_view_version'."
+      ],
+      "into a product. Details from the flatpak remote will automatically populate the repository fields. The repository will be available for syncing once it has been mirrored into a product.": [
+        ""
       ],
       "invalid: Repositories can only require one OS version.": [
         ""
