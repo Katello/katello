@@ -178,5 +178,7 @@ module Katello
         _('Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.')
       end
     end
+
+    class InvalidExportFormat < StandardError; end
   end
 end

@@ -55,10 +55,14 @@ module Katello
     end
 
     def find_repository_export_view
+      # For incremental exports, undefined format is permitted to infer export format
+      format = params[:format].present? ? find_export_format : ::Katello::Pulp3::ContentViewVersion::Export::UNDEFINED
+
       @view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
                                                                 repository: @repository,
                                                                 create_by_default: false,
-                                                                format: find_export_format)
+                                                                format: format,
+                                                                is_incremental: true)
       if @view.blank?
         msg = _("Unable to incrementally export. Do a Full Export on the repository content.")
         fail HttpErrors::BadRequest, msg
