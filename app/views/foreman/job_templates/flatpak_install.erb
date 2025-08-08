@@ -28,4 +28,19 @@ template_inputs:
   app_name = input('Application name')
   use_dbus_session = input('Launch a session bus instance') == 'true'
 %>
-sudo <%= use_dbus_session ? 'dbus-run-session ' : ''%>flatpak install <%= remote_name %> <%= app_name %> --assumeyes
+<% if use_dbus_session %>
+sudo dbus-run-session bash -c '
+  echo "Installing flatpak app <%= app_name %> from <%= remote_name %>"
+  if ! output=$(flatpak install <%= remote_name %> <%= app_name %> --assumeyes 2>&1); then
+  echo "$output"
+  echo "Flatpak install failed"
+  exit 1
+  fi
+  echo "$output"
+'
+dbus_status=$?
+sudo pkill -TERM -f flatpak-oci-authenticator || true
+exit $dbus_status
+<% else %>
+sudo flatpak install <%= remote_name %> <%= app_name %> --assumeyes
+<% end %>
