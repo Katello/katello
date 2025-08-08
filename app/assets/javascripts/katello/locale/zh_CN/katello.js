@@ -800,6 +800,9 @@
       "Application": [
         "应用"
       ],
+      "Application name": [
+        ""
+      ],
       "Apply": [
         "应用"
       ],
@@ -1040,6 +1043,9 @@
       "Below are the repository sets currently available for this content host. For Red Hat subscriptions, additional content can be made available through the {rhrp}. Changing default settings requires subscription-manager 1.10 or newer to be installed on this host.": [
         "以下是对于这个内容主机当前可用的仓库集。对于红帽订阅，额外的内容可以通过 {rhrp} 获得。修改默认设置需要 subscription-manager 1.10 或更新版本来在这个主机上安装。"
       ],
+      "Below you can add content overrides, which change whether a repository is enabled or disabled. Change their state one by one, or use the checkboxes and select an action to perform.": [
+        ""
+      ],
       "Beta": [
         "Beta"
       ],
@@ -1198,6 +1204,9 @@
       ],
       "Cannot add composite versions to another composite content view": [
         "无法将复合版本添加到另外一个复合内容视图中"
+      ],
+      "Cannot add container push repositories to a rolling content view": [
+        ""
       ],
       "Cannot add content view environments from a different organization": [
         ""
@@ -1375,6 +1384,12 @@
       ],
       "Change host content source": [
         "更改主机内容源"
+      ],
+      "Change the status of at least one repository.": [
+        ""
+      ],
+      "Changed status": [
+        ""
       ],
       "Changing a host's content source will change the Smart Proxy from which the host gets its content.": [
         ""
@@ -1670,6 +1685,9 @@
       "Content override search parameters": [
         "内容覆盖搜索参数"
       ],
+      "Content overrides updating.": [
+        ""
+      ],
       "Content source": [
         "内容源"
       ],
@@ -1853,6 +1871,9 @@
       "Could not find environments for promotion": [
         "无法找到升级到的环境"
       ],
+      "Could not find product with name '%{name}' in organization id %{org_id}.": [
+        ""
+      ],
       "Could not locate Pulp distribution.": [
         ""
       ],
@@ -1963,6 +1984,9 @@
       ],
       "Create Export History": [
         "创建导出历史记录"
+      ],
+      "Create Flatpak Remote": [
+        ""
       ],
       "Create Import History": [
         "创建导入历史记录"
@@ -2156,6 +2180,12 @@
       "Default and Rolling content view versions cannot be promoted": [
         ""
       ],
+      "Default custom non-yum repository mirroring policy": [
+        ""
+      ],
+      "Default custom yum repository mirroring policy": [
+        ""
+      ],
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         "智能代理同步默认下载策略（'inherit'、immediate' 或'on_demand'）"
       ],
@@ -2182,6 +2212,12 @@
       ],
       "Default location for subscribed hosts": [
         "订阅主机的默认位置"
+      ],
+      "Default mirroring policy for custom non-yum repositories (either 'mirror_content_only' or 'additive')": [
+        ""
+      ],
+      "Default mirroring policy for custom yum repositories (either 'mirror_content_only', 'additive' or 'mirror_complete')": [
+        ""
       ],
       "Default partitioning table for new Operating Systems created from synced content": [
         "从同步内容创建的新操作系统的默认分区表"
@@ -2236,6 +2272,9 @@
       ],
       "Delete Activation Key": [
         "删除激活码"
+      ],
+      "Delete Flatpak remote?": [
+        ""
       ],
       "Delete Host upon unregister": [
         "取消注册后删除主机"
@@ -2480,11 +2519,17 @@
       "Duration": [
         "持续时间"
       ],
+      "During incremental update, the previous content view version '%s' could not be found.": [
+        ""
+      ],
       "ERRATA ADVISORY": [
         "勘误公告"
       ],
       "Edit": [
         "编辑"
+      ],
+      "Edit Flatpak Remote": [
+        ""
       ],
       "Edit RPM rule": [
         "编辑 RPM 规则"
@@ -2945,13 +2990,31 @@
       "Finished": [
         "完成"
       ],
+      "Flatpak Remote ${name} created": [
+        ""
+      ],
+      "Flatpak Remote Details": [
+        ""
+      ],
       "Flatpak Remotes": [
+        ""
+      ],
+      "Flatpak remote could not be deleted: ": [
+        ""
+      ],
+      "Flatpak remote deleted": [
         ""
       ],
       "Flatpak remote numeric identifier": [
         ""
       ],
       "Flatpak remote repository numeric identifier": [
+        ""
+      ],
+      "Flatpak remote scan could not be started: ": [
+        ""
+      ],
+      "Flatpak remote updated": [
         ""
       ],
       "Force": [
@@ -3250,6 +3313,9 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "如何排序結果的順序（比方說 ASC 從下到上）"
+      ],
+      "ID": [
+        ""
       ],
       "ID of a HTTP Proxy": [
         "HTTP 代理的 ID"
@@ -3977,6 +4043,9 @@
       "Last checkin": [
         "最后检查"
       ],
+      "Last mirrored": [
+        ""
+      ],
       "Last published": [
         "最新发布的"
       ],
@@ -4391,6 +4460,9 @@
       "Manage packages": [
         ""
       ],
+      "Manage repository sets": [
+        ""
+      ],
       "Manifest": [
         "清单"
       ],
@@ -4493,10 +4565,19 @@
       "Minimum version": [
         "最小版本"
       ],
+      "Mirror": [
+        ""
+      ],
       "Mirror Remote Repository": [
         ""
       ],
+      "Mirror Repository": [
+        ""
+      ],
       "Mirror a flatpak remote repository": [
+        ""
+      ],
+      "Mirroring will import the remote flatpak repository": [
         ""
       ],
       "Missing activation key!": [
@@ -4541,7 +4622,16 @@
       "Multi-entitlement": [
         "多权利"
       ],
+      "Multi-environment activation key(s) affected": [
+        ""
+      ],
+      "Multi-environment host(s) affected": [
+        ""
+      ],
       "Must be Ascii alphanumeric, '_' or '-'": [
+        ""
+      ],
+      "Must be a vaild URL": [
         ""
       ],
       "N/A": [
@@ -4600,6 +4690,9 @@
       ],
       "Name of the host": [
         "主机名"
+      ],
+      "Name of the product to mirror the remote repository to": [
+        ""
       ],
       "Name of the repository": [
         "仓库名"
@@ -4707,6 +4800,9 @@
         ""
       ],
       "No available repository or filter updates": [
+        ""
+      ],
+      "No change": [
         ""
       ],
       "No content": [
@@ -5135,6 +5231,9 @@
       "Organization ID is required": [
         "必须提供机构 ID"
       ],
+      "Organization ID or title": [
+        ""
+      ],
       "Organization Information not provided.": [
         "未提供的机构信息。"
       ],
@@ -5432,6 +5531,9 @@
       "Physical": [
         "物理"
       ],
+      "Place symlinks to entitlement certificates on the host, enabling container/flatpak registry access without a username or password.": [
+        ""
+      ],
       "Plan numeric identifier": [
         "计划数字标识符"
       ],
@@ -5479,9 +5581,6 @@
       ],
       "Policy to set for mirroring content.  Must be one of %s.": [
         "为镜像内容设置的策略。必须是 %s 之一。"
-      ],
-      "Possible values: %s": [
-        ""
       ],
       "Prefer registered through Smart Proxy for remote execution": [
         ""
@@ -6389,6 +6488,9 @@
       "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot.": [
         ""
       ],
+      "Review and then click 'Set content overrides.' Status will be changed for the selected repository sets on the selected hosts.": [
+        ""
+      ],
       "Review and then click {submitBtnText}.": [
         ""
       ],
@@ -6472,6 +6574,9 @@
       ],
       "Saving alternate content source...": [
         "更新备用内容源..."
+      ],
+      "Scan": [
+        ""
       ],
       "Scan a flatpak remote": [
         ""
@@ -6572,6 +6677,9 @@
       "Select a lifecycle environment from the available promotion paths to promote new version.": [
         "从可用的提升路径中选择生命周期环境来提升新版本。"
       ],
+      "Select a product to mirror the repository into": [
+        ""
+      ],
       "Select a provider to install katello-host-tools-tracer": [
         "选择安装 katello-host-tools-tracer 的供应商"
       ],
@@ -6665,6 +6773,9 @@
       "Select products to associate to this source.": [
         "选择要与这个源关联的产品。"
       ],
+      "Select repository sets": [
+        ""
+      ],
       "Select row": [
         "选择行"
       ],
@@ -6713,6 +6824,9 @@
       "Service level to be used for autoheal": [
         "用于自动修复的服务级别"
       ],
+      "Set content overrides": [
+        ""
+      ],
       "Set content overrides for the host": [
         "设置主机的内容覆盖"
       ],
@@ -6727,6 +6841,9 @@
       ],
       "Set true to remove an override and reset it to 'default'": [
         "设置为 true 以删除覆盖并将它重置为 'default'"
+      ],
+      "Set up container registry certs": [
+        ""
       ],
       "Sets the system purpose usage": [
         "设置系统用途使用"
@@ -7673,6 +7790,9 @@
       "This Content View must be set to Import-only before performing an import": [
         "在执行导入之前，必须将此内容视图设置为“仅导入”"
       ],
+      "This Flatpak remote will be deleted. Repositories mirrored from this remote will remain available and functional for use": [
+        ""
+      ],
       "This Host is not currently registered with subscription-manager.": [
         "该主机当前没有使用 subscription-manager 注册。"
       ],
@@ -7835,6 +7955,9 @@
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
         ""
       ],
+      "To manage host content overrides, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "To manage host packages, a specific organization must be selected from the organization context.": [
         ""
       ],
@@ -7937,6 +8060,9 @@
       "URL of an OSTree repository.": [
         "OSTree 存储库的 URL。"
       ],
+      "URL:": [
+        ""
+      ],
       "UUID": [
         "UUID"
       ],
@@ -8012,6 +8138,9 @@
       "Unable to refresh any alternate content source. You either do not have the permission to refresh, or none of the alternate content sources exist.": [
         "无法刷新任何备用内容源。您没有刷新的权限，或者没有任何备用内容源。"
       ],
+      "Unable to refresh host-repository mapping": [
+        ""
+      ],
       "Unable to send errata e-mail notification: %{error}": [
         "无法发送勘误电子邮件通知：%{error}"
       ],
@@ -8023,6 +8152,12 @@
       ],
       "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url.": [
         "无法同步任何存储库。您或者没有同步权限，或者所选存储库没有提要URL。"
+      ],
+      "Unable to update host-repository mapping": [
+        ""
+      ],
+      "Unable to update hosts": [
+        ""
       ],
       "Unable to update the repository list": [
         "无法更新存储库列表"
@@ -8059,6 +8194,9 @@
       ],
       "Unregister host %s before assigning an organization": [
         "分配机构之前先取消注册主机 %s"
+      ],
+      "Unregister host %s before assigning an organization.": [
+        ""
       ],
       "Unregister the host as a subscription consumer": [
         "取消主机作为订阅使用者"
@@ -8329,6 +8467,9 @@
       ],
       "Use HTTP proxies": [
         "使用 HTTP 代理"
+      ],
+      "Use container certificates for container registry authentication. If it is set to true, container registry certificates will be installed on the host": [
+        ""
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "用于确定在 pulp3 中并性下载存储库的数量。使用小于20 的值。默认为 10"
@@ -9100,6 +9241,9 @@
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         "解析指定的对象只返回与特定对象关联的仓库。只支持 'content_view' 和 'content_view_version'。"
+      ],
+      "into a product. Details from the flatpak remote will automatically populate the repository fields. The repository will be available for syncing once it has been mirrored into a product.": [
+        ""
       ],
       "invalid: Repositories can only require one OS version.": [
         "无效：存储库只能要求一个操作系统版本。"
