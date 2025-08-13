@@ -8,6 +8,10 @@ module Katello
       def auto_complete_search
         begin
           options = resource_class.respond_to?(:completer_scope_options) ? resource_class.completer_scope_options(params[:search]) : {}
+          if resource_class < Authorizable
+            permission = resource_class.find_permission_name(:view)
+            resource_class = resource_class.authorized(permission)
+          end
           items = resource_class.where(:id => self.index_relation).complete_for(params[:search], options)
           items = filter_autocomplete_items(items)
           items = items.map do |item|
