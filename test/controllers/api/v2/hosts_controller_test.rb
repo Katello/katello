@@ -213,6 +213,35 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_response :error
   end
 
+  def test_handle_content_view_environments_for_create
+    @controller.expects(:validate_content_view_environment_params).returns([katello_content_view_environments(:library_default_view_environment)])
+    @controller.expects(:set_content_view_environments).with([katello_content_view_environments(:library_default_view_environment)])
+
+    post :create, params: {
+      :host => {
+        :name => "contenthost.example.com",
+        :content_facet_attributes => {
+          :content_view_environments => ["Library"],
+        },
+      },
+    }, session: set_session_user
+    # no assertions needed about the response, we're just making sure handle_content_view_environments_for_create is called
+  end
+
+  def test_handle_content_view_environments_for_update
+    @controller.expects(:validate_content_view_environment_params).returns([katello_content_view_environments(:library_default_view_environment)])
+    @controller.expects(:set_content_view_environments).with([katello_content_view_environments(:library_default_view_environment)])
+    host = FactoryBot.create(:host, :with_content, :with_subscription,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_environments => ["Library"],
+      },
+    }, session: set_session_user
+    # no assertions needed about the response, we're just making sure handle_content_view_environments_for_update is called
+  end
+
   def test_with_subscriptions
     host = FactoryBot.create(:host, :with_subscription, :with_operatingsystem)
     host_index_and_show(host)
