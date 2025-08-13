@@ -29,6 +29,11 @@ describe('Factory: CapsuleContent', function () {
         CapsuleContent.reclaimSpace({ id: 1 });
     });
 
+    it('provides a way to start content checksum verification', function () {
+        $httpBackend.expectPOST('katello/api/capsules/1/content/verify_checksum').respond({});
+        CapsuleContent.verifyContentChecksum({ id: 1 });
+    });
+
     it('provides a way to cancel synchronization', function () {
         $httpBackend.expectDELETE('katello/api/capsules/1/content/sync').respond({});
         CapsuleContent.cancelSync({ id: 1 });

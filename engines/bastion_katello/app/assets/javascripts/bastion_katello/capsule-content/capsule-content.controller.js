@@ -191,6 +191,22 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             }
         };
 
+        $scope.verifyContentChecksum = function () {
+            if (!$scope.syncState.is(syncState.SYNCING) && !$scope.syncState.is(syncState.VERIFYING_CONTENT_CHECKSUM)) {
+
+                $scope.syncState.set(syncState.VERIFY_CONTENT_CHECKSUM_TRIGGERED);
+
+                CapsuleContent.verifyContentChecksum({id: capsuleId}).$promise.then(function (task) {
+                    $scope.syncStatus['active_sync_tasks'].push(task);
+                    $scope.syncTask = aggregateTasks($scope.syncStatus['active_sync_tasks']);
+                    $scope.syncState.set(syncState.VERIFYING_CONTENT_CHECKSUM);
+                }, function (response) {
+                    processError(response, translate('Last verify content checksum failed: '));
+                    $scope.syncState.set(syncState.DEFAULT);
+                });
+            }
+        };
+
         $scope.syncStatusText = function (currentSyncState, syncStatus) {
             var message, syncableEnvs, envNames;
 
@@ -202,12 +218,16 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                 message = translate("Smart proxy currently syncing to your locations...");
             } else if (currentSyncState.is(currentSyncState.RECLAIMING_SPACE)) {
                 message = translate("Smart proxy currently reclaiming space...");
+            } else if (currentSyncState.is(currentSyncState.VERIFYING_CONTENT_CHECKSUM)) {
+                message = translate("Smart proxy currently verifying content checksums...");
             } else if (currentSyncState.is(currentSyncState.SYNC_TRIGGERED)) {
                 message = translate("Synchronization is about to start...");
             } else if (currentSyncState.is(currentSyncState.CANCEL_TRIGGERED)) {
                 message = translate("Synchronization is being cancelled...");
             } else if (currentSyncState.is(currentSyncState.RECLAIM_SPACE_TRIGGERED)) {
                 message = translate("Space reclamation is about to start...");
+            } else if (currentSyncState.is(currentSyncState.VERIFY_CONTENT_CHECKSUM_TRIGGERED)) {
+                message = translate("Verify Content Checksums is about to start...");
             } else {
                 syncableEnvs = _.filter(syncStatus['lifecycle_environments'], {syncable: true});
 

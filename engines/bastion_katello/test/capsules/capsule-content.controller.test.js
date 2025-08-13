@@ -39,6 +39,9 @@ describe('Controller: CapsuleContentController', function() {
         CapsuleContent.reclaimSpace = function (params) {
             return { $promise: deferred.promise };
         }
+        CapsuleContent.verifyContentChecksum = function (params) {
+            return { $promise: deferred.promise };
+        }
 
         translate = function (message) {
             return message;
@@ -93,6 +96,12 @@ describe('Controller: CapsuleContentController', function() {
             expect(CapsuleContent.reclaimSpace).toHaveBeenCalledWith({ id: '83' });
         });
 
+        it('starts capsule content checksum verification', function() {
+            spyOn(CapsuleContent, 'verifyContentChecksum').and.callThrough();
+            $scope.verifyContentChecksum();
+            expect(CapsuleContent.verifyContentChecksum).toHaveBeenCalledWith({ id: '83' });
+        });
+
         it('starts capsule synchronization with skip metadata option', function() {
             spyOn(CapsuleContent, 'sync').and.callThrough();
             $scope.syncCapsule(true);
@@ -107,6 +116,11 @@ describe('Controller: CapsuleContentController', function() {
         it('sets state to RECLAIM_SPACE_TRIGGERED', function() {
             $scope.reclaimSpace();
             expect(syncState.is(syncState.RECLAIM_SPACE_TRIGGERED)).toBeTruthy();
+        });
+
+        it('sets state to VERIFY_CONTENT_CHECKSUM_TRIGGERED', function() {
+            $scope.verifyContentChecksum();
+            expect(syncState.is(syncState.VERIFY_CONTENT_CHECKSUM_TRIGGERED)).toBeTruthy();
         });
 
         it('sets state to SYNCING when the response is successful', function() {
@@ -125,6 +139,13 @@ describe('Controller: CapsuleContentController', function() {
             expect(syncState.is(syncState.RECLAIMING_SPACE)).toBeTruthy();
         });
 
+        it('sets state to VERIFYING_CONTENT_CHECKSUM when the response is successful', function() {
+            $scope.verifyContentChecksum();
+            deferred.resolve({id: '1'});
+            $scope.$apply();
+
+            expect(syncState.is(syncState.VERIFYING_CONTENT_CHECKSUM)).toBeTruthy();
+        });
 
         it('adds task to active_sync_tasks when the sync response is successful', function() {
             var taskCount = $scope.syncStatus['active_sync_tasks'].length;
