@@ -9,6 +9,7 @@ const smartProxyContentData = require('./SmartProxyContentTest.fixtures.json');
 
 const smartProxyContentPath = api.getApiUrl('/capsules/1/content/sync');
 const smartProxyRefreshCountPath = api.getApiUrl('/capsules/1/content/update_counts');
+const smartProxyRepairContentPath = api.getApiUrl('/capsules/1/content/verify_checksum');
 
 const smartProxyContent = { ...smartProxyContentData };
 
@@ -129,7 +130,6 @@ test('Can call content count refresh for content view', async (done) => {
     })
     .reply(202);
 
-
   const {
     getByText, getAllByText, getByLabelText, getAllByLabelText,
   } = renderWithRedux(contentTable);
@@ -151,5 +151,71 @@ test('Can call content count refresh for content view', async (done) => {
 
   assertNockRequest(detailsScope);
   assertNockRequest(countsCVRefreshScope, done);
+  act(done);
+});
+
+test('Can call content repair for environment', async (done) => {
+  const detailsScope = nockInstance
+    .get(smartProxyContentPath)
+    .query(true)
+    .reply(200, smartProxyContent);
+
+  const contentEnvRepairScope = nockInstance
+    .post(smartProxyRepairContentPath, {
+      environment_id: 1,
+    })
+    .reply(202);
+
+  const {
+    getByText, getAllByLabelText,
+  } = renderWithRedux(contentTable);
+  await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
+
+  await patientlyWaitFor(() => expect(getByText('Verify Content Checksum')).toBeInTheDocument());
+  const verifyEnv = getByText('Verify Content Checksum');
+  verifyEnv.click();
+
+  assertNockRequest(detailsScope);
+  assertNockRequest(contentEnvRepairScope, done);
+  act(done);
+});
+
+test('Can call content repair for content view', async (done) => {
+  const detailsScope = nockInstance
+    .get(smartProxyContentPath)
+    .query(true)
+    .reply(200, smartProxyContent);
+
+  const contentCVRepairScope = nockInstance
+    .post(smartProxyRepairContentPath, {
+      content_view_id: 1,
+      environment_id: 1,
+    })
+    .reply(202);
+
+  const {
+    getByText, getAllByText, getByLabelText, getAllByLabelText,
+  } = renderWithRedux(contentTable);
+  await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
+  const tdEnvExpand = getByLabelText('expand-env-1');
+  const envExpansion = within(tdEnvExpand).getByLabelText('Details');
+  envExpansion.click();
+  await patientlyWaitFor(() => expect(getAllByText('Content view')[0]).toBeInTheDocument());
+  expect(getAllByText('Last published')[0]).toBeInTheDocument();
+  expect(getAllByText('Repository')[0]).toBeInTheDocument();
+  expect(getAllByText('Synced')[0]).toBeInTheDocument();
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Kebab toggle')[1]);
+  expect(getAllByLabelText('Kebab toggle')[1]).toHaveAttribute('aria-expanded', 'true');
+
+  await patientlyWaitFor(() => expect(getByText('Verify Content Checksum')).toBeInTheDocument());
+  const repairCv = getByText('Verify Content Checksum');
+  repairCv.click();
+
+  assertNockRequest(detailsScope);
+  assertNockRequest(contentCVRepairScope, done);
   act(done);
 });
