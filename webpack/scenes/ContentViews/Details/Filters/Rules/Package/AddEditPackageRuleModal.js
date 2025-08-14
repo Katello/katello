@@ -164,6 +164,7 @@ const AddEditPackageRuleModal = ({
               },
             }}
             onSearchChange={setName}
+            initialQuery={name}
           />
         </FormGroup>
         <FormGroup label={__('Architecture')} fieldId="architecture">
@@ -175,6 +176,7 @@ const AddEditPackageRuleModal = ({
               },
             }}
             onSearchChange={setArchitecture}
+            initialQuery={architecture}
           />
         </FormGroup>
         <FormGroup label={__('Version')} fieldId="version_comparator">
