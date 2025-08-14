@@ -8,6 +8,11 @@ rhel6_bugfix:
   repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   erratum_pulp3_href: "rhel6_bugfix_href"
 
+rhel6_trailing_whitespace:
+  erratum_id: <%= ActiveRecord::FixtureSet.identify(:trailing_whitespace) %>
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
+  erratum_pulp3_href: "rhel6_trailing_whitespace_href"
+
 rhel6_view_security:
   erratum_id: <%= ActiveRecord::FixtureSet.identify(:security) %>
   repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_library_view_1) %>
@@ -27,3 +32,18 @@ fedora_17_x86_64_trailing_whitespace:
     erratum_id: <%= ActiveRecord::FixtureSet.identify(:trailing_whitespace) %>
     repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
     erratum_pulp3_href: "fedora_17_x86_64_trailing_whitespace_href"
+
+fedora_17_x86_64_enhancement:
+    erratum_id: <%= ActiveRecord::FixtureSet.identify(:enhancement) %>
+    repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+    erratum_pulp3_href: "fedora_17_x86_64_enhancement_href"
+
+fedora_17_x86_64_singletonissue:
+    erratum_id: <%= ActiveRecord::FixtureSet.identify(:singletonissue) %>
+    repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+    erratum_pulp3_href: "fedora_17_x86_64_singletonissue_href"
+
+fedora_17_x86_64_modular:
+    erratum_id: <%= ActiveRecord::FixtureSet.identify(:modular) %>
+    repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+    erratum_pulp3_href: "fedora_17_x86_64_modular_href"

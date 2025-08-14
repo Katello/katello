@@ -137,7 +137,6 @@ module Katello
                                                        arch: rpm_i686.arch, nvrea: rpm_i686.nvrea)
           trigger_evrs([rpm_i686, rpm_i686_v2, installed_package2])
           HostInstalledPackage.create(host_id: @host.id, installed_package_id: installed_package2.id)
-          [rpm_i686, rpm_i686_v2].each { |p| ::Katello::RepositoryRpm.create(rpm_id: p.id, repository_id: @repo.id) }
 
           package_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).fetch_content_ids
           assert_equal 2, package_content_ids.size

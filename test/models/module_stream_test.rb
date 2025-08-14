@@ -12,7 +12,6 @@ module Katello
     end
 
     def test_clean_filter_rules
-      ::Katello::RepositoryModuleStream.create!(module_stream_id: @module_stream_empty.id, repository_id: @fedora_repo.id)
       filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
       river_rule = FactoryBot.create(:katello_content_view_module_stream_filter_rule,
                                    :filter => filter,

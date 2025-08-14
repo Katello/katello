@@ -9,3 +9,15 @@ one:
 two:
   repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_dev) %>
   module_stream_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
+
+three:
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+  module_stream_id: <%= ActiveRecord::FixtureSet.identify(:three) %>
+
+module_stream_four:
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+  module_stream_id: <%= ActiveRecord::FixtureSet.identify(:module_stream_four) %>
+
+empty:
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+  module_stream_id: <%= ActiveRecord::FixtureSet.identify(:empty) %>

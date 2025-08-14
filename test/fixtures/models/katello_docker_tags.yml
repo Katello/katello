@@ -1,9 +1,15 @@
 one:
   name: one
   pulp_id: one
+  docker_taggable_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  docker_taggable_type: Katello::DockerManifest
 two:
   name: two
   pulp_id: two
+  docker_taggable_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
+  docker_taggable_type: Katello::DockerManifest
 three:
   name: three
   pulp_id: three
+  docker_taggable_id: <%= ActiveRecord::FixtureSet.identify(:three) %>
+  docker_taggable_type: Katello::DockerManifest
