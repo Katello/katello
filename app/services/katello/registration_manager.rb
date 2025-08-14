@@ -125,12 +125,10 @@ module Katello
       #  * organization_destroy: destroy some data associated with host, but
       #    leave items alone that will be removed later as part of org destroy
       #  * unregistering: unregister the host but don't destroy it
-      #  * keep_kickstart_repository: ensure the KS repo ID is not set to nil
       def unregister_host(host, options = {})
         organization_destroy = options.fetch(:organization_destroy, false)
         unregistering = options.fetch(:unregistering, false)
-        keep_kickstart_repository = options.fetch(:keep_kickstart_repository, false)
-
+        preserve_for_provisioning = options.fetch(:preserve_for_provisioning, false)
         # if the first operation fails, just raise the error since there's nothing to clean up yet.
         candlepin_consumer_destroy(host.subscription_facet.uuid) if !organization_destroy && host.subscription_facet.try(:uuid)
 
@@ -140,14 +138,10 @@ module Katello
         host.subscription_facet.try(:destroy!)
 
         if unregistering
-          if keep_kickstart_repository
-            remove_host_artifacts(host, kickstart_repository_id: host&.content_facet&.kickstart_repository_id)
-          else
-            remove_host_artifacts(host)
-          end
+          remove_host_artifacts(host, preserve_for_provisioning: preserve_for_provisioning)
         elsif organization_destroy
           host.content_facet.try(:destroy!)
-          remove_host_artifacts(host, clear_content_facet: false)
+          remove_host_artifacts(host, clear_content_facet: false, preserve_for_provisioning: preserve_for_provisioning)
         else
           host.content_facet.try(:destroy!)
           destroy_host_record(host.id)
@@ -159,10 +153,11 @@ module Katello
         new_host = host.new_record?
         unless new_host
           host.save!
-          # Keep the kickstart repository ID so the host's Medium isn't unset
-          # Important for registering a host during provisioning
+          # Unregister the host before re-registering
+          # The retain_build_profile_upon_unregistration setting controls whether
+          # provisioning information (including kickstart repository) is preserved
           begin
-            unregister_host(host, :unregistering => true, :keep_kickstart_repository => true)
+            unregister_host(host, :unregistering => true, :preserve_for_provisioning => true)
           rescue RestClient::Gone
             Rails.logger.debug("Host %s has been removed in preparation for reregistration" % host&.name)
           end
@@ -319,15 +314,22 @@ module Katello
         subscription_facet
       end
 
-      def remove_host_artifacts(host, clear_content_facet: true, kickstart_repository_id: nil)
-        Rails.logger.debug "Host ID: #{host.id}, clear_content_facet: #{clear_content_facet}, kickstart_repository_id: #{kickstart_repository_id}"
+      def remove_host_artifacts(host, clear_content_facet: true, preserve_for_provisioning: false)
+        Rails.logger.debug "Host ID: #{host.id}, clear_content_facet: #{clear_content_facet}"
         if host.content_facet && clear_content_facet
           host.content_facet.bound_repositories = []
           host.content_facet.applicable_errata = []
           host.content_facet.uuid = nil
-          host.content_facet.content_view_environments = []
-          host.content_facet.content_source = ::SmartProxy.pulp_primary
-          host.content_facet.kickstart_repository_id = kickstart_repository_id
+
+          # Clear or retain provisioning information based on setting
+          unless Setting[:retain_build_profile_upon_unregistration] || preserve_for_provisioning
+            # Clear provisioning information if setting is disabled
+            host.content_facet.content_view_environments = []
+            host.content_facet.kickstart_repository_id = nil
+            host.content_facet.content_source = ::SmartProxy.pulp_primary
+          end
+          # If setting is enabled, keep current values (CVEs, kickstart_repository_id, content_source)
+
           host.content_facet.save!
           Rails.logger.debug "remove_host_artifacts: marking CVEs unchanged to prevent backend update"
           host.content_facet.mark_cves_unchanged

@@ -605,6 +605,12 @@ Foreman::Plugin.register :katello do
         full_name: N_('Delete Host upon unregister'),
         description: N_("When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host such as virtual machines and DNS records may also be deleted.")
 
+      setting 'retain_build_profile_upon_unregistration',
+        type: :boolean,
+        default: false,
+        full_name: N_('Retain build profile upon unregistration'),
+        description: N_("When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration.")
+
       setting 'register_hostname_fact',
         type: :string,
         default: '',
