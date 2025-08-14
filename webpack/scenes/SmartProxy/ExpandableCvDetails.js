@@ -9,7 +9,7 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import ContentViewIcon from '../ContentViews/components/ContentViewIcon';
 import ExpandedSmartProxyRepositories from './ExpandedSmartProxyRepositories';
-import { updateSmartProxyContentCounts } from './SmartProxyContentActions';
+import { updateSmartProxyContentCounts, repairSmartProxyContent } from './SmartProxyContentActions';
 
 const ExpandableCvDetails = ({
   smartProxyId, contentViews, contentCounts, envId,
@@ -27,6 +27,14 @@ const ExpandableCvDetails = ({
     title: __('Refresh counts'),
     onClick: () => {
       dispatch(updateSmartProxyContentCounts(smartProxyId, {
+        environment_id: envId, content_view_id: cvId,
+      }));
+    },
+  });
+  const repairContentAction = cvId => ({
+    title: __('Verify Content Checksum'),
+    onClick: () => {
+      dispatch(repairSmartProxyContent(smartProxyId, {
         environment_id: envId, content_view_id: cvId,
       }));
     },
@@ -103,7 +111,7 @@ const ExpandableCvDetails = ({
               <Td
                 key={`rowActions-${id}`}
                 actions={{
-                  items: [refreshCountAction(id)],
+                  items: [refreshCountAction(id), repairContentAction(id)],
                 }}
               />
             </Tr>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Thead, Tbody, Th, Tr, Td } from '@patternfly/react-table';
 import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
-import getSmartProxyContent, { updateSmartProxyContentCounts } from './SmartProxyContentActions';
+import getSmartProxyContent, { updateSmartProxyContentCounts, repairSmartProxyContent } from './SmartProxyContentActions';
 import {
   selectSmartProxyContent,
   selectSmartProxyContentStatus,
@@ -39,6 +39,12 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
     title: __('Refresh counts'),
     onClick: () => {
       dispatch(updateSmartProxyContentCounts(smartProxyId, { environment_id: envId }));
+    },
+  });
+  const repairContentAction = envId => ({
+    title: __('Verify Content Checksum'),
+    onClick: () => {
+      dispatch(repairSmartProxyContent(smartProxyId, { environment_id: envId }));
     },
   });
 
@@ -110,7 +116,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
                   <Td
                     key={`rowActions-${id}`}
                     actions={{
-                      items: [refreshCountAction(id)],
+                      items: [refreshCountAction(id), repairContentAction(id)],
                     }}
                   />
                 </Tr>
