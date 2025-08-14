@@ -325,9 +325,18 @@ module Katello
           host.content_facet.bound_repositories = []
           host.content_facet.applicable_errata = []
           host.content_facet.uuid = nil
-          host.content_facet.content_view_environments = []
-          host.content_facet.content_source = ::SmartProxy.pulp_primary
-          host.content_facet.kickstart_repository_id = kickstart_repository_id
+
+          # Clear or retain provisioning information based on setting
+          if Setting[:retain_build_profile_upon_unregistration]
+            # Retain current kickstart_repository_id if setting is enabled
+            host.content_facet.kickstart_repository_id = kickstart_repository_id if kickstart_repository_id
+          else
+            # Clear provisioning information if setting is disabled
+            host.content_facet.content_view_environments = []
+            host.content_facet.kickstart_repository_id = nil
+            host.content_facet.content_source = ::SmartProxy.pulp_primary
+          end
+
           host.content_facet.save!
           Rails.logger.debug "remove_host_artifacts: marking CVEs unchanged to prevent backend update"
           host.content_facet.mark_cves_unchanged

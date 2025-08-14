@@ -333,6 +333,69 @@ module Katello
         assert_equal ::SmartProxy.pulp_primary, @host.content_facet.content_source
       end
 
+      def test_unregister_host_clears_build_profile_when_setting_disabled
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+                                    :lifecycle_environment => @library, :organization => @content_view.organization)
+        kickstart_repo = katello_repositories(:fedora_17_x86_64)
+        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id)
+        Setting[:retain_build_profile_upon_unregistration] = false
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
+
+        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
+
+        # Verify provisioning information is cleared
+        assert_empty @host.content_facet.content_view_environments
+        assert_nil @host.content_facet.kickstart_repository_id
+        # Verify other data is still cleared as expected
+        assert_empty @host.content_facet.bound_repositories
+        assert_empty @host.content_facet.applicable_errata
+        assert_nil @host.content_facet.uuid
+      end
+
+      def test_unregister_host_retains_build_profile_when_setting_enabled
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+                                    :lifecycle_environment => @library, :organization => @content_view.organization)
+        kickstart_repo = katello_repositories(:fedora_17_x86_64)
+        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id)
+
+        original_cves = @host.content_facet.content_view_environments.dup
+        original_ks_repo_id = @host.content_facet.kickstart_repository_id
+
+        Setting[:retain_build_profile_upon_unregistration] = true
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
+
+        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
+
+        # Verify provisioning information is retained
+        assert_equal original_cves, @host.content_facet.content_view_environments
+        assert_equal original_ks_repo_id, @host.content_facet.kickstart_repository_id
+        # Verify other data is still cleared as expected
+        assert_empty @host.content_facet.bound_repositories
+        assert_empty @host.content_facet.applicable_errata
+        assert_nil @host.content_facet.uuid
+      end
+
+      def test_unregister_host_retains_kickstart_repository_when_keep_kickstart_repository_and_setting_enabled
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+                                    :lifecycle_environment => @library, :organization => @content_view.organization)
+        kickstart_repo = katello_repositories(:fedora_17_x86_64)
+        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id)
+
+        original_cves = @host.content_facet.content_view_environments.dup
+
+        Setting[:retain_build_profile_upon_unregistration] = true
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
+
+        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true, keep_kickstart_repository: true)
+
+        # Verify provisioning information is retained
+        assert_equal original_cves, @host.content_facet.content_view_environments
+        assert_equal kickstart_repo.id, @host.content_facet.kickstart_repository_id
+      end
+
       def test_destroy_host_not_found
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
