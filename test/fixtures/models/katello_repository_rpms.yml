@@ -25,3 +25,15 @@ fedora_dev_two:
 fedora_modular:
   rpm_id: <%= ActiveRecord::FixtureSet.identify(:modular) %>
   repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+
+fedora_modular_with_erratum_package:
+  rpm_id: <%= ActiveRecord::FixtureSet.identify(:modular_with_erratum_package) %>
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+
+fedora_one_i686:
+  rpm_id: <%= ActiveRecord::FixtureSet.identify(:one_i686) %>
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+
+fedora_one_i686_two:
+  rpm_id: <%= ActiveRecord::FixtureSet.identify(:one_i686_two) %>
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
