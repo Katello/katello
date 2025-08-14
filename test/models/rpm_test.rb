@@ -8,6 +8,8 @@ module Katello
       @rpm_two = katello_rpms(:two)
       @rpm_three = katello_rpms(:three)
       @rpm_one_two = katello_rpms(:one_two)
+      @rpm_one_i686 = katello_rpms(:one_i686)
+      @rpm_one_i686_two = katello_rpms(:one_i686_two)
 
       Rpm.any_instance.stubs(:backend_data).returns({})
     end
@@ -44,38 +46,60 @@ module Katello
       assert_equal Rpm.in_repositories([@repo, repo2]).to_a.sort, [@rpm_one, @rpm_two].sort
     end
 
-    def test_with_search
+    def test_search_version_greater_than_or_equal
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('version >= 1.0')
-      expected = [@rpm_one, @rpm_one_two, @rpm_three, @rpm_two]
-      assert_equal expected, rpms.to_a.sort
+      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_three, @rpm_two]
+      # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
+      assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
+    end
 
+    def test_search_version_greater_than
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('version > 1.0')
       expected = [@rpm_three]
-      assert_equal expected, rpms.to_a.sort
+      # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
+      assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
+    end
 
+    def test_search_version_less_than_or_equal
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('version <= 99')
-      expected = [@rpm_one, @rpm_one_two, @rpm_three, @rpm_two]
-      assert_equal expected, rpms.to_a.sort
+      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_three, @rpm_two]
+      # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
+      assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
+    end
 
+    def test_search_version_less_than
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('version < 99')
-      expected = [@rpm_one, @rpm_one_two, @rpm_two]
-      assert_equal expected, rpms.to_a.sort
+      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_two]
+      # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
+      assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
+    end
 
+    def test_search_release_greater_than_or_equal
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('release >= 2.el7')
-      expected = [@rpm_one_two, @rpm_three]
-      assert_equal expected, rpms.to_a.sort
+      expected = [@rpm_one_i686_two, @rpm_one_two, @rpm_three]
+      # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
+      assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
+    end
 
+    def test_search_release_greater_than
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('release > 1.el7')
-      expected = [@rpm_one_two, @rpm_three]
-      assert_equal expected, rpms.to_a.sort
+      expected = [@rpm_one_i686_two, @rpm_one_two, @rpm_three]
+      # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
+      assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
+    end
 
+    def test_search_release_less_than_or_equal
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('release <= 2.el7')
-      expected = [@rpm_one, @rpm_one_two, @rpm_two]
-      assert_equal expected, rpms.to_a.sort
+      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_two]
+      # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
+      assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
+    end
 
+    def test_search_release_less_than
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('release < 2.el7')
-      expected = [@rpm_one, @rpm_two]
-      assert_equal expected, rpms.to_a.sort
+      expected = [@rpm_one, @rpm_one_i686, @rpm_two]
+      # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
+      assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
     end
 
     def test_with_search_modular
