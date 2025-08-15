@@ -191,6 +191,8 @@ Katello::Engine.routes.draw do
           end
         end
 
+        get "/debs/thindex" => "debs#thindex"
+
         api_resources :debs, :only => [:index, :show] do
           collection do
             get :auto_complete_search
