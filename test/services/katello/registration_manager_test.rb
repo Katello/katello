@@ -338,7 +338,8 @@ module Katello
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                     :lifecycle_environment => @library, :organization => @content_view.organization)
         kickstart_repo = katello_repositories(:fedora_17_x86_64)
-        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id)
+        pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id, :content_source_id => pulp3_proxy.id)
         Setting[:retain_build_profile_upon_unregistration] = false
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
 
@@ -347,6 +348,7 @@ module Katello
         # Verify provisioning information is cleared
         assert_empty @host.content_facet.content_view_environments
         assert_nil @host.content_facet.kickstart_repository_id
+        assert_equal ::SmartProxy.pulp_primary, @host.content_facet.content_source
         # Verify other data is still cleared as expected
         assert_empty @host.content_facet.bound_repositories
         assert_empty @host.content_facet.applicable_errata
@@ -358,10 +360,12 @@ module Katello
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                     :lifecycle_environment => @library, :organization => @content_view.organization)
         kickstart_repo = katello_repositories(:fedora_17_x86_64)
-        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id)
+        pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id, :content_source_id => pulp3_proxy.id)
 
         original_cves = @host.content_facet.content_view_environments.dup
         original_ks_repo_id = @host.content_facet.kickstart_repository_id
+        original_content_source = @host.content_facet.content_source
 
         Setting[:retain_build_profile_upon_unregistration] = true
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
@@ -371,6 +375,7 @@ module Katello
         # Verify provisioning information is retained
         assert_equal original_cves, @host.content_facet.content_view_environments
         assert_equal original_ks_repo_id, @host.content_facet.kickstart_repository_id
+        assert_equal original_content_source, @host.content_facet.content_source
         # Verify other data is still cleared as expected
         assert_empty @host.content_facet.bound_repositories
         assert_empty @host.content_facet.applicable_errata
