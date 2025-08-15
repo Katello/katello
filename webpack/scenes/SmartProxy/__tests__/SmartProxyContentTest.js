@@ -9,6 +9,7 @@ const smartProxyContentData = require('./SmartProxyContentTest.fixtures.json');
 
 const smartProxyContentPath = api.getApiUrl('/capsules/1/content/sync');
 const smartProxyRefreshCountPath = api.getApiUrl('/capsules/1/content/update_counts');
+const smartProxyRepairContentPath = api.getApiUrl('/capsules/1/content/verify_checksum');
 
 const smartProxyContent = { ...smartProxyContentData };
 
@@ -129,7 +130,6 @@ test('Can call content count refresh for content view', async (done) => {
     })
     .reply(202);
 
-
   const {
     getByText, getAllByText, getByLabelText, getAllByLabelText,
   } = renderWithRedux(contentTable);
@@ -152,4 +152,65 @@ test('Can call content count refresh for content view', async (done) => {
   assertNockRequest(detailsScope);
   assertNockRequest(countsCVRefreshScope, done);
   act(done);
+});
+
+test('Can call content repair for environment', async (done) => {
+  const detailsScope = nockInstance
+    .get(smartProxyContentPath)
+    .query(true)
+    .reply(200, smartProxyContent);
+
+  const contentEnvRepairScope = nockInstance
+    .post(smartProxyRepairContentPath, {
+      environment_id: 1,
+    })
+    .reply(202);
+
+  const {
+    getByText, queryAllByLabelText,
+  } = renderWithRedux(contentTable);
+  await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
+  const envRowActions = queryAllByLabelText('Actions')[0];
+  envRowActions.click();
+  await patientlyWaitFor(() => expect(getByText('Verify Content Checksum')).toBeInTheDocument());
+  const refreshEnv = getByText('Verify Content Checksum');
+  refreshEnv.click();
+
+  assertNockRequest(detailsScope);
+  assertNockRequest(contentEnvRepairScope, done);
+});
+
+test('Can call content repair for content view', async (done) => {
+  const detailsScope = nockInstance
+    .get(smartProxyContentPath)
+    .query(true)
+    .reply(200, smartProxyContent);
+
+  const contentCVRepairScope = nockInstance
+    .post(smartProxyRepairContentPath, {
+      content_view_id: 1,
+      environment_id: 1,
+    })
+    .reply(202);
+
+  const {
+    getByText, getAllByText, getByLabelText, queryAllByLabelText,
+  } = renderWithRedux(contentTable);
+  await patientlyWaitFor(() => expect(getByText('Environment')).toBeInTheDocument());
+  const tdEnvExpand = getByLabelText('expand-env-1');
+  const envExpansion = within(tdEnvExpand).getByLabelText('Details');
+  envExpansion.click();
+  await patientlyWaitFor(() => expect(getAllByText('Content view')[0]).toBeInTheDocument());
+  expect(getAllByText('Last published')[0]).toBeInTheDocument();
+  expect(getAllByText('Repository')[0]).toBeInTheDocument();
+  expect(getAllByText('Synced')[0]).toBeInTheDocument();
+  const cvRowActions = queryAllByLabelText('Actions')[1];
+  cvRowActions.click();
+
+  await patientlyWaitFor(() => expect(getByText('Verify Content Checksum')).toBeInTheDocument());
+  const repairCv = getByText('Verify Content Checksum');
+  repairCv.click();
+
+  assertNockRequest(detailsScope, done);
+  assertNockRequest(contentCVRepairScope, done);
 });
