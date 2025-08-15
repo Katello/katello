@@ -199,6 +199,17 @@ module Katello
       ::SmartProxy.expects(:behind_load_balancer).with('unknown-proxy.example.com').returns([proxy_behind_lb])
       assert_equal host.remote_execution_proxies(rex_feature.name)[:registered_through], [proxy_behind_lb]
     end
+
+    def test_yum_or_yum_transient
+      assert_equal @foreman_host.yum_or_yum_transient, 'yum'
+
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
+      @foreman_host.content_facet.update(bootc_booted_image: 'quay.io/salami/soup')
+      assert_equal @foreman_host.yum_or_yum_transient, 'dnf --transient'
+
+      @foreman_host.content_facet.destroy!
+      assert_equal @foreman_host.reload.yum_or_yum_transient, 'yum'
+    end
   end
 
   class HostManagedExtensionsUpdateTest < HostManagedExtensionsTestBase
