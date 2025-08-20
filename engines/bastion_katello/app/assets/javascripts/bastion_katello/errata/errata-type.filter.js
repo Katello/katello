@@ -25,7 +25,7 @@ angular.module('Bastion.errata').filter('errataType', ['translate', function (tr
             errataType = translate('Security Advisory');
             break;
         default:
-            errataType = type;
+            errataType = translate('Other Advisory');
         }
 
         return errataType;
