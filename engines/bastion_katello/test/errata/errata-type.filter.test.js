@@ -23,7 +23,7 @@ describe('Filter:errataType', function() {
         expect(filter('security')).toBe('Security Advisory');
     });
 
-    it("returns provided type if not found.", function() {
-        expect(filter('blah')).toBe('blah');
+    it("returns 'Other Advisory' if not found.", function() {
+        expect(filter('blah')).toBe('Other Advisory');
     });
 });

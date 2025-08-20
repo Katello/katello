@@ -14,6 +14,7 @@ import {
   SecurityIcon,
   EnhancementIcon,
   SquareIcon,
+  QuestionCircleIcon,
 } from '@patternfly/react-icons';
 import { TranslatedAnchor } from '../Table/components/TranslatedPlural';
 
@@ -81,6 +82,21 @@ export const ErrataSummary = ({ type, count, errataCategory }) => {
     );
     break;
   default:
+    label = __('Other');
+    ErrataIcon = QuestionCircleIcon;
+    color = '#6a6e73';
+    url = (
+      <TranslatedAnchor
+        id="errata-card-other-count"
+        style={{ marginLeft: '0.4rem' }}
+        href={`#/Content/errata?type=other&show=${errataCategory}`}
+        count={count}
+        plural="others"
+        singular="other"
+        zeroMsg="# others"
+        ariaLabel={`${count} others`}
+      />
+    );
   }
   if (!ErrataIcon) return null;
 
@@ -126,6 +142,8 @@ export const ErrataType = ({ type }) => {
     ErrataIcon = EnhancementIcon;
     break;
   default:
+    label = __('Other');
+    ErrataIcon = QuestionCircleIcon;
   }
   if (!ErrataIcon) return null;
 
