@@ -1,12 +1,27 @@
 module Katello
   class Api::V2::HostDebsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
+    include Katello::Concerns::Api::V2::RepositoryContentController
 
-    before_action :find_host
+    before_action :find_host, only: [:index]
 
     resource_description do
       api_version 'v2'
       api_base_url "/api"
+    end
+
+    api :GET, "/host_debs/installed_debs", N_("Return a list of installed debs distinct by name")
+    param_group :search, ::Katello::Api::V2::ApiController
+    def installed_debs
+      _sort_by, _sort_order, options = sort_options
+      sort_by = 'name'
+      sort_order = 'asc'
+
+      options[:select] = "DISTINCT ON (#{::Katello::InstalledDeb.table_name}.name) #{::Katello::InstalledDeb.table_name}.id, #{::Katello::InstalledDeb.table_name}.name"
+      final_relation = ::Katello::InstalledDeb.all
+
+      result = scoped_search(final_relation, sort_by, sort_order, options)
+      respond_for_index(:collection => result, :template => "installed_debs")
     end
 
     api :GET, "/hosts/:host_id/debs", N_("List deb packages installed on the host")

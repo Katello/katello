@@ -22,6 +22,7 @@ import { BulkPackagesReview, dropdownOptions } from './04_Review';
 import { BulkPackagesUpgradeTable, BulkPackagesInstallTable, BulkPackagesRemoveTable } from './02_BulkPackagesTable';
 import { BulkPackagesReviewFooter } from './04_ReviewFooter';
 import katelloApi, { foremanApi } from '../../../../../services/api';
+import PACKAGE_CONTENT_TYPE_NAMES from '../BulkActionsConstants';
 
 export const UPGRADE_ALL = 'upgradeAll';
 export const UPGRADE = 'upgrade';
@@ -62,17 +63,17 @@ export const useHostsBulkSelect = ({ initialSelectedHosts, modalIsOpen }) => {
   };
 };
 
-export const getPackagesUrl = (selectedAction) => {
+export const getPackagesUrl = (selectedAction, contentTypeName) => {
+  if (contentTypeName === PACKAGE_CONTENT_TYPE_NAMES.INVALID) return '';
   if (selectedAction === REMOVE) {
-    return `${foremanApi.getApiUrl('/hosts/host_packages/installed_packages')}?per_page=7&include_permissions=true`;
+    return `${foremanApi.getApiUrl(`/hosts/host_${contentTypeName}/installed_${contentTypeName}`)}?per_page=7&include_permissions=true`;
   }
 
-  return `${katelloApi.getApiUrl('/packages/thindex')}?per_page=7&include_permissions=true&packages_restrict_upgradable=${selectedAction === 'upgrade'}`;
+  return `${katelloApi.getApiUrl(`/${contentTypeName}/thindex`)}?per_page=7&include_permissions=true&packages_restrict_upgradable=${selectedAction === 'upgrade'}`;
 };
 
 const BulkPackagesWizard = () => {
   const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-packages-wizard' });
-
 
   const [selectedAction, setSelectedAction] = useState(UPGRADE_ALL);
 
@@ -86,28 +87,32 @@ const BulkPackagesWizard = () => {
   const packageActionsNames = {
     install: __('Install packages'), remove: __('Remove packages'), upgrade: __('Upgrade packages'), upgradeAll: __('Upgrade packages'),
   };
-  const packageActions = () => {
-    switch (selectedAction) {
-    case INSTALL:
-      return (
-        <BulkPackagesInstallTable modalIsOpen={modalOpen} />
-      );
-    case REMOVE:
-      return (
-        <BulkPackagesRemoveTable modalIsOpen={modalOpen} />
-      );
-    default:
-      return (
-        <BulkPackagesUpgradeTable modalIsOpen={modalOpen} />
-      );
+
+
+  const initialSelectedHosts = fetchBulkParams();
+
+  const hostsBulkSelect =
+    useHostsBulkSelect({ initialSelectedHosts, modalIsOpen: modalOpen });
+
+  const currentlySelectedHosts =
+    hostsBulkSelect?.hostsResponse?.response?.results?.filter(host =>
+      !hostsBulkSelect.hostsBulkSelect.exclusionSet.has(host.id));
+
+  const getContentTypeName = () => {
+    if (currentlySelectedHosts === undefined) {
+      return PACKAGE_CONTENT_TYPE_NAMES.INVALID;
+    } else if (currentlySelectedHosts[0]?.operatingsystem_family === 'Debian') {
+      return PACKAGE_CONTENT_TYPE_NAMES.DEBIAN;
     }
+
+    return PACKAGE_CONTENT_TYPE_NAMES.REDHAT;
   };
 
   const finishButtonTextValues = {
     install: __('Install'), remove: __('Remove'), upgrade: __('Upgrade'), upgradeAll: __('Upgrade'),
   };
   const finishButtonText = finishButtonTextValues[selectedAction];
-  const PACKAGES_URL = getPackagesUrl(selectedAction);
+  const PACKAGES_URL = getPackagesUrl(selectedAction, getContentTypeName());
   const apiOptions = { key: 'BULK_HOST_PACKAGES' };
   const replacementResponse = !modalOpen ? { response: {} } : false;
   const packagesResponse = useTableIndexAPIResponse({
@@ -131,11 +136,6 @@ const BulkPackagesWizard = () => {
     metadata: { total, page, selectable: subtotal },
     idColumn: 'name',
   });
-
-  const initialSelectedHosts = fetchBulkParams();
-
-  const hostsBulkSelect =
-    useHostsBulkSelect({ initialSelectedHosts, modalIsOpen: modalOpen });
 
   // eslint-disable-next-line no-restricted-globals
   const selectionIsValid = count => count > 0 || isNaN(count);
@@ -164,6 +164,33 @@ const BulkPackagesWizard = () => {
     packagesResponse,
     hostsBulkSelect: hostsBulkSelect.hostsBulkSelect,
   };
+
+  const packageActions = () => {
+    switch (selectedAction) {
+    case INSTALL:
+      return (
+        <BulkPackagesInstallTable
+          contentTypeName={getContentTypeName()}
+          modalIsOpen={modalOpen}
+        />
+      );
+    case REMOVE:
+      return (
+        <BulkPackagesRemoveTable
+          contentTypeName={getContentTypeName()}
+          modalIsOpen={modalOpen}
+        />
+      );
+    default:
+      return (
+        <BulkPackagesUpgradeTable
+          contentTypeName={getContentTypeName()}
+          modalIsOpen={modalOpen}
+        />
+      );
+    }
+  };
+
   return (
     <BulkPackagesWizardContext.Provider value={bulkPackagesWizardContextData}>
       <Wizard
