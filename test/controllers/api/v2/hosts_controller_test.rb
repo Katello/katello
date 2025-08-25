@@ -268,7 +268,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_with_smartproxy
-    smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
+    smart_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
     host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem, :content_view => @content_view,
                               :lifecycle_environment => @environment, :content_source => smart_proxy)
     host_show(host, smart_proxy)
