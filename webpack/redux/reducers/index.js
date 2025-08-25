@@ -9,7 +9,6 @@ import { setOrganization } from '../../components/SelectOrg/SetOrganization';
 import { moduleStreams } from '../../scenes/ModuleStreams';
 import { reducers as organizationProductsReducers } from '../OrganizationProducts';
 import { moduleStreamDetails } from '../../scenes/ModuleStreams/Details';
-import { reducers as systemStatuses } from '../../components/extensions/about';
 import { contentViewDetails } from '../../scenes/ContentViews/Details';
 import hostDetails from '../../components/extensions/HostDetails/HostDetailsReducer';
 import searchBar from '../../components/extensions/SearchBar/SearchBarReducer';
@@ -28,5 +27,4 @@ export default combineReducers({
   hostDetails,
   searchBar,
   ...organizationProductsReducers,
-  ...systemStatuses,
 });
