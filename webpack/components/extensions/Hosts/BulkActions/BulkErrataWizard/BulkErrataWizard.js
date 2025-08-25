@@ -51,7 +51,7 @@ export const useErrataHostsBulkSelect = ({ initialSelectedHosts, modalIsOpen }) 
   };
 };
 
-export const ERRATA_URL = `${katelloApi.getApiUrl('/errata')}?per_page=7&include_permissions=true`;
+export const ERRATA_URL = `${katelloApi.getApiUrl('/errata')}?per_page=7&include_permissions=true&errata_restrict_installable=true`;
 
 const BulkErrataWizard = () => {
   const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-errata-wizard' });
