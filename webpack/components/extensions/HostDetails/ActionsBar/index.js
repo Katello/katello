@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   DropdownItem,
-  DropdownSeparator,
-} from '@patternfly/react-core/deprecated';
+  Divider,
+} from '@patternfly/react-core';
 import { CubeIcon, UndoIcon, RedoIcon } from '@patternfly/react-icons';
 
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -51,12 +51,12 @@ const HostActionsBar = () => {
       <DropdownItem
         ouiaId="katello-legacy-contenthost-ui"
         key="katello-legacy-contenthost-ui"
-        href={foremanUrl(`/content_hosts/${hostDetails?.id}`)}
+        to={foremanUrl(`/content_hosts/${hostDetails?.id}`)}
         icon={<UndoIcon />}
       >
         {__('Legacy content host UI')}
       </DropdownItem>
-      <DropdownSeparator key="separator" ouiaId="katello-separator" />
+      <Divider key="separator" />
       {showRecalculate && (
         <DropdownItem
           ouiaId="katello-refresh-applicability"
@@ -72,7 +72,7 @@ const HostActionsBar = () => {
         <DropdownItem
           ouiaId="katello-change-host-content-source"
           key="katello-change-host-content-source"
-          href={foremanUrl(`/change_host_content_source?host_id=${hostDetails?.id}&initialContentSourceId=${hostDetails?.content_facet_attributes?.content_source_id}`)}
+          to={foremanUrl(`/change_host_content_source?host_id=${hostDetails?.id}&initialContentSourceId=${hostDetails?.content_facet_attributes?.content_source_id}`)}
           icon={<CubeIcon />}
         >
           {__('Change content source')}
