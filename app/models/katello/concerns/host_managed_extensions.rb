@@ -89,7 +89,7 @@ module Katello
         prepend Overrides
 
         delegate :content_source_id, :single_content_view, :single_lifecycle_environment, :default_environment?, :single_content_view_environment?, :multi_content_view_environment?, :kickstart_repository_id, :bound_repositories,
-          :content_view_environment_labels, :installable_errata, :installable_rpms, :image_mode_host?, :yum_or_yum_transient, to: :content_facet, allow_nil: true
+          :content_view_environment_labels, :installable_errata, :installable_rpms, :image_mode_host?, to: :content_facet, allow_nil: true
 
         delegate :release_version, :purpose_role, :purpose_usage, to: :subscription_facet, allow_nil: true
 
@@ -602,6 +602,10 @@ module Katello
         entitlements = subscription_facet.candlepin_consumer.filter_entitlements(pool.cp_id)
         return nil if entitlements.empty?
         entitlements.sum { |e| e[:quantity] }
+      end
+
+      def yum_or_yum_transient
+        content_facet&.yum_or_yum_transient || "yum"
       end
 
       protected
