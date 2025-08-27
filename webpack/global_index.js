@@ -8,7 +8,6 @@ import { registerGetActions } from 'foremanReact/components/HostsIndex/TableRowA
 
 import hostsIndexColumnExtensions from './ForemanColumnExtensions/index';
 import hostTableRowActions from './components/extensions/Hosts/TableRowActions';
-import SystemStatuses from './components/extensions/about';
 import {
   RegistrationCommands,
   RegistrationActivationKeys,
@@ -22,7 +21,6 @@ import HwPropertiesCard from './components/extensions/HostDetails/DetailsTabCard
 import ImageModeCard from './components/extensions/HostDetails/DetailsTabCards/ImageModeCard';
 
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js';
-import extendReducer from './components/extensions/reducers';
 import rootReducer from './redux/reducers';
 import HostCollectionsCard from './components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsCard';
 import { hostIsNotRegistered } from './components/extensions/HostDetails/hostDetailsHelpers';
@@ -42,10 +40,8 @@ import BulkRepositorySetsWizardModal from './components/extensions/Hosts/BulkAct
 import ActivationKeysSearch from './components/ActivationKeysSearch';
 import { CVEDetailsCard } from './scenes/ActivationKeys/Details/components/CVEDetailsCard.js';
 
-registerReducer('katelloExtends', extendReducer);
 registerReducer('katello', rootReducer);
 
-addGlobalFill('aboutFooterSlot', '[katello]AboutSystemStatuses', <SystemStatuses key="katello-system-statuses" />, 100);
 addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <RegistrationCommands key="katello-reg" />, 100);
 addGlobalFill('registrationGeneral', '[katello]RegistrationActivationKeys', <RegistrationActivationKeys key="katello-reg-ak" />, 100);
 
