@@ -110,9 +110,48 @@ module Katello
 
       return true if is_user_set
 
+      # For blob upload operations, try to extend expired tokens
+      if !is_user_set && blob_upload_operation? && token_expired_but_valid? && extend_expired_token
+        return true
+      end
+
       redirect_authorization_headers
       render_error('unauthorized', :status => :unauthorized)
       return false
+    end
+
+    def blob_upload_operation?
+      %w[start_upload_blob upload_blob finish_upload_blob push_manifest].include?(params[:action])
+    end
+
+    def token_expired_but_valid?
+      return false unless request.headers['Authorization']
+
+      token_type, token = request.headers['Authorization'].split
+      return false unless token_type == 'Bearer' && token
+
+      personal_token = PersonalAccessToken.find_by_token(token)
+      personal_token&.expired? && personal_token.name == 'registry'
+    end
+
+    def extend_expired_token
+      return false unless request.headers['Authorization']
+
+      token_type, token = request.headers['Authorization'].split
+      return false unless token_type == 'Bearer' && token
+
+      personal_token = PersonalAccessToken.find_by_token(token)
+      return false unless personal_token&.expired? && personal_token.name == 'registry'
+
+      begin
+        personal_token.expires_at = 1.minute.from_now
+        personal_token.save!
+        User.current = User.unscoped.find(personal_token.user_id)
+        return true if User.current
+      rescue ActiveRecord::RecordInvalid
+        return false
+      end
+      false
     end
 
     def container_push_prop_validation(props = nil)
