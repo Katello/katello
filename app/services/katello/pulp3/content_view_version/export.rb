@@ -5,6 +5,9 @@ module Katello
         include ImportExportCommon
         SYNCABLE = "syncable".freeze
         IMPORTABLE = "importable".freeze
+        UNDEFINED = "undefined".freeze
+
+        # Available formats for export (UNDEFINED excluded)
         FORMATS = [SYNCABLE, IMPORTABLE].freeze
 
         attr_reader :smart_proxy, :content_view_version, :destination_server, :from_content_view_version, :repository, :base_path
@@ -159,20 +162,19 @@ module Katello
                                      generated_for: generated_for)
         end
 
-        def self.find_repository_export_view(repository:, create_by_default: false,
-                                              format: IMPORTABLE)
-          if format == IMPORTABLE
-            generated_for = :repository_export
-            name = "Export-#{repository.label}-#{repository.library_instance_or_self.id}"
+        def self.find_or_create_repository_export_view(repository:, format: UNDEFINED)
+          case format
+          when UNDEFINED
+            fail ::Katello::Errors::InvalidExportFormat, _("Export format must be specified for non-incremental repository exports.")
+          when IMPORTABLE
+            return find_generated_export_view(create_by_default: true, destination_server: nil, organization: repository.organization,
+              name: "Export-#{repository.label}-#{repository.library_instance_or_self.id}", generated_for: :repository_export)
+          when SYNCABLE
+            return find_generated_export_view(create_by_default: true, destination_server: nil, organization: repository.organization,
+              name: "Export-SYNCABLE-#{repository.label}-#{repository.library_instance_or_self.id}", generated_for: :repository_export_syncable)
           else
-            generated_for = :repository_export_syncable
-            name = "Export-SYNCABLE-#{repository.label}-#{repository.library_instance_or_self.id}"
+            fail ::Katello::Errors::InvalidExportFormat, _("Unknown repository export format '%s'.") % format
           end
-          find_generated_export_view(create_by_default: create_by_default,
-                                     destination_server: nil,
-                                     organization: repository.organization,
-                                     name: name,
-                                     generated_for: generated_for)
         end
 
         def self.generate_product_repo_strings(repositories:)

@@ -5,7 +5,7 @@ module Katello
     before_action :find_exportable_repository, :only => [:repository]
     before_action :find_library_export_view, :only => [:library]
     before_action :find_repository_export_view, :only => [:repository]
-    before_action :find_history, :only => [:version, :library, :repository]
+    before_action :find_incremental_history, :only => [:version, :library, :repository]
 
     def_param_group :incremental do
       param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export. "\
@@ -55,12 +55,28 @@ module Katello
     end
 
     def find_repository_export_view
-      @view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
-                                                                repository: @repository,
-                                                                create_by_default: false,
-                                                                format: find_export_format)
+      if params[:from_history_id].present?
+        find_incremental_history_from_id
+        @view = @history&.content_view_version&.content_view
+      else
+        possible_a = ::Katello::ContentView.where(name: "Export-#{@repository.label}-#{@repository.library_instance_or_self.id}",
+                                       organization: @repository.organization,
+                                       generated_for: :repository_export).send(:first)
+        possible_b = ::Katello::ContentView.where(name: "Export-SYNCABLE-#{@repository.label}-#{@repository.library_instance_or_self.id}",
+                                       organization: @repository.organization,
+                                       generated_for: :repository_export_syncable).send(:first)
+        @view = [possible_a, possible_b].compact.max_by(&:updated_at)
+      end
+
       if @view.blank?
         msg = _("Unable to incrementally export. Do a Full Export on the repository content.")
+        fail HttpErrors::BadRequest, msg
+      end
+
+      # Set the proper export format
+      @export_format = @view.generated_for == "repository_export_syncable" ? "syncable" : "importable"
+      if params[:format].present? && @export_format != params[:format]
+        msg = _("Provided export format '%{param}' does not match the inferred format of '%{inferred}'. Consider using 'from_history_id' to point to another export of the correct format.") % { param: params[:format], inferred: @export_format }
         fail HttpErrors::BadRequest, msg
       end
     end
