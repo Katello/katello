@@ -24,6 +24,9 @@ module Katello
           if taxonomy_class == Organization
             begin
               @taxonomy = Organization.new(resource_params)
+              # Raise validation error early if invalid
+              @taxonomy.validate!
+
               ::Katello::OrganizationCreator.new(@taxonomy).create!
               @taxonomy.reload
               switch_taxonomy
