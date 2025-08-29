@@ -6,6 +6,7 @@ import api from '../../../../services/api';
 import ContentViewDetails from '../ContentViewDetails';
 import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
 import cvDetailData from './contentViewRollingDetails.fixtures.json';
+import environmentPathsData from '../../Publish/__tests__/environmentPaths.fixtures.json';
 
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)">{component}</Route>;
@@ -19,6 +20,19 @@ const renderOptions = {
 };
 
 const cvDetailsPath = api.getApiUrl('/content_views/1');
+const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
+let envScope;
+
+beforeEach(() => {
+  envScope = nockInstance
+    .get(environmentPathsPath)
+    .query(true)
+    .reply(200, environmentPathsData);
+});
+
+afterEach(() => {
+  assertNockRequest(envScope);
+});
 
 test('Can call API and show details on page load', async (done) => {
   const { label, name, description } = cvDetailData;
@@ -104,6 +118,7 @@ test('Page contains Rolling CV type', async (done) => {
   await patientlyWaitFor(() => {
     expect(queryByText('Content view')).not.toBeInTheDocument();
     expect(queryByText('Rolling content view')).toBeInTheDocument();
+    expect(queryByText('Lifecycle Environments')).toBeInTheDocument();
     expect(queryByText('Composite content view')).not.toBeInTheDocument();
     expect(queryByText('Versions')).not.toBeInTheDocument();
     expect(queryByText('Filters')).not.toBeInTheDocument();

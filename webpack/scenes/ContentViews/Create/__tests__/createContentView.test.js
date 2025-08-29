@@ -25,6 +25,7 @@ const createDetails = {
   rolling: false,
   solve_dependencies: false,
   auto_publish: false,
+  environment_ids: [],
 };
 
 const createdCVDetails = { ...cvCreateData };
@@ -81,6 +82,7 @@ test('Displays dependent fields correctly', () => {
   expect(getByText('Rolling content view')).toBeInTheDocument();
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(queryByText('Lifecycle Environments')).not.toBeInTheDocument();
 
   // label auto_set
   fireEvent.change(getByLabelText('input_name'), { target: { value: '123 2123' } });
@@ -90,11 +92,19 @@ test('Displays dependent fields correctly', () => {
   fireEvent.click(getByLabelText('composite_tile'));
   expect(queryByText('Solve dependencies')).not.toBeInTheDocument();
   expect(getByText('Auto publish')).toBeInTheDocument();
+  expect(queryByText('Lifecycle Environments')).not.toBeInTheDocument();
 
   // display Solve Dependencies when Component CV
   fireEvent.click(getByLabelText('component_tile'));
   expect(getByText('Solve dependencies')).toBeInTheDocument();
   expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(queryByText('Lifecycle Environments')).not.toBeInTheDocument();
+
+  // display Lifecycle Environments when Rolling CV
+  fireEvent.click(getByLabelText('rolling_tile'));
+  expect(queryByText('Solve dependencies')).not.toBeInTheDocument();
+  expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(getByText('Lifecycle Environments')).toBeInTheDocument();
 });
 
 test('Validates label field', () => {

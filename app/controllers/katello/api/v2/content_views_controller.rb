@@ -21,6 +21,7 @@ module Katello
       param :description, String, :desc => N_("Description for the content view")
       param :repository_ids, Array, :desc => N_("List of repository ids")
       param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
+      param :environment_ids, Array, :desc => N_("List of lifecycle environments for rolling content views")
       param :auto_publish, :bool, :desc => N_("Enable/Disable auto publish of composite view")
       param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
       param :import_only, :bool, :desc => N_("Designate this Content View for importing from upstream servers only. Defaults to false")
@@ -42,6 +43,7 @@ module Katello
       {
         :component_ids => Katello::ContentViewVersion,
         :repository_ids => Katello::Repository,
+        :environment_ids => Katello::KTEnvironment,
       }
     end
 
@@ -87,11 +89,12 @@ module Katello
     param :rolling, :bool, :desc => N_("Rolling content view")
     param_group :content_view
     def create
+      validate_environment_ids!(params[:rolling])
       @content_view = ContentView.create!(view_params) do |view|
         view.organization = @organization
         view.label ||= labelize_params(params[:content_view])
       end
-      sync_task(::Actions::Katello::ContentView::Create, @content_view)
+      sync_task(::Actions::Katello::ContentView::Create, @content_view, sanitized_environment_ids)
 
       respond :resource => @content_view
     end
@@ -101,7 +104,8 @@ module Katello
     param :name, String, :desc => N_("New name for the content view")
     param_group :content_view
     def update
-      sync_task(::Actions::Katello::ContentView::Update, @content_view, view_params)
+      validate_environment_ids!(@content_view.rolling?)
+      sync_task(::Actions::Katello::ContentView::Update, @content_view, view_params, sanitized_environment_ids)
       respond :resource => @content_view.reload
     end
 
@@ -299,10 +303,21 @@ module Katello
       if (!@content_view || !@content_view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)
       end
-      result = params.require(:content_view).permit(*attrs).to_h
+      result = {}
+      result = params.require(:content_view).permit(*attrs).to_h unless action_name == "update" && @content_view.rolling? && params[:content_view].empty?
       # sanitize repository_ids to be a list of integers
       result[:repository_ids] = result[:repository_ids].compact.map(&:to_i) if result[:repository_ids].present?
       result
+    end
+
+    def sanitized_environment_ids
+      params[:environment_ids]&.compact&.map(&:to_i)
+    end
+
+    def validate_environment_ids!(rolling)
+      if params[:environment_ids] && !rolling
+        fail HttpErrors::BadRequest, _("It's not possible to provide environment_ids for anything other than a rolling content view.")
+      end
     end
 
     def find_environment

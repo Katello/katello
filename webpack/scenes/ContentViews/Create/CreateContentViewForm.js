@@ -27,6 +27,8 @@ import {
 } from './ContentViewCreateSelectors';
 import { LabelDependencies, LabelAutoPublish } from './ContentViewFormComponents';
 import ContentViewIcon from '../components/ContentViewIcon';
+import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathActions';
+import EnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPaths';
 import './CreateContentViewForm.scss';
 
 export const contentViewDescriptions = {
@@ -47,7 +49,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
   const [dependencies, setDependencies] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const [saving, setSaving] = useState(false);
-
+  const [selectedEnvs, setSelectedEnvs] = useState([]);
   const [labelValidated, setLabelValidated] = useState('default');
   const handleLabelChange = (newLabel, _event) => {
     setLabel(newLabel);
@@ -74,6 +76,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
     }
   }, [response, status, error, saving]);
 
+  const checkedEnvIds = selectedEnvs?.map(env => env.id) ?? [];
   const onSave = () => {
     setSaving(true);
     dispatch(createContentView({
@@ -84,8 +87,18 @@ const CreateContentViewForm = ({ setModalOpen }) => {
       rolling,
       solve_dependencies: (dependencies && !(rolling || composite)),
       auto_publish: (autoPublish && composite),
+      environment_ids: (checkedEnvIds),
     }));
   };
+
+  useEffect(
+    () => {
+      if (rolling) {
+        dispatch(getEnvironmentPaths());
+      }
+    },
+    [rolling, dispatch],
+  );
 
   useEffect(() => {
     setLabel(name.replace(/[^A-Za-z0-9_-]/g, '_'));
@@ -227,6 +240,16 @@ const CreateContentViewForm = ({ setModalOpen }) => {
             label={LabelAutoPublish()}
             isChecked={autoPublish}
             onChange={(_event, checked) => setAutoPublish(checked)}
+          />
+        </FormGroup>
+      )}
+      {rolling && (
+        <FormGroup isInline fieldId="lifecycleEnvironments" label={__('Lifecycle Environments')}>
+          <EnvironmentPaths
+            headerText=""
+            publishing={false}
+            userCheckedItems={selectedEnvs}
+            setUserCheckedItems={setSelectedEnvs}
           />
         </FormGroup>
       )}
