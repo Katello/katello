@@ -9,7 +9,7 @@ module Katello
 end
 
 Foreman::Application.routes.draw do
-  override_message = '{"message": "Route overriden by Katello, use the /katello API endpoint instead.  See /apidoc for more details."}'
+  override_message = '{"message": "Route overridden by Katello, use the /katello API endpoint instead.  See /apidoc for more details."}'
 
   match "/api/v2/organizations/*all", :to => proc { [404, {}, [override_message]] },
                                       :via => :put,
