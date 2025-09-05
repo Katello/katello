@@ -79,7 +79,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
   const checkedEnvIds = selectedEnvs?.map(env => env.id) ?? [];
   const onSave = () => {
     setSaving(true);
-    dispatch(createContentView({
+    let params = {
       name,
       label,
       description,
@@ -87,8 +87,11 @@ const CreateContentViewForm = ({ setModalOpen }) => {
       rolling,
       solve_dependencies: (dependencies && !(rolling || composite)),
       auto_publish: (autoPublish && composite),
-      environment_ids: (checkedEnvIds),
-    }));
+    };
+    if (rolling) {
+      params = { ...params, environment_ids: checkedEnvIds };
+    }
+    dispatch(createContentView(params));
   };
 
   useEffect(
