@@ -170,7 +170,7 @@ module Katello
     scoped_search :on => :label, :relation => :root, :complete_value => true, :only_explicit => true
     scoped_search :on => :content_label, :ext_method => :search_by_content_label, :default_operator => :like
 
-    delegate :product, :redhat?, :custom?, :deb_using_structured_apt?, :to => :root
+    delegate :product, :redhat?, :custom?, :to => :root
     delegate :yum?, :docker?, :deb?, :file?, :ostree?, :ansible_collection?, :generic?, :to => :root
     delegate :name, :label, :docker_upstream_name, :url, :download_concurrency, :to => :root
 
@@ -1046,30 +1046,11 @@ module Katello
 
     def deb_content_url_options
       return '' unless version_href
-      return '' if backend_service(SmartProxy.pulp_primary).version_missing_structure_content?
 
-      components = deb_pulp_components.join(',')
-      distributions = deb_pulp_distributions.join(',')
+      backend_service = self.backend_service(SmartProxy.pulp_primary)
+      components = backend_service.pulp_components.join(',')
+      distributions = backend_service.pulp_distributions.join(',')
       "/?comp=#{components}&rel=#{distributions}"
-    end
-
-    def deb_pulp_components(version_href = self.version_href)
-      return [] if version_href.blank?
-
-      pulp_api = Katello::Pulp3::Repository.instance_for_type(self, SmartProxy.pulp_primary).api.content_release_components_api
-      pulp_api.list({:repository_version => version_href}).results.map { |x| x.plain_component }.uniq
-    end
-
-    def deb_sanitize_pulp_distribution(distribution)
-      return "flat-repo" if distribution == "/"
-      return distribution.chomp("/") if distribution&.end_with?("/")
-      distribution
-    end
-
-    def deb_pulp_distributions(version_href = self.version_href)
-      return [] if version_href.blank?
-      pulp_api = Katello::Pulp3::Repository.instance_for_type(self, SmartProxy.pulp_primary).api.content_release_components_api
-      pulp_api.list({:repository_version => version_href}).results.map { |x| deb_sanitize_pulp_distribution(x.distribution) }.uniq
     end
 
     def sync_status

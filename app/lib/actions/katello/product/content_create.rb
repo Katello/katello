@@ -7,7 +7,7 @@ module Actions
         def plan(repository)
           root = repository.root
           sequence do
-            if repository.content_id.nil? || repository.content_id == 'INITIAL_DUMMY_VALUE'
+            if repository.content_id.nil?
               content_create = plan_action(Candlepin::Product::ContentCreate,
                                            repository_id: repository.id,
                                            owner:         root.organization.label,
@@ -45,7 +45,7 @@ module Actions
         def finalize
           root = ::Katello::RootRepository.find(input[:root_repository_id])
           content_url = root.custom_content_path
-          if root.deb_using_structured_apt?
+          if root.deb?
             repository = ::Katello::Repository.find(input[:repository_id])
             content_url += repository.deb_content_url_options
             repository.update(:content_id => input[:content_id])

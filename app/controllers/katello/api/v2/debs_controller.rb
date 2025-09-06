@@ -105,7 +105,7 @@ module Katello
         collection = collection.installable_for_hosts(@hosts)
       elsif not_installed && params[:host_id]
         host = @hosts.first
-        collection = Katello::Deb.apt_installable_for_host(host)
+        collection = Katello::Deb.deb_installable_for_host(host)
       elsif applicable
         collection = collection.applicable_to_hosts(@hosts)
       end
