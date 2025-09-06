@@ -7,7 +7,7 @@ import CreateContentViewForm from '../CreateContentViewForm';
 import cvCreateData from './contentViewCreateResult.fixtures.json';
 
 const cvCreatePath = api.getApiUrl('/content_views');
-
+const envPath = api.getApiUrl('/organizations/1/environments/paths?permission_type=promotable');
 const mockFn = jest.fn();
 
 delete window.location;
@@ -23,6 +23,16 @@ const createDetails = {
   description: '',
   composite: false,
   rolling: false,
+  solve_dependencies: false,
+  auto_publish: false,
+};
+
+const createRollingDetails = {
+  name: '1232123',
+  label: '1232123',
+  description: '',
+  composite: false,
+  rolling: true,
   solve_dependencies: false,
   auto_publish: false,
   environment_ids: [],
@@ -46,6 +56,30 @@ test('Can save content view from form', async (done) => {
   getByLabelText('create_content_view').click();
 
   assertNockRequest(createscope);
+  done();
+});
+
+test('Can save rolling content view from form with environment_ids param passed', async (done) => {
+  const createscope = nockInstance
+    .post(cvCreatePath, createRollingDetails)
+    .reply(201, createdCVDetails);
+  const envscope = nockInstance
+    .get(envPath)
+    .reply(200, []);
+
+  const { queryByText, getByLabelText } = renderWithRedux(form);
+  expect(queryByText('Description')).toBeInTheDocument();
+  fireEvent.change(getByLabelText('input_name'), { target: { value: '1232123' } });
+
+  await patientlyWaitFor(() => { expect(getByLabelText('input_label')).toHaveAttribute('value', '1232123'); });
+
+  fireEvent.click(getByLabelText('rolling_tile'));
+  await patientlyWaitFor(() => { expect(getByLabelText('rolling_tile')).toHaveAttribute('aria-selected', 'true'); });
+
+  getByLabelText('create_content_view').click();
+
+  assertNockRequest(createscope);
+  assertNockRequest(envscope);
   done();
 });
 
