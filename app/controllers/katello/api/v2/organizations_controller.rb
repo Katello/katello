@@ -4,14 +4,20 @@ module Katello
 
     include Api::V2::Rendering
     include ForemanTasks::Triggers
-
-    before_action :local_find_taxonomy, :only => %w(repo_discover cancel_repo_discover
-                                                    download_debug_certificate cdn_configuration
-                                                    redhat_provider update releases)
+    LOCAL_FIND_TAXONOMY_ACTIONS = %w(repo_discover cancel_repo_discover download_debug_certificate
+                                     cdn_configuration redhat_provider update releases).freeze
+    before_action :local_find_taxonomy, :only => LOCAL_FIND_TAXONOMY_ACTIONS
 
     resource_description do
       api_version 'v2'
       api_base_url "/katello/api"
+    end
+
+    def self.delay_find_taxonomy_actions
+      # used by RH Cloud to delay the execution of local_find_taxonomy
+      skip_before_action :local_find_taxonomy, :only => LOCAL_FIND_TAXONOMY_ACTIONS
+      yield
+      before_action :local_find_taxonomy, :only => LOCAL_FIND_TAXONOMY_ACTIONS
     end
 
     def_param_group :resource do

@@ -1,7 +1,7 @@
 module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController # rubocop:disable Metrics/ClassLength
     include Katello::Concerns::FilteredAutoCompleteSearch
-
+    INDEX_ACTIONS = [:index, :auto_complete_search].freeze
     generic_repo_wrap_params = []
     RepositoryTypeManager.generic_remote_options(defined_only: true).each do |option|
       generic_repo_wrap_params << option.name
@@ -16,8 +16,8 @@ module Katello
     CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE = "ssl_client_cert".freeze
     CONTENT_CREDENTIAL_SSL_CLIENT_KEY_TYPE = "ssl_client_key".freeze
 
-    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
-    before_action :find_product, :only => [:index, :auto_complete_search]
+    before_action :find_optional_organization, :only => INDEX_ACTIONS
+    before_action :find_product, :only => INDEX_ACTIONS
     before_action :find_product_for_create, :only => [:create]
     before_action :find_organization_from_product, :only => [:create]
     before_action :find_unauthorized_katello_resource, :only => [:gpg_key_content]
@@ -34,6 +34,15 @@ module Katello
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_KEY_TYPE }
     skip_before_action :authorize, :only => [:gpg_key_content]
     skip_before_action :check_media_type, :only => [:upload_content]
+
+    def self.delay_index_actions
+      # used by RH Cloud to delay the execution of find_optional_organization and find_product
+      skip_before_action :find_optional_organization, :only => INDEX_ACTIONS
+      skip_before_action :find_product, :only => INDEX_ACTIONS
+      yield
+      before_action :find_optional_organization, :only => INDEX_ACTIONS
+      before_action :find_product, :only => INDEX_ACTIONS
+    end
 
     def custom_index_relation(collection)
       collection.includes(:product)
