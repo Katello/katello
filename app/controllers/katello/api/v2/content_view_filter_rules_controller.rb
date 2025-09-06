@@ -95,7 +95,7 @@ module Katello
       update_params = rule_params
       update_params[:name] = update_params[:name].first if update_params[:name]
 
-      if @rule.filter.content_type == ContentViewPackageFilter::CONTENT_TYPE
+      if [ContentViewPackageFilter::CONTENT_TYPE, ContentViewDebFilter::CONTENT_TYPE].include?(@rule.filter.content_type)
         update_params[:version] = "" unless rule_params[:version]
         update_params[:min_version] = "" unless rule_params[:min_version]
         update_params[:max_version] = "" unless rule_params[:max_version]
