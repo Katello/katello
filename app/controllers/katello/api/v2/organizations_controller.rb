@@ -13,7 +13,7 @@ module Katello
       api_base_url "/katello/api"
     end
 
-    def self.delay_find_taxonomy_actions
+    def self.before_find_taxonomy_actions
       # used by RH Cloud to delay the execution of local_find_taxonomy
       skip_before_action :local_find_taxonomy, :only => LOCAL_FIND_TAXONOMY_ACTIONS
       yield

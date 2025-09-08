@@ -35,7 +35,7 @@ module Katello
     skip_before_action :authorize, :only => [:gpg_key_content]
     skip_before_action :check_media_type, :only => [:upload_content]
 
-    def self.delay_index_actions
+    def self.before_index_actions
       # used by RH Cloud to delay the execution of find_optional_organization and find_product
       skip_before_action :find_optional_organization, :only => INDEX_ACTIONS
       skip_before_action :find_product, :only => INDEX_ACTIONS
