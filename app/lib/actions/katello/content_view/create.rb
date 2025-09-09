@@ -6,7 +6,7 @@ module Actions
           content_view.save!
           if content_view.rolling?
             new_version = content_view.create_new_version
-            if environment_ids.any?
+            if environment_ids&.any?
               ::Katello::KTEnvironment.where(id: environment_ids).each do |environment|
                 plan_action(AddToEnvironment, new_version, environment)
               end

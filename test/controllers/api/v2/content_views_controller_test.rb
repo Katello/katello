@@ -167,6 +167,12 @@ module Katello
       assert_response 404
     end
 
+    def test_create_empty_rolling
+      post :create, params: { :name => "Rolling Test", :organization_id => @organization.id, :rolling => true }
+
+      assert_response :success
+    end
+
     def test_create_with_non_json_request
       @request.env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
       post :create, params: { :name => "My View", :description => "Cool", :organization_id => @organization.id }
