@@ -5,6 +5,7 @@ export const ERRATA_TYPES = {
   SECURITY: 'Security',
   BUGFIX: 'Bugfix',
   ENHANCEMENT: 'Enhancement',
+  OTHER: 'Other',
 };
 export const ERRATA_SEVERITIES = {
   NOT_APPLICABLE: 'N/A',
@@ -18,6 +19,7 @@ export const TYPES_TO_PARAM = {
   [ERRATA_TYPES.SECURITY]: 'security',
   [ERRATA_TYPES.BUGFIX]: 'bugfix',
   [ERRATA_TYPES.ENHANCEMENT]: 'enhancement',
+  [ERRATA_TYPES.OTHER]: 'other',
 };
 
 export const SEVERITIES_TO_PARAM = {
@@ -32,6 +34,7 @@ export const PARAM_TO_FRIENDLY_NAME = {
   security: 'Security',
   bugfix: 'Bugfix',
   enhancement: 'Enhancement',
+  other: 'Other',
   none: 'N/A',
   low: 'Low',
   moderate: 'Moderate',

@@ -14,7 +14,9 @@ module Katello
 
     RHEL_EOS_SCHEDULE = { # dates that each support category ends
       'RHEL10' => {
-        'full_support' => nil,
+        'full_support' => end_of_day('2030-05-31'),
+        'maintenance_support' => end_of_day('2035-05-31'),
+        'extended_support' => end_of_day('2038-05-31'),
       },
       'RHEL9' => {
         'full_support' => end_of_day('2027-05-31'),

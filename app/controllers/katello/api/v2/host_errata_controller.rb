@@ -7,6 +7,7 @@ module Katello
       bugfix: Katello::Erratum::BUGZILLA, # ['bugfix', 'recommended']
       security: Katello::Erratum::SECURITY, # ['security']
       enhancement: Katello::Erratum::ENHANCEMENT, # ['enhancement', 'optional']
+      other: 'other', # any type not in the above categories
     }.freeze
 
     before_action :find_host, only: :index
@@ -14,6 +15,8 @@ module Katello
     before_action :find_errata_ids, only: :apply
     before_action :find_environment, only: :index
     before_action :find_content_view, only: :index
+
+    after_action :strip_errata_type, only: :auto_complete_search
 
     resource_description do
       api_version 'v2'
@@ -41,7 +44,7 @@ module Katello
     param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
     param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
     param :include_applicable, :bool, :desc => N_("Return errata that are applicable to this host. Defaults to false)"), :required => false
-    param :type, String, :desc => N_("Return only errata of a particular type (security, bugfix, enhancement)"), :required => false
+    param :type, String, :desc => N_("Return only errata of a particular type (security, bugfix, enhancement, other)"), :required => false
     param :severity, String, :desc => N_("Return only errata of a particular severity (None, Low, Moderate, Important, Critical)"), :required => false
     param_group :search, Api::V2::ApiController
     def index
@@ -89,7 +92,12 @@ module Katello
         relation = @host.content_facet.installable_errata(@environment, @content_view)
       end
       if params[:type].present?
-        relation = relation.where(:errata_type => TYPES_FROM_PARAMS[params[:type].to_sym])
+        type_param = params[:type].to_sym
+        if type_param == :other
+          relation = relation.where.not(:errata_type => [Katello::Erratum::SECURITY, Katello::Erratum::BUGZILLA, Katello::Erratum::ENHANCEMENT].flatten)
+        elsif TYPES_FROM_PARAMS[type_param].present?
+          relation = relation.where(:errata_type => TYPES_FROM_PARAMS[type_param])
+        end
       end
       if params[:severity].present?
         params[:severity] = ['None', ''] if params[:severity] == 'None'
@@ -140,6 +148,20 @@ module Katello
         # Todo: remove this when the old content-host errata page is removed
         @errata_ids = find_bulk_errata_ids([@host], params[:bulk_errata_ids])
       end
+    end
+
+    def strip_errata_type
+      return if response.body.blank?
+
+      begin
+        items = JSON.parse(response.body)
+      rescue JSON::ParserError
+        return
+      end
+
+      filtered = items.reject { |h| h['part'].to_s.strip == 'errata_type' }
+
+      response.body = filtered.to_json
     end
 
     def validate_index_params!

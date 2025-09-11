@@ -20,7 +20,15 @@ module Actions
         end
 
         def run
-          ::Katello::Repository.where(id: input[:repository_ids]).destroy_all
+          ::Katello::Repository.where(id: input[:repository_ids]).each do |repository|
+            SmartProxy.unscoped.with_repo(repository).each do |smart_proxy|
+              next if smart_proxy.pulp_primary?
+
+              smart_proxy.content_counts&.dig("content_view_versions", repository.content_view_version_id.to_s, "repositories")&.delete(repository.id.to_s)
+              smart_proxy.save
+            end
+            repository.destroy!
+          end
         end
       end
     end

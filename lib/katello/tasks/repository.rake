@@ -78,6 +78,73 @@ namespace :katello do
     handle_manifest_list_label_updates
   end
 
+  desc "Clean up duplicate erratum_packages"
+  task :cleanup_duplicate_erratum_packages => ["dynflow:client", "check_ping"] do
+    User.current = User.anonymous_api_admin
+    handle_duplicate_erratum_packages
+  end
+
+  def handle_duplicate_erratum_packages
+    # Get all duplicate groups
+    duplicate_groups = Katello::ErratumPackage
+                        .select(:nvrea, :erratum_id, :name, :filename)
+                        .group(:nvrea, :erratum_id, :name, :filename)
+                        .having('COUNT(*) > 1')
+
+    return if duplicate_groups.empty?
+    # Alert users that they need to reindex their database to ensure the indexes are re-run and active.
+    puts "Please reindex your database to ensure indexes are rebuilt and active."
+    puts "This can be achieved by running `runuser -u postgres -- reindexdb -a`"
+    puts "Seek technical support for any errors with database reindexing."
+    # Build mapping of duplicates to keep/delete in memory
+    ids_to_delete = []
+    update_mappings = {}
+
+    duplicate_groups.each do |group|
+      # Get all IDs for this duplicate group in one query
+      duplicate_ids = Katello::ErratumPackage
+                       .where(
+                        nvrea: group.nvrea,
+                        erratum_id: group.erratum_id,
+                        name: group.name,
+                        filename: group.filename
+                       )
+                       .order(:id)
+                       .pluck(:id)
+
+      id_to_keep = duplicate_ids.first
+      ids_to_remove = duplicate_ids[1..]
+
+      ids_to_delete.concat(ids_to_remove)
+      ids_to_remove.each { |id| update_mappings[id] = id_to_keep }
+    end
+
+    return if ids_to_delete.empty?
+
+    # Handle references - delete conflicting ones first, then update remaining
+    update_mappings.each_slice(1000) do |batch|
+      batch.each do |old_id, new_id|
+        # Delete records where module_stream already has the target erratum_package
+        Katello::ModuleStreamErratumPackage
+          .where(erratum_package_id: old_id)
+          .where(
+            module_stream_id: Katello::ModuleStreamErratumPackage
+              .where(erratum_package_id: new_id)
+              .select(:module_stream_id)
+          )
+          .delete_all
+
+        # Update remaining records
+        Katello::ModuleStreamErratumPackage
+         .where(erratum_package_id: old_id)
+         .update_all(erratum_package_id: new_id)
+      end
+    end
+
+    Katello::ErratumPackage.where(id: ids_to_delete).delete_all
+    puts "Deleted #{ids_to_delete.size} duplicate erratum_packages"
+  end
+
   def lookup_repositories
     lifecycle_envs = Katello::KTEnvironment.where(:name => ENV['LIFECYCLE_ENVIRONMENT']) if ENV['LIFECYCLE_ENVIRONMENT']
     content_views = Katello::ContentView.where(:name => ENV['CONTENT_VIEW']) if ENV['CONTENT_VIEW']

@@ -56,6 +56,7 @@ module Katello
     param :product_name, String, :desc => N_("Name of the product to mirror the remote repository to")
     param :organization_id, :number, :desc => N_("organization identifier")
     def mirror
+      validate_product_for_mirroring
       task = async_task(::Actions::Katello::Flatpak::MirrorRemoteRepository, @flatpak_remote_repository, @product)
       respond_for_async :resource => task
     end
@@ -93,6 +94,14 @@ module Katello
 
     def rejected_autocomplete_items
       ['flatpak_remote_id', 'flatpak_remote']
+    end
+
+    private
+
+    def validate_product_for_mirroring
+      return unless @product&.redhat?
+      msg = _("Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.")
+      fail HttpErrors::UnprocessableEntity, msg
     end
   end
 end

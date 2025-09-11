@@ -96,8 +96,9 @@ module Actions
         end
 
         def handle_redhat_content(repository)
-          if repository.content_view.content_view_environment(repository.environment)
-            plan_action(Candlepin::Environment::SetContent, repository.content_view, repository.environment, repository.content_view.content_view_environment(repository.environment))
+          content_view_environment = repository.content_view.content_view_environment(repository.environment)
+          if content_view_environment && !repository.content_view.rolling?
+            plan_action(Candlepin::Environment::SetContent, repository.content_view, repository.environment, content_view_environment)
           end
         end
 

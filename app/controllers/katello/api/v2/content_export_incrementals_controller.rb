@@ -1,11 +1,12 @@
 module Katello
   class Api::V2::ContentExportIncrementalsController < Api::V2::ExportsController
-    before_action :find_exportable_organization, :only => [:library]
-    before_action :find_exportable_content_view_version, :only => [:version]
-    before_action :find_exportable_repository, :only => [:repository]
-    before_action :find_library_export_view, :only => [:library]
-    before_action :find_repository_export_view, :only => [:repository]
-    before_action :find_history, :only => [:version, :library, :repository]
+    before_action :find_exportable_content_view_version, :only => [:version]                        # determines @view
+    before_action :find_exportable_organization, :only => [:library]                                # determines @organization
+    before_action :find_library_export_view, :only => [:library]                                    # determines @view from @organization
+    before_action :find_exportable_repository, :only => [:repository]                               # finds @repository
+    before_action :find_repository_export_view, :only => [:repository]                              # determines @view from @repository
+    before_action :find_incremental_history, :only => [:version, :library, :repository]             # determines @history from @view
+    before_action :determine_export_format_from_history, :only => [:version, :library, :repository] # determines @export_format from @history
 
     def_param_group :incremental do
       param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export. "\
@@ -42,25 +43,74 @@ module Katello
 
     private
 
+    def find_export_view_helper(name_importable, name_syncable, organization, generated_for_importable, generated_for_syncable)
+      if params[:from_history_id].present?
+        find_incremental_history_from_id
+        @view = @history&.content_view_version&.content_view
+      else
+        importable_result = nil
+        syncable_result = nil
+        unless params[:format].present? && params[:format] == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
+          importable_result = determine_view_from_name(name_importable,
+          organization,
+          generated_for_importable)
+        end
+        unless params[:format].present? && params[:format] == ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
+          syncable_result = determine_view_from_name(name_syncable,
+          organization,
+          generated_for_syncable)
+        end
+        @view = [importable_result, syncable_result].compact.max_by(&:updated_at)
+      end
+      check_for_blank_view
+    end
+
     def find_library_export_view
-      @view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: params[:destination_server],
-                                                                organization: @organization,
-                                                                format: find_export_format,
-                                                                create_by_default: false)
+      find_export_view_helper(
+        ::Katello::ContentView::EXPORT_LIBRARY,
+        "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
+        @organization,
+        :library_export,
+        :library_export_syncable
+      )
+    end
+
+    def find_repository_export_view
+      find_export_view_helper(
+        "Export-#{@repository.label}-#{@repository.library_instance_or_self.id}",
+        "Export-SYNCABLE-#{@repository.label}-#{@repository.library_instance_or_self.id}",
+        @repository.organization,
+        :repository_export,
+        :repository_export_syncable
+      )
+    end
+
+    def determine_view_from_name(name, organization, generated_for)
+      ::Katello::ContentView.where(name: name,
+                                   organization: organization,
+                                   generated_for: generated_for).first
+    end
+
+    def check_for_blank_view
       if @view.blank?
-        msg = _("Unable to incrementally export. Do a Full Export on the library content "\
-                "before updating from the latest increment.")
+        valid_params = ""
+        valid_params << " 'from_history_id':#{params[:from_history_id]}" if params[:from_history_id].present?
+        valid_params << " 'format':#{params[:format]}" if params[:format].present?
+        if valid_params.blank?
+          msg = _("Unable to find a base content view to use for incremental export. Please run a complete export instead.")
+        else
+          msg = _("Unable to find a base content view to use for incremental export using the provided parameters:%{params}") % { params: valid_params }
+        end
         fail HttpErrors::BadRequest, msg
       end
     end
 
-    def find_repository_export_view
-      @view = ::Katello::Pulp3::ContentViewVersion::Export.find_repository_export_view(
-                                                                repository: @repository,
-                                                                create_by_default: false,
-                                                                format: find_export_format)
-      if @view.blank?
-        msg = _("Unable to incrementally export. Do a Full Export on the repository content.")
+    def determine_export_format_from_history
+      @export_format = @history.metadata[:format]
+
+      if params[:format].present? && @export_format != params[:format]
+        msg = _("The provided incremental export format '%{provided}' must match the previous export's format '%{previous}'. "\
+          "Consider using 'from_history_id' to point to a matching export.") % { provided: params[:format], previous: @export_format }
         fail HttpErrors::BadRequest, msg
       end
     end

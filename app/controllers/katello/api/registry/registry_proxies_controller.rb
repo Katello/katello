@@ -517,11 +517,11 @@ module Katello
         PersonalAccessToken.transaction do
           personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').first
           if personal_token.nil?
-            personal_token = PersonalAccessToken.new(user: User.current, name: 'registry', expires_at: 6.minutes.from_now)
+            personal_token = PersonalAccessToken.new(user: User.current, name: 'registry', expires_at: Setting['registry_token_expiration_minutes'].minutes.from_now)
             personal_token.generate_token
             personal_token.save!
           else
-            personal_token.expires_at = 6.minutes.from_now
+            personal_token.expires_at = Setting['registry_token_expiration_minutes'].minutes.from_now
             personal_token.save!
           end
         rescue ActiveRecord::RecordInvalid
