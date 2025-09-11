@@ -711,6 +711,12 @@ Foreman::Plugin.register :katello do
         full_name: N_('Enable structured APT for deb content'),
         description: N_("If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. " \
                         "You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.")
+
+      setting 'registry_token_expiration_minutes',
+        type: :integer,
+        default: 60,
+        full_name: N_('Registry token expiration time'),
+        description: N_('Time in minutes before registry access tokens expire.')
     end
   end
 
