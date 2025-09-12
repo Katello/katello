@@ -27,7 +27,7 @@ module Actions
             output[:matching_content] = srpms_match && rpms && errata && package_groups && distributions && target_repo_published && checksum_match
           end
 
-          if source_repo.content_type == ::Katello::Repository::DEB_TYPE
+          if source_repo.deb?
             debs = debs_match?(source_repo, target_repo)
 
             output[:matching_content] = debs && target_repo_published
