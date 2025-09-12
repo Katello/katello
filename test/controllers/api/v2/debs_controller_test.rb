@@ -96,6 +96,27 @@ module Katello
       assert_includes JSON.parse(response.body), @deb.name
     end
 
+    def test_autocomplete_name_blank_term
+      response = get :auto_complete_name, params: { :repoids => [@repo.id], :term => '' }
+
+      assert_response :success
+      assert_includes JSON.parse(response.body), @deb.name
+    end
+
+    def test_autocomplete_arch
+      response = get :auto_complete_arch, params: { :repoids => [@repo.id], :term => @deb.architecture.first }
+
+      assert_response :success
+      assert_includes JSON.parse(response.body), @deb.architecture
+    end
+
+    def test_autocomplete_arch_blank_term
+      response = get :auto_complete_arch, params: { :repoids => [@repo.id], :term => '' }
+
+      assert_response :success
+      assert_includes JSON.parse(response.body), @deb.architecture
+    end
+
     def test_show
       get :show, params: { :id => @deb.id }
 

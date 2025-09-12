@@ -45,6 +45,11 @@ module Katello
         query_arch = rule.architecture.tr("*", "%")
         query = query.where("#{Deb.table_name}.architecture ilike ?", query_arch)
       end
+      if rule.version.present?
+        query = query.search_version_equal(rule.version)
+      elsif rule.min_version.present? || rule.max_version.present?
+        query = query.search_version_range(rule.min_version, rule.max_version)
+      end
       query.default_sort
     end
   end
