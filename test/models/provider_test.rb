@@ -4,7 +4,7 @@ module Katello
   class ProviderTest < ActiveSupport::TestCase
     class OwnerUpstreamUpdateTest < ActiveSupport::TestCase
       let(:provider) { katello_providers(:redhat) }
-      let(:api_url) { 'http://theforeman.org' }
+      let(:api_url) { 'http://theforeman.org/subscription/consumers/' }
       let(:expected_url) { api_url }
 
       def setup
