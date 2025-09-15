@@ -775,8 +775,8 @@ module ::Actions::Katello::ContentView
 
     it 'unchanged repo and env' do
       action.expects(:action_subject).with(content_view)
-      assert_equal [env1.id], content_view.environment_ids
-      assert_equal [repo1.id], content_view.repository_ids
+      assert_equal_arrays [env1.id], content_view.environment_ids
+      assert_equal_arrays [repo1.id], content_view.repository_ids
 
       plan_action action, content_view, {'repository_ids' => [repo1.id]}, [env1.id]
 
@@ -788,8 +788,8 @@ module ::Actions::Katello::ContentView
 
     it 'remove repo and env' do
       action.expects(:action_subject).with(content_view)
-      assert_equal [env1.id], content_view.environment_ids
-      assert_equal [repo1.id], content_view.repository_ids
+      assert_equal_arrays [env1.id], content_view.environment_ids
+      assert_equal_arrays [repo1.id], content_view.repository_ids
 
       plan_action action, content_view, {'repository_ids' => []}, []
 
@@ -801,8 +801,8 @@ module ::Actions::Katello::ContentView
 
     it 'add repo and env' do
       action.expects(:action_subject).with(content_view)
-      assert_equal [env1.id], content_view.environment_ids
-      assert_equal [repo1.id], content_view.repository_ids
+      assert_equal_arrays [env1.id], content_view.environment_ids
+      assert_equal_arrays [repo1.id], content_view.repository_ids
 
       plan_action action, content_view, {'repository_ids' => [repo1.id, repo2.id]}, [env1.id, env2.id]
 
@@ -819,8 +819,8 @@ module ::Actions::Katello::ContentView
       content_view.repositories = [repo1, repo2]
       content_view.add_environment(env2, content_view.versions[0])
 
-      assert_equal [env1.id, env2.id], content_view.environment_ids
-      assert_equal [repo1.id, repo2.id], content_view.repository_ids
+      assert_equal_arrays [env1.id, env2.id], content_view.environment_ids
+      assert_equal_arrays [repo1.id, repo2.id], content_view.repository_ids
 
       plan_action action, content_view, {'repository_ids' => [repo2.id, repo3.id]}, [env2.id, env3.id]
 
