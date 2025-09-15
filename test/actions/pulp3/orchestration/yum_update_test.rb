@@ -12,9 +12,9 @@ module ::Actions::Pulp3
       @repo.root.update(
         verify_ssl_on_sync: false,
         mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE,
-        ssl_ca_cert: katello_gpg_keys(:unassigned_gpg_key),
-        ssl_client_cert: katello_gpg_keys(:unassigned_gpg_key),
-        ssl_client_key: katello_gpg_keys(:unassigned_gpg_key))
+        ssl_ca_cert: katello_gpg_keys(:real_ca),
+        ssl_client_cert: katello_gpg_keys(:real_cert),
+        ssl_client_key: katello_gpg_keys(:real_key))
 
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo)
