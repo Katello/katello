@@ -53,3 +53,11 @@ fedora_key:
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
   content_type: "cert"
+
+content_guard_cert:
+  name:            Content Guard Certificate
+  content:         "<%= File.read(File.join(::Katello::Engine.root, 'test', 'fixtures', 'certs', 'content_guard.crt')) %>"
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_type: "cert"

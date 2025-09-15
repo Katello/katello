@@ -46,9 +46,9 @@ module ::Actions::Pulp3
 
     def test_yum_create_complex
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_acs.name)
-      ca = katello_gpg_keys(:fedora_ca)
-      cert = katello_gpg_keys(:fedora_cert)
-      key = katello_gpg_keys(:fedora_key)
+      ca = katello_gpg_keys(:content_guard_cert)
+      cert = katello_gpg_keys(:content_guard_cert)
+      key = katello_gpg_keys(:content_guard_cert)
       http_proxy = FactoryBot.create(:http_proxy)
       http_proxy.name = 'acs http proxy'
       http_proxy.url = 'http://acs-url-proxy.com'

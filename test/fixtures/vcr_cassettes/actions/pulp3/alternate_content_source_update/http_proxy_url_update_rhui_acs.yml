@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos9-katello-devel-stable.example.com:9090/v2/features
+    uri: https://ip-10-0-168-167.rhos-01.prod.psi.rdu2.redhat.com:9090/v2/features
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -12,9 +12,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.1.0 (linux x86_64) ruby/3.0.7p220
       X-Request-Id:
-      - 414258f1-f3a6-4210-8155-608a1a0b7d04
+      - c5e83928-61be-4c99-a46c-bf05fafe45c4
       X-Session-Id:
-      - 7dad1280-cfcc-4b98-b4d9-6e0e5ff1446c
+      - 7c9927c9-9d36-4db3-a9a6-8c7db66109f6
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -26,12 +26,14 @@ http_interactions:
       - application/json
       Content-Length:
       - '43'
+      Strict-Transport-Security:
+      - max-age=31536000
       X-Content-Type-Options:
       - nosniff
       Server:
-      - foreman-proxy/3.13.0-develop
+      - foreman-proxy/3.17.0-develop
       Date:
-      - Thu, 20 Mar 2025 22:58:56 GMT
+      - Fri, 12 Sep 2025 19:28:06 GMT
       Connection:
       - Keep-Alive
     body:
@@ -39,5 +41,5 @@ http_interactions:
       base64_string: 'Y291bGQgbm90IHJlYWQgY2xpZW50IGNlcnQgZnJvbSBlbnZpcm9ubWVudA==
 
         '
-  recorded_at: Thu, 20 Mar 2025 22:58:56 GMT
+  recorded_at: Fri, 12 Sep 2025 19:28:06 GMT
 recorded_with: VCR 6.3.1
