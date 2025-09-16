@@ -3,11 +3,11 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 2.4.0-RC1",
+        "Project-Id-Version": "katello 4.18.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2023",
-        "Language-Team": "French (https://www.transifex.com/foreman/teams/114/fr/)",
+        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2025",
+        "Language-Team": "French (https://app.transifex.com/foreman/teams/114/fr/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
@@ -18,22 +18,22 @@
         "plural_forms": "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
       },
       "\\n* Product = '%{product}', Repository = '%{repository}'": [
-        "\\n* Produit: '%%{product}', Repo: '%%{repository}'"
+        "\\n* Produit = '%{product} ', Référentiel = '%{repository} '"
       ],
       " %{errata_count} Errata": [
-        " %{errata_count} Errata"
+        " %{errata_count}Errata"
       ],
       " %{modulemd_count} Module Stream(s)": [
         " %{modulemd_count} Flux de Module(s)"
       ],
       " %{package_count} Package(s)": [
-        " %{package_count} Package(s)"
+        " %{package_count} Paquet(s)"
       ],
       " (${item.published_at_words} ago)": [
-        ""
+        " (il y a ${item.published_at_words})"
       ],
       " (${version.published_at_words} ago)": [
-        ""
+        " (il y a ${version.published_at_words})"
       ],
       " Content view updated": [
         " Affichage de contenu mis à jour"
@@ -60,7 +60,7 @@
         " Il y a"
       ],
       " ago.": [
-        " Il y a "
+        "Il y a "
       ],
       " and": [
         " et"
@@ -69,7 +69,7 @@
         " sont en dehors de l'ordonnancement du chemin de l'environnement. La pratique recommandée est de passer à l'environnement suivant dans le chemin."
       ],
       " content view is used in listed composite content views.": [
-        "l’affichage du contenu est utilisé dans les affichages de contenus composites"
+        "l’affichage du contenu est utilisé dans les affichages de contenus composites."
       ],
       " content view is used in listed content views. For more information, ": [
         " l’affichage du contenu est utilisé dans les affichages de contenu de composants listés. Pour plus d’informations, "
@@ -90,25 +90,25 @@
         " pour gérer et promouvoir les vues de contenu, ou sélectionnez un autre environnement."
       ],
       "${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}": [
-        "Version"
+        "${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}"
       ],
       "${option}": [
         "${option}"
       ],
       "${pluralize(akResponse.length, 'activation key')} will be moved to content view ${selectedCVNameForAK} in ": [
-        "{pluralize(akResponse.length, 'activation key')} Les hôtes de contenu seront déplacés{selectedCVNameForAK} vers  "
+        "${pluralize(akResponse.length, 'activation key')} sera déplacé vers la vue de contenu ${selectedCVNameForAK} dans "
       ],
       "${pluralize(hostResponse.length, 'host')} will be moved to content view ${selectedCVNameForHosts} in ": [
-        "{pluralize(hostResponse.length, 'host')} Les hôtes de contenu seront déplacés{selectedCVNameForHosts} vers  "
+        "${pluralize(hostResponse.length, 'host')} sera déplacé vers la vue de contenu ${selectedCVNameForHosts} dans "
       ],
       "${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted": [
-        "{pluralize(versionCount, 'content view version')}(versionCount, 'content view version')} présent dans l’environnement ci-dessous sera supprimé une fois le contenu supprimé"
+        "${pluralize(versionCount, 'content view version')} dans les environnements ci-dessous seront supprimés lorsque la vue du contenu sera supprimée"
       ],
       "${selectedContentType}": [
-        "{selectedContentType}"
+        "${selectedContentType}"
       ],
       "${selectedContentType} will appear here when created.": [
-        "{selectedContentType} apparaîtra ici une fois que vous l’aurez créé."
+        "${selectedContentType} apparaîtra ici lors de sa création."
       ],
       "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?": [
         "%s%s a %s Hôtes et %s Groupes d’hôtes qui devront être réassociés après la suppression. Supprimer %s ?"
@@ -120,9 +120,9 @@
         "%s Errata"
       ],
       "%s Host": [
-        "%shôte",
-        "%shôtes",
-        "%shôtes"
+        "%sHôte",
+        "%sHôtes",
+        "%sHôtes"
       ],
       "%s Used": [
         "%sUtilisé(e)"
@@ -131,7 +131,7 @@
         "Il y a %s"
       ],
       "%s content type is not enabled.": [
-        ""
+        "le type de contenu  %s n’est pas activé."
       ],
       "%s guests": [
         "%s invités"
@@ -152,7 +152,7 @@
         "%s est inaccessible. %s "
       ],
       "%s was not found!": [
-        ""
+        "%s n'a pas été trouvé!"
       ],
       "%{errata} (%{total} other errata)": [
         "%{errata} (%{total} autres errata )"
@@ -182,7 +182,7 @@
         "Erratum %{errata} installé"
       ],
       "%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.": [
-        "Les abonnements en %{expiring_subs} de %{subject}  vont expirer dans moins de %{days} jours. Veuillez les renouveler avant leur expiration pour garantir que vos hôtes continueront à recevoir du contenu."
+        "Les abonnements en %{expiring_subs} de %{subject} vont expirer dans moins de %{days} jours. Veuillez les renouveler avant leur expiration pour garantir que vos hôtes continueront à recevoir du contenu."
       ],
       "%{group} (%{total} other package groups)": [
         "%{group} (%{total} groupes de packages)"
@@ -260,13 +260,13 @@
         "Mise à jour du groupe de packages %{group}"
       ],
       "%{label} failed": [
-        ""
+        "%{label} a échoué"
       ],
       "%{label} failed.": [
-        ""
+        "%{label} a échoué."
       ],
       "%{name} has no %{type} repositories with upstream URLs to add to the alternate content source.": [
-        ""
+        "%{name} n'a pas%{type} référentiels avec des URL en amont à ajouter à la source de contenu alternative."
       ],
       "%{package} (%{total} other packages)": [
         "%{package} ( %{total} autres packages )"
@@ -335,10 +335,10 @@
         "Délai d'expiration de la mise à jour du package %{package} dépassé"
       ],
       "%{package} package updated": [
-        "Package %{package} mis à jour."
+        "Package %{package} mis à jour"
       ],
       "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
-        ""
+        "%{release}:%{number_of_hosts} les hôtes approchent de la fin%{lifecycle} sur%{end_date}. Veuillez les mettre à niveau avant l'expiration du support. Vérifiez Hôte du rapport - Statuts pour plus de détails."
       ],
       "%{sla}": [
         "%{sla}"
@@ -347,31 +347,31 @@
         "Le disque de %{subject} est à %{percentage} plein. Comme ce proxy exécute Pulp, il a besoin d'espace disque pour publier les vues du contenu. Veuillez vous assurer que le disque n'est pas plein."
       ],
       "%{unused_substitutions} cannot be specified for %{content_name} as that information is not substitutable in %{content_url} ": [
-        "Le {unused_substitutions} ne peut pas être spécifié pour le % {content_name} car cette information n'est pas substituable en %{content_url} "
+        "%{unused_substitutions} ne peut pas être spécifié pour le %{content_name} car cette information n'est pas substituable en %{content_url} "
       ],
       "%{used} of %{total}": [
         "%{used} de %{total} "
       ],
       "%{value} can contain only lowercase letters, numbers, dashes and dots.": [
-        ""
+        "%{value} ne peut contenir que des lettres minuscules, des chiffres, des tirets et des points."
       ],
       "%{view_label} could not be promoted to %{environment_label} because the content view and the environment are not in the same organization!": [
         "%{view_label} n'a pas pu être promu en %{environment_label} parce que la vue du contenu et l'environnement ne sont pas dans la même organisation !"
       ],
       "'%{item}' does not exist in the backend system [ Candlepin ].  Either remove and re-enable the repository or try refreshing the manifest before synchronizing. ": [
-        "'%{item}' n'existe pas dans le système backend [ Candlepin ].  Soit vous supprimez et réactivez le dépôt, soit vous essayez de rafraîchir le manifeste avant la synchronisation. "
+        "'%{item}' n'existe pas dans le système backend [ Candlepin ].  Soit vous supprimez et réactivez le référentiel, soit vous essayez de rafraîchir le manifeste avant la synchronisation. "
       ],
       "'%{item}' does not exist in the backend system [ Candlepin ].  Either remove the invalid repository or try refreshing the manifest before promoting. ": [
-        "'%{item}' n'existe pas dans le système backend [ Candlepin ].  Supprimez le dépôt invalide ou essayez de rafraîchir le manifeste avant de le promouvoir. "
+        "'%{item}' n'existe pas dans le système backend [ Candlepin ].  Supprimez le référentiel invalide ou essayez de rafraîchir le manifeste avant de le promouvoir. "
       ],
       "'%{item}' does not exist in the backend system [ Candlepin ].  Remove and recreate the repository before synchronizing. ": [
         "'%{item}' n'existe pas dans le système backend [ Candlepin ].  Supprimez et recréez le référentiel avant de procéder à la synchronisation. "
       ],
       "'%{item}' does not exist in the backend system [ Candlepin ].  Remove the invalid repository before promoting. ": [
-        "'%{item}' n'existe pas dans le système backend [ Candlepin ].  Supprimez le dépôt invalide avant la promotion. "
+        "'%{item}' n'existe pas dans le système backend [ Candlepin ].  Supprimez le référentiel invalide avant la promotion. "
       ],
       "'%{item}' in this content view does not exist in the backend system [ Candlepin ].  Either remove the invalid repository or try refreshing the manifest before publishing again. ": [
-        "'%{item}' dans cette vue de contenu n'existe pas dans le système backend [ Candlepin ].  Supprimez le dépôt invalide ou essayez de rafraîchir le manifeste avant de publier à nouveau. "
+        "'%{item}' dans cette vue de contenu n'existe pas dans le système backend [ Candlepin ].  Supprimez le référentiel invalide ou essayez de rafraîchir le manifeste avant de publier à nouveau. "
       ],
       "'%{item}' in this content view does not exist in the backend system [ Candlepin ].  Remove the invalid repository before publishing again. ": [
         "'%{item}' dans cette vue de contenu n'existe pas dans le système backend [ Candlepin ].  Supprimez le référentiel invalide avant de publier à nouveau. "
@@ -389,7 +389,7 @@
         ", doit être unique à la version majeure et id de version."
       ],
       ": '%s' is a built-in environment": [
-        ": « %s » est un environnement intégré"
+        ":  '%s' est un environnement intégré"
       ],
       ":a_resource identifier": [
         ":a_resource identifier"
@@ -404,16 +404,16 @@
         "Une version du CV existe déjà avec la même version majeure et mineure (%{major}.%{minor})"
       ],
       "A Pool and its Subscription cannot belong to different organizations.": [
-        ""
+        "Un pool et son abonnement ne peuvent pas appartenir à des organisations différentes"
       ],
       "A backend service [ %s ] is unreachable": [
         "Un service backend [ %s ] est injoignable"
       ],
       "A comma-separated list of refs to include during an ostree sync. The wildcards *, ? are recognized.": [
-        ""
+        "Liste de références séparées par des virgules à inclure lors d'une synchronisation ostree. Les caractères génériques *, ? sont reconnus."
       ],
       "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
-        ""
+        "Liste de balises séparées par des virgules à exclure lors d'une synchronisation ostree. Les caractères génériques *, ? sont reconnus. 'exclude_refs' est évalué après 'include_refs'."
       ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
         "Un grand nombre d'errata n'est pas appliqué dans cet affichage de contenu. Seuls les 100 premiers sont affichés."
@@ -428,16 +428,16 @@
         "Une nouvelle version de "
       ],
       "A notification about failed content view promotion": [
-        ""
+        "Une notification concernant l'échec de la promotion de l'affichage du contenu"
       ],
       "A notification about failed content view publish": [
-        ""
+        "Une notification concernant l'échec de la publication de la vue de contenu"
       ],
       "A notification about failed proxy sync": [
-        ""
+        "Une notification concernant l'échec de la synchronisation du proxy"
       ],
       "A notification about failed repository sync": [
-        ""
+        "Une notification concernant l'échec de la synchronisation du référentiel"
       ],
       "A post-promotion summary of hosts with installable errata": [
         "Un sommaire des hôtes post-promotion avec errata installables"
@@ -466,6 +466,9 @@
       "About page": [
         "Page d'accueil"
       ],
+      "Abstract async task": [
+        ""
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "L'accès à la gestion des abonnements Red Hat est interdit. Si vous souhaitez modifier cette interdiction, veuillez mettre à jour le paramètre de contenu \\\"Connexion aux abonnements activée\\\"."
       ],
@@ -482,10 +485,10 @@
         "Action non autorisée à être exécutée dans cette organisation."
       ],
       "Activation Key information": [
-        ""
+        "Informations sur la clé d'activation"
       ],
       "Activation Key will no longer be available for use. This operation cannot be undone.": [
-        ""
+        "La clé d'activation ne sera plus disponible. Cette opération ne peut pas être annulée."
       ],
       "Activation Keys": [
         "Clés d'activation"
@@ -494,46 +497,46 @@
         "Clé d'activation"
       ],
       "Activation key %s has more than one content view. Use #content_views instead.": [
-        ""
+        "Clé d'activation%s possède plusieurs vues de contenu. Utilisez plutôt #content_views."
       ],
       "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.": [
-        ""
+        "Clé d'activation%s possède plusieurs environnements de cycle de vie. Utilisez plutôt #lifecycle_environments."
       ],
       "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
-        ""
+        "Clé d'activation '%s ' est associé à plusieurs environnements et l'enregistrement dans plusieurs environnements n'est pas activé."
       ],
       "Activation key ID": [
-        "ID de clé d'activation"
+        "ID de la clé d'activation"
       ],
       "Activation key deleted": [
-        ""
+        "Clé d'activation supprimée"
       ],
       "Activation key details": [
-        ""
+        "Détails de la clé d'activation"
       ],
       "Activation key details updated": [
-        ""
+        "Détails de la clé d'activation mis à jour"
       ],
       "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead.": [
         "Clé d'activation pour le client subscription-manager, requise pour CentOS et Red Hat Enterprise Linux. Pour plusieurs clés, utilisez plutôt le paramètre `activation_keys`."
       ],
       "Activation key identifier": [
-        ""
+        "Identifiant de la clé d'activation"
       ],
       "Activation key(s) to use during registration": [
-        ""
+        "Clé(s) d'activation à utiliser lors de l'inscription"
       ],
       "Activation keys": [
         "Clés d'activation"
       ],
       "Activation keys can be managed {here}.": [
-        ""
+        "Les clés d'activation peuvent être gérées{here}."
       ],
       "Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys or if you do not provide a host group.": [
-        ""
+        "Clés d'activation pour le client du gestionnaire d'abonnements, requises pour CentOS et Red Hat Enterprise Linux. Requis uniquement si le groupe d'hôtes ne dispose pas de clés d'activation ou si vous ne fournissez pas de groupe d'hôtes."
       ],
       "Activation keys may be used during {system_registration}.": [
-        ""
+        "Les clés d'activation peuvent être utilisées pendant{system_registration} ."
       ],
       "Activation keys: ": [
         "Clés d'activation : "
@@ -566,7 +569,7 @@
         "Ajouter des éléments à l’affichage du contenu"
       ],
       "Add content": [
-        ""
+        "Ajouter du contenu"
       ],
       "Add content view": [
         "Ajouter un affichage de contenu"
@@ -608,6 +611,9 @@
         "Ajouter référentiels"
       ],
       "Add repositories with package groups to content view to select them here.": [
+        "Ajouter des référentiels avec des groupes de paquets à l’affichage de contenu pour les sélectionner ici."
+      ],
+      "Add rolling repo clone": [
         ""
       ],
       "Add rule": [
@@ -617,7 +623,7 @@
         "Ajouter une source"
       ],
       "Add subscriptions": [
-        ""
+        "Ajouter des abonnements"
       ],
       "Add subscriptions consumed by a manifest from Red Hat Subscription Management": [
         "Ajouter les abonnements consommés par un manifeste de Red Hat Subscription Management"
@@ -626,7 +632,7 @@
         "Ajouter des abonnements à un ou plusieurs hôtes"
       ],
       "Add subscriptions using the Add Subscriptions button.": [
-        ""
+        "Ajouter des abonnements à l'aide du bouton Ajouter des abonnements."
       ],
       "Add to a host collection": [
         "Ajouter à une collection d'hôtes"
@@ -641,7 +647,7 @@
         "Contenu ajouté :"
       ],
       "Added component to content view": [
-        "Composant ajouté à la vue du contenu."
+        "Composant ajouté à la vue du contenu"
       ],
       "Additional content": [
         "Contenu supplémentaire"
@@ -650,16 +656,16 @@
         "Référentiels affectés"
       ],
       "Affected hosts": [
-        ""
+        "Hôtes affectés"
       ],
       "Affected repositories": [
         "Référentiels affectés"
       ],
       "After configuring Foreman, configuration must also be updated on {hosts}. Choose one of the following options to update {hosts}:": [
-        ""
+        "Après avoir configuré Foreman, la configuration doit également être mise à jour sur{hosts}. Choisissez l'une des options suivantes pour mettre à jour{hosts} :"
       ],
       "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently.": [
-        "Après avoir effectué la mise à jour croissante, appliquer les modifications aux systèmes spécifiés. Seuls les errata sont actuellement pris en charge."
+        "Après avoir effectué la mise à jour croissante, appliquer les modifications aux systèmes spécifiés. Seuls les erratas sont actuellement pris en charge."
       ],
       "All": [
         "Tout"
@@ -680,7 +686,7 @@
         "Tous les errata sont à jour"
       ],
       "All subpaths must have a slash at the end and none at the front": [
-        "Tous les sous-chemins doivent avoir une barre oblique à la fin et aucune au début."
+        "Tous les sous-chemins doivent avoir une barre oblique à la fin et aucune au début"
       ],
       "All up to date": [
         "Tout est à jour"
@@ -698,19 +704,19 @@
         "Permettre aux enregistrements d'hôtes de contourner la \\\"Profile d’hôte Assume'\\\" tant que l'hôte est en mode build."
       ],
       "Allow hosts or activation keys to be associated with multiple content view environments": [
-        ""
+        "Autoriser l'association d'hôtes ou de clés d'activation à plusieurs environnements d'affichage de contenu"
       ],
       "Allow hosts to re-register themselves only when they are in build mode": [
         "Autoriser les hôtes à se réenregistrer uniquement lorsqu'ils sont en mode \\\"build\\\""
       ],
       "Allow multiple content views": [
-        ""
+        "Permettre l'affichage de plusieurs contenus"
       ],
       "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host.": [
         "Autoriser les nouveaux enregistrements d'hôtes à assumer des profils enregistrés avec un nom d'hôte correspondant tant que l'UUID du DMI d'enregistrement n'est pas utilisé par un autre hôte."
       ],
       "Also include the latest upgradable package version for each host package": [
-        "Inclure également la dernière version de package de mise à jour pour chaque package d’hôte."
+        "Inclure également la dernière version de package de mise à jour pour chaque package d’hôte"
       ],
       "Alter a host's host collections": [
         "Modifier les collections d'hôtes d'un hôte"
@@ -749,19 +755,19 @@
         "Nombre de workers dans le pool pour l'exécution des tâches liées à l'hôte. Si la valeur est 0, la file d'attente par défaut sera utilisée à la place. Il faut redémarrer le service dynflowd/foreman-tasks."
       ],
       "An alternate content source can be added by using the \\\\\\\"Add source\\\\\\\" button below.": [
-        ""
+        "Une autre source de contenu peut être ajoutée en utilisant le bouton \\\\\\\"Ajouter une source\\\"\\\\ ci-dessous."
       ],
       "An environment is missing a prior": [
         "Il manque à l'environnement un préalable"
       ],
       "An error occurred during the sync \\n%{error_message}": [
-        "Une erreur s'est produite lors de la synchronisation\\n%{error_message}"
+        "Une erreur s'est produite lors de la synchronisation %{error_message}"
       ],
       "An error occurred during upload \\n%{error_message}": [
         "Une erreur s'est produite lors de la synchronisation %{error_message}"
       ],
       "An option to specify how many ostree commits to traverse.": [
-        ""
+        "Une option pour spécifier le nombre de commits ostree à parcourir."
       ],
       "Another component already includes content view with ID %s": [
         "Une autre composante comprend déjà une vue du contenu avec ID %s"
@@ -791,13 +797,13 @@
         "Hôtes de contenu applicables"
       ],
       "Applicable bugfix/enhancement errata": [
-        ""
+        "Corrections de bogues/améliorations applicables"
       ],
       "Applicable errata apply to at least one package installed on the host.": [
         "Les errata applicables s'appliquent à au moins un paquet installé sur l'hôte."
       ],
       "Applicable security errata": [
-        ""
+        "Errata de sécurité applicable"
       ],
       "Application": [
         "Application"
@@ -809,7 +815,7 @@
         "Appliquer"
       ],
       "Apply errata": [
-        ""
+        "Appliquer les errata"
       ],
       "Apply to all repositories in the CV": [
         "Appliquer à tous les référentiels dans le CV"
@@ -824,16 +830,16 @@
         "Appliquer via exécution à distante"
       ],
       "Approaching end of maintenance support": [
-        ""
+        "Approche de la fin du support de maintenance"
       ],
       "Approaching end of maintenance support (%s)": [
-        ""
+        "Approche de la fin du support de maintenance (%s )"
       ],
       "Approaching end of support": [
-        ""
+        "Approche de la fin du support"
       ],
       "Approaching end of support (%s)": [
-        ""
+        "Fin du support approche (%s )"
       ],
       "Arch": [
         "Arch"
@@ -875,13 +881,13 @@
         "Tableau des ID des composants de la vue du contenu à supprimer. Identificateur de l'association de composants"
       ],
       "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on.": [
-        ""
+        "Tableau d'identifiants d'environnement d'affichage de contenu associés à la clé d'activation. Ignoré si content_view_id et lifecycle_environment_id sont spécifiés. Nécessite l'activation du paramètre allow_multiple_content_views."
       ],
       "Array of content view environment ids to be associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        ""
+        "Tableau d'identifiants d'environnement d'affichage de contenu à associer à la clé d'activation. Ignoré si content_view_id et lifecycle_environment_id sont spécifiés. Nécessite que le paramètre allow_multiple_content_views soit activé."
       ],
       "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        ""
+        "Tableau d'identifiants d'environnement d'affichage de contenu à associer à l'hôte. Ignoré si content_view_id et lifecycle_environment_id sont spécifiés. Nécessite que le paramètre allow_multiple_content_views soit activé."
       ],
       "Array of host ids": [
         "Ensemble d'ids d'hôtes"
@@ -911,9 +917,9 @@
         "Attribuer des attributs de finalité du système sur un ou plusieurs hôtes"
       ],
       "Assign the %{count} host with no %{taxonomy_single} to %{taxonomy_name}": [
-        "Affecter l'hôte {taxonomy_single} sans %{taxonomy_name} à %{taxonomy_name}",
-        "Affecter tous les hôtes %{count} sans %{taxonomy_single}  à %{taxonomy_name}",
-        "Affecter tous les hôtes %{count} sans %{taxonomy_single}  à %{taxonomy_name}"
+        "Affecter l'hôte %{count} sans %{taxonomy_single} à %{taxonomy_name}",
+        "Affecter tous les hôtes %{count} sans %{taxonomy_single} à %{taxonomy_name}",
+        "Affecter tous les hôtes %{count} sans %{taxonomy_single} à %{taxonomy_name}"
       ],
       "Assign the environment and content view to one or more hosts": [
         "Assigner l'environnement et l'affichage de contenu d'un ou plusieurs systèmes hôtes"
@@ -922,10 +928,10 @@
         "Attribuer la version de diffusion à un ou plusieurs hôtes"
       ],
       "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        ""
+        "L'affectation d'un hôte à plusieurs environnements d'affichage de contenu n'est pas activée. Pour l'activer, définissez le paramètre allow_multiple_content_views."
       ],
       "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        ""
+        "L'attribution d'une clé d'activation à plusieurs environnements d'affichage de contenu n'est pas activée. Pour l'activer, définissez le paramètre allow_multiple_content_views."
       ],
       "Associated location IDs": [
         "Identifiants de localisation associés"
@@ -943,13 +949,13 @@
         "Au moins une clé d'activation doit être fournie"
       ],
       "At least one activation key must have a lifecycle environment and content view assigned to it": [
-        "Au moins une clé d'activation doit avoir un environnement de cycle de vie et un affichage de contenu lui étant assignée."
+        "Au moins une clé d'activation doit avoir un environnement de cycle de vie et un affichage de contenu lui étant assignée"
       ],
       "At least one errata type option needs to be selected.": [
-        ""
+        "Au moins une option de type d’errata doit être sélectionnée."
       ],
       "At least one of the selected items requires the host to reboot": [
-        ""
+        "Au moins un des éléments sélectionnés nécessite le redémarrage de l'hôte"
       ],
       "At least one organization must exist.": [
         "Au moins une organisation doit exister."
@@ -978,6 +984,9 @@
       "Auto Publish - Triggered by '%s'": [
         "Auto Publish - Déclenché par '%s' "
       ],
+      "Auto attach subscriptions": [
+        ""
+      ],
       "Auto publish": [
         "Auto Publish"
       ],
@@ -994,19 +1003,16 @@
         "référentiels disponibles"
       ],
       "Available image": [
-        ""
+        "Image disponible"
       ],
       "Available image digest": [
-        ""
+        "Résumé d'images disponible (digest)"
       ],
       "Available schema versions": [
-        ""
+        "Versions de schémas disponibles"
       ],
       "Back": [
         "Précédent"
-      ],
-      "Backend System Status": [
-        "Statut du système backend"
       ],
       "Base URL": [
         "URL de base"
@@ -1015,10 +1021,10 @@
         "URL de base pour trouver le contenu alternatif"
       ],
       "Base URL of the flatpak registry index, ex: https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/.": [
-        ""
+        "URL de base de l'index du registre flatpak, ex : https://flatpaks.redhat.io/rhel/ , https://registry.fedoraproject.org/."
       ],
       "Base URL to perform repo discovery on": [
-        "URL de base sur lequel effectuer la découverte de référentiel"
+        "URL de base sur lequel effectuer la détection de référentiel"
       ],
       "Basearch to disable": [
         "Basearch à désactiver"
@@ -1036,7 +1042,7 @@
         "Taille des lots pour synchroniser les référentiels."
       ],
       "Before continuing, ensure that all of the following prerequisites are met:": [
-        ""
+        "Avant de continuer, assurez-vous que toutes les conditions préalables suivantes sont remplies :"
       ],
       "Before removing versions you must move activation keys to an environment where the associated version is not in use.": [
         "Avant de supprimer des versions, vous devez déplacer les clés d'activation vers un environnement où la version associée n'est pas utilisée."
@@ -1066,22 +1072,22 @@
         "Les signets marqués comme étant publics sont disponibles à tous les utilisateurs"
       ],
       "Bootc rollback via Bootc interface": [
-        ""
+        "Restauration de Bootc via l'interface Bootc"
       ],
       "Bootc status via Bootc interface": [
-        ""
+        "État de Bootc via l'interface Bootc"
       ],
       "Bootc switch via Bootc interface": [
-        ""
+        "Commutation Bootc via l'interface Bootc"
       ],
       "Bootc upgrade via Bootc interface": [
-        ""
+        "Mise à niveau de Bootc via l'interface Bootc"
       ],
       "Booted Container Images": [
-        ""
+        "Images de conteneurs démarrés"
       ],
       "Booted container images": [
-        ""
+        "Images de conteneurs démarrées"
       ],
       "Both": [
         "Les deux"
@@ -1120,7 +1126,7 @@
         "Configuration CDN pour le contenu Red Hat"
       ],
       "CDN Configuration updated.": [
-        "Configuration CDN mise à jour"
+        "Configuration CDN mise à jour."
       ],
       "CDN configuration is set to Export Sync (disconnected). Repository enablement/disablement is not permitted on this page.": [
         "La configuration du CDN est réglée sur Export Sync (déconnecté). L'activation/désactivation du référentiel n'est pas autorisée sur cette page."
@@ -1150,7 +1156,7 @@
         "Calculer les errata applicables selon un environnement particulier"
       ],
       "Calculate content counts on smart proxies automatically": [
-        ""
+        "Calculer automatiquement le nombre de contenus sur les proxys intelligents"
       ],
       "Can communicate with the Red Hat Portal for subscriptions.": [
         "Peut communiquer avec le portail Red Hat pour les abonnements."
@@ -1159,13 +1165,13 @@
         "Peut uniquement supprimer les contenus à partir de l'Affichage de contenu par défaut"
       ],
       "Can't update the '%s' environment": [
-        "Mise à jour de l'environnement  '%s' impossible"
+        "Mise à jour de l'environnement '%s' impossible"
       ],
       "Cancel": [
         "Annuler"
       ],
       "Cancel repository discovery": [
-        "Annuler la découverte de référentiel"
+        "Annuler la détection de référentiel"
       ],
       "Cancel running smart proxy synchronization": [
         "Annuler l'exécution de la synchronisation du proxy smart"
@@ -1192,7 +1198,7 @@
         "Candlepin ne fonctionne pas correctement"
       ],
       "Candlepin returned different consumer uuid than requested (%s), updating uuid in subscription_facet.": [
-        ""
+        "Candlepin a renvoyé un uuid de consommateur différent de celui demandé (%s), en mettant à jour l'uuid dans subscription_facet."
       ],
       "Cannot add %s repositories to a content view.": [
         "Impossible d'ajouter %s référentiels à un affichage de contenu."
@@ -1213,22 +1219,22 @@
         ""
       ],
       "Cannot add content view environments from a different organization": [
-        ""
+        "Impossible d'ajouter des environnements d'affichage de contenu provenant d'une autre organisation"
       ],
       "Cannot add default content view to composite content view": [
         "Impossible d'ajouter un affichage du contenu par défaut à la vue du contenu composite"
       ],
       "Cannot add disabled Red Hat product %s to sync plan!": [
-        ""
+        "Impossible d'ajouter un produit Red Hat désactivé%s pour synchroniser le plan !"
       ],
       "Cannot add disabled products to sync plan!": [
-        ""
+        "Impossible d'ajouter des produits désactivés au plan de synchronisation !"
       ],
       "Cannot add generated content view versions to composite content view": [
         "Impossible d'ajouter des versions de la vue de contenu générée à la vue de contenu composite"
       ],
       "Cannot add product %s because it is disabled.": [
-        ""
+        "Ne peut pas ajouter produit %s car désactivé."
       ],
       "Cannot add repositories to a composite content view": [
         "Impossible d'ajouter des référentiels à un affichage du contenu composite"
@@ -1240,7 +1246,7 @@
         ""
       ],
       "Cannot associate a Red Hat provider with a custom product": [
-        ""
+        "Impossible d'associer un fournisseur Red Hat à un produit personnalisé"
       ],
       "Cannot associate a component to a non composite content view": [
         "Impossible d'ajouter un composant à un affichage de contenu non-composite"
@@ -1255,7 +1261,7 @@
         "Impossible de cloner dans un affichage de contenu par défaut"
       ],
       "Cannot delete '%{view}' due to associated %{dependent}: %{names}.": [
-        "Ne peut pas supprimer '%{view}'  en raison de l'association %{dependent} :%{names}."
+        "Ne peut pas supprimer '%{view}' en raison de l'association %{dependent} :%{names}."
       ],
       "Cannot delete Red Hat product: %{product}": [
         "Ne peut pas supprimer le produit Red Hat : %{product}"
@@ -1267,7 +1273,7 @@
         "Impossible de supprimer un produit dont les référentiels sont publiés dans une vue de contenu.  Produit : %{product}, %{view_versions}"
       ],
       "Cannot delete product: %{product} with repositories that are the last affected repository in content view filters. Delete these repositories before deleting product.": [
-        ""
+        "Impossible de supprimer le produit :%{product} avec les référentiels qui sont le dernier référentiel affecté dans les filtres d'affichage du contenu. Supprimez ces référentiels avant de supprimer le produit."
       ],
       "Cannot delete provider with attached products": [
         "Impossible de supprimer le fournisseur avec les produits joints"
@@ -1279,7 +1285,7 @@
         "Impossible de supprimer l'emplacement par défaut pour les hôtes abonnés. Si vous ne voulez plus de cet emplacement, modifiez l'emplacement par défaut pour les hôtes abonnés sous Administration > Paramètres, onglet Contenu."
       ],
       "Cannot delete the last Location.": [
-        "Impossible de supprimer le dernier emplacement"
+        "Impossible de supprimer le dernier emplacement."
       ],
       "Cannot delete version while it is in environment %s": [
         "Impossible de supprimer la version lorsqu'elle se trouve dans l'environnement %s"
@@ -1300,13 +1306,13 @@
         "Impossible d'importer un abonnement personnalisé à partir d'un produit Red Hat."
       ],
       "Cannot incrementally export from a filtered and a non-filtered content view version. The exported content view version '%{content_view} %{current}'  cannot be incrementally updated from version '%{from}.'.  Please do a full export.": [
-        ""
+        "Impossible d'exporter de manière incrémentale à partir d'une version filtrée et d'une version non filtrée de la vue de contenu. La version exportée de la vue de contenu '%{content_view} %{current}' ne peut pas être mise à jour de manière incrémentielle à partir de la version '%{from}.'.  Veuillez effectuer une exportation complète."
       ],
-      "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
+      "Cannot incrementally export from a incrementally updated version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
       "Cannot install errata: No errata found for search term '%s'": [
-        ""
+        "Impossible d'installer l'errata : aucun errata trouvé pour le terme de recherche «%s '"
       ],
       "Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}": [
         "Ne peut effectuer une mise à jour croissante sur une version d'affichage de contenu composite (%{name} version version %{version}"
@@ -1330,16 +1336,16 @@
         "Impossible d'enregistrer le système sur l'environnement '%s'"
       ],
       "Cannot remove '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}.": [
-        "Ne peut pas supprimer '%{view}' de l'environnement '%{env}' en raison de  %{dependent}: %{names}."
+        "Ne peut pas supprimer '%{view}' de l'environnement '%{env}' en raison de %{dependent}: %{names}."
       ],
       "Cannot remove content from a non-custom repository": [
-        "Impossible de supprimer le contenu d'un référentiel non personnalisé."
+        "Impossible de supprimer le contenu d'un référentiel non personnalisé"
       ],
       "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'.": [
         "Impossible de supprimer l'affichage de contenu de l'environnement. L'affichage de contenu '%{view}' ne se trouve pas dans l'environnement de cycle de vie '%{env}'."
       ],
       "Cannot remove package(s): No installed packages found for search term '%s'.": [
-        ""
+        "Impossible de supprimer le(s) paquet(s) : aucun paquet installé n'a été trouvé pour le terme de recherche «%s '."
       ],
       "Cannot set attribute %{attr} for content type %{type}": [
         "Impossible de définir l'attribut %{attr} pour le type de contenu %{type} "
@@ -1348,7 +1354,7 @@
         "Impossible de régler la publication automatique sur une vue de contenu non composite"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        ""
+        "Impossible d'ignorer la vérification des métadonnées sur les référentiels d'archives non-yum/deb."
       ],
       "Cannot specify components for non-composite views": [
         "Impossible d'indiquer des composants pour les affichages non-composite"
@@ -1360,10 +1366,10 @@
         "Impossible de synchroniser les référentiels file:// avec les politiques de téléchargement à la demande"
       ],
       "Cannot update properties of a container push repository": [
-        ""
+        "Impossible de mettre à jour les propriétés d'un référentiel push de conteneur"
       ],
       "Cannot upgrade packages: No installed packages found for search term '%s'.": [
-        ""
+        "Impossible de mettre à niveau les packages : aucun package installé n'a été trouvé pour le terme de recherche  '%s'"
       ],
       "Cannot upload Ansible collections.": [
         "Impossible de télécharger les collections Ansible."
@@ -1372,7 +1378,7 @@
         "Impossible de télécharger le contenu de l'image du conteneur."
       ],
       "Cannot upload container content via Hammer/API. Use podman push instead.": [
-        ""
+        "Impossible de télécharger le contenu du conteneur via Hammer/API. Utilisez plutôt podman push."
       ],
       "Capacity": [
         "Capacité"
@@ -1384,7 +1390,7 @@
         "Changer la source du contenu"
       ],
       "Change content view environments": [
-        ""
+        "Modifier les environnements d'affichage de contenu"
       ],
       "Change host content source": [
         "Changer la source du contenu de l'hôte"
@@ -1396,13 +1402,13 @@
         ""
       ],
       "Changing a host's content source will change the Smart Proxy from which the host gets its content.": [
-        ""
+        "La modification de la source de contenu d'un hôte modifiera le Smart Proxy à partir duquel l'hôte obtient son contenu."
       ],
       "Check audited changes and proceed only if content or filters have changed since last publish": [
-        ""
+        "Vérifier les changements audités et ne procéder que si le contenu ou les filtres ont été modifiés depuis la dernière publication."
       ],
       "Check for missing or corrupted artifacts, and attempt to redownload them.": [
-        ""
+        "Vérifiez les artefacts manquants ou corrompus et essayez de les télécharger à nouveau."
       ],
       "Check if a connection can be made to Red Hat Subscription Management.": [
         "Vérifiez si une connexion peut être établie avec Red Hat Subscription Management."
@@ -1423,7 +1429,7 @@
         "Le type de checksum ne peut pas être défini pour les référentiels yum avec une politique de téléchargement à la demande."
       ],
       "Checksum used for published repository contents. Supported types: %s": [
-        ""
+        "Somme de contrôle utilisée pour le contenu publié du référentiel. Types pris en charge : %s"
       ],
       "Choose content credentials if required for this RHUI source.": [
         "Choisissez les informations d'identification du contenu si nécessaire pour cette source RHUI."
@@ -1441,7 +1447,7 @@
         "Cliquez ici pour aller à la page des tâches."
       ],
       "Click to see repositories available to add.": [
-        ""
+        "Cliquez pour voir les référentiels disponibles à ajouter."
       ],
       "Click {update} below to save changes.": [
         "Cliquez sur {update} ci-dessous pour enregistrer les modifications."
@@ -1456,37 +1462,37 @@
         "Réduire tout"
       ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        ""
+        "Liste séparée par des virgules des libellés d'environnement d'affichage de contenu associés à la clé d'activation, au format « lifecycle_environment_label/content_view_label ». Ignoré si content_view_environment_ids est spécifié, ou si content_view_id et lifecycle_environment_id sont spécifiés. Nécessite que le paramètre allow_multiple_content_views soit activé."
       ],
       "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        ""
+        "Liste séparée par des virgules des libellés d'environnement d'affichage de contenu à associer à la clé d'activation, au format « lifecycle_environment_label/content_view_label ». Ignoré si content_view_environment_ids est spécifié, ou si content_view_id et lifecycle_environment_id sont spécifiés. Nécessite que le paramètre allow_multiple_content_views soit activé."
       ],
       "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        ""
+        "Liste séparée par des virgules des libellés d'environnement d'affichage de contenu à associer à l'hôte, au format « lifecycle_environment_label/content_view_label ». Ignoré si content_view_environment_ids est spécifié, ou si content_view_id et lifecycle_environment_id sont spécifiés. Nécessite que le paramètre allow_multiple_content_views soit activé."
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
         "Liste de sous-chemins séparés par des virgules. Tous les sous-chemins doivent avoir une barre oblique à la fin et aucune au début."
       ],
       "Comma-separated list of tags to exclude when syncing a container image repository. Default: any tag ending in \\\"-source\\\"": [
-        "Liste de balises, séparées par des virgules, à exclure lors de la synchronisation d'un référentiel d'images de conteneurs. Défaut : toute balise se terminant par \\\"-source\\\"."
+        "Liste de balises, séparées par des virgules, à exclure lors de la synchronisation d'un référentiel d'images de conteneurs. Défaut : toute balise se terminant par \\\"-source\\\""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "Liste de balises séparées par des virgules à synchroniser pour le référentiel d'images des conteneurs"
+      ],
+      "Commit upload": [
+        ""
       ],
       "Compare": [
         "Comparez"
       ],
       "Completed pulp task protection days": [
-        ""
-      ],
-      "Component": [
-        "Composant"
+        "Jours de protection des tâches pulp terminées"
       ],
       "Component Content View": [
         "Affichage du contenu des composants"
       ],
       "Component Version: '%{cvv}', Product: '%{product}', Repository: '%{repo}' ": [
-        "Version du composant : '%{cvv}', Produit : '%{product}', Dépôt : '%{repo}' "
+        "Version du composant : '%{cvv}', Produit : '%{product}', Référentiel : '%{repo}' "
       ],
       "Components": [
         "Composants"
@@ -1507,10 +1513,10 @@
         "IDs de ressource compute"
       ],
       "Configuration still must be updated on {hosts}": [
-        ""
+        "La configuration doit encore être mise à jour le {hosts}"
       ],
       "Configuration updated on Foreman": [
-        ""
+        "Configuration mise à jour sur Foreman"
       ],
       "Confirm Deletion": [
         "Confirmer la suppression"
@@ -1591,7 +1597,7 @@
         "URL de téléchargement du contenu"
       ],
       "Content Facet for host with id %s is non-existent. Skipping applicability calculation.": [
-        "La facette de contenu pour l'hôte avec id %s est inexistante. Sauter le calcul de l'applicabilité."
+        "La facet de contenu pour l'hôte avec id %s est inexistante. Sauter le calcul de l'applicabilité."
       ],
       "Content Hosts": [
         "Hôtes du contenu"
@@ -1618,10 +1624,10 @@
         "Id du filtre d'affichage de contenu"
       ],
       "Content View Filter identifier. Use to filter by ID": [
-        ""
+        "Filtre d'affichage de contenu Identifiant. Utilisez ce filtre pour filtrer par ID"
       ],
       "Content View ID": [
-        "ID d’affichage de contenu"
+        "ID de la vue de contenu"
       ],
       "Content View Name": [
         "Nom de la vue de contenu"
@@ -1663,10 +1669,10 @@
         "Identifiants de contenu"
       ],
       "Content facet for host %s has more than one content view. Use #content_views instead.": [
-        ""
+        "La facet de contenu de l'hôte %s a plus d'une vue de contenu. Utilisez plutôt #content_views."
       ],
       "Content facet for host %s has more than one lifecycle environment. Use #lifecycle_environments instead.": [
-        ""
+        "Facet de contenu pour l'hôte %s a plus d'un environnement de cycle de vie. Utilisez plutôt #lifecycle_environments."
       ],
       "Content files to upload. Can be a single file or array of files.": [
         "Fichiers de contenu à télécharger. Il peut s'agir d'un fichier unique ou d'un ensemble de fichiers."
@@ -1678,10 +1684,10 @@
         "Hôtes du contenu"
       ],
       "Content imported by %{user} into content view '%{name}'": [
-        "Contenu importé par %{user} dans la vue du contenu '%{name}'."
+        "Contenu importé par %{user} dans la vue du contenu '%{name}'"
       ],
       "Content may come from {contentSourceName} or any other Smart Proxy behind the load balancer.": [
-        ""
+        "Le contenu peut provenir de{contentSourceName} ou tout autre Smart Proxy derrière l'équilibreur de charge."
       ],
       "Content not uploaded to pulp": [
         "Le contenu ne peut pas être téléchargé dans pulp"
@@ -1708,25 +1714,25 @@
         "Le type de contenu %{content_type_string} n'appartient pas à un type de repo activé."
       ],
       "Content type %{content_type} is incompatible with repositories of type %{repo_type}": [
-        "Le type de contenu {content_type} est incompatible avec les référentiels de type %{repo_type}"
+        "Le type de contenu %{content_type} est incompatible avec les référentiels de type %{repo_type}"
       ],
       "Content type does not support repo discovery": [
-        ""
+        "Le type de contenu ne prend pas en charge la découverte de référentiels"
       ],
       "Content view": [
         "Affichage de contenu"
       ],
       "Content view ${name} created": [
-        "Vue de contenu {name} créée"
+        "Affichage du contenu ${name} créé"
       ],
       "Content view '%{content_view}' is not attached to the environment.": [
-        ""
+        "Affichage du contenu '%{content_view} \\\" n'est pas attaché à l'environnement."
       ],
       "Content view '%{content_view}' is not attached to this capsule.": [
-        ""
+        "Affichage du contenu '%{content_view} \\\" n'est pas attaché à cette capsule."
       ],
       "Content view '%{cv_name}' is a generated content view, which cannot be assigned to hosts or activation keys.": [
-        ""
+        "La vue de contenu \\\"%{cv_name}\\\" est une vue de contenu générée, qui ne peut pas être attribuée à des hôtes ou à des clés d'activation."
       ],
       "Content view '%{view}' is not in environment '%{env}'": [
         "L'affichage de contenu '%{view}' ne se trouve pas dans l'environnement '%{env}' "
@@ -1735,28 +1741,28 @@
         "L'affichage de contenu '%{view}' ne se trouve pas dans l'environnement de cycle de vie '%{env}'."
       ],
       "Content view ID": [
-        "ID d’affichage de contenu"
+        "ID de la vue de contenu"
       ],
       "Content view and environment not set for registration.": [
-        ""
+        "Affichage de contenu et environnement non définis pour l'enregistrement."
       ],
       "Content view and lifecycle environment must be provided together": [
-        ""
+        "La vue du contenu et l'environnement du cycle de vie doivent être fournis ensemble"
       ],
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
-        ""
+        "La vue de contenu n'a pas besoin d'être publiée puisqu'il n'y a pas de changement audité depuis la dernière publication. Passez le paramètre check_needs_publish à false si vous ne voulez pas vérifier si la vue de contenu a besoin d'une publication."
       ],
       "Content view environment": [
-        ""
+        "Environnement d'affichage du contenu"
       ],
       "Content view environments": [
-        ""
+        "Environnements d'affichage de contenu"
       ],
       "Content view environments and activation key must all belong to the same organization": [
-        ""
+        "Les environnements de visualisation du contenu et la clé d'activation doivent tous appartenir à la même organisation."
       ],
       "Content view environments must have both a content view and an environment": [
-        ""
+        "Les environnements de vues de contenu doivent avoir à la fois une vue de contenu et un environnement."
       ],
       "Content view has repository label '%s' which is not specified in repos_units parameter.": [
         "La vue du contenu a un label de référentiel '%s' qui n'est pas spécifié dans le paramètre repos_units."
@@ -1768,7 +1774,7 @@
         "Balise d'affichage du contenu"
       ],
       "Content view must be specified": [
-        ""
+        "La vue du contenu doit être spécifiée"
       ],
       "Content view name": [
         "Nom de la vue de contenu"
@@ -1780,10 +1786,10 @@
         "Identifiant numérique d'affichage du contenu"
       ],
       "Content view promote failure": [
-        ""
+        "La vue du contenu favorise l'échec"
       ],
       "Content view publish failure": [
-        ""
+        "Échec de publication de la vue du contenu"
       ],
       "Content view version export history identifier": [
         "Afficher l'historique des exportations pour une version d’affichage de contenu"
@@ -1795,10 +1801,10 @@
         "Identifiant de l'historique d'importation de la version d’affichage de contenu"
       ],
       "Content view version is empty": [
-        ""
+        "La version d'affichage du contenu est vide"
       ],
       "Content view version is empty or content counts are not up to date": [
-        ""
+        "La version d'affichage du contenu est vide ou le nombre de contenus n'est pas à jour"
       ],
       "Content views": [
         "Affichages de contenu"
@@ -1827,14 +1833,26 @@
       "Copy": [
         "Copie"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "Copier une clé d'activation|"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "Copier l’affichage de contenu"
       ],
       "Copy to clipboard": [
         "Copier dans le presse-papiers"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        ""
       ],
       "Cores per socket": [
         "Cores par socket"
@@ -1849,13 +1867,13 @@
         "Impossible de trouver %{content} ayant pour id '%{id}'. dans le référentiel."
       ],
       "Could not find %{count} errata.  Only found: %{found}": [
-        "Impossible de trouver errata %{count}. Résultat: %{found} uniquement."
+        "Impossible de trouver errata %{count}. Résultat: %{found} uniquement"
       ],
       "Could not find %{name} resource with id %{id}. %{perms_message}": [
-        "Impossible de trouver la ressource %%{name} avec l'identifiant %%{id}. %{perms_message}"
+        "Impossible de trouver la ressource %{name} avec l'identifiant %{id}. %{perms_message}"
       ],
       "Could not find %{name} resources with ids %{ids}": [
-        "Impossible de trouver la ressource %%{name} avec l'identifiant %%{ids}"
+        "Impossible de trouver la ressource %{name} avec l'identifiant %{ids}"
       ],
       "Could not find Environment with ids: %s": [
         "Impossible de trouver un environnement avec les ID : %s"
@@ -1879,13 +1897,13 @@
         ""
       ],
       "Could not locate Pulp distribution.": [
-        ""
+        "Impossible de localiser la distribution Pulp."
       ],
       "Could not locate local uploaded repository for content indexing.": [
-        ""
+        "Impossible de localiser le référentiel local téléchargé pour l'indexation du contenu."
       ],
       "Could not locate repository properties for content indexing.": [
-        ""
+        "Impossible de localiser les propriétés du référentiel pour l'indexation du contenu."
       ],
       "Could not remove the lifecycle environment from the smart proxy": [
         "Impossible de supprimer l'environnement du cycle de vie du proxy smart"
@@ -1924,7 +1942,7 @@
         "L'environnement de l'hôte du contenu '%s' est introuvable"
       ],
       "Couldn't find content view environment with content view ID '%{cv}' and environment ID '%{env}'": [
-        ""
+        "Impossible de trouver l'environnement d'affichage de contenu avec l'ID d'affichage de contenu «%{cv} ' et l'ID de l'environnement '%{env} '"
       ],
       "Couldn't find content view version '%s'": [
         "Impossible de trouver la version d'affichage de contenu '%s'"
@@ -1951,25 +1969,25 @@
         "Organisation '%s' introuvable"
       ],
       "Couldn't find prior-environment '%s'": [
-        "Le pré-environnement  '%s' est introuvable"
+        "Le pré-environnement '%s' est introuvable"
       ],
       "Couldn't find product with id '%s'": [
         "Le produit avec l’Id '%s' est introuvable"
       ],
       "Couldn't find products with id '%s'": [
-        "Impossible de trouver des produits avec l'id '%s'."
+        "Impossible de trouver des produits avec l'id '%s'"
       ],
       "Couldn't find repository '%s'": [
         "Référentiel '%s' introuvable"
       ],
       "Couldn't find smart proxies with id '%s'": [
-        "Impossible de trouver les proxies smart avec l'id '%s'."
+        "Impossible de trouver les proxies smart avec l'id '%s'"
       ],
       "Couldn't find smart proxies with name '%s'": [
-        "Impossible de trouver les proxies avec l'id '%s'."
+        "Impossible de trouver les proxies avec l'id '%s'"
       ],
       "Couldn't find specified content view and lifecycle environment.": [
-        ""
+        "Impossible de trouver l’affichage du contenu et l'environnement du cycle de vie spécifiés."
       ],
       "Couldn't find subject of synchronization": [
         "Sujet de la synchronisation introuvable"
@@ -1984,7 +2002,7 @@
         "Créer une autre source de contenu"
       ],
       "Create Container Push Repository Root": [
-        ""
+        "Créer une racine de référentiel de conteneurs push"
       ],
       "Create Export History": [
         "Créer un historique des exportations"
@@ -2017,7 +2035,7 @@
         "Créer une règle de filtre. Les paramètres inclus doivent se baser sur le type de filtre."
       ],
       "Create a flatpak remote": [
-        ""
+        "Créer une télécommande flatpak"
       ],
       "Create a host collection": [
         "Créer une collection d'hôte"
@@ -2049,20 +2067,35 @@
       "Create content view": [
         "Créer Affichage du contenu"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "Créer un filtre"
       ],
       "Create host collection": [
         "Créer Collection d'hôtes"
       ],
-      "Create new activation key": [
+      "Create import": [
         ""
+      ],
+      "Create importer": [
+        ""
+      ],
+      "Create new activation key": [
+        "Créer une nouvelle clé d'activation"
       ],
       "Create organization": [
         "Créer une organisation"
       ],
       "Create package filter rule": [
         "Créer une règle de filtrage des paquets"
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
       ],
       "Create rule": [
         "Créer une règle"
@@ -2074,7 +2107,7 @@
         "Critique"
       ],
       "Cron expression is not valid!": [
-        "L'expression cron n'est pas acceptée."
+        "L'expression cron n'est pas acceptée!"
       ],
       "Current organization does not have a manifest imported.": [
         "L'organisation actuelle ne dispose pas d'un manifeste importé."
@@ -2137,13 +2170,13 @@
         "Nom Deb"
       ],
       "Deb package identifiers to filter content by": [
-        "Identificateurs de packages Deb pour filtrer le contenu"
+        "Identificateurs de paquets Deb pour filtrer le contenu"
       ],
       "Deb packages": [
-        "Packages Deb"
+        "Paquets Deb"
       ],
       "Debian packages": [
-        ""
+        "Paquets Debian"
       ],
       "Debug Certificate": [
         "Déboguer Certificat"
@@ -2200,10 +2233,10 @@
         "Stratégie de téléchargement par défaut des référentiels Red Hat (soit 'immediate', 'on_demand')"
       ],
       "Default export format": [
-        ""
+        "Format d'exportation par défaut"
       ],
       "Default export format for content-exports(either 'syncable' or 'importable')": [
-        ""
+        "Format d'exportation par défaut pour les exportations de contenu (soit \\\"synchronisable\\\", soit \\\"importable\\\")"
       ],
       "Default finish template for new Operating Systems created from synced content": [
         "Modèle de finition par défaut pour les nouveaux systèmes d'exploitation créés à partir de contenu synchronisé"
@@ -2305,10 +2338,10 @@
         "Supprimer une règle de filtre"
       ],
       "Delete a flatpak remote": [
-        ""
+        "Supprimer une télécommande flatpak"
       ],
       "Delete activation key?": [
-        ""
+        "Supprimer la clé d'activation ?"
       ],
       "Delete all subscriptions attached to activation keys.": [
         "Supprimez tous les abonnements attachés aux clés d'activation."
@@ -2326,6 +2359,9 @@
         "Supprimer l’affichage du contenu"
       ],
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
+        "Supprimez les filtres d'affichage de contenu qui ont ce référentiel comme dernier référentiel associé. La valeur par défaut est vrai. S'ils sont sur faux, ces filtres s'appliqueront désormais à tous les référentiels dans la vue du contenu."
+      ],
+      "Delete distributions": [
         ""
       ],
       "Delete manifest from Red Hat provider": [
@@ -2334,6 +2370,27 @@
       "Delete multiple filters from a content view": [
         "Supprimer plusieurs filtres d'affichage de contenu"
       ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete orphaned migrated repositories": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
+      ],
       "Delete version": [
         "Supprimer la version"
       ],
@@ -2341,7 +2398,7 @@
         "Supprimer les versions"
       ],
       "Deleted %{host_count} %{hosts}": [
-        ""
+        "%{host_count} %{hosts} supprimés"
       ],
       "Deleted consumer '%s'": [
         "L'utilisateur '%s' a été supprimé"
@@ -2365,7 +2422,7 @@
         "Suppression des versions : {versionList}"
       ],
       "Depth": [
-        ""
+        "Profondeur"
       ],
       "Description": [
         "Description"
@@ -2380,7 +2437,7 @@
         "Description de la version d'affichage de contenu récemment publiée"
       ],
       "Description of the flatpak remote": [
-        ""
+        "Description de la télécommande flatpak"
       ],
       "Description of the repository": [
         "Description du référentiel"
@@ -2425,13 +2482,19 @@
         "Détruire une clé d'activation"
       ],
       "Destroy an alternate content source.": [
-        "Détruire une autre source de contenu"
+        "Détruire une autre source de contenu."
       ],
       "Destroy an environment": [
         "Détruire un environnement"
       ],
       "Destroy an environment in an organization": [
         "Détruire un environnement dans une organisation"
+      ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
       ],
       "Destroy one or more alternate content sources": [
         "Détruire une ou plusieurs sources de contenu alternatives"
@@ -2449,10 +2512,10 @@
         "Détails"
       ],
       "Determining settings for ${truncate(name)}": [
-        ""
+        "Détermination des paramètres de ${truncate(name)}"
       ],
       "Digest": [
-        ""
+        "Digest"
       ],
       "Directly setting package lists on composite content views is not allowed. Please update the components, then re-publish the composite.": [
         "Il n'est pas permis de définir directement des listes de packages sur des vues de contenu composite. Veuillez mettre à jour les composants, puis republier le composite."
@@ -2470,7 +2533,7 @@
         "Désactivez l'accès au contenu simple"
       ],
       "Disable a repository from the set": [
-        "Désactiver un référentiel à partir de l'ensemble"
+        "Activer un référentiel à partir de l'ensemble"
       ],
       "Disable module stream": [
         "Désactiver le flux de modules"
@@ -2480,6 +2543,9 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         "La désactivation de l'accès au contenu simple a échoué pour '%{subject}'."
+      ],
+      "Discover": [
+        ""
       ],
       "Discover Repositories": [
         "Découvrir des référentiels"
@@ -2509,16 +2575,16 @@
         "Limite du débit de téléchargement"
       ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
-        ""
+        "En raison d'un changement dans vos organisations, ce nom de conteneur est devenu ambigu (nom de l'organisation '%{org_label} '). Si vous souhaitez continuer à utiliser ce nom de conteneur, détruisez l'organisation en conflit avec '%{o_name} (identifiant%{o_id} ). Si vous souhaitez conserver les deux organisations, détruisez '%{o_label} /%{prod_label} /%{root_repo_label} \\\" et réessayez votre push en utilisant le format id."
       ],
       "Due to a change in your products, this container name has become ambiguous (product name '%{prod_label}'). If you wish to continue using this container name, destroy the product in conflict with '%{prod_name}' (id %{prod_id}). If you wish to keep both products, destroy '%{org_label}/%{prod_dot_label}/%{root_repo_label}' and retry your push using the id format.": [
-        ""
+        "En raison d'un changement dans vos produits, ce nom de conteneur est devenu ambigu (nom du produit '%{prod_label} '). Si vous souhaitez continuer à utiliser ce nom de conteneur, détruisez le produit en conflit avec '%{prod_name} ' (identifiant%{prod_id} ). Si vous souhaitez conserver les deux produits, détruisez-les.%{org_label} /%{prod_dot_label} /%{root_repo_label} \\\" et réessayez votre push en utilisant le format id."
       ],
       "Duplicate artifact detected": [
         "Artifact en double détecté"
       ],
       "Duplicate repositories in content view versions": [
-        ""
+        "Référentiels en double dans les versions d'affichage du contenu"
       ],
       "Duration": [
         "Durée"
@@ -2542,13 +2608,13 @@
         "Modifier l'URL et les sous-chemins"
       ],
       "Edit activation key": [
-        ""
+        "Modifier la clé d'activation"
       ],
       "Edit content view assignment": [
         "Modifier l'affectation de la vue du contenu"
       ],
       "Edit content view environments": [
-        ""
+        "Modifier les environnements d'affichage de contenu"
       ],
       "Edit credentials": [
         "Modifier les informations d'identification"
@@ -2578,16 +2644,16 @@
         "Modification des droits d'accès"
       ],
       "Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified": [
-        "Soit les deux paramètres 'content_view_id' et 'environment_id' doivent être indiqués à la fois, soit aucun d'entre deux ne doit être indiqué."
+        "Soit les deux paramètres 'content_view_id' et 'environment_id' doivent être indiqués à la fois, soit aucun d'entre deux ne doit être indiqué"
       ],
       "Either environments or versions must be specified.": [
-        "La version ou l'environnement doit être spécifié"
+        "La version ou l'environnement doit être spécifié."
       ],
       "Either organization ID or environment ID needs to be specified": [
         "L'ID de l'organisation ou de l'environnement doit être spécifié"
       ],
       "Either packages or groups must be provided": [
-        "Les packages ou les groupes doivent être fournis"
+        "Les paquets ou les groupes doivent être fournis"
       ],
       "Either set the content view with the latest flag or set the content view version": [
         "Définir la vue du contenu avec le dernier drapeau ou définir la version de la vue du contenu"
@@ -2620,7 +2686,7 @@
         "Activer les ensembles de référentiels"
       ],
       "Enable structured APT for deb content": [
-        ""
+        "Activer l'APT structuré pour le contenu deb"
       ],
       "Enable/Disable auto publish of composite view": [
         "Activer/désactiver la publication automatique de la vue composite"
@@ -2635,7 +2701,7 @@
         "L'activation de l'accès au contenu simple a échoué pour '%{subject}'."
       ],
       "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
-        ""
+        "L'activation de Tracer nécessite l'installation du package katello-host-tools-tracer sur l'hôte."
       ],
       "End Date": [
         "Date de Fin"
@@ -2671,10 +2737,10 @@
         "Environnement"
       ],
       "Environment ID": [
-        ""
+        "ID de l'environnement"
       ],
       "Environment ID and content view ID must be provided together": [
-        ""
+        "L'ID d'environnement et l'ID d'affichage du contenu doivent être fournis ensemble"
       ],
       "Environment IDs": [
         "IDs des environnements"
@@ -2682,11 +2748,14 @@
       "Environment cannot be in its own promotion path": [
         "L'environnement ne peut pas se trouver dans son propre chemin de promotion"
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "Identifiant d'environnement"
       ],
       "Environment name": [
-        ""
+        "Nom de l'environnement"
       ],
       "Environments": [
         "Environnements"
@@ -2713,19 +2782,22 @@
         "Installation de l'errata planifiée par %s"
       ],
       "Errata and package information will be updated at the next host check-in or package action.": [
-        ""
+        "Les errata et les informations sur les paquets seront mis à jour lors du prochain enregistrement de l'hôte ou de la prochaine action sur les paquets."
       ],
       "Errata and package information will be updated immediately.": [
-        ""
+        "Les errata et les informations sur les paquets seront mis à jour immédiatement."
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "Id de l'erratum (RHSA-2012:108)"
       ],
-      "Errata statuses not updated for deleted content facet with UUID %s": [
+      "Errata mail": [
         ""
       ],
+      "Errata statuses not updated for deleted content facet with UUID %s": [
+        "Les statuts d'errata ne sont pas mis à jour pour la facette de contenu supprimée avec UUID %s"
+      ],
       "Errata to apply": [
-        ""
+        "Errata à appliquer"
       ],
       "Errata to exclusively include in the action": [
         "Errata à inclure exclusivement dans l'action"
@@ -2758,7 +2830,7 @@
         "Erreur de connexion au service Pulp"
       ],
       "Error connecting. Got: %s": [
-        "Error de connexion. %s"
+        "Error de connexion :%s"
       ],
       "Error loading content views": [
         "Erreur de chargement des vues de contenu"
@@ -2776,13 +2848,13 @@
         "Exclure"
       ],
       "Exclude Refs": [
-        ""
+        "Exclure les références"
       ],
       "Exclude all RPMs not associated to any errata": [
-        "Exclure tous les RPMs non associés à un errata."
+        "Exclure tous les RPMs non associés à un errata"
       ],
       "Exclude all module streams not associated to any errata": [
-        "Exclure tous les flux de modules non associés à un errata."
+        "Exclure tous les flux de modules non associés à un errata"
       ],
       "Exclude filter": [
         "Exclure filtre"
@@ -2806,10 +2878,10 @@
         "Expiration prochaine en jours"
       ],
       "Expired ": [
-        ""
+        "Expiré "
       ],
       "Expires ": [
-        ""
+        "Expire "
       ],
       "Export": [
         "Exporter"
@@ -2833,10 +2905,16 @@
         "Exporter en CSV"
       ],
       "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
+        "Échec de l'exportation : un ou plusieurs référentiels doivent être synchronisés (avec la politique de téléchargement immédiat.)"
+      ],
+      "Export format must be specified for library exports.": [
+        ""
+      ],
+      "Export format must be specified for non-incremental repository exports.": [
         ""
       ],
       "Export formats.Choose syncable if the exported content needs to be in a yum format. This option is only available for %{syncable_repos} repositories. Choose importable if the importing server uses the same version  and exported content needs to be one of %{importable_repos} repositories.": [
-        ""
+        "Exporter les formats. Choisissez syncable si le contenu exporté doit être dans un format yum. Cette option n'est disponible que pour les référentiels %{syncable_repos}. Choisissez importable si le serveur d'importation utilise la même version et le contenu exporté doit correspondre à l’un des référentiels %{importable_repos}."
       ],
       "Export history identifier used for incremental export. If not provided the most recent export history will be used.": [
         "Identifiant de l'historique d'exportation utilisé pour l'exportation incrémentielle. S'il n'est pas fourni, l'historique d'exportation le plus récent sera utilisé."
@@ -2848,7 +2926,7 @@
         "Version exportée"
       ],
       "Extended support": [
-        ""
+        "Support étendu"
       ],
       "Facts successfully updated.": [
         "Mise à jour des faits réussie."
@@ -2879,6 +2957,9 @@
       ],
       "Fetch installable errata for one or more hosts.": [
         "Récupérer les errata installables pour un ou plusieurs hôtes."
+      ],
+      "Fetch pxe files": [
+        ""
       ],
       "Fetch traces for one or more hosts": [
         "Rechercher traces pour un ou plusieurs hôtes"
@@ -2911,7 +2992,7 @@
         "Filtrer les versions composites dont la publication a été déclenchée par la version du composant spécifié"
       ],
       "Filter content view versions that contain the file": [
-        ""
+        "Filtrer les versions d'affichage du contenu qui contiennent le fichier"
       ],
       "Filter created": [
         "Filtre créé"
@@ -2947,22 +3028,22 @@
         "Filtrer les produits par id de plan de sync"
       ],
       "Filter repositories by content unit type (erratum, docker_tag, etc.). Check the \\\"Indexed?\\\" types here: /katello/api/repositories/repository_types": [
-        "Filtrez les dépôts par type d'unité de contenu (erratum, docker_tag, etc.). Vérifiez les types \\\"Indexé ?\\\" ici : /katello/api/repositories/repository_types"
+        "Filtrez les référentiels par type d'unité de contenu (erratum, docker_tag, etc.). Vérifiez les types \\\"Indexé ?\\\" ici : /katello/api/repositories/repository_types"
       ],
       "Filter rule added": [
-        "Règle de filtre ajoutée."
+        "Règle de filtre ajoutée"
       ],
       "Filter rule edited": [
-        "Règle de filtre modifiée."
+        "Règle de filtre modifiée"
       ],
       "Filter rule removed": [
-        "Règle de filtre supprimée."
+        "Règle de filtre supprimée"
       ],
       "Filter rules added": [
         "Règles de filtre ajoutées"
       ],
       "Filter rules deleted": [
-        "Règles de filtre supprimées."
+        "Règles de filtre supprimées"
       ],
       "Filter versions by environment": [
         "Filtrer les versions par environnement"
@@ -2971,7 +3052,10 @@
         "Filtrer les versions par numéro de version"
       ],
       "Filter versions that are components in the specified composite version": [
-        "Filtrer les versions composantes dans la version composite spécifiée."
+        "Filtrer les versions composantes dans la version composite spécifiée"
+      ],
+      "Filtered index content": [
+        ""
       ],
       "Filters": [
         "Filtres"
@@ -2980,10 +3064,10 @@
         "Filtres supprimés"
       ],
       "Filters were applied to this version.": [
-        ""
+        "Des filtres ont été appliqués à cette version."
       ],
       "Filters will be applied to this content view version.": [
-        ""
+        "Les filtres seront appliqués à cette version de l'affichage du contenu."
       ],
       "Find the relative path for each RHUI repository and combine them in a comma-separated list.": [
         "Trouvez le chemin relatif de chaque référentiel RHUI et combinez-les dans une liste séparée par des virgules."
@@ -3001,7 +3085,7 @@
         ""
       ],
       "Flatpak Remotes": [
-        ""
+        "Flatpak Remotes"
       ],
       "Flatpak remote could not be deleted: ": [
         ""
@@ -3010,10 +3094,10 @@
         ""
       ],
       "Flatpak remote numeric identifier": [
-        ""
+        "Identifiant numérique distant Flatpak"
       ],
       "Flatpak remote repository numeric identifier": [
-        ""
+        "Identifiant numérique du référentiel distant Flatpak"
       ],
       "Flatpak remote scan could not be started: ": [
         ""
@@ -3021,41 +3105,44 @@
       "Flatpak remote updated": [
         ""
       ],
+      "Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.": [
+        ""
+      ],
       "Force": [
         "Force"
       ],
       "Force a sync and validate the checksums of all content. Non-yum repositories (or those with \\\\\\n                                                     On Demand download policy) are skipped.": [
-        "Forcer une sync et valider les sommes de contrôle de tous les contenus. Les référentiels non-yum (ou ceux avec \\\\\\n                                                     Politique de téléchargement à la demande) seront ignorés."
+        "Forcer une sync et valider les sommes de contrôle de tous les contenus. Les référentiels non-yum (ou ceux avec \\\\\\n                                                     On Demand download policy) seront ignorés."
       ],
       "Force a sync and validate the checksums of all content. Only used with yum repositories.": [
         "Forcer une synchronisation et valider les sommes de contrôle de tous les contenus. Utilisé uniquement avec les référentiels yum."
       ],
       "Force content view promotion and bypass lifecycle environment restriction": [
-        ""
+        "Forcer la promotion de la vue de contenu et contourner la restriction de l'environnement de cycle de vie"
       ],
       "Force delete the repository by removing it from all content view versions": [
         "Suppression forcée du référentiel en le supprimant de toutes les versions d’affichage de contenu"
       ],
       "Force metadata regeneration to proceed. Dangerous operation when version has repositories with the 'Complete Mirroring' mirroring policy": [
-        ""
+        "Forcez la régénération des métadonnées à continuer. Opération dangereuse lorsque la version possède des référentiels avec la politique de mise en miroir 'Complete Mirroring'"
       ],
       "Force metadata regeneration to proceed. Dangerous when repositories use the 'Complete Mirroring' mirroring policy": [
-        ""
+        "Force la régénération des métadonnées à se poursuivre. Dangereux lorsque les référentiels utilisent la politique de mise en miroir \\\"Complete Mirroring\\\""
       ],
       "Force promotion": [
         "Forcer promotion"
       ],
       "Force regenerate applicability.": [
-        "Regénération forcée de l'applicabilité."
+        "Regénérer forcée de l'applicabilité."
       ],
       "Force sync even if no upstream changes are detected. Non-yum repositories are skipped.": [
         "Sync forcée même si aucun changement en amont n'est détecté. Les référentiels non-yum seront ignorés."
       ],
       "Force sync even if no upstream changes are detected. Only used with yum or deb repositories.": [
-        ""
+        "Sync forcée même si aucun changement en amont n'est détecté. Utilisé uniquement avec les référentiels yum ou deb."
       ],
       "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy.": [
-        ""
+        "Force une republication du référentiel spécifié, en régénérant les métadonnées et les liens symboliques sur le système de fichiers. Non autorisé pour les référentiels avec la politique de mise en miroir « Mise en miroir complète »."
       ],
       "Forces a republish of the version's repositories' metadata": [
         "Oblige à republier les métadonnées des référentiels de la version"
@@ -3064,7 +3151,7 @@
         "Description complète"
       ],
       "Full support": [
-        ""
+        "Support total"
       ],
       "GPG Key URL": [
         "ID de la clé GPG"
@@ -3076,10 +3163,13 @@
         "Générer et télécharger"
       ],
       "Generate errata status from directly-installable content": [
-        ""
+        "Générer un statut d'errata à partir du contenu directement installable"
       ],
       "Generate host applicability": [
         "Générer l'applicabilité à l'hôte"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "Générer l'applicabilité du référentiel"
@@ -3088,7 +3178,7 @@
         "Généré"
       ],
       "Generated content views cannot be assigned to hosts or activation keys": [
-        ""
+        "Les vues de contenu généré ne peuvent pas être attribuées à des clés d'activation ou à des hôtes"
       ],
       "Generated content views cannot be directly published. They can updated only via export.": [
         "Les vues de contenu générées ne peuvent pas être publiées directement. Elles ne peuvent être mises à jour uniquement via l'exportation."
@@ -3097,7 +3187,7 @@
         "Obtenir tout le contenu disponible, pas seulement celui fourni par les abonnements"
       ],
       "Get all content available, not just that provided by subscriptions.": [
-        "Obtenir tout le contenu disponible, pas seulement celui fourni par les abonnements"
+        "Obtenir tout le contenu disponible, pas seulement celui fourni par les abonnements."
       ],
       "Get content and overrides for the host": [
         "Obtenir du contenu et des dérogations pour l'hôte"
@@ -3127,7 +3217,7 @@
         "Le critère donnée ne correspond à aucun hôte. Essayez de changer la règle."
       ],
       "Given criteria doesn't match any non-modular RPMs. Try changing your rule.": [
-        ""
+        "Les critères donnés ne correspondent à aucun RPM non modulaire. Essayez de changer votre règle."
       ],
       "Go to job details": [
         "Détails du job"
@@ -3154,16 +3244,16 @@
         "Doit être > 0"
       ],
       "Hash containing the Id of the single lifecycle environment to be associated with the activation key.": [
-        ""
+        "Hachage contenant l'ID de l'environnement de cycle de vie unique à associer à la clé d'activation."
       ],
       "Help": [
-        ""
+        "Assistance"
       ],
       "Helper": [
         "Aide"
       ],
       "Hide Reclaim Space Warning": [
-        ""
+        "Masquer l'avertissement de récupération d'espace"
       ],
       "Hide affected activation keys": [
         "Cacher les clés d'activation affectées"
@@ -3175,7 +3265,7 @@
         "Cacher la description"
       ],
       "History": [
-        "Historique "
+        "Historique"
       ],
       "History will appear here when the content view is published or promoted.": [
         "L'historique apparaîtra ici lorsque l’affichage du contenu sera publiée ou promue."
@@ -3187,10 +3277,10 @@
         "L’hôte %sn'est pas enregistré dans le subscription-manager."
       ],
       "Host %{hostname}: Cannot add content view environment to content facet. The host's content source '%{content_source}' does not sync lifecycle environment '%{lce}'.": [
-        ""
+        "Hôte %{hostname}: Impossible d'ajouter l'environnement de la vue de contenu à la facet de contenu. La source de contenu de l'hôte '%{content_source}' ne synchronise pas l'environnement de cycle de vie '%{lce}'."
       ],
       "Host %{name} cannot be assigned release version %{release_version}.": [
-        "L'hôte %{nom} ne peut pas se voir attribuer la version %{release_version}."
+        "L'hôte %{name} ne peut pas se voir attribuer la version %{release_version}."
       ],
       "Host '%{name}' does not belong to an organization": [
         "L'hôte '%{name}' n'appartient pas à une organisation"
@@ -3214,7 +3304,7 @@
         "ID Hôte"
       ],
       "Host Limit": [
-        ""
+        "Limite d'hôtes"
       ],
       "Host Profile Assume": [
         "Profil d'hôte Assume"
@@ -3244,16 +3334,16 @@
         "Contenu de l'hôte et détails de l'abonnement"
       ],
       "Host content source will remain the same. Click Save below to update the host's content view environment.": [
-        ""
+        "La source du contenu de l'hôte restera la même. Cliquez sur Enregistrer ci-dessous pour mettre à jour l'environnement d'affichage du contenu de l'hôte."
       ],
       "Host content view and environment updated": [
         "Mise à jour de la vue du contenu de l'hôte et de l'environnement"
       ],
       "Host content view environment(s) updated": [
-        ""
+        "Environnement(s) d'affichage du contenu de l'hôte mis à jour"
       ],
       "Host content view environments updating.": [
-        ""
+        "Mise à jour des environnements d'affichage du contenu de l'hôte."
       ],
       "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration.": [
         "La création d'un hôte a été ignorée pour %scar il partage un BIOS UUID avec %s. Pour signaler cet hyperviseur, surchargez son dmi.system.uuid fact ou mettez \\\"candlepin.use_system_uuid_for_matching\\\" à \\\"true\\\" dans la configuration de Candlepin."
@@ -3265,25 +3355,25 @@
         "IDs des groupes"
       ],
       "Host has not been registered with subscription-manager": [
-        "Cet hôte n'est pas enregistré dans le subscription-manager."
+        "Cet hôte n'est pas enregistré dans le subscription-manager"
       ],
       "Host has not been registered with subscription-manager.": [
-        "Cet hôte n'est pas enregistré dans subscription-manager."
+        "Cet hôte n'est pas enregistré dans le subscription-manager."
       ],
       "Host id to list applicable deb packages for": [
-        "Identifiant de l'hôte pour lister les packages applicables"
+        "Identifiant de l'hôte pour lister les paquets applicables"
       ],
       "Host id to list applicable errata for": [
         "Identifiant de l'hôte pour énumérer les errata applicables pour"
       ],
       "Host id to list applicable packages for": [
-        "Identifiant de l'hôte pour énumérer les packages applicables pour"
+        "Identifiant de l'hôte pour énumérer les paquets applicables pour"
       ],
       "Host identifier": [
-        ""
+        "Identifiant de l'hôte"
       ],
       "Host lifecycle support expiration notification": [
-        ""
+        "Notification d’expiration de la prise en charge du cycle de vie de l’hôte"
       ],
       "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance": [
         "L'hôte n'a pas été trouvé par l'UUID de l'abonnement : '%s', cela peut arriver si l'hôte est déjà enregistré, mais pas pour cette instance"
@@ -3310,16 +3400,22 @@
         "Hôtes : "
       ],
       "How many days before a completed Pulp task is purged by Orphan Cleanup.": [
-        ""
+        "Combien de jours avant qu'une tâche Pulp terminée soit purgée par Orphan Cleanup."
       ],
       "How many repositories should be synced concurrently on the capsule. A smaller number may lead to longer sync times. A larger number will increase dynflow load.": [
-        "Combien de référentiels doivent être synchronisés simultanément sur la capsule.  Un nombre inférieur peut entraîner des temps de synchronisation plus longs.  Un nombre plus élevé augmentera la charge de dynflow."
+        "Combien de référentiels doivent être synchronisés simultanément sur la capsule. Un nombre inférieur peut entraîner des temps de synchronisation plus longs. Un nombre plus élevé augmentera la charge de dynflow."
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
-        "Comment classer les résultats triés (ex :  ASC for pour croissant)"
+        "Comment classer les résultats triés (ex : ASC for pour croissant)"
+      ],
+      "Hypervisors": [
+        ""
+      ],
+      "Hypervisors update": [
+        ""
       ],
       "ID": [
-        ""
+        "ID"
       ],
       "ID of a HTTP Proxy": [
         "ID d'un proxy HTTP"
@@ -3343,7 +3439,7 @@
         "ID d'une organisation dans laquelle afficher les référentiels"
       ],
       "ID of flatpak remote to show repositories of": [
-        ""
+        "ID de la télécommande flatpak pour afficher les référentiels de"
       ],
       "ID of the Organization": [
         "ID de l'organisation"
@@ -3385,10 +3481,10 @@
         "ID des produits dont il faut copier les informations de référentiel dans une source de contenu alternative simplifiée. Les produits doivent comprendre au moins un référentiel du type de contenu choisi."
       ],
       "Id of a deb package to find repositories that contain the deb": [
-        "Id d'un package deb pour trouver les référentiels qui contiennent le deb"
+        "Id d'un paquet deb pour trouver les référentiels qui contiennent le deb"
       ],
       "Id of a file to find repositories that contain the file": [
-        "Id d'un package pour trouver les référentiels qui contiennent le fichier"
+        "Id d'un paquet pour trouver les référentiels qui contiennent le fichier"
       ],
       "Id of a rpm package to find repositories that contain the rpm": [
         "Id d'un package rpm pour trouver les référentiels qui contiennent le rpm"
@@ -3400,28 +3496,28 @@
         "id d'une erratum pour trouver les référentiels qui contiennent l'erratum"
       ],
       "Id of the HTTP proxy to use with alternate content sources": [
-        "Id du proxy HTTP à utiliser avec les sources de contenu alternatives."
+        "Id du proxy HTTP à utiliser avec les sources de contenu alternatives"
       ],
       "Id of the content host": [
         "ID de l'hôte du contenu"
       ],
       "Id of the content view to limit the content counting on": [
-        ""
+        "Identifiant de la vue de contenu pour limiter le contenu sur lequel compter"
       ],
       "Id of the content view to limit the synchronization on": [
         "Id du contenu sur lequel limiter la synchronisation"
       ],
       "Id of the content view to limit verifying checksum on": [
-        ""
+        "Identifiant de la vue de contenu sur laquelle limiter la vérification de la somme de contrôle"
       ],
       "Id of the environment to limit the content counting on": [
-        ""
+        "Identifiant de l'environnement pour limiter le contenu en comptant"
       ],
       "Id of the environment to limit the synchronization on": [
         "Id de l'environnement sur lequel limiter la synchronisation"
       ],
       "Id of the environment to limit verifying checksum on": [
-        ""
+        "Identifiant de l'environnement sur lequel limiter la vérification de la somme de contrôle"
       ],
       "Id of the host": [
         "Id de l'hôte"
@@ -3439,31 +3535,31 @@
         "Id de l'organisation sur lequel limiter les environnements"
       ],
       "Id of the repository to limit the content counting on": [
-        ""
+        "Identifiant du référentiel pour limiter le contenu sur lequel compter"
       ],
       "Id of the repository to limit the synchronization on": [
         "Id du référentiel sur lequel limiter la synchronisation"
       ],
       "Id of the repository to limit verifying checksum on": [
-        ""
+        "Identifiant du référentiel sur lequel limiter la vérification de la somme de contrôle"
       ],
       "Id of the single content view to be associated with the activation key.": [
-        ""
+        "Identifiant de la vue de contenu unique à associer à la clé d'activation."
       ],
       "Id of the single content view to be associated with the host.": [
-        ""
+        "Identifiant de la vue de contenu unique à associer à l'hôte."
       ],
       "Id of the single lifecycle environment to be associated with the activation key.": [
-        ""
+        "Identifiant de l'environnement de cycle de vie unique à associer à la clé d'activation."
       ],
       "Id of the single lifecycle environment to be associated with the host.": [
-        ""
+        "Identifiant de l'environnement de cycle de vie unique à associer à l'hôte."
       ],
       "Id of the smart proxy": [
         "Id du proxy smart"
       ],
       "Id of the smart proxy from which the host consumes content.": [
-        ""
+        "Identifiant du proxy intelligent à partir duquel l'hôte consomme du contenu."
       ],
       "Idenifier of the SSL CA Cert": [
         "Idenifier le Cert CA SSL"
@@ -3490,7 +3586,7 @@
         "Identifiants de l’Environnement de cycle de vie"
       ],
       "Identifies whether the repository should be unavailable on a client with a non-matching OS version.\\nPass [] to make repo available for clients regardless of OS version. Maximum length 1; allowed tags are: %s": [
-        ""
+        "Identifie si le référentiel doit être indisponible sur un client avec une version de système d'exploitation non correspondante. Passez [] pour rendre le référentiel disponible pour les clients quelle que soit la version du système d'exploitation. Longueur maximale 1 ; les balises autorisées sont : %s"
       ],
       "Ids of smart proxies to associate": [
         "Ids des proxies smart à associer"
@@ -3502,10 +3598,10 @@
         "Si les hôtes ne parviennent pas à s'enregistrer en raison de doublons d'UUID DMI, ajoutez ici leurs valeurs séparées par des virgules. Les enregistrements ultérieurs généreront un DMI UUID unique pour les hôtes concernés."
       ],
       "If product certificates should be used to authenticate to a custom CDN.": [
-        ""
+        "Si les certificats de produit doivent être utilisés pour s’authentifier auprès d’un CDN personnalisé."
       ],
       "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
-        ""
+        "Si ce paramètre est défini, les référentiel APT nouvellement créés dans Katello utiliseront la même structure de référentiel que les référentiels distants à partir desquels ils sont synchronisés. Vous pouvez migrer les référentiels APT existants pour qu'ils correspondent au paramètre, en exécutant « foreman-rake katello:migrate_structure_content_for_deb »."
       ],
       "If specified, remove the first instance of a subscription with matching id and quantity": [
         "Si spécifié, supprimer la première instance d'un abonnement avec la quantité et l'id correspondants"
@@ -3520,19 +3616,19 @@
         "Si c’est le cas, et register_hostname_fact est défini et fourni, l'enregistrement cherchera un nouvel hôte par son nom uniquement en utilisant ce fact, et ignorera tous les noms d'hôte correspondants"
       ],
       "If this is enabled, content counts on smart proxies will be updated automatically after content sync.": [
-        ""
+        "Si cette option est activée, le nombre de contenus sur les proxys intelligents sera mis à jour automatiquement après la synchronisation du contenu."
       ],
       "If this is enabled, repositories can be deleted even when they belong to published content views. The deleted repository will be removed from all content view versions.": [
         "Si cette option est activée, les référentiels peuvent être supprimés même s'ils appartiennent à des vues de contenu publiées. Le référentiel supprimé sera retiré de toutes les versions de la vue de contenu."
       ],
       "If this is enabled, repositories of content view versions without environments (\\\"archived\\\") will be distributed at '/pulp/content/<organization>/content_views/<content view>/X.Y/...'.": [
-        "Si cette option est activée, les dépôts de versions de vues de contenu sans environnement (\\\"archivées\\\") seront distribués dans '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
+        "Si cette option est activée, les référentiels de versions de vues de contenu sans environnement (\\\"archivées\\\") seront distribués dans '/pulp/content/<organization>/content_views/<content view>/X.Y/...'."
       ],
       "If this is enabled, the Smart Proxy page will suppress the warning message about reclaiming space.": [
-        ""
+        "Si cette option est activée, la page Smart Proxy supprimera le message d'avertissement concernant la récupération d'espace."
       ],
       "If true, only errata that can be installed without an incremental update will affect the host's errata status. Also affects the Host Collections dashboard widget.": [
-        ""
+        "Si cette option est définie sur true, seuls les errata pouvant être installés sans mise à jour incrémentielle affecteront le statut des errata de l'hôte. Affecte également le widget du tableau de bord des collections d'hôtes."
       ],
       "If true, only return repository sets that are associated with an active subscriptions": [
         "Si c’est le cas, ne renvoyez que les ensembles de référentiels associés à un abonnement actif"
@@ -3541,13 +3637,13 @@
         "Si c’est le cas, ne renvoyez que les ensembles de référentiels qui ont été activés. La valeur par défaut est false"
       ],
       "If true, return custom repository sets along with redhat repos. Will be ignored if repository_type is supplied.": [
-        ""
+        "Si true, retourner les jeux de référentiels personnalisés avec les référentiels redhat. Sera ignoré si repository_type est fourni."
       ],
       "If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to true": [
-        "Si c’est le cas, toute dépendance nécessaire sera copiée lors de l'ajout des errata ou package spécifiés. Valeur par défaut true."
+        "Si c’est le cas, toute dépendance nécessaire sera copiée lors de l'ajout des errata ou package spécifiés. Valeur par défaut true"
       ],
       "If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment": [
-        "Si c’est le cas, une nouvelle version composite sera publiée à l'aide d'un content_view_version_id spécifié ayant été promu à un environnement de cycle de vie."
+        "Si c’est le cas, une nouvelle version composite sera publiée à l'aide d'un content_view_version_id spécifié ayant été promu à un environnement de cycle de vie"
       ],
       "If you would prefer to move some of these hosts to different content views or environments then {clickHere} to manage these hosts individually.": [
         "Si vous préférez déplacer certains de ces hôtes vers des vues de contenu ou des environnements différents, alors {clickHere} pour gérer ces hôtes individuellement."
@@ -3556,7 +3652,7 @@
         "Le contenu ignorable ne peut être défini que pour les référentiels Yum."
       ],
       "Ignore %s cannot be set in combination with the 'Complete Mirroring' mirroring policy.": [
-        ""
+        "Ignorer%s ne peut pas être défini en combinaison avec la stratégie de mise en miroir « Mise en miroir complète »."
       ],
       "Ignore errors": [
         "Ignorer les erreurs"
@@ -3574,28 +3670,28 @@
         "Hôtes ignorés"
       ],
       "Image": [
-        ""
+        "Image"
       ],
       "Image digest": [
-        ""
+        "Image digest"
       ],
       "Image digests": [
-        ""
+        "Image digests"
       ],
       "Image mode": [
-        ""
+        "Mode image"
       ],
       "Image mode / package mode": [
-        ""
+        "Mode image / mode package"
       ],
       "Image mode details": [
-        ""
+        "Détails du mode image"
       ],
       "Image name": [
-        ""
+        "Nom de l'image"
       ],
       "Image-mode host": [
-        ""
+        "Hôte en mode image"
       ],
       "Immediate": [
         "Immédiat"
@@ -3631,22 +3727,31 @@
         "Importer une version d’affichage de contenu dans la bibliothèque"
       ],
       "Import a manifest using the Manifest tab above.": [
-        ""
+        "Importez un manifeste en utilisant l’onglet Manifeste ci-dessus."
       ],
       "Import a repository": [
         "Importe un référentiel"
       ],
       "Import a subscription manifest to give hosts access to Red Hat content.": [
+        "Importez un manifeste d'abonnement pour permettre aux hôtes d'accéder au contenu Red Hat."
+      ],
+      "Import migration": [
         ""
       ],
       "Import new manifest": [
-        ""
+        "Importer un nouveau manifeste"
       ],
       "Import only": [
         "Importation uniquement"
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "Les affichages de contenu importés ne peuvent pas être publiés directement. Le contenu ne peut être mis à jour qu'en l'important dans la vue."
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "Importer les téléchargements dans un référentiel"
@@ -3676,13 +3781,13 @@
         "Inclure"
       ],
       "Include Refs": [
-        ""
+        "Inclure les références"
       ],
       "Include all RPMs not associated to any errata": [
         "Inclure tous les RPMs qui ne sont associés à aucun errata"
       ],
       "Include all module streams not associated to any errata": [
-        "Inclure tous les flux de modules non associés à un errata."
+        "Inclure tous les flux de modules non associés à un errata"
       ],
       "Include content views generated by imports/exports. Defaults to false": [
         "Inclure les vues de contenu générées par les importations/exportations. Valeur par défaut : false"
@@ -3691,7 +3796,7 @@
         "Inclure filtre"
       ],
       "Include manifests": [
-        ""
+        "Inclure les manifestes"
       ],
       "Included": [
         "Inclus"
@@ -3714,6 +3819,9 @@
       "Incremental Update incomplete.": [
         "Mise à jour incrémentielle incomplète."
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        ""
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Mise à jour incrémentielle de %{content_view_count}Version(s) d'affichage de contenu "
       ],
@@ -3726,11 +3834,26 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "Mise à jour croissante spécifiée pour le composite %{name} version %{version}, mais aucun composant mis à jour."
       ],
+      "Index content": [
+        ""
+      ],
+      "Index errata": [
+        ""
+      ],
+      "Index module streams": [
+        ""
+      ],
+      "Index package groups": [
+        ""
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Le type Informable doit être l'un parmi [%{list} ]"
       ],
       "Inherit from Repository": [
         "Hérité du référentiel"
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "Initier une synchronisation des produits attachés au plan de synchronisation"
@@ -3745,16 +3868,16 @@
         "Installer les errata via l'interface Katello"
       ],
       "Install package group via Katello interface": [
-        "Installer le groupe de packages via l'interface Katello"
+        "Installer le groupe de paquets via l'interface Katello"
       ],
       "Install package via Katello interface": [
-        "Installer le package via l'interface Katello"
+        "Installer le paquet via l'interface Katello"
       ],
       "Install packages": [
-        "Installer les packages"
+        "Installer les paquets"
       ],
       "Install packages via Katello interface": [
-        "Installer le package via l'interface Katello"
+        "Installer le paquet via l'interface Katello"
       ],
       "Install via customized remote execution": [
         "Redémarrer via exécution à distance personnalisée"
@@ -3766,13 +3889,13 @@
         "Installable"
       ],
       "Installable bugfix/enhancement errata": [
-        ""
+        "Correction de bugs/améliorations installables"
       ],
       "Installable errata are applicable errata that are available in the host's assigned content view environments.": [
         ""
       ],
       "Installable security errata": [
-        ""
+        "Errata de sécurité installable"
       ],
       "Installable updates": [
         "Mises à jour installables"
@@ -3802,13 +3925,16 @@
         "Installation de l'erratum..."
       ],
       "Installing Package Group...": [
-        "Installation du groupe de packages..."
+        "Installation du groupe de paquets..."
       ],
       "Installing Package...": [
-        "Installation du package..."
+        "Installation du paquet..."
+      ],
+      "Instance update": [
+        ""
       ],
       "Instance-based": [
-        "Basé sur l'instancea"
+        "Basé sur l'instance"
       ],
       "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.": [
         "Interprète l'objet spécifié à retourner uniquement les Collections d'hôtes qui peuvent être associées à l'objet spécifié. La valeur 'hôte' est prise en charge."
@@ -3826,22 +3952,22 @@
         "Association non valable de l'identifiant de la vue du contenu. La vue du contenu doit correspondre à la version de la vue du contenu enregistrée"
       ],
       "Invalid content label: %s": [
-        "Étiquette de contenu non valide : %s"
+        "Libellé de contenu non valide : %s"
       ],
       "Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}": [
-        "Type de contenu invalide '%{content_type}' fourni. Les types de contenu doivent être l'un de %{content_types} "
+        "Type de contenu invalide '%{content_type}' fourni. Les types de contenu doivent être l'un de %{content_types}"
       ],
       "Invalid date range. The erratum filter rule start date must come before the end date": [
-        "Plage de dates invalide. La date du début de la règle du filtre de l'erratum doit se trouver avant la date de fin."
+        "Plage de dates invalide. La date du début de la règle du filtre de l'erratum doit se trouver avant la date de fin"
       ],
       "Invalid erratum filter rule specified, 'errata_id' cannot be specified in the same tuple as 'start_date', 'end_date' or 'types'": [
         "Règle de filtre de l'erratum non valide spécifiée, 'errata_id' ne peut être spécifié dans le même tuple que 'start_date', 'end_date' ou 'types'"
       ],
       "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date', 'types', or 'allow_other_types'": [
-        ""
+        "Règle de filtre d'erratum non valide spécifiée. Vous devez spécifier au moins l'un des éléments suivants : « errata_id », « start_date », « end_date », « types » ou « allow_other_types »"
       ],
       "Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}": [
-        "Type d'erratum non valide {invalid_types} fourni. Le type d'erratum doit être l'un des %{valid_types}"
+        "Type d'erratum non valide %{invalid_types} fourni. Le type d'erratum doit être l'un des %{valid_types}"
       ],
       "Invalid event_type %s": [
         "Type_événement_invalide %s"
@@ -3853,25 +3979,25 @@
         "Règle de filtre non valide spécifiée, 'version' ne peut être spécifiée dans le même tuple que 'min_version' ou 'max_version'"
       ],
       "Invalid format. Container name cannot be blank.": [
-        ""
+        "Format non valide. Le nom du conteneur ne peut pas être vide."
       ],
       "Invalid format. Container pushes should follow 'organization_label/product_label/name' OR 'id/organization_id/product_id/name' schema.": [
-        ""
+        "Format non valide. Les pushs de conteneurs doivent suivre le schéma « organization_label/product_label/name » OU « id/organization_id/product_id/name »."
       ],
       "Invalid format. Organization id must be an integer without leading zeros.": [
-        ""
+        "Format non valide. L'identifiant de l'organisation doit être un entier sans zéros non significatifs."
       ],
       "Invalid format. Organization label cannot be blank.": [
-        ""
+        "Format non valide. Le libellé de l'organisation ne peut pas être vide."
       ],
       "Invalid format. Product id must be an integer without leading zeros.": [
-        ""
+        "Format non valide. L'identifiant du produit doit être un entier sans zéros non significatifs."
       ],
       "Invalid format. Product label cannot be blank.": [
-        ""
+        "Format non valide. Le libellé du produit ne peut pas être vide."
       ],
       "Invalid mirroring policy for repository type %{type}, only %{policies} are valid.": [
-        "Politique de mise en miroir non valide pour le type de référentiel %%{type}, seul %%{policies} est valide."
+        "Politique de mise en miroir non valide pour le type de référentiel %{type}, seul %{policies} est valide."
       ],
       "Invalid parameters sent in the request for this operation. Please contact a system administrator.": [
         "Paramètres invalides envoyés dans la requête pour cette opération. Veuillez contacter un administrateur système."
@@ -3895,7 +4021,7 @@
         "Version du contenu non valide : [%s]"
       ],
       "Invalid repository in the metadata %{repo} error=%{error}": [
-        "Référentiel non valide dans les métadonnées %%{repo} error=%{error}"
+        "Référentiel non valide dans les métadonnées %{repo} error=%{error}"
       ],
       "Invalid value specified for Container Image repositories.": [
         "Valeur non valable spécifiée pour les référentiels d'images de conteneurs."
@@ -3913,7 +4039,7 @@
         "Délivré par"
       ],
       "It is only allowed for Non-Redhat Yum repositories.": [
-        ""
+        "N'est autorisé que pour les référentiels Yum non-Redhat."
       ],
       "It's not possible to bulk remove versions from a rolling content view.": [
         ""
@@ -3943,37 +4069,37 @@
         "Le job ${description} a commencé."
       ],
       "Katello Bootc interface": [
-        ""
+        "Interface de Katello Bootc"
       ],
       "Katello ID of local pool to update": [
         "Katello ID du pool local à mettre à jour"
       ],
       "Katello: Bootc Action": [
-        ""
+        "Katello : Action Bootc"
       ],
       "Katello: Bootc Rollback": [
-        ""
+        "Katello : retour en arrière de Bootc"
       ],
       "Katello: Bootc Status": [
-        ""
+        "Katello : Statut de Bootc"
       ],
       "Katello: Bootc Switch": [
-        ""
+        "Katello: Bootc Switch"
       ],
       "Katello: Bootc Upgrade": [
-        ""
+        "Katello : Mise à niveau de Bootc"
       ],
       "Katello: Configure host for new content source": [
-        ""
+        "Katello : configurer l'hôte pour la nouvelle source de contenu"
       ],
       "Katello: Install Errata": [
         "Katello : Installer l'errata"
       ],
       "Katello: Install Package": [
-        "Katello : Installer le package"
+        "Katello : Installer le paquet"
       ],
       "Katello: Install Package Group": [
-        "Katello : Installation du groupe de packages"
+        "Katello : Installation du groupe de paquets"
       ],
       "Katello: Install errata by search query": [
         "Katello : Installer les errata par requête de recherche"
@@ -3985,10 +4111,10 @@
         "Katello : Module Stream Actions"
       ],
       "Katello: Remove Package": [
-        "Katello : Supprimer le package"
+        "Katello : Supprimer le paquet"
       ],
       "Katello: Remove Package Group": [
-        "Katello : Supprimer le groupe de packages"
+        "Katello : Supprimer le groupe de paquets"
       ],
       "Katello: Remove Packages by search query": [
         "Katello : Supprimer les paquets par requête de recherche"
@@ -4000,19 +4126,19 @@
         "Katello : Redémarrage des services"
       ],
       "Katello: Update Package": [
-        "Katello : Mettre à jour le package"
+        "Katello : Mettre à jour le paquet"
       ],
       "Katello: Update Package Group": [
-        "Katello : Mise à jour du Groupe de packages"
+        "Katello : Mise à jour du Groupe de paquets"
       ],
       "Katello: Update Packages by search query": [
         "Katello : Mise à jour des paquets par requête de recherche"
       ],
       "Katello: Upload Profile": [
-        ""
+        "Katello : Télécharger le profil"
       ],
       "Keep latest packages": [
-        ""
+        "Conserver les derniers packages"
       ],
       "Key-value hash of subscription-manager facts, nesting uses a period delimiter (.)": [
         "Hachage de valeurs clés des facts du subscription-manager, l'imbrication utilise un délimiteur (.)"
@@ -4039,7 +4165,7 @@
         "Balise du contenu"
       ],
       "Label of the flatpak remote": [
-        ""
+        "Libellé flatpak remote"
       ],
       "Last check-in:": [
         "Dernière vérification :"
@@ -4060,10 +4186,10 @@
         "Dernier rafraîchissement :"
       ],
       "Last seen": [
-        ""
+        "Vu pour la dernière fois"
       ],
       "Last sync": [
-        ""
+        "Dernière Sync"
       ],
       "Last task": [
         "Dernière tâche"
@@ -4078,10 +4204,10 @@
         "Dernière version"
       ],
       "Learn more about adding subscription manifests in ": [
-        ""
+        "En savoir plus sur l'ajout de manifestes d'abonnement dans "
       ],
       "Legacy UI": [
-        ""
+        "UI héritée"
       ],
       "Legacy content host UI": [
         "Interface utilisateur de l'hôte de contenu hérité"
@@ -4126,13 +4252,13 @@
         "L'environnement de cycle de vie '%{environment}' n'est pas joint à cette capsule."
       ],
       "Lifecycle environment '%{env}' cannot be used with content view '%{view}'": [
-        ""
+        "Environnement du cycle de vie'%{env} 'ne peut pas être utilisé avec l'affichage du contenu'%{view} '"
       ],
       "Lifecycle environment ID": [
-        "ID d’environnement de cycle de vie"
+        "ID Environnement de cycle de vie"
       ],
       "Lifecycle environment must be specified": [
-        ""
+        "L'environnement du cycle de vie doit être spécifié"
       ],
       "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made.": [
         "L'environnement de cycle de vie n'était pas attaché au proxy smart; de ce fait, aucun changement n'a été fait."
@@ -4144,10 +4270,10 @@
         "Les environnements du cycle de vie ne peuvent pas être modifiés sur le proxy smart par défaut.  Le contenu de tous les environnements de cycle de vie existera sur ce proxy smart."
       ],
       "Limit actions to content in the host's environment.": [
-        ""
+        "Limitez les actions au contenu de l'environnement de l'hôte."
       ],
       "Limit content to Red Hat / custom": [
-        ""
+        "Limiter le contenu à Red Hat / personnalisé"
       ],
       "Limit content to enabled / disabled / overridden": [
         "Limiter le contenu à activé / désactivé / écrasé"
@@ -4195,10 +4321,10 @@
         "Répertorier toutes les organisations"
       ],
       "List all packages unique by name": [
-        ""
+        "Lister tous les packages uniques par nom"
       ],
       "List alternate content sources.": [
-        "Lister les autres sources de contenu"
+        "Lister les autres sources de contenu."
       ],
       "List an activation key's subscriptions": [
         "Répertorier les abonnements d'une clé d'activation"
@@ -4210,16 +4336,16 @@
         "Liste des abonnements disponibles auprès de Red Hat Subscription Management"
       ],
       "List booted bootc container images for hosts": [
-        ""
+        "Répertorier les images de conteneur bootc démarrées pour les hôtes"
       ],
       "List components attached to this content view": [
         "Liste des éléments attachés à cette vue de contenu"
       ],
       "List content counts for the smart proxy": [
-        ""
+        "Nombre de contenus de la liste pour le proxy intelligent"
       ],
       "List content view environments": [
-        ""
+        "Afficher le contenu de la liste des environnements"
       ],
       "List content view versions": [
         "Répertorier les versions d'affichage de contenu"
@@ -4228,10 +4354,10 @@
         "Répertorier les affichages de contenu"
       ],
       "List deb packages": [
-        "Lister Packages Deb"
+        "Lister les paquets Deb"
       ],
       "List deb packages installed on the host": [
-        "Répertorier les packages deb installés sur l'hôte"
+        "Répertorier les paquets deb installés sur l'hôte"
       ],
       "List environment paths": [
         "Répertorier les chemins d'environnement"
@@ -4240,10 +4366,10 @@
         "Répertorier les environnements dans une organisation"
       ],
       "List errata": [
-        "Répertorier les erratas"
+        "Répertorier les errata"
       ],
       "List errata available for the content host": [
-        "Répertorier les erratas disponibles pour l'hôte de contenu"
+        "Répertorier les errata disponibles pour l'hôte de contenu"
       ],
       "List export histories": [
         "Liste des historiques d'exportation"
@@ -4252,13 +4378,13 @@
         "Répertorier les règles de filtre"
       ],
       "List flatpak remote repositories": [
-        ""
+        "Lister les référentiels distants flatpak"
       ],
       "List flatpak remote's repositories": [
-        ""
+        "Lister les référentiels distants de flatpak"
       ],
       "List flatpak remotes": [
-        ""
+        "Liste des télécommandes Flatpak"
       ],
       "List host collections": [
         "Répertorier les collections d'hôtes"
@@ -4288,7 +4414,7 @@
         "Liste des ID de sources de contenu alternatif"
       ],
       "List of component content view version ids for composite views": [
-        "Liste d'ids de version d'affichage de contenu de composant pour les affichages composites."
+        "Liste d'id de version d'affichage de contenu de composant pour les affichages composites"
       ],
       "List of content units to ignore while syncing a yum repository. Must be subset of %s": [
         "Liste des unités de contenu à ignorer lors de la synchronisation d'un référentiel yum. Doit être un sous-ensemble de %s"
@@ -4333,10 +4459,10 @@
         "Liste des uuids invités de l'hyperviseur"
       ],
       "List of package group names (Deprecated)": [
-        "Liste de noms de groupes de packages (dépréciée)"
+        "Liste de noms de groupes de paquets (dépréciée)"
       ],
       "List of package names": [
-        "Liste de noms de packages"
+        "Liste de noms de paquets"
       ],
       "List of product ids": [
         "Liste d'ids de produits"
@@ -4345,7 +4471,7 @@
         "Liste d'id de produits à ajouter au plan de sync"
       ],
       "List of product ids to remove from the sync plan": [
-        "Liste d'ids de produits à supprimer du plan de sync"
+        "Liste d'id de produits à supprimer du plan de sync"
       ],
       "List of products in an organization": [
         "Liste de produits dans une organisation"
@@ -4363,13 +4489,13 @@
         "Liste de référentiels pour une balise meta docker"
       ],
       "List of repositories for a product": [
-        "Liste de tous les référentiels d'un produit"
+        "Synchroniser tous les référentiels d'un produit"
       ],
       "List of repositories in an organization": [
         "Liste des référentiels d’une organisation"
       ],
       "List of repository ids": [
-        "Liste d'ids de référentiel "
+        "Liste d'id de référentiel "
       ],
       "List of resources types that will be automatically associated": [
         "Lister les types de ressources qui seront associées automatiquement"
@@ -4390,10 +4516,10 @@
         "Répertorier les abonnements d'organisation"
       ],
       "List packages": [
-        "Répertorier tous les packages"
+        "Répertorier tous les paquets"
       ],
       "List packages installed on the host": [
-        "Répertorier les packages installés sur l'hôte"
+        "Répertorier les paquets installés sur l'hôte"
       ],
       "List products": [
         "Répertorier les produits"
@@ -4402,10 +4528,10 @@
         "Liste des référentiels dans l'environnement"
       ],
       "List repository sets for a product.": [
-        "Répertorier les ensembles de référentiels pour un produit"
+        "Répertorier les ensembles de référentiels pour un produit."
       ],
       "List repository sets.": [
-        "Répertorier les ensembles de référentiels"
+        "Répertorier les ensembles de référentiels."
       ],
       "List services that need restarting on the host": [
         "Liste des services qui doivent être redémarrés sur l'hôte"
@@ -4426,10 +4552,10 @@
         "Répertorier les environnements de cycle de vie non attachés au proxy smart"
       ],
       "Load balancer": [
-        ""
+        "Équilibreur de charge"
       ],
       "Loading": [
-        "Chargement..."
+        "Chargement"
       ],
       "Loading versions": [
         "Versions de chargement"
@@ -4441,7 +4567,7 @@
         "Faible"
       ],
       "Maintenance support": [
-        ""
+        "Support de maintenance"
       ],
       "Make copy of a content view": [
         "Faire une copie d'un affichage de contenu"
@@ -4456,13 +4582,13 @@
         "Gérer le manifeste"
       ],
       "Manage content": [
-        ""
+        "Gérer le contenu"
       ],
       "Manage errata": [
-        ""
+        "Gérer les errata"
       ],
       "Manage packages": [
-        ""
+        "Gérer les paquets"
       ],
       "Manage repository sets": [
         ""
@@ -4477,31 +4603,31 @@
         "Manifeste supprimé"
       ],
       "Manifest does not have a valid subscription": [
-        ""
+        "Le manifeste n’a pas d’abonnement valide"
       ],
       "Manifest expired": [
-        ""
+        "Manifeste expiré"
       ],
       "Manifest expiring soon": [
-        ""
+        "Le manifeste expire bientôt"
       ],
       "Manifest imported": [
         "Manifeste importé"
       ],
       "Manifest in '%{subject}' deleted.": [
-        "Manifeste de '%{sujet}' supprimé."
+        "Manifeste de '%{subject}' supprimé."
       ],
       "Manifest in '%{subject}' failed to refresh.": [
         "Le manifeste de '%{subject}' n'a pas été actualisé."
       ],
       "Manifest in '%{subject}' imported.": [
-        "Manifeste de '%{subject}' importé"
+        "Manifeste de '%{subject}' importé."
       ],
       "Manifest in '%{subject}' refreshed.": [
-        "Manifeste de '%{subject}' rafraîchi"
+        "Manifeste de '%{subject}' rafraîchi."
       ],
       "Manifest in organization %{subject} has an identity certificate that will expire in %{days_remaining} days, on %{manifest_expire_date}. To extend the expiration date, please refresh your manifest.": [
-        ""
+        "Le manifeste dans l'organisation%{subject} dispose d'un certificat d'identité qui expirera dans%{days_remaining} jours, sur%{manifest_expire_date} Pour prolonger la date d'expiration, veuillez actualiser votre manifeste."
       ],
       "Manifest refresh timeout": [
         "Échec de l'actualisation du manifeste"
@@ -4519,7 +4645,7 @@
         "Marquer les statuts des hôtes de contenu comme inconnus pour %s"
       ],
       "Matching RPMs based on your created filter rule. Remember, RPM filters don't apply to modular RPMs.": [
-        ""
+        "Correspondance des RPM en fonction de votre règle de filtrage créée. N'oubliez pas que les filtres RPM ne s'appliquent pas aux RPM modulaires."
       ],
       "Matching content": [
         "Contenu correspondant"
@@ -4528,7 +4654,7 @@
         "Max %(maxQuantity)s"
       ],
       "Max Hosts (%{limit}) reached for activation key '%{name}'": [
-        "Hôtes Maximum (%{limit}) atteint pour la clé d'activation '%{name}'."
+        "Hôtes Maximum (%{limit}) atteint pour la clé d'activation '%{name}'"
       ],
       "Maximum download rate when syncing a repository (requests per second). Use 0 for no limit.": [
         "Taux de téléchargement maximal lors de la synchronisation d'un référentiel (demandes par seconde). Utilisez 0 pour ne pas avoir de limite."
@@ -4560,8 +4686,11 @@
       "Messaging connection": [
         "Connexion à la messagerie"
       ],
-      "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
+      "Metadata generate": [
         ""
+      ],
+      "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
+        "La republication des métadonnées est risquée sur les référentiels « Complete Mirroring ». Modifiez la politique de mise en miroir et réessayez. Vous pouvez également utiliser le paramètre « force » pour régénérer les métadonnées localement. Lors de la prochaine synchronisation, les métadonnées du référentiel en amont écraseront les métadonnées locales des référentiels « Complete Mirroring »."
       ],
       "Metadata taken from the upstream export history for this Content View Version": [
         "Métadonnées tirées de l'historique des exportations en amont pour cette version de la vue du contenu"
@@ -4573,13 +4702,13 @@
         ""
       ],
       "Mirror Remote Repository": [
-        ""
+        "Miroir du référentiel distant"
       ],
       "Mirror Repository": [
         ""
       ],
       "Mirror a flatpak remote repository": [
-        ""
+        "Mettre en miroir un référentiel distant flatpak"
       ],
       "Mirroring will import the remote flatpak repository": [
         ""
@@ -4588,7 +4717,7 @@
         "Clé d'activation manquante !"
       ],
       "Missing arguments %{substitutions} for %{content_url}": [
-        "Arguments manquants %{substitutions} pour %{content_url} "
+        "Arguments manquants%{substitutions} pour %{content_url}"
       ],
       "Model": [
         "Modéliser"
@@ -4597,7 +4726,7 @@
         "Modéré"
       ],
       "Modify via remote execution": [
-        ""
+        "Modifier via l'exécution à distance"
       ],
       "Modular": [
         "Modulaire"
@@ -4621,6 +4750,15 @@
         "Les flux de modules apparaîtront ici après avoir activé les référentiels Red Hat ou créé des produits personnalisés."
       ],
       "Multi Content View Environment": [
+        "Environnement d'affichage multi-contenu"
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -4645,31 +4783,31 @@
         "N/A"
       ],
       "NOTE: Content view version '%{content_view} %{current}' does not have any exportable repositories. At least one repository with any of the following types is required to be able to export: '%{exportable_types}'.": [
-        ""
+        "NOTE : La version de la vue de contenu '%{content_view} %{current}' n'a pas de référentiel exportable. Au moins un référentiel de l'un des types suivants est nécessaire pour pouvoir exporter : '%{exportable_types}'."
       ],
       "NOTE: Unable to export repository '%{repository}' because it does not have an exportable content type.": [
         "NOTE : Impossible d'exporter le référentiel '%{repository}' car il n'a pas de type de contenu exportable."
       ],
       "NOTE: Unable to export repository '%{repository}' because it does not have an syncably exportable content type.": [
-        ""
+        "NOTE : Impossible d'exporter le référentiel '%{repository}' car il n'a pas de type de contenu exportable de manière synchronisée."
       ],
       "NOTE: Unable to fully export '%{organization}' organization's library because it contains repositories without the 'immediate' download policy. Update the download policy and sync affected repositories to include them in the export. \\n %{repos}": [
-        "REMARQUE : Impossible d'exporter complètement la bibliothèque de l'organisation '%%{organization}' car elle contient des référentiels sans la politique de téléchargement \\\"immédiate\\\". Mettez à jour la politique de téléchargement et synchronisez les référentiels concernés pour les inclure dans l'exportation\\n %%{repos}"
+        "REMARQUE : Impossible d'exporter complètement la bibliothèque de l'organisation '%{organization}' car elle contient des référentiels sans la politique de téléchargement \\\"immédiate\\\". Mettez à jour la politique de téléchargement et synchronisez les référentiels concernés pour les inclure dans l'exportation\\n %{repos}"
       ],
       "NOTE: Unable to fully export Content View Version '%{content_view} %{current}' it contains repositories with un-exportable content types. \\n %{repos}": [
-        "REMARQUE : Impossible d'exporter complètement la version de la vue du contenu '%{content_view} %{current}' car elle contient des référentiels avec des types de contenu non exportables. \\n %{repos}"
+        "REMARQUE : Impossible d'exporter complètement la version de la vue du contenu '%{content_view}%{current}' car elle contient des référentiels avec des types de contenu non exportables. \\n %{repos}"
       ],
       "NOTE: Unable to fully export Content View Version '%{content_view} %{current}' it contains repositories without the 'immediate' download policy. Update the download policy and sync affected repositories. Once synced republish the content view and export the generated version. \\n %{repos}": [
-        "REMARQUE : Impossible d'exporter complètement la version de la vue du contenu '%{content_view} %%{current}' car elle contient des référentiels sans la politique de téléchargement 'immediate'. Mettez à jour la politique de téléchargement et synchronisez les référentiels concernés. Une fois synchronisé, republiez la vue du contenu et exportez la version générée\\n %%{repos}"
+        "REMARQUE : Impossible d'exporter complètement la version de la vue du contenu '%{content_view} %{current}' car elle contient des référentiels sans la politique de téléchargement 'immediate'. Mettez à jour la politique de téléchargement et synchronisez les référentiels concernés. Une fois synchronisé, republiez la vue du contenu et exportez la version générée\\n %{repos}"
       ],
       "NOTE: Unable to fully export repository '%{repository}' because it does not have the 'immediate' download policy. Update the download policy and sync the affected repository to include them in the export.": [
-        "NOTE : Impossible d'exporter complètement le dépôt '%{repository}' car il n'a pas la politique de téléchargement 'immédiate'. Mettez à jour la politique de téléchargement et synchronisez le référentiel concerné pour l'inclure dans l'exportation."
+        "NOTE : Impossible d'exporter complètement le référentiel '%{repository}' car il n'a pas la politique de téléchargement 'immédiate'. Mettez à jour la politique de téléchargement et synchronisez le référentiel concerné pour l'inclure dans l'exportation."
       ],
       "Name": [
         "Nom"
       ],
       "Name and label of default content view should not be changed": [
-        "Le nom et le libellé de la vue de contenu par défaut ne doivent pas être modifiés."
+        "Le nom et le libellé de la vue de contenu par défaut ne doivent pas être modifiés"
       ],
       "Name is a required parameter.": [
         "Le nom est un paramètre obligatoire."
@@ -4687,10 +4825,10 @@
         "Nom de l'affichage du contenu"
       ],
       "Name of the flatpak remote": [
-        ""
+        "Nom de la télécommande flatpak"
       ],
       "Name of the flatpak remote repository": [
-        ""
+        "Nom du référentiel distant flatpak"
       ],
       "Name of the host": [
         "Nom de l'hôte"
@@ -4738,28 +4876,28 @@
         "Nouveau nom de la collection d'hôte"
       ],
       "New name cannot be blank": [
-        "Le nouveau nom ne peut être vide."
+        "Le nouveau nom ne peut être vide"
       ],
       "New name for the content view": [
         "Nouveau nom de l'affichage du contenu"
       ],
       "New version is available: Version ${latestVersion}": [
-        "Une version plus récente est disponible : Version {latestVersion}"
+        "Une nouvelle version est disponible : Version ${latestVersion}"
       ],
       "Newly published": [
         "Dernière publication"
       ],
       "Newly published version will be the same as the previous version.": [
-        ""
+        "La nouvelle version publiée sera la même que la précédente."
       ],
       "No": [
         "Non"
       ],
       "No Activation Keys selected": [
-        "Aucune clé d'activation n'est affectée."
+        "Aucune clé d'activation n'est affectée"
       ],
       "No Activation keys to select": [
-        "Aucune clé d'activation n'est affectée."
+        "Aucune clé d'activation n'est affectée"
       ],
       "No Content View": [
         "Aucun affichage de contenu"
@@ -4795,19 +4933,19 @@
         "Pas d'artefacts à montrer"
       ],
       "No available component content view updates": [
-        ""
+        "Aucune mise à jour de l'affichage du contenu des composants n'est disponible"
       ],
       "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.": [
-        ""
+        "Aucun debs disponible trouvé pour le terme de recherche '%s '. Vérifiez les environnements d'affichage du contenu de l'hôte et les debs déjà installés."
       ],
       "No available packages found for search term '%s'.": [
-        ""
+        "Aucun package disponible trouvé pour le terme de recherche '%s '."
       ],
       "No available repository or filter updates": [
-        ""
+        "Aucune mise à jour de référentiel ou de filtre disponible"
       ],
       "No change": [
-        ""
+        "Aucun changement"
       ],
       "No content": [
         "Aucun contenu"
@@ -4822,13 +4960,13 @@
         "Aucun contenu dans les versions sélectionnées."
       ],
       "No content view environments": [
-        ""
+        "Environnements d'affichage de contenu"
       ],
       "No content view environments found with ids: %{ids}": [
-        ""
+        "Aucun environnement d'affichage de contenu trouvé avec les identifiants : %{ids}"
       ],
       "No content view environments found with names: %{names}": [
-        ""
+        "Aucun environnement d'affichage de contenu trouvé avec les noms : %{names}"
       ],
       "No content view history events found.": [
         "Aucun historique d'affichage de contenu n'a été trouvé."
@@ -4840,10 +4978,10 @@
         "Aucune vue du contenu n'est disponible pour l'environnement sélectionné"
       ],
       "No content views to add yet": [
-        ""
+        "Aucune vue de contenu à ajouter pour l'instant"
       ],
       "No content views yet": [
-        ""
+        "Aucun affichage de contenu pour l’instant"
       ],
       "No content_view_version_ids provided": [
         "Aucun content_view_version_ids fourni"
@@ -4855,7 +4993,7 @@
         "Aucune description fournie"
       ],
       "No docker manifests to delete after ignoring manifests with tags or manifest lists": [
-        ""
+        "Aucun manifeste Docker à supprimer après avoir ignoré les manifestes avec des balises ou des listes de manifestes"
       ],
       "No enabled repositories match your search criteria.": [
         "Aucun référentiel activé ne correspond à vos critères de recherche."
@@ -4864,16 +5002,16 @@
         "Aucun environnement"
       ],
       "No errata filter rules yet": [
-        ""
+        "Pas encore d'errata sur les règles de filtrage"
       ],
       "No errata found.": [
-        ""
+        "Aucune errata trouvées."
       ],
       "No errata matching given search query": [
-        ""
+        "Aucun errata ne correspond à la requête de recherche donnée"
       ],
       "No errata to add yet": [
-        ""
+        "Pas d'errata à afficher pour l’instant"
       ],
       "No errors": [
         "Aucune erreur"
@@ -4885,31 +5023,31 @@
         "Aucun fichier téléchargé"
       ],
       "No filters yet": [
-        ""
+        "Pas encore de filtres"
       ],
       "No history yet": [
-        ""
+        "Aucun historique trouvé"
       ],
       "No host collections": [
         "Aucune collection d'hôtes"
       ],
       "No host collections found.": [
-        "Aucune collection d'hôtes trouvée"
+        "Aucune collection d'hôtes trouvée."
       ],
       "No host collections yet": [
         "Pas encore de collections d'hôtes"
       ],
       "No hosts found": [
-        ""
+        "Aucun hôte trouvé."
       ],
       "No hosts registered with subscription-manager found in selection.": [
         "Aucun hôte enregistré avec le gestionnaire d'abonnement n'a été trouvé dans la sélection."
       ],
       "No hosts were specified": [
-        ""
+        "Aucun hôte n'a été spécifié"
       ],
       "No installed debs found for search term '%s'": [
-        ""
+        "Aucun debs installé n'a été trouvé pour le terme de recherche '%s'"
       ],
       "No installed packages and/or enabled repositories have been reported by %s.": [
         "Aucun package installé et/ou référentiel activé n'a été signalé par %s."
@@ -4924,7 +5062,7 @@
         "Aucun manifeste trouvé. Importez un manifeste avec les abonnements appropriés avant d'importer le contenu."
       ],
       "No manifest imported": [
-        ""
+        "Aucun manifeste importé"
       ],
       "No matching ": [
         "Aucun résultat"
@@ -4933,7 +5071,7 @@
         "Aucun résultat ${name} correspondant."
       ],
       "No matching ${selectedContentType} found": [
-        "Aucun résultat {selectedContentType} correspondant."
+        "Pas de ${selectedContentType} correspondant trouvé"
       ],
       "No matching DEB found.": [
         "Aucun DEB correspondant n’a été trouvé."
@@ -4951,7 +5089,7 @@
         "Aucune errata correspondante n’a été trouvée"
       ],
       "No matching filter rules found.": [
-        "Aucun filtre correspondant n'a été trouvé"
+        "Aucun filtre correspondant n'a été trouvé."
       ],
       "No matching filters found": [
         "Aucun filtre correspondant n'a été trouvé"
@@ -4966,10 +5104,10 @@
         "Aucun hôte correspondant n’a été trouvé."
       ],
       "No matching non-modular RPM found.": [
-        ""
+        "Aucun RPM non modulaire correspondant n'a été trouvé."
       ],
       "No matching packages found": [
-        "Aucun paquet correspondant n'a été trouvé."
+        "Aucun paquet correspondant n'a été trouvé"
       ],
       "No matching repositories found": [
         "Aucun référentiel correspondant n'a été trouvé"
@@ -4978,25 +5116,25 @@
         "Aucun ensemble de référentiels correspondant n'a été trouvé"
       ],
       "No matching traces found": [
-        "Aucune règle de traces n'a été trouvée."
+        "Aucune règle de traces n'a été trouvée"
       ],
       "No matching version found": [
         "Aucune version correspondante trouvée"
       ],
       "No module stream filter rules yet": [
-        ""
+        "Pas encore de règles de filtrage des flux de modules"
       ],
       "No module streams to add yet.": [
-        ""
+        "Il n'y a pas encore de flux de modules à ajouter."
       ],
       "No new packages installed": [
-        "Aucun nouveau package installé"
+        "Aucun nouveau paquet installé"
       ],
       "No package groups yet": [
-        ""
+        "Aucun groupe de paquets pour l’instant"
       ],
       "No packages": [
-        "Aucun package"
+        "Aucun paquet"
       ],
       "No packages available to install": [
         "Aucun paquet disponible pour l'installation"
@@ -5005,10 +5143,10 @@
         ""
       ],
       "No packages removed": [
-        "Aucun package supprimé"
+        "Aucun paquet supprimé"
       ],
       "No packages updated": [
-        "Aucun package mis à jour"
+        "Aucun paquet mis à jour"
       ],
       "No pool IDs were provided.": [
         "Aucun ID de Pool n'a été fourni."
@@ -5044,22 +5182,22 @@
         "Pas de logique récurrente liée au plan de synchronisation."
       ],
       "No repositories added yet": [
-        ""
+        "Aucun référentiel n'est disponible."
       ],
       "No repositories available to add": [
-        ""
+        "Aucun référentiel disponible à ajouter"
       ],
       "No repositories available.": [
         "Aucun référentiel n'est disponible."
       ],
       "No repositories enabled.": [
-        "Aucun référentiel activé"
+        "Aucun référentiel activé."
       ],
       "No repositories selected.": [
         "Aucun référentiel sélectionné."
       ],
       "No repositories to show": [
-        "Aucun dépôt à montrer"
+        "Aucun référentiel à afficher"
       ],
       "No repository sets match your search criteria.": [
         "Aucun ensemble de référentiels ne correspond à vos critères de recherche."
@@ -5068,31 +5206,31 @@
         "Aucun ensemble de référentiels à afficher."
       ],
       "No rules yet": [
-        ""
+        "Aucune règle pour l’instant"
       ],
       "No services defined, is this class extended?": [
         "Aucuns services définis, est-ce une classe étendue ?"
       ],
       "No start time currently available.": [
-        "Aucune date de début disponible actuellement"
+        "Aucune date de début disponible actuellement."
       ],
       "No subscriptions match your search criteria.": [
-        "Aucun abonnement ne correspond à vos critères dae recherche."
+        "Aucun abonnement ne correspond à vos critères de recherche."
       ],
       "No syncable repositories found for selected products and options.": [
         "Aucun référentiel synchronisable n'a été trouvé pour les produits et options sélectionnés."
       ],
       "No upgradable packages found for search term '%s'.": [
-        ""
+        "Aucun package pouvant être mis à niveau n'a été trouvé pour le terme de recherche «%s '."
       ],
       "No upgradable packages found.": [
-        ""
+        "Packages évolutifs"
       ],
       "No uploads param specified. An array of uploads to import is required.": [
         "Aucun paramètre de téléchargement n'est spécifié. Un tableau des téléchargements à importer est nécessaire."
       ],
       "No versions yet": [
-        ""
+        "Aucune version pour l’instant"
       ],
       "Non-security errata applicable": [
         "Errata non-sécurité applicable"
@@ -5128,7 +5266,7 @@
         "Pas encore publié"
       ],
       "Note: Deleting a subscription manifest is STRONGLY discouraged.": [
-        ""
+        "Remarque : La suppression d'un manifeste d'abonnement est FORTEMENT déconseillée."
       ],
       "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:": [
         "Remarque : la suppression d'un manifeste d'abonnement est VIVEMENT déconseillée. La suppression d'un manifeste entraînera :"
@@ -5149,13 +5287,13 @@
         "Nombre de résultats par page à renvoyer"
       ],
       "Number of results per page to return.": [
-        "Nombre de résultats par page à renvoyer"
+        "Nombre de résultats par page à renvoyer."
       ],
       "Number to Allocate": [
         "Numéro à attribuer"
       ],
       "OS": [
-        ""
+        "OS"
       ],
       "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.": [
         "OS restreint à {osRestricted}. Si l'OS de l'hôte ne correspond pas, le référentiel ne sera pas disponible sur cet hôte."
@@ -5188,7 +5326,7 @@
         "Emplacement-disque des référentiels Pulp3 exportés"
       ],
       "Once the prerequisites are met, select a provider to install katello-host-tools-tracer": [
-        ""
+        "Une fois les prérequis remplis, sélectionnez un fournisseur pour installer katello-host-tools-tracer"
       ],
       "One of parameters [ %s ] required but not specified.": [
         "L'un des paramètres [ %s ] est requis, mais il n'est pas spécifié."
@@ -5215,7 +5353,7 @@
         "Seul un fournisseur Red Hat autorisé pour une organisation"
       ],
       "Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.": [
-        ""
+        "Seuls les référentiels non publiés dans une vue de contenu peuvent être désactivés. Les référentiels publiés doivent être supprimés de la page de détails du référentiel."
       ],
       "Only returns id and quantity fields": [
         "Ne renvoie que les champs d'identification et de quantité"
@@ -5227,7 +5365,7 @@
         "Organisation"
       ],
       "Organization %s is being deleted.": [
-        "L'organisation %s a été supprimée"
+        "L'organisation %s a été supprimée."
       ],
       "Organization ID": [
         "ID de l’organisation"
@@ -5248,22 +5386,22 @@
         "ID de l’organisation"
       ],
       "Organization id not found: '%s'": [
-        ""
+        "ID Organisation non trouvée : '%s '"
       ],
       "Organization identifier": [
-        "Identifiant de l'organisation"
+        "identifiant de l'organisation"
       ],
       "Organization label": [
         "Balise de l'organisation"
       ],
       "Organization label '%s' is ambiguous. Try using an id-based container name.": [
-        ""
+        "Le libellé d'organisation '%s \\\" est ambigu. Essayez d'utiliser un nom de conteneur basé sur un identifiant."
       ],
       "Organization not found": [
         "Organisation non trouvée"
       ],
       "Organization not found: '%s'": [
-        ""
+        "Organisation non trouvée : '%s '"
       ],
       "Organization required": [
         "Organisation requise"
@@ -5275,7 +5413,7 @@
         "Temps de protection du contenu orphelin"
       ],
       "Orphaned content facets for deleted hosts exist for the content view and environment. Please run rake task : katello:clean_orphaned_facets and try again!": [
-        ""
+        "Des facets de contenu orphelines pour des hôtes supprimés existent pour la vue de contenu et l'environnement. Veuillez exécuter la tâche rake : katello:clean_orphaned_facets et réessayer !"
       ],
       "Other": [
         "Autre"
@@ -5320,37 +5458,37 @@
         "Groupe de packages"
       ],
       "Package Group Install": [
-        "Installation de groupes de packages"
+        "Installation de groupes de paquets"
       ],
       "Package Group Install Canceled": [
-        "Installation du groupe de packages annulée"
+        "Installation du groupe de paquets annulée"
       ],
       "Package Group Install Complete": [
-        "Installation du groupe de packages terminée"
+        "Installation du groupe de paquets terminée"
       ],
       "Package Group Install Failed": [
         "Échec de l'installation du groupe de packages"
       ],
       "Package Group Install Timed Out": [
-        "Délai d'expiration de l'installation du groupe de packages dépassé"
+        "Délai d'expiration de l'installation du groupe de paquets dépassé"
       ],
       "Package Group Install scheduled by %s": [
         "Installation du groupe de packages planifiée par %s"
       ],
       "Package Group Remove": [
-        "Suppression de groupes de packages"
+        "Suppression de groupes de paquets"
       ],
       "Package Group Remove Canceled": [
-        "Suppression du groupe de packages annulée"
+        "Suppression du groupe de paquets annulée"
       ],
       "Package Group Remove Complete": [
-        "Suppression du groupe de packages terminée"
+        "Suppression du groupe de paquets terminée"
       ],
       "Package Group Remove Failed": [
-        "Échec de la suppression du groupe de packages"
+        "Échec de la suppression du groupe de paquets"
       ],
       "Package Group Remove Timed Out": [
-        "Délai d'expiration de la suppression du groupe de packages dépassé"
+        "Délai d'expiration de la suppression du groupe de paquets dépassé"
       ],
       "Package Group Remove scheduled by %s": [
         "Suppression du groupe de packages planifiée par %s"
@@ -5362,64 +5500,64 @@
         "Mise à jour du groupe de packages planifiée par %s"
       ],
       "Package Groups": [
-        "Groupes de packages"
+        "Groupes de paquets"
       ],
       "Package Install": [
-        "Installation de packages"
+        "Installation de paquets"
       ],
       "Package Install Canceled": [
-        "Installation du package annulée"
+        "Installation du paquet annulée"
       ],
       "Package Install Complete": [
-        "Installation du package terminée"
+        "Installation du paquet terminée"
       ],
       "Package Install Failed": [
-        "Échec de l'installation du package"
+        "Échec de l'installation du paquet"
       ],
       "Package Install Timed Out": [
-        "Délai d'expiration de l'installation du package dépassé"
+        "Délai d'expiration de l'installation du paquet dépassé"
       ],
       "Package Install scheduled by %s": [
         "Installation du package planifiée par %s"
       ],
       "Package Remove": [
-        "Suppression de packages"
+        "Suppression de paquets"
       ],
       "Package Remove Canceled": [
-        "Suppression du package annulée"
+        "Suppression du paquet annulée"
       ],
       "Package Remove Complete": [
-        "Suppression du package terminée"
+        "Suppression du paquet terminée"
       ],
       "Package Remove Failed": [
-        "Échec de la suppression du package"
+        "Échec de la suppression du paquet"
       ],
       "Package Remove Timed Out": [
-        "Délai d'expiration de la suppression du package dépassé"
+        "Délai d'expiration de la suppression du paquet dépassé"
       ],
       "Package Remove scheduled by %s": [
         "Suppression du package planifiée par %s"
       ],
       "Package Type": [
-        "Type de package"
+        "Type de paquet"
       ],
       "Package Types": [
         "Types de paquets"
       ],
       "Package Update": [
-        "Mise à jour de packages"
+        "Mise à jour de paquets"
       ],
       "Package Update Canceled": [
-        "Mise à jour du package annulée"
+        "Mise à jour du paquet annulée"
       ],
       "Package Update Complete": [
         "Mise à jour du package terminée"
       ],
       "Package Update Failed": [
-        "Échec de la mise à jour du package"
+        "Échec de la mise à jour du paquet"
       ],
       "Package Update Timed Out": [
-        "Délai d'expiration de la mise à jour du package dépassé"
+        "Délai d'expiration de la mise à jour du paquet dépassé"
       ],
       "Package Update scheduled by %s": [
         "Mise à jour du package planifiée par %s"
@@ -5428,19 +5566,19 @@
         ""
       ],
       "Package group update canceled": [
-        "Mise à jour du groupe de packages annulée"
+        "Mise à jour du groupe de paquets annulée"
       ],
       "Package group update complete": [
-        "Mise à jour du groupe de package terminée"
+        "Mise à jour du groupe de paquet terminée"
       ],
       "Package group update failed": [
-        "Échec de la mise à jour du groupe de packages"
+        "Échec de la mise à jour du groupe de paquets"
       ],
       "Package group update timed out": [
-        "Délai d'expiration de la mise à jour du groupe de packages dépassé"
+        "Délai d'expiration de la mise à jour du groupe de paquets dépassé"
       ],
       "Package groups": [
-        "Groupes de packages"
+        "Groupes de paquets"
       ],
       "Package identifiers to filter content by": [
         "Identificateurs de packages pour filtrer le contenu par"
@@ -5452,28 +5590,28 @@
         "Installation de packages: \\\"%{package}\\\" "
       ],
       "Package mode": [
-        ""
+        "Mode package"
       ],
       "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist.": [
-        ""
+        "Types de paquets à synchroniser pour le contenu Python, séparés par une virgule. Laissez vide pour obtenir tous les types de paquets. Les types de paquets sont : bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist."
       ],
       "Packages": [
         "Packages"
       ],
       "Packages must be provided": [
-        "Des packages doivent être fournis"
+        "Des paquets doivent être fournis"
       ],
       "Packages to be removed": [
-        ""
+        "Packages à supprimer"
       ],
       "Packages to be updated": [
-        ""
+        "Packages à mettre à jour"
       ],
       "Packages to install": [
-        ""
+        "Packages à installer"
       ],
       "Packages will appear here when available.": [
-        "Les packages apparaîtront ici une fois disponibles."
+        "Les paquets apparaîtront ici une fois disponibles."
       ],
       "Page number, starting at 1": [
         "Numéro de la page, commençant par 1"
@@ -5503,13 +5641,13 @@
         "Suspendue"
       ],
       "Pending tasks detected in repositories of this content view. Please wait for the tasks: ": [
-        ""
+        "Des tâches en attente ont été détectées dans les référentiels de cette vue de contenu. Veuillez patienter pendant les tâches : "
       ],
       "Perform a module stream action via Katello interface": [
         "Effectuer une action de flux de module via l'interface Katello"
       ],
       "Perform an Incremental Update on one or more Content View Versions": [
-        "Effectuer une mise à jour croissante sur une ou plusieurs versions d'affichage de contenu."
+        "Effectuer une mise à jour croissante sur une ou plusieurs versions d'affichage de contenu"
       ],
       "Performs a full-export of a content view version.": [
         "Effectue une exportation complète d'une version de vue de contenu."
@@ -5545,7 +5683,7 @@
         "Veuillez ajouter quelques référentiels."
       ],
       "Please create some content views.": [
-        ""
+        "Veuillez créer des vues de contenu."
       ],
       "Please enter a positive number above zero": [
         "Veuillez entrer un nombre positif au-dessus de zéro"
@@ -5566,7 +5704,7 @@
         "Veuillez sélectionner un environnement de cycle de vie et une vue de contenu pour déplacer cette clé d'activation."
       ],
       "Please select a lifecycle environment and content view to view activation keys.": [
-        ""
+        "Veuillez sélectionner un environnement de cycle de vie et une vue de contenu pour afficher les clés d'activation."
       ],
       "Please select an architecture before assigning a kickstart repository": [
         "Veuillez sélectionner une architecture avant d'attribuer un référentiel kickstart"
@@ -5587,10 +5725,10 @@
         "Politique à définir pour le contenu de mise en miroir . Doit être un parmi %s."
       ],
       "Prefer registered through Smart Proxy for remote execution": [
-        ""
+        "Préférez l'enregistrement via Smart Proxy pour l'exécution à distance"
       ],
       "Prefer using a Smart Proxy to which a host is registered when using remote execution": [
-        ""
+        "Préférez utiliser un proxy intelligent sur lequel un hôte est enregistré lors de l'utilisation de l'exécution à distance"
       ],
       "Prevent from further updates": [
         "Empêcher toute mise à jour ultérieure"
@@ -5629,13 +5767,13 @@
         "Créer Produit"
       ],
       "Product Host Count": [
-        ""
+        "Nombre d'hôtes du produit"
       ],
       "Product ID": [
         "ID Produit"
       ],
       "Product ID to mirror the remote repository to": [
-        ""
+        "ID de produit pour refléter le référentiel distant"
       ],
       "Product and Repositories": [
         "Produit et référentiels"
@@ -5650,13 +5788,13 @@
         "L'identifiant du produit tel qu'il figure dans la liste des produits installés sur l'hôte, \\\\\\n        il ne s'agit pas du même numéro d'identification que celui des produits renvoyés par l'api"
       ],
       "Product id not found: '%s'": [
-        ""
+        "ID produit non trouvé : ’%s '"
       ],
       "Product label": [
-        ""
+        "Étiquette du produit"
       ],
       "Product label '%s' is ambiguous. Try using an id-based container name.": [
-        ""
+        "Le libellé du produit '%s \\\" est ambigu. Essayez d'utiliser un nom de conteneur basé sur un identifiant."
       ],
       "Product name": [
         "Nom du produit"
@@ -5665,7 +5803,7 @@
         "Nom du produit tel qu'il figure dans la liste des produits installés sur l'hôte"
       ],
       "Product not found: '%s'": [
-        ""
+        "Produit non trouvé : '%s '"
       ],
       "Product the repository belongs to": [
         "Produit auquel le référentiel appartient"
@@ -5677,10 +5815,10 @@
         "Produit avec ID %s non trouvé dans Candlepin. Sauter l'importation de contenu pour ce produit."
       ],
       "Product: '%{product}', Repository: '%{repository}'": [
-        "* Produit: '%%{product}', Repo: '%%{repository}'"
+        "Produit: '%{product}', Référentiel: '%{repository}'"
       ],
       "Product: '%{product}', Repository: '%{repo}' ": [
-        "Produit: '%%{product}', Repo: '%%{repo}' "
+        "Produit: '%{product}', Repo: '%{repo}' "
       ],
       "Products": [
         "Produits"
@@ -5701,7 +5839,7 @@
         "Promouvoir les errata"
       ],
       "Promote version ${versionNameToPromote}": [
-        "Promouvoir la version {versionNameToPromote}"
+        "Promouvoir la version ${versionNameToPromote}"
       ],
       "Promoted to ": [
         "Promu à "
@@ -5713,7 +5851,7 @@
         "Résumé de la promotion"
       ],
       "Promotion Summary for %{content_view}": [
-        "Résumé de la promotion pour {content_view}"
+        "Résumé de la promotion pour %{content_view}"
       ],
       "Promotion to Environment": [
         "Promotion à Environnement"
@@ -5728,13 +5866,13 @@
         "Un pool avec l’identification %s n'a pas de droit d’accès en amont"
       ],
       "Provisioning template IDs": [
-        "IDs des modèles d'attribution"
+        "IDs des modèles de provisionnement"
       ],
       "Proxies": [
         "Proxies"
       ],
       "Proxy sync failure": [
-        ""
+        "Échec de la sync du proxy"
       ],
       "Public": [
         "Public"
@@ -5746,7 +5884,7 @@
         "Publier"
       ],
       "Publish Lifecycle Environment Container Repositories": [
-        ""
+        "Publier des référentiels de conteneurs d'environnement de cycle de vie"
       ],
       "Publish a content view": [
         "Publier une vue de contenu"
@@ -5764,7 +5902,7 @@
         "Nouvelle version publiée"
       ],
       "Publishing ${truncate(name)}": [
-        ""
+        "Publication ${truncate(name)}"
       ],
       "Publishing content view": [
         "Publier un affichage de contenu"
@@ -5817,23 +5955,26 @@
       "Pulp task error": [
         "Erreur de tâche pulp"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
-        "Package Python"
+        "Paquet Python"
       ],
       "Python Packages": [
-        "Packages Python"
+        "Paquets Python"
       ],
       "Python package": [
-        "Package Python"
+        "Paquet Python"
       ],
       "Python packages": [
-        "Packages Python"
+        "Paquets Python"
       ],
       "Python packages to exclude from the upstream URL, names separated by newline. You may also specify versions, for example: django~=2.0.": [
-        "Packages Python à exclure depuis l'URL amont, noms séparés par une nouvelle ligne. Vous pouvez également spécifier des versions, par exemple : django~=2.0. "
+        "Paquets Python à exclure depuis l'URL amont, noms séparés par une nouvelle ligne. Vous pouvez également spécifier des versions, par exemple : django~=2.0. "
       ],
       "Python packages to include from the upstream URL, names separated by newline. You may also specify versions, for example: django~=2.0. Leave empty to include every package.": [
-        "Package Python à inclure depuis l'URL amont, noms séparés par une nouvelle ligne. Vous pouvez également spécifier des versions, par exemple : django~=2.0. Laissez vide pour inclure tous les packages."
+        "Paquet Python à inclure depuis l'URL amont, noms séparés par une nouvelle ligne. Vous pouvez également spécifier des versions, par exemple : django~=2.0. Laissez vide pour inclure tous les paquets."
       ],
       "Quantity": [
         "Quantité"
@@ -5848,7 +5989,7 @@
         "Quantité de souscriptions spécifiées à retirer"
       ],
       "Quantity of this subscription to add": [
-        "Nombre de ces abonnements à ajouter."
+        "Nombre de ces abonnements à ajouter"
       ],
       "Quantity of this subscriptions to add": [
         "Quantité de cet abonnement à ajouter"
@@ -5866,10 +6007,10 @@
         "RH Repos"
       ],
       "RHEL Lifecycle status": [
-        ""
+        "Statut du cycle de vie de RHEL"
       ],
       "RHEL lifecycle": [
-        ""
+        "Cycle de vie de RHEL"
       ],
       "RHUI": [
         "RHUI"
@@ -5878,10 +6019,10 @@
         "RPM"
       ],
       "RPM Package Groups": [
-        "RPM Groupes de packages"
+        "RPM Groupes de paquets"
       ],
       "RPM Packages": [
-        "RPM Packages"
+        "RPM paquets"
       ],
       "RPM name": [
         "Nom du RPM"
@@ -5893,7 +6034,7 @@
         "Mises à jour des paquets RPM"
       ],
       "RPM packages": [
-        "Packages RPM"
+        "Paquets RPM"
       ],
       "RPMs": [
         "RPMs"
@@ -5917,13 +6058,16 @@
         "Réassigner les hôtes affectés"
       ],
       "Reboot host": [
-        ""
+        "Redémarrer l'hôte"
       ],
       "Reboot required": [
         "Redémarrage nécessaire"
       ],
       "Reclaim Space": [
         "Récupération d’espace"
+      ],
+      "Reclaim space": [
+        ""
       ],
       "Reclaim space from On Demand repositories": [
         "Récupérer l’espace en provenance des référentiels Sur demande"
@@ -5938,13 +6082,13 @@
         "Référentiels recommandés"
       ],
       "Red Hat": [
-        ""
+        "Red Hat"
       ],
       "Red Hat CDN": [
         "Red Hat CDN"
       ],
       "Red Hat CDN URL": [
-        "Red Hat CDN URL"
+        "URL du CDN (« Content Distribution Network », réseau de distribution de contenu) de Red Hat"
       ],
       "Red Hat Repositories": [
         "Référentiels Red Hat"
@@ -5971,7 +6115,7 @@
         "Le fournisseur Red Hat ne peut pas être supprimé"
       ],
       "Red Hat repositories cannot be manipulated.": [
-        "Les référentiels Red Hat ne peuvent pas être manipulés"
+        "Les référentiels Red Hat ne peuvent pas être manipulés."
       ],
       "Refresh": [
         "Réactualiser"
@@ -5989,6 +6133,9 @@
         ""
       ],
       "Refresh all alternate content sources": [
+        "Actualiser toutes les sources de contenu alternatives"
+      ],
+      "Refresh all distributions": [
         ""
       ],
       "Refresh alternate content sources": [
@@ -5998,19 +6145,31 @@
         "Rafraîchir une source de contenu alternative. L'actualisation, comme la synchronisation du référentiel, est nécessaire avant d'utiliser une autre source de contenu."
       ],
       "Refresh applicability": [
-        ""
+        "Actualiser l'applicabilité"
       ],
       "Refresh counts": [
+        "Actualiser le nombre"
+      ],
+      "Refresh distribution": [
         ""
       ],
       "Refresh errata applicability": [
+        "Actualiser l'applicabilité des errata"
+      ],
+      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
-        ""
+        "Actualiser l’applicabilité du package"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Actualiser le fichier manifeste importé précédemment pour le fournisseur de Red Hat"
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         "Source de rafraîchissement"
@@ -6028,7 +6187,7 @@
         "Enregistré"
       ],
       "Registered at": [
-        ""
+        "Enregistré à"
       ],
       "Registered by": [
         "Enregistré par"
@@ -6037,10 +6196,10 @@
         "Enregistré le"
       ],
       "Registered to": [
-        ""
+        "Enregistré par"
       ],
       "Registering to multiple environments is not enabled.": [
-        ""
+        "L'enregistrement à multiples environnements n'est pas activé."
       ],
       "Registration details": [
         "Détails de l'inscription"
@@ -6053,6 +6212,12 @@
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
         "Le modèle de nom de registre entraînera l'invalidation du nom de l'image de conteneur des référentiels membres"
+      ],
+      "Registry token expiration time": [
+        ""
+      ],
+      "Reindex subscriptions": [
+        ""
       ],
       "Related composite content views": [
         "Affichages du contenu composite associé"
@@ -6091,7 +6256,7 @@
         "Recharger les données"
       ],
       "Remote execution is enabled.": [
-        ""
+        "L'exécution à distance est activée."
       ],
       "Remote execution job '${description}' failed.": [
         "La tâche d'exécution à distance '${description}' a échoué."
@@ -6150,6 +6315,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "Supprimer un ou plusieurs abonnements d'un manifeste amont"
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Supprimer un groupe de packages via l'interface Katello"
       ],
@@ -6157,13 +6325,16 @@
         "Supprimer le package via l'interface Katello"
       ],
       "Remove packages": [
-        ""
+        "Supprimer packages"
       ],
       "Remove packages via Katello interface": [
-        "Supprimer le package via l'interface Katello"
+        "Supprimer le paquet via l'interface Katello"
       ],
       "Remove products from sync plan": [
         "Supprimer les produits du plan de sync"
+      ],
+      "Remove rolling repo clone": [
+        ""
       ],
       "Remove subscriptions": [
         "Supprimer les abonnements"
@@ -6172,10 +6343,16 @@
         "Supprimer les abonnements de %s"
       ],
       "Remove subscriptions from a host": [
-        ""
+        "Supprimer les abonnements d'un hôte"
       ],
       "Remove subscriptions from one or more hosts": [
         "Supprimer les abonnements d'un ou plusieurs hôtes"
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Supprimer les versions et/ou les environnements de l'affichage de contenu et assigner les systèmes et les clés à nouveau"
@@ -6190,28 +6367,31 @@
         "Composants supprimés de l'affichage du contenu"
       ],
       "Removing Package Group...": [
-        "Suppression du groupe de packages..."
+        "Suppression du groupe de paquets..."
       ],
       "Removing Package...": [
-        "Suppression du package..."
+        "Suppression du paquet..."
       ],
       "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}": [
-        "Retrait du produit %{prod_name} avec ID %{prod_id} de l'ACS %{acs_name} avec ID %.{acs_id}"
+        "Retrait du produit %{prod_name} avec ID %{prod_id} de l'ACS %{acs_name} avec ID %{acs_id}"
       ],
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "Supprimer cette version de tous les environnement n’aura pas pour effet de supprimer la version. La version sera toujours disponible pour une promotion ultérieure."
       ],
-      "Replace content source on the target machine": [
+      "Repair": [
         ""
       ],
+      "Replace content source on the target machine": [
+        "Remplacer la source de contenu sur la machine cible"
+      ],
       "Repo ID": [
-        ""
+        "ID du référentiel"
       ],
       "Repo Type": [
         "Type de référentiel"
       ],
       "Repo label": [
-        ""
+        "Libellé de référentiel"
       ],
       "Repositories": [
         "Référentiels"
@@ -6219,44 +6399,50 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "Les référentiels ne sont pas disponibles pour l'activation lorsque la configuration du CDN est définie sur Air-gapped (déconnecté)."
       ],
-      "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
+      "Repositories certs reset": [
         ""
+      ],
+      "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
+        "Les référentiels communs aux versions d'affichage de contenu sélectionnées fusionneront, ce qui donnera une vue de contenu composite qui est une union de tout le contenu de chacune des versions d'affichage de contenu."
       ],
       "Repositories from published Content Views are not allowed.": [
         "Les référentiels des affichages de contenu publiés ne sont pas autorisés."
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repository": [
         "Référentiel"
       ],
       "Repository %s cannot be deleted since it has already been included in a published Content View. Use repository details page to delete": [
-        ""
+        "Le référentiel %s ne peut pas être supprimé car il a déjà été inclus dans une vue de contenu publiée. Utilisez la page des détails du référentiel pour supprimer"
       ],
       "Repository %s cannot be deleted since it is the last affected repository in a filter. Use repository details page to delete.": [
-        ""
+        "Le référentiel %s ne peut pas être supprimé car il s'agit du dernier référentiel affecté dans un filtre. Utilisez la page des détails du référentiel pour supprimer."
       ],
       "Repository %{label} failed to synchronize": [
-        ""
+        "Référentiel %{label} n’a pas pu synchroniser"
       ],
       "Repository '%(repoName)s' has been disabled.": [
-        "Le référentiel '%(repoName)s' a été désactivé"
+        "Le référentiel '%(repoName)s' a été désactivé."
       ],
       "Repository '%(repoName)s' has been enabled.": [
         "Le référentiel '%(repoName)s' a été activé."
       ],
       "Repository ID": [
-        ""
+        "ID référentiel"
       ],
       "Repository Id associated with the kickstart repo used for provisioning": [
         "Identifiant de référentiel associé au référentiel de démarrage kickstart utilisée pour le provisionnement"
       ],
       "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it or use --remove-from-content-view-versions flag to automatically remove the repository from all published versions.": [
-        ""
+        "Le référentiel ne peut pas être supprimé car il a déjà été inclus dans une vue de contenu publiée. Veuillez supprimer toutes les versions de Content View contenant ce référentiel avant d'essayer de le supprimer ou utilisez l'indicateur --remove-from-content-view-versions pour supprimer automatiquement le référentiel de toutes les versions publiées."
       ],
       "Repository cannot be disabled since it has already been promoted.": [
         "Le référentiel ne peut pas être désactivé car il a déjà été promu."
       ],
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
-        "Le référentiel a déjà été cloné sur %{cv_name} dans l'environnement %{to_env} "
+        "Le référentiel a déjà été cloné sur %{cv_name} dans l'environnement %{to_env}"
       ],
       "Repository id": [
         "Id de référentiel"
@@ -6268,10 +6454,10 @@
         "Le label de référentiel '%s' n'est pas associé à la vue du contenu."
       ],
       "Repository name": [
-        ""
+        "Nom du référentiel"
       ],
       "Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema.": [
-        ""
+        "Nom du référentiel '%{container_name} ' existe déjà dans ce produit en utilisant un schéma de nommage différent. Veuillez réessayer votre demande avec le%{root_repo_container_push_name} formatez ou détruisez et recréez le référentiel en utilisant votre schéma préféré."
       ],
       "Repository not found": [
         "Référentiel introuvable"
@@ -6280,7 +6466,7 @@
         "Chemin d’accès du référentiel"
       ],
       "Repository set disabled": [
-        "Ensemble de référentiels désactivé."
+        "Ensemble de référentiels désactivé"
       ],
       "Repository set enabled": [
         "Ensemble de référentiels activé"
@@ -6310,13 +6496,13 @@
         "Les ensembles de référentiels apparaîtront ici après avoir activé les référentiels Red Hat ou créé des produits personnalisés."
       ],
       "Repository sets will appear here when the host's content view and environment has available content.": [
-        ""
+        "Les ensembles de référentiels apparaissent ici lorsque la vue de contenu de l'hôte et l'environnement ont un contenu disponible."
       ],
       "Repository sync failure": [
-        ""
+        "Échec de synchronisation du référentiel"
       ],
       "Repository type": [
-        ""
+        "Type de référentiel"
       ],
       "Republish Repositories of %{name} %{version}": [
         "Republier les référentiels de %{name}%{version} "
@@ -6325,10 +6511,10 @@
         "Publier de nouveau les référentiels de version"
       ],
       "Republish repository metadata": [
-        ""
+        "Republier les métadonnées de référentiel"
       ],
       "Requested access to '%s' is denied": [
-        ""
+        "Accès demandé à '%s \\\" est refusé"
       ],
       "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys.": [
         "Nécessite que vous chargiez le subscription-manifest et que vous ré-attachiez les abonnements aux hôtes et aux clés d'activation."
@@ -6340,7 +6526,7 @@
         "Les exigences de yaml doivent avoir une structure de paire clé-valeur."
       ],
       "Requirements yaml should have a 'collections' key": [
-        "Les exigences de yaml doivent avoir une clé 'collections'."
+        "Les exigences de yaml doivent avoir une clé 'collections'"
       ],
       "Requires Virt-Who": [
         "Nécessite Virt-Who"
@@ -6397,7 +6583,7 @@
         "Retourne uniquement les produits Red Hat (non-personnalisés)"
       ],
       "Return a list of installed packages distinct by name": [
-        ""
+        "Renvoie une liste de packages installés distincts par nom"
       ],
       "Return content that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported.": [
         "Retourne le contenu qui peut être ajouté à l'objet spécifié.  Les valeurs \\\"content_view_version\\\" et \\\"content_view_filter\\\" sont supportées."
@@ -6406,13 +6592,13 @@
         "Retourner uniquement les produits personnalisés"
       ],
       "Return deb packages that are applicable to one or more hosts (defaults to true if host_id is specified)": [
-        "Renvoie les packages deb qui sont applicables à un ou plusieurs hôtes (par défaut, true si host_id est spécifié)"
+        "Renvoie les paquets deb qui sont applicables à un ou plusieurs hôtes (par défaut, true si host_id est spécifié)"
       ],
       "Return deb packages that are upgradable on one or more hosts": [
-        "Renvoie les packages qui sont évolutifs sur un ou plusieurs hôtes"
+        "Renvoie les paquets qui sont évolutifs sur un ou plusieurs hôtes"
       ],
       "Return deb packages that can be added to the specified object.  Only the value 'content_view_version' is supported.": [
-        "Renvoie les packages qui peuvent être ajoutés à l'objet spécifié. Seule la valeur \\\"content_view_version\\\" est prise en charge."
+        "Renvoie les paquets qui peuvent être ajoutés à l'objet spécifié. Seule la valeur \\\"content_view_version\\\" est prise en charge."
       ],
       "Return enabled products only": [
         "Retourner uniquement les produits activés"
@@ -6435,11 +6621,11 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         "Retourner uniquement les errata d'une gravité particulière (Aucune, Faible, Modérée, Importante, Critique)"
       ],
-      "Return only errata of a particular type (security, bugfix, enhancement)": [
-        "Renvoie uniquement les errata d'un type particulier (sécurité, correction de bogues, amélioration)."
+      "Return only errata of a particular type (security, bugfix, enhancement, other)": [
+        ""
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
-        "Renvoyer uniquement les packages comportant un statut particulier (upgradable ou up-to-date)"
+        "Renvoie uniquement les paquets comportant un statut particulier (mise à jour possible ou mis à jour)"
       ],
       "Return only subscriptions which can be attached to the upstream allocation": [
         "Ne restituer que les abonnements qui peuvent être rattachés à l'allocation en amont"
@@ -6466,7 +6652,7 @@
         "Retourne des abonnements qui correspondent aux produits installés d'un hôte donné"
       ],
       "Return subscriptions which do not overlap with a currently-attached subscription": [
-        "Retourne les abonnements qui ne se superposent pas avec l'abonnement actuellement attaché."
+        "Retourne les abonnements qui ne se superposent pas avec l'abonnement actuellement attaché"
       ],
       "Return the content of a Content Credential, used directly by yum": [
         "Renvoie le contenu des identifiants de contenu, utilisé directement par yum"
@@ -6481,7 +6667,7 @@
         "Renvoie le contenu qui peut être ajouté et qui est actuellement ajouté à l'objet. La valeur 'content_view_filter' est prise en charge"
       ],
       "Review": [
-        ""
+        "Vérification"
       ],
       "Review affected environment": [
         "Examen de l'environnement affecté"
@@ -6496,13 +6682,13 @@
         ""
       ],
       "Review and then click {submitBtnText}.": [
-        ""
+        "Vérifiez puis cliquez{submitBtnText} ."
       ],
       "Review details": [
         "Détails de la revue"
       ],
       "Review hosts": [
-        ""
+        "Vérification des hôtes"
       ],
       "Review the information below and click ": [
         "Consultez les informations ci-dessous et cliquez dessus "
@@ -6520,10 +6706,10 @@
         "Rôles"
       ],
       "Rollback image": [
-        ""
+        "Rollback image"
       ],
       "Rollback image digest": [
-        ""
+        "Rollback image digest"
       ],
       "Rolling content view": [
         ""
@@ -6538,16 +6724,16 @@
         "Exécuter Plan Sync :"
       ],
       "Run job invocation": [
-        ""
+        "Invocation d'un job d'exécution"
       ],
       "Running": [
         "Exécution en cours"
       ],
       "Running image": [
-        ""
+        "Image en cours d'exécution"
       ],
       "Running image digest": [
-        ""
+        "Résumé d'images en cours d'exécution (digest)"
       ],
       "SKU": [
         "SKU"
@@ -6576,6 +6762,21 @@
       "Save": [
         "Enregistrer"
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "Mise à jour de la source de contenu alternatif..."
       ],
@@ -6583,13 +6784,19 @@
         ""
       ],
       "Scan a flatpak remote": [
+        "Numériser une télécommande Flatpak"
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
         ""
       ],
       "Schema version 1": [
-        ""
+        "Schéma Version 1"
       ],
       "Schema version 2": [
-        ""
+        "Schéma Version 2"
       ],
       "Search": [
         "Recherche"
@@ -6598,7 +6805,7 @@
         "Requête de recherche"
       ],
       "Search available Debian packages": [
-        ""
+        "Rechercher les paquets Debian disponibles"
       ],
       "Search available packages": [
         "Rechercher les paquets disponibles"
@@ -6664,7 +6871,7 @@
         "Sélectionnez une clé client"
       ],
       "Select a content source first": [
-        ""
+        "Sélectionner d'abord une source de contenu"
       ],
       "Select a content view": [
         "Sélectionner un affichage de contenu"
@@ -6676,7 +6883,7 @@
         "Sélectionnez un environnement de cycle de vie et une vue de contenu pour déplacer cet hôte."
       ],
       "Select a lifecycle environment first": [
-        ""
+        "Sélectionnez d'abord un environnement de cycle de vie"
       ],
       "Select a lifecycle environment from the available promotion paths to promote new version.": [
         "Sélectionnez un environnement de cycle de vie parmi les chemins de promotion disponibles pour promouvoir la nouvelle version."
@@ -6688,10 +6895,10 @@
         "Sélectionner un fournisseur pour installer katello-host-tools-tracer"
       ],
       "Select a source": [
-        ""
+        "Sélectionner une source"
       ],
       "Select action": [
-        ""
+        "Choisir l'action"
       ],
       "Select all": [
         "Tout sélectionner"
@@ -6712,16 +6919,16 @@
         "Sélectionner une organisation"
       ],
       "Select at least one erratum.": [
-        ""
+        "Sélectionnez au moins un erratum."
       ],
       "Select at least one package.": [
-        ""
+        "Sélectionnez au moins un package."
       ],
       "Select attributes for ${akDetails.name}": [
-        ""
+        "Sélectionner les attributs pour ${akDetails.name}"
       ],
       "Select available version of ${truncate(cvName)} to use": [
-        ""
+        "Sélectionnez la version disponible de ${truncate(cvName)} à utiliser"
       ],
       "Select available version of content views to use": [
         "Sélectionnez la version disponible des vues de contenu à utiliser"
@@ -6733,10 +6940,10 @@
         "Choisir l'environnement"
       ],
       "Select errata": [
-        ""
+        "Sélectionner les errata"
       ],
       "Select errata to apply on the selected hosts. Some errata may already be applied on some hosts.": [
-        ""
+        "Sélectionnez les errata à appliquer sur les hôtes sélectionnés. Certains errata peuvent déjà être appliqués sur certains hôtes."
       ],
       "Select host collection(s) to associate with host {hostName}.": [
         "Sélectionnez la ou les collections d'hôtes à associer à l'hôte {hostName}."
@@ -6757,16 +6964,16 @@
         "Sélectionnez-en un"
       ],
       "Select packages to install on the selected hosts. Some packages may already be installed on some hosts.": [
-        ""
+        "Sélectionnez les packages à installer sur les hôtes sélectionnés. Certains packages peuvent déjà être installés sur certains hôtes."
       ],
       "Select packages to install to the host {hostName}.": [
         "Sélectionnez les paquets à installer sur l'hôte {hostName}."
       ],
       "Select packages to remove on the selected hosts.": [
-        ""
+        "Sélectionnez les packages à supprimer sur les hôtes sélectionnés."
       ],
       "Select packages to upgrade to the latest version. Packages may have different versions on different hosts.": [
-        ""
+        "Sélectionnez les packages à mettre à niveau vers la dernière version. Les packages peuvent avoir des versions différentes sur différents hôtes."
       ],
       "Select page": [
         "Sélectionner page"
@@ -6793,10 +7000,10 @@
         "Sélectionner le type de source"
       ],
       "Select system purpose attributes for activation key {name}.": [
-        ""
+        "Sélectionnez les attributs d'objectif du système pour la clé d'activation{name} ."
       ],
       "Select system purpose attributes for host {name}.": [
-        ""
+        "Sélectionner les attributs system purpose de l'hôte {name}."
       ],
       "Select the installation media that will be used to provision this host. Choose 'Synced Content' for Synced Kickstart Repositories or 'All Media' for other media.": [
         "Sélectionnez le support d'installation qui sera utilisé pour fournir cet hôte. Choisissez \\\"Contenu synchronisé\\\" pour les référentiels de démarrage synchronisés ou \\\"Tous les médias\\\" pour les autres médias."
@@ -6808,10 +7015,10 @@
         "Environnements sélectionnés"
       ],
       "Selected errata will be applied on {hostCount} hosts": [
-        ""
+        "Les errata sélectionnés seront appliqués sur{hostCount} hôtes"
       ],
       "Selected packages will be {submitAction} on {hostCount} hosts": [
-        ""
+        "Les packages sélectionnés seront{submitAction} sur{hostCount} hôtes"
       ],
       "Sending a list of included IDs is not allowed when all items are being selected.": [
         "L'envoi d'une liste d'identifiants inclus n'est pas autorisé lorsque tous les éléments sont sélectionnés."
@@ -6838,7 +7045,7 @@
         "Définir des priorités de contenu pour un ou plusieurs hôtes"
       ],
       "Set this HTTP proxy as the default content HTTP proxy": [
-        ""
+        "Définir ce proxy HTTP comme proxy HTTP de contenu par défaut"
       ],
       "Set true to override to enabled; Set false to override to disabled.'": [
         "Définissez true pour passer en mode activé ; définissez false pour passer en mode désactivé."
@@ -6862,7 +7069,7 @@
         "Sévérité"
       ],
       "Severity must be one of: %s": [
-        "Une sévérité doit être choisie parmi %s."
+        "Une sévérité doit être choisie parmi %s"
       ],
       "Show %s": [
         "Afficher %s"
@@ -6883,10 +7090,10 @@
         "Afficher un historique d'affichage de contenu"
       ],
       "Show a flatpak remote": [
-        ""
+        "Afficher une télécommande Flatpak"
       ],
       "Show a flatpak remote repository": [
-        ""
+        "Afficher un référentiel distant flatpak"
       ],
       "Show a host collection": [
         "Afficher une collection d'hôte"
@@ -6913,13 +7120,13 @@
         "Tout afficher"
       ],
       "Show all repository sets": [
-        ""
+        "Afficher tous les ensembles de référentiels"
       ],
       "Show an activation key": [
         "Afficher une clé d'activation"
       ],
       "Show an alternate content source.": [
-        "Afficher une autre source de contenu"
+        "Afficher une autre source de contenu."
       ],
       "Show an environment": [
         "Afficher un environnement"
@@ -6937,7 +7144,7 @@
         "Afficher Description complète"
       ],
       "Show hosts associated to an activation key": [
-        ""
+        "Afficher les hôtes associés à une clé d'activation"
       ],
       "Show organization": [
         "Afficher l'organisation"
@@ -6949,16 +7156,16 @@
         "Afficher les versions disponibles pour l'hôte de contenu"
       ],
       "Show repositories": [
-        ""
+        "Afficher les référentiels"
       ],
       "Show repositories enabled on the host that are known to Katello": [
-        "Afficher les référentiels activés sur l'hôte qui sont connus de Katello."
+        "Afficher les référentiels activés sur l'hôte qui sont connus de Katello"
       ],
       "Show the available repository types": [
         "Affiche les types de référentiels disponibles"
       ],
       "Show whether each lifecycle environment is associated with the given Smart Proxy id.": [
-        ""
+        "Indique si chaque environnement de cycle de vie est associé à l'identifiant Smart Proxy donné."
       ],
       "Shows status of Katello system and it's subcomponents": [
         "Afficher le statut du système Katello et ses sous-composants"
@@ -6973,7 +7180,7 @@
         "L'accès au contenu simple a été activé pour '%{subject}'."
       ],
       "Simple Content Access is the only supported content access mode": [
-        ""
+        "L'accès simple au contenu est le seul mode d'accès au contenu pris en charge"
       ],
       "Simplified": [
         "Simplifié"
@@ -6991,19 +7198,19 @@
         "Smart Proxies"
       ],
       "Smart proxy ID": [
-        ""
+        "ID smart proxy"
       ],
       "Smart proxy IDs": [
         "IDs des smart proxies"
       ],
       "Smart proxy content count refresh has started in the background": [
-        ""
+        "L'actualisation du nombre de contenus du proxy intelligent a démarré en arrière-plan"
       ],
       "Smart proxy content source not found!": [
         "La source de contenu du smart proxy n'a pas été trouvée !"
       ],
       "Smart proxy name": [
-        ""
+        "Nom du smart proxy"
       ],
       "Sockets": [
         "Sockets"
@@ -7024,13 +7231,13 @@
         ""
       ],
       "Some environments are disabled because they are not associated with the host's content source.": [
-        ""
+        "Certains environnements sont désactivés parce qu'ils ne sont pas associés à la source de contenu de l'hôte."
       ],
       "Some environments are disabled because they are not associated with the selected content source.": [
-        ""
+        "Certains environnements sont désactivés parce qu'ils ne sont pas associés à la source de contenu sélectionnée."
       ],
       "Some hosts are not registered as content hosts and will be ignored.": [
-        "Les hôtes suivants ne sont pas enregistrés comme hôtes de contenu, ils seront donc ignorés :"
+        "Les hôtes suivants ne sont pas enregistrés comme hôtes de contenu, ils seront donc ignorés."
       ],
       "Some of your inputs contain errors. Please update them and save your changes again.": [
         "Certaines de vos entrées contiennent des erreurs. Veuillez les mettre à jour et enregistrer à nouveau vos modifications."
@@ -7039,76 +7246,76 @@
         "Certains services ne sont pas correctement démarrés. Consultez la page d’accueil pour plus d'informations."
       ],
       "Something went wrong while adding a bookmark: ${getBookmarkErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l'ajout du signet : {getBookmarkErrorMsgs(error.response)} (error.response)}"
+        "Un problème est survenu lors de l'ajout d'un signet : ${getBookmarkErrorMsgs(error.response)}"
       ],
       "Something went wrong while adding a filter rule! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l'ajout d’une règle de filtre ! {getResponseErrorMsgs(error.response)} (error.response)}"
+        "Une erreur s'est produite lors de l'ajout d'une règle de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while adding component! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l'ajout du composant ! {getResponseErrorMsgs(error.response)} (error.response)}"
+        "Une erreur s'est produite lors de l'ajout du composant ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while adding filter rules! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l'ajout des règles de filtres! {getResponseErrorMsgs(error.response)} (error.response)}"
+        "Une erreur s'est produite lors de l'ajout de règles de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while creating the filter! ${getResponseErrorMsgs(error.response)}": [
-        "Quelque chose s'est mal passé lors de la création du filtre !{getResponseErrorMsgs(error.response)} (error.response)}"
+        "Une erreur s'est produite lors de la création du filtre !{getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while deleting alternate content sources: ${getResponseErrorMsgs(error.response)}": [
         "Un problème est survenu lors de la suppression des sources de contenu alternatives : ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while deleting filter rules! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la suppression des règles de filtres ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de la suppression des règles de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while deleting filters! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la suppression des versions ${getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la suppression des filtres ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while deleting this filter! ${getResponseErrorMsgs(error.response)}": [
-        "Quelque chose s'est mal passé lors de la suppression de ce filtre ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de la suppression de ce filtre ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while deleting versions ${getResponseErrorMsgs(error.response)}": [
         "Un problème est survenu lors de la suppression des versions ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while editing a filter rule! ${getResponseErrorMsgs(error.response)}": [
-        "Quelque chose s'est mal passé lors de la modification de ce filtre ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de la modification d'une règle de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while editing the filter! ${getResponseErrorMsgs(error.response)}": [
-        "Quelque chose s'est mal passé lors de la création du filtre !{getResponseErrorMsgs(error.response)} (error.response)}"
+        "Une erreur s'est produite lors de la modification du filtre !{getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while editing version details. ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la modification des détails de la version ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de la modification des détails de la version. ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching ${lowerCase(pluralLabel)}! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de la sélection des hôtes - {lowerCase(pluralLabel)}"
+        "Une erreur s'est produite lors de la récupération de ${lowerCase(pluralLabel)} ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l’extraction des filtres ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de la récupération des fichiers !{getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur est survenue lors de l’extraction des packages rpm {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de la récupération des paquets rpm !{getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting container manifest lists! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "Une erreur s'est produite lors de l'obtention des listes de manifestes de conteneurs ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting container tags! ${getResponseErrorMsgs(error.response)}": [
         "Un problème est survenu lors de l’obtention des balises docker ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting deb packages! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l’extraction des packages deb ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de l'obtention des packages deb ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting errata! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l’apparition des errata ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de l'obtention de l'errata ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting module streams! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l’obtention des flux de modules ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de l'obtention des flux de modules !{getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting repositories! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l’extraction des référentiels ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de l'obtention des référentiels !{getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting the data. See the logs for more information": [
         "Un problème est survenu lors de l'obtention des données. Voir les journaux pour plus d'informations"
       ],
       "Something went wrong while getting version details. ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de l’affichage des détails de la version ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de l'obtention des détails de la version. ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while loading the Smart Proxy. See the logs for more information": [
         "Un problème est survenu lors du chargement du Smart Proxy. Voir les logs pour plus d'informations"
@@ -7120,40 +7327,40 @@
         "Un problème est survenu lors du rafraîchissement des sources de contenu alternatives : "
       ],
       "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "Une erreur s'est produite lors de l'actualisation du contenu : ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while removing a filter rule! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la suppression d’une règle de filtre ! {getResponseErrorMsgs(error.response)} (error.response)}"
+        "Une erreur s'est produite lors de la suppression d'une règle de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while removing component! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la suppression du composant ! {getResponseErrorMsgs(error.response)} (error.response)}"
+        "Une erreur s'est produite lors de la suppression du composant !{getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving package groups! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération des groupes de référentiel ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de la récupération des groupes de packages ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the activation keys! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération des clés d’activation ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Une erreur s'est produite lors de la récupération des clés d'activation ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the container tags! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération des étiquettes de conteneur ! ${getResponseErrorMsgs(error.response)}"
+        "Un problème est survenu lors de la récupération des libéllés de conteneur ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the content view components! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération de l’historique de l’affichage du contenu ! {getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la récupération des composants de la vue de contenu ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the content view filter rules! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération du filtre d'affichage du contenu ! {getResponseErrorMsgs(error.response)}"
+        "Un problème est survenu lors de la récupération du filtre d'affichage du contenu ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération du filtre d'affichage du contenu ! {getResponseErrorMsgs(error.response)}"
+        "Un problème est survenu lors de la récupération du filtre d'affichage du contenu ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the content view filters! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération des filtres d'affichage du contenu ! {getResponseErrorMsgs(error.response)}"
+        "Un problème est survenu lors de la récupération des filtres d'affichage du contenu ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the content view history! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération de l’historique de l’affichage du contenu ! {getResponseErrorMsgs(error.response)}"
+        "Un problème est survenu lors de la récupération de l’historique de l’affichage du contenu ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the content view versions! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération de l’historique de l’affichage du contenu ! {getResponseErrorMsgs(error.response)}"
+        "Un problème est survenu lors de la récupération de l’historique de l’affichage du contenu ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the content! ${getResponseErrorMsgs(error.response)}": [
         "Un problème est survenu lors de la récupération du contenu ! ${getResponseErrorMsgs(error.response)}"
@@ -7162,13 +7369,13 @@
         "Un problème est survenu lors de la récupération des paquets deb ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the errata! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération de l'errata ! {getResponseErrorMsgs(error.response)}"
+        "Un problème est survenu lors de la récupération de l'errata ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
         "Un problème est survenu lors de la récupération des fichiers ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération des hôtes ! {getResponseErrorMsgs(error.response)}(error.response)}"
+        "Un problème est survenu lors de la récupération des fichiers ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the module streams! ${getResponseErrorMsgs(error.response)}": [
         "Quelque chose s'est mal passé lors de la récupération des flux du module ! ${getResponseErrorMsgs(error.response)}"
@@ -7183,7 +7390,7 @@
         "Un problème est survenu lors de la récupération des référentiels ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the repository types! ${getResponseErrorMsgs(error.response)}": [
-        "Un problème est survenu lors de la récupération des types de référentiel ! {getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la récupération des types de référentiels ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while updating the content source. See the logs for more information": [
         "Un problème est survenu lors de la mise à jour de la source de contenu. Voir les journaux pour plus d'informations"
@@ -7216,10 +7423,10 @@
         "Empilage des ID"
       ],
       "Staged image": [
-        ""
+        "Première étape d’image"
       ],
       "Staged image digest": [
-        ""
+        "Résumé d'images de première étape (digest)"
       ],
       "Start Date": [
         "Date de départ"
@@ -7243,7 +7450,7 @@
         "Statut"
       ],
       "Status must be one of: %s": [
-        "La valeur doit être choisie parmi %s."
+        "La valeur doit être choisie parmi %s"
       ],
       "Storage": [
         "Stockage"
@@ -7285,7 +7492,7 @@
         "Manifeste d'abonnement"
       ],
       "Subscription Manifest expiration date check": [
-        ""
+        "Vérification de la date d'expiration du manifeste d'abonnement"
       ],
       "Subscription Manifest validity check": [
         "Contrôle de la validité du manifeste abonnement"
@@ -7342,7 +7549,7 @@
         "Service d'abonnements"
       ],
       "Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}].": [
-        "Discordance de substitution. Impossible de mettre à jour le contenu : (%{content}). De [%{content_url} ] à [{new_url}]."
+        "Discordance de substitution. Impossible de mettre à jour le contenu : (%{content}). De [%{content_url} ] à [%{new_url}]."
       ],
       "Success": [
         "Réussi"
@@ -7381,10 +7588,13 @@
         "Type de pris en charge"
       ],
       "Support ended": [
-        ""
+        "Fin du support"
       ],
       "Supported Content Types": [
         "Types de contenu pris en charge"
+      ],
+      "Sync": [
+        ""
       ],
       "Sync Canceled": [
         "Sync Annulée"
@@ -7405,7 +7615,7 @@
         "Plan de Sync"
       ],
       "Sync Plan: ": [
-        "Plan de Sync : "
+        "Plan de Sync :"
       ],
       "Sync Plans": [
         "Plans de sync"
@@ -7435,10 +7645,13 @@
         "Sync Total Timeout"
       ],
       "Sync a repository": [
-        "Synchroniser un référentiel"
+        "Sync un référentiel"
       ],
       "Sync all repositories for a product": [
         "Synchroniser tous les référentiels d'un produit"
+      ],
+      "Sync capsule": [
+        ""
       ],
       "Sync complete.": [
         "Sync Terminée."
@@ -7458,8 +7671,11 @@
       "Sync state": [
         "État de synchronisation"
       ],
-      "Synced": [
+      "Syncable export": [
         ""
+      ],
+      "Synced": [
+        "Synchronisé"
       ],
       "Synced ": [
         "Synchronisé "
@@ -7507,7 +7723,7 @@
         "Mise à jour des attributs system purpose"
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
-        ""
+        "L'objectif du système vous permet de définir l'utilisation prévue du système sur votre réseau et améliore la précision des rapports dans le service Abonnements de la console Red Hat Hybrid Cloud."
       ],
       "Tag name": [
         "Nom de la balise"
@@ -7519,13 +7735,13 @@
         "Tâche"
       ],
       "Task ${task.humanized.action} completed with a result of ${task.result}. ${task.errors ? getErrors(task) : ''}": [
-        "La tâche ${task.humanized.action} s'est achevée avec un résultat de ${task.result}.{task.errors ? getErrors(task) : ''}"
+        "La tâche ${task.humanized.action} s'est achevée avec un résultat de ${task.result}. ${task.errors ? getErrors(task) : ''}"
       ],
       "Task ${task.humanized.action} has started.": [
         "La tâche ${task.humanized.action} a commencé."
       ],
       "Task ID": [
-        ""
+        "ID Tâche"
       ],
       "Task canceled": [
         "Tâche annulée"
@@ -7534,13 +7750,13 @@
         "Détails de la tâche"
       ],
       "Task details": [
-        ""
+        "Détails de la tâche"
       ],
       "Task result": [
-        ""
+        "Résultat de la tâche"
       ],
       "Task state": [
-        ""
+        "État de la tâche"
       ],
       "Temporary": [
         "Temporaire"
@@ -7552,16 +7768,16 @@
         "Le type de source de contenu alternatif"
       ],
       "The Foreman Client repository is available in the host's content view environment(s). ": [
-        ""
+        "Le référentiel Foreman Client est disponible dans le(s) environnement(s) d'affichage de contenu de l'hôte. "
       ],
       "The Foreman Client repository is enabled. ": [
-        ""
+        "Le référentiel client Foreman est activé. "
       ],
       "The Foreman Client repository is synced. ": [
-        ""
+        "Le référentiel client Foreman est synchronisé. "
       ],
       "The Foreman Client repository set is enabled for the host. ": [
-        ""
+        "L'ensemble de référentiels Foreman Client est activé pour l'hôte. "
       ],
       "The URL to receive a session token from, e.g. used with Automation Hub.": [
         "L'URL à partir de laquelle recevoir un jeton de session, par exemple utilisé avec Automation Hub."
@@ -7573,7 +7789,7 @@
         "Le contenu du fichier"
       ],
       "The amount of latest versions of a package to keep on sync, includes pre-releases if synced. Default 0 keeps all versions.": [
-        ""
+        "Nombre de versions les plus récentes d'un package à conserver en synchronisation, y compris les versions préliminaires si elles sont synchronisées. La valeur par défaut 0 conserve toutes les versions."
       ],
       "The content type for the Alternate Content Source": [
         "Le type de contenu de la source de contenu alternatif"
@@ -7633,10 +7849,10 @@
         "Id de l'environnement du cycle de vie"
       ],
       "The ids of the hosts to alter. Hosts not managed by Katello are ignored": [
-        "Les identifiants des hôtes à modifier. Les hôtes non gérés par Katello sont ignorés."
+        "Les identifiants des hôtes à modifier. Les hôtes non gérés par Katello sont ignorés"
       ],
       "The list of environments to promote the specified Content View Version to (replacing the older version)": [
-        "La liste des environnements vers lesquels promouvoir la version d'affichage de contenu spécifiée (en remplacement de l'ancienne version)."
+        "La liste des environnements vers lesquels promouvoir la version d'affichage de contenu spécifiée (en remplacement de l'ancienne version)"
       ],
       "The manifest doesn't exist on console.redhat.com. Please create and import a new manifest.": [
         "Le manifeste n'existe pas sur console.redhat.com. Veuillez créer et importer un nouveau manifeste."
@@ -7657,10 +7873,10 @@
         "Le nombre maximum de secondes que Pulp peut prendre pour télécharger un fichier, sans compter le temps de connexion."
       ],
       "The maximum number of versions of each package to keep.": [
-        "Le nombre maximum de versions de chaque package à conserver."
+        "Le nombre maximum de versions de chaque paquet à conserver."
       ],
       "The number of days remaining in a subscription before you will be reminded about renewing it. Also used for manifest expiration warnings.": [
-        ""
+        "Nombre de jours restants dans un abonnement avant qu'un rappel ne vous soit adressé pour le renouveler. Également utilisé pour les avertissements d'expiration manifeste."
       ],
       "The number of items fetched from a single paged Pulp API call.": [
         "Le nombre d'éléments récupérés à partir d'un seul appel à l'API Pulp."
@@ -7672,7 +7888,7 @@
         "L'ordre de tri des résultats. ['asc', 'desc'] La valeur par défaut est \\\"desc\\\"."
       ],
       "The organization's manifest does not contain the subscriptions required to enable the following repositories.\\n %{repos}": [
-        "Le manifeste de l'organisation ne contient pas les abonnements nécessaires pour activer les référentiels suivants.\\n %%{repos}"
+        "Le manifeste de l'organisation ne contient pas les abonnements nécessaires pour activer les référentiels suivants.\\n %{repos}"
       ],
       "The page you are attempting to access requires selecting a specific organization.": [
         "La page à laquelle vous tentez d'accéder nécessite la sélection d'une organisation spécifique."
@@ -7684,7 +7900,10 @@
         "La promotion du %{content_view} à %{environment} a terminé. %{count} errata sont à la disposition de vos hôtes."
       ],
       "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts.": [
-        "La promotion de {content_view} à <b> %{environment}</b> est terminée. Les %{count}errata nécessaires sont installables sur vos hôtes."
+        "La promotion de %{content_view} à <b> %{environment}</b> est terminée. Les %{count}errata nécessaires sont installables sur vos hôtes."
+      ],
+      "The provided incremental export format '%{provided}' must match the previous export's format '%{previous}'. Consider using 'from_history_id' to point to a matching export.": [
+        ""
       ],
       "The repository is already enabled": [
         "Le référentiel est déjà activé"
@@ -7708,7 +7927,7 @@
         "Le référentiel kickstart sélectionné ne fait pas partie de la vue de contenu assignée, de l’environnement de cycle de vie, de la source de contenu, du système d'exploitation ou de l'architecture"
       ],
       "The selected lifecycle environment contains no activation keys": [
-        ""
+        "L'environnement de cycle de vie sélectionné ne contient aucune clé d'activation"
       ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
         "L’affichage de contenu sélectionné/hérité n’est pas disponible pour cet environnement de cycle de vie"
@@ -7735,7 +7954,7 @@
         "Le type de contenu à télécharger (srpm, fichier, etc.). Vérifiez les types téléchargeables ici : /katello/api/repositories/repository_types"
       ],
       "The value will be available in templates as @host.params['kt_activation_keys']": [
-        ""
+        "La valeur sera disponible dans les modèles sous la forme @host.params['kt_activation_keys']"
       ],
       "There are no Manifests to display": [
         "Il n'y a aucun manifeste à afficher"
@@ -7750,7 +7969,7 @@
         "Il n'y a pas de collections d'hôtes disponibles à ajouter."
       ],
       "There are no products or repositories enabled. Try enabling via %{custom} or %{redhat}.": [
-        "Aucun produit ou référentiel n'est activé. Essayez d'activer via %{custom} ou %{redhat} "
+        "Aucun produit ou référentiel n'est activé. Essayez d'activer via %{custom} ou %{redhat}."
       ],
       "There are {numberOfActivationKeys} activation keys that need to be reassigned.": [
         "Il y a {numberOfActivationKeys} clés d'activation qui doivent être réaffectées."
@@ -7765,7 +7984,7 @@
         "Il n'y a pas de contenu téléchargé à nettoyer."
       ],
       "There is no manifest history to display.": [
-        ""
+        "Il n'y a pas d'historique manifeste à afficher."
       ],
       "There is no such HTTP proxy": [
         "Il n'existe pas de proxy HTTP de ce type"
@@ -7804,10 +8023,10 @@
         "Le manifeste de souscription de cette organisation a expiré. Veuillez importer un nouveau manifeste."
       ],
       "This action doesn't support package groups": [
-        "Cette action de prend pas en charge les groupes de packages"
+        "Cette action de prend pas en charge les groupes de paquets"
       ],
       "This action should only be taken for debugging purposes.": [
-        ""
+        "Cette action ne doit être effectuée qu'à des fins de débogage."
       ],
       "This action should only be taken in extreme circumstances or for debugging purposes.": [
         "Cette action doit être prise uniquement dans des circonstances extrêmes ou à des fins de débogage."
@@ -7825,7 +8044,7 @@
         "Cette version de la vue du contenu n'a pas d'historique."
       ],
       "This content view version is used in one or more multi-environment hosts. The version will simply be removed from the multi-environment hosts. The content view and lifecycle environment you select here will only apply to single-environment hosts. See hammer activation-key --help for more details.": [
-        ""
+        "Cette version d'affichage de contenu est utilisée dans un ou plusieurs hôtes multi-environnements. La version sera simplement supprimée des hôtes multi-environnements. L'affichage de contenu et l'environnement de cycle de vie que vous sélectionnez ici s'appliqueront uniquement aux hôtes à environnement unique. Voir hammer activation-key --help pour plus de détails."
       ],
       "This content view will be automatically updated to the latest version.": [
         "Cet affichage de contenu sera automatiquement mis à jour à la dernière version."
@@ -7834,13 +8053,13 @@
         "Cet affichage de contenu va être supprimé. Les changements seront applicables une fois que vous aurez saisi la touche Supprimer."
       ],
       "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode.": [
-        ""
+        "Ce point de terminaison est obsolète et sera supprimé dans une prochaine version. L'accès simple au contenu est le seul mode d'accès au contenu pris en charge."
       ],
       "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
-        ""
+        "Ce point de terminaison est principalement conçu pour les interactions avec l'interface utilisateur et le téléchargement de contenu dans le référentiel. Pour les téléchargements basés sur l'API, utilisez plutôt le point de terminaison « content_uploads »."
       ],
       "This environment is used in one or more multi-environment activation keys. The environment will simply be removed from the multi-environment keys. The content view and lifecycle environment you select here will only apply to single-environment activation keys. See hammer activation-key --help for more details.": [
-        ""
+        "Cet environnement est utilisé dans une ou plusieurs clés d'activation multi-environnement. L'environnement sera simplement supprimé des clés multi-environnement. L'affichage du contenu et l'environnement de cycle de vie que vous sélectionnez ici s'appliqueront uniquement aux clés d'activation à environnement unique. Voir hammer activation-key --help pour plus de détails."
       ],
       "This erratum is not installable because it is not in this host's assigned content view environments.": [
         ""
@@ -7852,10 +8071,10 @@
         "Cet hôte n’a pas d’errata installable."
       ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
-        ""
+        "Cet hôte a des errata qui sont applicables, mais non installables. Ajustez vos filtres et réessayez."
       ],
       "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
-        ""
+        "Cet hôte est associé à plusieurs environnements d'affichage de contenu. Si vous attribuez un environnement de cycle de vie et un affichage de contenu ici, l'hôte sera supprimé des autres environnements."
       ],
       "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.": [
         "L'organisation de cet hôte est en mode d'accès simple au contenu. L'ajout d'abonnements est désactivé."
@@ -7885,7 +8104,7 @@
         "Il ne s'agit pas d'un référentiel associé"
       ],
       "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        ""
+        "Cette page affiche les abonnements disponibles à partir du manifeste d'abonnement de cette organisation.{br} Apprenez-en davantage sur l'utilisation globale de votre abonnement avec le{subscriptionsService}."
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
         "Ce référentiel n'est pas suggéré. Veuillez consulter la %(anchorBegin)sdocumentation%(anchorEnd)s supplémentaire avant l'utilisation."
@@ -7918,13 +8137,16 @@
         "Cela créera une copie de {cv}, y compris les détails, les référentiels et les filtres. Les données générées telles que l'historique, les tâches et les versions ne seront pas copiées."
       ],
       "This will update the content view environments for {hosts}.": [
-        ""
+        "Cela mettra à jour les environnements d'affichage de contenu pour{hosts} ."
       ],
       "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned.": [
+        "Temps en minutes avant que le contenu qui n'est pas contenu dans un référentiel et n'a pas été consulté soit considéré comme orphelin."
+      ],
+      "Time in minutes before registry access tokens expire.": [
         ""
       ],
       "Time to expire yum metadata in seconds. Only relevant for custom yum repositories.": [
-        ""
+        "Délai d'expiration des métadonnées yum en secondes. Ne concerne que les référentiels yum personnalisés."
       ],
       "Timeout when refreshing a manifest (in seconds)": [
         "Délai d'attente pour le rafraîchissement d'un manifeste (en secondes)"
@@ -7936,40 +8158,43 @@
         "Titre"
       ],
       "To change content view environments, a specific organization must be selected from the organization context.": [
-        ""
+        "Pour modifier les environnements d'affichage de contenu, une organisation spécifique doit être sélectionnée dans le contexte de l'organisation."
       ],
       "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system.": [
-        ""
+        "Pour activer l'option de contenu synchronisé, cet hôte doit utiliser une source de contenu, une vue de contenu et un environnement de cycle de vie qui contiennent des référentiels Kickstart synchronisés pour l'architecture et le système d'exploitation sélectionnés."
       ],
       "To enable them, add the environment to the content source, or select a different content source.": [
-        ""
+        "Pour les activer, ajoutez l'environnement à la source de contenu ou sélectionnez une autre source de contenu."
       ],
       "To enable them, add the environment to the host's content source, or ": [
-        ""
+        "Pour les activer, ajoutez l'environnement à la source de contenu de l'hôte, ou "
       ],
       "To finish the process of changing the content source, run the following script manually on {hosts}.": [
-        ""
+        "Pour terminer le processus de modification de la source de contenu, exécutez manuellement le script suivant sur{hosts} ."
       ],
       "To get started, add a filter rule to this filter": [
-        ""
+        "Pour commencer, ajoutez une règle de filtrage à ce filtre"
       ],
       "To get started, add this host to a host collection.": [
         "Pour commencer, ajoutez cet hôte à une collection d'hôtes."
       ],
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
-        ""
+        "Pour inclure ou exclure un contenu spécifique de l’affichage de contenu, créez un filtre. Sans filtre, l’affichage de contenu inclut tout ce qui provient des référentiels ajoutés."
       ],
       "To manage host content overrides, a specific organization must be selected from the organization context.": [
         ""
       ],
       "To manage host packages, a specific organization must be selected from the organization context.": [
-        ""
+        "Pour gérer les packages hôtes, une organisation spécifique doit être sélectionnée dans le contexte de l'organisation."
       ],
       "To manage packages, select an action.": [
+        "Pour gérer les packages, sélectionnez une action."
+      ],
+      "Toggle": [
         ""
       ],
       "Token/password for the flatpak remote": [
-        ""
+        "Jeton/mot de passe pour la télécommande flatpak"
       ],
       "Total steps: ": [
         "Total des étapes : "
@@ -8035,7 +8260,7 @@
         "Type"
       ],
       "Type must be one of: %s": [
-        "Une valeur doit être choisie parmi %s."
+        "Une valeur doit être choisie parmi %s"
       ],
       "Type of content": [
         "Type de contenu"
@@ -8062,7 +8287,7 @@
         "URL d’une source de contenu PyPI telle que https://pypi.org."
       ],
       "URL of an OSTree repository.": [
-        "URL d’un référentiel OSTree"
+        "URL d’un référentiel OSTree."
       ],
       "URL:": [
         ""
@@ -8092,7 +8317,7 @@
         "Impossible de se connecter. Obtenu: %s"
       ],
       "Unable to create ContentViewEnvironment. Check the logs for more information.": [
-        ""
+        "Impossible de créer ContentViewEnvironment. Vérifier les journaux pour plus d'informations."
       ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         "Impossible de supprimer une source de contenu alternative. Soit vous n'avez pas l'autorisation de supprimer, soit aucune des sources de contenu alternatives n'existe."
@@ -8102,6 +8327,12 @@
       ],
       "Unable to detect puppet path": [
         "Impossible de détecter le chemin d’accès Pulp"
+      ],
+      "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
+        ""
+      ],
+      "Unable to find a base content view to use for incremental export. Please run a complete export instead.": [
+        ""
       ],
       "Unable to find a content view with ID %s": [
         ""
@@ -8118,12 +8349,6 @@
       "Unable to import in to Content View specified in the metadata - '%{name}'. The 'import_only' attribute for the content view is set to false. To mark this Content View as importable, have your system administrator run the following command on the server. ": [
         "Impossible d'importer dans la vue du contenu spécifiée dans les métadonnées - '%{name}'. L'attribut 'import_only' de la vue de contenu est défini sur false. Pour marquer cette vue de contenu comme importable, demandez à votre administrateur système d'exécuter la commande suivante sur le serveur. "
       ],
-      "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment.": [
-        "Impossible d'exporter de manière incrémentielle. Effectuez une exportation complète du contenu de la bibliothèque avant d'effectuer la mise à jour à partir du dernier incrément."
-      ],
-      "Unable to incrementally export. Do a Full Export on the repository content.": [
-        "Impossible d'exporter de manière incrémentielle. Faites une exportation complète du contenu du référentiel."
-      ],
       "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.": [
         "Impossible de réassigner des activation_keys. Veuillez vérifier activation_key_content_view_id et activation_key_environment_id."
       ],
@@ -8137,7 +8362,7 @@
         "Impossible de réassigner des systèmes. Veuillez vérifier system_content_view_id et system_environment_id."
       ],
       "Unable to refresh any alternate content source. You either do not have the permission to refresh, or no alternate content sources exist.": [
-        ""
+        "Impossible d'actualiser une source de contenu alternative. Soit vous n'avez pas l'autorisation d'actualiser, soit aucune source de contenu alternative n'existe."
       ],
       "Unable to refresh any alternate content source. You either do not have the permission to refresh, or none of the alternate content sources exist.": [
         "Impossible d'actualiser une source de contenu alternative. Soit vous n'avez pas l'autorisation d'actualiser, soit aucune des sources de contenu alternatives n'existe."
@@ -8152,7 +8377,7 @@
         "Impossible de sync le référentiel. Ce référentiel ne possède pas d'url de flux."
       ],
       "Unable to sync repo. This repository is not a library instance repository.": [
-        ""
+        "Impossible de synchroniser le référentiel. Ce référentiel n'est pas un référentiel d'instance de bibliothèque."
       ],
       "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url.": [
         "Impossible de synchroniser un référentiel. Vous ne possédez pas de permission pour synchroniser ou les référentiels sélectionnés ne contiennent pas un url de flux."
@@ -8189,6 +8414,12 @@
       ],
       "Unknown errata status": [
         "Statut d'errata inconnu"
+      ],
+      "Unknown library export format '%s'.": [
+        ""
+      ],
+      "Unknown repository export format '%s'.": [
+        ""
       ],
       "Unknown traces status": [
         "Statut des traces inconnues"
@@ -8227,7 +8458,7 @@
         "Mise à jour de la configuration CDN"
       ],
       "Update Content Counts": [
-        ""
+        "Mettre à jour le nombre de contenus"
       ],
       "Update Content Overrides": [
         "Mettre à jour les substitutions de contenu"
@@ -8254,7 +8485,7 @@
         "Mettre à jour une règle de filtre. Les paramètres inclus doivent se baser sur le type de filtre."
       ],
       "Update a flatpak remote": [
-        ""
+        "Mettre à jour une télécommande flatpak"
       ],
       "Update a host collection": [
         "Mettre à jour une collection d'hôte"
@@ -8269,7 +8500,7 @@
         "Mettre à jour une clé d'activation"
       ],
       "Update an alternate content source.": [
-        "Mettre à jour une autre source de contenu"
+        "Mettre à jour une autre source de contenu."
       ],
       "Update an environment": [
         "Mettre à jour un environnement"
@@ -8278,15 +8509,27 @@
         "Mettre à jour un environnement dans une organisation"
       ],
       "Update content counts for the smart proxy": [
+        "Mettre à jour le nombre de contenus pour le proxy intelligent"
+      ],
+      "Update content urls": [
         ""
       ],
       "Update content view environments for host": [
-        ""
+        "Mettre à jour les environnements d'affichage de contenu pour l'hôte"
       ],
       "Update content view environments for host %s": [
+        "Mettre à jour les environnements d'affichage de contenu pour l'hôte %s"
+      ],
+      "Update distributions": [
         ""
       ],
       "Update hosts manually": [
+        "Mettre à jour les hôtes manuellement"
+      ],
+      "Update http proxy": [
+        ""
+      ],
+      "Update http proxy details": [
         ""
       ],
       "Update installed packages, enabled repos, module inventory": [
@@ -8302,13 +8545,22 @@
         "Mise à jour du package via l'interface Katello"
       ],
       "Update packages via Katello interface": [
-        "Mise à jour du package via l'interface Katello"
+        "Mise à jour du paquet via l'interface Katello"
+      ],
+      "Update redhat repository": [
+        ""
       ],
       "Update release version for host": [
         "Mettre à jour la version de publication pour l'hôte"
       ],
       "Update release version for host %s": [
         "Mettre à jour la version de publication pour l'hôte %s"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "Mise à jour des services nécessitant un redémarrage"
@@ -8323,7 +8575,7 @@
         "Mettre à jour la source de contenu pour les hôtes spécifiés et générer le script de reconfiguration"
       ],
       "Update the host immediately via remote execution": [
-        ""
+        "Mise à jour immédiate de l'hôte par exécution à distance"
       ],
       "Update the information about enabled repositories": [
         "Mettre à jour les informations sur les référentiels activés"
@@ -8350,13 +8602,13 @@
         "Met à jour un produit"
       ],
       "Updates available: Component content view versions have been updated.": [
-        ""
+        "Mises à jour disponibles : les versions de l'affichage du contenu des composants ont été mises à jour."
       ],
       "Updates available: Repositories and/or filters have changed.": [
-        ""
+        "Mises à jour disponibles : Les référentiels et/ou les filtres ont changé."
       ],
       "Updating Package...": [
-        "Mise à jour de packages..."
+        "Mise à jour de paquets..."
       ],
       "Updating System Purpose for host": [
         "Mise à jour Objectif système pour l'hôte"
@@ -8365,7 +8617,7 @@
         "Mise à jour Objectif système pour l'hôte %s"
       ],
       "Updating package group...": [
-        "Mise à jour du groupe de packages..."
+        "Mise à jour du groupe de paquets..."
       ],
       "Updating repository authentication configuration": [
         "Mise à jour de la configuration d'authentification du référentiel"
@@ -8380,10 +8632,10 @@
         "Mettre à niveau"
       ],
       "Upgrade all packages": [
-        ""
+        "Mise à jour de tous les paquets"
       ],
       "Upgrade packages": [
-        ""
+        "Mis à niveau des packages"
       ],
       "Upgrade via customized remote execution": [
         "Mettre à niveau via exécution à distance personnalisée"
@@ -8400,14 +8652,23 @@
       "Upload a subscription manifest": [
         "Télécharger un fichier manifeste d'abonnement"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "Téléverser vers"
       ],
       "Upload package / repos profile": [
-        ""
+        "Télécharger le profil du package/repository"
       ],
       "Upload request id": [
         "Télécharger l'id de requête"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "Chandelle en amont"
@@ -8422,7 +8683,7 @@
         "Le nom en amont ne peut pas être vide lorsque l'URL du référentiel est fournie."
       ],
       "Upstream authentication token string for yum repositories.": [
-        ""
+        "Chaîne de jeton d'authentification en amont pour les référentiels yum."
       ],
       "Upstream foreman server to sync CDN content from. Relevant only for 'upstream_server' type.": [
         "Serveur foreman en amont pour synchroniser le contenu CDN. Pertinent uniquement pour le type 'upstream_server'."
@@ -8449,7 +8710,7 @@
         "Le nom d'utilisateur et le mot de passe en amont ne peuvent être définis que sur des référentiels personnalisés."
       ],
       "Upstream username and upstream password cannot be blank for ULN repositories": [
-        "Le nom d'utilisateur et le mot de passe en amont ne peuvent être vides pour les ULN personnalisés."
+        "Le nom d'utilisateur et le mot de passe en amont ne peuvent être vides pour les ULN personnalisés"
       ],
       "Upstream username requires upstream password be set.": [
         "Le nom d'utilisateur en amont exige que le mot de passe en amont soit défini."
@@ -8485,13 +8746,13 @@
         "L'utilisateur '%s' n'a pas spécifié un ID d'organisation et ne possède pas d'organisation par défaut."
       ],
       "User '%{user}' does not belong to Organization '%{organization}'.": [
-        "L'utilisateur  '%{user}' n'appartient pas à l'organisation '%{organization}'."
+        "L'utilisateur '%{user}' n'appartient pas à l'organisation '%{organization}'."
       ],
       "User IDs": [
         "ID des utilisateurs"
       ],
       "User must be logged in.": [
-        "L'utilisateur doit être connecté"
+        "L'utilisateur doit être connecté."
       ],
       "Username": [
         "Nom d'utilisateur"
@@ -8500,7 +8761,7 @@
         "Nom d'utilisateur pour l'authentification. Pertinent uniquement pour le type 'upstream_server'."
       ],
       "Username for the flatpak remote": [
-        ""
+        "Nom d'utilisateur pour la télécommande flatpak"
       ],
       "Username of the upstream repository user used for authentication": [
         "Nom d'utilisateur de l'utilisateur du référentiel en amont utilisé pour l'authentification"
@@ -8509,16 +8770,16 @@
         "Nom d'utilisateur pour accéder à l'URL"
       ],
       "Username, Password, Organization Label, and SSL CA Content Credential must be provided together.": [
-        "Le nom d'utilisateur, le mot de passe, le label de l'organisation et le justificatif de contenu de l'autorité de certification SSL doivent être fournis ensemble"
+        "Le nom d'utilisateur, le mot de passe, le label de l'organisation et le justificatif de contenu de l'autorité de certification SSL doivent être fournis ensemble."
       ],
       "Username, Password, Upstream Organization Label, and SSL CA Credential are required when using an upstream Foreman server.": [
         "Le nom d'utilisateur, le mot de passe, le label de l'organisation en amont et l'accréditation de l'autorité de certification SSL sont requis lorsque vous utilisez un serveur Foreman en amont."
       ],
       "Validate host/lifecycle environment/content source coherence": [
-        ""
+        "Valider la cohérence entre l'hôte, l'environnement du cycle de vie et la source de contenu"
       ],
       "Validate that a host's assigned lifecycle environment is synced by the smart proxy from which the host will get its content. Applies only to API requests; does not affect web UI checks": [
-        ""
+        "Validez que l'environnement de cycle de vie attribué à un hôte est synchronisé par le proxy intelligent à partir duquel l'hôte obtiendra son contenu. S'applique uniquement aux requêtes API ; n'affecte pas les vérifications de l'interface utilisateur Web"
       ],
       "Value must either be a boolean or 'default' for 'enabled'": [
         "La valeur doit être soit un booléen, soit la valeur par défaut de \\\"enabled\\\""
@@ -8526,23 +8787,26 @@
       "Verify SSL": [
         "Vérifier SSL"
       ],
-      "Verify checksum for content on smart proxy": [
+      "Verify checksum": [
         ""
+      ],
+      "Verify checksum for content on smart proxy": [
+        "Vérifier la somme de contrôle du contenu sur le proxy intelligent"
       ],
       "Verify checksum for one or more products": [
         "Vérifier la somme de contrôle pour un ou plusieurs produits"
       ],
       "Verify checksum of repositories in %{name} %{version}": [
-        ""
+        "Vérifier la somme de contrôle des référentiels dans %{name} %{version}"
       ],
       "Verify checksum of repository contents": [
         "Vérifier la somme de contrôle des contenus de référentiel"
       ],
       "Verify checksum of repository contents in the content view version": [
-        ""
+        "Vérifier la somme de contrôle du contenu du référentiel dans la version d'affichage du contenu"
       ],
       "Verify checksum of version repositories": [
-        ""
+        "Vérifier la somme de contrôle des référentiels de versions"
       ],
       "Version": [
         "Version"
@@ -8551,16 +8815,16 @@
         "Version "
       ],
       "Version ${item.version}": [
-        "Version"
+        "Version ${item.version}"
       ],
       "Version ${version.version}": [
-        "Version"
+        "Version ${version.version}"
       ],
       "Version ${versionNameToRemove} will be deleted from all environments. It will no longer be available for promotion.": [
         "Version {versionNameToRemove} sera supprimée de tous les environnements. Ne seront plus disponibles pour la promotion."
       ],
       "Version ${versionNameToRemove} will be deleted from the listed environments. It will no longer be available for promotion.": [
-        "Version {versionNameToRemove} sera supprimée des environnement listés. Ne seront plus disponibles pour la promotion."
+        "Version ${versionNameToRemove} sera supprimé des environnements répertoriés. Il ne sera plus disponible pour la promotion."
       ],
       "Version ${versionOne}": [
         "Version ${versionOne}"
@@ -8593,7 +8857,7 @@
         "L'affichage %{view} n’a pas été promu à %{env} "
       ],
       "View Filters": [
-        ""
+        "Voir les filtres"
       ],
       "View Subscription Usage": [
         "Afficher l'utilisation de l'abonnement"
@@ -8602,25 +8866,25 @@
         "Voir un rapport sur les hôtes concernés"
       ],
       "View applicable errata": [
-        ""
+        "Voir l'errata applicable"
       ],
       "View by": [
         "Afficher par"
       ],
       "View content views": [
-        ""
+        "Afficher les vues de contenu"
       ],
       "View details": [
         ""
       ],
       "View documentation": [
-        ""
+        "Voir la documentation"
       ],
       "View matching content": [
         "Afficher le contenu correspondant"
       ],
       "View sync status": [
-        ""
+        "Afficher l'état de synchronisation"
       ],
       "View tasks ": [
         "Voir les tâches "
@@ -8641,7 +8905,7 @@
         "Hôte virtuel"
       ],
       "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
+        "AVERTISSEMENT : un accès simple au contenu sera requis pour toutes les organisations dans Katello 4.12."
       ],
       "Waiting to start.": [
         "Attente de démarrage."
@@ -8665,7 +8929,7 @@
         "Lorsque vous dés-enregistrez un hôte via le gestionnaire d'abonnement, supprimez également l'enregistrement de l'hôte. Les ressources gérées liées à l'hôte, telles que les machines virtuelles et les enregistrements DNS, peuvent également être supprimés."
       ],
       "Whether or not the host collection may have unlimited hosts": [
-        "Que la collection d'hôte possède des hôtes illimités ou non."
+        "Que la collection d'hôte possède des hôtes illimités ou non"
       ],
       "Whether or not to auto sync the Smart Proxies after a content view promotion.": [
         "La synchronisation automatique ou non des proxys smart après une promotion d’affichage de contenu."
@@ -8677,7 +8941,7 @@
         "La régénération ou non du référentiel sur disque. Valeur par défaut : true"
       ],
       "Whether or not to return filters applied to the content view version": [
-        ""
+        "Retour ou non des filtres appliqués à la version de l'affichage du contenu"
       ],
       "Whether or not to show all results": [
         "Afficher tous les résultats ou pas"
@@ -8710,7 +8974,7 @@
         "Vous ne pouvez vérifier le statut de synchronisation pour les référentiels que dans l'environnement de cycle de vie de la bibliothèque."
       ],
       "You cannot have more than %{max_hosts} host(s) associated with host collection '%{host_collection}'.": [
-        "\\\"Vous ne pouvez pas posséder plus de{max_hosts} hôte(s) associés à la collection d'hôte '%{host_collection} '."
+        "\\\"Vous ne pouvez pas posséder plus de %{max_hosts} hôte(s) associés à la collection d'hôte '%{host_collection} '."
       ],
       "You cannot set an organization's parent. This feature is disabled.": [
         "Vous ne pouvez pas définir un parent d'organisation . Cette fonctionnalité est désactivée."
@@ -8719,13 +8983,13 @@
         "Vous ne pouvez pas définir un id de parent d'organisation . Cette fonctionnalité est désactivée."
       ],
       "You currently don't have any ${selectedContentType}.": [
-        "Vous n'avez actuellement aucun {selectedContentType}."
+        "Vous n'avez actuellement aucun ${selectedContentType} ."
       ],
       "You currently don't have any alternate content sources.": [
         "Vous n'avez pas actuellement de sources de contenu alternatives."
       ],
       "You currently don't have any related content views.": [
-        ""
+        "Vous n'avez actuellement aucun affichage de contenu associé."
       ],
       "You currently don't have any repositories associated with this content.": [
         "Vous n'avez actuellement aucun référentiel associé à ce contenu."
@@ -8734,7 +8998,7 @@
         "Vous n'avez actuellement aucun référentiel à ajouter à ce filtre."
       ],
       "You currently have no content views to display": [
-        ""
+        "Vous n'avez actuellement aucune vue de contenu à afficher"
       ],
       "You do not have permissions to delete %s": [
         "Vous ne disposez pas des droits nécessaires pour supprimer %s"
@@ -8749,7 +9013,7 @@
         "Vous avez des modifications non sauvegardées. Voulez-vous sortir sans sauvegarder vos modifications ?"
       ],
       "You must select at least one host.": [
-        ""
+        "Veuillez sélectionner au moins un hôte."
       ],
       "You were not allowed to add %s": [
         "Vous n'êtes pas autorisé à ajouter %s"
@@ -8764,16 +9028,16 @@
         "Vous n'êtes pas autorisé à sync %s"
       ],
       "You're making changes to %(entitlementCount)s entitlement(s)": [
-        "Vous apportez des modifications à %(entitlementCount)s droits d’accès."
+        "Vous apportez des modifications à %(entitlementCount)s droits d’accès"
       ],
       "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.": [
-        ""
+        "Votre manifeste a expiré le{expirationDate}. Pour continuer à utiliser le contenu Red Hat, importez un nouveau manifeste."
       ],
       "Your manifest has expired. To continue using Red Hat content, import a new manifest.": [
-        ""
+        "Votre manifeste a expiré. Pour continuer à utiliser le contenu Red Hat, importez un nouveau manifeste."
       ],
       "Your manifest will expire in {daysMessage}. To extend the expiration date, refresh your manifest. Or, if your Foreman is disconnected, import a new manifest.": [
-        ""
+        "Votre manifeste expirera dans{daysMessage} Pour prolonger la date d'expiration, actualisez votre manifeste. Ou, si votre Foreman est déconnecté, importez un nouveau manifeste."
       ],
       "Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.": [
         "Votre requête de recherche n'était pas valide. Veuillez la réviser et réessayer. L'erreur complète a été envoyée aux journaux des applications."
@@ -8797,7 +9061,7 @@
         "Votre recherche n’a renvoyé aucun hôte."
       ],
       "Your search returned no matching non-modular RPMs.": [
-        ""
+        "Votre recherche n'a renvoyé aucun RPM non modulaire correspondant."
       ],
       "Yum": [
         "Yum"
@@ -8809,7 +9073,7 @@
         "une URL CDN personnalisée"
       ],
       "a deb package": [
-        "Package Deb"
+        "paquet Deb"
       ],
       "a docker manifest": [
         "un manifeste de docker"
@@ -8827,16 +9091,16 @@
         "un flux de module"
       ],
       "a package": [
-        "un package"
+        "un paquet"
       ],
       "a package group": [
-        "un groupe de package"
+        "un groupe de paquet"
       ],
       "actions not found": [
         "actions non trouvées"
       ],
       "activation key": [
-        ""
+        "clé d'activation"
       ],
       "activation key identifier": [
         "identifiant de la clé d'activation"
@@ -8848,22 +9112,22 @@
         "clés d'activation"
       ],
       "add all module streams without errata to the included/excluded list. (module stream filter only)": [
-        "ajouter tous les flux de modules sans errata à la liste incluse/exclue. (filtre de package uniquement)."
+        "ajouter tous les flux de modules sans errata à la liste incluse/exclue. (filtre de package uniquement)"
       ],
       "add all packages without errata to the included/excluded list. (package filter only)": [
-        "ajouter tous les packages sans errata à la liste incluse/exclue. (filtre de package uniquement)."
+        "ajouter tous les packages sans errata à la liste incluse/exclue. (filtre de package uniquement)"
       ],
       "all environments": [
         "Tous les environnements"
       ],
       "all packages": [
-        "tous les packages"
+        "tous les paquets"
       ],
       "all packages update": [
-        "mise à jour de tous les packages"
+        "mise à jour de tous les paquets"
       ],
       "all packages update failed": [
-        "échec de la mise à jour de tous les packages"
+        "échec de la mise à jour de tous les paquets"
       ],
       "allow unauthenticed pull of container images": [
         "permettre l’extraction non authentifiée d'images de conteneurs"
@@ -8890,7 +9154,7 @@
         ""
       ],
       "attempted to sync a non-library repository.": [
-        ""
+        "a tenté de synchroniser un référentiel autre qu'une bibliothèque."
       ],
       "attempted to sync without a feed URL": [
         "a tenté de sync sans URL de flux"
@@ -8899,13 +9163,13 @@
         "joindre automatiquement les abonnements lors de l'enregistrement"
       ],
       "base url to perform repo discovery on": [
-        "url de base sur lequel effectuer la découverte de référentiel  "
+        "url de base sur lequel effectuer la détection de référentiel  "
       ],
       "bug fix": [
-        ""
+        "correction de bogue"
       ],
       "bug fixes": [
-        ""
+        "corrections de bogues"
       ],
       "bulk add filter rules": [
         "bulk - ajouter règles de filtre"
@@ -8953,7 +9217,7 @@
         "ne peut pas être fixé parce que le nombre d'hôtes est illimité"
       ],
       "cannot be set for repositories without 'Additive' mirroring policy.": [
-        ""
+        "ne peut pas être défini pour les référentiels sans politique de mise en miroir « Additive »."
       ],
       "cannot contain characters other than ascii alpha numerals, '_', '-'. ": [
         "ne peut pas contenir de caractères autres que des alphanumériques ASCII, '_' ou '-'. "
@@ -8971,7 +9235,7 @@
         "ne peut pas contenir plus de %s caractères"
       ],
       "change the host's content source.": [
-        ""
+        "modifier la source de contenu de l'hôte."
       ],
       "checking %s task status": [
         "vérification de l'état de la tâche %s "
@@ -8995,7 +9259,7 @@
         "content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')"
       ],
       "content type ('deb', 'file', 'ostree_ref', 'rpm', 'srpm')": [
-        ""
+        "type de contenu ('deb', 'fichier', 'ostree_ref', 'rpm', 'srpm')"
       ],
       "content view component ID. Identifier of the component association": [
         "ID du composant de visualisation du contenu. Identificateur de l'association de composants"
@@ -9040,16 +9304,16 @@
         "versions d'affichage de contenu à comparer"
       ],
       "create a custom product": [
-        ""
+        "créer un produit personnalisé"
       ],
       "create a filter for a content view": [
         "créer un filtre pour un affichage de contenu"
       ],
       "day": [
-        ""
+        "jour"
       ],
       "days": [
-        ""
+        "jours"
       ],
       "deb, package, package group, or docker tag names": [
         "deb, packages, groupes de packages ou noms de balises docker"
@@ -9058,7 +9322,7 @@
         "package_ids n'est pas sous forme de table"
       ],
       "deb_names_for_job_template: Action must be one of %s": [
-        ""
+        "deb_names_for_job_template : l'action doit être l'une des %s"
       ],
       "delete a filter": [
         "supprimer un filtre"
@@ -9082,16 +9346,16 @@
         "disque"
       ],
       "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
-        ""
+        "politique de téléchargement pour les référentiels deb, docker, file et yum (soit « immédiat » ou « à la demande »)"
       ],
       "enables or disables synchronization": [
         "active ou désactive la synchronisation"
       ],
       "enhancement": [
-        ""
+        "amélioration"
       ],
       "enhancements": [
-        ""
+        "améliorations"
       ],
       "environment identifier": [
         "identifiant d'environnement"
@@ -9121,7 +9385,7 @@
         "erratum : ID ou objet tout sélectionner"
       ],
       "erratum: allow types not matching a valid errata type": [
-        ""
+        "erratum : autoriser les types ne correspondant pas à un type d'errata valide"
       ],
       "erratum: end date (YYYY-MM-DD)": [
         "erratum : date de fin (AAAA-MM-JJ)"
@@ -9181,10 +9445,10 @@
         "a déjà été pris pour ce produit."
       ],
       "here": [
-        ""
+        "ici"
       ],
       "host": [
-        ""
+        "hôte"
       ],
       "host collection name to filter by": [
         "nom de la collection d'hôte avec lequel filtrer"
@@ -9220,7 +9484,7 @@
         "initialisation d'une tâche Pulp"
       ],
       "installed": [
-        ""
+        "Installé"
       ],
       "installing errata...": [
         "installation de l'errata..."
@@ -9232,16 +9496,16 @@
         "l'installation ou la mise à jour de paquets"
       ],
       "installing package group...": [
-        "installation du groupe de packages..."
+        "installation du groupe de paquets..."
       ],
       "installing package groups...": [
-        "installation des groupes de packages..."
+        "installation des groupes de paquets..."
       ],
       "installing package...": [
-        "installation du package..."
+        "installation du paquet..."
       ],
       "installing packages...": [
-        "installation des packages..."
+        "installation des paquets..."
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         "Interprète l'objet spécifié pour qu’il ne retourne que les référentiels qui peuvent être associés à l'objet spécifié. La valeur 'content_view' est prise en charge."
@@ -9253,7 +9517,7 @@
         "invalide : les référentiels ne peuvent exiger qu'une seule version du système d'exploitation."
       ],
       "invalid: The content source must sync the lifecycle environment assigned to the host. See the logs for more information.": [
-        ""
+        "invalide : la source de contenu doit synchroniser l'environnement de cycle de vie attribué à l'hôte. Consultez les journaux pour plus d'informations."
       ],
       "is already attached to the capsule": [
         "est déjà attaché à la capsule"
@@ -9280,13 +9544,13 @@
         "libellé du référentiel"
       ],
       "limit to only repositories with this download policy": [
-        "limiter aux dépôts ayant cette politique de téléchargement"
+        "limiter aux référentiels ayant cette politique de téléchargement"
       ],
       "list filters": [
         "répertorier les filtres"
       ],
       "list of repository ids": [
-        "liste d'ids de référentiel "
+        "liste d'id de référentiel "
       ],
       "list of rpm filename strings to include in published version": [
         "liste des chaînes de noms de fichiers rpm à inclure dans la version publiée"
@@ -9298,7 +9562,7 @@
         "nombre maximum d'hôtes de contenu enregistrés"
       ],
       "may not be less than the number of hosts associated with the host collection.": [
-        "ne peut pas être inférieur au nombre d'hôtes de associés à la collection d'hôtes"
+        "ne peut pas être inférieur au nombre d'hôtes de associés à la collection d'hôtes."
       ],
       "module stream ids": [
         "Ids des flux de modules"
@@ -9307,16 +9571,16 @@
         "modules de flux non trouvés"
       ],
       "multi-environment activation key": [
-        ""
+        "clé d'activation multi-environnement"
       ],
       "multi-environment activation keys": [
-        ""
+        "clés d'activation multi-environnement"
       ],
       "multi-environment host": [
-        ""
+        "hôte multi-environnement"
       ],
       "multi-environment hosts": [
-        ""
+        "hôtes multi-environnements"
       ],
       "must be %{gpg_key} or %{cert}": [
         "doit être %{gpg_key} ou %{cert}"
@@ -9331,7 +9595,7 @@
         "doit être une des valeurs suivantes : %s"
       ],
       "must be true or false": [
-        ""
+        "doit être vrai ou faux"
       ],
       "must be unique within one organization": [
         "doit être unique dans une organisation"
@@ -9400,7 +9664,7 @@
         "de l'environnement doit être unique dans l'organisation"
       ],
       "only show the repositories readable by this user with this username": [
-        "afficher uniquement les dépôts lisibles par cet utilisateur avec ce nom d'utilisateur"
+        "afficher uniquement les référentiels lisibles par cet utilisateur avec ce nom d'utilisateur"
       ],
       "organization ID": [
         "ID d’organisation"
@@ -9409,25 +9673,25 @@
         "identifiant de l'organisation"
       ],
       "package group: uuid": [
-        "Mise à jour de groupes de packages"
+        "Mise à jour de groupes de paquets"
       ],
       "package, package group, or docker tag names": [
-        "packages, groupes de packages ou balises docker"
+        "paquets, groupes de paquets ou balises docker"
       ],
       "package, package group, or docker tag: name": [
-        "package, groupe de packages ou balise docker : nom"
+        "paquet, groupe de paquets ou balise docker : nom"
       ],
       "package: architecture": [
-        "package: architecture"
+        "paquet: architecture"
       ],
       "package: maximum version": [
-        "package : version maximum"
+        "paquet : version maximum"
       ],
       "package: minimum version": [
-        "package : version minimum"
+        "paquet : version minimum"
       ],
       "package: version": [
-        "package : version"
+        "paquet : version"
       ],
       "package_ids is not an array": [
         "package_ids n'est pas une table"
@@ -9460,16 +9724,16 @@
         "register_hostname_fact est réglé sur %s, mais aucun fact n'a été trouvé, ou était localhost."
       ],
       "removing package group...": [
-        "suppression du groupe de packages..."
+        "suppression du groupe de paquets..."
       ],
       "removing package groups...": [
-        "suppression des groupes de packages..."
+        "suppression des groupes de paquets..."
       ],
       "removing package...": [
-        "suppression du package..."
+        "suppression du paquet..."
       ],
       "removing packages...": [
-        "suppression des packages..."
+        "suppression des paquets..."
       ],
       "repo label": [
         "libélé de référentiel"
@@ -9496,16 +9760,16 @@
         "identifiant de règle"
       ],
       "security advisories": [
-        ""
+        "avis de sécurité"
       ],
       "security advisory": [
-        ""
+        "avis de sécurité"
       ],
       "selected host": [
-        ""
+        "hôte sélectionné"
       ],
       "selected hosts": [
-        ""
+        "hôtes sélectionnés"
       ],
       "service level": [
         "niveau de service"
@@ -9547,19 +9811,19 @@
         "identifiant numérique du plan de sync"
       ],
       "system registration": [
-        ""
+        "enregistrement du système"
       ],
       "the documentation.": [
-        ""
+        "la documentation."
       ],
       "the following attributes can not be updated for the Red Hat provider: [ %s ]": [
         "les attributs suivants ne peuvent pas être mis à jour pour le fournisseur Red Hat : [ %s ]"
       ],
       "the host": [
-        ""
+        "l'hôte"
       ],
       "the hosts": [
-        ""
+        "les hôtes"
       ],
       "to": [
         "à"
@@ -9589,19 +9853,19 @@
         "mise à jour d'un filtre"
       ],
       "updated": [
-        ""
+        "Mis à jour"
       ],
       "updating package group...": [
-        "mise à jour du groupe de packages..."
+        "mise à jour du groupe de paquets..."
       ],
       "updating package groups...": [
-        "mise à jour des groupes de packages..."
+        "mise à jour des groupes de paquets..."
       ],
       "updating package...": [
-        "mise à jour du package..."
+        "mise à jour du paquet..."
       ],
       "updating packages...": [
-        "mise à jour des packages..."
+        "mise à jour des paquets..."
       ],
       "upstream Foreman server": [
         "serveur Foreman en amont"
@@ -9616,7 +9880,7 @@
         "via Exécution à distante"
       ],
       "view content view tabs.": [
-        "voir onglets d’affichage de contenu"
+        "voir onglets d’affichage de contenu."
       ],
       "waiting for %s to finish the task": [
         "en attendant que %s termine la tâche"
@@ -9634,7 +9898,7 @@
         "liste des versions à synchroniser avec deb-archive, séparée par des espaces"
       ],
       "whitespace-separated list of repo components to be synced from deb-archive": [
-        "liste des composants du dépôt à synchroniser à partir de deb-archive, séparée par des espaces"
+        "liste des composants du référentiel à synchroniser à partir de deb-archive, séparée par des espaces"
       ],
       "with": [
         "avec"
@@ -9646,7 +9910,7 @@
         "{0} éléments sélectionnés"
       ],
       "{enableRedHatRepos} or {createACustomProduct}.": [
-        ""
+        "{enableRedHatRepos} ou {createACustomProduct}."
       ],
       "{numberOfActivationKeys} activation key will be assigned to content view {cvName} in": [
         "{numberOfActivationKeys} la clé d'activation sera attribuée à la vue du contenu {cvName} dans"
