@@ -1,4 +1,4 @@
-# 4.18.0.rc2 Vessel (2025-08-26)
+# 4.18.0 Vessel (2025-09-16)
 
 ## Features
 
@@ -27,17 +27,31 @@
 
 ## Bug Fixes
 
-### Hammer
- * Force flag requires param for content-override commands ([#38677](https://projects.theforeman.org/issues/38677), [b760bbfc](https://github.com/Katello/hammer-cli-katello.git/commit/b760bbfcfd99ba8d62e05fa440145b3fac012609))
- * Hammer command with --csv option generates few fields in json format ([#38405](https://projects.theforeman.org/issues/38405), [1cb23adb](https://github.com/Katello/hammer-cli-katello.git/commit/1cb23adb604e2f8be56384a380666c22f5725bc6))
- * Org options are missing in inline help ([#38268](https://projects.theforeman.org/issues/38268), [6db0c5f3](https://github.com/Katello/hammer-cli-katello.git/commit/6db0c5f3578979d3721d181fe22c7b137e4eff6d))
+### Container
+ * Smart proxy sync can fail when host has no bound container repos ([#38728](https://projects.theforeman.org/issues/38728), [e43b53f1](https://github.com/Katello/smart_proxy_container_gateway.git/commit/e43b53f1f6ab4ce8d098108fda8d8523c3450cd1))
+ * Long container push uploads result in authentication error ([#38649](https://projects.theforeman.org/issues/38649), [b8091350](https://github.com/Katello/katello.git/commit/b8091350dc9d829394b0acab5d29ada2082fdade))
+ * Flatpak - Install REX job run hangs for 10 minutes ([#38638](https://projects.theforeman.org/issues/38638), [2c1bfa5b](https://github.com/Katello/katello.git/commit/2c1bfa5b0ba7d77623cdf17303d73fc3ec77e5b8))
+ * Handle permissions correctly on flatpak UI + UX feedback ([#38621](https://projects.theforeman.org/issues/38621), [da7d3e5e](https://github.com/Katello/katello.git/commit/da7d3e5e8c40df9f308edbbe9fa73bf59ed677ec))
+ * Remove "seeded" and "organization_id" from Flatpak remote search bar proposals ([#38617](https://projects.theforeman.org/issues/38617), [1b5c3966](https://github.com/Katello/katello.git/commit/1b5c3966253f22988782a5229bfea1f9cbe2de93))
+ * Add capsule URL as flatpak index endpoint ([#38530](https://projects.theforeman.org/issues/38530), [783c4507](https://github.com/Katello/smart_proxy_container_gateway.git/commit/783c45077b78b8545660fd0e9385532adbeb7b9d))
+
+### Organizations and Locations
+ * Attempts to set cdn_configuration on downstream SAT organization fails due to RH Cloud controller overwrites ([#38723](https://projects.theforeman.org/issues/38723), [9f72db7e](https://github.com/Katello/katello.git/commit/9f72db7ef32906dded988d1837e27d39d406278e))
 
 ### Repositories
+ * Cannot mirror Flatpak into default Red Hat products — restricted to custom products only ([#38720](https://projects.theforeman.org/issues/38720), [afecfbf3](https://github.com/Katello/katello.git/commit/afecfbf34375917b7d27dbe20dbf6888402970f2))
+ * Update the Recommended Repositories page to change the Red Hat Satellite Capsule and Red Hat Satellite Maintenance repositories from version 6.17 to 6.18 for RHEL 9 ([#38717](https://projects.theforeman.org/issues/38717), [a5269981](https://github.com/Katello/katello.git/commit/a52699811c8b06d970aedf8f03c99f3144d8884d))
+ * Clean duplicate erratum packages before bigint migration ([#38685](https://projects.theforeman.org/issues/38685), [dac68360](https://github.com/Katello/katello.git/commit/dac6836079633c0a546ac35d932e85ba6992ddd3))
  * Repo discovery Registry Search Parameter Default:* (search all) can return incomplete results ([#38675](https://projects.theforeman.org/issues/38675), [d518a5fe](https://github.com/Katello/katello.git/commit/d518a5fedb94ff03c03cc257778b0dab48a74187))
  * HTTP should be allowed on Flatpak remote creation and application name should be displayed for remote repository ([#38634](https://projects.theforeman.org/issues/38634), [48f50cfe](https://github.com/Katello/katello.git/commit/48f50cfec6d4c0aff2d4e5a1e40785ba12a235bf))
  * Prevent unintentional password updates in empty edit forms ([#38593](https://projects.theforeman.org/issues/38593), [df7ea596](https://github.com/Katello/katello.git/commit/df7ea596fc2b655c3c61a90293aac478d9804bb2))
  * ERROR:  nextval: reached maximum value of sequence "katello_erratum_packages_id_seq"  during concurrent repository sync plan executions ([#38497](https://projects.theforeman.org/issues/38497), [63f5f434](https://github.com/Katello/katello.git/commit/63f5f434596e5bb6087da39a4ea8b649789428bf))
  * Create option for default repository mirroring behavior ([#38433](https://projects.theforeman.org/issues/38433), [d2fbe1a3](https://github.com/Katello/katello.git/commit/d2fbe1a3a4158ccc140ac482217044cc7701198c))
+
+### Hammer
+ * Force flag requires param for content-override commands ([#38677](https://projects.theforeman.org/issues/38677), [b760bbfc](https://github.com/Katello/hammer-cli-katello.git/commit/b760bbfcfd99ba8d62e05fa440145b3fac012609))
+ * Hammer command with --csv option generates few fields in json format ([#38405](https://projects.theforeman.org/issues/38405), [1cb23adb](https://github.com/Katello/hammer-cli-katello.git/commit/1cb23adb604e2f8be56384a380666c22f5725bc6))
+ * Org options are missing in inline help ([#38268](https://projects.theforeman.org/issues/38268), [6db0c5f3](https://github.com/Katello/hammer-cli-katello.git/commit/6db0c5f3578979d3721d181fe22c7b137e4eff6d))
 
 ### Hosts
  * in host-details-kebab- update to non deprecated dropdown ([#38666](https://projects.theforeman.org/issues/38666), [e4530b84](https://github.com/Katello/katello.git/commit/e4530b84c1807ac509f2103a5bc4e5eb1210ddc1))
@@ -46,13 +60,11 @@
  * RPM filter rule deletes existing entries when a rule is edited  ([#38652](https://projects.theforeman.org/issues/38652), [cc4c90cb](https://github.com/Katello/katello.git/commit/cc4c90cbe68ffdb2b2c9b3d87db79122a667e2f4))
  * Few PF5 widgets have dynamic OUIA IDs on Contentview Page ([#38635](https://projects.theforeman.org/issues/38635), [5c765af1](https://github.com/Katello/katello.git/commit/5c765af17fc2198710531fde69721706955d64ae))
  * Incremental CCV updates all CV versions ([#38484](https://projects.theforeman.org/issues/38484), [86e656c7](https://github.com/Katello/katello.git/commit/86e656c77b249fec0c399c9d93820ffd4feb89bd))
+ * Content view environments endpoint does not work well with FAM ([#38443](https://projects.theforeman.org/issues/38443), [53942dfd](https://github.com/Katello/katello.git/commit/53942dfd1e31bd7539a2bee759363f482d39a878))
  * Content view environments can be created without a content view version id ([#38270](https://projects.theforeman.org/issues/38270), [1c02a478](https://github.com/Katello/katello.git/commit/1c02a478adceb217c380b3f410e7ed84200f6097))
 
-### Container
- * Flatpak - Install REX job run hangs for 10 minutes ([#38638](https://projects.theforeman.org/issues/38638), [2c1bfa5b](https://github.com/Katello/katello.git/commit/2c1bfa5b0ba7d77623cdf17303d73fc3ec77e5b8))
- * Handle permissions correctly on flatpak UI + UX feedback ([#38621](https://projects.theforeman.org/issues/38621), [da7d3e5e](https://github.com/Katello/katello.git/commit/da7d3e5e8c40df9f308edbbe9fa73bf59ed677ec))
- * Remove "seeded" and "organization_id" from Flatpak remote search bar proposals ([#38617](https://projects.theforeman.org/issues/38617), [1b5c3966](https://github.com/Katello/katello.git/commit/1b5c3966253f22988782a5229bfea1f9cbe2de93))
- * Add capsule URL as flatpak index endpoint ([#38530](https://projects.theforeman.org/issues/38530), [783c4507](https://github.com/Katello/smart_proxy_container_gateway.git/commit/783c45077b78b8545660fd0e9385532adbeb7b9d))
+### Inter Server Sync
+ * Incremental repository export fails on syncable content unless --format syncable is passed ([#38637](https://projects.theforeman.org/issues/38637), [4da582b3](https://github.com/Katello/katello.git/commit/4da582b3f7e81339ae1feded66a85758850ddfaa))
 
 ### Tests
  * Update CP VCR's for 4.6.3-1 ([#38618](https://projects.theforeman.org/issues/38618), [c44d9c07](https://github.com/Katello/katello.git/commit/c44d9c0713070151df48b2d12c0a7fd02a7360f8))
