@@ -3,11 +3,11 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 2.4.0-RC1",
+        "Project-Id-Version": "katello 4.18.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ettore Atalan <atalanttore@googlemail.com>, 2023",
-        "Language-Team": "German (https://www.transifex.com/foreman/teams/114/de/)",
+        "Last-Translator": "Ettore Atalan <atalanttore@googlemail.com>, 2025",
+        "Language-Team": "German (https://app.transifex.com/foreman/teams/114/de/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
@@ -465,6 +465,9 @@
       "About page": [
         "Über die Seite"
       ],
+      "Abstract async task": [
+        ""
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
       ],
@@ -505,7 +508,7 @@
         "Aktivierungsschlüssel-ID"
       ],
       "Activation key deleted": [
-        ""
+        "Aktivierungsschlüssel gelöscht"
       ],
       "Activation key details": [
         ""
@@ -607,6 +610,9 @@
         ""
       ],
       "Add repositories with package groups to content view to select them here.": [
+        ""
+      ],
+      "Add rolling repo clone": [
         ""
       ],
       "Add rule": [
@@ -976,6 +982,9 @@
       "Auto Publish - Triggered by '%s'": [
         "Automatische Veröffentlichung - Ausgelöst durch '%s'"
       ],
+      "Auto attach subscriptions": [
+        ""
+      ],
       "Auto publish": [
         ""
       ],
@@ -1002,9 +1011,6 @@
       ],
       "Back": [
         "Zurück"
-      ],
-      "Backend System Status": [
-        "Back-End-Systemstatus"
       ],
       "Base URL": [
         "Basis URL"
@@ -1300,7 +1306,7 @@
       "Cannot incrementally export from a filtered and a non-filtered content view version. The exported content view version '%{content_view} %{current}'  cannot be incrementally updated from version '%{from}.'.  Please do a full export.": [
         ""
       ],
-      "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
+      "Cannot incrementally export from a incrementally updated version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
       "Cannot install errata: No errata found for search term '%s'": [
@@ -1471,14 +1477,14 @@
       "Comma-separated list of tags to sync for a container image repository": [
         ""
       ],
+      "Commit upload": [
+        ""
+      ],
       "Compare": [
         "Vergleichen"
       ],
       "Completed pulp task protection days": [
         ""
-      ],
-      "Component": [
-        "Komponente"
       ],
       "Component Content View": [
         "Komponenteninhaltsansicht"
@@ -1825,14 +1831,26 @@
       "Copy": [
         "Kopieren"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "Aktivierungsschlüssel kopieren"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         ""
       ],
       "Copy to clipboard": [
         "In Zwischenablage abspeichern"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        ""
       ],
       "Cores per socket": [
         "Kerne pro Socket"
@@ -2047,10 +2065,19 @@
       "Create content view": [
         "Inhaltsansicht erstellen"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "Filter erstellen"
       ],
       "Create host collection": [
+        ""
+      ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -2060,6 +2087,12 @@
         "Organisation erstellen"
       ],
       "Create package filter rule": [
+        ""
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
         ""
       ],
       "Create rule": [
@@ -2326,11 +2359,35 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Manifest vom Red Hat Anbieter löschen"
       ],
       "Delete multiple filters from a content view": [
         "Löschen Sie mehrere Filter aus einer Inhaltsansicht"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete orphaned migrated repositories": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         ""
@@ -2431,6 +2488,12 @@
       "Destroy an environment in an organization": [
         "Umgebung in einer Organisation löschen"
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2450,7 +2513,7 @@
         ""
       ],
       "Digest": [
-        ""
+        "Digest"
       ],
       "Directly setting package lists on composite content views is not allowed. Please update the components, then re-publish the composite.": [
         "Das direkte Festlegen von Paketlisten für zusammengesetzte Inhaltsansichten ist nicht zulässig. Bitte aktualisieren Sie die Komponenten und veröffentlichen Sie dann das Composite erneut."
@@ -2478,6 +2541,9 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         "Fehler beim Deaktivieren des einfachen Inhaltszugriffs für '%{subject}'."
+      ],
+      "Discover": [
+        ""
       ],
       "Discover Repositories": [
         "Repositorys suchen"
@@ -2680,6 +2746,9 @@
       "Environment cannot be in its own promotion path": [
         "Umgebung kann nicht in ihrem eigenen Übertragungspfad liegen"
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "Umgebungskennung"
       ],
@@ -2718,6 +2787,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "Errata-ID des Erratums (RHSA-2012:108)"
+      ],
+      "Errata mail": [
+        ""
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2833,6 +2905,12 @@
       "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
         ""
       ],
+      "Export format must be specified for library exports.": [
+        ""
+      ],
+      "Export format must be specified for non-incremental repository exports.": [
+        ""
+      ],
       "Export formats.Choose syncable if the exported content needs to be in a yum format. This option is only available for %{syncable_repos} repositories. Choose importable if the importing server uses the same version  and exported content needs to be one of %{importable_repos} repositories.": [
         ""
       ],
@@ -2877,6 +2955,9 @@
       ],
       "Fetch installable errata for one or more hosts.": [
         "Rufen Sie installierbare Errata für einen oder mehrere Hosts ab."
+      ],
+      "Fetch pxe files": [
+        ""
       ],
       "Fetch traces for one or more hosts": [
         "Abrufen von Traces für einen oder mehrere Hosts"
@@ -2971,6 +3052,9 @@
       "Filter versions that are components in the specified composite version": [
         "Versionen filtern, die Komponenten in der angegebenen Verbundversion sind"
       ],
+      "Filtered index content": [
+        ""
+      ],
       "Filters": [
         "Filter"
       ],
@@ -3017,6 +3101,9 @@
         ""
       ],
       "Flatpak remote updated": [
+        ""
+      ],
+      "Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.": [
         ""
       ],
       "Force": [
@@ -3078,6 +3165,9 @@
       ],
       "Generate host applicability": [
         "Hostanwendbarkeit generieren"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "Repository-Anwendbarkeit generieren"
@@ -3212,7 +3302,7 @@
         "Host-ID"
       ],
       "Host Limit": [
-        ""
+        "Hostgrenze"
       ],
       "Host Profile Assume": [
         "Hostprofil annehmen"
@@ -3316,8 +3406,14 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Reihenfolge der sortierten Ergebnisse (z. B. ASC für aufsteigend)"
       ],
-      "ID": [
+      "Hypervisors": [
         ""
+      ],
+      "Hypervisors update": [
+        ""
+      ],
+      "ID": [
+        "Kennung"
       ],
       "ID of a HTTP Proxy": [
         "ID eines HTTP-Proxys"
@@ -3637,6 +3733,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         ""
       ],
@@ -3644,6 +3743,12 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
+        ""
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -3712,6 +3817,9 @@
       "Incremental Update incomplete.": [
         "Inkrementelle Aktualisierung unvollständig."
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        ""
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Inkrementelles Update von %{content_view_count} Content View-Version(en)"
       ],
@@ -3724,11 +3832,26 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "Inkrementelle Aktualisierung für Verbund %{name} Version %{version} angegeben, aber keine Komponenten aktualisiert."
       ],
+      "Index content": [
+        ""
+      ],
+      "Index errata": [
+        ""
+      ],
+      "Index module streams": [
+        ""
+      ],
+      "Index package groups": [
+        ""
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Relevante Typen sind folgende [ %{list} ]"
       ],
       "Inherit from Repository": [
         "Vom Repository erben"
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "Synchronisation von Produkten des Synchronisationsplans einleiten"
@@ -3804,6 +3927,9 @@
       ],
       "Installing Package...": [
         "Paket wird installiert …"
+      ],
+      "Instance update": [
+        ""
       ],
       "Instance-based": [
         "Instanzbasiert"
@@ -4061,7 +4187,7 @@
         ""
       ],
       "Last sync": [
-        ""
+        "Letzte Synchronisierung"
       ],
       "Last task": [
         "Letzte Aufgabe"
@@ -4558,6 +4684,9 @@
       "Messaging connection": [
         "Verbindung zum Messaging"
       ],
+      "Metadata generate": [
+        ""
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -4619,6 +4748,15 @@
         ""
       ],
       "Multi Content View Environment": [
+        ""
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -4805,7 +4943,7 @@
         ""
       ],
       "No change": [
-        ""
+        "Keine Änderungen"
       ],
       "No content": [
         ""
@@ -5153,7 +5291,7 @@
         "Zuzuweisende Nummer"
       ],
       "OS": [
-        ""
+        "Betriebssystem"
       ],
       "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.": [
         ""
@@ -5815,6 +5953,9 @@
       "Pulp task error": [
         "Pulp-Aufgabenfehler"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         ""
       ],
@@ -5923,6 +6064,9 @@
       "Reclaim Space": [
         ""
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -5989,6 +6133,9 @@
       "Refresh all alternate content sources": [
         ""
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -6001,7 +6148,13 @@
       "Refresh counts": [
         ""
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
+        ""
+      ],
+      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -6009,6 +6162,12 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Zuvor importiertes Manifest für Red Hat Anbieter aktualisieren"
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         ""
@@ -6051,6 +6210,12 @@
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
         "Das Namensmuster der Registrierung führt zu einem ungültigen Container-Image-Namen der Mitglieds-Repositorys"
+      ],
+      "Registry token expiration time": [
+        ""
+      ],
+      "Reindex subscriptions": [
+        ""
       ],
       "Related composite content views": [
         ""
@@ -6148,6 +6313,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Paketgruppe über Katello-Schnittstelle entfernen"
       ],
@@ -6163,6 +6331,9 @@
       "Remove products from sync plan": [
         "Produkte aus Synchronisationsplan entfernen"
       ],
+      "Remove rolling repo clone": [
+        ""
+      ],
       "Remove subscriptions": [
         "Subskriptionen entfernen"
       ],
@@ -6174,6 +6345,12 @@
       ],
       "Remove subscriptions from one or more hosts": [
         "Abonnements von einem oder mehreren Hosts entfernen"
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Versionen und/oder Umgebungen aus einer Inhaltsansicht entfernen und Systeme und Schlüssel neu zuweisen"
@@ -6199,6 +6376,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         ""
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -6217,11 +6397,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "Repositorys aus veröffentlichten Inhaltsansichten sind nicht zulässig."
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repository": [
         "Repository"
@@ -6242,7 +6428,7 @@
         "Repository '%(repoName)s' wurde aktiviert."
       ],
       "Repository ID": [
-        ""
+        "Repository-Kennung"
       ],
       "Repository Id associated with the kickstart repo used for provisioning": [
         "Repository-ID, die mit dem Kickstart-Repository verknüpft ist, das für die Bereitstellung verwendet wird"
@@ -6433,7 +6619,7 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         ""
       ],
-      "Return only errata of a particular type (security, bugfix, enhancement)": [
+      "Return only errata of a particular type (security, bugfix, enhancement, other)": [
         ""
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
@@ -6574,6 +6760,21 @@
       "Save": [
         "Speichern"
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         ""
       ],
@@ -6581,6 +6782,12 @@
         ""
       ],
       "Scan a flatpak remote": [
+        ""
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
         ""
       ],
       "Schema version 1": [
@@ -7384,6 +7591,9 @@
       "Supported Content Types": [
         "Unterstützte Inhaltstypen"
       ],
+      "Sync": [
+        ""
+      ],
       "Sync Canceled": [
         "Synchronisation abgebrochen"
       ],
@@ -7438,6 +7648,9 @@
       "Sync all repositories for a product": [
         "Alle Repositorys für ein Produkt synchronisieren"
       ],
+      "Sync capsule": [
+        ""
+      ],
       "Sync complete.": [
         "Synchronisation abgeschlossen."
       ],
@@ -7455,6 +7668,9 @@
       ],
       "Sync state": [
         "Synchronisierungsstatus"
+      ],
+      "Syncable export": [
+        ""
       ],
       "Synced": [
         ""
@@ -7683,6 +7899,9 @@
       ],
       "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts.": [
         "Die Übertragung von %{content_view} nach <b>%{environment}</b> wurde abgeschlossen. %{count} benötigte Errata können auf Ihren Hosts installiert werden."
+      ],
+      "The provided incremental export format '%{provided}' must match the previous export's format '%{previous}'. Consider using 'from_history_id' to point to a matching export.": [
+        ""
       ],
       "The repository is already enabled": [
         "Das Repository ist bereits aktiviert"
@@ -7921,6 +8140,9 @@
       "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned.": [
         ""
       ],
+      "Time in minutes before registry access tokens expire.": [
+        ""
+      ],
       "Time to expire yum metadata in seconds. Only relevant for custom yum repositories.": [
         ""
       ],
@@ -7964,6 +8186,9 @@
         ""
       ],
       "To manage packages, select an action.": [
+        ""
+      ],
+      "Toggle": [
         ""
       ],
       "Token/password for the flatpak remote": [
@@ -8101,6 +8326,12 @@
       "Unable to detect puppet path": [
         "Puppet-Pfad kann nicht erkannt werden"
       ],
+      "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
+        ""
+      ],
+      "Unable to find a base content view to use for incremental export. Please run a complete export instead.": [
+        ""
+      ],
       "Unable to find a content view with ID %s": [
         ""
       ],
@@ -8114,12 +8345,6 @@
         "Benutzer können nicht abgerufen werden"
       ],
       "Unable to import in to Content View specified in the metadata - '%{name}'. The 'import_only' attribute for the content view is set to false. To mark this Content View as importable, have your system administrator run the following command on the server. ": [
-        ""
-      ],
-      "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment.": [
-        "Es ist nicht möglich inkrementell zu exportieren. Tätige einen vollen Export des Library-Kontents vor dem Upgrade des neuesten Inkrements."
-      ],
-      "Unable to incrementally export. Do a Full Export on the repository content.": [
         ""
       ],
       "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.": [
@@ -8187,6 +8412,12 @@
       ],
       "Unknown errata status": [
         "Unbekannter Errata-Status"
+      ],
+      "Unknown library export format '%s'.": [
+        ""
+      ],
+      "Unknown repository export format '%s'.": [
+        ""
       ],
       "Unknown traces status": [
         "Unbekannter Trace-Status"
@@ -8278,13 +8509,25 @@
       "Update content counts for the smart proxy": [
         ""
       ],
+      "Update content urls": [
+        ""
+      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
+        ""
+      ],
+      "Update http proxy": [
+        ""
+      ],
+      "Update http proxy details": [
         ""
       ],
       "Update installed packages, enabled repos, module inventory": [
@@ -8302,11 +8545,20 @@
       "Update packages via Katello interface": [
         ""
       ],
+      "Update redhat repository": [
+        ""
+      ],
       "Update release version for host": [
         "Release-Version für Host aktualisieren"
       ],
       "Update release version for host %s": [
         "Release-Version für Host aktualisieren %s"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "Services aktualisieren, welche neugestartet werden müssen"
@@ -8398,6 +8650,12 @@
       "Upload a subscription manifest": [
         "Subskriptionsmanifest hochladen"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "Hochgeladen in"
       ],
@@ -8406,6 +8664,9 @@
       ],
       "Upload request id": [
         "Anfrage-ID hochladen"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -8523,6 +8784,9 @@
       ],
       "Verify SSL": [
         "SSL überprüfen"
+      ],
+      "Verify checksum": [
+        ""
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -9182,7 +9446,7 @@
         ""
       ],
       "host": [
-        ""
+        "Host"
       ],
       "host collection name to filter by": [
         "Name der Hostsammlung, nach der gefiltert werden soll"
