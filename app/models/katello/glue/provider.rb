@@ -31,10 +31,21 @@ module Katello
     end
 
     module InstanceMethods
-      API_URL = 'https://subscription.rhsm.redhat.com/subscription/consumers/'.freeze
+      API_BASE_URL = 'https://subscription.rhsm.redhat.com'.freeze
+      SUBSCRIPTION_PATH = '/subscription'.freeze
+      CONSUMERS_PATH = '/consumers/'.freeze
+      API_URL = API_BASE_URL + SUBSCRIPTION_PATH + CONSUMERS_PATH # https://subscription.rhsm.redhat.com/subscription/consumers/
+
+      def normalize_api_url(api_url)
+        return nil if api_url.blank?
+        uri = URI.parse(api_url)
+        # only take base url; we will overwrite the path to ensure it's correct
+        uri.path = SUBSCRIPTION_PATH + CONSUMERS_PATH # https://subscription.rhsm.redhat.com/subscription/consumers/
+        uri.to_s
+      end
+
       def api_url(upstream = {})
-        # Default to Red Hat
-        ENV['REDHAT_RHSM_API_URL'] || upstream['apiUrl'] || API_URL
+        ENV['REDHAT_RHSM_API_URL'] || normalize_api_url(upstream['apiUrl']) || API_URL
       end
 
       def sync
