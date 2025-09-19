@@ -574,7 +574,11 @@ module Katello
       return yield
     rescue RestClient::Exception => exception
       if [301, 302, 307].include?(exception.response.code)
-        redirect_to exception.response.headers[:location]
+        # Handle aliased hostname on original request
+        redirect_location = URI(exception.response.headers[:location])
+        redirect_location.host = request.host if request.host.present?
+
+        redirect_to redirect_location.to_s, allow_other_host: true
         nil
       else
         raise exception
