@@ -6,6 +6,9 @@ module Actions
           include Actions::Helpers::OutputPropagator
           def plan(repository, smart_proxy, options)
             sequence do
+              if repository.deb?
+                plan_action(Pulp3::Repository::DebRemoveEmptyMetadata, repository, smart_proxy)
+              end
               plan_action(Actions::Pulp3::Repository::RefreshRemote, repository, smart_proxy)
               action_output = plan_action(Actions::Pulp3::Repository::Sync, repository, smart_proxy, options).output
 

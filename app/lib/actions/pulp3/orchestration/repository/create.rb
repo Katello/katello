@@ -6,7 +6,7 @@ module Actions
           def plan(repository, smart_proxy, force = false)
             sequence do
               create_action = plan_action(Actions::Pulp3::Repository::Create, repository, smart_proxy, force)
-              if repository.deb? && repository.library_instance?
+              if repository.deb?
                 response = plan_action(Pulp3::Repository::Initialize, repository, smart_proxy)
                 plan_action(Actions::Pulp3::Repository::SaveVersion, repository, tasks: response.output[:pulp_tasks])
               else

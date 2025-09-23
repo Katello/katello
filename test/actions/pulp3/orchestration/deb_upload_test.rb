@@ -37,7 +37,7 @@ module ::Actions::Pulp3
         repository_reference = Katello::Pulp3::RepositoryReference.find_by(
             :root_repository_id => @repo.root.id,
             :content_view_id => @repo.content_view.id)
-        assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+        assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
 
         upload_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::UploadContent, @repo, @primary, @file2, 'deb')
         assert_equal "success", upload_action.result
@@ -47,7 +47,7 @@ module ::Actions::Pulp3
         repository_reference = Katello::Pulp3::RepositoryReference.find_by(
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
-        assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
+        assert_equal repository_reference.repository_href + "versions/4/", @repo.version_href
         assert_equal @repo.debs.count, deb_count + 1
       end
     end
@@ -65,7 +65,7 @@ module ::Actions::Pulp3
       repository_reference = Katello::Pulp3::RepositoryReference.find_by(
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
-      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+      assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
 
       VCR.use_cassette(cassette_name + '_binary_duplicate', :match_requests_on => [:method, :path, :params]) do
         action_result = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::UploadContent, @repo, @primary, @file1, 'deb')
@@ -75,7 +75,7 @@ module ::Actions::Pulp3
       repository_reference = Katello::Pulp3::RepositoryReference.find_by(
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
-      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+      assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
     end
   end
 end
