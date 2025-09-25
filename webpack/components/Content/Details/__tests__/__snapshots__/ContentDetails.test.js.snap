@@ -7,7 +7,7 @@ exports[`Content Details Info should render and contain appropriate components 1
     loadingText="Loading"
     timeout={300}
   >
-    <Uncontrolled(TabContainer)
+    <ForwardRef
       defaultActiveKey={1}
       id="content-tabs-container"
       style={
@@ -137,7 +137,7 @@ exports[`Content Details Info should render and contain appropriate components 1
           </TabPane>
         </TabContent>
       </Grid>
-    </Uncontrolled(TabContainer)>
+    </ForwardRef>
   </LoadingState>
 </div>
 `;
