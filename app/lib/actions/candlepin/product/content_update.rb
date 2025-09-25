@@ -16,11 +16,10 @@ module Actions
         end
 
         def finalize
+          # finalize, because Katello::Product::ContentCreate updates repository.content_id during finalize!
           content_url = input[:content_url]
-          # We must retrieve the repository in the finalize phase, because Katello::Product::ContentCreate
-          # only updates the repository.content_id in the finalize phase!
           repository = ::Katello::Repository.find(input[:repository_id])
-          if repository.deb_using_structured_apt?
+          if repository.deb?
             content_url += repository.deb_content_url_options
           end
 

@@ -676,7 +676,6 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
         root.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
         root.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
         root.deb_architectures = repo_params[:deb_architectures] if repo_params[:deb_architectures]
-        root.content_id = 'INITIAL_DUMMY_VALUE' unless Setting['deb_enable_structured_apt']
       end
 
       if root.ansible_collection?

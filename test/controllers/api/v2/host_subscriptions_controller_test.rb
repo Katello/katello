@@ -303,7 +303,7 @@ module Katello
       assert_equal(label, result[0][:content_label])
     end
 
-    def test_find_content_overrides_with_inverse_search_limited_to_environment_with_structured_apt
+    def test_find_deb_content_overrides_with_inverse_search_limited_to_environment
       # Create Host with "deb" as content
       content_view = katello_content_views(:library_dev_view)
       library = katello_environments(:library)
