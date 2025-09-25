@@ -66,9 +66,17 @@ module Katello
     end
 
     def find_library_export_view
+      importable_name = ::Katello::ContentView::EXPORT_LIBRARY
+      syncable_name = "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE"
+
+      unless params[:destination_server].blank?
+        importable_name += "-#{params[:destination_server]}"
+        syncable_name += "-#{params[:destination_server]}"
+      end
+
       find_export_view_helper(
-        ::Katello::ContentView::EXPORT_LIBRARY,
-        "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
+        importable_name,
+        syncable_name,
         @organization,
         :library_export,
         :library_export_syncable

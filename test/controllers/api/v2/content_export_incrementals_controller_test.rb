@@ -114,6 +114,26 @@ module Katello
       assert_equal @controller.instance_variable_get(:@view), syncable_result
     end
 
+    def test_find_library_export_view_with_destination_server
+      @controller.params = {destination_server: 'satellite.example.com'}
+      organization = get_organization
+      @controller.instance_variable_set(:@organization, organization)
+      importable_result = mock("importable_result")
+      importable_result.stubs(:updated_at).returns(2.days.ago)
+      syncable_result = mock("syncable_result")
+      syncable_result.stubs(:updated_at).returns(1.day.ago)
+      @controller.stubs(:determine_view_from_name).with("#{::Katello::ContentView::EXPORT_LIBRARY}-satellite.example.com",
+                                                        organization,
+                                                        :library_export).returns(importable_result).once
+      @controller.stubs(:determine_view_from_name).with("#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE-satellite.example.com",
+                                                        organization,
+                                                        :library_export_syncable).returns(syncable_result).once
+      @controller.send(:find_library_export_view)
+
+      # Ensure the newer of the two is chosen
+      assert_equal @controller.instance_variable_get(:@view), syncable_result
+    end
+
     def test_find_library_not_found
       org = get_organization
       post :library, params: { organization_id: org.id,
@@ -213,6 +233,7 @@ module Katello
       @controller.send(:find_repository_export_view)
       assert_equal @controller.instance_variable_get(:@view), syncable_result
     end
+
 
     def test_find_repository_not_found
       @controller.params = {}
