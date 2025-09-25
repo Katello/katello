@@ -17,7 +17,7 @@ begin
       Rake::Task['rake:test:katello:test'].invoke
     end
 
-    desc "Runs puplcore integration tests"
+    desc "Runs pulpcore integration tests"
     task 'katello:pulpcore' do
       Rake::Task['jenkins:setup:minitest'].invoke
       Rake::Task['rake:test:katello:test:pulpcore'].invoke
