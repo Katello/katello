@@ -55,7 +55,7 @@ module Katello
       end
 
       def done?
-        task_group_data['all_tasks_dispatched'] == true && IN_PROGRESS_STATES.all? { |state| task_group_data[state] == 0 }
+        IN_PROGRESS_STATES.all? { |state| task_group_data[state] == 0 }
       end
 
       def group_progress_reports
