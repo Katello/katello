@@ -84,6 +84,22 @@ namespace :katello do
     handle_duplicate_erratum_packages
   end
 
+  desc "Populate repository version PRNs for all repositories"
+  task :populate_repository_version_prns => ["dynflow:client", "check_ping"] do
+    User.current = User.anonymous_api_admin
+    api = ::Katello::Pulp3::Api::Core.new(SmartProxy.pulp_primary)
+    updates = []
+    repository_versions = api.core_repository_versions_list_all(fields: 'pulp_href,prn')
+    repository_versions.each do |repo_version|
+      next if repo_version.prn.blank?
+      updates << { version_href: repo_version.pulp_href, prn: repo_version.prn }
+    end
+
+    updates.each do |update|
+      ::Katello::Repository.where(version_href: update[:version_href]).update_all(version_prn: update[:prn])
+    end
+  end
+
   def handle_duplicate_erratum_packages
     # Get all duplicate groups
     duplicate_groups = Katello::ErratumPackage
