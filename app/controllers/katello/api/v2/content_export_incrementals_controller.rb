@@ -43,60 +43,74 @@ module Katello
 
     private
 
-    def find_export_view_helper(name_importable, name_syncable, organization, generated_for_importable, generated_for_syncable)
+    def find_library_export_view
       if params[:from_history_id].present?
         find_incremental_history_from_id
         @view = @history&.content_view_version&.content_view
       else
-        importable_result = nil
-        syncable_result = nil
-        unless params[:format].present? && params[:format] == ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
-          importable_result = determine_view_from_name(name_importable,
-          organization,
-          generated_for_importable)
+        # Determine format for finding existing view
+        format = params[:format] || ::Katello::Pulp3::ContentViewVersion::Export::UNDEFINED
+
+        # Try to find existing views based on format
+        views = []
+        if format != ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
+          importable_view = ::Katello::Pulp3::ContentViewVersion::Export.find_export_view(
+            destination_server: params[:destination_server],
+            organization: @organization,
+            name: ::Katello::ContentView::EXPORT_LIBRARY,
+            generated_for: :library_export
+          )
+          views << importable_view if importable_view
         end
-        unless params[:format].present? && params[:format] == ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
-          syncable_result = determine_view_from_name(name_syncable,
-          organization,
-          generated_for_syncable)
+
+        if format != ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
+          syncable_view = ::Katello::Pulp3::ContentViewVersion::Export.find_export_view(
+            destination_server: params[:destination_server],
+            organization: @organization,
+            name: "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
+            generated_for: :library_export_syncable
+          )
+          views << syncable_view if syncable_view
         end
-        @view = [importable_result, syncable_result].compact.max_by(&:updated_at)
+
+        @view = views.compact.max_by(&:updated_at)
       end
       check_for_blank_view
     end
 
-    def find_library_export_view
-      importable_name = ::Katello::ContentView::EXPORT_LIBRARY
-      syncable_name = "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE"
-
-      unless params[:destination_server].blank?
-        importable_name += "-#{params[:destination_server]}"
-        syncable_name += "-#{params[:destination_server]}"
-      end
-
-      find_export_view_helper(
-        importable_name,
-        syncable_name,
-        @organization,
-        :library_export,
-        :library_export_syncable
-      )
-    end
-
     def find_repository_export_view
-      find_export_view_helper(
-        "Export-#{@repository.label}-#{@repository.library_instance_or_self.id}",
-        "Export-SYNCABLE-#{@repository.label}-#{@repository.library_instance_or_self.id}",
-        @repository.organization,
-        :repository_export,
-        :repository_export_syncable
-      )
-    end
+      if params[:from_history_id].present?
+        find_incremental_history_from_id
+        @view = @history&.content_view_version&.content_view
+      else
+        # Determine format for finding existing view
+        format = params[:format] || ::Katello::Pulp3::ContentViewVersion::Export::UNDEFINED
 
-    def determine_view_from_name(name, organization, generated_for)
-      ::Katello::ContentView.where(name: name,
-                                   organization: organization,
-                                   generated_for: generated_for).first
+        # Try to find existing views based on format
+        views = []
+        if format != ::Katello::Pulp3::ContentViewVersion::Export::SYNCABLE
+          importable_view = ::Katello::Pulp3::ContentViewVersion::Export.find_export_view(
+            destination_server: nil,
+            organization: @repository.organization,
+            name: "Export-#{@repository.label}-#{@repository.library_instance_or_self.id}",
+            generated_for: :repository_export
+          )
+          views << importable_view if importable_view
+        end
+
+        if format != ::Katello::Pulp3::ContentViewVersion::Export::IMPORTABLE
+          syncable_view = ::Katello::Pulp3::ContentViewVersion::Export.find_export_view(
+            destination_server: nil,
+            organization: @repository.organization,
+            name: "Export-SYNCABLE-#{@repository.label}-#{@repository.library_instance_or_self.id}",
+            generated_for: :repository_export_syncable
+          )
+          views << syncable_view if syncable_view
+        end
+
+        @view = views.compact.max_by(&:updated_at)
+      end
+      check_for_blank_view
     end
 
     def check_for_blank_view

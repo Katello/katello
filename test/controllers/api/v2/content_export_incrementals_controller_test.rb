@@ -74,12 +74,22 @@ module Katello
       importable_result.stubs(:updated_at).returns(2.days.ago)
       syncable_result = mock("syncable_result")
       syncable_result.stubs(:updated_at).returns(1.day.ago)
-      @controller.stubs(:determine_view_from_name).with(::Katello::ContentView::EXPORT_LIBRARY,
-                                                        organization,
-                                                        :library_export).returns(importable_result).once
-      @controller.stubs(:determine_view_from_name).with("#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
-                                                        organization,
-                                                        :library_export_syncable).returns(syncable_result).once
+
+      # When format is UNDEFINED (default), both conditions are checked
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: nil,
+        organization: organization,
+        name: ::Katello::ContentView::EXPORT_LIBRARY,
+        generated_for: :library_export
+      ).returns(importable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: nil,
+        organization: organization,
+        name: "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
+        generated_for: :library_export_syncable
+      ).returns(syncable_result).once
+
       @controller.send(:find_library_export_view)
 
       # Ensure the newer of the two is chosen
@@ -92,10 +102,14 @@ module Katello
       @controller.instance_variable_set(:@organization, organization)
       importable_result = mock("importable_result")
       importable_result.stubs(:updated_at).returns(1.day.ago)
-      @controller.stubs(:determine_view_from_name).never
-      @controller.stubs(:determine_view_from_name).with(::Katello::ContentView::EXPORT_LIBRARY,
-                                                        organization,
-                                                        :library_export).returns(importable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: nil,
+        organization: organization,
+        name: ::Katello::ContentView::EXPORT_LIBRARY,
+        generated_for: :library_export
+      ).returns(importable_result).once
+
       @controller.send(:find_library_export_view)
       assert_equal @controller.instance_variable_get(:@view), importable_result
     end
@@ -106,10 +120,14 @@ module Katello
       @controller.instance_variable_set(:@organization, organization)
       syncable_result = mock("syncable_result")
       syncable_result.stubs(:updated_at).returns(1.day.ago)
-      @controller.stubs(:determine_view_from_name).never
-      @controller.stubs(:determine_view_from_name).with("#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
-                                                        organization,
-                                                        :library_export_syncable).returns(syncable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: nil,
+        organization: organization,
+        name: "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
+        generated_for: :library_export_syncable
+      ).returns(syncable_result).once
+
       @controller.send(:find_library_export_view)
       assert_equal @controller.instance_variable_get(:@view), syncable_result
     end
@@ -122,12 +140,21 @@ module Katello
       importable_result.stubs(:updated_at).returns(2.days.ago)
       syncable_result = mock("syncable_result")
       syncable_result.stubs(:updated_at).returns(1.day.ago)
-      @controller.stubs(:determine_view_from_name).with("#{::Katello::ContentView::EXPORT_LIBRARY}-satellite.example.com",
-                                                        organization,
-                                                        :library_export).returns(importable_result).once
-      @controller.stubs(:determine_view_from_name).with("#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE-satellite.example.com",
-                                                        organization,
-                                                        :library_export_syncable).returns(syncable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: 'satellite.example.com',
+        organization: organization,
+        name: ::Katello::ContentView::EXPORT_LIBRARY,
+        generated_for: :library_export
+      ).returns(importable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: 'satellite.example.com',
+        organization: organization,
+        name: "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
+        generated_for: :library_export_syncable
+      ).returns(syncable_result).once
+
       @controller.send(:find_library_export_view)
 
       # Ensure the newer of the two is chosen
@@ -136,6 +163,10 @@ module Katello
 
     def test_find_library_not_found
       org = get_organization
+
+      # Stub the service method calls to return nil
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).returns(nil)
+
       post :library, params: { organization_id: org.id,
                                from_latest_increment: true }
       response = JSON.parse(@response.body)['displayMessage']
@@ -181,12 +212,21 @@ module Katello
       importable_result.stubs(:updated_at).returns(2.days.ago)
       syncable_result = mock("syncable_result")
       syncable_result.stubs(:updated_at).returns(1.day.ago)
-      @controller.stubs(:determine_view_from_name).with("Export-repo_label-42",
-                                                        mock_org,
-                                                        :repository_export).returns(importable_result).once
-      @controller.stubs(:determine_view_from_name).with("Export-SYNCABLE-repo_label-42",
-                                                        mock_org,
-                                                        :repository_export_syncable).returns(syncable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: nil,
+        organization: mock_org,
+        name: "Export-repo_label-42",
+        generated_for: :repository_export
+      ).returns(importable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: nil,
+        organization: mock_org,
+        name: "Export-SYNCABLE-repo_label-42",
+        generated_for: :repository_export_syncable
+      ).returns(syncable_result).once
+
       @controller.send(:find_repository_export_view)
 
       # Ensure the newer of the two is chosen
@@ -205,10 +245,14 @@ module Katello
       @controller.instance_variable_set(:@repository, repository)
       importable_result = mock("importable_result")
       importable_result.stubs(:updated_at).returns(1.day.ago)
-      @controller.stubs(:determine_view_from_name).never
-      @controller.stubs(:determine_view_from_name).with("Export-repo_label-42",
-                                                        mock_org,
-                                                        :repository_export).returns(importable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: nil,
+        organization: mock_org,
+        name: "Export-repo_label-42",
+        generated_for: :repository_export
+      ).returns(importable_result).once
+
       @controller.send(:find_repository_export_view)
       assert_equal @controller.instance_variable_get(:@view), importable_result
     end
@@ -225,15 +269,17 @@ module Katello
       @controller.instance_variable_set(:@repository, repository)
       syncable_result = mock("syncable_result")
       syncable_result.stubs(:updated_at).returns(1.day.ago)
-      @controller.stubs(:determine_view_from_name).never
-      @controller.stubs(:determine_view_from_name).with("Export-SYNCABLE-repo_label-42",
-                                                        mock_org,
-                                                        :repository_export_syncable).returns(syncable_result).once
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).with(
+        destination_server: nil,
+        organization: mock_org,
+        name: "Export-SYNCABLE-repo_label-42",
+        generated_for: :repository_export_syncable
+      ).returns(syncable_result).once
 
       @controller.send(:find_repository_export_view)
       assert_equal @controller.instance_variable_get(:@view), syncable_result
     end
-
 
     def test_find_repository_not_found
       @controller.params = {}
@@ -245,7 +291,9 @@ module Katello
       repository.stubs(:library_instance_or_self).returns(library_instance)
       repository.stubs(:organization).returns(mock_org)
       @controller.instance_variable_set(:@repository, repository)
-      @controller.stubs(:determine_view_from_name).returns(nil)
+
+      ::Katello::Pulp3::ContentViewVersion::Export.stubs(:find_export_view).returns(nil)
+
       assert_raises(HttpErrors::BadRequest) do
         @controller.send(:find_repository_export_view)
       end

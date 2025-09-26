@@ -133,12 +133,27 @@ module Katello
           MetadataGenerator.new(export_service: self).generate!
         end
 
-        def self.find_generated_export_view(destination_server:, organization:, name:, generated_for:, create_by_default: false)
-          name += "-#{destination_server}" unless destination_server.blank?
-          select_method = create_by_default ? :first_or_create : :first
-          ::Katello::ContentView.where(name: name,
-                                       organization: organization,
-                                       generated_for: generated_for).send(select_method)
+        def self.find_export_view(name:, organization:, generated_for:, destination_server: nil)
+          full_name = destination_server.blank? ? name : "#{name}-#{destination_server}"
+
+          ::Katello::ContentView.where(
+            name: full_name,
+            organization: organization,
+            generated_for: generated_for
+          ).first
+        end
+
+        # Find or create export view
+        def self.find_or_create_export_view(name:, organization:, generated_for:, destination_server: nil)
+          find_export_view(name: name, organization: organization, generated_for: generated_for, destination_server: destination_server) ||
+            begin
+              full_name = destination_server.blank? ? name : "#{name}-#{destination_server}"
+              ::Katello::ContentView.create!(
+                name: full_name,
+                organization: organization,
+                generated_for: generated_for
+              )
+            end
         end
 
         def format
@@ -151,13 +166,13 @@ module Katello
           when UNDEFINED
             fail ::Katello::Errors::InvalidExportFormat, _("Export format must be specified for library exports.")
           when IMPORTABLE
-            return find_generated_export_view(create_by_default: true,
+            return find_or_create_export_view(
                                      destination_server: destination_server,
                                      organization: organization,
                                      name: ::Katello::ContentView::EXPORT_LIBRARY,
                                      generated_for: :library_export)
           when SYNCABLE
-            return find_generated_export_view(create_by_default: true,
+            return find_or_create_export_view(
                                      destination_server: destination_server,
                                      organization: organization,
                                      name: "#{::Katello::ContentView::EXPORT_LIBRARY}-SYNCABLE",
@@ -172,10 +187,10 @@ module Katello
           when UNDEFINED
             fail ::Katello::Errors::InvalidExportFormat, _("Export format must be specified for non-incremental repository exports.")
           when IMPORTABLE
-            return find_generated_export_view(create_by_default: true, destination_server: nil, organization: repository.organization,
+            return find_or_create_export_view(destination_server: nil, organization: repository.organization,
               name: "Export-#{repository.label}-#{repository.library_instance_or_self.id}", generated_for: :repository_export)
           when SYNCABLE
-            return find_generated_export_view(create_by_default: true, destination_server: nil, organization: repository.organization,
+            return find_or_create_export_view(destination_server: nil, organization: repository.organization,
               name: "Export-SYNCABLE-#{repository.label}-#{repository.library_instance_or_self.id}", generated_for: :repository_export_syncable)
           else
             fail ::Katello::Errors::InvalidExportFormat, _("Unknown repository export format '%s'.") % format
