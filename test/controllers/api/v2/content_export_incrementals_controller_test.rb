@@ -234,7 +234,6 @@ module Katello
       assert_equal @controller.instance_variable_get(:@view), syncable_result
     end
 
-
     def test_find_repository_not_found
       @controller.params = {}
       mock_org = mock("organization")
