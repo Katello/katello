@@ -64,7 +64,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@content_view.organization]) do
         get :index, params: { :content_view_id => @content_view.id }
       end
     end
@@ -97,7 +97,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms) do
+      assert_protected_action(:create, allowed_perms, denied_perms, [@content_view.organization]) do
         post :create, params: { :name => "Test", :content_view_id => @content_view.id }
       end
     end
@@ -113,7 +113,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:show, allowed_perms, denied_perms, [@filter.content_view.organization]) do
         get :show, params: { :content_view_id => @filter.content_view_id, :id => @filter.id }
       end
     end
@@ -148,7 +148,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission,
                       {:name => "read_content_views", :search => "name=\"#{@filter.content_view.name}\"" }]
 
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@filter.content_view.organization]) do
         put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name" }
       end
     end
@@ -157,7 +157,7 @@ module Katello
       allowed_perms = [{:name => "edit_content_views", :search => "name=\"#{@filter.content_view.name}\"" }]
       denied_perms = [{:name => "edit_content_views", :search => "name=\"some_name\"" }]
 
-      assert_protected_object(:update, allowed_perms, denied_perms) do
+      assert_protected_object(:update, allowed_perms, denied_perms, [@filter.content_view.organization]) do
         put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name" }
       end
     end
@@ -199,7 +199,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@filter.content_view.organization]) do
         delete :destroy, params: { :content_view_id => @filter.content_view_id, :id => @filter.id }
       end
     end

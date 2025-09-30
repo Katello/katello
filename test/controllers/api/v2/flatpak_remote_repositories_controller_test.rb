@@ -90,7 +90,7 @@ module Katello
       allowed_perms = [@product_edit_permission]
       denied_perms = [@create_permission, @view_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:mirror, allowed_perms, denied_perms) do
+      assert_protected_action(:mirror, allowed_perms, denied_perms, [@organization]) do
         post :mirror, params: { :id => @redhat_remote_runtime_repository.id, :product_id => @product.id }
       end
     end

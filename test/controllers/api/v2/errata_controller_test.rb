@@ -29,6 +29,8 @@ module Katello
 
       models
       permissions
+      User.current.organizations << @test_repo.organization
+      User.current.save!
     end
 
     def test_index
@@ -118,7 +120,7 @@ module Katello
     end
 
     def test_index_protected
-      assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
+      assert_protected_action(:index, @auth_permissions, @unauth_permissions, [@test_repo.organization]) do
         get :index, params: { :repository_id => @test_repo.id }
       end
     end
@@ -130,7 +132,7 @@ module Katello
         :promote_or_remove_content_views, :export_content
       ]
       all_unauth_permissions = @unauth_permissions + cv_unauth_permissions
-      assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions) do
+      assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions, [@test_repo.organization]) do
         get :index, params: { :content_view_version_id => @content_view_version.id, :available_for => 'content_view_version' }
       end
     end
@@ -181,7 +183,7 @@ module Katello
       errata = @test_repo.errata.first
       Erratum.stubs(:find).with(errata.errata_id).returns(errata)
 
-      assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
+      assert_protected_action(:show, @auth_permissions, @unauth_permissions, [@test_repo.organization]) do
         get :show, params: { :repository_id => @test_repo.id, :id => errata.errata_id }
       end
     end

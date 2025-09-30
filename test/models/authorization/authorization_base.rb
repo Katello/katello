@@ -5,9 +5,10 @@ module Katello
     include Katello::AuthorizationSupportMethods
 
     def setup
-      @no_perms_user      = User.find(users(:restricted).id)
-      @admin              = User.find(users(:admin).id)
       @acme_corporation   = get_organization
+      @no_perms_user      = User.find(users(:restricted).id)
+      @no_perms_user.organizations << @acme_corporation
+      @admin = User.find(users(:admin).id)
 
       @fedora_hosted        = Provider.find(katello_providers(:fedora_hosted).id)
       @fedora_17_x86_64     = Repository.find(katello_repositories(:fedora_17_x86_64).id)

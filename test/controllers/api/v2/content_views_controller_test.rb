@@ -191,7 +191,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:show, allowed_perms, denied_perms, [@organization]) do
         get :show, params: { :id => @library_dev_staging_view.id }
       end
     end
@@ -200,7 +200,7 @@ module Katello
       allowed_perms = [{:name => :view_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }]
       denied_perms = [{:name => :view_content_views, :search => "name=\"#{@library_dev_view.name}\"" }]
 
-      assert_protected_object(:show, allowed_perms, denied_perms) do
+      assert_protected_object(:show, allowed_perms, denied_perms, [@organization]) do
         get :show, params: { :id => @library_dev_staging_view.id }
       end
     end
@@ -296,7 +296,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, :destroy_content_views]
 
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, params: { :id => @library_dev_staging_view.id, :name => "new name" }
       end
     end
@@ -367,7 +367,7 @@ module Katello
       allowed_perms = [:destroy_content_views]
       denied_perms = [@view_permission, @create_permission, @update_permission, diff_view_destroy_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
         delete :destroy, params: { :id => @library_dev_staging_view.id }
       end
     end
@@ -384,7 +384,7 @@ module Katello
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @update_permission, :destroy_content_views]
 
-      assert_protected_action(:copy, allowed_perms, denied_perms) do
+      assert_protected_action(:copy, allowed_perms, denied_perms, [@organization]) do
         post :copy, params: { :id => @library_dev_staging_view.id, :name => "Test" }
       end
     end
@@ -449,7 +449,7 @@ module Katello
                       [:promote_or_remove_content_views_to_environments, diff_view_remove_permission],
                      ]
 
-      assert_protected_action(:remove_from_environment, allowed_perms, denied_perms) do
+      assert_protected_action(:remove_from_environment, allowed_perms, denied_perms, [@organization]) do
         delete :remove_from_environment, params: { :id => @library_dev_staging_view.id, :environment_id => @dev.id }
       end
     end
@@ -493,7 +493,7 @@ module Katello
       Katello::ActivationKey.expects(:with_content_views).with(@library_dev_staging_view).
                             at_least_once.returns(with_environments)
 
-      assert_protected_action(:remove, allowed_perms, denied_perms) do
+      assert_protected_action(:remove, allowed_perms, denied_perms, [@organization]) do
         put :remove, params: { :id => @library_dev_staging_view.id, :environment_ids => env_ids }
       end
     end
@@ -513,7 +513,7 @@ module Katello
                       [:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views],
                      ]
 
-      assert_protected_action(:remove, allowed_perms, denied_perms) do
+      assert_protected_action(:remove, allowed_perms, denied_perms, [@organization]) do
         put :remove, params: { :id => @library_dev_staging_view.id, :content_view_version_ids => [@library_dev_staging_view.version(@dev).id,
                                                                                                   @library_dev_staging_view.version(@staging).id] }
       end
@@ -570,9 +570,7 @@ module Katello
       Katello::ActivationKey.expects(:with_content_views).with(content_view).
                             at_least_once.returns(with_environments)
 
-      assert_protected_action(:remove, allowed_perms, denied_perms) do
-        User.current.update_attribute(:organizations, [host.organization])
-        User.current.update_attribute(:locations, [host.location])
+      assert_protected_action(:remove, allowed_perms, denied_perms, [host.organization], [host.location]) do
         put :remove, params: { :id => content_view.id, :environment_ids => env_ids, :system_content_view_id => alternate_cv.id, :system_environment_id => alternate_env.id }
       end
     end
@@ -617,7 +615,7 @@ module Katello
                        alternate_env_read_permission, bad_cv_read_permission],
                      ]
 
-      assert_protected_action(:remove, allowed_perms, denied_perms) do
+      assert_protected_action(:remove, allowed_perms, denied_perms, [@organization]) do
         put :remove, params: { :id => ak.content_view.id, :environment_ids => [ak.environment.id], :key_content_view_id => alternate_cv.id, :key_environment_id => alternate_env.id }
       end
     end
