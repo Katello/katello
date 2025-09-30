@@ -23,7 +23,7 @@ module Katello
       allowed_perms = [@export_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@library_dev_staging_view.organization]) do
         get :index, params: { :content_view_id => @library_dev_staging_view.id }
       end
     end
@@ -34,7 +34,7 @@ module Katello
                       @destroy_permission, @view_permission]
       version = @library_dev_staging_view.versions.first
 
-      assert_protected_action(:version, allowed_perms, denied_perms) do
+      assert_protected_action(:version, allowed_perms, denied_perms, [@library_dev_staging_view.organization]) do
         post :version, params: { :id => version.id }
       end
     end
