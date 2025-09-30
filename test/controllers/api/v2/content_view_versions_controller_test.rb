@@ -111,7 +111,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index, params: { :content_view_id => @library_dev_staging_view.id }
       end
     end
@@ -126,7 +126,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index, params: { :content_view_id => @library_dev_staging_view.id }
       end
     end
@@ -209,7 +209,7 @@ module Katello
 
       #ENV['test'] = 'asd'
       denied_perms = [[@view_permission, @create_permission, @update_permission, @destroy_permission]]
-      assert_protected_action(:promote, allowed_perms, denied_perms) do
+      assert_protected_action(:promote, allowed_perms, denied_perms, [@organization]) do
         post :promote, params: { :id => @library_dev_staging_view.versions.first.id, :environment_ids => [@dev.id] }
       end
 
@@ -307,7 +307,7 @@ module Katello
       denied_perms =  [@view_permission, @create_permission, @update_permission, @cv_promote_permission,
                        publish_permission, view_promote_permission, environment_promote_permission]
 
-      assert_protected_action(:incremental_update, allowed_perms, denied_perms) do
+      assert_protected_action(:incremental_update, allowed_perms, denied_perms, [@organization]) do
         put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}], :add_content => {:errata_ids => [errata_id], :resolve_dependencies => true} }
       end
     end
@@ -319,7 +319,7 @@ module Katello
       allowed_perms = [@destroy_permission]
 
       denied_perms = [[@view_permission, @create_permission, @update_permission, @cv_promote_permission, diff_view_destroy_permission]]
-      assert_protected_object(:destroy, allowed_perms, denied_perms) do
+      assert_protected_object(:destroy, allowed_perms, denied_perms, [@organization]) do
         post :destroy, params: { :id => @library_dev_staging_view.versions.first.id }
       end
 
@@ -343,7 +343,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
       new_description = 'New version description.'
 
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, params: { :id => @library_view.versions.first.id, :description => new_description }
       end
     end
