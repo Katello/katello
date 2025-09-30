@@ -528,7 +528,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms) do
+      assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
         post :create, params: { :product_id => @product.id }
       end
     end
@@ -561,7 +561,7 @@ module Katello
       allowed_perms = [@read_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:show, allowed_perms, denied_perms, [@organization]) do
         get :show, params: { :id => @repository.id }
       end
     end
@@ -570,7 +570,7 @@ module Katello
       allowed_perms = [{:name => @read_permission, :search => "name=\"#{@repository.product.name}\"" }]
       denied_perms = [{:name => @read_permission, :search => "name=\"#{@redhat_repository.product.name}\"" }]
 
-      assert_protected_object(:show, allowed_perms, denied_perms) do
+      assert_protected_object(:show, allowed_perms, denied_perms, [@organization]) do
         get :show, params: { :id => @repository.id }
       end
     end
@@ -620,7 +620,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, params: { :id => @repository.id }
       end
     end
@@ -767,7 +767,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:remove_content, allowed_perms, denied_perms) do
+      assert_protected_action(:remove_content, allowed_perms, denied_perms, [@organization]) do
         put :remove_content, params: { :id => @repository.id, :ids => [@rpm.id] }
       end
     end
@@ -808,7 +808,7 @@ module Katello
       allowed_perms = [@destroy_permission]
       denied_perms = [@read_permission, @create_permission, @update_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
         delete :destroy, params: { :id => @repository.id }
       end
     end
@@ -842,7 +842,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:republish, allowed_perms, denied_perms) do
+      assert_protected_action(:republish, allowed_perms, denied_perms, [@organization]) do
         put :republish, params: { :id => @repository.id }
       end
     end
@@ -884,7 +884,7 @@ module Katello
       allowed_perms = [@sync_permission]
       denied_perms = [@create_permission, @read_permission, @destroy_permission, @update_permission]
 
-      assert_protected_action(:sync, allowed_perms, denied_perms) do
+      assert_protected_action(:sync, allowed_perms, denied_perms, [@organization]) do
         post :sync, params: { :id => @repository.id }
       end
     end
@@ -920,7 +920,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@create_permission, @read_permission, @destroy_permission, @sync_permission]
 
-      assert_protected_action(:verify_checksum, allowed_perms, denied_perms) do
+      assert_protected_action(:verify_checksum, allowed_perms, denied_perms, [@organization]) do
         post :verify_checksum, params: { :id => @repository.id }
       end
     end
@@ -957,7 +957,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:upload_content, allowed_perms, denied_perms) do
+      assert_protected_action(:upload_content, allowed_perms, denied_perms, [@organization]) do
         post :upload_content, params: { :id => @repository.id }
       end
     end
@@ -1079,7 +1079,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:import_uploads, allowed_perms, denied_perms) do
+      assert_protected_action(:import_uploads, allowed_perms, denied_perms, [@organization]) do
         put :import_uploads, params: { :id => @repository.id, :uploads => [{'id' => '1'}] }
       end
     end

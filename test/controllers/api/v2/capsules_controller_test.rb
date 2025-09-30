@@ -41,7 +41,7 @@ module Katello
     end
 
     def test_user_index
-      assert_protected_action(:index, view_smart_proxies_perms, incorrect_perms) do
+      assert_protected_action(:index, view_smart_proxies_perms, incorrect_perms, @organization) do
         get :index
       end
     end
