@@ -4,8 +4,6 @@ module Katello
 
     CONTENT_TYPE = 'deb'.freeze
 
-    has_many :repository_debs, :class_name => "Katello::RepositoryDeb", :dependent => :destroy, :inverse_of => :deb
-    has_many :repositories, :through => :repository_debs, :class_name => "Katello::Repository"
     has_many :content_facet_applicable_debs, :class_name => "Katello::ContentFacetApplicableDeb",
              :dependent => :destroy, :inverse_of => :deb
     has_many :content_facets, :through => :content_facet_applicable_debs, :class_name => "Katello::Host::ContentFacet"
