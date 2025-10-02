@@ -64,6 +64,14 @@ npm run format                                  # Format JavaScript
 npm run build                                   # Build and lint JS
 ```
 
+**JavaScript Testing:**
+```bash
+cd $GITDIR/katello
+npm test                                        # All JS tests
+npx jest webpack/path/to/file.test.js           # Individual test file
+npm run test:watch                              # Watch mode
+```
+
 ### File Locations by Task
 
 **API Development:**
@@ -83,6 +91,7 @@ npm run build                                   # Build and lint JS
 - React Tests: `webpack/scenes/[Feature]/__tests__/[Component].test.js`
 - Legacy AngularJS: `engines/bastion_katello/app/assets/javascripts/`
 - Stylesheets: `app/assets/stylesheets/katello/[feature].scss`
+- Table Pages: Use `TableIndexPage` from `foremanReact/components/PF4/TableIndexPage/TableIndexPage`
 
 **Background Jobs:**
 - Actions: `app/lib/actions/katello/[domain]/[action_name].rb`
@@ -184,8 +193,10 @@ sudo systemctl status candlepin
 1. **Location**: Place in `webpack/scenes/[Feature]/[Component].js`
 2. **Test**: Create `webpack/scenes/[Feature]/__tests__/[Component].test.js`
 3. **Component**: Follow Patternfly patterns
-4. **API**: Connect to existing endpoints
-5. **Manual Test**: `cd $GITDIR/foreman && bundle exec foreman start`
+4. **Table Pages**: Use `TableIndexPage` from Foreman (see examples below)
+5. **API**: Connect to existing endpoints
+6. **Manual Test**: `cd $GITDIR/foreman && bundle exec foreman start`
+7. **Test Individual File**: `cd $GITDIR/katello && npx jest webpack/scenes/[Feature]/__tests__/[Component].test.js`
 
 ### Database Changes
 1. **Migration**: Generate from Foreman directory
@@ -245,10 +256,11 @@ mode=all ktest ~/katello/test/actions/pulp3/orchestration/multi_copy_all_units_t
 ### JavaScript Testing
 ```bash
 cd $GITDIR/katello
-npm test                    # Single run
-npm run test:watch          # Watch mode
-npm run test:current        # Current changes only
-npm run storybook           # Component development (port 6007)
+npm test                                    # All tests (single run)
+npm run test:watch                          # Watch mode
+npm run test:current                        # Current changes only
+npx jest webpack/path/to/test_file.test.js  # Run individual test file
+npm run storybook                           # Component development (port 6007)
 ```
 
 ### Code Quality Standards
@@ -263,6 +275,37 @@ npm run storybook           # Component development (port 6007)
 3. Implement minimal code to pass
 4. Verify success and refactor
 5. Run related tests to prevent regressions
+
+### UI Components & Patterns
+
+**TableIndexPage - Use for All Table Pages**
+
+Always use `TableIndexPage` from Foreman when creating new table-based UI pages.
+
+**Basic Pattern:**
+```javascript
+import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
+
+const columns = {
+  name: { title: __('Name'), wrapper: ({id, name}) => <a href={`/path/${id}`}>{name}</a>, isSorted: true },
+  status: { title: __('Status') },
+};
+
+return (
+  <TableIndexPage
+    apiUrl="/katello/api/resources"
+    apiOptions={{ key: 'RESOURCE_KEY' }}
+    header={__('Resources')}
+    controller="resources"
+    columns={columns}
+  />
+);
+```
+
+**Reference Examples:**
+- Simple: `/home/vagrant/foreman/webpack/.../routes/Models/ModelsPage/index.js`
+- Advanced: `/home/vagrant/foreman/webpack/.../components/HostsIndex/index.js`
+- Katello: `/home/vagrant/katello/webpack/scenes/ContentViews/Table/ContentViewsTable.js`
 
 ## Technical Details
 
