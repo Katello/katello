@@ -1,9 +1,9 @@
 yum_alternate_content_source:
   name:                           Yum ACS
   label:                          yum_acs_fixture
-  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:fedora_ca) %>
-  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:fedora_cert) %>
-  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_key) %>
+  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:real_ca) %>
+  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:real_cert) %>
+  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:real_key) %>
   content_type:                   yum
   base_url:                       "https://fixtures.pulpproject.org/"
   alternate_content_source_type:  custom
@@ -14,9 +14,9 @@ yum_alternate_content_source:
 yum_alternate_content_source_rhui:
   name:                           Yum ACS RHUI
   label:                          yum_acs_fixture_rhui
-  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:fedora_ca) %>
-  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:fedora_cert) %>
-  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_key) %>
+  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:real_ca) %>
+  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:real_cert) %>
+  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:real_key) %>
   content_type:                   yum
   base_url:                       "https://fixtures.pulpproject.org/"
   alternate_content_source_type:  rhui
@@ -27,9 +27,9 @@ yum_alternate_content_source_rhui:
 file_alternate_content_source:
   name:                           File ACS
   label:                          file_acs_fixture
-  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:fedora_ca) %>
-  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:fedora_cert) %>
-  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_key) %>
+  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:real_ca) %>
+  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:real_cert) %>
+  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:real_key) %>
   content_type:                   file
   base_url:                       "https://fixtures.pulpproject.org/"
   alternate_content_source_type:  custom

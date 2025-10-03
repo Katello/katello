@@ -21,9 +21,9 @@ module ::Actions::Pulp3
         "Expected a distribution reference."
       @repo.root.update(
         verify_ssl_on_sync: false,
-        ssl_ca_cert: katello_gpg_keys(:unassigned_gpg_key),
-        ssl_client_cert: katello_gpg_keys(:unassigned_gpg_key),
-        ssl_client_key: katello_gpg_keys(:unassigned_gpg_key))
+        ssl_ca_cert: katello_gpg_keys(:real_ca),
+        ssl_client_cert: katello_gpg_keys(:real_cert),
+        ssl_client_key: katello_gpg_keys(:real_key))
     end
 
     def teardown
