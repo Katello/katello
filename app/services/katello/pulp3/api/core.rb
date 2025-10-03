@@ -64,6 +64,10 @@ module Katello
           PulpcoreClient::RepositoriesApi.new(core_api_client)
         end
 
+        def core_repository_versions_api
+          PulpcoreClient::RepositoryVersionsApi.new(core_api_client)
+        end
+
         def repositories_api
           repository_type.repositories_api_class.new(api_client)
         end
@@ -234,6 +238,12 @@ module Katello
         def core_repositories_list_all(options = {})
           self.class.fetch_from_list do |page_opts|
             core_repositories_api.list(page_opts.merge(options))
+          end
+        end
+
+        def core_repository_versions_list_all(options = {})
+          self.class.fetch_from_list do |page_opts|
+            core_repository_versions_api.list(page_opts.merge(options))
           end
         end
 
