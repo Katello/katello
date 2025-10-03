@@ -137,10 +137,15 @@ class SubscriptionsPage extends Component {
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
       searchQuery, updateSearchQuery, hasUpstreamConnection,
       task, activePermissions, subscriptions, subscriptionTableSettings, isManifestImported,
+      contentCredentialsErrorMessage,
     } = this.props;
     // Basic permissions - should we even show this page?
     if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
       return <PermissionDenied missingPermissions={subscriptions.missingPermissions} />;
+    }
+    let missingPermissions = null;
+    if (contentCredentialsErrorMessage?.missing_permissions?.length > 0) {
+      missingPermissions = contentCredentialsErrorMessage.missing_permissions;
     }
     // Granular permissions
     const permissions = propsToCamelCase(activePermissions);
@@ -282,28 +287,34 @@ class SubscriptionsPage extends Component {
             />
 
             <div id="subscriptions-table" className="modal-container">
-              <SubscriptionsTable
-                canManageSubscriptionAllocations={canManageSubscriptionAllocations}
-                loadSubscriptions={this.props.loadSubscriptions}
-                tableColumns={columns}
-                updateQuantity={this.props.updateQuantity}
-                emptyState={emptyStateData}
-                subscriptions={this.props.subscriptions}
-                subscriptionDeleteModalOpen={deleteModalOpened}
-                onSubscriptionDeleteModalClose={closeDeleteModal}
-                onDeleteSubscriptions={onDeleteSubscriptions}
-                toggleDeleteButton={toggleDeleteButton}
-                task={task}
-                selectedRows={this.state.selectedRows}
-                onSelectedRowsChange={this.handleSelectedRowsChange}
-                selectionEnabled={!disableManifestActions}
-              />
-              <ModalProgressBar
-                show={!!task}
-                container={document.getElementById('subscriptions-table')}
-                title={task ? task.humanized.action : null}
-                progress={task ? Math.round(task.progress * 100) : 0}
-              />
+              {missingPermissions ? (
+                <PermissionDenied missingPermissions={missingPermissions} />
+              ) : (
+                <>
+                  <SubscriptionsTable
+                    canManageSubscriptionAllocations={canManageSubscriptionAllocations}
+                    loadSubscriptions={this.props.loadSubscriptions}
+                    tableColumns={columns}
+                    updateQuantity={this.props.updateQuantity}
+                    emptyState={emptyStateData}
+                    subscriptions={this.props.subscriptions}
+                    subscriptionDeleteModalOpen={deleteModalOpened}
+                    onSubscriptionDeleteModalClose={closeDeleteModal}
+                    onDeleteSubscriptions={onDeleteSubscriptions}
+                    toggleDeleteButton={toggleDeleteButton}
+                    task={task}
+                    selectedRows={this.state.selectedRows}
+                    onSelectedRowsChange={this.handleSelectedRowsChange}
+                    selectionEnabled={!disableManifestActions}
+                  />
+                  <ModalProgressBar
+                    show={!!task}
+                    container={document.getElementById('subscriptions-table')}
+                    title={task ? task.humanized.action : null}
+                    progress={task ? Math.round(task.progress * 100) : 0}
+                  />
+                </>
+              )}
             </div>
           </Col>
         </Row>
@@ -376,6 +387,11 @@ SubscriptionsPage.propTypes = {
   deleteButtonDisabled: PropTypes.bool,
   disableDeleteButton: PropTypes.func.isRequired,
   enableDeleteButton: PropTypes.func.isRequired,
+  contentCredentialsErrorMessage: PropTypes.shape({
+    message: PropTypes.string,
+    details: PropTypes.string,
+    missing_permissions: PropTypes.arrayOf(PropTypes.string),
+  }),
 };
 
 SubscriptionsPage.defaultProps = {
@@ -393,6 +409,7 @@ SubscriptionsPage.defaultProps = {
     can_import_manifest: false,
     can_manage_subscription_allocations: false,
   },
+  contentCredentialsErrorMessage: null,
 };
 
 export default SubscriptionsPage;

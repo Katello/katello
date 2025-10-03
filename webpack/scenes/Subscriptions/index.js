@@ -5,6 +5,7 @@ import * as subscriptionActions from './SubscriptionActions';
 import * as taskActions from '../Tasks/TaskActions';
 import * as tableActions from '../Settings/Tables/TableActions';
 import * as manifestActions from './Manifest/ManifestActions';
+import * as contentCredentialActions from '../ContentCredentials/ContentCredentialActions';
 
 import {
   selectSubscriptionsState,
@@ -16,6 +17,7 @@ import {
   selectIsTaskPending,
   selectHasUpstreamConnection,
 } from './SubscriptionsSelectors';
+import { selectContentCredentialsErrorMessage } from '../ContentCredentials/ContentCredentialSelectors';
 import selectTableSettings from '../../scenes/Settings/SettingsSelectors';
 import { selectIsPollingTask } from '../Tasks/TaskSelectors';
 import { selectOrganizationState, selectIsManifestImported } from '../Organizations/OrganizationSelectors';
@@ -42,6 +44,7 @@ const mapStateToProps = (state) => {
     deleteModalOpened: selectDeleteModalOpened(state),
     deleteButtonDisabled: selectDeleteButtonDisabled(state),
     organization: selectOrganizationState(state),
+    contentCredentialsErrorMessage: selectContentCredentialsErrorMessage(state),
   };
 };
 
@@ -53,6 +56,7 @@ const actions = {
   ...tableActions,
   ...manifestActions,
   ...foremanModalActions,
+  ...contentCredentialActions,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
