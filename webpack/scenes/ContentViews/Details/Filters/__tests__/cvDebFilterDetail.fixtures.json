@@ -1,0 +1,95 @@
+{
+  "inclusion": true,
+  "original_packages": false,
+  "id": 42,
+  "name": "test_deb_filter",
+  "description": null,
+  "created_at": "2025-07-28 12:00:00 -0400",
+  "updated_at": "2025-07-28 12:00:00 -0400",
+  "content_view": {
+    "composite": false,
+    "rolling": false,
+    "component_ids": [],
+    "default": false,
+    "version_count": 1,
+    "latest_version": "1.0",
+    "auto_publish": false,
+    "solve_dependencies": false,
+    "import_only": false,
+    "repository_ids": [ 11 ],
+    "id": 7,
+    "name": "Debian-CV",
+    "label": "Debian_CV",
+    "description": "",
+    "organization_id": 1,
+    "organization": {
+      "name": "Default Organization",
+      "label": "Default_Organization",
+      "id": 1
+    },
+    "created_at": "2025-07-28 11:50:00 -0400",
+    "updated_at": "2025-07-28 11:50:00 -0400",
+    "environments": [
+      {
+        "id": 1,
+        "name": "Library",
+        "label": "Library",
+        "permissions": {
+          "readable": true
+        }
+      }
+    ],
+    "repositories": [
+      {
+        "id": 11,
+        "name": "debian_10_amd64",
+        "label": "debian_10_amd64",
+        "content_type": "deb",
+        "product": {
+          "id": 5,
+          "name": "Debian 10"
+        },
+        "content_counts": {
+          "deb": 8,
+          "package": 8,
+          "package_group": 0,
+          "erratum": 0,
+          "module_stream": 0
+        }
+      }
+    ],
+    "versions": [
+      {
+        "id": 31,
+        "version": "1.0",
+        "published": "2025-07-28 11:55:00 -0400",
+        "environment_ids": []
+      }
+    ],
+    "components": [],
+    "content_view_components": [],
+    "activation_keys": [],
+    "next_version": "2.0",
+    "last_published": "2025-07-28 11:55:00 -0400",
+    "permissions": {
+      "view_content_views": true,
+      "edit_content_views": true,
+      "destroy_content_views": true,
+      "publish_content_views": true,
+      "promote_or_remove_content_views": true
+    }
+  },
+  "repositories": [],
+  "type": "deb",
+  "rules": [
+    {
+      "content_view_filter_id": 42,
+      "min_version": "1.0",
+      "architecture": "amd64",
+      "id": 99,
+      "name": "tre",
+      "created_at": "2025-07-28 12:01:00 -0400",
+      "updated_at": "2025-07-28 12:01:00 -0400"
+    }
+  ]
+}

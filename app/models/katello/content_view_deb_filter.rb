@@ -13,6 +13,8 @@ module Katello
         package_filenames.concat(query_debs(repo, rule))
       end
 
+      package_filenames = package_filenames.uniq.sort
+
       ContentViewDebFilter.generate_deb_clauses(package_filenames)
     end
 
@@ -21,6 +23,9 @@ module Katello
       self.deb_rules.each do |rule|
         deb_filenames.concat(query_debs(repo, rule))
       end
+
+      deb_filenames = deb_filenames.uniq
+
       debs = Deb.in_repositories(repo)
       debs.where(filename: deb_filenames).pluck(:pulp_id).flatten.uniq
     end
@@ -44,6 +49,11 @@ module Katello
       if rule.architecture.present?
         query_arch = rule.architecture.tr("*", "%")
         query = query.where("#{Deb.table_name}.architecture ilike ?", query_arch)
+      end
+      if rule.version.present?
+        query = query.search_version_equal(rule.version)
+      elsif rule.min_version.present? || rule.max_version.present?
+        query = query.search_version_range(rule.min_version, rule.max_version)
       end
       query.default_sort
     end
