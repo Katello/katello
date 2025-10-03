@@ -184,7 +184,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @delete_permission, @create_permission]
 
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, params: { :id => @product.id, :product => {:name => 'New Name'} }
       end
     end
@@ -193,7 +193,7 @@ module Katello
       allowed_perms = [{:name => @update_permission, :search => "name=\"#{@product.name}\"" }]
       denied_perms = [{:name => @update_permission, :search => "name=\"some_name\"" }]
 
-      assert_protected_object(:update, allowed_perms, denied_perms) do
+      assert_protected_object(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, params: { :id => @product.id, :product => {:name => 'New Name'} }
       end
     end
@@ -213,7 +213,7 @@ module Katello
       allowed_perms = [@delete_permission]
       denied_perms = [@create_permission, @read_permission, @update_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
         delete :destroy, params: { :id => @product.id }
       end
     end
@@ -237,7 +237,7 @@ module Katello
       denied_perms = [@read_permission, @update_permission, @delete_permission, @create_permission]
 
       assert_async_task(::Actions::BulkAction)
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         post :sync, params: { :id => @product.id }
       end
     end

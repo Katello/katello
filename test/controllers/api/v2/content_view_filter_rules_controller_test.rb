@@ -37,8 +37,7 @@ module Katello
     def test_index_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [get_organization]) do
         get :index, params: { :content_view_filter_id => @filter.id }
       end
     end
@@ -69,7 +68,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms) do
+      assert_protected_action(:create, allowed_perms, denied_perms, [get_organization]) do
         post :create, params: { :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0" }
       end
     end
