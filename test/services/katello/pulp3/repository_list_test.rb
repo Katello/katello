@@ -30,7 +30,7 @@ module Katello
           sync_and_reload_repo(repo1, @primary)
 
           repo2 = katello_repositories(:pulp3_file_1)
-          repo2.root.update(:url => 'https://repos.fedorapeople.org/pulp/pulp/demo_repos/test_file_repo/')
+          repo2.root.update(:url => 'https://fixtures.pulpproject.org/file/')
           create_repo(repo2, @primary)
           ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, repo2)
           sync_and_reload_repo(repo2, @primary)

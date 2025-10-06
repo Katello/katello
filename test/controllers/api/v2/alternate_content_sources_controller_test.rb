@@ -8,9 +8,9 @@ module Katello
       @acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @acs_rhui = katello_alternate_content_sources(:yum_alternate_content_source_rhui)
       @acs_simplified = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
-      @ca = katello_gpg_keys(:fedora_ca)
-      @cert = katello_gpg_keys(:fedora_cert)
-      @key = katello_gpg_keys(:fedora_key)
+      @ca = katello_gpg_keys(:real_ca)
+      @cert = katello_gpg_keys(:real_cert)
+      @key = katello_gpg_keys(:real_key)
       @http_proxy = FactoryBot.create(:http_proxy)
       @smart_proxy = ::SmartProxy.pulp_primary
       @product = katello_products(:fedora)

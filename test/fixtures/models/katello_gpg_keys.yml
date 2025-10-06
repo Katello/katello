@@ -53,3 +53,27 @@ fedora_key:
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
   content_type: "cert"
+
+real_cert:
+  name:            Real Certificate
+  content:         "<%= File.read(File.join(::Katello::Engine.root, 'test', 'fixtures', 'certs', 'real-cert.crt')) %>"
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_type: "cert"
+
+real_ca:
+  name:            Real CA Certificate
+  content:         "<%= File.read(File.join(::Katello::Engine.root, 'test', 'fixtures', 'certs', 'real-ca.crt')) %>"
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_type: "cert"
+
+real_key:
+  name:            Real Private Key
+  content:         "<%= File.read(File.join(::Katello::Engine.root, 'test', 'fixtures', 'certs', 'real-key.key')) %>"
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_type: "cert"
