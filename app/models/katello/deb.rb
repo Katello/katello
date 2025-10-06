@@ -27,16 +27,16 @@ module Katello
       ContentFacetApplicableDeb
     end
 
-    def self.search_version_range(min = nil, max = nil)
-      query = self.all
-      query = Katello::Util::PackageFilter.new(query, min, Katello::Util::PackageFilter::GREATER_THAN).results if min
-      query = Katello::Util::PackageFilter.new(query, max, Katello::Util::PackageFilter::LESS_THAN).results if max
-      query
-    end
+    scope :search_version_equal, ->(ver) {
+      where("deb_version_cmp(#{::Katello::Deb.table_name}.version, ?) = 0", ver)
+    }
 
-    def self.search_version_equal(version)
-      Katello::Util::PackageFilter.new(self, version, Katello::Util::PackageFilter::EQUAL).results
-    end
+    scope :search_version_range, ->(min_ver, max_ver) {
+      query = all
+      query = query.where("deb_version_cmp(#{::Katello::Deb.table_name}.version, ?) >= 0", min_ver) if min_ver.present?
+      query = query.where("deb_version_cmp(#{::Katello::Deb.table_name}.version, ?) <= 0", max_ver) if max_ver.present?
+      query
+    }
 
     def self.total_for_repositories(repos)
       self.in_repositories(repos).count

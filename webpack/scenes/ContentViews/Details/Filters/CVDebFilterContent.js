@@ -235,6 +235,7 @@ const CVDebFilterContent = ({
                     filterId={filterId}
                     onClose={onClose}
                     selectedFilterRuleData={selectedFilterRuleData}
+                    repositoryIds={details.repository_ids}
                   />}
               </>}
           />
