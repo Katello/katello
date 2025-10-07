@@ -39,18 +39,14 @@ module Katello
           end
 
           # Even after this bug (https://github.com/pulp/pulp_rpm/issues/2821) is fixed,
-          # it is possible to have duplicate errata asosociated to a repo.
+          # it is possible to have duplicate errata associated to a repo.
           if @content_type.label == 'erratum'
             to_insert.uniq! { |row| row["pulp_id"] || row[:pulp_id] }
           end
 
           next if to_insert.empty?
           insert_timestamps(to_insert)
-          if @content_type.mutable
-            @model_class.upsert_all(to_insert, unique_by: :pulp_id)
-          else
-            @model_class.insert_all(to_insert, unique_by: :pulp_id)
-          end
+          upsert_with_deadlock_retry(to_insert)
         end
 
         import_associations(units) if @repository
@@ -187,6 +183,25 @@ module Katello
         filter_rules.delete_all
       else
         return false
+      end
+    end
+
+    def upsert_with_deadlock_retry(to_insert)
+      retry_count = 0
+      begin
+        if @content_type.mutable
+          @model_class.upsert_all(to_insert, unique_by: :pulp_id)
+        else
+          @model_class.insert_all(to_insert, unique_by: :pulp_id)
+        end
+      rescue ActiveRecord::Deadlocked
+        retry_count += 1
+        if retry_count <= 3
+          sleep(rand(1..5))
+          retry
+        else
+          raise
+        end
       end
     end
 
