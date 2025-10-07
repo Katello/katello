@@ -13,8 +13,12 @@ import {
   FormHelperText,
   HelperText,
   HelperTextItem,
-
+  Alert,
+  AlertActionCloseButton,
+  AlertActionLink,
+  TextContent,
 } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { createFlatpakRemote } from '../FlatpakRemotesActions';
 import {
   selectCreateFlatpakRemotes,
@@ -24,7 +28,7 @@ import {
 import { updateFlatpakRemote } from '../Details/FlatpakRemoteDetailActions';
 
 // eslint-disable-next-line react/prop-types
-const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
+const FlatpakRemotesForm = ({ setModalOpen, remoteData, hasRedhatRemote }) => {
   const {
     id: editingId,
     name: editingName,
@@ -42,6 +46,7 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
   const [redirect, setRedirect] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const [alertDismissed, setAlertDismissed] = useState(false);
   const [urlValidated, setUrlValidated] = useState('default');
   const handleUrlChange = (newurl, _event) => {
     setUrl(newurl);
@@ -114,6 +119,29 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
       }}
       id="create-flatpak-form"
     >
+      {!alertDismissed && !hasRedhatRemote && (
+      <Alert
+        ouiaId="flatpak-remote-info-alert"
+        isInline
+        title={__('Add Red Hat Flatpak remote')}
+        actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
+        actionLinks={
+          <React.Fragment>
+            <AlertActionLink onClick={() => setUrl('https://flatpaks.redhat.io/rhel')}>
+              {__('Add Red Hat flatpak remote')}
+            </AlertActionLink>
+            <AlertActionLink component="a" href="https://access.redhat.com/terms-based-registry/" target="_blank">
+              {__('Generate username and password')} <ExternalLinkAltIcon />
+            </AlertActionLink>
+          </React.Fragment>
+            }
+      >
+        <TextContent>
+          {__('To continue with Red Hat Flatpak remote, you need to generate your username and password in')} <a target="_blank" href="https://access.redhat.com/terms-based-registry/" rel="noreferrer">access.redhat.com/terms-based-registry/</a>
+        </TextContent>
+      </Alert>
+      )}
+
       <FormGroup
         label={__('Name')}
         isRequired
@@ -168,7 +196,9 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
         />
         <FormHelperText>
           <HelperText>
-            <HelperTextItem>Authentication for registry</HelperTextItem>
+            <HelperTextItem>
+              {__('Provide credentials if the registry requires authentication')}
+            </HelperTextItem>
           </HelperText>
         </FormHelperText>
       </FormGroup>
@@ -209,10 +239,12 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData }) => {
 
 FlatpakRemotesForm.propTypes = {
   setModalOpen: PropTypes.func,
+  hasRedhatRemote: PropTypes.bool,
 };
 
 FlatpakRemotesForm.defaultProps = {
   setModalOpen: null,
+  hasRedhatRemote: true,
 };
 
 export default FlatpakRemotesForm;

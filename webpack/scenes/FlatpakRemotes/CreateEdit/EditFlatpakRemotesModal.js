@@ -8,7 +8,7 @@ const EditFlatpakModal = ({ show, setIsOpen, remoteData }) => (
   <Modal
     ouiaId="edit-flatpak-modal"
     title={__('Edit Flatpak Remote')}
-    variant={ModalVariant.small}
+    variant={ModalVariant.medium}
     isOpen={show}
     onClose={() => { setIsOpen(false); }}
     appendTo={document.body}
