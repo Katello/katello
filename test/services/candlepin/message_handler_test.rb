@@ -21,64 +21,6 @@ module Katello
     end
   end
 
-  class ComplianceCreatedTest < MessageHandlerTestBase
-    let(:event_name) { 'compliance.created' }
-
-    def test_consumer_uuid
-      assert_equal @consumer_uuid, handler.consumer_uuid
-    end
-
-    def test_reasons
-      assert_equal 1, handler.reasons.count
-      assert_equal 'Red Hat Enterprise Linux Server', handler.reasons[0]['productName']
-    end
-
-    def test_status
-      assert_equal 'invalid', handler.status
-    end
-
-    def test_subscription_facet
-      assert_equal @facet, handler.subscription_facet
-    end
-  end
-
-  class EntitlementCreatedTest < MessageHandlerTestBase
-    let(:event_name) { 'entitlement.created' }
-
-    def test_pool_id
-      assert_equal @pool_id, handler.pool_id
-    end
-
-    def test_consumer_uuid
-      assert_equal @consumer_uuid, handler.consumer_uuid
-    end
-
-    def test_create_pool_on_host
-      @facet.pools = []
-
-      handler.create_pool_on_host
-      refute_empty @facet.pools.where(:cp_id => @pool_id)
-    end
-  end
-
-  class EntitlementDeletedTest < MessageHandlerTestBase
-    let(:event_name) { 'entitlement.deleted' }
-
-    def test_consumer_uuid
-      assert_equal @consumer_uuid, handler.consumer_uuid
-    end
-
-    def test_pool_id
-      assert_equal @pool_id, handler.pool_id
-    end
-
-    def test_remove_pool_from_host
-      @facet.pools = [@pool]
-      handler.remove_pool_from_host
-      assert_empty @facet.pools.where(:cp_id => @pool_id)
-    end
-  end
-
   class PoolCreatedTest < MessageHandlerTestBase
     let(:event_name) { 'pool.created' }
 

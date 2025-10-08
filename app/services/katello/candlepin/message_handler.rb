@@ -46,25 +46,7 @@ module Katello
         case subject
         when 'pool.created', 'pool.deleted'
           content['entityId']
-        when 'entitlement.created', 'entitlement.deleted'
-          content['referenceId']
         end
-      end
-
-      def create_pool_on_host
-        return if self.subscription_facet.nil? || pool.nil?
-        old_host_ids = subscription_facet_host_ids
-        ::Katello::SubscriptionFacetPool.where(subscription_facet_id: self.subscription_facet.id,
-                                               pool_id: pool.id).first_or_create
-        pool.import_audit_record(old_host_ids)
-      end
-
-      def remove_pool_from_host
-        return if self.subscription_facet.nil? || pool.nil?
-        old_host_ids = subscription_facet_host_ids
-        ::Katello::SubscriptionFacetPool.where(subscription_facet_id: self.subscription_facet.id,
-                                               pool_id: pool.id).destroy_all
-        pool.import_audit_record(old_host_ids)
       end
 
       def import_pool(index_hosts = true)
@@ -102,12 +84,6 @@ module Katello
 
         Rails.logger.error "Received content_access_mode_modified event for org #{org.label}. This event is no longer supported."
         org.simple_content_access?(cached: false)
-      end
-
-      private
-
-      def subscription_facet_host_ids
-        ::Katello::SubscriptionFacetPool.where(pool_id: pool_id).joins(:subscription_facet).pluck(:host_id)
       end
     end
   end
