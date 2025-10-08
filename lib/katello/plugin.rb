@@ -79,6 +79,15 @@ Foreman::Plugin.register :katello do
          :turbolinks => false
 
     menu :top_menu,
+         :container_images,
+         :caption => N_('Container Images'),
+         :url_hash => {:controller => 'katello/api/v2/container_images',
+                       :action => 'index'},
+         :url => '/container_images',
+         :engine => Katello::Engine,
+         :turbolinks => false
+
+    menu :top_menu,
          :flatpak_remotes,
          :caption => N_('Flatpak Remotes'),
          :url_hash => {:controller => 'katello/api/v2/flatpak_remotes',
