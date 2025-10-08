@@ -21,7 +21,9 @@ module Actions
 
           output[:publication_provided] = false
           if input[:tasks].present? && (publication_href = ::Katello::Pulp3::Task.publication_href(input[:tasks]))
-            repo.update(:publication_href => publication_href)
+            repo_backend_service = repo.backend_service(SmartProxy.pulp_primary)
+            publication = repo_backend_service.api.publications_api.read(publication_href, {fields: 'prn'})
+            repo.update(:publication_href => publication_href, :publication_prn => publication.prn)
             output[:publication_provided] = true
           end
 
@@ -29,7 +31,9 @@ module Actions
             if repo.version_href != version_href || input[:force_fetch_version]
               output[:contents_changed] = true
               repo.update(:last_contents_changed => DateTime.now)
-              repo.update(:version_href => version_href)
+              repo_backend_service = repo.backend_service(SmartProxy.pulp_primary)
+              version = repo_backend_service.api.repository_versions_api.read(version_href, {fields: 'prn'})
+              repo.update(:version_href => version_href, :version_prn => version.prn)
             end
           else
             # get publication and check if repo-version and publication match. Otherwise, contents_changed: false

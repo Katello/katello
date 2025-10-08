@@ -70,14 +70,14 @@ module Katello
 
       def create_remote
         response = super
-        repo.update!(:remote_href => response.pulp_href)
+        repo.update!(:remote_href => response.pulp_href, :remote_prn => response.prn)
       end
 
       def update_remote
         href = repo.remote_href
         if remote_options[:url].blank?
           if href
-            repo.update(remote_href: nil)
+            repo.update(remote_href: nil, remote_prn: nil)
             delete_remote(href: href)
           end
         else
@@ -157,7 +157,7 @@ module Katello
 
       def distribution_needs_update?
         if distribution_reference
-          expected = secure_distribution_options(relative_path).except(:name).compact
+          expected = secure_distribution_options(relative_path).except(:name, :content_guard_prn).compact
           actual = get_distribution&.to_hash || {}
           expected != actual.slice(*expected.keys)
         elsif repo.environment
@@ -279,7 +279,9 @@ module Katello
       end
 
       def create_distribution(path)
-        distribution_data = api.distribution_class.new(secure_distribution_options(path))
+        options = secure_distribution_options(path)
+        options.delete(:content_guard_prn)  # Remove PRN field before sending to Pulp
+        distribution_data = api.distribution_class.new(options)
         unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
           fail_missing_publication(distribution_data.publication)
         end
@@ -300,8 +302,9 @@ module Katello
           unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
             fail_missing_publication(options[:publication])
           end
-          distribution_reference.update(:content_guard_href => options[:content_guard])
-          api.distributions_api.partial_update(distribution_reference.href, options)
+          content_guard_prn = options.delete(:content_guard_prn) # Extract PRN and remove from options
+          distribution_reference.update(:content_guard_href => options[:content_guard], :content_guard_prn => content_guard_prn)
+          api.distributions_api.partial_update(distribution_reference.href, options)  # Send options without PRN field
         end
       end
 
@@ -368,7 +371,18 @@ module Katello
       def save_distribution_references(hrefs)
         hrefs.each do |href|
           pulp3_distribution_data = api.get_distribution(href)
-          path, content_guard_href = pulp3_distribution_data&.base_path, pulp3_distribution_data&.content_guard
+          path = pulp3_distribution_data&.base_path
+          content_guard_href = pulp3_distribution_data&.content_guard
+          prn = pulp3_distribution_data&.prn
+
+          # Fetch content_guard PRN if content_guard exists
+          # TODO: Remove this once we have PRNs in the distribution data
+          content_guard_prn = nil
+          if content_guard_href
+            content_guard = Katello::Pulp3::Api::ContentGuard.new(smart_proxy).get_content_guards_api.read(content_guard_href, {fields: 'prn'})
+            content_guard_prn = content_guard.prn
+          end
+
           if distribution_reference
             found_distribution = read_distribution(distribution_reference.href)
             unless found_distribution
@@ -377,7 +391,14 @@ module Katello
           end
           unless distribution_reference
             # Ensure that duplicates won't be created in the case of a race condition
-            DistributionReference.where(path: path, href: href, repository_id: repo.id, content_guard_href: content_guard_href).first_or_create!
+            DistributionReference.where(
+              path: path,
+              href: href,
+              prn: prn,
+              repository_id: repo.id,
+              content_guard_href: content_guard_href,
+              content_guard_prn: content_guard_prn
+            ).first_or_create!
           end
         end
       end
@@ -444,8 +465,11 @@ module Katello
         secured_distribution_options = {}
         if root.unprotected
           secured_distribution_options[:content_guard] = nil
+          secured_distribution_options[:content_guard_prn] = nil
         else
-          secured_distribution_options[:content_guard] = ::Katello::Pulp3::ContentGuard.first.pulp_href
+          content_guard = ::Katello::Pulp3::ContentGuard.first
+          secured_distribution_options[:content_guard] = content_guard.pulp_href
+          secured_distribution_options[:content_guard_prn] = content_guard.pulp_prn
         end
         secured_distribution_options.merge!(distribution_options(path))
       end

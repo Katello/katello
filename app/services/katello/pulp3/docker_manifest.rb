@@ -27,6 +27,7 @@ module Katello
           schema_version: unit['schema_version'],
           digest: unit['digest'],
           pulp_id: unit[unit_identifier],
+          pulp_prn: unit['prn'],
           annotations: unit['annotations'],
           labels: unit['labels'],
           is_bootable: unit['is_bootable'] || unit['type'] == 'bootable',

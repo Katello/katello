@@ -406,6 +406,7 @@ module Katello
       push_repo_api_response = pulp_api.container_push_repo_for_name(@container_path_input)
 
       latest_version_href = push_repo_api_response&.latest_version_href
+      latest_version_prn = push_repo_api_response&.latest_version_prn
       pulp_repo_href = push_repo_api_response&.pulp_href
 
       if latest_version_href.empty? || pulp_repo_href.empty?
@@ -416,7 +417,7 @@ module Katello
         )
       end
 
-      instance_repo.update!(version_href: latest_version_href)
+      instance_repo.update!(version_href: latest_version_href, version_prn: latest_version_prn)
       # The Pulp repository should not change after first creation
       if root_repository.repository_references.empty?
         ::Katello::Pulp3::RepositoryReference.where(root_repository_id: instance_repo.root_id,
@@ -432,6 +433,7 @@ module Katello
       instance_repo = root_repository&.library_instance
       distribution_api_response = pulp_api.container_push_distribution_for_repository(pulp_repo_href)
       pulp_distribution_href = distribution_api_response&.pulp_href
+      pulp_distribution_prn = distribution_api_response&.prn
 
       if pulp_distribution_href.empty?
         return render_podman_error(
@@ -445,11 +447,12 @@ module Katello
                                                            repository_id: instance_repo.id).first
       if dist
         if dist.href != pulp_distribution_href
-          dist.update(href: pulp_distribution_href)
+          dist.update(href: pulp_distribution_href, prn: pulp_distribution_prn)
         end
       else
         ::Katello::Pulp3::DistributionReference.create!(path: @container_path_input,
                                                        href: pulp_distribution_href,
+                                                       prn: pulp_distribution_prn,
                                                        repository_id: instance_repo.id)
       end
     end
