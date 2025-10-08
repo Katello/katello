@@ -16,6 +16,7 @@ import withHeader from './withHeaders';
 import ChangeContentSource from '../../scenes/Hosts/ChangeContentSource';
 import AlternateContentSource from '../../scenes/AlternateContentSources';
 import BootedContainerImages from '../../scenes/BootedContainerImages';
+import ContainerImages from '../../scenes/ContainerImages';
 import FlatpakRemotes from '../../scenes/FlatpakRemotes';
 import FlatpakRemoteDetails from '../../scenes/FlatpakRemotes/Details';
 
@@ -91,6 +92,10 @@ export const links = [
   {
     path: 'booted_container_images',
     component: WithOrganization(withHeader(BootedContainerImages, { title: __('Booted container images') })),
+  },
+  {
+    path: 'labs/container_images',
+    component: WithOrganization(withHeader(ContainerImages, { title: __('Container Images') })),
   },
   {
     path: 'flatpak_remotes',

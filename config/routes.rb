@@ -35,6 +35,8 @@ Katello::Engine.routes.draw do
 
   match '/booted_container_images' => 'react#index', :via => [:get]
 
+  match '/container_images' => 'react#index', :via => [:get]
+
   match '/flatpak_remotes' => 'react#index', :via => [:get]
   match '/flatpak_remotes/*page' => 'react#index', :via => [:get]
 
