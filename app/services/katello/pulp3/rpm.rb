@@ -90,7 +90,7 @@ module Katello
         custom_json = {}
         custom_json['modular'] = unit['is_modular']
         custom_json['pulp_id'] = unit['pulp_href']
-        custom_json['pulp_prn'] = unit['prn']  # Also store PRN alongside pulp_id
+        custom_json['pulp_prn'] = unit['prn'] # Also store PRN alongside pulp_id
         (PULP_INDEXED_FIELDS - ['is_modular', 'pulp_href', 'prn', 'rpm_sourcerpm', 'pkgId', 'location_href']).
           each { |field| custom_json[field] = unit[field] }
         custom_json['release_sortable'] = Util::Package.sortable_version(unit['release'])

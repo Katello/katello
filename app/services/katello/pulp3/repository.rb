@@ -280,7 +280,7 @@ module Katello
 
       def create_distribution(path)
         options = secure_distribution_options(path)
-        options.delete(:content_guard_prn)  # Remove PRN field before sending to Pulp
+        options.delete(:content_guard_prn) # Remove PRN field before sending to Pulp
         distribution_data = api.distribution_class.new(options)
         unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
           fail_missing_publication(distribution_data.publication)
@@ -304,7 +304,7 @@ module Katello
           end
           content_guard_prn = options.delete(:content_guard_prn) # Extract PRN and remove from options
           distribution_reference.update(:content_guard_href => options[:content_guard], :content_guard_prn => content_guard_prn)
-          api.distributions_api.partial_update(distribution_reference.href, options)  # Send options without PRN field
+          api.distributions_api.partial_update(distribution_reference.href, options)
         end
       end
 

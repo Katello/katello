@@ -35,12 +35,11 @@ module Katello
           else
             found = create
           end
-          persist_if_needed(found)  # Pass the whole object, not just prn
+          persist_if_needed(found)
         end
 
         def persist_if_needed(content_guard_obj)
           return if self.smart_proxy.pulp_mirror?
-          # content_guard_obj already has both pulp_href and prn
           Katello::Util::Support.active_record_retry do
             found = Katello::Pulp3::ContentGuard.find_by(:name => default_name)
             if found
