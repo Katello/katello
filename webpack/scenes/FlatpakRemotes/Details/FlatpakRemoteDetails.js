@@ -149,7 +149,7 @@ export default function FlatpakRemoteDetails() {
         </TextContent>
       </GridItem>
 
-      <GridItem span={12}>
+      <GridItem span={12} id="remote-repositories-table">
         <RemoteRepositoriesTable frId={frId} canMirror={canMirror} />
       </GridItem>
       { isEditing &&
