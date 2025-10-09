@@ -130,7 +130,6 @@ describe('SystemPurposeEditModal', () => {
         id: 1,
         host: {
           subscription_facet_attributes: {
-            autoheal: true,
             // we're going to change role from 'Server' to 'Workstation'
             purpose_role: 'Red Hat Enterprise Linux Workstation',
             purpose_usage: 'Production',
@@ -187,7 +186,6 @@ describe('SystemPurposeEditModal', () => {
         id: 1,
         activation_key: {
           // we're going to change role from 'Server' to 'Workstation'
-          autoheal: true,
           purpose_role: 'Red Hat Enterprise Linux Workstation',
           purpose_usage: 'Production',
           release_version: '8',
