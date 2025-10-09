@@ -242,14 +242,6 @@ module Katello
       assert_equal "6", host.operatingsystem.minor
     end
 
-    def test_remove_subscriptions
-      pool = katello_pools(:pool_one)
-      pq = [PoolWithQuantities.new(pool, [1])]
-      ForemanTasks.expects(:sync_task).with(Actions::Katello::Host::RemoveSubscriptions, host, pq)
-
-      host.subscription_facet.remove_subscriptions(pq)
-    end
-
     def test_search_by_activation_key_id
       host.subscription_facet.activation_keys << activation_key
       assert_includes ::Host.search_for("activation_key_id = #{activation_key.id}"), host

@@ -2,7 +2,6 @@ module Katello
   class Api::V2::HostSubscriptionsController < Katello::Api::V2::ApiController
     include Katello::Concerns::Api::V2::ContentOverridesController
     before_action :find_host, :except => :create
-    before_action :check_subscriptions, :only => [:add_subscriptions, :remove_subscriptions]
     before_action :find_content_view_environment, :only => :create
     before_action :check_registration_services, :only => [:destroy, :create]
     before_action :find_content_overrides, :only => [:content_override]
@@ -161,10 +160,6 @@ module Katello
       @content_view_environment = Katello::ContentViewEnvironment.where(:content_view_id => params[:content_view_id],
                                                                         :environment_id => params[:lifecycle_environment_id]).first
       fail HttpErrors::NotFound, _("Couldn't find specified content view and lifecycle environment.") if @content_view_environment.nil?
-    end
-
-    def check_subscriptions
-      fail HttpErrors::BadRequest, _("subscriptions not specified") if params[:subscriptions].blank?
     end
 
     def check_registration_services
