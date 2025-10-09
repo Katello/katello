@@ -59,13 +59,6 @@ module Actions
             if options[:importing]
               handle_importing_content(version, options[:path], options[:metadata])
             elsif options[:syncable]
-              if separated_repo_map[:pulp3_deb_multicopy].keys.flatten.present?
-                plan_action(::Actions::Katello::Repository::MultiCloneToVersion, separated_repo_map[:pulp3_deb_multicopy], version)
-              end
-              if separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
-                plan_action(::Actions::Katello::Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_multicopy], version)
-              end
-
               # Create import history for syncable imports so they display under hammer's content-import list command.
               if options[:path] && options[:metadata]
                 plan_action(
@@ -75,6 +68,13 @@ module Actions
                   metadata: options[:metadata],
                   content_view_name: version.content_view.name
                 )
+              end
+            else
+              if separated_repo_map[:pulp3_deb_multicopy].keys.flatten.present?
+                plan_action(::Actions::Katello::Repository::MultiCloneToVersion, separated_repo_map[:pulp3_deb_multicopy], version)
+              end
+              if separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
+                plan_action(::Actions::Katello::Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_multicopy], version)
               end
             end
 
