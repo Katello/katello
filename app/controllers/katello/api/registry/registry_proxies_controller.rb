@@ -406,7 +406,6 @@ module Katello
       push_repo_api_response = pulp_api.container_push_repo_for_name(@container_path_input)
 
       latest_version_href = push_repo_api_response&.latest_version_href
-      latest_version_prn = push_repo_api_response&.latest_version_prn
       pulp_repo_href = push_repo_api_response&.pulp_href
 
       if latest_version_href.empty? || pulp_repo_href.empty?
@@ -416,6 +415,11 @@ module Katello
           :not_found
         )
       end
+
+      # Fetch version PRN from Pulp API
+      # FIXME: Remove this workaround when https://github.com/pulp/pulpcore/issues/7008 is resolved
+      version_response = pulp_api.repository_versions_api.read(latest_version_href, {fields: 'prn'})
+      latest_version_prn = version_response&.prn
 
       instance_repo.update!(version_href: latest_version_href, version_prn: latest_version_prn)
       # The Pulp repository should not change after first creation

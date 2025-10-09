@@ -25,6 +25,21 @@ module Katello
         href.include?('/publications/')
       end
 
+      # Build a PRN from a Pulp href
+      # @param href [String] Pulp href (e.g., "/pulp/api/v3/contentguards/certguard/rhsm/uuid/")
+      # @param pulp_plugin [String] Pulp plugin name (e.g., "certguard", "container", "rpm")
+      # @param pulp_model [String] Pulp model name (e.g., "rhsmcertguard", "containerrepository", "rpmrepository")
+      # @return [String, nil] PRN string (e.g., "prn:certguard.rhsmcertguard:uuid") or nil if href doesn't match expected format
+      def self.build_prn(href, pulp_plugin, pulp_model)
+        return nil unless href
+
+        # Extract UUID from href (last non-empty path segment)
+        uuid = href.split('/').reject(&:empty?).last
+        return nil unless uuid
+
+        "prn:#{pulp_plugin}.#{pulp_model}:#{uuid}"
+      end
+
       def partial_repo_path
         fail NotImplementedError
       end
@@ -157,6 +172,7 @@ module Katello
 
       def distribution_needs_update?
         if distribution_reference
+          # FIXME: Workaround for https://github.com/pulp/pulpcore/issues/7004
           expected = secure_distribution_options(relative_path).except(:name, :content_guard_prn).compact
           actual = get_distribution&.to_hash || {}
           expected != actual.slice(*expected.keys)
@@ -180,7 +196,8 @@ module Katello
           RepositoryReference.where(
             root_repository_id: repo.root_id,
             content_view_id: repo.content_view.id,
-            repository_href: response.pulp_href).create!
+            repository_href: response.pulp_href,
+            repository_prn: response.prn).create!
           response
         end
       end
@@ -373,15 +390,20 @@ module Katello
           pulp3_distribution_data = api.get_distribution(href)
           path = pulp3_distribution_data&.base_path
           content_guard_href = pulp3_distribution_data&.content_guard
-          prn = pulp3_distribution_data&.prn
 
-          # Fetch content_guard PRN if content_guard exists
-          # TODO: Remove this once we have PRNs in the distribution data
-          content_guard_prn = nil
-          if content_guard_href
-            content_guard = Katello::Pulp3::Api::ContentGuard.new(smart_proxy).get_content_guards_api.read(content_guard_href, {fields: 'prn'})
-            content_guard_prn = content_guard.prn
+          # FIXME: Workaround for ansible distributions not returning PRN
+          # Remove once https://github.com/pulp/pulp_ansible/issues/2320 is fixed
+          if repo.ansible_collection?
+            prn = self.class.build_prn(href, 'ansible', 'ansibledistribution')
+          else
+            prn = pulp3_distribution_data&.prn
           end
+
+          # Build content_guard PRN from href if content_guard exists
+          # FIXME: Workaround for https://github.com/pulp/pulpcore/issues/7004
+          content_guard_prn = if content_guard_href&.include?('/contentguards/certguard/rhsm/')
+                                self.class.build_prn(content_guard_href, 'certguard', 'rhsmcertguard')
+                              end
 
           if distribution_reference
             found_distribution = read_distribution(distribution_reference.href)
