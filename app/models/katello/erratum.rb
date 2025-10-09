@@ -227,7 +227,7 @@ module Katello
       property :summary, String, desc: 'Returns the errata summary, the length can very, it is usually in range of 60 to 1000 characters. It can include empty line characters.'
     end
     class Jail < ::Safemode::Jail
-      allow :errata_id, :errata_type, :issued, :created_at, :severity, :package_names, :cves, :reboot_suggested, :title, :summary
+      allow :errata_id, :errata_type, :issued, :updated, :created_at, :severity, :package_names, :cves, :reboot_suggested, :title, :summary
     end
   end
 end
