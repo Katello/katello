@@ -113,7 +113,7 @@ module Katello
     end
 
     def test_index_protected
-      assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
+      assert_protected_action(:index, @auth_permissions, @unauth_permissions, [@org]) do
         get :index, params: { :repository_id => @repo.id }
       end
     end
@@ -125,7 +125,7 @@ module Katello
         :promote_or_remove_content_views, :export_content
       ]
       all_unauth_permissions = @unauth_permissions + cv_unauth_permissions
-      assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions) do
+      assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions, [@org]) do
         get :index, params: { :content_view_version_id => @version.id, :available_for => 'content_view_version' }
       end
     end
@@ -175,7 +175,7 @@ module Katello
     end
 
     def test_show_protected
-      assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
+      assert_protected_action(:show, @auth_permissions, @unauth_permissions, [@org]) do
         get :show, params: { :repository_id => @repo.id, :id => @rpm.pulp_id }
       end
     end

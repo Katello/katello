@@ -43,7 +43,7 @@ module Katello
       allowed_perms = [@read_permission]
       denied_perms = [@create_permission, @delete_permission, @update_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index
       end
     end
