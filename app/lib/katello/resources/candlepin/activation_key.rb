@@ -10,11 +10,10 @@ module Katello
             ::Katello::Util::Data.array_with_indifferent_access akeys
           end
 
-          def create(name, owner_key, auto_attach, service_level, release_version, purpose_role, purpose_usage)
+          def create(name, owner_key, service_level, release_version, purpose_role, purpose_usage)
             url = "/candlepin/owners/#{owner_key}/activation_keys"
             params = {
               name: name,
-              autoAttach: auto_attach,
               serviceLevel: service_level,
               releaseVer: release_version,
               role: purpose_role,
@@ -24,8 +23,8 @@ module Katello
             JSON.parse(response.body).with_indifferent_access
           end
 
-          def update(id, release_version, service_level, auto_attach, purpose_role, purpose_usage)
-            attrs = { :releaseVer => release_version, :serviceLevel => service_level, :autoAttach => auto_attach, :role => purpose_role, :usage => purpose_usage }.delete_if { |_k, v| v.nil? }
+          def update(id, release_version, service_level, purpose_role, purpose_usage)
+            attrs = { :releaseVer => release_version, :serviceLevel => service_level, :role => purpose_role, :usage => purpose_usage }.delete_if { |_k, v| v.nil? }
             JSON.parse(self.put(path(id), attrs.to_json, self.default_headers).body).with_indifferent_access
           end
 

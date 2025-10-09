@@ -256,14 +256,54 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
 
     host = FactoryBot.create(:host, :with_subscription, :with_operatingsystem)
-    host.subscription_facet.update!(:autoheal => true,
+    host.subscription_facet.update!(:service_level => 'Premium',
                                                :installed_products_attributes => [{:product_name => 'foo', :version => '6', :product_id => '69'}])
 
-    put :update, params: { :id => host.id, :subscription_facet_attributes => {:autoheal => false} }
+    put :update, params: { :id => host.id, :subscription_facet_attributes => {:service_level => 'Standard'} }
 
     assert_response :success
 
-    refute host.reload.subscription_facet.reload.autoheal
+    assert_equal 'Standard', host.reload.subscription_facet.reload.service_level
+    assert_equal 'foo', host.subscription_facet.installed_products.first.name
+  end
+
+  def test_update_subscription_facet_with_empty_service_level
+    Katello::Host::SubscriptionFacet.any_instance.stubs(:backend_update_needed?).returns(false)
+
+    Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
+    Katello::Candlepin::Consumer.any_instance.stubs(:virtual_host).returns(nil)
+    Katello::Candlepin::Consumer.any_instance.stubs(:virtual_guests).returns([])
+    Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
+
+    host = FactoryBot.create(:host, :with_subscription, :with_operatingsystem)
+    host.subscription_facet.update!(:service_level => 'Premium',
+                                               :installed_products_attributes => [{:product_name => 'foo', :version => '6', :product_id => '69'}])
+
+    put :update, params: { :id => host.id, :subscription_facet_attributes => {:service_level => ''} }
+
+    assert_response :success
+
+    assert_equal '', host.reload.subscription_facet.reload.service_level
+    assert_equal 'foo', host.subscription_facet.installed_products.first.name
+  end
+
+  def test_update_subscription_facet_with_nil_service_level
+    Katello::Host::SubscriptionFacet.any_instance.stubs(:backend_update_needed?).returns(false)
+
+    Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
+    Katello::Candlepin::Consumer.any_instance.stubs(:virtual_host).returns(nil)
+    Katello::Candlepin::Consumer.any_instance.stubs(:virtual_guests).returns([])
+    Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
+
+    host = FactoryBot.create(:host, :with_subscription, :with_operatingsystem)
+    host.subscription_facet.update!(:service_level => 'Premium',
+                                               :installed_products_attributes => [{:product_name => 'foo', :version => '6', :product_id => '69'}])
+
+    put :update, params: { :id => host.id, :subscription_facet_attributes => {:service_level => nil} }
+
+    assert_response :success
+
+    assert_nil host.reload.subscription_facet.reload.service_level
     assert_equal 'foo', host.subscription_facet.installed_products.first.name
   end
 

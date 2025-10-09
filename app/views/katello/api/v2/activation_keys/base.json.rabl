@@ -1,7 +1,7 @@
 extends 'katello/api/v2/common/org_reference'
 extends 'katello/api/v2/common/timestamps'
 
-attributes :id, :name, :description, :unlimited_hosts, :auto_attach, :content_view_environment_labels
+attributes :id, :name, :description, :unlimited_hosts, :content_view_environment_labels
 
 node :multi_content_view_environment do |ak|
   ak.multi_content_view_environment?

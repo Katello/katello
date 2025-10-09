@@ -51,8 +51,6 @@ export const BLOCKING_FOREMAN_TASK_TYPES = [
   'Actions::Katello::UpstreamSubscriptions::UpdateEntitlement',
   'Actions::Katello::UpstreamSubscriptions::RemoveEntitlements',
   'Actions::Katello::UpstreamSubscriptions::UpdateEntitlements',
-  'Actions::Katello::Organization::SimpleContentAccess::Enable',
-  'Actions::Katello::Organization::SimpleContentAccess::Disable',
 ];
 
 export const SUBSCRIPTION_TABLE_NAME = 'Katello::Subscriptions';
