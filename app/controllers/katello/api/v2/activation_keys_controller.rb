@@ -13,7 +13,7 @@ module Katello
     before_action :verify_simple_content_access_disabled, :only => [:add_subscriptions]
     before_action :validate_release_version, :only => [:create, :update]
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage content_view_environments))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level purpose_role purpose_usage content_view_environments))
 
     def_param_group :activation_key do
       param :organization_id, :number, :desc => N_("organization identifier"), :required => true
@@ -22,7 +22,6 @@ module Katello
       param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
       param :release_version, String, :desc => N_("content release version")
       param :service_level, String, :desc => N_("service level")
-      param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration"), deprecated: true
       param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
       param :purpose_role, String, :desc => N_("Sets the system purpose usage")
 
@@ -125,8 +124,7 @@ module Katello
       @new_activation_key.reload
       sync_task(::Actions::Katello::ActivationKey::Update, @new_activation_key,
                   :service_level   => @activation_key.service_level,
-                  :release_version => @activation_key.release_version,
-                  :auto_attach     => @activation_key.auto_attach
+                  :release_version => @activation_key.release_version
                )
       @activation_key.pools.each do |pool|
         @new_activation_key.subscribe(pool[:id])
@@ -379,7 +377,6 @@ module Katello
                                              :content_view_id,
                                              :release_version,
                                              :service_level,
-                                             :auto_attach,
                                              :max_hosts,
                                              :unlimited_hosts,
                                              :purpose_role,

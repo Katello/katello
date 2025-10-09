@@ -106,49 +106,6 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/hosts/bulk/remove_subscriptions", N_("Remove subscriptions from one or more hosts"), deprecated: true
-    param_group :bulk_params
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to remove") do
-      param :id, String, :desc => N_("Subscription Pool id"), :required => true
-      param :quantity, Integer, :desc => N_("Quantity of specified subscription to remove"), :required => false
-    end
-    def remove_subscriptions
-      #combine the quantities for duplicate pools into PoolWithQuantities objects
-      pool_id_quantities = params.require(:subscriptions).inject({}) do |new_hash, subscription|
-        new_hash[subscription['id']] ||= PoolWithQuantities.new(Pool.find(subscription['id']))
-        new_hash[subscription['id']].quantities << subscription['quantity']
-        new_hash
-      end
-      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::RemoveSubscriptions, @hosts, pool_id_quantities.values)
-      respond_for_async :resource => task
-    end
-
-    api :PUT, "/hosts/bulk/add_subscriptions", N_("Add subscriptions to one or more hosts"), deprecated: true
-    param_group :bulk_params
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => true do
-      param :id, String, :desc => N_("Subscription Pool id"), :required => true
-      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
-    end
-    def add_subscriptions
-      if @organization.simple_content_access?
-        fail HttpErrors::BadRequest, _("The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled")
-      end
-
-      pools_with_quantities = params.require(:subscriptions).map do |sub_params|
-        PoolWithQuantities.new(Pool.find(sub_params['id']), sub_params['quantity'])
-      end
-
-      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::AttachSubscriptions, @hosts, pools_with_quantities)
-      respond_for_async :resource => task
-    end
-
-    api :PUT, "/hosts/bulk/auto_attach", N_("Trigger an auto-attach of subscriptions on one or more hosts"), deprecated: true
-    param_group :bulk_params
-    def auto_attach
-      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::AutoAttachSubscriptions, @hosts)
-      respond_for_async :resource => task
-    end
-
     api :PUT, "/hosts/bulk/content_overrides", N_("Set content overrides to one or more hosts")
     param_group :bulk_params
     param :content_overrides, Array, :desc => N_("Array of Content override parameters") do

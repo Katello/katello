@@ -15,7 +15,6 @@ module ::Actions::Katello::ActivationKey
     let(:action_class) { ::Actions::Katello::ActivationKey::Create }
     let(:candlepin_input) do
       {  :organization_label => activation_key.organization.label,
-         :auto_attach => true,
          :service_level => 'Self-support',
          :release_version => activation_key.release_version,
          :purpose_usage => activation_key.purpose_usage,
@@ -39,7 +38,7 @@ module ::Actions::Katello::ActivationKey
 
   class UpdateTest < TestBase
     let(:action_class) { ::Actions::Katello::ActivationKey::Update }
-    let(:input) { { :auto_attach => 'false', :purpose_usage => "usage", :purpose_role => "role"} }
+    let(:input) { { :purpose_usage => "usage", :purpose_role => "role"} }
 
     it 'plans' do
       action.expects(:action_subject).with(activation_key)
@@ -49,7 +48,6 @@ module ::Actions::Katello::ActivationKey
       assert_action_planed(action, ::Actions::Candlepin::ActivationKey::Update)
       assert_equal(activation_key.purpose_usage, "usage")
       assert_equal(activation_key.purpose_role, "role")
-      assert_equal(activation_key.auto_attach, false)
     end
   end
 

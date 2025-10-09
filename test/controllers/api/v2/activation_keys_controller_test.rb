@@ -105,25 +105,13 @@ module Katello
       ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create)
 
-      post :create, params: { organization_id: @organization.id, name: 'Typical Key', release_version: '7Server', auto_attach: false, service_level: 'Standard' }
+      post :create, params: { organization_id: @organization.id, name: 'Typical Key', release_version: '7Server', service_level: 'Standard' }
 
       assert_response :success
       response = JSON.parse(@response.body)
       assert_equal 'Standard', response['service_level']
       assert_equal '7Server', response['release_version']
       assert_equal 'Typical Key', response['name']
-      refute response['auto_attach']
-    end
-
-    def test_create_no_auto_attach
-      ActivationKey.any_instance.expects(:reload)
-      assert_sync_task(::Actions::Katello::ActivationKey::Create)
-      post :create, params: { organization_id: @organization.id, name: 'Unset Auto-Attach' }
-
-      assert_response :success
-      response = JSON.parse(@response.body)
-
-      assert response['auto_attach']
     end
 
     test_attributes :pid => '1d73b8cc-a754-4637-8bae-d9d2aaf89003'
@@ -461,21 +449,6 @@ module Katello
       assert_operator @activation_key.content_view_environments.size, :>, 0
     end
 
-    test_attributes :pid => 'ec225dad-2d27-4b37-989d-1ba2c7f74ac4'
-    def test_update_auto_attach
-      new_auto_attach = !@activation_key.auto_attach
-      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, activation_key_params|
-        assert_equal activation_key.id, @activation_key.id
-        assert_equal new_auto_attach, activation_key_params[:auto_attach]
-      end
-      put :update, params: {
-        :id => @activation_key.id,
-        :organization_id => @organization.id,
-        :activation_key => { :auto_attach => new_auto_attach },
-      }
-      assert_response :success
-    end
-
     def test_update_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
@@ -532,14 +505,12 @@ module Katello
       @activation_key.stubs(:cp_id).returns("22222")
       @activation_key.stubs(:service_level).returns("Premium")
       @activation_key.stubs(:release_version).returns("6Server")
-      @activation_key.stubs(:auto_attach).returns(false)
       ActivationKey.expects(:readable).returns(stub(:find_by => @activation_key))
 
       assert_sync_task(::Actions::Katello::ActivationKey::Create)
       assert_sync_task(::Actions::Katello::ActivationKey::Update) do |_activation_key, activation_key_params|
         assert_equal activation_key_params[:service_level], @activation_key.service_level
         assert_equal activation_key_params[:release_version], @activation_key.release_version
-        assert_equal activation_key_params[:auto_attach], @activation_key.auto_attach
       end
       content_overrides = [::Katello::ContentOverride.new("foo", :enabled => 1), ::Katello::ContentOverride.new("bar", :enabled => nil)]
       @activation_key.expects(:content_overrides).at_least_once.returns(content_overrides)

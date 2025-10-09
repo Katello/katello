@@ -6,7 +6,6 @@ module Actions
           param :cp_id
           param :release_version
           param :service_level
-          param :auto_attach
           param :purpose_role
           param :purpose_usage
         end
@@ -16,7 +15,6 @@ module Actions
                                                                 input[:cp_id],
                                                                 input[:release_version],
                                                                 input[:service_level],
-                                                                input[:auto_attach],
                                                                 input[:purpose_role],
                                                                 input[:purpose_usage])
         end
