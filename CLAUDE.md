@@ -302,10 +302,12 @@ return (
 );
 ```
 
-**Reference Examples:**
-- Simple: `/home/vagrant/foreman/webpack/.../routes/Models/ModelsPage/index.js`
-- Advanced: `/home/vagrant/foreman/webpack/.../components/HostsIndex/index.js`
-- Katello: `/home/vagrant/katello/webpack/scenes/ContentViews/Table/ContentViewsTable.js`
+**References:**
+- [Table Index Page](./TABLE_INDEX_PAGE_PATTERNS.md)
+- Simple [ModelsPage] (https://github.com/theforeman/foreman/blob/develop/webpack/assets/javascripts/react_app/routes/Models/ModelsPage/index.js)
+- Complex: [HostsIndex](https://github.com/theforeman/foreman/blob/develop/webpack/assets/javascripts/react_app/components/HostsIndex/index.js)
+- Katello: `./webpack/scenes/ContentViews/Table/ContentViewsTable.js`
+
 
 ## Technical Details
 
