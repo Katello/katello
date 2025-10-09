@@ -31,7 +31,6 @@ module Katello
         custom_json = unit.slice(*keys)
         custom_json.inject(HashWithIndifferentAccess.new({})) { |h, (k, v)| h.merge({ k => v.respond_to?(:strip) ? v.strip : v }) }
         custom_json['pulp_id'] = custom_json['id']
-        custom_json['pulp_prn'] = unit['prn']
         custom_json["issued"] = custom_json.delete("issued_date")
         custom_json["updated"] = custom_json.delete("updated_date")
         custom_json['title'] = custom_json['title']&.truncate(255)
