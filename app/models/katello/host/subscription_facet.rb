@@ -51,7 +51,6 @@ module Katello
           self.dmi_uuid = consumer_params['facts']['dmi.system.uuid']
         end
 
-        self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].nil?
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].nil?
         self.registered_at = consumer_params['created'] unless consumer_params['created'].blank?
         self.last_checkin = consumer_params['lastCheckin'] unless consumer_params['lastCheckin'].blank?
@@ -130,7 +129,6 @@ module Katello
 
       def consumer_attributes
         attrs = {
-          :autoheal => autoheal,
           :usage => purpose_usage,
           :role => purpose_role,
           :serviceLevel => service_level,
@@ -257,10 +255,6 @@ module Katello
         Katello::Product.joins(:subscriptions => {:pools => :subscription_facets}).where("#{Katello::Host::SubscriptionFacet.table_name}.id" => self.id).enabled.uniq
       end
 
-      def remove_subscriptions(pools_with_quantities)
-        ForemanTasks.sync_task(Actions::Katello::Host::RemoveSubscriptions, self.host, pools_with_quantities)
-      end
-
       def self.sanitize_name(name)
         name.gsub('_', '-').chomp('.').downcase
       end
@@ -274,7 +268,7 @@ module Katello
       end
 
       def backend_update_needed?
-        %w(release_version service_level autoheal purpose_role purpose_usage).each do |method|
+        %w(release_version service_level purpose_role purpose_usage).each do |method|
           if self.send("#{method}_changed?")
             Rails.logger.debug("backend_update_needed: subscription facet #{method} changed")
             return true

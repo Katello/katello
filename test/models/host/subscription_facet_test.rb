@@ -92,12 +92,6 @@ module Katello
       assert_includes ::Host.search_for("release_version = 7Server"), host
     end
 
-    def test_search_autoheal
-      subscription_facet.update!(:autoheal => 'true')
-
-      assert_includes ::Host.search_for("autoheal = true"), host
-    end
-
     def test_search_service_level
       subscription_facet.update!(:service_level => 'terrible')
 
@@ -124,19 +118,18 @@ module Katello
     end
 
     def test_update_from_consumer_attributes
-      params = { :lastCheckin => Time.now, :autoheal => true, :serviceLevel => "Premium", :releaseVer => "7Server" }
+      params = { :lastCheckin => Time.now, :serviceLevel => "Premium", :releaseVer => "7Server" }
       Katello::Resources::Candlepin::Consumer.stubs(:virtual_guests).returns([])
       Katello::Resources::Candlepin::Consumer.stubs(:virtual_host).returns(nil)
       subscription_facet.update_from_consumer_attributes(params.with_indifferent_access)
 
       assert_equal subscription_facet.last_checkin, params[:lastCheckin]
-      assert_equal subscription_facet.autoheal, params[:autoheal]
       assert_equal subscription_facet.service_level, params[:serviceLevel]
       assert_equal subscription_facet.release_version, params[:releaseVer]
     end
 
     def test_update_from_consumer_attributes_release_version
-      params = { :lastCheckin => Time.now, :autoheal => true, :serviceLevel => "Premium", :releaseVer => {'releaseVer' => "7Server" }}
+      params = { :lastCheckin => Time.now, :serviceLevel => "Premium", :releaseVer => {'releaseVer' => "7Server" }}
       Katello::Resources::Candlepin::Consumer.stubs(:virtual_guests).returns([])
       Katello::Resources::Candlepin::Consumer.stubs(:virtual_host).returns(nil)
       subscription_facet.update_from_consumer_attributes(params.with_indifferent_access)

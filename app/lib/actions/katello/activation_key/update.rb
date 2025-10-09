@@ -12,14 +12,12 @@ module Actions
                         cp_id: activation_key.cp_id,
                         release_version: activation_key.release_version,
                         service_level: activation_key.service_level,
-                        auto_attach: activation_key.auto_attach,
                         purpose_role: activation_key.purpose_role,
                         purpose_usage: activation_key.purpose_usage)
           end
         end
 
         def update_candlepin?(activation_key, activation_key_params)
-          cp_changed?(activation_key.auto_attach, activation_key_params[:auto_attach]) ||
           cp_changed?(activation_key.service_level, activation_key_params[:service_level]) ||
           cp_changed?(activation_key.release_version, activation_key_params[:release_version]) ||
           cp_changed?(activation_key.purpose_role, activation_key_params[:purpose_role]) ||

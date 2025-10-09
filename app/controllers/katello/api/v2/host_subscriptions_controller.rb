@@ -17,10 +17,9 @@ module Katello
 
     def_param_group :subscription_facet_attributes do
       param :release_version, String, :desc => N_("Release version for this Host to use (7Server, 7.1, etc)")
-      param :autoheal, :bool, :desc => N_("Sets whether the Host will autoheal subscriptions upon checkin")
       param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
       param :purpose_role, String, :desc => N_("Sets the system purpose usage")
-      param :service_level, String, :desc => N_("Service level to be used for autoheal")
+      param :service_level, String, :desc => N_("Service level")
       param :hypervisor_guest_uuids, Array, :desc => N_("List of hypervisor guest uuids")
       param :installed_products_attributes, Array, :desc => N_("List of products installed on the host") do
         param_group :installed_products, Api::V2::HostSubscriptionsController
@@ -49,18 +48,6 @@ module Katello
       @host.reload if reload_host
       presenter = ::Katello::HostSubscriptionsPresenter.new(@host)
       full_result_response(presenter.subscriptions)
-    end
-
-    api :PUT, "/hosts/:host_id/subscriptions/auto_attach", N_("Trigger an auto-attach of subscriptions"), deprecated: true
-    param :host_id, Integer, :desc => N_("Id of the host"), :required => true
-    def auto_attach
-      deprecate_entitlement_mode_endpoint
-      if @host.organization.simple_content_access?
-        fail ::Katello::HttpErrors::BadRequest, _("This host's organization is in Simple Content Access mode. Auto-attach is disabled")
-      end
-
-      sync_task(::Actions::Katello::Host::AutoAttachSubscriptions, @host)
-      respond_for_index(:collection => index_response(reload_host: true), :template => "index")
     end
 
     api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
@@ -113,45 +100,6 @@ module Katello
         end
       end
       rhsm_params
-    end
-
-    api :PUT, "/hosts/:host_id/subscriptions/remove_subscriptions", N_("Remove subscriptions from a host"), deprecated: true
-    param :host_id, Integer, :desc => N_("Id of the host"), :required => true
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to remove") do
-      param :id, String, :desc => N_("Subscription Pool id"), :required => true
-      param :quantity, Integer, :desc => N_("If specified, remove the first instance of a subscription with matching id and quantity"), :required => false
-    end
-    def remove_subscriptions
-      deprecate_entitlement_mode_endpoint
-      #combine the quantities for duplicate pools into PoolWithQuantities objects
-      pool_id_quantities = params.require(:subscriptions).inject({}) do |new_hash, subscription|
-        new_hash[subscription['id']] ||= PoolWithQuantities.new(Pool.with_identifier(subscription['id']))
-        new_hash[subscription['id']].quantities << subscription['quantity']
-        new_hash
-      end
-
-      sync_task(::Actions::Katello::Host::RemoveSubscriptions, @host, pool_id_quantities.values)
-      respond_for_index(:collection => index_response(reload_host: true), :template => "index")
-    end
-
-    api :PUT, "/hosts/:host_id/subscriptions/add_subscriptions", N_("Add a subscription to a host"), deprecated: true
-    param :host_id, Integer, :desc => N_("Id of the host"), :required => true
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => true do
-      param :id, String, :desc => N_("Subscription Pool id"), :required => true
-      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
-    end
-    def add_subscriptions
-      deprecate_entitlement_mode_endpoint
-      if @host.organization.simple_content_access?
-        fail ::Katello::HttpErrors::BadRequest, _("This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.")
-      end
-
-      pools_with_quantities = params.require(:subscriptions).map do |sub_params|
-        PoolWithQuantities.new(Pool.with_identifier(sub_params['id']), sub_params['quantity'].to_i)
-      end
-
-      sync_task(::Actions::Katello::Host::AttachSubscriptions, @host, pools_with_quantities)
-      respond_for_index(:collection => index_response(reload_host: true), :template => "index")
     end
 
     api :GET, "/hosts/:host_id/subscriptions/product_content", N_("Get content and overrides for the host")
@@ -228,7 +176,7 @@ module Katello
     end
 
     def action_permission
-      if ['add_subscriptions', 'destroy', 'remove_subscriptions', 'auto_attach', 'content_override'].include?(params[:action])
+      if ['destroy', 'content_override'].include?(params[:action])
         :edit
       elsif ['index', 'events', 'product_content', 'available_release_versions', 'enabled_repositories'].include?(params[:action])
         :view
