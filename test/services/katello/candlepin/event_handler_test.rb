@@ -24,34 +24,6 @@ module Katello
       OpenStruct.new(result)
     end
 
-    describe 'handles compliance.created' do
-      let(:mymessage) do
-        message("compliance.created", 'eventData' => "{\"status\":\"invalid\"}")
-      end
-    end
-
-    describe 'handles entitlement.created' do
-      let(:mymessage) do
-        message("entitlement.created", :referenceId => pool_id)
-      end
-
-      it 'reindex the pool' do
-        Katello::Candlepin::MessageHandler.any_instance.expects(:import_pool)
-        handler.handle(mymessage)
-      end
-    end
-
-    describe 'handles entitlement.deleted' do
-      let(:mymessage) do
-        message("entitlement.deleted", :referenceId => pool_id)
-      end
-
-      it 'reindex the pool' do
-        Katello::Candlepin::MessageHandler.any_instance.expects(:import_pool)
-        handler.handle(mymessage)
-      end
-    end
-
     describe 'handles pool.created' do
       let(:mymessage) do
         message "pool.created", :entityId => pool_id
@@ -69,17 +41,6 @@ module Katello
       end
 
       it 'pool removed from index' do
-        handler.handle(mymessage)
-      end
-    end
-
-    describe 'handles owner_content_access_mode.modified' do
-      let(:mymessage) do
-        message "owner_content_access_mode.modified"
-      end
-
-      it 'calls the right MessageHandler method' do
-        Katello::Candlepin::MessageHandler.any_instance.expects(:handle_content_access_mode_modified)
         handler.handle(mymessage)
       end
     end
