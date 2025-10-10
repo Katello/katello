@@ -81,7 +81,7 @@ module Katello
       def create_remote
         if smart_proxy_acs&.remote_href.nil?
           response = super
-          smart_proxy_acs.update!(remote_href: response.pulp_href)
+          smart_proxy_acs.update!(remote_href: response.pulp_href, remote_prn: response.prn)
         end
       end
 
@@ -106,7 +106,7 @@ module Katello
           end
           response = api.alternate_content_source_api.create(name: generate_backend_object_name, paths: paths.sort,
                                                              remote: smart_proxy_acs.remote_href)
-          smart_proxy_acs.update!(alternate_content_source_href: response.pulp_href)
+          smart_proxy_acs.update!(alternate_content_source_href: response.pulp_href, alternate_content_source_prn: response.prn)
           return response
         end
       end

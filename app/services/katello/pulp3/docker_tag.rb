@@ -18,6 +18,7 @@ module Katello
       def self.generate_model_row(unit)
         row = {
           pulp_id: unit[unit_identifier],
+          pulp_prn: unit['prn'],
           name: unit['name'],
         }
 
