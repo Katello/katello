@@ -55,28 +55,4 @@ module Katello
       assert_empty Katello::Pool.find_by(:cp_id => @pool_id)
     end
   end
-
-  class OwnerContentAccessModeModifiedTest < MessageHandlerTestBase
-    let(:event_name) { 'owner_content_access_mode.modified' }
-
-    def setup
-      @org = get_organization(:empty_organization)
-      Katello::Resources::Candlepin::Owner.expects(:all).returns(
-        [
-          {
-            'displayName' => @org.name,
-            'key' => @org.label,
-          },
-        ]
-      )
-      super
-    end
-
-    def test_content_access_mode_modified
-      Organization.any_instance.expects(:simple_content_access?).with(cached: false)
-      Rails.logger.expects(:error).with("Received content_access_mode_modified event for org #{@org.label}. This event is no longer supported.")
-
-      handler.handle_content_access_mode_modified
-    end
-  end
 end

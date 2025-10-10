@@ -44,16 +44,5 @@ module Katello
         handler.handle(mymessage)
       end
     end
-
-    describe 'handles owner_content_access_mode.modified' do
-      let(:mymessage) do
-        message "owner_content_access_mode.modified"
-      end
-
-      it 'calls the right MessageHandler method' do
-        Katello::Candlepin::MessageHandler.any_instance.expects(:handle_content_access_mode_modified)
-        handler.handle(mymessage)
-      end
-    end
   end
 end

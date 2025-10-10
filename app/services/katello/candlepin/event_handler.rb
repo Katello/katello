@@ -19,8 +19,6 @@ module Katello
             message_handler.import_pool
           when /pool\.deleted/
             message_handler.delete_pool
-          when /owner_content_access_mode\.modified/
-            message_handler.handle_content_access_mode_modified
           end
         end
       end

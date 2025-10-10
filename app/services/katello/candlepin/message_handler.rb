@@ -68,23 +68,6 @@ module Katello
           Rails.logger.info "Deleted Katello::Pool with cp_id=#{pool_id}"
         end
       end
-
-      def handle_content_access_mode_modified
-        # Ideally the target_name would be the Candlepin Owner key
-        # Since it's the displayName, and we don't update that after org creation, there could be a mismatch
-        # For now, find the Candlepin Owner displayName from this event, and tie it back to a Katello org based on owner key
-        owners = Katello::Resources::Candlepin::Owner.all
-        owner = owners.find { |o| o['displayName'] == target_name }
-
-        unless owner
-          fail("Candlepin Owner %s could not be found" % target_name)
-        end
-
-        org = ::Organization.find_by!(label: owner['key'])
-
-        Rails.logger.error "Received content_access_mode_modified event for org #{org.label}. This event is no longer supported."
-        org.simple_content_access?(cached: false)
-      end
     end
   end
 end
