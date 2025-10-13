@@ -41,6 +41,7 @@ const HostActionsBar = () => {
       'bulk-packages-wizard',
       'bulk-errata-wizard',
       'bulk-repo-sets-wizard',
+      'bulk-change-host-collections-modal',
     ].forEach((id) => {
       dispatch(addModal({ id }));
     });
