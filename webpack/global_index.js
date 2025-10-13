@@ -34,6 +34,7 @@ import HostsIndexActionsBar from './components/extensions/Hosts/ActionsBar';
 import RecentCommunicationCardExtensions from './components/extensions/HostDetails/DetailsTabCards/RecentCommunicationCardExtensions';
 import SystemPurposeCard from './components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard';
 import BulkChangeHostCVModal from './components/extensions/Hosts/BulkActions/BulkChangeHostCVModal/index.js';
+import BulkChangeHostCollectionsModal, { BulkChangeHostCollectionsMenuItem } from './components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/index.js';
 import BulkPackagesWizardModal from './components/extensions/Hosts/BulkActions/BulkPackagesWizard/index.js';
 import BulkErrataWizardModal from './components/extensions/Hosts/BulkActions/BulkErrataWizard/index.js';
 import BulkRepositorySetsWizardModal from './components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/index.js';
@@ -95,6 +96,8 @@ addGlobalFill('_all-hosts-modals', 'BulkChangeHostCVModal', <BulkChangeHostCVMod
 addGlobalFill('_all-hosts-modals', 'BulkPackagesWizardModal', <BulkPackagesWizardModal key="bulk-packages-wizard-modal" />, 200);
 addGlobalFill('_all-hosts-modals', 'BulkErrataWizardModal', <BulkErrataWizardModal key="bulk-errata-wizard-modal" />, 300);
 addGlobalFill('_all-hosts-modals', 'BulkRepositorySetsWizardModal', <BulkRepositorySetsWizardModal key="bulk-repo-sets-wizard-modal" />, 400);
+addGlobalFill('_all-hosts-modals', 'BulkChangeHostCollectionsModal', <BulkChangeHostCollectionsModal key="bulk-change-host-collections-modal" />, 500);
+addGlobalFill('_host-associations', 'BulkChangeHostCollectionsMenuItem', <BulkChangeHostCollectionsMenuItem key="bulk-change-host-collections-menu-item" />, 100);
 
 registerColumns(hostsIndexColumnExtensions);
 registerGetActions({
