@@ -123,36 +123,19 @@ module Katello
     end
 
     def test_ping_katello_events
-      Katello::EventDaemon::Runner
-        .expects(:service_status).with(:katello_events)
-        .returns(processed_count: 0, failed_count: 0, running: true)
+      Katello::Ping.stubs(:event_queue_foreman_tasks).returns([stub(:task)])
 
       result = Katello::Ping.ping_katello_events({})
 
       assert_equal 'ok', result[:status]
-      assert_equal '0 Processed, 0 Failed', result[:message]
-    end
-
-    def test_ping_katello_events_starting
-      Katello::EventDaemon::Runner
-        .expects(:service_status).with(:katello_events)
-        .returns(running: 'starting')
-
-      result = Katello::Ping.ping_katello_events({})
-
-      assert_equal 'ok', result[:status]
-      assert_equal '0 Processed, 0 Failed', result[:message]
     end
 
     def test_ping_katello_events_not_running
-      Katello::EventDaemon::Runner
-        .expects(:service_status).with(:katello_events)
-        .returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
+      Katello::Ping.expects(:event_queue_foreman_tasks).returns([])
 
       result = Katello::Ping.ping_katello_events({})
 
       assert_equal 'FAIL', result[:status]
-      assert_equal 'Not running', result[:message]
     end
   end
 
