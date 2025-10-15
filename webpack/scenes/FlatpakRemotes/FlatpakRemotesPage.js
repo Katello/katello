@@ -37,6 +37,7 @@ const FlatpakRemotesPage = () => {
     can_edit: canEdit = false,
     can_delete: canDelete = false,
     can_create: canCreate = false,
+    has_redhat_flatpak_remote: hasRedhatRemote = false,
   } = response || {};
 
   const columnHeaders = [__('Name'), __('URL')];
@@ -183,6 +184,7 @@ const FlatpakRemotesPage = () => {
         <CreateFlatpakModal
           show={isModalOpen}
           setIsOpen={setIsModalOpen}
+          hasRedhatRemote={hasRedhatRemote}
         />
         <EditFlatpakModal
           show={isEditModalOpen}
