@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.18.0.rc2",
+        "Project-Id-Version": "katello 4.18.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2025",
+        "Last-Translator": "Ondřej Gajdušek, 2025",
         "Language-Team": "Japanese (https://app.transifex.com/foreman/teams/114/ja/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -464,11 +464,8 @@
       "About page": [
         "About ページ"
       ],
-      "Abstract async task": [
-        ""
-      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
-        "Red Hat Subcription Management へのアクセスは禁止されています。これを変更する場合は、コンテンツ設定の「サブスクリプション接続の有効化」を更新してください。"
+        "Red Hat Subscription Management へのアクセスは禁止されています。これを変更するには、コンテンツ設定の 'サブスクリプション接続の有効化' を更新してください。"
       ],
       "Account Number": [
         "アカウント番号"
@@ -610,9 +607,6 @@
       ],
       "Add repositories with package groups to content view to select them here.": [
         "パッケージグループのあるリポジトリーをコンテンツビューに追加して、ここで選択します。"
-      ],
-      "Add rolling repo clone": [
-        ""
       ],
       "Add rule": [
         "ルールの追加"
@@ -783,7 +777,7 @@
         "Ansible コレクション"
       ],
       "Any updates to image mode host(s) will be lost on the next reboot.": [
-        ""
+        "イメージモードのホストへの更新は、次回の再起動時に失われます。"
       ],
       "Applicability Batch Size": [
         "適用可能なバッチサイズ"
@@ -807,7 +801,7 @@
         "アプリケーション"
       ],
       "Application name": [
-        ""
+        "アプリケーション名"
       ],
       "Apply": [
         "適用"
@@ -980,9 +974,6 @@
       "Auto Publish - Triggered by '%s'": [
         "自動公開 - '%s' によるトリガー"
       ],
-      "Auto attach subscriptions": [
-        ""
-      ],
       "Auto publish": [
         "自動公開"
       ],
@@ -1050,7 +1041,7 @@
         "以下は、このコンテンツホストで現在利用可能なリポジトリーセットです。Red Hat サブスクリプションの場合は、{rhrp} により追加のコンテンツを利用できる可能性があります。デフォルト設定を変更するには、subscription-manager 1.10 またはそれ以降をこのホストにインストールする必要があります。"
       ],
       "Below you can add content overrides, which change whether a repository is enabled or disabled. Change their state one by one, or use the checkboxes and select an action to perform.": [
-        ""
+        "以下でコンテンツオーバーライドを追加できます。これにより、リポジトリーの有効/無効を変更できます。オーバーライドの状態を 1 つずつ変更するか、チェックボックスを使用して実行するアクションを選択してください。"
       ],
       "Beta": [
         "ベータ"
@@ -1212,7 +1203,7 @@
         "複合バージョンを別の複合コンテンツビューに追加できません"
       ],
       "Cannot add container push repositories to a rolling content view": [
-        ""
+        "コンテナープッシュリポジトリーをローリングコンテンツビューに追加できません"
       ],
       "Cannot add content view environments from a different organization": [
         "別の組織からコンテンツビュー環境を追加できません"
@@ -1236,10 +1227,10 @@
         "リポジトリーを複合コンテンツビューに追加できません"
       ],
       "Cannot add rolling content view to composite content view": [
-        ""
+        "ローリングコンテンツビューを複合コンテンツビューに追加できません"
       ],
       "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.": [
-        ""
+        "コンテンツビュー環境を割り当てることができません %s: コンテンツビューが公開されていないか、そのライフサイクル環境にプロモートされていません。"
       ],
       "Cannot associate a Red Hat provider with a custom product": [
         "Red Hat プロバイダーをカスタム製品に関連付けることができません"
@@ -1248,7 +1239,7 @@
         "コンポーネントを複合コンテンツビュー以外に関連付けできません"
       ],
       "Cannot be disabled because it is part of a content view": [
-        ""
+        "コンテンツビューの一部であるため無効にできません"
       ],
       "Cannot calculate name for custom repos": [
         "カスタムリポジトリーの名前を計算できません"
@@ -1392,10 +1383,10 @@
         "ホストコンテンツソースの変更"
       ],
       "Change the status of at least one repository.": [
-        ""
+        "少なくとも 1 つのリポジトリーのステータスを変更してください。"
       ],
       "Changed status": [
-        ""
+        "変更されたステータス"
       ],
       "Changing a host's content source will change the Smart Proxy from which the host gets its content.": [
         "ホストのコンテンツソースを変更すると、ホストのコンテンツ取得元の Smart Proxy が変更されます。"
@@ -1458,7 +1449,7 @@
         "すべて折りたたむ"
       ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        "ホストに関連付ける Candlepin 環境名のコンマ区切りリスト。形式は 'lifecycle_environment_label/content_view_label' です。content_view_environment_ids が指定されている場合、または content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+        "アクティベーションキーに関連付けるコンテンツビュー環境ラベルのコンマ区切りリスト。形式は 'lifecycle_environment_label/content_view_label' です。content_view_environment_ids が指定されている場合、または content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
       ],
       "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         "アクティベーションキーに関連付けるコンテンツビュー環境ラベルのコンマ区切りリスト。形式は 'lifecycle_environment_label/content_view_label' です。content_view_environment_ids が指定されている場合、または content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
@@ -1474,9 +1465,6 @@
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "コンテナーイメージリポジトリーに同期するコンマ区切りのタグ一覧"
-      ],
-      "Commit upload": [
-        ""
       ],
       "Compare": [
         "比較"
@@ -1560,13 +1548,13 @@
         "コンテナータグ"
       ],
       "Contains content views. You must choose the version to use for each content view.": [
-        ""
+        "コンテンツビューが含まれます。各コンテンツビューで使用するバージョンを選択する必要があります。"
       ],
       "Contains repositories. Always serves the latest synced content, without the need to publish versions.": [
-        ""
+        "リポジトリーが含まれます。バージョンを公開する必要なく、常に最新の同期済みコンテンツを提供します。"
       ],
       "Contains repositories. Versions are published and optionally filtered.": [
-        ""
+        "リポジトリーが含まれます。バージョンが公開され、必要に応じてフィルタリングされます。"
       ],
       "Content": [
         "コンテンツ"
@@ -1692,7 +1680,7 @@
         "コンテンツオーバーライドの検索パラメーター"
       ],
       "Content overrides updating.": [
-        ""
+        "コンテンツオーバーライドを更新中です。"
       ],
       "Content source": [
         "コンテンツソース"
@@ -1829,26 +1817,14 @@
       "Copy": [
         "コピー"
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "アクティベーションキーをコピーします"
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         "コンテンツビューのコピー"
       ],
       "Copy to clipboard": [
         "クリップボードにコピー"
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
-        ""
       ],
       "Cores per socket": [
         "1 ソケットあたりのコア数"
@@ -1890,7 +1866,7 @@
         "プロモート環境が見つかりませんでした"
       ],
       "Could not find product with name '%{name}' in organization id %{org_id}.": [
-        ""
+        "組織 id %{org_id} 内に '%{name}' という名前の製品は見つかりませんでした。"
       ],
       "Could not locate Pulp distribution.": [
         "Pulp ディストリビューションが見つかりませんでした。"
@@ -2004,7 +1980,7 @@
         "エクスポート履歴の作成"
       ],
       "Create Flatpak Remote": [
-        ""
+        "Flatpak リモートの作成"
       ],
       "Create Import History": [
         "インポート履歴の作成"
@@ -2063,20 +2039,11 @@
       "Create content view": [
         "コンテンツビューの作成"
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         "フィルターの作成"
       ],
       "Create host collection": [
         "ホストコレクションの作成"
-      ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
-        ""
       ],
       "Create new activation key": [
         "新規アクティベーションキーの作成"
@@ -2086,12 +2053,6 @@
       ],
       "Create package filter rule": [
         "パッケージフィルタールールの作成"
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
-        ""
       ],
       "Create rule": [
         "ルールの作成"
@@ -2211,13 +2172,13 @@
         "デフォルトのシステム SLA"
       ],
       "Default and Rolling content view versions cannot be promoted": [
-        ""
+        "デフォルトおよびローリングコンテンツビューのバージョンはプロモートできません"
       ],
       "Default custom non-yum repository mirroring policy": [
-        ""
+        "yum 以外のカスタムリポジトリーのデフォルトミラーリングポリシー"
       ],
       "Default custom yum repository mirroring policy": [
-        ""
+        "yum カスタムリポジトリーのデフォルトミラーリングポリシー"
       ],
       "Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')": [
         "Smart Proxy 同期のデフォルトのダウンロードポリシー ('継承'、'即時' または 'オンデマンド' のいずれか)"
@@ -2247,10 +2208,10 @@
         "サブスクライブ済みホストのデフォルトの場所"
       ],
       "Default mirroring policy for custom non-yum repositories (either 'mirror_content_only' or 'additive')": [
-        ""
+        "yum 以外のカスタムリポジトリーのデフォルトのミラーリングポリシー ('mirror_content_only' または 'additive' のいずれか)"
       ],
       "Default mirroring policy for custom yum repositories (either 'mirror_content_only', 'additive' or 'mirror_complete')": [
-        ""
+        "yum カスタムリポジトリーのデフォルトミラーリングポリシー ('mirror_content_only'、'additive'、または 'mirror_complete' のいずれか)"
       ],
       "Default partitioning table for new Operating Systems created from synced content": [
         "同期コンテンツから作成された新規オペレーティングシステムのデフォルトのパーティションテーブル"
@@ -2307,7 +2268,7 @@
         "アクティベーションキーの削除"
       ],
       "Delete Flatpak remote?": [
-        ""
+        "Flatpak リモートを削除しますか?"
       ],
       "Delete Host upon unregister": [
         "登録解除時にホストを削除します"
@@ -2357,35 +2318,11 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         "このリポジトリーが関連付けられた最後のリポジトリーであるコンテンツビューフィルターを削除します。デフォルトは true です。false の場合、そのようなフィルターがコンテンツビュー内のすべてのリポジトリーに適用されます。"
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "Red Hat プロバイダーからマニフェストを削除"
       ],
       "Delete multiple filters from a content view": [
         "コンテンツビューから複数のフィルターを削除します"
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete orphaned migrated repositories": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
-        ""
       ],
       "Delete version": [
         "バージョンの削除"
@@ -2486,12 +2423,6 @@
       "Destroy an environment in an organization": [
         "組織の環境を破棄"
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         "1 つ以上の代替コンテンツソースの破棄"
       ],
@@ -2540,9 +2471,6 @@
       "Disabling Simple Content Access failed for '%{subject}'.": [
         "'%{subject}' のシンプルコンテンツアクセスの有効化に失敗しました。"
       ],
-      "Discover": [
-        ""
-      ],
       "Discover Repositories": [
         "リポジトリーの検出"
       ],
@@ -2586,7 +2514,7 @@
         "期間"
       ],
       "During incremental update, the previous content view version '%s' could not be found.": [
-        ""
+        "増分更新中に以前のコンテンツビューバージョン '%s' が見つかりませんでした。"
       ],
       "ERRATA ADVISORY": [
         "エラータアドバイザリー"
@@ -2595,7 +2523,7 @@
         "編集"
       ],
       "Edit Flatpak Remote": [
-        ""
+        "Flatpak リモートの編集"
       ],
       "Edit RPM rule": [
         "RPM ルールの編集"
@@ -2744,9 +2672,6 @@
       "Environment cannot be in its own promotion path": [
         "同じ環境内のプロモートパスに環境を存在させることはできません。"
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         "環境 ID"
       ],
@@ -2785,9 +2710,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "エラータのエラータ ID (RHSA-2012:108)"
-      ],
-      "Errata mail": [
-        ""
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "UUID %s を持つ削除済みコンテンツファセットのエラータステータスが更新されませんでした"
@@ -2954,9 +2876,6 @@
       "Fetch installable errata for one or more hosts.": [
         "1 つまたは複数のホストにインストール可能なエラータを取得します。"
       ],
-      "Fetch pxe files": [
-        ""
-      ],
       "Fetch traces for one or more hosts": [
         "1 台以上のホストのトレースを取得します"
       ],
@@ -3050,9 +2969,6 @@
       "Filter versions that are components in the specified composite version": [
         "指定した複合バージョンに含まれるコンポーネントのバージョンを絞り込む"
       ],
-      "Filtered index content": [
-        ""
-      ],
       "Filters": [
         "フィルター"
       ],
@@ -3075,19 +2991,19 @@
         "終了"
       ],
       "Flatpak Remote ${name} created": [
-        ""
+        "Flatpak リモート ${name} が作成されました"
       ],
       "Flatpak Remote Details": [
-        ""
+        "Flatpak リモートの詳細"
       ],
       "Flatpak Remotes": [
         "flatpak リモート"
       ],
       "Flatpak remote could not be deleted: ": [
-        ""
+        "Flatpak リモートを削除できませんでした: "
       ],
       "Flatpak remote deleted": [
-        ""
+        "Flatpak リモートが削除されました"
       ],
       "Flatpak remote numeric identifier": [
         "flatpak リモートの数値識別子"
@@ -3096,10 +3012,10 @@
         "flatpak リモートリポジトリーの数値識別子"
       ],
       "Flatpak remote scan could not be started: ": [
-        ""
+        "Flatpak リモートのスキャンを開始できませんでした: "
       ],
       "Flatpak remote updated": [
-        ""
+        "Flatpak リモートが更新されました"
       ],
       "Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.": [
         ""
@@ -3163,9 +3079,6 @@
       ],
       "Generate host applicability": [
         "ホストに適用可能なエラータを生成します"
-      ],
-      "Generate metadata": [
-        ""
       ],
       "Generate repository applicability": [
         "リポジトリーに適用可能なエラータを生成します"
@@ -3403,12 +3316,6 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "結果のソート順 (例: ascending (昇順) の ASC)"
-      ],
-      "Hypervisors": [
-        ""
-      ],
-      "Hypervisors update": [
-        ""
       ],
       "ID": [
         "ID"
@@ -3731,9 +3638,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "サブスクリプションマニフェストをインポートして、ホストが Red Hat コンテンツにアクセスできるようにします。"
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         "新しいマニフェストのインポート"
       ],
@@ -3742,12 +3646,6 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "インポートのみのコンテンツビューは直接公開できません。コンテンツは、ビューにインポートしなければ更新されません。"
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
-        ""
       ],
       "Import uploads into a repository": [
         "アップロードのリポジトリーへのインポート"
@@ -3815,9 +3713,6 @@
       "Incremental Update incomplete.": [
         "増分更新が完了していません。"
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        ""
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 件のコンテンツビューバージョンの増分更新 "
       ],
@@ -3830,26 +3725,11 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "複合コンテンツ %{name} のバージョン %{version} に増分更新が指定されましたが、コンポーネントは更新されていません。"
       ],
-      "Index content": [
-        ""
-      ],
-      "Index errata": [
-        ""
-      ],
-      "Index module streams": [
-        ""
-      ],
-      "Index package groups": [
-        ""
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "情報タイプは以下のいずれかでなければなりません [ %{list} ]"
       ],
       "Inherit from Repository": [
         "リポジトリーから継承"
-      ],
-      "Initialize": [
-        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "同期プランに割り当てられた製品の同期を開始します"
@@ -3888,7 +3768,7 @@
         "インストール可能なバグ修正/機能拡張エラータ"
       ],
       "Installable errata are applicable errata that are available in the host's assigned content view environments.": [
-        ""
+        "インストール可能なエラータは、ホストの割り当て済みコンテンツビュー環境で使用できる適用可能なエラータです。"
       ],
       "Installable security errata": [
         "インストール可能なセキュリティーエラータ"
@@ -3925,9 +3805,6 @@
       ],
       "Installing Package...": [
         "パッケージのインストール中..."
-      ],
-      "Instance update": [
-        ""
       ],
       "Instance-based": [
         "インスタンスベース"
@@ -4038,25 +3915,25 @@
         "Red Hat 以外の Yum リポジトリーでのみ許可されています。"
       ],
       "It's not possible to bulk remove versions from a rolling content view.": [
-        ""
+        "ローリングコンテンツビューからバージョンを一括削除することはできません。"
       ],
       "It's not possible to copy a rolling content view.": [
-        ""
+        "ローリングコンテンツビューをコピーすることはできません。"
       ],
       "It's not possible to create a filter for a rolling content view.": [
-        ""
+        "ローリングコンテンツビューのフィルターを作成することはできません。"
       ],
       "It's not possible to destroy a version of a rolling content view.": [
-        ""
+        "ローリングコンテンツビューのバージョンを破棄することはできません。"
       ],
       "It's not possible to export a rolling content view.": [
-        ""
+        "ローリングコンテンツビューをエクスポートすることはできません。"
       ],
       "It's not possible to promote a rolling content view.": [
-        ""
+        "ローリングコンテンツビューをプロモートすることはできません。"
       ],
       "It's not possible to publish a rolling content view.": [
-        ""
+        "ローリングコンテンツビューを公開することはできません。"
       ],
       "Job '${description}' completed": [
         "ジョブ '${description}' が完了しました"
@@ -4170,7 +4047,7 @@
         "最終チェックイン"
       ],
       "Last mirrored": [
-        ""
+        "前回のミラーリング"
       ],
       "Last published": [
         "最終公開日"
@@ -4587,7 +4464,7 @@
         "パッケージの管理"
       ],
       "Manage repository sets": [
-        ""
+        "リポジトリーセットの管理"
       ],
       "Manifest": [
         "Manifest (マニフェスト)"
@@ -4682,9 +4559,6 @@
       "Messaging connection": [
         "メッセージング接続"
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "メタデータの再公開は、'完全ミラーリング' リポジトリーでは危険です。ミラーリングポリシーを変更してから再試行してください。\\nあるいは、'force' パラメーターを使用してメタデータをローカルに再生成してください。次回の同期時に、アップストリームリポジトリーのメタデータによって、'完全ミラーリング' リポジトリーのローカルメタデータが上書きされます。"
       ],
@@ -4695,19 +4569,19 @@
         "最小のバージョン"
       ],
       "Mirror": [
-        ""
+        "ミラー"
       ],
       "Mirror Remote Repository": [
         "リモートリポジトリーのミラーリング"
       ],
       "Mirror Repository": [
-        ""
+        "ミラーリポジトリー"
       ],
       "Mirror a flatpak remote repository": [
         "flatpak リモートリポジトリーをミラーリングする"
       ],
       "Mirroring will import the remote flatpak repository": [
-        ""
+        "ミラーリングによりリモートの flatpak リポジトリー"
       ],
       "Missing activation key!": [
         "アクティベーションキーがありません!"
@@ -4748,29 +4622,20 @@
       "Multi Content View Environment": [
         "マルチコンテンツビュー環境"
       ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
-        ""
-      ],
       "Multi-entitlement": [
         "マルチエンタイトルメント"
       ],
       "Multi-environment activation key(s) affected": [
-        ""
+        "影響を受けるマルチ環境アクティベーションキー"
       ],
       "Multi-environment host(s) affected": [
-        ""
+        "影響を受けるマルチ環境ホスト"
       ],
       "Must be Ascii alphanumeric, '_' or '-'": [
-        ""
+        "ASCII 英数字、'_'、または '-' である必要があります"
       ],
       "Must be a vaild URL": [
-        ""
+        "有効な URL である必要があります"
       ],
       "N/A": [
         "N/A"
@@ -4830,7 +4695,7 @@
         "ホスト名"
       ],
       "Name of the product to mirror the remote repository to": [
-        ""
+        "リモートリポジトリーのミラー先となる製品の名前"
       ],
       "Name of the repository": [
         "リポジトリー名"
@@ -5127,7 +4992,7 @@
         "インストール済みの新規パッケージはありません"
       ],
       "No package groups yet": [
-        "RPM パッケージグループがまだありません"
+        "パッケージグループがまだありません"
       ],
       "No packages": [
         "パッケージがありません"
@@ -5136,7 +5001,7 @@
         "インストール可能なパッケージはありません"
       ],
       "No packages available to install on this host. Please check the host's assigned content view environments.": [
-        ""
+        "このホストにインストールできるパッケージがありません。ホストの割り当て済みコンテンツビュー環境を確認してください。"
       ],
       "No packages removed": [
         "削除済みのパッケージはありません"
@@ -5370,7 +5235,7 @@
         "組織 ID は必須です"
       ],
       "Organization ID or title": [
-        ""
+        "組織 ID またはタイトル"
       ],
       "Organization Information not provided.": [
         "組織情報が提供されていません。"
@@ -5403,7 +5268,7 @@
         "必要な組織"
       ],
       "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.": [
-        ""
+        "孤立項目のクリーンアップで、一部の Pulp リポジトリーバージョンの削除に失敗しました。詳細はログを確認してください。"
       ],
       "Orphaned Content Protection Time": [
         "単独コンテンツの保護時間"
@@ -5559,7 +5424,7 @@
         "%s によりパッケージの更新がスケジュールされました"
       ],
       "Package actions will be transient": [
-        ""
+        "パッケージアクションは一時的なものです"
       ],
       "Package group update canceled": [
         "パッケージグループの更新が取り消されました"
@@ -5670,7 +5535,7 @@
         "物理"
       ],
       "Place symlinks to entitlement certificates on the host, enabling container/flatpak registry access without a username or password.": [
-        ""
+        "ホスト上のエンタイトルメント証明書へのシンボリックリンクを配置し、ユーザー名やパスワードなしでコンテナー/flatpak レジストリーにアクセスできるようにします。"
       ],
       "Plan numeric identifier": [
         "プランの数値 ID"
@@ -5769,7 +5634,7 @@
         "製品 ID"
       ],
       "Product ID to mirror the remote repository to": [
-        "リモートリポジトリーをミラーリングする製品 ID"
+        "リモートリポジトリーのミラー先となる製品の ID"
       ],
       "Product and Repositories": [
         "製品およびリポジトリー"
@@ -5951,9 +5816,6 @@
       "Pulp task error": [
         "Pulp タスクのエラー"
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         "Python パッケージ"
       ],
@@ -6062,9 +5924,6 @@
       "Reclaim Space": [
         "領域の再利用"
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         "オンデマンドリポジトリーからの領域の再利用"
       ],
@@ -6126,13 +5985,10 @@
         "マニフェストの更新"
       ],
       "Refresh RollingCV Repo": [
-        ""
+        "RollingCV リポジトリーの更新"
       ],
       "Refresh all alternate content sources": [
         "すべての代替コンテンツソースの更新"
-      ],
-      "Refresh all distributions": [
-        ""
       ],
       "Refresh alternate content sources": [
         "代替コンテンツソースの更新"
@@ -6146,26 +6002,14 @@
       "Refresh counts": [
         "更新回数"
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
         "エラータの適用可能性の更新"
-      ],
-      "Refresh if needed": [
-        ""
       ],
       "Refresh package applicability": [
         "パッケージの適用可能性の更新"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Red Hat プロバイダーの以前にインポートされたマニフェストを更新"
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         "ソースの更新"
@@ -6210,9 +6054,6 @@
         "レジストリー名のパターンが原因で、メンバーリポジトリーのコンテナーイメージ名が無効になります"
       ],
       "Registry token expiration time": [
-        ""
-      ],
-      "Reindex subscriptions": [
         ""
       ],
       "Related composite content views": [
@@ -6311,9 +6152,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "アップストリームマニフェストから 1 つ以上のサブスクリプションを削除します"
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         "Katello インターフェイスでのパッケージグループの削除"
       ],
@@ -6329,9 +6167,6 @@
       "Remove products from sync plan": [
         "同期プランから製品を削除"
       ],
-      "Remove rolling repo clone": [
-        ""
-      ],
       "Remove subscriptions": [
         "サブスクリプションの削除"
       ],
@@ -6343,12 +6178,6 @@
       ],
       "Remove subscriptions from one or more hosts": [
         "1 つ以上のホストからサブスクリプションを削除します"
-      ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "コンテンツビューからバージョンおよび/または環境を削除し、システムおよびキーを再度割り当てます"
@@ -6374,9 +6203,6 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "すべての環境からこのバージョンを削除しても、バージョンは削除されません。バージョンは引き続き以降のプロモーションの対象になります。"
       ],
-      "Repair": [
-        ""
-      ],
       "Replace content source on the target machine": [
         "ターゲットマシン上のコンテンツソースの置き換え"
       ],
@@ -6395,17 +6221,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "CDN 設定がエアギャップ (切断) に設定されている間、リポジトリーは有効にできません。"
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "選択したコンテンツビューバージョンに共通のリポジトリーがマージされます。その結果、各コンテンツビューバージョンのすべてのコンテンツが結合された複合コンテンツビューが作成されます。"
       ],
       "Repositories from published Content Views are not allowed.": [
         "公開されたコンテンツビューからのリポジトリーは許可されません。"
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repository": [
         "リポジトリー"
@@ -6672,10 +6492,10 @@
         "影響を受ける環境を確認"
       ],
       "Review and optionally exclude hosts from your selection. Note that package actions on any image mode hosts will be transient and lost on the next reboot.": [
-        ""
+        "選択したホストを確認し、必要に応じて除外してください。イメージモードのホストに対するパッケージアクションは一時的なものであり、次回の再起動時に失われることに注意してください。"
       ],
       "Review and then click 'Set content overrides.' Status will be changed for the selected repository sets on the selected hosts.": [
-        ""
+        "確認して、'コンテンツオーバーライドの設定' をクリックしてください。選択したホスト上の選択したリポジトリーセットのステータスが変更されます。"
       ],
       "Review and then click {submitBtnText}.": [
         "確認して {submitBtnText} をクリックしてください。"
@@ -6708,10 +6528,10 @@
         "ロールバックイメージダイジェスト"
       ],
       "Rolling content view": [
-        ""
+        "ローリングコンテンツビュー"
       ],
       "Rolling content views": [
-        ""
+        "ローリングコンテンツビュー"
       ],
       "Rules to be added": [
         "追加するルール"
@@ -6758,35 +6578,14 @@
       "Save": [
         "保存"
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         "代替コンテンツソースの保存"
       ],
       "Scan": [
-        ""
+        "スキャン"
       ],
       "Scan a flatpak remote": [
         "flatpak リモートをスキャンする"
-      ],
-      "Scan cdn": [
-        ""
-      ],
-      "Scan remote": [
-        ""
       ],
       "Schema version 1": [
         "スキーマバージョン 1"
@@ -6885,7 +6684,7 @@
         "利用可能なプロモーションパスからライフサイクル環境を選択し、新しいバージョンをプロモートします。"
       ],
       "Select a product to mirror the repository into": [
-        ""
+        "リポジトリーのミラー先となる製品を選択してください"
       ],
       "Select a provider to install katello-host-tools-tracer": [
         "katello-host-tools-tracer をインストールするプロバイダーの選択"
@@ -6981,7 +6780,7 @@
         "このソースに関連付ける製品を選択します。"
       ],
       "Select repository sets": [
-        ""
+        "リポジトリーセットの選択"
       ],
       "Select row": [
         "行の選択"
@@ -7032,7 +6831,7 @@
         "自動修復に使用されるサービスレベル"
       ],
       "Set content overrides": [
-        ""
+        "コンテンツオーバーライドの設定"
       ],
       "Set content overrides for the host": [
         "ホストのコンテンツ上書きの設定"
@@ -7050,7 +6849,7 @@
         "上書きを削除して「デフォルト」にリセットするには True に設定します"
       ],
       "Set up container registry certs": [
-        ""
+        "コンテナーレジストリー証明書のセットアップ"
       ],
       "Sets the system purpose usage": [
         "システム目的の使用率を設定します"
@@ -7224,7 +7023,7 @@
         "依存関係の解決"
       ],
       "Some environments are disabled because they are not associated with all of the affected hosts' content sources.": [
-        ""
+        "一部の環境は、影響を受けるホストのコンテンツソースすべてに関連付けられていないため、無効になります。"
       ],
       "Some environments are disabled because they are not associated with the host's content source.": [
         "一部の環境は、ホストのコンテンツソースに関連付けられていないため無効になります。"
@@ -7589,9 +7388,6 @@
       "Supported Content Types": [
         "サポート対象のコンテンツタイプ"
       ],
-      "Sync": [
-        ""
-      ],
       "Sync Canceled": [
         "同期が取り消されました"
       ],
@@ -7646,9 +7442,6 @@
       "Sync all repositories for a product": [
         "製品のすべてのリポジトリーを同期します"
       ],
-      "Sync capsule": [
-        ""
-      ],
       "Sync complete.": [
         "同期が完了しました。"
       ],
@@ -7666,9 +7459,6 @@
       ],
       "Sync state": [
         "同期の状態"
-      ],
-      "Syncable export": [
-        ""
       ],
       "Synced": [
         "同期されています"
@@ -7830,7 +7620,7 @@
         "インポートメタデータで提供されている以下のリポジトリーのコンテンツタイプまたはプロバイダータイプが正しくありません。インポートする前に、エクスポートリポジトリーとインポートリポジトリーが同じタイプであることを確認してください\\n %{repos}"
       ],
       "The generated container repository name is invalid. Please review the lifecycle environment's registry name pattern. It may be caused by special characters in the components that make up the name, like the organization.": [
-        ""
+        "生成されたコンテナーリポジトリー名が無効です。ライフサイクル環境のレジストリー名のパターンを確認してください。組織名などの名前の構成要素に特殊文字が含まれていることが原因である可能性があります。"
       ],
       "The id of the content source": [
         "コンテンツソースの ID"
@@ -8010,7 +7800,7 @@
         "インポートを実行する前に、このコンテンツビューをインポートのみに設定する必要があります"
       ],
       "This Flatpak remote will be deleted. Repositories mirrored from this remote will remain available and functional for use": [
-        ""
+        "この Flatpak リモートは削除されます。このリモートからミラーリングされたリポジトリーは、引き続き利用可能で正常に機能します"
       ],
       "This Host is not currently registered with subscription-manager.": [
         "このホストは現在、subscription-manager に登録されていません。"
@@ -8058,7 +7848,7 @@
         "この環境は、1 つ以上のマルチ環境アクティベーションキーで使用されています。この環境は単に、マルチ環境キーから削除されるだけです。ここで選択したコンテンツビューとライフサイクル環境は、単一環境アクティベーションキーにのみ影響があります。詳細は、hammer activation-key --help を参照してください。"
       ],
       "This erratum is not installable because it is not in this host's assigned content view environments.": [
-        ""
+        "このエラータは、このホストの割り当て済みコンテンツビュー環境に含まれていないため、インストールできません。"
       ],
       "This host does not have any Module streams.": [
         "このホストにはモジュールストリームがありません。"
@@ -8178,16 +7968,13 @@
         "コンテンツビューから特定のコンテンツを追加または除外するには、フィルターを作成します。フィルターを使用しない場合は、コンテンツビューには追加したリポジトリーにあるものがすべて含まれます。"
       ],
       "To manage host content overrides, a specific organization must be selected from the organization context.": [
-        ""
+        "ホストのコンテンツオーバーライドを管理するには、組織コンテキストから特定の組織を選択する必要があります。"
       ],
       "To manage host packages, a specific organization must be selected from the organization context.": [
         "ホストパッケージを管理するには、組織コンテキストから特定の組織を選択する必要があります。"
       ],
       "To manage packages, select an action.": [
         "パッケージを管理するには、アクションを選択してください。"
-      ],
-      "Toggle": [
-        ""
       ],
       "Token/password for the flatpak remote": [
         "flatpak リモートのトークン/パスワード"
@@ -8286,7 +8073,7 @@
         "OSTree リポジトリーの URL。"
       ],
       "URL:": [
-        ""
+        "URL:"
       ],
       "UUID": [
         "UUID"
@@ -8331,10 +8118,10 @@
         ""
       ],
       "Unable to find a content view with ID %s": [
-        ""
+        "ID %s のコンテンツビューが見つかりません"
       ],
       "Unable to find a lifecycle environment with ID %s": [
-        ""
+        "ID %s のライフサイクル環境が見つかりません"
       ],
       "Unable to find product '%s' in organization '%s'": [
         "組織 '%s' で製品 '%s' が見つかりません"
@@ -8364,7 +8151,7 @@
         "代替コンテンツソースを更新できません。更新するパーミッションがないか、代替コンテンツソースが存在しません。"
       ],
       "Unable to refresh host-repository mapping": [
-        ""
+        "ホストとリポジトリーのマッピングをリフレッシュできません"
       ],
       "Unable to send errata e-mail notification: %{error}": [
         "エラータのメール通知を送信できません: %{error}"
@@ -8379,10 +8166,10 @@
         "リポジトリーを同期できません。同期する権限がないか、または選択されたリポジトリーにフィード URL がないかのいずれかです。"
       ],
       "Unable to update host-repository mapping": [
-        ""
+        "ホストとリポジトリーのマッピングを更新できません"
       ],
       "Unable to update hosts": [
-        ""
+        "ホストを更新できません"
       ],
       "Unable to update the repository list": [
         "リポジトリー一覧を更新できません"
@@ -8427,7 +8214,7 @@
         "組織を割り当てる前にホスト %s の登録を解除してください"
       ],
       "Unregister host %s before assigning an organization.": [
-        ""
+        "組織を割り当てる前にホスト %s の登録を解除してください。"
       ],
       "Unregister the host as a subscription consumer": [
         "ホストからサブスクリプション登録の解除"
@@ -8507,26 +8294,14 @@
       "Update content counts for the smart proxy": [
         "Smart Proxy のコンテンツ数を更新します"
       ],
-      "Update content urls": [
-        ""
-      ],
       "Update content view environments for host": [
         "ホストのコンテンツビュー環境の更新"
       ],
       "Update content view environments for host %s": [
         "ホスト %s のコンテンツビュー環境の更新"
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
         "ホストの手動更新"
-      ],
-      "Update http proxy": [
-        ""
-      ],
-      "Update http proxy details": [
-        ""
       ],
       "Update installed packages, enabled repos, module inventory": [
         "インストール済みパッケージ、有効なリポジトリー、モジュールインベントリーの更新"
@@ -8543,20 +8318,11 @@
       "Update packages via Katello interface": [
         "Katello インターフェイスでのパッケージの更新"
       ],
-      "Update redhat repository": [
-        ""
-      ],
       "Update release version for host": [
         "ホストのリリースバージョンの更新"
       ],
       "Update release version for host %s": [
         "ホスト %s のリリースバージョンの更新"
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
-        ""
       ],
       "Update services requiring restart": [
         "再起動が必要なサービスの更新"
@@ -8648,12 +8414,6 @@
       "Upload a subscription manifest": [
         "サブスクリプションマニフェストのアップロード"
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         "アップロード先"
       ],
@@ -8662,9 +8422,6 @@
       ],
       "Upload request id": [
         "要求 ID のアップロード"
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         "アップストリーム Candlepin"
@@ -8730,7 +8487,7 @@
         "HTTP プロキシーの使用"
       ],
       "Use container certificates for container registry authentication. If it is set to true, container registry certificates will be installed on the host": [
-        ""
+        "コンテナーレジストリーの認証にコンテナー証明書を使用します。true に設定すると、コンテナーレジストリー証明書がホストにインストールされます"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "pulp3 のリポジトリーの同時ダウンロード数を判断するのに使用します。値は 20 未満を使用してください。デフォルト値は 10 です。"
@@ -8782,9 +8539,6 @@
       ],
       "Verify SSL": [
         "SSL の確認"
-      ],
-      "Verify checksum": [
-        ""
       ],
       "Verify checksum for content on smart proxy": [
         "Smart Proxy 上のコンテンツのチェックサムを確認する"
@@ -8871,7 +8625,7 @@
         "コンテンツビューの表示"
       ],
       "View details": [
-        ""
+        "詳細の表示"
       ],
       "View documentation": [
         "ドキュメントの表示"
@@ -9147,7 +8901,7 @@
         "Yum リポジトリーでのみ許可されています。"
       ],
       "assign a new content source to the hosts": [
-        ""
+        "ホストへの新規コンテンツソースの割り当て"
       ],
       "attempted to sync a non-library repository.": [
         "非ライブラリーリポジトリーの同期が試行されました。"
@@ -9207,7 +8961,7 @@
         "現在の使用数 (%s) より少ない値を指定できません"
       ],
       "cannot be nil": [
-        "Nill にしないでください"
+        "nil にしないでください"
       ],
       "cannot be set because unlimited hosts is set": [
         "ホストが無制限に設定されているため設定できません"
@@ -9507,7 +9261,7 @@
         "指定のオブジェクトを解釈して、指定のオブジェクトに関連付け可能なリポジトリーのみを返します。'content_view' と 'content_view_version' のみがサポートされます。"
       ],
       "into a product. Details from the flatpak remote will automatically populate the repository fields. The repository will be available for syncing once it has been mirrored into a product.": [
-        ""
+        "が製品にインポートされます。flatpak リモートから取得した詳細情報が、リポジトリーのフィールドに自動的に入力されます。リポジトリーが製品にミラーリングされると、そのリポジトリーを同期できるようになります。"
       ],
       "invalid: Repositories can only require one OS version.": [
         "無効: リポジトリーに必要な OS バージョンは 1 つだけです。"
@@ -9549,7 +9303,7 @@
         "リポジトリー ID の一覧"
       ],
       "list of rpm filename strings to include in published version": [
-        "公開バージョンに含める rmp ファイル名文字列の一覧"
+        "公開バージョンに含める rpm ファイル名文字列の一覧"
       ],
       "max_hosts must be given a value if this host collection is not unlimited.": [
         "このホストコレクションが無制限でない場合は、max_hosts に値を提供する必要があります。"
@@ -9831,7 +9585,7 @@
         "コンポーネントのコンテンツビューの最新版が必要な場合には True を指定します"
       ],
       "true if this repository can be published via HTTP": [
-        "このリポジトリーが HHTP 経由で公開できる場合は true"
+        "このリポジトリーが HTTP を介して公開できる場合は true"
       ],
       "type of filter (e.g. deb, rpm, package_group, erratum, erratum_id, erratum_date, docker, modulemd)": [
         "フィルターのタイプ (例: deb、rpm、package_group、erratum、erratum_id、erratum_date、docker、modulemd)"
