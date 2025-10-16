@@ -221,6 +221,15 @@ Foreman::Plugin.register :katello do
        :after => :content_hosts,
        :turbolinks => false
 
+  menu :labs_menu,
+       :container_images,
+       :url => '/labs/container_images',
+       :url_hash => {:controller => 'katello/api/v2/container_images_controller',
+                     :action => 'index'},
+       :caption => N_('Container Images'),
+       :parent => :lab_features_menu,
+       :turbolinks => false
+
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 
