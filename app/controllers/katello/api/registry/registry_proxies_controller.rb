@@ -7,6 +7,7 @@ module Katello
     skip_before_action :authorize
     before_action :optional_authorize, only: [:token, :catalog]
     before_action :registry_authorize, except: [:token, :v1_search, :catalog, :static_index]
+    before_action :static_index_authorize, only: [:static_index]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list, :check_blob, :pull_blob]
     before_action :container_push_prop_validation, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     before_action :create_container_repo_if_needed, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
@@ -63,7 +64,7 @@ module Katello
                                              "scope=\"repository:registry:pull,push\""
     end
 
-    def set_user_by_token(token, redirect_on_failure = true)
+    def authenticate_from_request(token, redirect_on_failure = true)
       if token
         token_type, token = token.split
         if token_type == 'Bearer' && token
@@ -94,7 +95,7 @@ module Katello
       if @repository && (@repository.environment.registry_unauthenticated_pull || ssl_client_authorized?(@repository.organization.label))
         true
       elsif params['action'] == 'catalog'
-        set_user_by_token(request.headers['Authorization'], false)
+        authenticate_from_request(request.headers['Authorization'], false)
       elsif (params['action'] == 'token' && params['scope'].blank? && params['account'].blank?)
         true
       else
@@ -106,13 +107,26 @@ module Katello
       @repository = find_readable_repository
       return true if ['GET', 'HEAD'].include?(request.method) && @repository && !require_user_authorization?
 
-      is_user_set = set_user_by_token(request.headers['Authorization'])
+      return true if authenticate_from_request(request.headers['Authorization'])
 
-      return true if is_user_set
+      unauthorized
+    end
 
+    def static_index_authorize
+      authenticate_from_request(request.headers['Authorization'])
+      find_host_by_ip unless @host
+      true
+    end
+
+    def find_host_by_ip
+      host_ip = request.remote_ip
+      @host = ::Host.joins(:primary_interface).where("nics.ip = :host_ip OR nics.ip6 = :host_ip", host_ip: host_ip)&.first
+    end
+
+    def unauthorized
       redirect_authorization_headers
       render_error('unauthorized', :status => :unauthorized)
-      return false
+      false
     end
 
     def container_push_prop_validation(props = nil)
@@ -851,12 +865,20 @@ module Katello
     end
 
     def static_index
-      host_ip = request.remote_ip
-      @host ||= ::Host.joins(:primary_interface).where("nics.ip = :host_ip OR nics.ip6 = :host_ip", host_ip: host_ip)&.first
-      flatpak_index = (redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers) })
-      flatpak_index_json = JSON.parse(flatpak_index)
       repos = Repository.readable_docker_catalog(@host)
-      available_container_repo_names = repos.map(&:container_repository_name)
+      return render json: { 'Registry' => request_url, 'Results' => [] } if repos.empty?
+
+      available_container_repo_names = repos.map(&:container_repository_name).compact
+
+      flatpak_index = (redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers) })
+
+      begin
+        flatpak_index_json = JSON.parse(flatpak_index)
+      rescue JSON::ParserError => e
+        Rails.logger.error("Failed to parse flatpak index JSON: #{e.message}")
+        return render json: { 'Registry' => request_url, 'Results' => [] }
+      end
+
       flatpak_index_json['Results'] = flatpak_index_json['Results'].select do |result|
         available_container_repo_names.include?(result['Name'])
       end
