@@ -20,6 +20,7 @@ module Katello
       def self.generate_model_row(unit, content_type)
         {
           pulp_id: unit['pulp_href'],
+          pulp_prn: unit['prn'],
           name: content_type&.model_name&.call(unit),
           version: content_type&.model_version&.call(unit),
           filename: content_type&.model_filename&.call(unit),

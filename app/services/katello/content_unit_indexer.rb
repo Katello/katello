@@ -103,11 +103,13 @@ module Katello
       def push(unit)
         if @service_class.backend_unit_identifier
           pulp_href = unit.dig(@service_class.backend_unit_identifier)
+          pulp_prn = unit['prn']
         else
           pulp_href = nil
+          pulp_prn = nil
         end
         unit_id = unit[@service_class.unit_identifier]
-        @values[unit_id] = pulp_href
+        @values[unit_id] = { href: pulp_href, prn: pulp_prn }
       end
 
       def db_values
@@ -117,7 +119,10 @@ module Katello
         @final_values = ::Katello::ContentUnitIndexer.pulp_id_to_id_map(@content_type, @values.keys).map do |pulp_id, katello_id|
           #:repository_id => X, :erratum_id => y
           row = {:repository_id => @repository.id, @content_type.model_class.unit_id_field => katello_id}
-          row[pulp_href_association_name] = @values[pulp_id] if pulp_href_association_name
+          if pulp_href_association_name
+            row[pulp_href_association_name] = @values[pulp_id][:href]
+            row[pulp_prn_association_name] = @values[pulp_id][:prn] if pulp_prn_association_name
+          end
           row
         end
         ContentUnitIndexer.insert_timestamps(@content_type.model_class, @final_values)
@@ -126,6 +131,10 @@ module Katello
 
       def pulp_href_association_name
         'erratum_pulp3_href' if @content_type.label == 'erratum'
+      end
+
+      def pulp_prn_association_name
+        'erratum_prn' if @content_type.label == 'erratum'
       end
     end
 

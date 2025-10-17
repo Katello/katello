@@ -33,7 +33,7 @@ module Actions
               if (target_repo.publication_href != source_repo.publication_href && smart_proxy.pulp_primary?)
                 target_repo.clear_smart_proxy_sync_histories
               end
-              target_repo.update!(publication_href: source_repo.publication_href)
+              target_repo.update!(publication_href: source_repo.publication_href, publication_prn: source_repo.publication_prn)
             end
           end
         end

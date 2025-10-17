@@ -68,6 +68,7 @@ module Katello
         shared_attributes = unit.keys & Katello::ModuleStream.column_names
         to_return = unit.select { |key, _v| shared_attributes.include?(key) }
         to_return['pulp_id'] = unit['pulp_href']
+        to_return['pulp_prn'] = unit['prn']
         to_return[:created_at] = DateTime.now
         to_return[:updated_at] = DateTime.now
         to_return

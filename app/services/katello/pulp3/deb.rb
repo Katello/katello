@@ -31,6 +31,7 @@ module Katello
         unit = unit.try(:with_indifferent_access)
         return {
           pulp_id: unit[unit_identifier],
+          pulp_prn: unit[:prn],
           checksum: unit[:sha256],
           filename: unit[:relative_path],
           name: unit[:package],
