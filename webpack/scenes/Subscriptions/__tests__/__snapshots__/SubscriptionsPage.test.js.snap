@@ -1,5 +1,83 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`subscriptions page should render <PermissionDenied /> when contentCredentialsErrorMessage has missing permissions 1`] = `
+<Grid
+  bsClass="container-fluid"
+  componentClass="div"
+  fluid={false}
+  id="subscriptions-page"
+>
+  <Row
+    bsClass="row"
+    componentClass="div"
+  >
+    <Col
+      bsClass="col"
+      componentClass="div"
+      sm={12}
+    >
+      <Flex
+        alignItems={
+          Object {
+            "default": "alignItemsBaseline",
+          }
+        }
+      >
+        <FlexItem>
+          <h1>
+            Subscriptions
+          </h1>
+        </FlexItem>
+      </Flex>
+      <SubscriptionsToolbar
+        autocompleteQueryParams={
+          Object {
+            "organization_id": 1,
+          }
+        }
+        canManageSubscriptionAllocations={false}
+        disableAddButton={true}
+        disableDeleteButton={true}
+        disableDeleteReason="This is disabled because no connection could be made to the upstream Manifest."
+        disableManifestActions={true}
+        disableManifestReason="This is disabled because no connection could be made to the upstream Manifest."
+        isManifestImported={false}
+        onDeleteButtonClick={[Function]}
+        onExportCsvButtonClick={[Function]}
+        onManageManifestButtonClick={[Function]}
+        onSearch={[Function]}
+        tableColumns={Array []}
+        toolTipOnChange={[Function]}
+        toolTipOnclose={[Function]}
+        updateSearchQuery={[Function]}
+      />
+      <Connect(ManageManifestModal)
+        canImportManifest={false}
+        delete={[Function]}
+        disableManifestActions={true}
+        disabledReason="This is disabled because no connection could be made to the upstream Manifest."
+        refresh={[Function]}
+        taskInProgress={false}
+        upload={[Function]}
+      />
+      <div
+        className="modal-container"
+        id="subscriptions-table"
+      >
+        <PermissionDenied
+          missingPermissions={
+            Array [
+              "view_subscriptions",
+            ]
+          }
+          primaryButton={null}
+        />
+      </div>
+    </Col>
+  </Row>
+</Grid>
+`;
+
 exports[`subscriptions page should render <PermissionDenied /> when permissions are missing 1`] = `
 <PermissionDenied
   missingPermissions={

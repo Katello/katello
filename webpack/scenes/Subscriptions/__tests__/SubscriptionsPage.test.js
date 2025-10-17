@@ -61,6 +61,7 @@ describe('subscriptions page', () => {
     closeDeleteModal={noop}
     disableDeleteButton={noop}
     enableDeleteButton={noop}
+    contentCredentialsErrorMessage={null}
   />);
 
   const permissionDeniedPage = shallow(<SubscriptionsPage
@@ -96,6 +97,7 @@ describe('subscriptions page', () => {
     closeDeleteModal={noop}
     disableDeleteButton={noop}
     enableDeleteButton={noop}
+    contentCredentialsErrorMessage={null}
   />);
 
   it('should render', async () => {
@@ -104,6 +106,96 @@ describe('subscriptions page', () => {
 
   it('should render <PermissionDenied /> when permissions are missing', async () => {
     expect(toJson(permissionDeniedPage)).toMatchSnapshot();
+  });
+
+  it('should render <PermissionDenied /> when contentCredentialsErrorMessage has missing permissions', async () => {
+    const contentCredentialsErrorPage = shallow(<SubscriptionsPage
+      setModalOpen={noop}
+      setModalClosed={noop}
+      organization={organization}
+      subscriptions={successState}
+      subscriptionTableSettings={settingsSuccessState}
+      loadTables={loadTables}
+      loadTableColumns={loadTableColumns}
+      createColumns={createColumns}
+      updateColumns={updateColumns}
+      loadSubscriptions={loadSubscriptions}
+      loadAvailableQuantities={loadAvailableQuantities}
+      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
+      updateQuantity={updateQuantity}
+      handleStartTask={handleStartTask}
+      handleFinishedTask={handleFinishedTask}
+      pollTaskUntilDone={noop}
+      pollBulkSearch={noop}
+      pollTasks={pollTasks}
+      cancelPollTasks={noop}
+      deleteSubscriptions={() => {}}
+      resetTasks={noop}
+      uploadManifest={noop}
+      deleteManifest={noop}
+      refreshManifest={noop}
+      updateSearchQuery={noop}
+      openManageManifestModal={noop}
+      closeManageManifestModal={noop}
+      openDeleteModal={noop}
+      closeDeleteModal={noop}
+      disableDeleteButton={noop}
+      enableDeleteButton={noop}
+      contentCredentialsErrorMessage={{
+        message: 'Permission denied',
+        details: 'You do not have permission to view subscriptions',
+        missing_permissions: ['view_subscriptions'],
+      }}
+    />);
+
+    expect(toJson(contentCredentialsErrorPage)).toMatchSnapshot();
+  });
+
+  it('should render normally when contentCredentialsErrorMessage has no missing permissions', async () => {
+    const normalPage = shallow(<SubscriptionsPage
+      setModalOpen={noop}
+      setModalClosed={noop}
+      organization={organization}
+      subscriptions={successState}
+      subscriptionTableSettings={settingsSuccessState}
+      loadTables={loadTables}
+      loadTableColumns={loadTableColumns}
+      createColumns={createColumns}
+      updateColumns={updateColumns}
+      loadSubscriptions={loadSubscriptions}
+      loadAvailableQuantities={loadAvailableQuantities}
+      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
+      updateQuantity={updateQuantity}
+      handleStartTask={handleStartTask}
+      handleFinishedTask={handleFinishedTask}
+      pollTaskUntilDone={noop}
+      pollBulkSearch={noop}
+      pollTasks={pollTasks}
+      cancelPollTasks={noop}
+      deleteSubscriptions={() => {}}
+      resetTasks={noop}
+      uploadManifest={noop}
+      deleteManifest={noop}
+      refreshManifest={noop}
+      updateSearchQuery={noop}
+      openManageManifestModal={noop}
+      closeManageManifestModal={noop}
+      openDeleteModal={noop}
+      closeDeleteModal={noop}
+      disableDeleteButton={noop}
+      enableDeleteButton={noop}
+      contentCredentialsErrorMessage={{
+        message: 'Some other error',
+        details: 'Not a permission error',
+        missing_permissions: [],
+      }}
+    />);
+
+    // Should render the subscriptions table, not PermissionDenied
+    expect(normalPage.find('SubscriptionsTable')).toHaveLength(1);
+    expect(normalPage.find('PermissionDenied')).toHaveLength(0);
   });
 
   it('should poll tasks when org changes', async () => {
