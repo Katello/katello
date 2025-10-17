@@ -214,6 +214,13 @@ sudo systemctl status candlepin
 - **Integration tests**: `test/scenarios/`
 - **JavaScript tests**: `webpack/` with Jest
 
+### Test Writing Guidelines
+
+Don't write unnecessary comments in tests. When writing a new test, look at surrounding tests and try to match their qualities, including
+- testing style - method names, choice of test methods, etc.
+- test length, where possible
+- length and quantity of comments (don't be too wordy)
+
 ### Test Commands Reference
 
 **CRITICAL: Never use `bundle exec rake test TEST=...` for individual tests. Always use `ktest`.**
