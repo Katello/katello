@@ -1,3 +1,24 @@
+# 4.18.1 Vessel (2025-10-17)
+
+## Bug Fixes
+
+### Content Views
+ * Dependency solved CV publishes fail ([#38821](https://projects.theforeman.org/issues/38821), [08f76999](https://github.com/Katello/katello.git/commit/08f76999188233993423fcd35859b22bffc05cc5))
+ * Content View Filter Errata: error when searching by date ([#38754](https://projects.theforeman.org/issues/38754), [64320686](https://github.com/Katello/katello.git/commit/643206864c6a8f14e708a6701b15fb4cdef45798))
+
+### Repositories
+ * Adjust tests to changes in scoped_search >= 4.3.0 ([#38792](https://projects.theforeman.org/issues/38792), [3eb6724a](https://github.com/Katello/katello.git/commit/3eb6724a4b589b85f6150dce1106f528c2a82518))
+ * Sync of "flat" Nagios deb repos fails with message: Paths are duplicated ([#38710](https://projects.theforeman.org/issues/38710))
+
+### Inter Server Sync
+ * incremental exports broken when using destination server and no history id ([#38775](https://projects.theforeman.org/issues/38775), [1316a10e](https://github.com/Katello/katello.git/commit/1316a10e282c4f222d28c80e2fcf85f593f6b562))
+
+### API
+ * The rails 7 upgrade causes DNS aliased hostnames to error when pulling containers with podman ([#38744](https://projects.theforeman.org/issues/38744), [ac1944ff](https://github.com/Katello/katello.git/commit/ac1944ffd98bc7dace08b4362659f009610cf44b))
+
+### Hosts
+ * Debian repos are shown multiple times on the new host details page in repo sets for multi-cves ([#38699](https://projects.theforeman.org/issues/38699), [9b1937fe](https://github.com/Katello/katello.git/commit/9b1937feef91ca061c35f5cba89de21582c881ac))
+
 # 4.18.0 Vessel (2025-09-16)
 
 ## Features
