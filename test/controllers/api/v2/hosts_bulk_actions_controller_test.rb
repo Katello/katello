@@ -192,6 +192,90 @@ module Katello
       end
     end
 
+    def test_applicable_errata
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
+      @host1.content_facet.applicable_errata = @view_repo.errata
+
+      # Get all applicable errata
+      applicable = @host1.content_facet.applicable_errata
+
+      # Verify some are not installable (not in bound repos)
+      non_installable = applicable - @host1.content_facet.installable_errata
+      assert non_installable.any?
+
+      post :applicable_errata, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id }
+      assert_response :success
+
+      response_body = JSON.parse(response.body)
+      errata_ids = response_body['results'].map { |e| e['errata_id'] }
+
+      # Verify applicable_errata returns ALL applicable errata
+      expected_ids = applicable.pluck(:errata_id)
+      assert_equal expected_ids.sort, errata_ids.sort
+    end
+
+    def test_installable_errata
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
+      @host1.content_facet.applicable_errata = @view_repo.errata
+      @host1.content_facet.bound_repositories << @view_repo
+
+      # Get errata that are both applicable AND installable (in bound repos)
+      installable = @host1.content_facet.installable_errata
+
+      assert installable.any?
+
+      post :installable_errata, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id }
+      assert_response :success
+
+      response_body = JSON.parse(response.body)
+      errata_ids = response_body['results'].map { |e| e['errata_id'] }
+
+      # Verify installable_errata returns ONLY installable errata (in bound repos)
+      expected_ids = installable.pluck(:errata_id)
+      assert_equal expected_ids.sort, errata_ids.sort
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def test_applicable_and_installable_errata_hosts
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
+      erratum = @view_repo.errata.first
+      assert erratum
+
+      # Make erratum applicable to BOTH hosts by creating ContentFacetErratum records
+      Katello::ContentFacetErratum.create!(content_facet_id: @host1.content_facet.id, erratum_id: erratum.id)
+      Katello::ContentFacetErratum.create!(content_facet_id: @host2.content_facet.id, erratum_id: erratum.id)
+
+      # Make erratum installable ONLY for host2 by binding its repository
+      Katello::ContentFacetRepository.create!(content_facet_id: @host2.content_facet.id, repository_id: @view_repo.id)
+
+      # Test applicable_errata endpoint
+      post :applicable_errata, params: { :included => {:ids => [@host1.id, @host2.id]}, :organization_id => @org.id }
+      assert_response :success
+
+      applicable_response = JSON.parse(response.body)
+      applicable_erratum = applicable_response['results'].find { |e| e['errata_id'] == erratum.errata_id }
+      assert applicable_erratum
+
+      # Verify applicable_hosts includes BOTH hosts
+      applicable_host_ids = applicable_erratum['applicable_hosts'].map { |h| h['id'] }
+      assert_includes applicable_host_ids, @host1.content_facet.id
+      assert_includes applicable_host_ids, @host2.content_facet.id
+
+      # Test installable_errata endpoint
+      post :installable_errata, params: { :included => {:ids => [@host1.id, @host2.id]}, :organization_id => @org.id }
+      assert_response :success
+
+      installable_response = JSON.parse(response.body)
+      installable_erratum = installable_response['results'].find { |e| e['errata_id'] == erratum.errata_id }
+
+      if installable_erratum
+        # Verify installable_hosts field includes ONLY host2 (installable), NOT host1
+        installable_host_ids = installable_erratum['applicable_hosts'].map { |h| h['id'] }
+        refute_includes installable_host_ids, @host1.content_facet.id
+        assert_includes installable_host_ids, @host2.content_facet.id
+      end
+    end
+
     def test_available_incremental_updates
       ContentViewVersion.any_instance.stubs(:content_counts).returns(
                      :package_count => 0, :errata_count => 0, :puppet_module_count => 0)
