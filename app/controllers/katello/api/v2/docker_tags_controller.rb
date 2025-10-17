@@ -46,6 +46,13 @@ module Katello
 
     private
 
+    def custom_index_relation(collection)
+      collection.includes(
+        schema1: { docker_taggable: :docker_manifests },
+        schema2: { docker_taggable: :docker_manifests }
+      )
+    end
+
     def find_repositories
       @repositories = Repository.readable.where(:id => params[:repoids])
     end
