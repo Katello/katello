@@ -56,7 +56,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:show, allowed_perms, denied_perms, [@organization]) do
         get :show, params: { :id => @remote.id }
       end
     end
@@ -101,7 +101,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@create_permission, @view_permission, @destroy_permission]
 
-      assert_protected_action(:scan, allowed_perms, denied_perms) do
+      assert_protected_action(:scan, allowed_perms, denied_perms, [@organization]) do
         post :scan, params: { id: @remote.id }
       end
     end

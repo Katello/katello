@@ -120,7 +120,7 @@ module Katello
 
     def test_index_protected_product
       allowed_perms = [:view_products]
-      assert_protected_action(:index, allowed_perms, []) do
+      assert_protected_action(:index, allowed_perms, [], [@organization]) do
         get(:index, params: { :product_id => @product.id })
       end
     end
@@ -129,7 +129,7 @@ module Katello
       setup_activation_keys
       allowed_perms = [:view_activation_keys]
 
-      assert_protected_action(:index, allowed_perms, []) do
+      assert_protected_action(:index, allowed_perms, [], [@organization]) do
         get(:index, params: { :activation_key_id => @activation_key.id })
       end
     end
@@ -158,7 +158,7 @@ module Katello
       setup_hosts
       allowed_perms = [:view_hosts]
 
-      assert_protected_action(:index, allowed_perms, []) do
+      assert_protected_action(:index, allowed_perms, [], [@organization]) do
         get(:index, params: { :host_id => @host.id })
       end
     end
@@ -266,7 +266,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission]
 
-      assert_protected_action(:available_repositories, allowed_perms, denied_perms) do
+      assert_protected_action(:available_repositories, allowed_perms, denied_perms, [@organization]) do
         get :available_repositories, params: { :product_id => @product.id, :id => @content_id }
       end
     end
@@ -309,7 +309,7 @@ module Katello
       allowed_perms = [@edit_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @view_permission]
 
-      assert_protected_action(:enable, allowed_perms, denied_perms) do
+      assert_protected_action(:enable, allowed_perms, denied_perms, [@organization]) do
         put :enable, params: { product_id: @product.id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
       end
     end
@@ -340,7 +340,7 @@ module Katello
       allowed_perms = [@edit_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @view_permission]
 
-      assert_protected_action(:disable, allowed_perms, denied_perms) do
+      assert_protected_action(:disable, allowed_perms, denied_perms, [@organization]) do
         put :disable, params: { product_id: @product.id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
       end
     end
