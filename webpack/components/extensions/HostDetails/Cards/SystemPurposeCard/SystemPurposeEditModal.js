@@ -117,7 +117,6 @@ const SystemPurposeEditModal = ({
       dispatch(updateHostSysPurposeAttributes({
         id,
         attributes: {
-          autoheal: true,
           purpose_role: optionsToValue(roleOptions, selectedRole),
           purpose_usage: optionsToValue(usageOptions, selectedUsage),
           release_version: optionsToValue(releaseVersionOptions, selectedReleaseVersion),
@@ -129,7 +128,6 @@ const SystemPurposeEditModal = ({
       dispatch(updateAKSysPurposeAttributes({
         id,
         attributes: {
-          autoheal: true,
           purpose_role: optionsToValue(roleOptions, selectedRole),
           purpose_usage: optionsToValue(usageOptions, selectedUsage),
           release_version: optionsToValue(releaseVersionOptions, selectedReleaseVersion),
