@@ -15,6 +15,7 @@ import { SyncAltIcon, OutlinedQuestionCircleIcon } from '@patternfly/react-icons
 import { translate as __ } from 'foremanReact/common/I18n';
 import FontAwesomeImageModeIcon from '../../components/extensions/Hosts/FontAwesomeImageModeIcon';
 import BootedContainerImagesPage from '../BootedContainerImages/BootedContainerImagesPage';
+import SyncedContainerImagesPage from './SyncedContainerImagesPage';
 
 const ContainerImagesPage = () => {
   const [activeTabKey, setActiveTabKey] = useState(0);
@@ -70,9 +71,7 @@ const ContainerImagesPage = () => {
           </Tabs>
         </StackItem>
         <StackItem>
-          {activeTabKey === 0 && (
-          <div>{__('Synced container images content')}</div>
-          )}
+          {activeTabKey === 0 && <SyncedContainerImagesPage />}
           {activeTabKey === 1 && <BootedContainerImagesPage />}
         </StackItem>
       </Stack>
