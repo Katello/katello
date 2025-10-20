@@ -79,6 +79,11 @@ const fixtures = {
         per_page: 10, // eslint-disable-line camelcase
         subtotal: 20,
         results: 'some-results',
+        can_import_manifest: true, // eslint-disable-line camelcase
+        can_delete_manifest: true, // eslint-disable-line camelcase
+        can_manage_subscription_allocations: true, // eslint-disable-line camelcase
+        can_edit_organizations: true, // eslint-disable-line camelcase
+        can_view_subscriptions: true, // eslint-disable-line camelcase
       },
       search: 'some search',
     },

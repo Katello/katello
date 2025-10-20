@@ -149,7 +149,12 @@ class SubscriptionsPage extends Component {
       canManageSubscriptionAllocations,
       canImportManifest,
       canEditOrganizations,
+      canViewSubscriptions,
     } = permissions;
+    // Check view_subscriptions permission
+    if (!canViewSubscriptions) {
+      return <PermissionDenied missingPermissions={['view_subscriptions']} />;
+    }
     const disableManifestActions = !!task || !hasUpstreamConnection;
 
     const openManageManifestModal = () => this.props.setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
@@ -334,6 +339,7 @@ SubscriptionsPage.propTypes = {
   activePermissions: PropTypes.shape({
     can_delete_manifest: PropTypes.bool,
     can_manage_subscription_allocations: PropTypes.bool,
+    can_view_subscriptions: PropTypes.bool,
   }),
   organization: PropTypes.shape({
     id: PropTypes.number,
@@ -392,6 +398,7 @@ SubscriptionsPage.defaultProps = {
   activePermissions: {
     can_import_manifest: false,
     can_manage_subscription_allocations: false,
+    can_view_subscriptions: false,
   },
 };
 
