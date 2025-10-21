@@ -8,13 +8,21 @@ module Katello
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
       @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       @rhui_acs = katello_alternate_content_sources(:yum_alternate_content_source_rhui)
+      @deb_acs = katello_alternate_content_sources(:deb_alternate_content_source)
+      @deb_simplified_acs = katello_alternate_content_sources(:deb_simplified_alternate_content_source)
       @simplified_acs.verify_ssl = nil
+      @deb_simplified_acs.verify_ssl = nil
       Setting['content_default_http_proxy'] = proxy.name
     end
 
     def test_create
       assert @yum_acs.save
       refute_empty AlternateContentSource.where(id: @yum_acs.id)
+    end
+
+    def test_deb_create
+      assert @deb_acs.save
+      refute_empty AlternateContentSource.where(id: @deb_acs.id)
     end
 
     def test_duplicate_name
@@ -156,6 +164,11 @@ module Katello
       @file_acs.save
       @file_acs.reload
 
+      @deb_acs = katello_alternate_content_sources(:deb_alternate_content_source)
+      @deb_acs.subpaths = []
+      @deb_acs.save!
+      @deb_acs.reload
+
       @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       @repo1 = ::Katello::Repository.find_by(relative_path: 'ACME_Corporation/library/fedora_17_label_no_arch')
       @repo2 = ::Katello::Repository.find_by(relative_path: 'ACME_Corporation/library/fedora_17_label')
@@ -195,14 +208,21 @@ module Katello
       assert_equal acss.sort, [@yum_acs, @simplified_acs, @rhui_acs].sort
     end
 
+    def test_search_content_type_deb
+      deb_acs = katello_alternate_content_sources(:deb_alternate_content_source)
+      deb_acs.save!
+      acss = AlternateContentSource.search_for('content_type = "deb"')
+      assert_includes acss, deb_acs
+    end
+
     def test_search_acs_type
       acss = AlternateContentSource.search_for("alternate_content_source_type = \"#{@yum_acs.alternate_content_source_type}\"")
-      assert_equal acss.sort, [@file_acs, @yum_acs].sort
+      assert_equal acss.sort, [@file_acs, @yum_acs, @deb_acs].sort
     end
 
     def test_search_upstream_username
       acss = AlternateContentSource.search_for("upstream_username = \"#{@yum_acs.upstream_username}\"")
-      assert_equal acss.sort, [@file_acs, @yum_acs, @rhui_acs].sort
+      assert_equal acss.sort, [@file_acs, @yum_acs, @rhui_acs, @deb_acs].sort
     end
 
     def test_search_smart_proxy_id
@@ -226,6 +246,38 @@ module Katello
     def test_search_product_name
       acss = AlternateContentSource.search_for("product_name = \"#{@repo1.product.name}\"")
       assert_equal acss, [@simplified_acs]
+    end
+
+    def test_deb_requires_distributions_for_custom
+      @deb_acs.deb_releases = nil
+      error = assert_raises(ActiveRecord::RecordInvalid) { @deb_acs.save! }
+      assert_match 'Deb releases must be provided for deb alternate content sources', error.message
+    end
+
+    def test_deb_disallows_subpaths
+      @deb_acs.deb_releases = 'bookworm'
+      @deb_acs.subpaths = ['repo1/', '  ']
+      error = assert_raises(ActiveRecord::RecordInvalid) { @deb_acs.save! }
+      assert_match('Subpaths must be empty for deb alternate content sources', error.message)
+    end
+
+    def test_non_deb_disallows_deb_fields
+      @yum_acs.deb_releases = 'bookworm'
+      error = assert_raises(ActiveRecord::RecordInvalid) { @yum_acs.save! }
+      assert_match('deb_* fields can only be set for deb alternate content sources', error.message)
+    end
+
+    def test_simplified_disallows_deb_fields
+      acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
+      acs.verify_ssl = nil
+      acs.deb_releases = 'bookworm'
+      acs.deb_components = 'main'
+      acs.deb_architectures = 'amd64'
+
+      refute acs.valid?
+      assert acs.errors[:deb_releases].present?
+      assert acs.errors[:deb_components].present?
+      assert acs.errors[:deb_architectures].present?
     end
   end
 end

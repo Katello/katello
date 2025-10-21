@@ -6,6 +6,7 @@ module Katello
     wrap_parameters :alternate_content_source, include: acs_wrap_params
 
     before_action :find_authorized_katello_resource, only: [:show, :update, :destroy, :refresh]
+    before_action :validate_acs_params!, only: [:create, :update]
     before_action :find_smart_proxies, only: :create
     before_action :find_products, only: :create
 
@@ -14,6 +15,9 @@ module Katello
       param :description, String, desc: N_("Description for the alternate content source"), required: false
       param :base_url, String, desc: N_('Base URL for finding alternate content'), required: false
       param :subpaths, Array, desc: N_('Path suffixes for finding alternate content'), required: false
+      param :deb_releases, String, desc: N_('Debian releases/distributions (e.g., trixie, bookworm)'), required: false
+      param :deb_components, String, desc: N_('Debian components (e.g., main, contrib)'), required: false
+      param :deb_architectures, String, desc: N_('Debian architectures (e.g., amd64, arm64)'), required: false
       param :smart_proxy_ids, Array, desc: N_("Ids of smart proxies to associate"), required: false
       param :smart_proxy_names, Array, desc: N_("Names of smart proxies to associate"), required: false
       param :upstream_username, String, desc: N_("Basic authentication username"), required: false
@@ -119,7 +123,8 @@ module Katello
       keys = [
         :name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type,
         :alternate_content_source_type, :use_http_proxies, :base_url, {subpaths: []}, :upstream_username,
-        :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl, {product_ids: []}
+        :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl, {product_ids: []},
+        :deb_releases, :deb_components, :deb_architectures
       ]
 
       params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
@@ -151,6 +156,26 @@ module Katello
         missing_products = params[:product_ids] - @products.pluck(:id)
         fail HttpErrors::NotFound, _("Couldn't find products with id '%s'") % missing_products.to_sentence
       end
+    end
+
+    def validate_acs_params!
+      attrs = acs_params.except(:smart_proxy_ids, :smart_proxy_names, :product_ids)
+
+      acs =
+        if action_name == 'create'
+          ::Katello::AlternateContentSource.new(attrs)
+        else
+          @alternate_content_source.assign_attributes(attrs)
+          @alternate_content_source
+        end
+
+      return if acs.valid?
+
+      render json: {
+        message: acs.errors.full_messages.to_sentence,
+        errors: acs.errors.to_hash,
+        full_messages: acs.errors.full_messages,
+      }, status: :unprocessable_entity
     end
   end
 end
