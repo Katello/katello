@@ -11,7 +11,11 @@ module Katello
     self.table_name = :katello_alternate_content_sources
 
     ACS_TYPES = %w(custom simplified rhui).freeze
-    CONTENT_TYPES = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE].freeze
+    CONTENT_TYPES = [
+      ::Katello::Repository::YUM_TYPE,
+      ::Katello::Repository::FILE_TYPE,
+      ::Katello::Repository::DEB_TYPE,
+    ].freeze
     AUDIT_REFRESH_ACTION = 'refresh'.freeze
 
     encrypts :upstream_password
@@ -22,6 +26,8 @@ module Katello
 
     validate :validate_ssl_ids
     validate :validate_products
+    validate :deb_constraints
+    validate :deb_fields_xor_subpaths
 
     has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source,
              class_name: "Katello::AlternateContentSourceProduct"
@@ -32,8 +38,9 @@ module Katello
              inverse_of: :alternate_content_source
     has_many :smart_proxies, -> { distinct }, through: :smart_proxy_alternate_content_sources
 
-    validates :base_url, :subpaths, :upstream_username,
-              :upstream_password, if: :simplified?, absence: true
+    validates :base_url, :subpaths, :upstream_username, :upstream_password,
+              :deb_releases, :deb_components, :deb_architectures,
+              if: :simplified?, absence: true
     validates :base_url, if: -> { custom? || rhui? }, presence: true
     validates :label, :uniqueness => true
     validates :name, :uniqueness => true, presence: true
@@ -61,7 +68,9 @@ module Katello
       message: "'%{value}' is not valid for RHUI ACS",
     }
     validate :constraint_acs_update, on: :update
-    validates_with Validators::AlternateContentSourcePathValidator, :attributes => [:base_url, :subpaths], :if => :custom?
+    validates_with Validators::AlternateContentSourcePathValidator,
+      :attributes => [:base_url, :subpaths],
+      :if => -> { custom? && !deb? }
 
     scope :uses_http_proxies, -> { where(use_http_proxies: true) }
 
@@ -92,6 +101,10 @@ module Katello
 
     def rhui?
       alternate_content_source_type == 'rhui'
+    end
+
+    def deb?
+      content_type == ::Katello::Repository::DEB_TYPE
     end
 
     def self.with_products(products)
@@ -166,6 +179,30 @@ module Katello
     def validate_products
       if (custom? || rhui?) && products.present?
         errors.add(:product_ids, "cannot be set for custom or rhui ACS")
+      end
+    end
+
+    def deb_constraints
+      return unless deb?
+
+      releases = deb_releases.to_s.split(/[,\s]+/).map(&:strip).reject(&:blank?)
+
+      if custom? && releases.empty?
+        errors.add(:deb_releases, 'must be provided for deb alternate content sources')
+      end
+    end
+
+    def deb_fields_xor_subpaths
+      return if simplified?
+
+      if deb?
+        if subpaths.present? && Array(subpaths).reject { |s| s.to_s.strip.blank? }.any?
+          errors.add(:subpaths, 'must be empty for deb alternate content sources')
+        end
+      else
+        if deb_releases.present? || deb_components.present? || deb_architectures.present?
+          errors.add(:base, 'deb_* fields can only be set for deb alternate content sources')
+        end
       end
     end
   end
