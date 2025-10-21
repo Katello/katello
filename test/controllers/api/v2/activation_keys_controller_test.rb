@@ -75,7 +75,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:show, allowed_perms, denied_perms, [@organization]) do
         get :show, params: { :id => @activation_key.id }
       end
     end
@@ -84,7 +84,7 @@ module Katello
       #don't have view on LCE or CV
       denied_perms = [{:name => @create_permission, :search => "name=\"Key A2\""}]
 
-      assert_protected_object(:create, [], denied_perms) do
+      assert_protected_object(:create, [], denied_perms, [@organization]) do
         post :create, params: { :environment => { :id => @library.id }, :content_view_id => @view.id, :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
       end
     end
@@ -96,7 +96,7 @@ module Katello
       allowed_perms = [[@create_permission, dev_env_read_permission, view_read_permission]]
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms) do
+      assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
         post :create, params: { :environment => { :id => @library.id }, :content_view_id => @view.id, :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
       end
     end
@@ -558,7 +558,7 @@ module Katello
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @destroy_permission, @update_permission]
 
-      assert_protected_action(:copy, allowed_perms, denied_perms) do
+      assert_protected_action(:copy, allowed_perms, denied_perms, [@organization]) do
         post(:copy, params: { :id => @activation_key.id, :new_name => "new name" })
       end
     end
@@ -567,7 +567,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:content_override, allowed_perms, denied_perms) do
+      assert_protected_action(:content_override, allowed_perms, denied_perms, [@organization]) do
         put(:content_override,
             params: { id: @activation_key.id,
                       content_overrides: [{:content_label => 'fedora', :name => "enabled", :value => true}],

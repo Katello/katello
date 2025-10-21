@@ -41,7 +41,7 @@ module Katello
       allowed_perms = [@sync_permission]
       denied_perms = []
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index, params: { :repository_id => @repository.id }
       end
     end

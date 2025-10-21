@@ -42,7 +42,7 @@ module Katello
       allowed_perms = [@sync_permission]
       denied_perms = []
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index
       end
     end
@@ -60,7 +60,7 @@ module Katello
       allowed_perms = [@sync_permission]
       denied_perms = []
 
-      assert_protected_action(:sync_status, allowed_perms, denied_perms) do
+      assert_protected_action(:sync_status, allowed_perms, denied_perms, [@organization]) do
         get :sync_status, params: { :repoids => [@repository.id] }
       end
     end
@@ -91,7 +91,7 @@ module Katello
       allowed_perms = [@sync_permission]
       denied_perms = []
 
-      assert_protected_action(:sync, allowed_perms, denied_perms) do
+      assert_protected_action(:sync, allowed_perms, denied_perms, [@organization]) do
         post :sync, params: { :repoids => [@repository.id] }
       end
     end
@@ -107,7 +107,7 @@ module Katello
       allowed_perms = [@sync_permission]
       denied_perms = []
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
         delete :destroy, params: { :id => @repository.id }
       end
     end

@@ -56,7 +56,7 @@ module Katello
     end
 
     def test_index_protected
-      assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
+      assert_protected_action(:index, @auth_permissions, @unauth_permissions, [@organization]) do
         get :index, params: { :repository_id => @repo.id }
       end
     end

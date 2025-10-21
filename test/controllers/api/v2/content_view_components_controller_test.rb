@@ -5,7 +5,8 @@ require "katello_test_helper"
 module Katello
   class Api::V2::ContentViewComponentsControllerTest < ActionController::TestCase
     def models
-      @composite = create(:katello_content_view, :composite)
+      @content_view = katello_content_views(:library_dev_view)
+      @composite = create(:katello_content_view, :composite, :organization => @content_view.organization)
     end
 
     def permissions
@@ -24,7 +25,6 @@ module Katello
     end
 
     def create_component
-      @content_view = katello_content_views(:library_dev_view)
       ContentViewComponent.create!(:composite_content_view => @composite,
                                    :content_view => @content_view, :latest => true)
     end
@@ -40,13 +40,12 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@composite.organization]) do
         get :index, params: { :composite_content_view_id => @composite.id }
       end
     end
 
     def test_add_components_with_content_view
-      @content_view = katello_content_views(:library_dev_view)
       @content_view_version = katello_content_view_versions(:library_dev_view_version)
       put :add_components, params: { :composite_content_view_id => @composite.id, :components => [{:content_view_id => @content_view.id, :latest => true}] }
 
@@ -70,23 +69,19 @@ module Katello
     end
 
     def test_add_components_protected
-      @content_view = katello_content_views(:library_dev_view)
-
       allowed_perms = [[@update_permission, {:name => "view_content_views", :search => "name=\"#{@content_view.name}\"" }]]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms) do
+      assert_protected_action(:create, allowed_perms, denied_perms, [@content_view.organization]) do
         put :add_components, params: { :composite_content_view_id => @composite.id, :components => [{:content_view_id => @content_view.id, :latest => true}] }
       end
     end
 
     def test_add_components_protected_object
-      @content_view = katello_content_views(:library_dev_view)
-
       allowed_perms = [[@update_permission, {:name => "view_content_views", :search => "name=\"#{@content_view.name}\"" }]]
       denied_perms = [[@update_permission, {:name => "view_content_views", :search => "name=\"someothername\"" }]]
 
-      assert_protected_object(:create, allowed_perms, denied_perms) do
+      assert_protected_object(:create, allowed_perms, denied_perms, [@composite.organization]) do
         put :add_components, params: { :composite_content_view_id => @composite.id, :components => [{:content_view_id => @content_view.id, :latest => true}] }
       end
     end
@@ -110,7 +105,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:show, allowed_perms, denied_perms, [@composite.organization]) do
         get :show, params: { :composite_content_view_id => @composite.id, :id => component.id }
       end
     end
@@ -156,7 +151,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@composite.organization]) do
         put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :content_view_version_id => component.latest_version.id, :latest => false }
       end
     end
@@ -167,7 +162,7 @@ module Katello
       allowed_perms = [{:name => "edit_content_views", :search => "name=\"#{@composite.name}\"" }]
       denied_perms = [{:name => "edit_content_views", :search => "name=\"some_name\"" }]
 
-      assert_protected_object(:update, allowed_perms, denied_perms) do
+      assert_protected_object(:update, allowed_perms, denied_perms, [@composite.organization]) do
         put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :content_view_version_id => component.latest_version.id, :latest => false }
       end
     end
@@ -185,7 +180,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@composite.organization]) do
         put :remove_components, params: { :composite_content_view_id => @composite.id, :component_ids => [component.id] }
       end
     end
