@@ -2,7 +2,7 @@ extends 'katello/api/v2/common/identifier'
 
 if @object.respond_to?(:alternate_content_source_type)
   if @object.custom? || @object.rhui?
-    attributes :name, :alternate_content_source_type, :content_type, :base_url, :subpaths, :upstream_username, :smart_proxies, :verify_ssl, :use_http_proxies
+    attributes :name, :alternate_content_source_type, :content_type, :base_url, :subpaths, :deb_releases, :deb_components, :deb_architectures, :upstream_username, :smart_proxies, :verify_ssl, :use_http_proxies
     child :ssl_ca_cert => :ssl_ca_cert do |_object|
       attributes :id, :name
     end
