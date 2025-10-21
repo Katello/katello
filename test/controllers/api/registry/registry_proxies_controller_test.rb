@@ -1295,6 +1295,197 @@ module Katello
         error.returns(false)
       end
     end
+
+    describe "static_index" do
+      before do
+        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => katello_content_views(:library_dev_view),
+                                   :lifecycle_environment => katello_environments(:library), :organization => @organization)
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+        @docker_env_repo.set_container_repository_name
+        @docker_env_repo.save!
+      end
+
+      it "authenticates with client certificate and sets host" do
+        uuid = @host.content_facet.uuid
+
+        # Mock certificate authentication
+        client_cert = mock('client_cert')
+        client_cert.stubs(:uuid).returns(uuid)
+        ::Cert::RhsmClient.expects(:new).returns(client_cert)
+        @controller.expects(:cert_present?).returns(true)
+        @controller.expects(:cert_from_request).returns('cert_data')
+        @controller.expects(:authenticate_client).returns(true)
+
+        # Mock readable catalog to return repos the host can access
+        Repository.expects(:readable_docker_catalog).with(@host).returns([@docker_repo, @docker_env_repo])
+
+        # Mock Pulp response
+        flatpak_response = {
+          'Results' => [
+            {'Name' => @docker_repo.container_repository_name},
+            {'Name' => @docker_env_repo.container_repository_name},
+            {'Name' => 'unauthorized_repo'},
+          ],
+        }.to_json
+
+        Resources::Registry::Proxy.expects(:get).returns(flatpak_response)
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        get :static_index
+
+        assert_response 200
+        body = JSON.parse(response.body)
+        # Should only include repos the authenticated host can access
+        assert_includes body['Results'].map { |r| r['Name'] }, @docker_repo.container_repository_name
+        assert_includes body['Results'].map { |r| r['Name'] }, @docker_env_repo.container_repository_name
+        refute_includes body['Results'].map { |r| r['Name'] }, 'unauthorized_repo'
+      end
+
+      it "authenticates with basic auth and uses user permissions" do
+        # Mock readable catalog to return repos the user can access
+        Repository.expects(:readable_docker_catalog).with(nil).returns([@docker_repo, @docker_env_repo])
+
+        # Mock Pulp response
+        flatpak_response = {
+          'Results' => [
+            {'Name' => @docker_repo.container_repository_name},
+            {'Name' => @docker_env_repo.container_repository_name},
+          ],
+        }.to_json
+
+        Resources::Registry::Proxy.expects(:get).returns(flatpak_response)
+
+        # Basic auth is already set up by default in test environment
+        get :static_index
+
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal 2, body['Results'].length
+      end
+
+      it "returns repos in unauthorized environments when no cert and no IP match" do
+        request.env['REMOTE_ADDR'] = '10.0.0.1'
+
+        @controller.expects(:cert_present?).returns(false)
+
+        Repository.expects(:readable_docker_catalog).with(nil).returns([])
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        get :static_index
+
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal 0, body['Results'].length
+      end
+
+      it "authenticates with Bearer token" do
+        user = User.current
+        token = mock('token')
+        token.stubs('expired?').returns(false)
+        token.stubs(:user_id).returns(user.id)
+
+        PersonalAccessToken.expects(:find_by_token).with("valid_token").returns(token)
+
+        # Mock readable catalog
+        Repository.expects(:readable_docker_catalog).with(nil).returns([@docker_repo])
+
+        # Mock Pulp response
+        flatpak_response = {
+          'Results' => [
+            {'Name' => @docker_repo.container_repository_name},
+          ],
+        }.to_json
+
+        Resources::Registry::Proxy.expects(:get).returns(flatpak_response)
+
+        User.current = nil
+        session[:user] = nil
+        @request.env['HTTP_AUTHORIZATION'] = "Bearer valid_token"
+
+        get :static_index
+
+        assert_response 200
+      end
+
+      it "falls back to IP-based host lookup when no auth is provided" do
+        # Set up IP-based host lookup (fallback when no auth)
+        @host.primary_interface.update!(ip: '192.168.1.100')
+        request.env['REMOTE_ADDR'] = '192.168.1.100'
+
+        # Mock readable catalog
+        Repository.expects(:readable_docker_catalog).with(@host).returns([@docker_repo, @docker_env_repo])
+
+        # Mock Pulp response
+        flatpak_response = {
+          'Results' => [
+            {'Name' => @docker_repo.container_repository_name},
+            {'Name' => @docker_env_repo.container_repository_name},
+          ],
+        }.to_json
+
+        Resources::Registry::Proxy.expects(:get).returns(flatpak_response)
+
+        # Clear all authentication
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+        @request.env.delete('HTTP_AUTHORIZATION')
+
+        get :static_index
+
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal 2, body['Results'].length
+      end
+
+      it "filters repositories based on host permissions" do
+        uuid = @host.content_facet.uuid
+
+        # Mock certificate authentication
+        client_cert = mock('client_cert')
+        client_cert.stubs(:uuid).returns(uuid)
+        ::Cert::RhsmClient.expects(:new).returns(client_cert)
+        @controller.expects(:cert_present?).returns(true)
+        @controller.expects(:cert_from_request).returns('cert_data')
+        @controller.expects(:authenticate_client).returns(true)
+
+        # Mock readable catalog to only return repos from the host's org
+        Repository.expects(:readable_docker_catalog).with(@host).returns([@docker_repo, @docker_env_repo])
+
+        # Mock Pulp response with all repos (including one the host shouldn't access)
+        flatpak_response = {
+          'Results' => [
+            {'Name' => @docker_repo.container_repository_name},
+            {'Name' => @docker_env_repo.container_repository_name},
+            {'Name' => 'other_org_repo'},
+          ],
+        }.to_json
+
+        Resources::Registry::Proxy.expects(:get).returns(flatpak_response)
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        get :static_index
+
+        assert_response 200
+        body = JSON.parse(response.body)
+
+        # Should only include repos from the authenticated host's organization
+        assert_equal 2, body['Results'].length
+        assert_includes body['Results'].map { |r| r['Name'] }, @docker_repo.container_repository_name
+        assert_includes body['Results'].map { |r| r['Name'] }, @docker_env_repo.container_repository_name
+        refute_includes body['Results'].map { |r| r['Name'] }, 'other_org_repo'
+      end
+    end
     #rubocop:enable Metrics/BlockLength
   end
 end
