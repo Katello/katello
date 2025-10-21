@@ -15,6 +15,17 @@ module Katello
         @api ||= ::Katello::Pulp3::Repository.api(smart_proxy, @acs.content_type)
       end
 
+      def join_space_or_nil(value)
+        vals = Array(value).map(&:to_s).map(&:strip).reject(&:blank?)
+        vals.empty? ? nil : vals.join(' ')
+      end
+
+      def join_space_required!(field, value)
+        s = join_space_or_nil(value)
+        fail ::Katello::Errors::Pulp3Error, "Debian ACS requires '#{field}' to be a non-empty string" if s.nil?
+        s
+      end
+
       def generate_backend_object_name
         "#{acs.label}-#{smart_proxy.url}-#{rand(9999)}"
       end
@@ -56,6 +67,11 @@ module Katello
           proxy_password: smart_proxy.http_proxy&.password,
           total_timeout: Setting[:sync_connect_timeout],
         }
+        if acs.content_type == ::Katello::Repository::DEB_TYPE
+          remote_options[:distributions] = join_space_required!('distributions', acs.distributions)
+          remote_options[:components] = join_space_or_nil(acs.components)
+          remote_options[:architectures] = join_space_or_nil(acs.architectures)
+        end
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.empty? && !remote_options[:url].end_with?('/PULP_MANIFEST')
           remote_options[:url] = acs.base_url + '/PULP_MANIFEST'
         end
@@ -66,6 +82,10 @@ module Katello
         end
         remote_options.merge!(username: acs&.upstream_username, password: acs&.upstream_password)
         remote_options.merge!(ssl_remote_options)
+      end
+
+      def remove_options
+        { proxy_url: nil, proxy_username: nil, proxy_password: nil }
       end
 
       def ssl_remote_options
@@ -100,12 +120,15 @@ module Katello
 
       def create
         if smart_proxy_acs&.alternate_content_source_href.nil?
-          paths = acs.subpaths.deep_dup
-          if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.present?
-            paths = insert_pulp_manifest!(paths)
+          body = { name: generate_backend_object_name, remote: smart_proxy_acs.remote_href }
+
+          if acs.content_type == ::Katello::Repository::FILE_TYPE
+            paths = acs.subpaths.deep_dup
+            paths = insert_pulp_manifest!(paths) if paths.present?
+            body[:paths] = paths.sort
           end
-          response = api.alternate_content_source_api.create(name: generate_backend_object_name, paths: paths.sort,
-                                                             remote: smart_proxy_acs.remote_href)
+
+          response = api.alternate_content_source_api.create(**body)
           smart_proxy_acs.update!(alternate_content_source_href: response.pulp_href, alternate_content_source_prn: response.prn)
           return response
         end
@@ -117,11 +140,15 @@ module Katello
 
       def update
         href = smart_proxy_acs.alternate_content_source_href
-        paths = acs.subpaths.deep_dup
-        if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.present?
-          paths = insert_pulp_manifest!(paths)
+        body = { name: generate_backend_object_name, remote: smart_proxy_acs.remote_href }
+
+        if acs.content_type == ::Katello::Repository::FILE_TYPE
+          paths = acs.subpaths.deep_dup
+          paths = insert_pulp_manifest!(paths) if paths.present?
+          body[:paths] = paths.sort
         end
-        api.alternate_content_source_api.update(href, name: generate_backend_object_name, paths: paths.sort, remote: smart_proxy_acs.remote_href)
+
+        api.alternate_content_source_api.update(href, **body)
       end
 
       def delete_alternate_content_source

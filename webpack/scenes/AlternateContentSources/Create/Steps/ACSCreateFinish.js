@@ -40,6 +40,9 @@ const ACSCreateFinish = ({ activeStep }) => {
     password,
     caCert,
     productIds,
+    distributions,
+    components,
+    architectures,
   } = useContext(ACSCreateContext);
   const dispatch = useDispatch();
   const response = useSelector(state => selectCreateACS(state, name));
@@ -48,13 +51,27 @@ const ACSCreateFinish = ({ activeStep }) => {
   const [createACSDispatched, setCreateACSDispatched] = useState(false);
   const [saving, setSaving] = useState(true);
 
+  const toList = str => (str || '').trim().split(/[,\s]+/).filter(Boolean);
+  const joinOrUndef = (str) => {
+    const arr = toList(str);
+    return arr.length ? arr.join(' ') : undefined;
+  };
+
   const acsTypeParams = useCallback((params, type) => {
     let acsParams = params;
     if (type === 'custom' || type === 'rhui') {
       acsParams = {
         base_url: url, verify_ssl: verifySSL, ssl_ca_cert_id: caCert, ...acsParams,
       };
-      if (subpaths !== '') {
+      if (contentType === 'deb') {
+        acsParams = {
+          ...acsParams,
+          distributions: joinOrUndef(distributions),
+          components: joinOrUndef(components),
+          architectures: joinOrUndef(architectures),
+          subpaths: [],
+        };
+      } else if (subpaths !== '') {
         acsParams = { subpaths: subpaths.split(','), ...acsParams };
       }
     }
@@ -62,7 +79,7 @@ const ACSCreateFinish = ({ activeStep }) => {
       acsParams = { product_ids: productIds, ...acsParams };
     }
     return acsParams;
-  }, [caCert, productIds, subpaths, url, verifySSL]);
+  }, [caCert, productIds, subpaths, url, verifySSL, contentType, distributions, components, architectures]);
 
   useDeepCompareEffect(() => {
     if (currentStep === 8 && !createACSDispatched) {

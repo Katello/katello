@@ -11,7 +11,11 @@ module Katello
     self.table_name = :katello_alternate_content_sources
 
     ACS_TYPES = %w(custom simplified rhui).freeze
-    CONTENT_TYPES = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE].freeze
+    CONTENT_TYPES = [
+      ::Katello::Repository::YUM_TYPE,
+      ::Katello::Repository::FILE_TYPE,
+      ::Katello::Repository::DEB_TYPE,
+    ].freeze
     AUDIT_REFRESH_ACTION = 'refresh'.freeze
 
     encrypts :upstream_password
@@ -22,6 +26,7 @@ module Katello
 
     validate :validate_ssl_ids
     validate :validate_products
+    validate :deb_constraints
 
     has_many :alternate_content_source_products, dependent: :delete_all, inverse_of: :alternate_content_source,
              class_name: "Katello::AlternateContentSourceProduct"
@@ -92,6 +97,10 @@ module Katello
 
     def rhui?
       alternate_content_source_type == 'rhui'
+    end
+
+    def deb?
+      content_type == ::Katello::Repository::DEB_TYPE
     end
 
     def self.with_products(products)
@@ -167,6 +176,18 @@ module Katello
       if (custom? || rhui?) && products.present?
         errors.add(:product_ids, "cannot be set for custom or rhui ACS")
       end
+    end
+
+    def deb_constraints
+      return unless content_type == ::Katello::Repository::DEB_TYPE
+
+      if custom? && Array(distributions).compact_blank.empty?
+        errors.add(:distributions, 'must be provided for deb alternate content sources')
+      end
+
+      self.distributions = Array(distributions).compact_blank.uniq if will_save_change_to_distributions?
+      self.components = Array(components).compact_blank.uniq if will_save_change_to_components?
+      self.architectures = Array(architectures).compact_blank.uniq if will_save_change_to_architectures?
     end
   end
 end

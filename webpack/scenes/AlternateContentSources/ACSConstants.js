@@ -14,10 +14,12 @@ export const acsDetailsKey = acsId => `${ACS_KEY}_DETAILS_${acsId}`;
 
 export const YUM = __('Yum');
 export const FILE = __('File');
+export const DEB = __('Deb');
 
 export const ACS_TYPE_TRANSLATIONS_ENUM = {
   [YUM]: 'yum',
   [FILE]: 'file',
+  [DEB]: 'deb',
 };
 
 export default ACS_KEY;
