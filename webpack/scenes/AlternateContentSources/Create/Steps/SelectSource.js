@@ -37,6 +37,7 @@ const SelectSource = () => {
 
   const typeOptions = [{ value: 'yum', label: __('Yum') }];
   if (acsType !== 'rhui') {
+    typeOptions.push({ value: 'deb', label: __('Deb') });
     typeOptions.push({ value: 'file', label: __('File') });
   }
 
