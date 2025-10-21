@@ -27,6 +27,14 @@ module Katello
         def content_release_components_api
           PulpDebClient::ContentReleaseComponentsApi.new(api_client)
         end
+
+        def self.alternate_content_source_class
+          PulpDebClient::DebAptAlternateContentSource
+        end
+
+        def alternate_content_source_api
+          PulpDebClient::AcsDebApi.new(api_client)
+        end
       end
     end
   end

@@ -48,3 +48,25 @@ file_simplified_alternate_content_source:
   label:                          file_simplified_acs_fixture
   content_type:                   file
   alternate_content_source_type:  simplified
+
+deb_alternate_content_source:
+  name:                           Deb ACS
+  label:                          deb_acs_fixture
+  ssl_ca_cert_id:                 <%= ActiveRecord::FixtureSet.identify(:real_ca) %>
+  ssl_client_cert_id:             <%= ActiveRecord::FixtureSet.identify(:real_cert) %>
+  ssl_client_key_id:              <%= ActiveRecord::FixtureSet.identify(:real_key) %>
+  content_type:                   deb
+  base_url:                       "https://fixtures.pulpproject.org/debian/"
+  alternate_content_source_type:  custom
+  verify_ssl:                     true
+  upstream_username:              admin
+  upstream_password:              changeme
+  deb_releases:                   ragnarok
+  deb_components:                 asgard jotunheimr
+  deb_architectures:              ppc64
+
+deb_simplified_alternate_content_source:
+  name:                           Deb Simplified ACS
+  label:                          deb_simplified_acs_fixture
+  content_type:                   deb
+  alternate_content_source_type:  simplified

@@ -42,6 +42,9 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
   const [caCertName, setCACertName] = useState('');
   const [productIds, setProductIds] = useState([]);
   const [productNames, setProductNames] = useState([]);
+  const [debReleases, setDebReleases] = useState('');
+  const [debComponents, setDebComponents] = useState('');
+  const [debArchitectures, setDebArchitectures] = useState('');
   const dispatch = useDispatch();
 
   useEffect(
@@ -56,7 +59,12 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
   const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
   const urlValidated = (url === '' || isValidUrl(url, acsType)) ? 'default' : 'error';
 
-  const urlAndPathsValid = () => url !== '' && urlValidated !== 'error' && subPathValidated !== 'error';
+  const urlAndPathsValid = () => {
+    const baseOk = url !== '' && urlValidated !== 'error' && subPathValidated !== 'error';
+    const isDebCustom = contentType === 'deb' && acsType === 'custom';
+    const hasReleases = (debReleases || '').trim().split(/[,\s]+/).filter(Boolean).length > 0;
+    return baseOk && (!isDebCustom || hasReleases);
+  };
 
   const credentialsFilled = () => {
     if (authentication === 'manual') {
@@ -98,7 +106,7 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
 
   const urlPathStep = {
     id: 5,
-    name: __('URL and paths'),
+    name: (contentType === 'deb') ? __('URL and Debian fields') : __('URL and paths'),
     component: <AcsUrlPaths />,
     canJumpTo: (acsType === 'custom' || acsType === 'rhui') && (smartProxies.length) && name !== '',
     enableNext: urlAndPathsValid(),
@@ -182,6 +190,12 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
       setCACert,
       caCertName,
       setCACertName,
+      debReleases,
+      setDebReleases,
+      debComponents,
+      setDebComponents,
+      debArchitectures,
+      setDebArchitectures,
     }}
     >
       <Wizard
