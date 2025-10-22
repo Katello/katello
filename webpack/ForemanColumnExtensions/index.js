@@ -237,6 +237,49 @@ const hostsIndexColumnExtensions = [
     weight: 2600,
     isSorted: true,
   },
+  {
+    columnName: 'host_collections',
+    title: __('Host collections'),
+    wrapper: (hostDetails) => {
+      const hostCollections = hostDetails?.host_collections ?? [];
+      if (hostCollections.length === 0) return '—';
+
+      // Show count badge if more than one collection
+      if (hostCollections.length > 1) {
+        return (
+          <Flex>
+            <FlexItem>
+              <Badge isRead>{hostCollections.length}</Badge>
+            </FlexItem>
+            <Popover
+              id="host-collections-tooltip"
+              className="host-collections-tooltip"
+              maxWidth="34rem"
+              headerContent={hostDetails.display_name}
+              bodyContent={
+                <Flex direction={{ default: 'column' }}>
+                  {hostCollections.map(hc => (
+                    <FlexItem key={hc.id}>
+                      <Text component={TextVariants.p}>{hc.name}</Text>
+                    </FlexItem>
+                  ))}
+                </Flex>
+              }
+            >
+              <FlexItem>
+                {truncate(hostCollections.map(hc => hc.name).join(', '), 35)}
+              </FlexItem>
+            </Popover>
+          </Flex>
+        );
+      }
+
+      // Just show the name if only one collection
+      return hostCollections[0].name;
+    },
+    weight: 2700,
+    isSorted: false,
+  },
 ];
 
 hostsIndexColumnExtensions.forEach((column) => {
