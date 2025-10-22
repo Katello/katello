@@ -34,10 +34,14 @@ Rails.application.config.to_prepare do
     def self.chain(plan_uuids, action, *args)
       result = dynflow.world.chain(plan_uuids, action, *args)
       # The ForemanTasks record may not exist yet for delayed plans,
-      # so we need to find or create it
+      # so we need to find or create it and properly initialize it
       ForemanTasks::Task.find_by(:external_id => result.id) ||
-        ForemanTasks::Task::DynflowTask.new(:external_id => result.id).tap do |task|
-          task.save!
+        begin
+          delayed_plan = dynflow.world.persistence.load_delayed_plan(result.id)
+          execution_plan = dynflow.world.persistence.load_execution_plan(result.id)
+          ForemanTasks::Task::DynflowTask.new(:external_id => result.id).tap do |task|
+            task.update_from_dynflow(execution_plan, delayed_plan)
+          end
         end
     end
   end
