@@ -189,7 +189,7 @@ module Katello
       allowed_perms = [{:name => "edit_host_collections", :search => "name=\"#{@host_collection.name}\"" }]
       denied_perms = [{:name => "edit_host_collections", :search => "name=\"some_name\"" }]
 
-      assert_protected_object(:put, allowed_perms, denied_perms) do
+      assert_protected_object(:put, allowed_perms, denied_perms, [@host_collection.organization]) do
         put :update, params: { :id => @host_collection.id }
       end
     end

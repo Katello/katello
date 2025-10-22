@@ -15,6 +15,8 @@ module Support
             proxy.features << pulp_feature
           end
         end
+        proxy.organizations = [get_organization]
+        proxy.locations = [taxonomies(:location1)]
         proxy.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:core])
       end
     end
