@@ -43,7 +43,7 @@ module Actions
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
                                                           :task => self.task,
                                                           :notes => description,
-                                                          :triggered_by => options[:triggered_by]
+                                                          :triggered_by_id => options[:triggered_by_id] || options[:triggered_by]&.id
                                                          )
           source_repositories = []
           content_view.publish_repositories(options[:override_components]) do |repositories|
@@ -113,7 +113,9 @@ module Actions
 
         def run
           version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-          version.auto_publish_composites!
+          # Pass the current task's execution plan ID so auto_publish can coordinate
+          # with other component CV publishes using Dynflow chaining
+          version.auto_publish_composites!(task.external_id)
 
           output[:content_view_id] = input[:content_view_id]
           output[:content_view_version_id] = input[:content_view_version_id]
