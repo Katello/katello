@@ -275,7 +275,7 @@ module Actions
           end
 
           if version.latest? && !version.content_view.composite?
-            version.auto_publish_composites!
+            version.auto_publish_composites!(task.external_id)
           end
         end
 

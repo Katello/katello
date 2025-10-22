@@ -249,7 +249,7 @@ module ::Actions::Katello::ContentView
     end
 
     context 'run phase' do
-      it 'creates auto-publish events for non-composite views' do
+      it 'triggers auto-publish for composite views using chaining' do
         composite_view = katello_content_views(:composite_view)
         action.stubs(:task).returns(success_task)
 
@@ -258,23 +258,35 @@ module ::Actions::Katello::ContentView
                           composite_content_view: composite_view,
                           content_view: content_view)
 
+        # Mock the task relation to simulate no other component tasks running
+        task_relation = mock('task_relation')
+        task_relation.expects(:select).returns([])
+        ForemanTasks::Task::DynflowTask.expects(:for_action)
+          .with(::Actions::Katello::ContentView::Publish)
+          .returns(task_relation)
+        task_relation.expects(:where).with(state: ['planning', 'planned', 'running']).returns(task_relation)
+
+        # Expect async_task to be called (no siblings, so no chaining)
+        ForemanTasks.expects(:async_task).with(
+          ::Actions::Katello::ContentView::Publish,
+          composite_view,
+          anything,
+          triggered_by: anything
+        )
+
         plan_action action, content_view
         run_action action
-
-        event = Katello::Event.find_by(event_type: Katello::Events::AutoPublishCompositeView::EVENT_TYPE, object_id: composite_view.id)
-        version = content_view.versions.last
-
-        assert_equal event.metadata[:triggered_by], version.id
-        assert_equal event.metadata[:description], "Auto Publish - Triggered by '#{version.name}'"
       end
 
       it 'does nothing for non-composite view' do
         action.stubs(:task).returns(success_task)
 
+        # Should not trigger any auto-publish tasks
+        ForemanTasks.expects(:async_task).never
+        ForemanTasks.expects(:chain).never
+
         plan_action action, katello_content_views(:no_environment_view)
         run_action action
-
-        assert_empty Katello::Event.all
       end
     end
 
