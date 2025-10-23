@@ -42,8 +42,15 @@ module Katello
     def test_auto_publish_with_no_sibling_tasks_triggers_immediately
       task_id = SecureRandom.uuid
 
-      # Stub to return no tasks
-      ForemanTasks::Task::DynflowTask.stubs(:for_action).returns(ForemanTasks::Task.none)
+      # Stub to return no scheduled tasks, no sibling tasks, no composite tasks
+      scheduled_relation = stub(any?: false)
+      sibling_relation = stub(select: [])
+      composite_relation = stub(select: [])
+
+      ForemanTasks::Task::DynflowTask.stubs(:for_action)
+        .returns(stub(where: scheduled_relation))  # First: scheduled check
+        .then.returns(stub(where: sibling_relation))  # Second: sibling check
+        .then.returns(stub(where: composite_relation))  # Third: composite check
 
       # Should trigger async_task since no siblings are running
       ForemanTasks.expects(:async_task).with(
@@ -66,10 +73,15 @@ module Katello
       # Create mock running task for sibling component
       sibling_task = stub(external_id: task_id2, input: { 'content_view' => { 'id' => @component_cv2.id } })
 
-      # First call (sibling check) returns sibling, second call (composite check) returns nothing
+      # Stub the three checks: scheduled, sibling, composite
+      scheduled_relation = stub(any?: false)
+      sibling_relation = stub(select: [sibling_task])
+      composite_relation = stub(select: [])
+
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
-        .returns(stub(where: stub(select: [sibling_task])))
-        .then.returns(stub(where: stub(select: [])))
+        .returns(stub(where: scheduled_relation))  # First: scheduled check
+        .then.returns(stub(where: sibling_relation))  # Second: sibling check
+        .then.returns(stub(where: composite_relation))  # Third: composite check
 
       # Should use chain since sibling is running
       ForemanTasks.expects(:chain).with(
@@ -89,13 +101,22 @@ module Katello
       task_id = SecureRandom.uuid
       composite_task_id = SecureRandom.uuid
 
-      # Create mock scheduled composite publish task
-      composite_task = stub(external_id: composite_task_id, input: { 'content_view' => { 'id' => @composite_cv.id } })
+      # Create mock scheduled composite publish task with delayed plan args
+      composite_task = stub(external_id: composite_task_id)
+      delayed_plan = stub(args: [@composite_cv, "description", {}])
 
-      # First call (sibling check) returns nothing, second call (composite check) returns composite task
+      # Mock the delayed plan lookup - need to allow the real dynflow world through
+      # but intercept the persistence.load_delayed_plan call
+      world_stub = ForemanTasks.dynflow.world
+      persistence_stub = stub(load_delayed_plan: delayed_plan)
+      world_stub.stubs(:persistence).returns(persistence_stub)
+
+      # Stub scheduled check to return the composite task
+      scheduled_relation = mock
+      scheduled_relation.expects(:any?).yields(composite_task).returns(true)
+
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
-        .returns(stub(where: stub(select: [])))
-        .then.returns(stub(where: stub(select: [composite_task])))
+        .returns(stub(where: scheduled_relation))
 
       # Should not create any new task
       ForemanTasks.expects(:chain).never
@@ -107,8 +128,15 @@ module Katello
     def test_auto_publish_handles_lock_conflict_gracefully
       task_id = SecureRandom.uuid
 
-      # Stub to return no tasks
-      ForemanTasks::Task::DynflowTask.stubs(:for_action).returns(ForemanTasks::Task.none)
+      # Stub to return no scheduled, sibling, or composite tasks
+      scheduled_relation = stub(any?: false)
+      sibling_relation = stub(select: [])
+      composite_relation = stub(select: [])
+
+      ForemanTasks::Task::DynflowTask.stubs(:for_action)
+        .returns(stub(where: scheduled_relation))
+        .then.returns(stub(where: sibling_relation))
+        .then.returns(stub(where: composite_relation))
 
       # Simulate lock conflict
       lock = stub('required_lock')
