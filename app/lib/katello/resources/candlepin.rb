@@ -88,6 +88,10 @@ module Katello
         class << self
           delegate :[], to: :json_resource
 
+          def default_headers(uuid = nil)
+            super(uuid).except('cp-user', 'cp-consumer')
+          end
+
           def resource(options = {}, url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
             cert_store = OpenSSL::X509::Store.new
             cert_store.add_file(ca_file) if ca_file

@@ -44,6 +44,42 @@ module Katello
           OpenSSL::PKey::RSA.expects(:new)
           UpstreamCandlepinResource.resource(url: "http://www.foo.com", client_cert: "", client_key: "")
         end
+
+        def test_default_headers_excludes_cp_user_and_cp_consumer
+          User.stubs(:cp_oauth_header).returns({'cp-user' => 'admin'})
+
+          headers = UpstreamCandlepinResource.default_headers
+
+          refute headers.key?('cp-user'), "UpstreamCandlepinResource should not include 'cp-user' header"
+          refute headers.key?('cp-consumer'), "UpstreamCandlepinResource should not include 'cp-consumer' header"
+
+          assert headers.key?('accept'), "Headers should still include 'accept'"
+          assert headers.key?('content-type'), "Headers should still include 'content-type'"
+        end
+
+        def test_default_headers_excludes_cp_consumer_with_uuid
+          User.stubs(:consumer?).returns(true)
+          User.stubs(:cp_oauth_header).returns({'cp-consumer' => 'test-uuid'})
+
+          headers = UpstreamCandlepinResource.default_headers('hypervisor-uuid')
+
+          refute headers.key?('cp-user'), "UpstreamCandlepinResource should not include 'cp-user' header"
+          refute headers.key?('cp-consumer'), "UpstreamCandlepinResource should not include 'cp-consumer' header even with uuid parameter"
+
+          assert headers.key?('accept'), "Headers should still include 'accept'"
+          assert headers.key?('content-type'), "Headers should still include 'content-type'"
+        end
+      end
+
+      class CandlepinResourceTest < ActiveSupport::TestCase
+        def test_default_headers_includes_cp_oauth_header
+          User.stubs(:cp_oauth_header).returns({'cp-user' => 'admin'})
+
+          headers = CandlepinResource.default_headers
+
+          assert headers.key?('cp-user'), "CandlepinResource should include 'cp-user' header for local Candlepin"
+          assert_equal 'admin', headers['cp-user']
+        end
       end
 
       class ProductTest < ActiveSupport::TestCase
