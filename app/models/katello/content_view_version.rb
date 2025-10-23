@@ -371,17 +371,38 @@ module Katello
         # component CVs finish simultaneously and try to create composite publishes
         # The lock is automatically released at the end of the transaction
         composite_cv.with_lock do
+          # Check if there's already a scheduled delayed plan for this composite CV
+          # For scheduled tasks, input isn't populated yet, so we check the delayed plan's args
+          has_scheduled_composite_publish = ForemanTasks::Task::DynflowTask
+            .for_action(::Actions::Katello::ContentView::Publish)
+            .where(state: 'scheduled')
+            .any? do |task|
+              begin
+                delayed_plan = ForemanTasks.dynflow.world.persistence.load_delayed_plan(task.external_id)
+                args = delayed_plan.args
+                # First arg is the content view - check if it matches our composite CV
+                args.first.is_a?(::Katello::ContentView) && args.first.id == composite_cv.id
+              rescue StandardError
+                false
+              end
+            end
+
+          if has_scheduled_composite_publish
+            Rails.logger.info("Composite CV #{composite_cv.name} publish already scheduled (delayed plan exists), skipping duplicate")
+            next
+          end
+
           # Find all currently running publish tasks for sibling component CVs
           # that belong to this composite CV
           sibling_task_ids = find_sibling_component_publish_tasks(composite_cv, component_task_id)
 
-          # Also find any currently running or scheduled composite CV publish tasks
+          # Also find any currently running composite CV publish tasks
           composite_task_ids = find_composite_publish_tasks(composite_cv)
 
-          # If a composite publish is already scheduled or running, skip creating another one
-          # The existing publish will see the latest component versions when it runs
+          # If a composite publish is already running, skip creating another one
+          # The existing publish will pick up the latest component versions
           if composite_task_ids.any?
-            Rails.logger.info("Composite CV #{composite_cv.name} publish already scheduled/running, skipping duplicate")
+            Rails.logger.info("Composite CV #{composite_cv.name} publish already running, skipping duplicate")
             next
           end
 
@@ -450,20 +471,22 @@ module Katello
       task_ids.reject { |id| id == current_task_id }
     end
 
-    # Find all currently running or scheduled publish tasks for the composite CV itself
+    # Find all currently running composite publish tasks for the given composite CV
+    # NOTE: This does NOT check for scheduled tasks - those are handled separately in auto_publish_composites!
+    # by inspecting delayed plan args, since scheduled tasks don't have input populated yet.
     # @param composite_cv [Katello::ContentView] The composite content view
-    # @return [Array<String>] Array of execution plan IDs for all running/scheduled composite publish tasks
+    # @return [Array<String>] Array of execution plan IDs for all running composite publish tasks
     def find_composite_publish_tasks(composite_cv)
-      running_tasks = ForemanTasks::Task::DynflowTask
+      relevant_tasks = ForemanTasks::Task::DynflowTask
         .for_action(::Actions::Katello::ContentView::Publish)
-        .where(state: ['scheduled', 'planning', 'planned', 'running'])
+        .where(state: ['planning', 'planned', 'running'])
         .select do |task|
           # Check if task is publishing the composite CV
           task_input = task.input
           task_input && task_input.dig('content_view', 'id') == composite_cv.id
         end
 
-      running_tasks.map(&:external_id)
+      relevant_tasks.map(&:external_id)
     end
 
     public

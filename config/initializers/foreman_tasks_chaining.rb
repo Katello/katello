@@ -39,7 +39,7 @@ Rails.application.config.to_prepare do
         begin
           delayed_plan = dynflow.world.persistence.load_delayed_plan(result.id)
           execution_plan = dynflow.world.persistence.load_execution_plan(result.id)
-          ForemanTasks::Task::DynflowTask.new(:external_id => result.id).tap do |task|
+          ForemanTasks::Task::DynflowTask.new_for_execution_plan(execution_plan).tap do |task|
             task.update_from_dynflow(execution_plan, delayed_plan)
           end
         end
