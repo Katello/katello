@@ -14,12 +14,49 @@ module Katello
             super
           end
         end
+
+        def resource_scope(options = {})
+          scope = super(options)
+          # Eager load host_collections for index action to avoid N+1 queries
+          # Using preload to force loading even if not accessed
+          if params[:action] == 'index'
+            scope = scope.preload(:host_collections) if scope.respond_to?(:preload)
+          end
+          scope
+        end
       end
 
       included do
         prepend Overrides
         around_action :handle_content_view_environments_for_create, only: [:create]
         before_action :handle_content_view_environments_for_update, only: [:update]
+        after_action :add_host_collections_to_response, only: [:index]
+
+        def add_host_collections_to_response
+          return unless response.content_type&.include?('json')
+          return if @hosts.nil? || !@hosts.respond_to?(:each)
+
+          # Parse the JSON response
+          begin
+            body = JSON.parse(response.body)
+
+            # Add host_collections to each host in results
+            if body['results'].is_a?(Array)
+              body['results'].each_with_index do |host_data, index|
+                host = @hosts[index]
+                next unless host&.respond_to?(:host_collections)
+
+                host_data['host_collections'] = host.host_collections.map do |hc|
+                  { 'id' => hc.id, 'name' => hc.name }
+                end
+              end
+
+              response.body = body.to_json
+            end
+          rescue JSON::ParserError => e
+            Rails.logger.error "Failed to parse response JSON: #{e.message}"
+          end
+        end
 
         def destroy
           Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
