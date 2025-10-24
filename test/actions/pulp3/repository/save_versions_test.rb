@@ -2,6 +2,7 @@ require 'katello_test_helper'
 
 module ::Actions::Pulp3::Repository
   class SaveVersionsTest < ActiveSupport::TestCase
+    # rubocop:disable Metrics/AbcSize
     include Katello::Pulp3Support
 
     def setup
@@ -21,6 +22,19 @@ module ::Actions::Pulp3::Repository
       repos = [@repo1.id, @repo2.id]
 
       ::Katello::Repository.any_instance.stubs(:index_content).returns(nil)
+
+      # Stub version PRN API calls via backend service
+      mock_version1 = mock('version1')
+      mock_version1.stubs(:prn).returns('prn:core.repositoryversion:uuid-1')
+      mock_version2 = mock('version2')
+      mock_version2.stubs(:prn).returns('prn:core.repositoryversion:uuid-2')
+
+      mock_versions_api = mock('repository_versions_api')
+      mock_versions_api.stubs(:read).with("test_repo_1/2/", {fields: 'prn'}).returns(mock_version1)
+      mock_versions_api.stubs(:read).with("test_repo_2/3/", {fields: 'prn'}).returns(mock_version2)
+
+      Katello::Pulp3::Repository.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+      Katello::Pulp3::Api::File.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
 
       tasks_map = [{ created_resources: ["test_repo_1/2/", "test_repo_2/3/"] }]
 
@@ -48,6 +62,20 @@ module ::Actions::Pulp3::Repository
         returns(::PulpFileClient::FileFileRepositoryResponse.new(latest_version_href: "test_repo_1/2/"))
       ::PulpFileClient::RepositoriesFileApi.any_instance.expects(:read).with("test_repo_2/").
         returns(::PulpFileClient::FileFileRepositoryResponse.new(latest_version_href: "test_repo_2/3/"))
+
+      # Stub version PRN API calls via backend service
+      mock_version1 = mock('version1')
+      mock_version1.stubs(:prn).returns('prn:core.repositoryversion:uuid-1')
+      mock_version2 = mock('version2')
+      mock_version2.stubs(:prn).returns('prn:core.repositoryversion:uuid-2')
+
+      mock_versions_api = mock('repository_versions_api')
+      mock_versions_api.stubs(:read).with("test_repo_1/2/", {fields: 'prn'}).returns(mock_version1)
+      mock_versions_api.stubs(:read).with("test_repo_2/3/", {fields: 'prn'}).returns(mock_version2)
+
+      Katello::Pulp3::Repository.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+      Katello::Pulp3::Api::File.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+
       ::Katello::Repository.any_instance.stubs(:index_content).returns(true)
 
       task = ForemanTasks.sync_task(::Actions::Pulp3::Repository::SaveVersions, repos, tasks: tasks_map)
@@ -74,6 +102,20 @@ module ::Actions::Pulp3::Repository
         returns(::PulpFileClient::FileFileRepositoryResponse.new(latest_version_href: "test_repo_1/2/"))
       ::PulpFileClient::RepositoriesFileApi.any_instance.expects(:read).with("test_repo_2/").
         returns(::PulpFileClient::FileFileRepositoryResponse.new(latest_version_href: "test_repo_2/3/"))
+
+      # Stub version PRN API calls via backend service
+      mock_version1 = mock('version1')
+      mock_version1.stubs(:prn).returns('prn:core.repositoryversion:uuid-1')
+      mock_version2 = mock('version2')
+      mock_version2.stubs(:prn).returns('prn:core.repositoryversion:uuid-2')
+
+      mock_versions_api = mock('repository_versions_api')
+      mock_versions_api.stubs(:read).with("test_repo_1/2/", {fields: 'prn'}).returns(mock_version1)
+      mock_versions_api.stubs(:read).with("test_repo_2/3/", {fields: 'prn'}).returns(mock_version2)
+
+      Katello::Pulp3::Repository.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+      Katello::Pulp3::Api::File.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+
       ::Katello::Repository.any_instance.stubs(:index_content).returns(true)
 
       task = ForemanTasks.sync_task(::Actions::Pulp3::Repository::SaveVersions, repos, tasks: tasks_map)
@@ -105,5 +147,6 @@ module ::Actions::Pulp3::Repository
       assert task.output[:contents_changed]
       assert_nil task.output[:updated_repositories]
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end

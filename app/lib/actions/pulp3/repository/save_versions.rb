@@ -37,7 +37,8 @@ module Actions
             end
 
             unless new_version_href == repo.version_href
-              repo.update(version_href: new_version_href)
+              version = repo_backend_service.api.repository_versions_api.read(new_version_href, {fields: 'prn'})
+              repo.update(version_href: new_version_href, version_prn: version.prn)
               repo.index_content
               output[:contents_changed] = true
               output[:updated_repositories] << repo.id

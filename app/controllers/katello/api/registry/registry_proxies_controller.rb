@@ -430,7 +430,12 @@ module Katello
         )
       end
 
-      instance_repo.update!(version_href: latest_version_href)
+      # Fetch version PRN from Pulp API
+      # FIXME: Remove this workaround when https://github.com/pulp/pulpcore/issues/7008 is resolved
+      version_response = pulp_api.repository_versions_api.read(latest_version_href, {fields: 'prn'})
+      latest_version_prn = version_response&.prn
+
+      instance_repo.update!(version_href: latest_version_href, version_prn: latest_version_prn)
       # The Pulp repository should not change after first creation
       if root_repository.repository_references.empty?
         ::Katello::Pulp3::RepositoryReference.where(root_repository_id: instance_repo.root_id,
@@ -446,6 +451,7 @@ module Katello
       instance_repo = root_repository&.library_instance
       distribution_api_response = pulp_api.container_push_distribution_for_repository(pulp_repo_href)
       pulp_distribution_href = distribution_api_response&.pulp_href
+      pulp_distribution_prn = distribution_api_response&.prn
 
       if pulp_distribution_href.empty?
         return render_podman_error(
@@ -459,11 +465,12 @@ module Katello
                                                            repository_id: instance_repo.id).first
       if dist
         if dist.href != pulp_distribution_href
-          dist.update(href: pulp_distribution_href)
+          dist.update(href: pulp_distribution_href, prn: pulp_distribution_prn)
         end
       else
         ::Katello::Pulp3::DistributionReference.create!(path: @container_path_input,
                                                        href: pulp_distribution_href,
+                                                       prn: pulp_distribution_prn,
                                                        repository_id: instance_repo.id)
       end
     end

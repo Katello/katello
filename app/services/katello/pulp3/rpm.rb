@@ -5,7 +5,7 @@ module Katello
       CONTENT_TYPE = "rpm".freeze
       PULPCORE_CONTENT_TYPE = "rpm.package".freeze
 
-      PULP_INDEXED_FIELDS = %w(pulp_href name version release arch epoch summary is_modular rpm_sourcerpm location_href pkgId).freeze
+      PULP_INDEXED_FIELDS = %w(pulp_href prn name version release arch epoch summary is_modular rpm_sourcerpm location_href pkgId).freeze
 
       lazy_accessor :description, :license, :buildhost, :vendor, :relativepath, :children, :checksumtype,
                     :changelog, :group, :size, :url, :build_time, :group,
@@ -90,7 +90,8 @@ module Katello
         custom_json = {}
         custom_json['modular'] = unit['is_modular']
         custom_json['pulp_id'] = unit['pulp_href']
-        (PULP_INDEXED_FIELDS - ['is_modular', 'pulp_href', 'rpm_sourcerpm', 'pkgId', 'location_href']).
+        custom_json['pulp_prn'] = unit['prn'] # Also store PRN alongside pulp_id
+        (PULP_INDEXED_FIELDS - ['is_modular', 'pulp_href', 'prn', 'rpm_sourcerpm', 'pkgId', 'location_href']).
           each { |field| custom_json[field] = unit[field] }
         custom_json['release_sortable'] = Util::Package.sortable_version(unit['release'])
         custom_json['version_sortable'] = Util::Package.sortable_version(unit['version'])

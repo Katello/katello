@@ -1066,7 +1066,7 @@ module Katello
         mock_content_view = mock('content_view')
         mock_content_view.stubs(:id).returns(content_view_id)
         mock_instance_repo = mock('library_instance')
-        mock_instance_repo.expects(:update!).with(version_href: latest_version_href)
+        mock_instance_repo.expects(:update!).with(version_href: latest_version_href, version_prn: 'prn:core.repositoryversion:0199cec8-d7d5-794c-ab23-30ee02953c30')
         mock_instance_repo.stubs(:root_id).returns(root_id)
         mock_instance_repo.stubs(:content_view).returns(mock_content_view)
         mock_instance_repo.stubs(:id).returns(instance_id)
@@ -1085,10 +1085,18 @@ module Katello
         mock_push_repo_api_response_results.stubs(:pulp_href).returns(pulp_repo_href)
         mock_distribution_api_response_results = mock('mock_distribution_api_response_results')
         mock_distribution_api_response_results.stubs(:pulp_href).returns(pulp_distribution_href)
+        mock_distribution_api_response_results.stubs(:prn).returns('prn:container.containerdistribution:some-uuid')
+
+        # mock version API response for PRN
+        mock_version_response = mock('mock_version_response')
+        mock_version_response.stubs(:prn).returns('prn:core.repositoryversion:0199cec8-d7d5-794c-ab23-30ee02953c30')
+        mock_repository_versions_api = mock('repository_versions_api')
+        mock_repository_versions_api.expects(:read).with(latest_version_href, {fields: 'prn'}).returns(mock_version_response)
 
         mock_pulp_api = mock('pulp_api')
         mock_pulp_api.expects(:container_push_repo_for_name).with(container_push_name).returns(mock_push_repo_api_response_results)
         mock_pulp_api.expects(:container_push_distribution_for_repository).with(pulp_repo_href).returns(mock_distribution_api_response_results)
+        mock_pulp_api.stubs(:repository_versions_api).returns(mock_repository_versions_api)
 
         # mock the repository reference
         mock_repo_reference = mock('repo_reference')
@@ -1196,15 +1204,23 @@ module Katello
         mock_push_repo_api_response_results.stubs(:pulp_href).returns(pulp_repo_href)
         mock_distribution_api_response_results = mock('mock_distribution_api_response_results')
         mock_distribution_api_response_results.stubs(:pulp_href).returns(nil)
+        mock_distribution_api_response_results.stubs(:prn).returns('prn:container.containerdistribution:some-uuid')
+
+        # mock version API response for PRN
+        mock_version_response = mock('mock_version_response')
+        mock_version_response.stubs(:prn).returns('prn:core.repositoryversion:0199cec8-d7d5-794c-ab23-30ee02953c30')
+        mock_repository_versions_api = mock('repository_versions_api')
+        mock_repository_versions_api.expects(:read).with(latest_version_href, {fields: 'prn'}).returns(mock_version_response)
 
         mock_pulp_api = mock('pulp_api')
         mock_pulp_api.expects(:container_push_repo_for_name).with(container_push_name).returns(mock_push_repo_api_response_results)
         mock_pulp_api.expects(:container_push_distribution_for_repository).with(pulp_repo_href).returns(mock_distribution_api_response_results)
+        mock_pulp_api.stubs(:repository_versions_api).returns(mock_repository_versions_api)
 
         mock_pulp_primary = mock('pulp_primary')
         SmartProxy.stubs(:pulp_primary).returns(mock_pulp_primary)
         mock_backend_service = mock('backend_service')
-        mock_instance_repo.expects(:update!).with(version_href: latest_version_href)
+        mock_instance_repo.expects(:update!).with(version_href: latest_version_href, version_prn: 'prn:core.repositoryversion:0199cec8-d7d5-794c-ab23-30ee02953c30')
         mock_instance_repo.stubs(:backend_service).with(mock_pulp_primary).returns(mock_backend_service)
         mock_backend_service.stubs(:api).returns(mock_pulp_api)
 

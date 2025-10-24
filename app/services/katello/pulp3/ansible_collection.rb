@@ -22,6 +22,7 @@ module Katello
       def self.generate_model_row(unit)
         {
           pulp_id: unit['pulp_href'],
+          pulp_prn: unit['prn'],
           checksum: unit['sha256'],
           namespace: unit['namespace'],
           version: unit['version'],
