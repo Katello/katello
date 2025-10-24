@@ -64,9 +64,6 @@ Foreman::Application.routes.draw do
             match '/bulk/remove_host_collections' => 'hosts_bulk_actions#bulk_remove_host_collections', :via => :put
             match '/bulk/remove_host_collections' => 'hosts_bulk_actions#bulk_remove_host_collections', :via => :put
 
-            match '/bulk/add_subscriptions' => 'hosts_bulk_actions#add_subscriptions', :via => :put
-            match '/bulk/remove_subscriptions' => 'hosts_bulk_actions#remove_subscriptions', :via => :put
-            match '/bulk/auto_attach' => 'hosts_bulk_actions#auto_attach', :via => :put
             match '/bulk/content_overrides' => 'hosts_bulk_actions#content_overrides', :via => :put
 
             match '/bulk/applicable_errata' => 'hosts_bulk_actions#applicable_errata', :via => :post
@@ -99,13 +96,10 @@ Foreman::Application.routes.draw do
 
           resources :subscriptions, :only => [:index], :controller => :host_subscriptions do
             collection do
-              put :auto_attach
               match '/product_content' => 'repository_sets#index', :via => :get, :entity => :host
               get :available_release_versions
               get :enabled_repositories
               put :content_override
-              put :remove_subscriptions
-              put :add_subscriptions
               delete :destroy
             end
           end

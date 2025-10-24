@@ -58,8 +58,6 @@ Katello::Engine.routes.draw do
             match '/product_content' => 'repository_sets#index', :via => :get, :entity => :activation_key
             match '/content_override' => 'activation_keys#content_override', :via => :put
             post :copy
-            put :add_subscriptions
-            put :remove_subscriptions
           end
           match '/releases' => 'activation_keys#available_releases', :via => :get, :on => :member
           api_resources :host_collections, :only => [:index]

@@ -13,10 +13,7 @@ module Katello
     before_action :find_deletable_hosts, only: [:destroy_hosts]
     before_action :find_readable_hosts, only: [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, only: [:available_incremental_updates]
-    before_action :find_organization, only: [:add_subscriptions]
     before_action :find_traces, only: [:resolve_traces]
-
-    before_action :validate_organization, only: [:add_subscriptions]
 
     # disable *_count fields on erratum rabl, since they perform N+1 queries
     before_action :disable_erratum_hosts_count
@@ -103,49 +100,6 @@ module Katello
     param_group :bulk_params
     def destroy_hosts
       task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Destroy, @hosts)
-      respond_for_async :resource => task
-    end
-
-    api :PUT, "/hosts/bulk/remove_subscriptions", N_("Remove subscriptions from one or more hosts"), deprecated: true
-    param_group :bulk_params
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to remove") do
-      param :id, String, :desc => N_("Subscription Pool id"), :required => true
-      param :quantity, Integer, :desc => N_("Quantity of specified subscription to remove"), :required => false
-    end
-    def remove_subscriptions
-      #combine the quantities for duplicate pools into PoolWithQuantities objects
-      pool_id_quantities = params.require(:subscriptions).inject({}) do |new_hash, subscription|
-        new_hash[subscription['id']] ||= PoolWithQuantities.new(Pool.find(subscription['id']))
-        new_hash[subscription['id']].quantities << subscription['quantity']
-        new_hash
-      end
-      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::RemoveSubscriptions, @hosts, pool_id_quantities.values)
-      respond_for_async :resource => task
-    end
-
-    api :PUT, "/hosts/bulk/add_subscriptions", N_("Add subscriptions to one or more hosts"), deprecated: true
-    param_group :bulk_params
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => true do
-      param :id, String, :desc => N_("Subscription Pool id"), :required => true
-      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
-    end
-    def add_subscriptions
-      if @organization.simple_content_access?
-        fail HttpErrors::BadRequest, _("The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled")
-      end
-
-      pools_with_quantities = params.require(:subscriptions).map do |sub_params|
-        PoolWithQuantities.new(Pool.find(sub_params['id']), sub_params['quantity'])
-      end
-
-      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::AttachSubscriptions, @hosts, pools_with_quantities)
-      respond_for_async :resource => task
-    end
-
-    api :PUT, "/hosts/bulk/auto_attach", N_("Trigger an auto-attach of subscriptions on one or more hosts"), deprecated: true
-    param_group :bulk_params
-    def auto_attach
-      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::AutoAttachSubscriptions, @hosts)
       respond_for_async :resource => task
     end
 
@@ -308,10 +262,6 @@ module Katello
 
     def find_deletable_hosts
       find_bulk_hosts(:destroy_hosts, params)
-    end
-
-    def validate_organization
-      fail HttpErrors::BadRequest, _("Organization ID is required") if @organization.blank?
     end
 
     def validate_host_collection_membership_limit
