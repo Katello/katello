@@ -130,7 +130,7 @@ module Katello
       allowed_perms = [{:name => @view_permission, :search => "name=\"#{@sync_plan.name}\"" }]
       denied_perms = [{:name => @view_permission, :search => "name=\"some_name\"" }]
 
-      assert_protected_object(:show, allowed_perms, denied_perms) do
+      assert_protected_object(:show, allowed_perms, denied_perms, [@organization]) do
         get :show, params: { :id => @sync_plan.id }
       end
     end

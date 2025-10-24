@@ -35,7 +35,7 @@ module Katello
     end
 
     def test_lifecycle_environments_protected
-      assert_protected_action(:lifecycle_environments, view_allowed_perms, denied_perms, [@repository.organization]) do
+      assert_protected_action(:lifecycle_environments, view_allowed_perms, denied_perms, [proxy_with_pulp.organizations.first], [proxy_with_pulp.locations.first]) do
         get :lifecycle_environments, params: { :id => proxy_with_pulp.id }
       end
     end
@@ -46,7 +46,7 @@ module Katello
     end
 
     def test_available_lifecycle_environments_protected
-      assert_protected_action(:available_lifecycle_environments, view_allowed_perms, denied_perms, [@repository.organization]) do
+      assert_protected_action(:available_lifecycle_environments, view_allowed_perms, denied_perms, [proxy_with_pulp.organizations.first], [proxy_with_pulp.locations.first]) do
         get :available_lifecycle_environments, params: { :id => proxy_with_pulp.id }
       end
     end
@@ -57,7 +57,7 @@ module Katello
     end
 
     def test_add_lifecycle_environment_protected
-      assert_protected_action(:add_lifecycle_environment, [[:view_capsule_content, :manage_capsule_content, :view_lifecycle_environments]], denied_perms, [@repository.organization]) do
+      assert_protected_action(:add_lifecycle_environment, [[:view_capsule_content, :manage_capsule_content, :view_lifecycle_environments]], denied_perms, [proxy_with_pulp.organizations.first], [proxy_with_pulp.locations.first]) do
         post :add_lifecycle_environment, params: { :id => proxy_with_pulp.id, :environment_id => environment.id }
       end
     end
@@ -70,7 +70,7 @@ module Katello
     end
 
     def test_remove_lifecycle_environment_protected
-      assert_protected_action(:remove_lifecycle_environment, [[:view_capsule_content, :manage_capsule_content, :view_lifecycle_environments]], denied_perms, [@repository.organization]) do
+      assert_protected_action(:remove_lifecycle_environment, [[:view_capsule_content, :manage_capsule_content, :view_lifecycle_environments]], denied_perms, [proxy_with_pulp.organizations.first], [proxy_with_pulp.locations.first]) do
         delete :remove_lifecycle_environment, params: { :id => proxy_with_pulp.id, :environment_id => environment.id }
       end
     end
@@ -106,7 +106,7 @@ module Katello
     end
 
     def test_sync_protected
-      assert_protected_action(:sync, allowed_perms, denied_perms, [@repository.organization]) do
+      assert_protected_action(:sync, allowed_perms, denied_perms, [proxy_with_pulp.organizations.first], [proxy_with_pulp.locations.first]) do
         post :sync, params: { :id => proxy_with_pulp.id, :environment_id => environment.id }
       end
     end
@@ -117,7 +117,7 @@ module Katello
     end
 
     def test_sync_status_protected
-      assert_protected_action(:sync, view_allowed_perms, denied_perms, [@repository.organization]) do
+      assert_protected_action(:sync, view_allowed_perms, denied_perms, [proxy_with_pulp.organizations.first], [proxy_with_pulp.locations.first]) do
         get :sync_status, params: { :id => proxy_with_pulp.id }
       end
     end
@@ -128,7 +128,7 @@ module Katello
     end
 
     def test_cancel_sync_protected
-      assert_protected_action(:sync, allowed_perms, denied_perms, [@repository.organization]) do
+      assert_protected_action(:sync, allowed_perms, denied_perms, [proxy_with_pulp.organizations.first], [proxy_with_pulp.locations.first]) do
         get :cancel_sync, params: { :id => proxy_with_pulp.id }
       end
     end

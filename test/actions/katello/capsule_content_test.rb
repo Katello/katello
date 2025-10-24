@@ -25,6 +25,7 @@ module ::Actions::Katello::CapsuleContent
       SmartProxy.any_instance.stubs(:ping_pulp).returns({})
       SmartProxy.any_instance.stubs(:ping_pulp3).returns({})
       SmartProxy.any_instance.stubs(:pulp3_configuration).returns(nil)
+      SmartProxy.any_instance.stubs(:verify_ueber_certs).returns(nil)
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:list).returns(nil)
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:create).returns(nil)
     end
