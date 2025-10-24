@@ -7,10 +7,8 @@ module Katello
     before_action :find_optional_organization, :only => [:index, :create, :show]
     before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :available_releases,
                                                                :available_host_collections, :add_host_collections, :remove_host_collections,
-                                                               :content_override, :add_subscriptions, :remove_subscriptions,
-                                                               :subscriptions]
+                                                               :content_override, :subscriptions]
     before_action :find_content_view_environments, :only => [:create, :update]
-    before_action :verify_simple_content_access_disabled, :only => [:add_subscriptions]
     before_action :validate_release_version, :only => [:create, :update]
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level purpose_role purpose_usage content_view_environments))
@@ -179,46 +177,6 @@ module Katello
       respond_for_show(:resource => @activation_key)
     end
 
-    def deprecate_entitlement_mode_endpoint
-      ::Foreman::Deprecation.api_deprecation_warning(N_("This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."))
-    end
-
-    api :PUT, "/activation_keys/:id/add_subscriptions", N_("Attach a subscription"), deprecated: true
-    param :id, :number, :desc => N_("ID of the activation key"), :required => true
-    param :subscription_id, :number, :desc => N_("Subscription identifier"), :required => false
-    param :quantity, :number, :desc => N_("Quantity of this subscription to add"), :required => false
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
-      param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
-      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
-    end
-    def add_subscriptions
-      deprecate_entitlement_mode_endpoint
-      if params[:subscriptions]
-        params[:subscriptions].each { |subscription| @activation_key.subscribe(subscription[:id], subscription[:quantity]) }
-      elsif params[:subscription_id]
-        @activation_key.subscribe(params[:subscription_id], params[:quantity])
-      end
-
-      respond_for_index(:collection => subscription_index, :template => 'subscriptions')
-    end
-
-    api :PUT, "/activation_keys/:id/remove_subscriptions", N_("Unattach a subscription"), deprecated: true
-    param :id, :number, :desc => N_("ID of the activation key"), :required => true
-    param :subscription_id, String, :desc => N_("Subscription ID"), :required => false
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
-      param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
-    end
-    def remove_subscriptions
-      deprecate_entitlement_mode_endpoint
-      if params[:subscriptions]
-        params[:subscriptions].each { |subscription| @activation_key.unsubscribe(subscription[:id]) }
-      elsif params[:subscription_id]
-        @activation_key.unsubscribe(params[:subscription_id])
-      end
-
-      respond_for_index(:collection => subscription_index, :template => 'subscriptions')
-    end
-
     api :PUT, "/activation_keys/:id/content_override", N_("Override content for activation_key")
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :content_overrides, Array, :desc => N_("Array of Content override parameters to be added in bulk") do
@@ -270,17 +228,6 @@ module Katello
     end
 
     private
-
-    def subscription_index
-      subs = @activation_key.subscriptions
-      {
-        :results => subs,
-        :subtotal => subs.count,
-        :total => subs.count,
-        :page => 1,
-        :per_page => subs.count,
-      }
-    end
 
     def find_cve_for_single
       environment_id = params.dig(:environment, :id) || params[:environment_id]
@@ -403,12 +350,6 @@ module Katello
       end
 
       key_params
-    end
-
-    def verify_simple_content_access_disabled
-      if @activation_key.organization.simple_content_access?
-        fail HttpErrors::BadRequest, _("The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled")
-      end
     end
 
     def validate_release_version

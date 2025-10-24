@@ -38,7 +38,6 @@ module Katello
       @plugin.permission :edit_activation_keys,
                          {
                            'katello/api/v2/activation_keys' => [:update, :content_override,
-                                                                :add_subscriptions, :remove_subscriptions,
                                                                 :add_host_collections, :remove_host_collections],
                          },
                          :resource_type => 'Katello::ActivationKey',
