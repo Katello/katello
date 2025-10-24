@@ -66,7 +66,7 @@ module Katello
       param_group :installed_products, ::Katello::Api::V2::HostSubscriptionsController
     end
     param :release_version, String, :desc => N_("Release version of the content host")
-    param :service_level, String, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT")
+    param :service_level, String, :desc => N_("Service level, e.g. SELF-SUPPORT")
     param :lifecycle_environment_id, Integer, :desc => N_("Lifecycle Environment ID"), :required => true
     param :content_view_id, Integer, :desc => N_("Content View ID"), :required => true
     def create
