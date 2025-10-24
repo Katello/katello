@@ -291,9 +291,8 @@ module ::Actions::Katello::Repository
       assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository
     end
 
-    it 'Removes content for structured apt' do
+    it 'Removes content for deb' do
       library_instance_repository = katello_repositories(:debian_9_amd64)
-      assert library_instance_repository.deb_using_structured_apt?
       content_view = katello_content_views(:library_dev_view)
       clone = library_instance_repository.build_clone(:environment => katello_environments(:library), :content_view => content_view)
       clone.save!
@@ -305,9 +304,8 @@ module ::Actions::Katello::Repository
       assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, clone
     end
 
-    it 'Retains content for rolling structured apt' do
+    it 'Retains content for rolling deb' do
       library_instance_repository = katello_repositories(:debian_9_amd64)
-      assert library_instance_repository.deb_using_structured_apt?
       content_view = katello_content_views(:rolling_view)
       clone = library_instance_repository.build_clone(:environment => katello_environments(:library), :content_view => content_view)
       clone.save!
@@ -318,9 +316,8 @@ module ::Actions::Katello::Repository
       refute_action_planned action, ::Actions::Katello::Product::ContentDestroy
     end
 
-    it 'Retains content for rolling structured apt with remove_from_content_view_versions' do
+    it 'Retains content for rolling deb with remove_from_content_view_versions' do
       library_instance_repository = katello_repositories(:debian_9_amd64)
-      assert library_instance_repository.deb_using_structured_apt?
       content_view = katello_content_views(:rolling_view)
       clone = library_instance_repository.build_clone(:environment => katello_environments(:library), :content_view => content_view)
       clone.save!

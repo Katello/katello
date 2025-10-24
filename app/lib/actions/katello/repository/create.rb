@@ -64,7 +64,7 @@ module Actions
         end
 
         def create_content?(repository, clone)
-          if repository.deb_using_structured_apt?
+          if repository.deb?
             return true
           elsif clone || repository.content
             return false
