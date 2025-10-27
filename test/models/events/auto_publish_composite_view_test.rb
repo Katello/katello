@@ -4,12 +4,20 @@ module Katello
   module Events
     class AutoPublishCompositeViewTest < ActiveSupport::TestCase
       let(:composite_view) { katello_content_views(:composite_view) }
+      let(:component_version) { katello_content_view_versions(:library_view_version_1) }
 
       def test_run_with_publish
-        ForemanTasks.expects(:async_task)
+        metadata = { description: "Auto Publish - Test", version_id: component_version.id }
+
+        ForemanTasks.expects(:async_task).with(
+          ::Actions::Katello::ContentView::Publish,
+          composite_view,
+          metadata[:description],
+          triggered_by: metadata[:version_id]
+        )
 
         event = AutoPublishCompositeView.new(composite_view.id) do |instance|
-          instance.metadata = {}
+          instance.metadata = metadata
         end
 
         event.run
@@ -23,10 +31,12 @@ module Katello
       end
 
       def test_run_with_lock_error
+        metadata = { description: "Auto Publish - Test", version_id: component_version.id }
+
         ForemanTasks.expects(:async_task).raises(ForemanTasks::Lock::LockConflict.new(mock, []))
 
         instance = AutoPublishCompositeView.new(composite_view.id) do |event|
-          event.metadata = {}
+          event.metadata = metadata
         end
 
         assert_raises(ForemanTasks::Lock::LockConflict) { instance.run }

@@ -1,12 +1,10 @@
 module Katello
   module Events
-    # DEPRECATED: This event class is no longer used after implementing Dynflow chaining
-    # for auto-publish composite views. EventQueue.push_event calls have been removed.
-    # This class is kept temporarily for reference but should be removed in a future release
-    # along with:
-    #   - test/models/events/auto_publish_composite_view_test.rb
-    #   - EventQueue registration in lib/katello/engine.rb (already commented out)
-    # See: ContentViewVersion#auto_publish_composites! which now uses ForemanTasks.chain
+    # Event handler for retrying composite content view auto-publish when a lock conflict occurs.
+    # This is used in conjunction with Dynflow chaining:
+    # - Dynflow chaining coordinates sibling component CV publishes to avoid race conditions
+    # - Event-based retry handles the case when a composite CV publish is already running
+    # See: ContentViewVersion#auto_publish_composites!
     class AutoPublishCompositeView
       EVENT_TYPE = 'auto_publish_composite_view'.freeze
 
