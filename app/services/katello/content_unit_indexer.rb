@@ -159,17 +159,19 @@ module Katello
         @service_class.supports_id_fetch?
     end
 
-    def sync_repository_associations(assocication_tracker, additive: false)
+    def sync_repository_associations(association_tracker, additive: false)
       unless additive
         ActiveRecord::Base.connection.uncached do
           repo_associations_to_destroy = @model_class.repository_association_class.where(repository_id: @repository.id).where.
-            not(@model_class.unit_id_field => assocication_tracker.unit_ids)
+            not(@model_class.unit_id_field => association_tracker.unit_ids)
           clean_filter_rules(repo_associations_to_destroy) if repo_associations_to_destroy.present? && [::Katello::ModuleStream, ::Katello::Erratum, ::Katello::PackageGroup].include?(@model_class)
           repo_associations_to_destroy.destroy_all
         end
       end
-      return if assocication_tracker.db_values.empty?
-      @model_class.repository_association_class.upsert_all(assocication_tracker.db_values, :unique_by => association_class_uniqiness_attributes)
+      return if association_tracker.db_values.empty?
+      @model_class.repository_association_class.upsert_all(association_tracker.db_values, :unique_by => association_class_uniqueness_attributes)
+
+      clean_duplicate_docker_tags if @model_class == Katello::DockerTag
     end
 
     def clean_filter_rules(repo_associations_to_destroy)
@@ -195,6 +197,26 @@ module Katello
       end
     end
 
+    def clean_duplicate_docker_tags
+      # Deduplicate docker tags by name, keeping the one with the newest updated_at
+      deduplicated_tags = @repository.docker_tags.group_by(&:name).map { |_name, tags| tags.max_by(&:updated_at) }
+      return if deduplicated_tags.empty?
+      valid_names = deduplicated_tags.map(&:name)
+      valid_taggable_ids = deduplicated_tags.map(&:id)
+
+      # Remove duplicate tags with same names as valid tags, keeping only the newest ones
+      # Lookup by docker_manifest is important; docker_tags usually only contains the newest tag.
+      tag_ids_to_remove = @repository.docker_manifests
+                            .joins(:docker_tags)
+                            .where(katello_docker_tags: { name: valid_names })
+                            .where.not(katello_docker_tags: {id: valid_taggable_ids})
+                            .pluck('katello_docker_tags.id')
+
+      return if tag_ids_to_remove.empty?
+      Rails.logger.info("Removing #{tag_ids_to_remove.count} duplicate docker tag associations in repository '#{@repository.label}'")
+      Katello::DockerTag.where(id: tag_ids_to_remove).destroy_all
+    end
+
     def upsert_with_deadlock_retry(to_insert)
       retry_count = 0
       begin
@@ -214,7 +236,7 @@ module Katello
       end
     end
 
-    def association_class_uniqiness_attributes
+    def association_class_uniqueness_attributes
       columns = [@model_class.unit_id_field, 'repository_id']
       found = ActiveRecord::Base.connection.indexes(@model_class.repository_association_class.table_name).find do |index|
         index.columns.sort == columns.sort
