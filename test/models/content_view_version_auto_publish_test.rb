@@ -108,6 +108,27 @@ module Katello
       @component1_version.auto_publish_composites!(task_id)
     end
 
+    def test_auto_publish_schedules_event_when_composite_running
+      task_id = SecureRandom.uuid
+      running_task = stub(external_id: SecureRandom.uuid, input: { 'content_view' => { 'id' => @composite_cv.id } })
+
+      ForemanTasks::Task::DynflowTask.stubs(:for_action)
+        .returns(stub(where: stub(any?: false)))  # Scheduled check: none
+        .then.returns(stub(where: stub(select: [running_task])))  # Running check: found running task
+
+      # Should schedule event instead of creating task
+      event_attrs = {}
+      ::Katello::EventQueue.expects(:push_event).with(
+        ::Katello::Events::AutoPublishCompositeView::EVENT_TYPE,
+        @composite_cv.id
+      ).yields(event_attrs)
+
+      ForemanTasks.expects(:chain).never
+      ForemanTasks.expects(:async_task).never
+
+      @component1_version.auto_publish_composites!(task_id)
+    end
+
     def test_auto_publish_handles_lock_conflict_gracefully
       task_id = SecureRandom.uuid
 

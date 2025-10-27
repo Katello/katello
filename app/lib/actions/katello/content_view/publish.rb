@@ -37,13 +37,15 @@ module Actions
           version = version_for_publish(content_view, options)
           self.version = version
           library = content_view.organization.library
+          triggered_by_id = options[:triggered_by_id] ||
+                            (options[:triggered_by].is_a?(Integer) ? options[:triggered_by] : options[:triggered_by]&.id)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
                                                           :task => self.task,
                                                           :notes => description,
-                                                          :triggered_by_id => options[:triggered_by_id] || options[:triggered_by]&.id
+                                                          :triggered_by_id => triggered_by_id
                                                          )
           source_repositories = []
           content_view.publish_repositories(options[:override_components]) do |repositories|
