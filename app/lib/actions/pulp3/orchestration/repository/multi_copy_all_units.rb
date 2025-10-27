@@ -31,7 +31,7 @@ module Actions
             input[:repo_id_map].each do |source_repo_id, dest_repo_id|
               dest_repo = ::Katello::Repository.find(dest_repo_id)
               source_repo = ::Katello::Repository.find(source_repo_id)
-              dest_repo.update!(version_href: source_repo.version_href)
+              dest_repo.update!(version_href: source_repo.version_href, version_prn: source_repo.version_prn)
             end
           end
         end

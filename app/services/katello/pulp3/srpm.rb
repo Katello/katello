@@ -6,7 +6,7 @@ module Katello
 
       CONTENT_TYPE = "srpm".freeze
 
-      PULP_INDEXED_FIELDS = %w(pulp_href name version release arch epoch summary location_href pkgId).freeze
+      PULP_INDEXED_FIELDS = %w(pulp_href prn name version release arch epoch summary location_href pkgId).freeze
 
       lazy_accessor :pulp_facts, :initializer => :backend_data
 
@@ -68,7 +68,8 @@ module Katello
       def self.generate_model_row(unit)
         custom_json = {}
         custom_json['pulp_id'] = unit['pulp_href']
-        (PULP_INDEXED_FIELDS - ['pulp_href', 'pkgId', 'location_href']).
+        custom_json['pulp_prn'] = unit['prn']
+        (PULP_INDEXED_FIELDS - ['pulp_href', 'prn', 'pkgId', 'location_href']).
           each { |field| custom_json[field] = unit[field] }
         custom_json['release_sortable'] = Util::Package.sortable_version(unit['release'])
         custom_json['version_sortable'] = Util::Package.sortable_version(unit['version'])

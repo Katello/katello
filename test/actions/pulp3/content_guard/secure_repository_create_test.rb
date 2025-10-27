@@ -28,6 +28,7 @@ module ::Actions::Pulp3
       assert content_guard
       distribution = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id).first
       assert_equal content_guard.pulp_href, distribution.content_guard_href
+      assert_match(/^prn:certguard\.rhsmcertguard:[0-9a-f\-]+$/, distribution.content_guard_prn)
     end
   end
 end

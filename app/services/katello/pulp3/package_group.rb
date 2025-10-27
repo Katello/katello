@@ -58,6 +58,7 @@ module Katello
       def self.generate_model_row(unit)
         custom_json = {}
         custom_json['pulp_id'] = unit['pulp_href']
+        custom_json['pulp_prn'] = unit['prn']
         custom_json['name'] = unit['name']
         custom_json['description'] = unit['description']
         custom_json

@@ -25,7 +25,9 @@ module Actions
           repository.last_contents_changed = DateTime.now if repository.version_href != library_instance.version_href
 
           repository.version_href = library_instance.version_href
+          repository.version_prn = library_instance.version_prn
           repository.publication_href = library_instance.publication_href
+          repository.publication_prn = library_instance.publication_prn
           if repository.deb_using_structured_apt?
             repository.content_id = library_instance.content_id
           end

@@ -28,6 +28,8 @@ module ::Actions::Pulp3
                                                                    :content_view_id => @repo.content_view.id)
       assert repo_reference
       assert repo_reference.repository_href
+      assert_not_nil repo_reference.repository_prn
+      assert_match(/^prn:file\.filerepository:[0-9a-f\-]+$/, repo_reference.repository_prn)
     end
   end
 end

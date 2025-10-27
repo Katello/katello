@@ -33,6 +33,10 @@ module ::Actions::Pulp3
       assert_equal 1, @yum_acs.smart_proxy_alternate_content_sources.count
       assert @yum_acs.smart_proxy_alternate_content_sources.first.remote_href.start_with?('/pulp/api/v3/remotes/rpm/rpm/')
       assert @yum_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_href.start_with?('/pulp/api/v3/acs/rpm/rpm/')
+      assert_not_nil @yum_acs.smart_proxy_alternate_content_sources.first.remote_prn
+      assert_match(/^prn:rpm\.rpmremote:[0-9a-f\-]+$/, @yum_acs.smart_proxy_alternate_content_sources.first.remote_prn)
+      assert_not_nil @yum_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_prn
+      assert_match(/^prn:rpm\.rpmalternatecontentsource:[0-9a-f\-]+$/, @yum_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_prn)
     end
 
     def test_file_create
@@ -42,6 +46,10 @@ module ::Actions::Pulp3
       assert_equal 1, @file_acs.smart_proxy_alternate_content_sources.count
       assert @file_acs.smart_proxy_alternate_content_sources.first.remote_href.start_with?('/pulp/api/v3/remotes/file/file/')
       assert @file_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_href.start_with?('/pulp/api/v3/acs/file/file/')
+      assert_not_nil @file_acs.smart_proxy_alternate_content_sources.first.remote_prn
+      assert_match(/^prn:file\.fileremote:[0-9a-f\-]+$/, @file_acs.smart_proxy_alternate_content_sources.first.remote_prn)
+      assert_not_nil @file_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_prn
+      assert_match(/^prn:file\.filealternatecontentsource:[0-9a-f\-]+$/, @file_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_prn)
     end
 
     def test_yum_create_complex
@@ -69,6 +77,10 @@ module ::Actions::Pulp3
       assert_equal 1, @yum_acs.smart_proxy_alternate_content_sources.count
       assert @yum_acs.smart_proxy_alternate_content_sources.first.remote_href.start_with?('/pulp/api/v3/remotes/rpm/rpm/')
       assert @yum_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_href.start_with?('/pulp/api/v3/acs/rpm/rpm/')
+      assert_not_nil @yum_acs.smart_proxy_alternate_content_sources.first.remote_prn
+      assert_match(/^prn:rpm\.rpmremote:[0-9a-f\-]+$/, @yum_acs.smart_proxy_alternate_content_sources.first.remote_prn)
+      assert_not_nil @yum_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_prn
+      assert_match(/^prn:rpm\.rpmalternatecontentsource:[0-9a-f\-]+$/, @yum_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_prn)
     end
   end
 end

@@ -25,6 +25,7 @@ module Katello
 
         {
           pulp_id: unit[unit_identifier],
+          pulp_prn: unit['prn'],
           name: filename,
           path: unit['relative_path'],
           checksum: unit['sha256'],
