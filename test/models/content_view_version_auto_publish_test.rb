@@ -44,7 +44,7 @@ module Katello
 
       # Stub to return no scheduled, no running composite, no sibling tasks
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
-        .returns(stub(where: stub(any?: false)))  # Scheduled check: no scheduled tasks
+        .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
         .then.returns(stub(where: stub(select: [])))  # Running composite check: none
         .then.returns(stub(where: stub(select: [])))  # Sibling check: none
 
@@ -65,9 +65,9 @@ module Katello
       sibling_task = stub(external_id: task_id2, input: { 'content_view' => { 'id' => @component_cv2.id } })
 
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
-        .returns(stub(where: stub(any?: false)))  # Scheduled check: no scheduled tasks
-        .then.returns(stub(where: stub(select: [])))  # Running composite check: none
-        .then.returns(stub(where: stub(select: [sibling_task])))  # Sibling check: found sibling
+        .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
+        .then.returns(stub(where: stub(select: []))) # Running composite check: none
+        .then.returns(stub(where: stub(select: [sibling_task]))) # Sibling check: found sibling
 
       ForemanTasks.expects(:chain).with(
         [task_id2],
@@ -113,8 +113,8 @@ module Katello
       running_task = stub(external_id: SecureRandom.uuid, input: { 'content_view' => { 'id' => @composite_cv.id } })
 
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
-        .returns(stub(where: stub(any?: false)))  # Scheduled check: none
-        .then.returns(stub(where: stub(select: [running_task])))  # Running check: found running task
+        .returns(stub(where: stub(any?: false))) # Scheduled check: none
+        .then.returns(stub(where: stub(select: [running_task]))) # Running check: found running task
 
       # Should schedule event instead of creating task
       event_attrs = {}
@@ -133,7 +133,7 @@ module Katello
       task_id = SecureRandom.uuid
 
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
-        .returns(stub(where: stub(any?: false)))  # Scheduled check: none
+        .returns(stub(where: stub(any?: false))) # Scheduled check: none
         .then.returns(stub(where: stub(select: [])))  # Running composite check: none
         .then.returns(stub(where: stub(select: [])))  # Sibling check: none
 
@@ -172,17 +172,13 @@ module Katello
     def test_find_sibling_tasks_excludes_non_component_tasks
       task_id = SecureRandom.uuid
 
-      # Create mock task for a different CV (not a component)
-      other_cv = FactoryBot.create(:katello_content_view, :organization => @org)
-      other_task = stub(external_id: SecureRandom.uuid, input: { 'content_view' => { 'id' => other_cv.id } })
-
-      # The select block will filter out other_task
+      # The select block will filter out tasks for CVs that aren't components
       ForemanTasks::Task::DynflowTask.stubs(:for_action).returns(stub(where: stub(select: [])))
 
       result = @component1_version.send(:find_sibling_component_publish_tasks, @composite_cv, task_id)
 
       # Should exclude current task and other CV's task
-      assert_equal [], result
+      assert_empty result
     end
   end
 end

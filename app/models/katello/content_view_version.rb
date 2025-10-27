@@ -370,10 +370,11 @@ module Katello
         composite_cv.with_lock do
           status = composite_publish_status(composite_cv)
 
-          if status == :scheduled
+          case status
+          when :scheduled
             Rails.logger.info("Composite CV #{composite_cv.name} publish already scheduled, skipping duplicate")
             next
-          elsif status == :running
+          when :running
             # A composite publish is currently running - we need to schedule another one
             # after it finishes to include this new component version
             Rails.logger.info("Composite CV #{composite_cv.name} publish running, scheduling event for retry")
