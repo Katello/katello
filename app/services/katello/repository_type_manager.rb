@@ -31,14 +31,16 @@ module Katello
       end
 
       def enabled_repository_types(update = true)
-        if update && pulp_primary&.has_feature?(PULP3_FEATURE) && pulp_primary&.capabilities(PULP3_FEATURE)&.empty?
+        return @enabled_repository_types unless update
+
+        disabled_types = @defined_repository_types.keys - @enabled_repository_types.keys
+        return @enabled_repository_types if disabled_types.empty?
+
+        if pulp_primary&.has_feature?(PULP3_FEATURE) && pulp_primary&.capabilities(PULP3_FEATURE)&.empty?
           fix_pulp3_capabilities
         end
 
-        disabled_types = @defined_repository_types.keys - @enabled_repository_types.keys
-        if update && disabled_types.present?
-          disabled_types.each { |repo_type| update_enabled_repository_type(repo_type.to_s) }
-        end
+        disabled_types.each { |repo_type| update_enabled_repository_type(repo_type.to_s) }
         @enabled_repository_types
       end
 

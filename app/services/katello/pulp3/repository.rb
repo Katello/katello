@@ -124,7 +124,10 @@ module Katello
       end
 
       def self.instance_for_type(repo, smart_proxy)
-        Katello::RepositoryTypeManager.enabled_repository_types[repo.root.content_type].pulp3_service_class.new(repo, smart_proxy)
+        repo_types = Katello::RepositoryTypeManager.enabled_repository_types(false)
+        # Populate cache on first call if empty
+        repo_types = Katello::RepositoryTypeManager.enabled_repository_types if repo_types.empty?
+        repo_types[repo.root.content_type].pulp3_service_class.new(repo, smart_proxy)
       end
 
       def should_purge_empty_contents?
