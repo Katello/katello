@@ -6,7 +6,6 @@ module Actions
           activation_key.save!
           cp_create = plan_action(Candlepin::ActivationKey::Create,
                                   organization_label: activation_key.organization.label,
-                                  auto_attach: activation_key.auto_attach,
                                   service_level: params[:service_level],
                                   release_version: activation_key.release_version,
                                   purpose_role: activation_key.purpose_role,

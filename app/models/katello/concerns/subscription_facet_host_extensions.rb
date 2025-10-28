@@ -21,7 +21,6 @@ module Katello
         scoped_search on: :status, relation: :rhel_lifecycle_status_object, rename: :rhel_lifecycle_status, complete_value: rhel_lifecycle_status_map
 
         scoped_search :on => :release_version, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
-        scoped_search :on => :autoheal, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
         scoped_search :on => :service_level, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
         scoped_search :on => :last_checkin, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
         scoped_search :on => :registered_through, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
@@ -45,8 +44,6 @@ module Katello
         content_facet.cves_changed = false if content_facet
         content_facet&.save!
 
-        auto_attach_enabled_via_checkin = consumer_params.try(:[], 'autoheal')
-
         if subscription_facet
           consumer_params ||= subscription_facet.consumer_attributes
 
@@ -58,10 +55,6 @@ module Katello
             consumer_params[:facts]['dmi.system.uuid'] = override_value
           end
           ::Katello::Resources::Candlepin::Consumer.update(subscription_facet.uuid, consumer_params)
-
-          if auto_attach_enabled_via_checkin
-            ::Katello::Resources::Candlepin::Consumer.refresh_entitlements(subscription_facet.uuid)
-          end
 
           if consumer_params.try(:[], :facts)
             ::Katello::Host::SubscriptionFacet.update_facts(self, consumer_params[:facts])

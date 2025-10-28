@@ -224,37 +224,6 @@ module Katello
       host.update_candlepin_associations(params)
     end
 
-    def test_update_with_autoheal
-      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
-      host.content_facet.expects(:save!)
-      params = {:facts => {'memory.memtotal' => '16 GB'}, :autoheal => true}.with_indifferent_access
-      assert_equal host.subscription_facet_attributes.autoheal, false
-
-      ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, params)
-      ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).with(host.subscription_facet.uuid)
-      ::Katello::Host::SubscriptionFacet.expects(:update_facts).with(host, params[:facts])
-      host.subscription_facet.expects(:update_hypervisor).with(params)
-      host.subscription_facet.expects(:update_guests).with(params)
-
-      host.update_candlepin_associations(params)
-
-      assert_equal host.subscription_facet_attributes.autoheal, true
-    end
-
-    def test_update_with_false_autoheal
-      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
-      host.subscription_facet.update(autoheal: true)
-      params = {:autoheal => false}.with_indifferent_access
-
-      ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, params)
-      host.subscription_facet.expects(:update_hypervisor).with(params)
-      host.subscription_facet.expects(:update_guests).with(params)
-
-      host.update_candlepin_associations(params)
-
-      assert_equal host.subscription_facet_attributes.autoheal, false
-    end
-
     def test_update_with_nil_facts
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_facet.expects(:save!)
@@ -288,8 +257,8 @@ module Katello
     def test_update_with_facet_params
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_facet.expects(:save!)
-      host.subscription_facet.stubs(:consumer_attributes).returns('autoheal' => true)
-      host.subscription_facet.expects(:update_from_consumer_attributes).with({ 'autoheal' => true })
+      host.subscription_facet.stubs(:consumer_attributes).returns('serviceLevel' => 'Premium')
+      host.subscription_facet.expects(:update_from_consumer_attributes).with({ 'serviceLevel' => 'Premium' })
       ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, host.subscription_facet.consumer_attributes)
       ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).never
       ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
