@@ -3,11 +3,11 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 2.4.0-RC1",
+        "Project-Id-Version": "katello 4.19.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ettore Atalan <atalanttore@googlemail.com>, 2023",
-        "Language-Team": "German (https://www.transifex.com/foreman/teams/114/de/)",
+        "Last-Translator": "Ettore Atalan <atalanttore@googlemail.com>, 2025",
+        "Language-Team": "German (https://app.transifex.com/foreman/teams/114/de/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
@@ -447,9 +447,6 @@
       "A remote execution job is in progress.": [
         ""
       ],
-      "A service level for auto-healing process, e.g. SELF-SUPPORT": [
-        "Ein Servicelevel für automatische Neusubskription, z. B. SELBSTHILFE"
-      ],
       "A smart proxy seems to have been refreshed without pulpcore being running. Please refresh the smart proxy after ensuring that pulpcore services are running.": [
         "Ein intelligenter Proxy scheint aktualisiert worden zu sein, ohne dass Pulcore ausgeführt wird. Bitte aktualisieren Sie den Smart Proxy, nachdem Sie sichergestellt haben, dass die Pulcore-Dienste ausgeführt werden."
       ],
@@ -505,7 +502,7 @@
         "Aktivierungsschlüssel-ID"
       ],
       "Activation key deleted": [
-        ""
+        "Aktivierungsschlüssel gelöscht"
       ],
       "Activation key details": [
         ""
@@ -552,11 +549,14 @@
       "Add RPM rule": [
         ""
       ],
+      "Add Red Hat Flatpak remote": [
+        ""
+      ],
+      "Add Red Hat flatpak remote": [
+        ""
+      ],
       "Add Subscriptions": [
         "Abonnements hinzufügen"
-      ],
-      "Add a subscription to a host": [
-        "Subskription zu einem Host hinzufügen"
       ],
       "Add an alternate content source": [
         ""
@@ -620,9 +620,6 @@
       ],
       "Add subscriptions consumed by a manifest from Red Hat Subscription Management": [
         "Abonnements hinzufügen, die von einem Manifest von Red Hat Subscription Management verwendet werden"
-      ],
-      "Add subscriptions to one or more hosts": [
-        "Abonnements zu einem oder mehreren Hosts hinzufügen"
       ],
       "Add subscriptions using the Add Subscriptions button.": [
         ""
@@ -891,12 +888,6 @@
       "Array of pools to add": [
         "Array von Pools zum Hinzufügen"
       ],
-      "Array of subscriptions to add": [
-        "Array der hinzuzufügenden Subskriptionen"
-      ],
-      "Array of subscriptions to remove": [
-        "Array der zu entfernenden Subskriptionen"
-      ],
       "Array of uploads to import": [
         "Array von Uploads zum Importieren"
       ],
@@ -952,15 +943,6 @@
       "At least one organization must exist.": [
         "Mindestens eine Organisation muss existieren."
       ],
-      "Attach a subscription": [
-        "Subskription verknüpfen"
-      ],
-      "Attach subscriptions": [
-        "Subskriptionen verknüpfen"
-      ],
-      "Attach subscriptions to %s": [
-        "Subskriptionen mit %s verknüpfen"
-      ],
       "Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin": [
         "Es wurde versucht, den Verbraucher %s vom Kerzenhalter zu zerstören, aber der Verbraucher existiert nicht im Kerzenhalter"
       ],
@@ -1002,9 +984,6 @@
       ],
       "Back": [
         "Zurück"
-      ],
-      "Backend System Status": [
-        "Back-End-Systemstatus"
       ],
       "Base URL": [
         "Basis URL"
@@ -1073,6 +1052,9 @@
         ""
       ],
       "Bootc upgrade via Bootc interface": [
+        ""
+      ],
+      "Booted": [
         ""
       ],
       "Booted Container Images": [
@@ -1300,7 +1282,7 @@
       "Cannot incrementally export from a filtered and a non-filtered content view version. The exported content view version '%{content_view} %{current}'  cannot be incrementally updated from version '%{from}.'.  Please do a full export.": [
         ""
       ],
-      "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
+      "Cannot incrementally export from a incrementally updated version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
       "Cannot install errata: No errata found for search term '%s'": [
@@ -1477,9 +1459,6 @@
       "Completed pulp task protection days": [
         ""
       ],
-      "Component": [
-        "Komponente"
-      ],
       "Component Content View": [
         "Komponenteninhaltsansicht"
       ],
@@ -1544,6 +1523,9 @@
         "Container image tag"
       ],
       "Container image tags": [
+        ""
+      ],
+      "Container images": [
         ""
       ],
       "Container manifest lists": [
@@ -2059,12 +2041,6 @@
       "Create organization": [
         "Organisation erstellen"
       ],
-      "Create package filter rule": [
-        ""
-      ],
-      "Create rule": [
-        "Regel erstellen"
-      ],
       "Credentials": [
         "Anmeldedaten"
       ],
@@ -2450,7 +2426,7 @@
         ""
       ],
       "Digest": [
-        ""
+        "Digest"
       ],
       "Directly setting package lists on composite content views is not allowed. Please update the components, then re-publish the composite.": [
         "Das direkte Festlegen von Paketlisten für zusammengesetzte Inhaltsansichten ist nicht zulässig. Bitte aktualisieren Sie die Komponenten und veröffentlichen Sie dann das Composite erneut."
@@ -2463,9 +2439,6 @@
       ],
       "Disable Red Hat Insights.": [
         "Deaktivieren Sie Red Hat Insights."
-      ],
-      "Disable Simple Content Access": [
-        "Einfachen Inhaltszugriff deaktivieren"
       ],
       "Disable a repository from the set": [
         "Deaktivieren Sie ein Repository aus dem Set"
@@ -2530,6 +2503,9 @@
       "Edit": [
         "Bearbeiten"
       ],
+      "Edit DEB rule": [
+        ""
+      ],
       "Edit Flatpak Remote": [
         ""
       ],
@@ -2555,9 +2531,6 @@
         "Details bearbeiten"
       ],
       "Edit filter rule": [
-        ""
-      ],
-      "Edit package filter rule": [
         ""
       ],
       "Edit products": [
@@ -2601,9 +2574,6 @@
       ],
       "Enable Red Hat repositories": [
         ""
-      ],
-      "Enable Simple Content Access": [
-        "Einfachen Inhaltszugriff aktivieren"
       ],
       "Enable Tracer": [
         ""
@@ -2833,6 +2803,12 @@
       "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
         ""
       ],
+      "Export format must be specified for library exports.": [
+        ""
+      ],
+      "Export format must be specified for non-incremental repository exports.": [
+        ""
+      ],
       "Export formats.Choose syncable if the exported content needs to be in a yum format. This option is only available for %{syncable_repos} repositories. Choose importable if the importing server uses the same version  and exported content needs to be one of %{importable_repos} repositories.": [
         ""
       ],
@@ -3019,6 +2995,9 @@
       "Flatpak remote updated": [
         ""
       ],
+      "Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.": [
+        ""
+      ],
       "Force": [
         "Erzwingen"
       ],
@@ -3081,6 +3060,9 @@
       ],
       "Generate repository applicability": [
         "Repository-Anwendbarkeit generieren"
+      ],
+      "Generate username and password": [
+        ""
       ],
       "Generated": [
         "Generiert"
@@ -3212,7 +3194,7 @@
         "Host-ID"
       ],
       "Host Limit": [
-        ""
+        "Hostgrenze"
       ],
       "Host Profile Assume": [
         "Hostprofil annehmen"
@@ -3317,7 +3299,7 @@
         "Reihenfolge der sortierten Ergebnisse (z. B. ASC für aufsteigend)"
       ],
       "ID": [
-        ""
+        "Kennung"
       ],
       "ID of a HTTP Proxy": [
         "ID eines HTTP-Proxys"
@@ -3504,9 +3486,6 @@
       ],
       "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
         ""
-      ],
-      "If specified, remove the first instance of a subscription with matching id and quantity": [
-        "Falls angegeben, entfernen Sie die erste Instanz einer Subskription mit passender ID und Anzahl"
       ],
       "If the smart proxies' assigned HTTP proxies should be used": [
         ""
@@ -3931,6 +3910,9 @@
       "It's not possible to promote a rolling content view.": [
         ""
       ],
+      "It's not possible to provide environment_ids for anything other than a rolling content view.": [
+        ""
+      ],
       "It's not possible to publish a rolling content view.": [
         ""
       ],
@@ -4061,7 +4043,7 @@
         ""
       ],
       "Last sync": [
-        ""
+        "Letzte Synchronisierung"
       ],
       "Last task": [
         "Letzte Aufgabe"
@@ -4329,6 +4311,9 @@
       ],
       "List of hypervisor guest uuids": [
         "Liste der Hypervisor-Gast-UUIDs"
+      ],
+      "List of lifecycle environments for rolling content views": [
+        ""
       ],
       "List of package group names (Deprecated)": [
         "Liste der Paketgruppennamen (veraltet)"
@@ -4805,7 +4790,7 @@
         ""
       ],
       "No change": [
-        ""
+        "Keine Änderungen"
       ],
       "No content": [
         ""
@@ -5153,7 +5138,7 @@
         "Zuzuweisende Nummer"
       ],
       "OS": [
-        ""
+        "Betriebssystem"
       ],
       "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.": [
         ""
@@ -5229,9 +5214,6 @@
       ],
       "Organization ID": [
         "Organisations-ID"
-      ],
-      "Organization ID is required": [
-        "Organisations-ID ist erforderlich"
       ],
       "Organization ID or title": [
         ""
@@ -5716,6 +5698,9 @@
       "Promotion to Environment": [
         "Promotion des Environments"
       ],
+      "Provide credentials if the registry requires authentication": [
+        ""
+      ],
       "Provide the required information and click {update} below to save changes.": [
         ""
       ],
@@ -5841,15 +5826,6 @@
       ],
       "Quantity of entitlements to bind": [
         "Anzahl der zu bindenden Berechtigungen"
-      ],
-      "Quantity of specified subscription to remove": [
-        "Menge des angegebenen Abonnements, das entfernt werden soll"
-      ],
-      "Quantity of this subscription to add": [
-        "Hinzuzufügende Anzahl dieser Subskription"
-      ],
-      "Quantity of this subscriptions to add": [
-        "Hinzuzufügende Anzahl der Subskription"
       ],
       "Quantity to Allocate": [
         "Zuzuweisende Menge"
@@ -6019,9 +5995,6 @@
       "Register a host with subscription and information": [
         "Registrieren Sie einen Host mit Abonnement und Informationen"
       ],
-      "Register host '%s' before attaching subscriptions": [
-        "Registrieren Sie den Host '%s', bevor Sie Abonnements anhängen"
-      ],
       "Registered": [
         "Registriert"
       ],
@@ -6051,6 +6024,9 @@
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
         "Das Namensmuster der Registrierung führt zu einem ungültigen Container-Image-Namen der Mitglieds-Repositorys"
+      ],
+      "Registry token expiration time": [
+        ""
       ],
       "Related composite content views": [
         ""
@@ -6163,18 +6139,6 @@
       "Remove products from sync plan": [
         "Produkte aus Synchronisationsplan entfernen"
       ],
-      "Remove subscriptions": [
-        "Subskriptionen entfernen"
-      ],
-      "Remove subscriptions from %s": [
-        "Subskriptionen aus %s entfernen"
-      ],
-      "Remove subscriptions from a host": [
-        ""
-      ],
-      "Remove subscriptions from one or more hosts": [
-        "Abonnements von einem oder mehreren Hosts entfernen"
-      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Versionen und/oder Umgebungen aus einer Inhaltsansicht entfernen und Systeme und Schlüssel neu zuweisen"
       ],
@@ -6242,7 +6206,7 @@
         "Repository '%(repoName)s' wurde aktiviert."
       ],
       "Repository ID": [
-        ""
+        "Repository-Kennung"
       ],
       "Repository Id associated with the kickstart repo used for provisioning": [
         "Repository-ID, die mit dem Kickstart-Repository verknüpft ist, das für die Bereitstellung verwendet wird"
@@ -6394,6 +6358,9 @@
       "Return Red Hat (non-custom) products only": [
         "Return Red Hat (non-custom) products only"
       ],
+      "Return a list of installed debs distinct by name": [
+        ""
+      ],
       "Return a list of installed packages distinct by name": [
         ""
       ],
@@ -6433,7 +6400,7 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         ""
       ],
-      "Return only errata of a particular type (security, bugfix, enhancement)": [
+      "Return only errata of a particular type (security, bugfix, enhancement, other)": [
         ""
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
@@ -6573,6 +6540,9 @@
       ],
       "Save": [
         "Speichern"
+      ],
+      "Save Environments": [
+        ""
       ],
       "Saving alternate content source...": [
         ""
@@ -6820,11 +6790,14 @@
       "Service Level (SLA)": [
         "Service Level (SLA)"
       ],
+      "Service level": [
+        ""
+      ],
       "Service level of host": [
         "Servicelevel des Hosts"
       ],
-      "Service level to be used for autoheal": [
-        "Service-Level, das für die automatische Reparatur verwendet werden soll"
+      "Service level, e.g. SELF-SUPPORT": [
+        ""
       ],
       "Set content overrides": [
         ""
@@ -6849,9 +6822,6 @@
       ],
       "Sets the system purpose usage": [
         "Setzt setzt die System-Zweck-Nutzung"
-      ],
-      "Sets whether the Host will autoheal subscriptions upon checkin": [
-        "Legt fest, ob der Host Abonnements beim Einchecken automatisch repariert"
       ],
       "Setting 'default_location_subscribed_hosts' is not set to a valid location.": [
         "Die Einstellung 'default_location_subscribed_hosts' ist nicht auf einen gültigen Standort festgelegt."
@@ -7003,6 +6973,9 @@
       "Smart proxy name": [
         ""
       ],
+      "Smart proxy verify content checksum has started in the background": [
+        ""
+      ],
       "Sockets": [
         "Sockets"
       ],
@@ -7117,7 +7090,7 @@
       "Something went wrong while refreshing alternate content sources: ": [
         ""
       ],
-      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
+      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error?.response)}": [
         ""
       ],
       "Something went wrong while removing a filter rule! ${getResponseErrorMsgs(error.response)}": [
@@ -7184,6 +7157,9 @@
         "Beim Abrufen der Repository-Typen ist ein Fehler aufgetreten! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while updating the content source. See the logs for more information": [
+        ""
+      ],
+      "Something went wrong while verifying content checksums: ${getResponseErrorMsgs(error?.response)}": [
         ""
       ],
       "Something went wrong! Please check server logs!": [
@@ -7273,9 +7249,6 @@
       "Subscription Details": [
         "Subskriptionsdetails"
       ],
-      "Subscription ID": [
-        "Subskriptions-ID"
-      ],
       "Subscription Info": [
         "Subskriptionsinformationen"
       ],
@@ -7290,12 +7263,6 @@
       ],
       "Subscription Name": [
         "Abonnementname"
-      ],
-      "Subscription Pool id": [
-        "Subskriptionspool-ID"
-      ],
-      "Subscription Pool uuid": [
-        "Subskriptionspool-UUID"
       ],
       "Subscription UUID": [
         "Abonnement-UUID"
@@ -7464,6 +7431,9 @@
       ],
       "Synced Content": [
         "Synchronisierte Inhalte"
+      ],
+      "Synced container images content": [
+        ""
       ],
       "Synchronize": [
         "Synchronisieren"
@@ -7684,6 +7654,9 @@
       "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts.": [
         "Die Übertragung von %{content_view} nach <b>%{environment}</b> wurde abgeschlossen. %{count} benötigte Errata können auf Ihren Hosts installiert werden."
       ],
+      "The provided incremental export format '%{provided}' must match the previous export's format '%{previous}'. Consider using 'from_history_id' to point to a matching export.": [
+        ""
+      ],
       "The repository is already enabled": [
         "Das Repository ist bereits aktiviert"
       ],
@@ -7710,9 +7683,6 @@
       ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
         ""
-      ],
-      "The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled": [
-        "Die spetifizierte Organization ist im Simple-Content-Zugriffs-Modus. Das Hinzufügen von Subskriptionen ist deaktiviert."
       ],
       "The subscription cannot be found upstream": [
         "Das Abonnement kann nicht im Upstream gefunden werden"
@@ -7855,12 +7825,6 @@
       "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
         ""
       ],
-      "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.": [
-        "Die Organisation dieses Gastgebers befindet sich im einfachen Inhaltszugriffsmodus. Das Anhängen von Abonnements ist deaktiviert."
-      ],
-      "This host's organization is in Simple Content Access mode. Auto-attach is disabled": [
-        "Die Organisation dieses Gastgebers befindet sich im einfachen Inhaltszugriffsmodus. Automatisches Anhängen ist deaktiviert"
-      ],
       "This is disabled because a manifest task is in progress": [
         "Dies ist deaktiviert, da eine Manifestaufgabe ausgeführt wird"
       ],
@@ -7921,6 +7885,9 @@
       "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned.": [
         ""
       ],
+      "Time in minutes before registry access tokens expire.": [
+        ""
+      ],
       "Time to expire yum metadata in seconds. Only relevant for custom yum repositories.": [
         ""
       ],
@@ -7934,6 +7901,9 @@
         "Titel"
       ],
       "To change content view environments, a specific organization must be selected from the organization context.": [
+        ""
+      ],
+      "To continue with Red Hat Flatpak remote, you need to generate your username and password in": [
         ""
       ],
       "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system.": [
@@ -8010,12 +7980,6 @@
       ],
       "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy.": [
         ""
-      ],
-      "Trigger an auto-attach of subscriptions": [
-        "Automatische Verknüpfung von Subskriptionen auslösen "
-      ],
-      "Trigger an auto-attach of subscriptions on one or more hosts": [
-        "Auslösen eines automatischen Anhängens von Abonnements auf einem oder mehreren Hosts"
       ],
       "Try changing your search criteria.": [
         ""
@@ -8101,6 +8065,12 @@
       "Unable to detect puppet path": [
         "Puppet-Pfad kann nicht erkannt werden"
       ],
+      "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
+        ""
+      ],
+      "Unable to find a base content view to use for incremental export. Please run a complete export instead.": [
+        ""
+      ],
       "Unable to find a content view with ID %s": [
         ""
       ],
@@ -8114,12 +8084,6 @@
         "Benutzer können nicht abgerufen werden"
       ],
       "Unable to import in to Content View specified in the metadata - '%{name}'. The 'import_only' attribute for the content view is set to false. To mark this Content View as importable, have your system administrator run the following command on the server. ": [
-        ""
-      ],
-      "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment.": [
-        "Es ist nicht möglich inkrementell zu exportieren. Tätige einen vollen Export des Library-Kontents vor dem Upgrade des neuesten Inkrements."
-      ],
-      "Unable to incrementally export. Do a Full Export on the repository content.": [
         ""
       ],
       "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.": [
@@ -8170,9 +8134,6 @@
       "Unapplied Errata": [
         "Nicht angewendete Errata"
       ],
-      "Unattach a subscription": [
-        "Subskription lösen"
-      ],
       "Unfiltered params array: %s.": [
         "Ungefiltertes Parameter-Array: %s ."
       ],
@@ -8187,6 +8148,12 @@
       ],
       "Unknown errata status": [
         "Unbekannter Errata-Status"
+      ],
+      "Unknown library export format '%s'.": [
+        ""
+      ],
+      "Unknown repository export format '%s'.": [
+        ""
       ],
       "Unknown traces status": [
         "Unbekannter Trace-Status"
@@ -8521,6 +8488,9 @@
       "Value must either be a boolean or 'default' for 'enabled'": [
         "Der Wert muss entweder ein boolescher Wert oder 'Standard' für 'aktiviert' sein."
       ],
+      "Verify Content Checksum": [
+        ""
+      ],
       "Verify SSL": [
         "SSL überprüfen"
       ],
@@ -8603,6 +8573,9 @@
         ""
       ],
       "View by": [
+        ""
+      ],
+      "View container images in the local registry using the Synced tab. View container images booted by image mode hosts using the Booted tab. The Booted tab also shows images outside of the local container registry.": [
         ""
       ],
       "View content views": [
@@ -8893,9 +8866,6 @@
       "attempted to sync without a feed URL": [
         "Synchronisation ohne Feed-URL versucht"
       ],
-      "auto attach subscriptions upon registration": [
-        "Nach Registrierung automatisch mit Subskriptionen verknüpfen"
-      ],
       "base url to perform repo discovery on": [
         "Basis-URL zur Durchführung der Suche"
       ],
@@ -9182,7 +9152,7 @@
         ""
       ],
       "host": [
-        ""
+        "Host"
       ],
       "host collection name to filter by": [
         "Name der Hostsammlung, nach der gefiltert werden soll"
@@ -9531,9 +9501,6 @@
       ],
       "start datetime of synchronization": [
         "Startdatum und -zeit der Synchronisation"
-      ],
-      "subscriptions not specified": [
-        "Subskriptionen sind nicht angegeben"
       ],
       "sync plan description": [
         "Beschreibung des Synchronisationsplans"

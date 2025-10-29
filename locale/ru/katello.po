@@ -11,14 +11,14 @@
 # Yulia <yulia.poyarkova@redhat.com>, 2022
 # Denis Denis <stereodenis@gmail.com>, 2022
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2022
-# Bryan Kearney <bryan.kearney@gmail.com>, 2024
+# Bryan Kearney <bryan.kearney@gmail.com>, 2025
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 4.18.0.pre.master\n"
+"Project-Id-Version: katello 4.19.0.pre.master\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
-"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2024\n"
+"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/foreman/teams/114/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -461,9 +461,6 @@ msgstr ""
 msgid "A remote execution job is in progress."
 msgstr ""
 
-msgid "A service level for auto-healing process, e.g. SELF-SUPPORT"
-msgstr "Уровень обслуживания для автоматического восстановления (например, SELF-SUPPORT)"
-
 msgid "A smart proxy seems to have been refreshed without pulpcore being running. Please refresh the smart proxy after ensuring that pulpcore services are running."
 msgstr ""
 
@@ -566,11 +563,14 @@ msgstr ""
 msgid "Add RPM rule"
 msgstr ""
 
-msgid "Add Subscriptions"
+msgid "Add Red Hat Flatpak remote"
 msgstr ""
 
-msgid "Add a subscription to a host"
-msgstr "Выделить подписки узлу"
+msgid "Add Red Hat flatpak remote"
+msgstr ""
+
+msgid "Add Subscriptions"
+msgstr ""
 
 msgid "Add an alternate content source"
 msgstr ""
@@ -633,9 +633,6 @@ msgid "Add subscriptions"
 msgstr ""
 
 msgid "Add subscriptions consumed by a manifest from Red Hat Subscription Management"
-msgstr ""
-
-msgid "Add subscriptions to one or more hosts"
 msgstr ""
 
 msgid "Add subscriptions using the Add Subscriptions button."
@@ -911,12 +908,6 @@ msgstr ""
 msgid "Array of pools to add"
 msgstr ""
 
-msgid "Array of subscriptions to add"
-msgstr "Массив добавляемых подписок"
-
-msgid "Array of subscriptions to remove"
-msgstr "Массив удаляемых подписок"
-
 msgid "Array of uploads to import"
 msgstr ""
 
@@ -973,15 +964,6 @@ msgstr ""
 msgid "At least one organization must exist."
 msgstr "Должна существовать как минимум одна организация."
 
-msgid "Attach a subscription"
-msgstr "Назначить подписку"
-
-msgid "Attach subscriptions"
-msgstr "Выделить подписки"
-
-msgid "Attach subscriptions to %s"
-msgstr "Выделить подписки %s"
-
 msgid "Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin"
 msgstr ""
 
@@ -1023,9 +1005,6 @@ msgstr ""
 
 msgid "Back"
 msgstr "Назад"
-
-msgid "Backend System Status"
-msgstr "Состояние базовой системы"
 
 msgid "Base URL"
 msgstr ""
@@ -1094,6 +1073,9 @@ msgid "Bootc switch via Bootc interface"
 msgstr ""
 
 msgid "Bootc upgrade via Bootc interface"
+msgstr ""
+
+msgid "Booted"
 msgstr ""
 
 msgid "Booted Container Images"
@@ -1321,7 +1303,7 @@ msgstr ""
 msgid "Cannot incrementally export from a filtered and a non-filtered content view version. The exported content view version '%{content_view} %{current}'  cannot be incrementally updated from version '%{from}.'.  Please do a full export."
 msgstr ""
 
-msgid "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export."
+msgid "Cannot incrementally export from a incrementally updated version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export."
 msgstr ""
 
 msgid "Cannot install errata: No errata found for search term '%s'"
@@ -1498,9 +1480,6 @@ msgstr ""
 msgid "Completed pulp task protection days"
 msgstr ""
 
-msgid "Component"
-msgstr "Компонент"
-
 msgid "Component Content View"
 msgstr ""
 
@@ -1565,6 +1544,9 @@ msgid "Container image tag"
 msgstr ""
 
 msgid "Container image tags"
+msgstr ""
+
+msgid "Container images"
 msgstr ""
 
 msgid "Container manifest lists"
@@ -2080,12 +2062,6 @@ msgstr ""
 msgid "Create organization"
 msgstr "Создать организацию"
 
-msgid "Create package filter rule"
-msgstr ""
-
-msgid "Create rule"
-msgstr ""
-
 msgid "Credentials"
 msgstr ""
 
@@ -2485,9 +2461,6 @@ msgstr "Отключить"
 msgid "Disable Red Hat Insights."
 msgstr ""
 
-msgid "Disable Simple Content Access"
-msgstr ""
-
 msgid "Disable a repository from the set"
 msgstr ""
 
@@ -2551,6 +2524,9 @@ msgstr "РЕКОМЕНДАЦИИ ИСПРАВЛЕНИЙ"
 msgid "Edit"
 msgstr "Изменить"
 
+msgid "Edit DEB rule"
+msgstr ""
+
 msgid "Edit Flatpak Remote"
 msgstr ""
 
@@ -2576,9 +2552,6 @@ msgid "Edit details"
 msgstr ""
 
 msgid "Edit filter rule"
-msgstr ""
-
-msgid "Edit package filter rule"
 msgstr ""
 
 msgid "Edit products"
@@ -2621,9 +2594,6 @@ msgid "Enable"
 msgstr "Включить"
 
 msgid "Enable Red Hat repositories"
-msgstr ""
-
-msgid "Enable Simple Content Access"
 msgstr ""
 
 msgid "Enable Tracer"
@@ -2854,6 +2824,12 @@ msgstr ""
 msgid "Export failed: One or more repositories needs to be synced (with Immediate download policy.)"
 msgstr ""
 
+msgid "Export format must be specified for library exports."
+msgstr ""
+
+msgid "Export format must be specified for non-incremental repository exports."
+msgstr ""
+
 msgid "Export formats.Choose syncable if the exported content needs to be in a yum format. This option is only available for %{syncable_repos} repositories. Choose importable if the importing server uses the same version  and exported content needs to be one of %{importable_repos} repositories."
 msgstr ""
 
@@ -3040,6 +3016,9 @@ msgstr ""
 msgid "Flatpak remote updated"
 msgstr ""
 
+msgid "Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product."
+msgstr ""
+
 msgid "Force"
 msgstr ""
 
@@ -3103,6 +3082,9 @@ msgid "Generate host applicability"
 msgstr ""
 
 msgid "Generate repository applicability"
+msgstr ""
+
+msgid "Generate username and password"
 msgstr ""
 
 msgid "Generated"
@@ -3340,7 +3322,7 @@ msgid "How to order the sorted results (e.g. ASC for ascending)"
 msgstr "Порядок сортировки (например, ASC — по возрастанию)"
 
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 msgid "ID of a HTTP Proxy"
 msgstr ""
@@ -3529,9 +3511,6 @@ msgstr ""
 
 msgid "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'."
 msgstr ""
-
-msgid "If specified, remove the first instance of a subscription with matching id and quantity"
-msgstr "Если задано, удалить указанное число подписок в соответствии с заданным идентификатором"
 
 msgid "If the smart proxies' assigned HTTP proxies should be used"
 msgstr ""
@@ -3956,6 +3935,9 @@ msgstr ""
 msgid "It's not possible to promote a rolling content view."
 msgstr ""
 
+msgid "It's not possible to provide environment_ids for anything other than a rolling content view."
+msgstr ""
+
 msgid "It's not possible to publish a rolling content view."
 msgstr ""
 
@@ -4353,6 +4335,9 @@ msgid "List of host ids to replace the hosts in host collection"
 msgstr "Список идентификаторов узлов в составе коллекции"
 
 msgid "List of hypervisor guest uuids"
+msgstr ""
+
+msgid "List of lifecycle environments for rolling content views"
 msgstr ""
 
 msgid "List of package group names (Deprecated)"
@@ -5263,9 +5248,6 @@ msgstr "Организация %s удаляется."
 msgid "Organization ID"
 msgstr "Код организации"
 
-msgid "Organization ID is required"
-msgstr ""
-
 msgid "Organization ID or title"
 msgstr ""
 
@@ -5751,6 +5733,9 @@ msgstr "Сводка переносов %{content_view}"
 msgid "Promotion to Environment"
 msgstr ""
 
+msgid "Provide credentials if the registry requires authentication"
+msgstr ""
+
 msgid "Provide the required information and click {update} below to save changes."
 msgstr ""
 
@@ -5876,15 +5861,6 @@ msgstr ""
 
 msgid "Quantity of entitlements to bind"
 msgstr ""
-
-msgid "Quantity of specified subscription to remove"
-msgstr ""
-
-msgid "Quantity of this subscription to add"
-msgstr "Количество добавляемых подписок"
-
-msgid "Quantity of this subscriptions to add"
-msgstr "Количество добавляемых подписок"
 
 msgid "Quantity to Allocate"
 msgstr ""
@@ -6054,9 +6030,6 @@ msgstr ""
 msgid "Register a host with subscription and information"
 msgstr ""
 
-msgid "Register host '%s' before attaching subscriptions"
-msgstr ""
-
 msgid "Registered"
 msgstr "Зарегистрирован"
 
@@ -6085,6 +6058,9 @@ msgid "Registry name pattern results in invalid container image name of member r
 msgstr ""
 
 msgid "Registry name pattern will result in invalid container image name of member repositories"
+msgstr ""
+
+msgid "Registry token expiration time"
 msgstr ""
 
 msgid "Related composite content views"
@@ -6197,18 +6173,6 @@ msgstr ""
 
 msgid "Remove products from sync plan"
 msgstr "Исключить продукты из плана синхронизации"
-
-msgid "Remove subscriptions"
-msgstr "Удалить подписки"
-
-msgid "Remove subscriptions from %s"
-msgstr "Удалить подписки %s"
-
-msgid "Remove subscriptions from a host"
-msgstr ""
-
-msgid "Remove subscriptions from one or more hosts"
-msgstr ""
 
 msgid "Remove versions and/or environments from a content view and reassign systems and keys"
 msgstr "Удалить версии и окружения из представления и переназначить системы и ключи"
@@ -6429,6 +6393,9 @@ msgstr "Извлечь отдельное исправление для узла
 msgid "Return Red Hat (non-custom) products only"
 msgstr ""
 
+msgid "Return a list of installed debs distinct by name"
+msgstr ""
+
 msgid "Return a list of installed packages distinct by name"
 msgstr ""
 
@@ -6468,7 +6435,7 @@ msgstr ""
 msgid "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)"
 msgstr ""
 
-msgid "Return only errata of a particular type (security, bugfix, enhancement)"
+msgid "Return only errata of a particular type (security, bugfix, enhancement, other)"
 msgstr ""
 
 msgid "Return only packages of a particular status (upgradable or up-to-date)"
@@ -6608,6 +6575,9 @@ msgstr ""
 
 msgid "Save"
 msgstr "Сохранить"
+
+msgid "Save Environments"
+msgstr ""
 
 msgid "Saving alternate content source..."
 msgstr ""
@@ -6855,10 +6825,13 @@ msgstr "Уровень обслуживания %s"
 msgid "Service Level (SLA)"
 msgstr ""
 
+msgid "Service level"
+msgstr ""
+
 msgid "Service level of host"
 msgstr ""
 
-msgid "Service level to be used for autoheal"
+msgid "Service level, e.g. SELF-SUPPORT"
 msgstr ""
 
 msgid "Set content overrides"
@@ -6883,9 +6856,6 @@ msgid "Set up container registry certs"
 msgstr ""
 
 msgid "Sets the system purpose usage"
-msgstr ""
-
-msgid "Sets whether the Host will autoheal subscriptions upon checkin"
 msgstr ""
 
 msgid "Setting 'default_location_subscribed_hosts' is not set to a valid location."
@@ -7038,6 +7008,9 @@ msgstr ""
 msgid "Smart proxy name"
 msgstr ""
 
+msgid "Smart proxy verify content checksum has started in the background"
+msgstr ""
+
 msgid "Sockets"
 msgstr "Сокеты"
 
@@ -7152,7 +7125,7 @@ msgstr ""
 msgid "Something went wrong while refreshing alternate content sources: "
 msgstr ""
 
-msgid "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}"
+msgid "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error?.response)}"
 msgstr ""
 
 msgid "Something went wrong while removing a filter rule! ${getResponseErrorMsgs(error.response)}"
@@ -7219,6 +7192,9 @@ msgid "Something went wrong while retrieving the repository types! ${getResponse
 msgstr ""
 
 msgid "Something went wrong while updating the content source. See the logs for more information"
+msgstr ""
+
+msgid "Something went wrong while verifying content checksums: ${getResponseErrorMsgs(error?.response)}"
 msgstr ""
 
 msgid "Something went wrong! Please check server logs!"
@@ -7308,9 +7284,6 @@ msgstr "Подписка"
 msgid "Subscription Details"
 msgstr "Подписка"
 
-msgid "Subscription ID"
-msgstr "Идентификатор подписки"
-
 msgid "Subscription Info"
 msgstr "Сведения о подписке"
 
@@ -7325,12 +7298,6 @@ msgstr ""
 
 msgid "Subscription Name"
 msgstr ""
-
-msgid "Subscription Pool id"
-msgstr "Идентификатор пула подписок"
-
-msgid "Subscription Pool uuid"
-msgstr "UUID пула подписок"
 
 msgid "Subscription UUID"
 msgstr ""
@@ -7499,6 +7466,9 @@ msgstr ""
 
 msgid "Synced Content"
 msgstr "Синхронизация содержимого"
+
+msgid "Synced container images content"
+msgstr ""
 
 msgid "Synchronize"
 msgstr "Синхронизировать"
@@ -7723,6 +7693,9 @@ msgstr "%{content_view} перенесено в %{environment}.  Доступн�
 msgid "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts."
 msgstr "%{content_view} перенесено в  <b>%{environment}</b>. Обязательных исправлений, готовых к установке: %{count}."
 
+msgid "The provided incremental export format '%{provided}' must match the previous export's format '%{previous}'. Consider using 'from_history_id' to point to a matching export."
+msgstr ""
+
 msgid "The repository is already enabled"
 msgstr "Репозиторий уже подключен"
 
@@ -7748,9 +7721,6 @@ msgid "The selected lifecycle environment contains no activation keys"
 msgstr ""
 
 msgid "The selected/Inherited Content View is not available for this Lifecycle Environment"
-msgstr ""
-
-msgid "The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled"
 msgstr ""
 
 msgid "The subscription cannot be found upstream"
@@ -7894,12 +7864,6 @@ msgstr ""
 msgid "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments."
 msgstr ""
 
-msgid "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled."
-msgstr ""
-
-msgid "This host's organization is in Simple Content Access mode. Auto-attach is disabled"
-msgstr ""
-
 msgid "This is disabled because a manifest task is in progress"
 msgstr ""
 
@@ -7960,6 +7924,9 @@ msgstr ""
 msgid "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned."
 msgstr ""
 
+msgid "Time in minutes before registry access tokens expire."
+msgstr ""
+
 msgid "Time to expire yum metadata in seconds. Only relevant for custom yum repositories."
 msgstr ""
 
@@ -7973,6 +7940,9 @@ msgid "Title"
 msgstr "Заголовок"
 
 msgid "To change content view environments, a specific organization must be selected from the organization context."
+msgstr ""
+
+msgid "To continue with Red Hat Flatpak remote, you need to generate your username and password in"
 msgstr ""
 
 msgid "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system."
@@ -8048,12 +8018,6 @@ msgid "Traces will be shown here to a user with the appropriate permissions."
 msgstr ""
 
 msgid "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy."
-msgstr ""
-
-msgid "Trigger an auto-attach of subscriptions"
-msgstr "Разрешить автоматическое выделение подписок"
-
-msgid "Trigger an auto-attach of subscriptions on one or more hosts"
 msgstr ""
 
 msgid "Try changing your search criteria."
@@ -8140,6 +8104,12 @@ msgstr "Хранилище Pulp не обнаружено"
 msgid "Unable to detect puppet path"
 msgstr ""
 
+msgid "Unable to find a base content view to use for incremental export using the provided parameters:%{params}"
+msgstr ""
+
+msgid "Unable to find a base content view to use for incremental export. Please run a complete export instead."
+msgstr ""
+
 msgid "Unable to find a content view with ID %s"
 msgstr ""
 
@@ -8153,12 +8123,6 @@ msgid "Unable to get users"
 msgstr ""
 
 msgid "Unable to import in to Content View specified in the metadata - '%{name}'. The 'import_only' attribute for the content view is set to false. To mark this Content View as importable, have your system administrator run the following command on the server. "
-msgstr ""
-
-msgid "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment."
-msgstr ""
-
-msgid "Unable to incrementally export. Do a Full Export on the repository content."
 msgstr ""
 
 msgid "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id."
@@ -8209,9 +8173,6 @@ msgstr ""
 msgid "Unapplied Errata"
 msgstr "Несохраненные исправления"
 
-msgid "Unattach a subscription"
-msgstr "Отключить подписку"
-
 msgid "Unfiltered params array: %s."
 msgstr ""
 
@@ -8226,6 +8187,12 @@ msgstr ""
 
 msgid "Unknown errata status"
 msgstr "Неизвестный статус исправлений"
+
+msgid "Unknown library export format '%s'."
+msgstr ""
+
+msgid "Unknown repository export format '%s'."
+msgstr ""
 
 msgid "Unknown traces status"
 msgstr ""
@@ -8560,6 +8527,9 @@ msgstr ""
 msgid "Value must either be a boolean or 'default' for 'enabled'"
 msgstr ""
 
+msgid "Verify Content Checksum"
+msgstr ""
+
 msgid "Verify SSL"
 msgstr "Проверить SSL"
 
@@ -8642,6 +8612,9 @@ msgid "View applicable errata"
 msgstr ""
 
 msgid "View by"
+msgstr ""
+
+msgid "View container images in the local registry using the Synced tab. View container images booted by image mode hosts using the Booted tab. The Booted tab also shows images outside of the local container registry."
 msgstr ""
 
 msgid "View content views"
@@ -8931,9 +8904,6 @@ msgstr ""
 
 msgid "attempted to sync without a feed URL"
 msgstr "попытка синхронизации без указания URL-адреса источника"
-
-msgid "auto attach subscriptions upon registration"
-msgstr "автоматический выбор подписок при регистрации"
 
 msgid "base url to perform repo discovery on"
 msgstr "базовый адрес для поиска репозиториев"
@@ -9570,9 +9540,6 @@ msgstr ""
 
 msgid "start datetime of synchronization"
 msgstr "дата и время синхронизации"
-
-msgid "subscriptions not specified"
-msgstr "подписки не определены"
 
 msgid "sync plan description"
 msgstr "описание плана синхронизации"
