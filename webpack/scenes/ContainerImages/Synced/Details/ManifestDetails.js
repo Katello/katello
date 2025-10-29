@@ -21,7 +21,11 @@ import { STATUS } from 'foremanReact/constants';
 import Loading from 'foremanReact/components/Loading';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import EmptyStateMessage from '../../../../components/Table/EmptyStateMessage';
-import { capitalize } from '../../../../utils/helpers';
+import {
+  getManifest,
+  getShortDigest,
+  formatManifestType,
+} from '../../containerImagesHelpers';
 import getDockerTagDetails from './ManifestDetailsActions';
 import {
   selectDockerTagDetails,
@@ -50,13 +54,8 @@ const ManifestDetails = () => {
   const error = useSelector(state =>
     selectDockerTagDetailError(state, tagId));
 
-  const getManifest = () => {
-    if (!manifestData) return null;
-    return manifestData.manifest || manifestData.manifest_schema2 || manifestData.manifest_schema1;
-  };
-
   const getDisplayManifest = () => {
-    const parentManifest = getManifest();
+    const parentManifest = getManifest(manifestData);
 
     if (!manifestId || !parentManifest) {
       return parentManifest;
@@ -68,34 +67,6 @@ const ManifestDetails = () => {
     }
 
     return parentManifest;
-  };
-
-  const getShortDigest = (digest) => {
-    if (!digest) return 'N/A';
-    const parts = digest.split(':');
-    if (parts.length === 2) {
-      return `${parts[0]}:${parts[1].substring(0, 12)}`;
-    }
-    return digest.substring(0, 19);
-  };
-
-  const formatManifestType = (manifest) => {
-    if (!manifest || !manifest.manifest_type) return 'N/A';
-
-    if (manifest.manifest_type === 'list') {
-      return capitalize(manifest.manifest_type);
-    }
-
-    if (manifest.manifest_type === 'image') {
-      if (manifest.is_bootable) {
-        return __('Bootable');
-      }
-      if (manifest.is_flatpak) {
-        return __('Flatpak');
-      }
-    }
-
-    return capitalize(manifest.manifest_type);
   };
 
   if (status === STATUS.PENDING) {
@@ -114,7 +85,6 @@ const ManifestDetails = () => {
   // Filter to show only library repositories
   const libraryRepositories = manifestData.repositories?.filter(repo =>
     repo.library_instance) || [];
-  const repositoryNames = libraryRepositories.map(repo => repo.name).join(', ') || 'N/A';
 
   const labels = manifest?.labels || {};
   const labelKeys = Object.keys(labels);
@@ -166,7 +136,24 @@ const ManifestDetails = () => {
             <GridItem span={6}>
               <TextContent>
                 <Text component={TextVariants.h6} ouiaId="manifest-repository-label">{__('Repositories')}</Text>
-                <Text ouiaId="manifest-repository-value">{repositoryNames}</Text>
+                <Text ouiaId="manifest-repository-value">
+                  {libraryRepositories.length === 0 ? (
+                    'N/A'
+                  ) : (
+                    libraryRepositories.map((repo, index) => (
+                      <React.Fragment key={repo.id}>
+                        {index > 0 && ', '}
+                        <a
+                          href={`/products/${repo.product_id}/repositories/${repo.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {repo.name}
+                        </a>
+                      </React.Fragment>
+                    ))
+                  )}
+                </Text>
               </TextContent>
             </GridItem>
 

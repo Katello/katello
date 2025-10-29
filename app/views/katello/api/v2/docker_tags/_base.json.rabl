@@ -46,6 +46,8 @@ if @organization
         :name => repo.name,
         :full_path => repo.full_path,
         :library_instance => repo.library_instance?,
+        :product_id => repo.product&.id,
+        :product_name => repo.product&.name,
       }
       attributes
     end
@@ -64,6 +66,12 @@ else
     attributes :id, :name, :full_path
     node :library_instance do |repo|
       repo.library_instance?
+    end
+    node :product_id do |repo|
+      repo.product&.id
+    end
+    node :product_name do |repo|
+      repo.product&.name
     end
   end
 

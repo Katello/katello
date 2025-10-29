@@ -98,6 +98,30 @@ describe('ManifestDetails', () => {
     assertNockRequest(scope);
   });
 
+  test('Repository links are clickable and have correct URLs', async () => {
+    const scope = nockInstance
+      .get(manifestDetailsPath(2))
+      .query(true)
+      .reply(200, manifestDetailsData);
+
+    const { getByText } = renderWithRedux(
+      withManifestRoute(<ManifestDetails />),
+      renderOptions(2),
+    );
+
+    await patientlyWaitFor(() => {
+      expect(getByText('ubi9-container')).toBeInTheDocument();
+    });
+
+    const repoLink = getByText('ubi9-container').closest('a');
+    expect(repoLink).toBeInTheDocument();
+    expect(repoLink).toHaveAttribute('href', '/products/5/repositories/10');
+    expect(repoLink).toHaveAttribute('target', '_blank');
+    expect(repoLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+    assertNockRequest(scope);
+  });
+
   test('Displays "No labels" when labels are empty', async () => {
     const dataWithoutLabels = {
       ...manifestDetailsData,

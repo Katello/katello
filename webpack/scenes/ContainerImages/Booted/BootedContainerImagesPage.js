@@ -16,9 +16,10 @@ import {
   useTableSort,
 } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import Pagination from 'foremanReact/components/Pagination';
-import EmptyPage from 'foremanReact/routes/common/EmptyPage';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanHostsPageUrl } from 'foremanReact/Root/Context/ForemanContext';
+import { STATUS } from '../containerImagesHelpers';
+import TableEmptyState from '../TableEmptyState';
 import BOOTED_CONTAINER_IMAGES_KEY, { BOOTED_CONTAINER_IMAGES_API_PATH } from './BootedContainerImagesConstants';
 
 const BootedContainerImagesPage = () => {
@@ -79,11 +80,6 @@ const BootedContainerImagesPage = () => {
   });
   const expandedImages = useSet([]);
   const imageIsExpanded = bootcBootedImage => expandedImages.has(bootcBootedImage);
-  const STATUS = {
-    PENDING: 'PENDING',
-    RESOLVED: 'RESOLVED',
-    ERROR: 'ERROR',
-  };
 
   const {
     response: {
@@ -108,7 +104,6 @@ const BootedContainerImagesPage = () => {
     <TableIndexPage
       apiUrl={BOOTED_CONTAINER_IMAGES_API_PATH}
       apiOptions={apiOptions}
-      header={__('Booted container images')}
       createable={false}
       isDeleteable={false}
       controller="/katello/api/v2/host_bootc_images"
@@ -134,42 +129,11 @@ const BootedContainerImagesPage = () => {
               </>
             </Tr>
           </Thead>
-          {(results.length === 0 || errorMessage) && (
-            <Tbody>
-              {status === STATUS.PENDING && results.length === 0 && (
-                <Tr ouiaId="table-loading">
-                  <Td colSpan={100}>
-                    <EmptyPage
-                      message={{
-                        type: 'loading',
-                        text: __('Loading...'),
-                      }}
-                    />
-                  </Td>
-                </Tr>
-              )}
-              {!(status === STATUS.PENDING) &&
-                results.length === 0 &&
-                !errorMessage && (
-                  <Tr ouiaId="table-empty">
-                    <Td colSpan={100}>
-                      <EmptyPage
-                        message={{
-                          type: 'empty',
-                        }}
-                      />
-                    </Td>
-                  </Tr>
-              )}
-              {errorMessage && (
-                <Tr ouiaId="table-error">
-                  <Td colSpan={100}>
-                    <EmptyPage message={{ type: 'error', text: errorMessage }} />
-                  </Td>
-                </Tr>
-              )}
-            </Tbody>
-          )}
+          <TableEmptyState
+            status={status}
+            results={results}
+            errorMessage={errorMessage}
+          />
           {results?.map((result, rowIndex) => {
             const { bootc_booted_image: bootcBootedImage, digests } = result;
             const isExpanded = imageIsExpanded(bootcBootedImage);
