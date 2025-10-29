@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
+import { Button } from '@patternfly/react-core';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
   useSetParamsAndApiAndSearch,
@@ -17,42 +18,33 @@ import {
   useTableSort,
 } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import Pagination from 'foremanReact/components/Pagination';
-import EmptyPage from 'foremanReact/routes/common/EmptyPage';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { capitalize } from '../../../utils/helpers';
 import { orgId } from '../../../services/api';
+import {
+  formatManifestType,
+  getManifest,
+  hasLabelsOrAnnotations,
+  anyChildHasLabelsOrAnnotations,
+  STATUS,
+} from '../containerImagesHelpers';
+import LabelsAnnotationsModal from '../LabelsAnnotationsModal';
+import TableEmptyState from '../TableEmptyState';
 import './SyncedContainerImagesPage.scss';
 
 const SYNCED_CONTAINER_IMAGES_KEY = 'SYNCED_CONTAINER_IMAGES';
 const SYNCED_CONTAINER_IMAGES_API_PATH = '/katello/api/v2/docker_tags';
 
 const SyncedContainerImagesPage = () => {
-  const formatManifestType = (manifest) => {
-    if (!manifest || !manifest.manifest_type) return 'N/A';
-
-    if (manifest.manifest_type === 'list') {
-      return capitalize(manifest.manifest_type);
-    }
-
-    if (manifest.manifest_type === 'image') {
-      if (manifest.is_bootable) {
-        return __('Bootable');
-      }
-      if (manifest.is_flatpak) {
-        return __('Flatpak');
-      }
-    }
-
-    return capitalize(manifest.manifest_type);
-  };
+  const [showLabelsModal, setShowLabelsModal] = useState(false);
+  const [selectedManifest, setSelectedManifest] = useState(null);
 
   const getManifestType = (tag) => {
-    const manifest = tag.manifest || tag.manifest_schema1 || tag.manifest_schema2;
+    const manifest = getManifest(tag);
     return formatManifestType(manifest);
   };
 
   const getDigest = (tag) => {
-    const manifest = tag.manifest || tag.manifest_schema1 || tag.manifest_schema2;
+    const manifest = getManifest(tag);
     if (!manifest || !manifest.digest) return 'N/A';
     return (
       <Link to={`/labs/container_images/${tag.id}`}>
@@ -74,6 +66,14 @@ const SyncedContainerImagesPage = () => {
     );
   };
 
+  const openLabelsModal = (manifest) => {
+    setSelectedManifest(manifest);
+    setShowLabelsModal(true);
+  };
+
+  const expandedTags = useSet([]);
+  const tagIsExpanded = tagId => expandedTags.has(tagId);
+
   const columns = {
     name: {
       title: __('Tag'),
@@ -93,7 +93,36 @@ const SyncedContainerImagesPage = () => {
     },
     labels: {
       title: __('Labels | Annotations'),
-      wrapper: () => <span>{__('View here')}</span>,
+      wrapper: (tag) => {
+        const manifest = getManifest(tag);
+        if (hasLabelsOrAnnotations(manifest)) {
+          return (
+            <Button
+              variant="link"
+              isInline
+              onClick={() => openLabelsModal(manifest)}
+              ouiaId="view-labels-annotations-button"
+              aria-label={__('View labels and annotations')}
+            >
+              {__('View here')}
+            </Button>
+          );
+        }
+        if (anyChildHasLabelsOrAnnotations(manifest)) {
+          const isExpanded = tagIsExpanded(tag.id);
+          return (
+            <Button
+              variant="link"
+              isInline
+              onClick={() => expandedTags.onToggle(!isExpanded, tag.id)}
+              ouiaId="see-child-manifests-button"
+            >
+              {__('See child manifests')}
+            </Button>
+          );
+        }
+        return <span>{__('N/A')}</span>;
+      },
       width: 15,
     },
   };
@@ -174,15 +203,6 @@ const SyncedContainerImagesPage = () => {
     onSort,
   });
 
-  const expandedTags = useSet([]);
-  const tagIsExpanded = tagId => expandedTags.has(tagId);
-
-  const STATUS = {
-    PENDING: 'PENDING',
-    RESOLVED: 'RESOLVED',
-    ERROR: 'ERROR',
-  };
-
   const {
     response: {
       results = [],
@@ -240,42 +260,11 @@ const SyncedContainerImagesPage = () => {
               ))}
             </Tr>
           </Thead>
-          {(results.length === 0 || errorMessage) && (
-            <Tbody>
-              {status === STATUS.PENDING && results.length === 0 && (
-                <Tr ouiaId="table-loading">
-                  <Td colSpan={100}>
-                    <EmptyPage
-                      message={{
-                        type: 'loading',
-                        text: __('Loading...'),
-                      }}
-                    />
-                  </Td>
-                </Tr>
-              )}
-              {!(status === STATUS.PENDING) &&
-                results.length === 0 &&
-                !errorMessage && (
-                  <Tr ouiaId="table-empty">
-                    <Td colSpan={100}>
-                      <EmptyPage
-                        message={{
-                          type: 'empty',
-                        }}
-                      />
-                    </Td>
-                  </Tr>
-              )}
-              {errorMessage && (
-                <Tr ouiaId="table-error">
-                  <Td colSpan={100}>
-                    <EmptyPage message={{ type: 'error', text: errorMessage }} />
-                  </Td>
-                </Tr>
-              )}
-            </Tbody>
-          )}
+          <TableEmptyState
+            status={status}
+            results={results}
+            errorMessage={errorMessage}
+          />
           {results?.map((tag, rowIndex) => {
             const { id, manifest } = tag;
             const isExpanded = tagIsExpanded(id);
@@ -324,7 +313,19 @@ const SyncedContainerImagesPage = () => {
                       </Td>
                       <Td dataLabel={__('Product')} className="empty-cell" />
                       <Td dataLabel={__('Labels | Annotations')}>
-                        N/A
+                        {hasLabelsOrAnnotations(childManifest) ? (
+                          <Button
+                            variant="link"
+                            isInline
+                            onClick={() => openLabelsModal(childManifest)}
+                            ouiaId="view-child-labels-annotations-button"
+                            aria-label={__('View labels and annotations')}
+                          >
+                            {__('View here')}
+                          </Button>
+                        ) : (
+                          <span>N/A</span>
+                        )}
                       </Td>
                     </Tr>
                   );
@@ -343,6 +344,13 @@ const SyncedContainerImagesPage = () => {
             updateParamsByUrl
           />
         }
+        <LabelsAnnotationsModal
+          show={showLabelsModal}
+          setIsOpen={setShowLabelsModal}
+          digest={selectedManifest?.digest || ''}
+          labels={selectedManifest?.labels || {}}
+          annotations={selectedManifest?.annotations || {}}
+        />
       </>
     </TableIndexPage>
   );
