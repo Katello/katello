@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
+import { Button } from '@patternfly/react-core';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
   useSetParamsAndApiAndSearch,
@@ -20,12 +21,16 @@ import EmptyPage from 'foremanReact/routes/common/EmptyPage';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { capitalize } from '../../utils/helpers';
 import { orgId } from '../../services/api';
+import LabelsAnnotationsModal from './LabelsAnnotationsModal';
 import './SyncedContainerImagesPage.scss';
 
 const SYNCED_CONTAINER_IMAGES_KEY = 'SYNCED_CONTAINER_IMAGES';
 const SYNCED_CONTAINER_IMAGES_API_PATH = '/katello/api/v2/docker_tags';
 
 const SyncedContainerImagesPage = () => {
+  const [showLabelsModal, setShowLabelsModal] = useState(false);
+  const [selectedManifest, setSelectedManifest] = useState(null);
+
   const formatManifestType = (manifest) => {
     if (!manifest || !manifest.manifest_type) return 'N/A';
 
@@ -69,6 +74,26 @@ const SyncedContainerImagesPage = () => {
     );
   };
 
+  const openLabelsModal = (manifest) => {
+    setSelectedManifest(manifest);
+    setShowLabelsModal(true);
+  };
+
+  const hasLabelsOrAnnotations = (manifest) => {
+    if (!manifest) return false;
+    const labelsCount = Object.keys(manifest.labels || {}).length;
+    const annotationsCount = Object.keys(manifest.annotations || {}).length;
+    return labelsCount + annotationsCount > 0;
+  };
+
+  const anyChildHasLabelsOrAnnotations = (manifest) => {
+    if (!manifest?.manifests) return false;
+    return manifest.manifests.some(child => hasLabelsOrAnnotations(child));
+  };
+
+  const expandedTags = useSet([]);
+  const tagIsExpanded = tagId => expandedTags.has(tagId);
+
   const columns = {
     name: {
       title: __('Tag'),
@@ -88,7 +113,36 @@ const SyncedContainerImagesPage = () => {
     },
     labels: {
       title: __('Labels | Annotations'),
-      wrapper: () => <span>{__('View here')}</span>,
+      wrapper: (tag) => {
+        const manifest = tag.manifest || tag.manifest_schema1 || tag.manifest_schema2;
+        if (hasLabelsOrAnnotations(manifest)) {
+          return (
+            <Button
+              variant="link"
+              isInline
+              onClick={() => openLabelsModal(manifest)}
+              ouiaId="view-labels-annotations-button"
+              aria-label={__('View labels and annotations')}
+            >
+              {__('View here')}
+            </Button>
+          );
+        }
+        if (anyChildHasLabelsOrAnnotations(manifest)) {
+          const isExpanded = tagIsExpanded(tag.id);
+          return (
+            <Button
+              variant="link"
+              isInline
+              onClick={() => expandedTags.onToggle(!isExpanded, tag.id)}
+              ouiaId="see-child-manifests-button"
+            >
+              {__('See child manifests')}
+            </Button>
+          );
+        }
+        return <span>{__('N/A')}</span>;
+      },
       width: 15,
     },
   };
@@ -168,9 +222,6 @@ const SyncedContainerImagesPage = () => {
     columnsToSortParams,
     onSort,
   });
-
-  const expandedTags = useSet([]);
-  const tagIsExpanded = tagId => expandedTags.has(tagId);
 
   const STATUS = {
     PENDING: 'PENDING',
@@ -315,7 +366,19 @@ const SyncedContainerImagesPage = () => {
                       </Td>
                       <Td dataLabel={__('Product')} className="empty-cell" />
                       <Td dataLabel={__('Labels | Annotations')}>
-                        N/A
+                        {hasLabelsOrAnnotations(childManifest) ? (
+                          <Button
+                            variant="link"
+                            isInline
+                            onClick={() => openLabelsModal(childManifest)}
+                            ouiaId="view-child-labels-annotations-button"
+                            aria-label={__('View labels and annotations')}
+                          >
+                            {__('View here')}
+                          </Button>
+                        ) : (
+                          <span>N/A</span>
+                        )}
                       </Td>
                     </Tr>
                   );
@@ -334,6 +397,13 @@ const SyncedContainerImagesPage = () => {
             updateParamsByUrl
           />
         }
+        <LabelsAnnotationsModal
+          show={showLabelsModal}
+          setIsOpen={setShowLabelsModal}
+          digest={selectedManifest?.digest || ''}
+          labels={selectedManifest?.labels || {}}
+          annotations={selectedManifest?.annotations || {}}
+        />
       </>
     </TableIndexPage>
   );
