@@ -1,0 +1,63 @@
+{
+  "total": 3,
+  "subtotal": 3,
+  "page": 1,
+  "per_page": 20,
+  "error": null,
+  "search": null,
+  "sort": {
+    "by": "name",
+    "order": "asc"
+  },
+  "results": [
+    {
+      "id": 1,
+      "name": "latest",
+      "manifest": {
+        "id": 101,
+        "digest": "sha256:abcd1234567890abcd1234567890abcd1234567890abcd1234567890abcd1234",
+        "manifest_type": "list",
+        "is_bootable": false,
+        "is_flatpak": false,
+        "manifests": [
+          {
+            "id": 102,
+            "digest": "sha256:1111aaaa2222bbbb3333cccc4444dddd5555eeee6666ffff7777gggg8888hhhh",
+            "manifest_type": "image",
+            "is_bootable": false,
+            "is_flatpak": false
+          },
+          {
+            "id": 103,
+            "digest": "sha256:2222bbbb3333cccc4444dddd5555eeee6666ffff7777gggg8888hhhh9999iiii",
+            "manifest_type": "image",
+            "is_bootable": true,
+            "is_flatpak": false
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "v1.0",
+      "manifest": {
+        "id": 104,
+        "digest": "sha256:efgh5678901234efgh5678901234efgh5678901234efgh5678901234efgh5678",
+        "manifest_type": "image",
+        "is_bootable": true,
+        "is_flatpak": false
+      }
+    },
+    {
+      "id": 3,
+      "name": "flatpak-app",
+      "manifest_schema2": {
+        "id": 105,
+        "digest": "sha256:ijkl9012345678ijkl9012345678ijkl9012345678ijkl9012345678ijkl9012",
+        "manifest_type": "image",
+        "is_bootable": false,
+        "is_flatpak": true
+      }
+    }
+  ]
+}

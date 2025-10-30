@@ -16,6 +16,8 @@ end
 child :docker_manifest => :manifest do
   attributes :pulp_id => :id
   attributes :schema_version, :digest, :manifest_type
+  attributes :labels, :annotations
+  attributes :is_bootable, :is_flatpak
 
   node :manifests, :if => lambda { |m| m.manifest_type == 'list' } do |manifest|
     manifest.docker_manifests.map do |child_manifest|
@@ -24,6 +26,10 @@ child :docker_manifest => :manifest do
         :digest => child_manifest.digest,
         :schema_version => child_manifest.schema_version,
         :manifest_type => child_manifest.manifest_type,
+        :labels => child_manifest.labels,
+        :annotations => child_manifest.annotations,
+        :is_bootable => child_manifest.is_bootable,
+        :is_flatpak => child_manifest.is_flatpak,
       }
     end
   end
