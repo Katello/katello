@@ -39,6 +39,7 @@ import BulkPackagesWizardModal from './components/extensions/Hosts/BulkActions/B
 import BulkErrataWizardModal from './components/extensions/Hosts/BulkActions/BulkErrataWizard/index.js';
 import BulkRepositorySetsWizardModal from './components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/index.js';
 import BulkSystemPurposeModal from './components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/index.js';
+import BulkManageTracesModal from './components/extensions/Hosts/BulkActions/BulkManageTracesModal/index.js';
 import ActivationKeysSearch from './components/ActivationKeysSearch';
 import { CVEDetailsCard } from './scenes/ActivationKeys/Details/components/CVEDetailsCard.js';
 
@@ -99,6 +100,7 @@ addGlobalFill('_all-hosts-modals', 'BulkErrataWizardModal', <BulkErrataWizardMod
 addGlobalFill('_all-hosts-modals', 'BulkRepositorySetsWizardModal', <BulkRepositorySetsWizardModal key="bulk-repo-sets-wizard-modal" />, 400);
 addGlobalFill('_all-hosts-modals', 'BulkChangeHostCollectionsModal', <BulkChangeHostCollectionsModal key="bulk-change-host-collections-modal" />, 500);
 addGlobalFill('_all-hosts-modals', 'BulkSystemPurposeModal', <BulkSystemPurposeModal key="bulk-system-purpose-modal" />, 600);
+addGlobalFill('_all-hosts-modals', 'BulkManageTracesModal', <BulkManageTracesModal key="bulk-manage-traces-modal" />, 700);
 addGlobalFill('_host-associations', 'BulkChangeHostCollectionsMenuItem', <BulkChangeHostCollectionsMenuItem key="bulk-change-host-collections-menu-item" />, 100);
 
 registerColumns(hostsIndexColumnExtensions);
