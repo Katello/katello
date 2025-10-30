@@ -41,6 +41,7 @@ const HostActionsBar = () => {
       'bulk-packages-wizard',
       'bulk-errata-wizard',
       'bulk-repo-sets-wizard',
+      'bulk-manage-traces-modal',
     ].forEach((id) => {
       dispatch(addModal({ id }));
     });
@@ -49,6 +50,7 @@ const HostActionsBar = () => {
   const { setModalOpen: openBulkPackagesWizardModal } = useForemanModal({ id: 'bulk-packages-wizard' });
   const { setModalOpen: openBulkErrataWizardModal } = useForemanModal({ id: 'bulk-errata-wizard' });
   const { setModalOpen: openBulkRepositorySetsWizardModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
+  const { setModalOpen: openBulkManageTracesModal } = useForemanModal({ id: 'bulk-manage-traces-modal' });
 
   const orgId = useForemanOrganization()?.id;
 
@@ -85,6 +87,15 @@ const HostActionsBar = () => {
                 isDisabled={selectedCount === 0}
               >
                 {__('Errata')}
+              </MenuItem>
+              <MenuItem
+                itemId="bulk-manage-traces-dropdown-item"
+                key="bulk-manage-traces-dropdown-item"
+                onClick={openBulkManageTracesModal}
+                isDisabled={selectedCount === 0 || !orgId}
+                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage traces, a specific organization must be selected from the organization context.')} />}
+              >
+                {__('Traces')}
               </MenuItem>
               <MenuItem
                 itemId="bulk-repo-sets-wizard-dropdown-item"
