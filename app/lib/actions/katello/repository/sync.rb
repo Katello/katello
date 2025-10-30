@@ -101,7 +101,7 @@ module Actions
         end
 
         def update_deb_content(repo)
-          return unless repo.deb_using_structured_apt?
+          return unless repo.deb?
 
           plan_action(::Actions::Candlepin::Product::ContentUpdate,
                       owner:           repo.organization.label,

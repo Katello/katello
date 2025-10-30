@@ -389,10 +389,6 @@ module Katello
       self.content_type == Repository::DEB_TYPE
     end
 
-    def deb_using_structured_apt?
-      self.deb? && !self.content_id
-    end
-
     def ansible_collection?
       self.content_type == Repository::ANSIBLE_COLLECTION_TYPE
     end
@@ -446,7 +442,8 @@ module Katello
     end
 
     def format_arches
-      if content_type == ::Katello::Repository::DEB_TYPE
+      if self.deb?
+        # Pulp 2 needed a "," separated string-list, but Pulp 3 needs " " separated!
         self.deb_architectures&.gsub(" ", ",")
       else
         self.arch == "noarch" ? nil : self.arch

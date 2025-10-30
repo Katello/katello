@@ -22,10 +22,11 @@ module Katello
 
       roots = Katello::RootRepository.where(:product_id => considered_products).subscribable
       roots = roots.in_content_view_version(versions).distinct if versions.present?
-      content_ids = roots.where.not(:content_id => nil).pluck(:content_id)
-      structured_apt_roots = roots.where(:content_id => nil)
-      if structured_apt_roots.any?
-        deb_repos_query = Katello::Repository.where(root: structured_apt_roots)
+      content_ids = roots.where.not(:content_type => ::Katello::Repository::DEB_TYPE).pluck(:content_id)
+      deb_roots = roots.where(:content_type => ::Katello::Repository::DEB_TYPE)
+      if deb_roots.any?
+        # deb? roots need to be considered separately because they do not have content_ids on the root!
+        deb_repos_query = Katello::Repository.where(root: deb_roots)
         deb_repos_library = Set.new
         deb_repos_batch = []
         if match_environment

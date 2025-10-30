@@ -15,7 +15,7 @@ module Actions
             ::Katello::ProductContent.where(product_id: root_repository.product_id,
                                             content_id: katello_content_id).destroy_all
 
-            if root_repository.repositories.count <= 1 || repository.deb_using_structured_apt?
+            if root_repository.repositories.count <= 1 || repository.deb?
               plan_action(Candlepin::Product::ContentDestroy,
                           owner: root_repository.product.organization.label,
                           content_id: repository.content_id)
