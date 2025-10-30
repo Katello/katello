@@ -4,7 +4,7 @@ module Katello
 
     before_action :find_remote_repository, :except => [:index, :auto_complete_search]
     before_action :find_optional_organization, :only => [:index, :auto_complete_search]
-    before_action :find_product, :only => [:mirror]
+    before_action :find_and_validate_product_for_mirroring, :only => [:mirror]
 
     resource_description do
       name 'Flatpak Remote Repositories'
@@ -56,7 +56,6 @@ module Katello
     param :product_name, String, :desc => N_("Name of the product to mirror the remote repository to")
     param :organization_id, :number, :desc => N_("organization identifier")
     def mirror
-      validate_product_for_mirroring
       task = async_task(::Actions::Katello::Flatpak::MirrorRemoteRepository, @flatpak_remote_repository, @product)
       respond_for_async :resource => task
     end
@@ -75,21 +74,6 @@ module Katello
       @flatpak_remote_repository
     end
 
-    def find_product
-      if params[:product_id]
-        @product = Product.editable.find(params[:product_id])
-        throw_resource_not_found(name: 'product', id: params[:product_id]) unless @product
-      elsif params[:product_name] && params[:organization_id]
-        @product = Product.editable.find_by(name: params[:product_name], organization_id: params[:organization_id])
-        unless @product
-          msg = _("Could not find product with name '%{name}' in organization id %{org_id}.") %
-                  { name: params[:product_name], org_id: params[:organization_id] }
-          fail HttpErrors::NotFound, msg
-        end
-      end
-      @product
-    end
-
     protected
 
     def rejected_autocomplete_items
@@ -98,10 +82,28 @@ module Katello
 
     private
 
-    def validate_product_for_mirroring
-      return unless @product&.redhat?
-      msg = _("Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.")
-      fail HttpErrors::UnprocessableEntity, msg
+    def find_and_validate_product_for_mirroring
+      if params[:product_id]
+        @product = Product.editable.find(params[:product_id]) # will throw not found if id is invalid
+      elsif params[:product_name] && params[:organization_id]
+        @product = Product.editable.find_by(name: params[:product_name], organization_id: params[:organization_id])
+        unless @product
+          msg = _("Could not find product with name '%{name}' in organization id %{org_id}.") %
+                  { name: params[:product_name], org_id: params[:organization_id] }
+          fail HttpErrors::NotFound, msg
+        end
+      elsif params[:product_name]
+        msg = _("Organization must be specified when providing product by name.")
+        fail HttpErrors::BadRequest, msg
+      else
+        msg = _("Product must be specified.")
+        fail HttpErrors::BadRequest, msg
+      end
+
+      if @product.redhat?
+        msg = _("Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.")
+        fail HttpErrors::UnprocessableEntity, msg
+      end
     end
   end
 end

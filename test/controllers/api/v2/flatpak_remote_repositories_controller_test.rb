@@ -79,8 +79,19 @@ module Katello
       end
     end
 
-    def test_mirror
+    def test_mirror_product_id
       post :mirror, params: { :id => @redhat_remote_runtime_repository.id, :product_id => @product.id }
+
+      assert_response :success
+      assert_template 'api/v2/common/async'
+    end
+
+    def test_mirror_product_name
+      post :mirror, params: {
+        :id => @redhat_remote_runtime_repository.id,
+        :product_name => @product.name,
+        :organization_id => @organization.id,
+      }
 
       assert_response :success
       assert_template 'api/v2/common/async'
@@ -93,6 +104,58 @@ module Katello
       assert_protected_action(:mirror, allowed_perms, denied_perms, [@organization]) do
         post :mirror, params: { :id => @redhat_remote_runtime_repository.id, :product_id => @product.id }
       end
+    end
+
+    def test_mirror_product_missing
+      post :mirror, params: { :id => @redhat_remote_runtime_repository.id }
+
+      assert_response :bad_request
+      response_body = JSON.parse(response.body)
+      assert_match(/Product must be specified/, response_body['displayMessage'])
+    end
+
+    def test_mirror_product_name_organization_missing
+      post :mirror, params: {
+        :id => @redhat_remote_runtime_repository.id,
+        :product_name => @product.name,
+      }
+
+      assert_response :bad_request
+      response_body = JSON.parse(response.body)
+      assert_match(/Organization must be specified when providing product by name/, response_body['displayMessage'])
+    end
+
+    def test_mirror_product_id_invalid
+      post :mirror, params: {
+        :id => @redhat_remote_runtime_repository.id,
+        :product_id => 999,
+      }
+
+      assert_response :not_found
+    end
+
+    def test_mirror_product_name_invalid
+      post :mirror, params: {
+        :id => @redhat_remote_runtime_repository.id,
+        :product_name => 'nonexistent_product',
+        :organization_id => @organization.id,
+      }
+
+      assert_response :not_found
+      response_body = JSON.parse(response.body)
+      assert_match(/Could not find product/, response_body['displayMessage'])
+    end
+
+    def test_mirror_product_redhat
+      redhat_product = katello_products(:redhat)
+      post :mirror, params: {
+        :id => @redhat_remote_runtime_repository.id,
+        :product_id => redhat_product.id,
+      }
+
+      assert_response :unprocessable_entity
+      response_body = JSON.parse(response.body)
+      assert_match(/cannot be mirrored into Red Hat products/, response_body['displayMessage'])
     end
   end
 end
