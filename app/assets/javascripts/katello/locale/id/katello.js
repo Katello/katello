@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.18.0.pre.master",
+        "Project-Id-Version": "katello 4.19.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Andika Triwidada <andika@gmail.com>, 2024",
@@ -447,9 +447,6 @@
       "A remote execution job is in progress.": [
         ""
       ],
-      "A service level for auto-healing process, e.g. SELF-SUPPORT": [
-        ""
-      ],
       "A smart proxy seems to have been refreshed without pulpcore being running. Please refresh the smart proxy after ensuring that pulpcore services are running.": [
         ""
       ],
@@ -552,10 +549,13 @@
       "Add RPM rule": [
         ""
       ],
-      "Add Subscriptions": [
+      "Add Red Hat Flatpak remote": [
         ""
       ],
-      "Add a subscription to a host": [
+      "Add Red Hat flatpak remote": [
+        ""
+      ],
+      "Add Subscriptions": [
         ""
       ],
       "Add an alternate content source": [
@@ -619,9 +619,6 @@
         ""
       ],
       "Add subscriptions consumed by a manifest from Red Hat Subscription Management": [
-        ""
-      ],
-      "Add subscriptions to one or more hosts": [
         ""
       ],
       "Add subscriptions using the Add Subscriptions button.": [
@@ -891,12 +888,6 @@
       "Array of pools to add": [
         ""
       ],
-      "Array of subscriptions to add": [
-        ""
-      ],
-      "Array of subscriptions to remove": [
-        ""
-      ],
       "Array of uploads to import": [
         ""
       ],
@@ -952,15 +943,6 @@
       "At least one organization must exist.": [
         ""
       ],
-      "Attach a subscription": [
-        ""
-      ],
-      "Attach subscriptions": [
-        ""
-      ],
-      "Attach subscriptions to %s": [
-        ""
-      ],
       "Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin": [
         ""
       ],
@@ -1001,9 +983,6 @@
         ""
       ],
       "Back": [
-        ""
-      ],
-      "Backend System Status": [
         ""
       ],
       "Base URL": [
@@ -1073,6 +1052,9 @@
         ""
       ],
       "Bootc upgrade via Bootc interface": [
+        ""
+      ],
+      "Booted": [
         ""
       ],
       "Booted Container Images": [
@@ -1300,7 +1282,7 @@
       "Cannot incrementally export from a filtered and a non-filtered content view version. The exported content view version '%{content_view} %{current}'  cannot be incrementally updated from version '%{from}.'.  Please do a full export.": [
         ""
       ],
-      "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
+      "Cannot incrementally export from a incrementally updated version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
       "Cannot install errata: No errata found for search term '%s'": [
@@ -1477,9 +1459,6 @@
       "Completed pulp task protection days": [
         ""
       ],
-      "Component": [
-        ""
-      ],
       "Component Content View": [
         ""
       ],
@@ -1544,6 +1523,9 @@
         ""
       ],
       "Container image tags": [
+        ""
+      ],
+      "Container images": [
         ""
       ],
       "Container manifest lists": [
@@ -2059,12 +2041,6 @@
       "Create organization": [
         ""
       ],
-      "Create package filter rule": [
-        ""
-      ],
-      "Create rule": [
-        ""
-      ],
       "Credentials": [
         ""
       ],
@@ -2464,9 +2440,6 @@
       "Disable Red Hat Insights.": [
         ""
       ],
-      "Disable Simple Content Access": [
-        ""
-      ],
       "Disable a repository from the set": [
         ""
       ],
@@ -2530,6 +2503,9 @@
       "Edit": [
         ""
       ],
+      "Edit DEB rule": [
+        ""
+      ],
       "Edit Flatpak Remote": [
         ""
       ],
@@ -2555,9 +2531,6 @@
         ""
       ],
       "Edit filter rule": [
-        ""
-      ],
-      "Edit package filter rule": [
         ""
       ],
       "Edit products": [
@@ -2600,9 +2573,6 @@
         ""
       ],
       "Enable Red Hat repositories": [
-        ""
-      ],
-      "Enable Simple Content Access": [
         ""
       ],
       "Enable Tracer": [
@@ -2833,6 +2803,12 @@
       "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
         ""
       ],
+      "Export format must be specified for library exports.": [
+        ""
+      ],
+      "Export format must be specified for non-incremental repository exports.": [
+        ""
+      ],
       "Export formats.Choose syncable if the exported content needs to be in a yum format. This option is only available for %{syncable_repos} repositories. Choose importable if the importing server uses the same version  and exported content needs to be one of %{importable_repos} repositories.": [
         ""
       ],
@@ -3019,6 +2995,9 @@
       "Flatpak remote updated": [
         ""
       ],
+      "Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.": [
+        ""
+      ],
       "Force": [
         ""
       ],
@@ -3080,6 +3059,9 @@
         ""
       ],
       "Generate repository applicability": [
+        ""
+      ],
+      "Generate username and password": [
         ""
       ],
       "Generated": [
@@ -3505,9 +3487,6 @@
       "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
         ""
       ],
-      "If specified, remove the first instance of a subscription with matching id and quantity": [
-        ""
-      ],
       "If the smart proxies' assigned HTTP proxies should be used": [
         ""
       ],
@@ -3931,6 +3910,9 @@
       "It's not possible to promote a rolling content view.": [
         ""
       ],
+      "It's not possible to provide environment_ids for anything other than a rolling content view.": [
+        ""
+      ],
       "It's not possible to publish a rolling content view.": [
         ""
       ],
@@ -4328,6 +4310,9 @@
         ""
       ],
       "List of hypervisor guest uuids": [
+        ""
+      ],
+      "List of lifecycle environments for rolling content views": [
         ""
       ],
       "List of package group names (Deprecated)": [
@@ -5230,9 +5215,6 @@
       "Organization ID": [
         ""
       ],
-      "Organization ID is required": [
-        ""
-      ],
       "Organization ID or title": [
         ""
       ],
@@ -5716,6 +5698,9 @@
       "Promotion to Environment": [
         ""
       ],
+      "Provide credentials if the registry requires authentication": [
+        ""
+      ],
       "Provide the required information and click {update} below to save changes.": [
         ""
       ],
@@ -5840,15 +5825,6 @@
         ""
       ],
       "Quantity of entitlements to bind": [
-        ""
-      ],
-      "Quantity of specified subscription to remove": [
-        ""
-      ],
-      "Quantity of this subscription to add": [
-        ""
-      ],
-      "Quantity of this subscriptions to add": [
         ""
       ],
       "Quantity to Allocate": [
@@ -6019,9 +5995,6 @@
       "Register a host with subscription and information": [
         ""
       ],
-      "Register host '%s' before attaching subscriptions": [
-        ""
-      ],
       "Registered": [
         ""
       ],
@@ -6050,6 +6023,9 @@
         ""
       ],
       "Registry name pattern will result in invalid container image name of member repositories": [
+        ""
+      ],
+      "Registry token expiration time": [
         ""
       ],
       "Related composite content views": [
@@ -6161,18 +6137,6 @@
         ""
       ],
       "Remove products from sync plan": [
-        ""
-      ],
-      "Remove subscriptions": [
-        ""
-      ],
-      "Remove subscriptions from %s": [
-        ""
-      ],
-      "Remove subscriptions from a host": [
-        ""
-      ],
-      "Remove subscriptions from one or more hosts": [
         ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
@@ -6394,6 +6358,9 @@
       "Return Red Hat (non-custom) products only": [
         ""
       ],
+      "Return a list of installed debs distinct by name": [
+        ""
+      ],
       "Return a list of installed packages distinct by name": [
         ""
       ],
@@ -6433,7 +6400,7 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         ""
       ],
-      "Return only errata of a particular type (security, bugfix, enhancement)": [
+      "Return only errata of a particular type (security, bugfix, enhancement, other)": [
         ""
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
@@ -6572,6 +6539,9 @@
         ""
       ],
       "Save": [
+        ""
+      ],
+      "Save Environments": [
         ""
       ],
       "Saving alternate content source...": [
@@ -6820,10 +6790,13 @@
       "Service Level (SLA)": [
         ""
       ],
+      "Service level": [
+        ""
+      ],
       "Service level of host": [
         ""
       ],
-      "Service level to be used for autoheal": [
+      "Service level, e.g. SELF-SUPPORT": [
         ""
       ],
       "Set content overrides": [
@@ -6848,9 +6821,6 @@
         ""
       ],
       "Sets the system purpose usage": [
-        ""
-      ],
-      "Sets whether the Host will autoheal subscriptions upon checkin": [
         ""
       ],
       "Setting 'default_location_subscribed_hosts' is not set to a valid location.": [
@@ -7003,6 +6973,9 @@
       "Smart proxy name": [
         ""
       ],
+      "Smart proxy verify content checksum has started in the background": [
+        ""
+      ],
       "Sockets": [
         ""
       ],
@@ -7117,7 +7090,7 @@
       "Something went wrong while refreshing alternate content sources: ": [
         ""
       ],
-      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
+      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error?.response)}": [
         ""
       ],
       "Something went wrong while removing a filter rule! ${getResponseErrorMsgs(error.response)}": [
@@ -7184,6 +7157,9 @@
         ""
       ],
       "Something went wrong while updating the content source. See the logs for more information": [
+        ""
+      ],
+      "Something went wrong while verifying content checksums: ${getResponseErrorMsgs(error?.response)}": [
         ""
       ],
       "Something went wrong! Please check server logs!": [
@@ -7273,9 +7249,6 @@
       "Subscription Details": [
         ""
       ],
-      "Subscription ID": [
-        ""
-      ],
       "Subscription Info": [
         ""
       ],
@@ -7289,12 +7262,6 @@
         ""
       ],
       "Subscription Name": [
-        ""
-      ],
-      "Subscription Pool id": [
-        ""
-      ],
-      "Subscription Pool uuid": [
         ""
       ],
       "Subscription UUID": [
@@ -7463,6 +7430,9 @@
         ""
       ],
       "Synced Content": [
+        ""
+      ],
+      "Synced container images content": [
         ""
       ],
       "Synchronize": [
@@ -7684,6 +7654,9 @@
       "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts.": [
         ""
       ],
+      "The provided incremental export format '%{provided}' must match the previous export's format '%{previous}'. Consider using 'from_history_id' to point to a matching export.": [
+        ""
+      ],
       "The repository is already enabled": [
         ""
       ],
@@ -7709,9 +7682,6 @@
         ""
       ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
-        ""
-      ],
-      "The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled": [
         ""
       ],
       "The subscription cannot be found upstream": [
@@ -7855,12 +7825,6 @@
       "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
         ""
       ],
-      "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.": [
-        ""
-      ],
-      "This host's organization is in Simple Content Access mode. Auto-attach is disabled": [
-        ""
-      ],
       "This is disabled because a manifest task is in progress": [
         ""
       ],
@@ -7921,6 +7885,9 @@
       "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned.": [
         ""
       ],
+      "Time in minutes before registry access tokens expire.": [
+        ""
+      ],
       "Time to expire yum metadata in seconds. Only relevant for custom yum repositories.": [
         ""
       ],
@@ -7934,6 +7901,9 @@
         ""
       ],
       "To change content view environments, a specific organization must be selected from the organization context.": [
+        ""
+      ],
+      "To continue with Red Hat Flatpak remote, you need to generate your username and password in": [
         ""
       ],
       "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system.": [
@@ -8009,12 +7979,6 @@
         ""
       ],
       "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy.": [
-        ""
-      ],
-      "Trigger an auto-attach of subscriptions": [
-        ""
-      ],
-      "Trigger an auto-attach of subscriptions on one or more hosts": [
         ""
       ],
       "Try changing your search criteria.": [
@@ -8101,6 +8065,12 @@
       "Unable to detect puppet path": [
         ""
       ],
+      "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
+        ""
+      ],
+      "Unable to find a base content view to use for incremental export. Please run a complete export instead.": [
+        ""
+      ],
       "Unable to find a content view with ID %s": [
         ""
       ],
@@ -8114,12 +8084,6 @@
         ""
       ],
       "Unable to import in to Content View specified in the metadata - '%{name}'. The 'import_only' attribute for the content view is set to false. To mark this Content View as importable, have your system administrator run the following command on the server. ": [
-        ""
-      ],
-      "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment.": [
-        ""
-      ],
-      "Unable to incrementally export. Do a Full Export on the repository content.": [
         ""
       ],
       "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.": [
@@ -8170,9 +8134,6 @@
       "Unapplied Errata": [
         ""
       ],
-      "Unattach a subscription": [
-        ""
-      ],
       "Unfiltered params array: %s.": [
         ""
       ],
@@ -8186,6 +8147,12 @@
         ""
       ],
       "Unknown errata status": [
+        ""
+      ],
+      "Unknown library export format '%s'.": [
+        ""
+      ],
+      "Unknown repository export format '%s'.": [
         ""
       ],
       "Unknown traces status": [
@@ -8521,6 +8488,9 @@
       "Value must either be a boolean or 'default' for 'enabled'": [
         ""
       ],
+      "Verify Content Checksum": [
+        ""
+      ],
       "Verify SSL": [
         ""
       ],
@@ -8603,6 +8573,9 @@
         ""
       ],
       "View by": [
+        ""
+      ],
+      "View container images in the local registry using the Synced tab. View container images booted by image mode hosts using the Booted tab. The Booted tab also shows images outside of the local container registry.": [
         ""
       ],
       "View content views": [
@@ -8891,9 +8864,6 @@
         ""
       ],
       "attempted to sync without a feed URL": [
-        ""
-      ],
-      "auto attach subscriptions upon registration": [
         ""
       ],
       "base url to perform repo discovery on": [
@@ -9530,9 +9500,6 @@
         ""
       ],
       "start datetime of synchronization": [
-        ""
-      ],
-      "subscriptions not specified": [
         ""
       ],
       "sync plan description": [

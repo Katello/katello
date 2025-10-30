@@ -6,11 +6,12 @@
 # Bryan Kearney <bryan.kearney@gmail.com>, 2023
 # Amit Upadhye <aupadhye@redhat.com>, 2025
 # Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
+# Ondřej Gajdušek, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025\n"
+"Last-Translator: Ondřej Gajdušek, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/foreman/teams/114/zh_CN/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -304,6 +305,14 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-warning inline-icon\"></i>\n"
 "  该主机当前未使用 subscription-manager 注册。使用<a href=\"/hosts/register\">注册主机</a>流程来完成注册。"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
+msgid ""
+"<span> {{table.numSelected &gt 1? 'Register Content Hosts':'Register Content"
+" Host' | translate}} </span>"
+msgstr ""
+"<span> {{table.numSelected &gt 1? 'Register Content Hosts':'Register Content"
+" Host' | translate}} </span>"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "1 Content Host"
@@ -677,7 +686,6 @@ msgstr "应用{{ errataIds.length }} 勘误到所有内容主机？"
 
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata.html
-#: app/assets/javascripts/bastion_katello/errata/views/errata.html
 msgid "Apply Errata"
 msgstr "应用勘误"
 
@@ -3315,7 +3323,7 @@ msgstr "请确保选择了内容视图。"
 msgid ""
 "Please select a lifecycle environment. Lifecycle environment and content "
 "view must be provided together."
-msgstr ""
+msgstr "请选择一个生命周期环境。生命周期环境和内容视图必须一起提供。"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
 msgid "Please select an environment."
@@ -3516,10 +3524,6 @@ msgstr "刷新表"
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
 msgid "Register a Content Host"
 msgstr "注册一个内容主机"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
-msgid "Register Content Host"
-msgstr "注册内容主机"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html

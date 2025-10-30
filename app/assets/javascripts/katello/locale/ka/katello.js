@@ -3,11 +3,11 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 2.4.0-RC1",
+        "Project-Id-Version": "katello 4.19.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2023",
-        "Language-Team": "Georgian (https://www.transifex.com/foreman/teams/114/ka/)",
+        "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2025",
+        "Language-Team": "Georgian (https://app.transifex.com/foreman/teams/114/ka/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
         "Content-Transfer-Encoding": "8bit",
@@ -30,10 +30,10 @@
         " %{package_count} პაკეტი"
       ],
       " (${item.published_at_words} ago)": [
-        ""
+        " (${item.published_at_words}-ის წინ)"
       ],
       " (${version.published_at_words} ago)": [
-        ""
+        " (${version.published_at_words}-ის წინ)"
       ],
       " Content view updated": [
         " შემცველობის ხედი განახლდა"
@@ -42,7 +42,7 @@
         " DEB-ები"
       ],
       " Either select the latest content view or the content view version. Cannot set both.": [
-        ""
+        "  აირჩიეთ ან ბოლო შემცველობის ხედი ან შემცველობის ხედის ვერსია. ორივეს ვერ დააყენებთ."
       ],
       " RPMs": [
         " RPM-ები"
@@ -69,10 +69,10 @@
         ""
       ],
       " content view is used in listed composite content views.": [
-        ""
+        " შემცველობის ხედი გამოტანილ კომპოზიტურ შემცველობის ხედებშია ჩამოთვლილი."
       ],
       " content view is used in listed content views. For more information, ": [
-        ""
+        " შემცველობის ხედი გამოტანილ შემცველობის ხედებშია ჩამოთვლილი. მეტი ინფორმაციისთვის, "
       ],
       " environment cannot be set to an environment already on its path": [
         ""
@@ -84,7 +84,7 @@
         ""
       ],
       " or any step on the left.": [
-        ""
+        " ან ნებისმიერი ნაბიჯი მარცხნივ."
       ],
       " to manage and promote content views, or select a different environment.": [
         ""
@@ -130,7 +130,7 @@
         "%s-ის წინ"
       ],
       "%s content type is not enabled.": [
-        ""
+        "%s შემცველობის ტიპი ჩართული არაა."
       ],
       "%s guests": [
         "%s სტუმარი"
@@ -259,10 +259,10 @@
         "%{group} პაკეტის ჯგუფი განახლდა"
       ],
       "%{label} failed": [
-        ""
+        "%{label} ჩავარდა"
       ],
       "%{label} failed.": [
-        ""
+        "%{label} ჩავარდა."
       ],
       "%{name} has no %{type} repositories with upstream URLs to add to the alternate content source.": [
         ""
@@ -394,7 +394,7 @@
         ":a_resource -ის იდენტიფიკატორი"
       ],
       "<b>PROMOTION</b> SUMMARY": [
-        ""
+        "<b>დაწინაურების</b> მიმოხილვა"
       ],
       "<b>SYNC</b> SUMMARY": [
         "<b>სინქრონიზაციის</b> მიმოხილვა"
@@ -418,7 +418,7 @@
         ""
       ],
       "A large number of errata were synced for this repository, so only the first 100 are shown.": [
-        ""
+        "ამ რეპოზიტორიისთვის სინქრონიზებულია მეტისმეტად ბევრი მორჩენილი პაჩი. ნაჩვენებია მხოლოდ პირველი 100."
       ],
       "A list of subscriptions expiring soon": [
         "გამოწერები, რომლებსაც ვადა მალე გასდით"
@@ -427,16 +427,16 @@
         "ახალი ვერსია პაკეტისთვის "
       ],
       "A notification about failed content view promotion": [
-        ""
+        "გაფრხილება ჩავარდნილი შემცველობის ხედის დაწინაურების შესახებ"
       ],
       "A notification about failed content view publish": [
-        ""
+        "გაფრხილება ჩავარდნილი შემცველობის ხედის გამოცემის შესახებ"
       ],
       "A notification about failed proxy sync": [
-        ""
+        "გაფრთხილება პროქსის ჩავარდნილი სინქრონიზაციის შესახებ"
       ],
       "A notification about failed repository sync": [
-        ""
+        "გაფრთხილება ჩავარდნილი რეპოზიტორიის სინქრონიზაციის შესახებ"
       ],
       "A post-promotion summary of hosts with installable errata": [
         ""
@@ -447,17 +447,14 @@
       "A remote execution job is in progress.": [
         "დაშორებულად გაშვებული დავალება ჯერ კიდევ მიმდინარეობს."
       ],
-      "A service level for auto-healing process, e.g. SELF-SUPPORT": [
-        "სერვისის დონე თვით-წამლობის პროცესისთვის. მაგ; SELF-SUPPORT"
-      ],
       "A smart proxy seems to have been refreshed without pulpcore being running. Please refresh the smart proxy after ensuring that pulpcore services are running.": [
         ""
       ],
       "A summary of available and applicable errata for your hosts": [
-        ""
+        "თქვენი ჰოსტების შესაბამისი მორჩენილი აპლიკაციის პაჩების მიმოხილვა"
       ],
       "A summary of new errata after a repository is synchronized": [
-        ""
+        "ახალი მორჩენილი პაჩების მიმოხილვა რეპოზიტორიის სინქრონიზაციის შემდეგ"
       ],
       "ANY": [
         "ნებისმიერი"
@@ -475,7 +472,7 @@
         "მოქმედება"
       ],
       "Action not allowed for the default smart proxy.": [
-        "ნაგულისხმებ ჭკვიან პროქსიზე ეს ქმედება დაუშვებელია."
+        "ნაგულისხმევ ჭკვიან პროქსიზე ეს ქმედება დაუშვებელია."
       ],
       "Action unauthorized to be performed in this organization.": [
         "ამ ორგანიზაციაში ქმედების განხორციელების ავტორიზაცია არ გაგაჩნიათ."
@@ -505,13 +502,13 @@
         "აქტივაციის გასაღების ID"
       ],
       "Activation key deleted": [
-        ""
+        "აქტივაციის გასაღები წაიშალა"
       ],
       "Activation key details": [
-        ""
+        "აქტივაციის გასაღების დეტალები"
       ],
       "Activation key details updated": [
-        ""
+        "აქტივაციის გასაღები განახლდა"
       ],
       "Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead.": [
         ""
@@ -520,7 +517,7 @@
         ""
       ],
       "Activation key(s) to use during registration": [
-        ""
+        "აქტივაციის გასაღებები რეგისტრაციისას გამოსაყენებლად"
       ],
       "Activation keys": [
         "აქტივაცის გასაღებები"
@@ -552,11 +549,14 @@
       "Add RPM rule": [
         "RPM-ის წესის დამატება"
       ],
+      "Add Red Hat Flatpak remote": [
+        ""
+      ],
+      "Add Red Hat flatpak remote": [
+        ""
+      ],
       "Add Subscriptions": [
         "გამოწერების დამატება"
-      ],
-      "Add a subscription to a host": [
-        "ჰოსტზე გამოწერის დამატება"
       ],
       "Add an alternate content source": [
         "შემცველობის ალტერნატიული წყაროს დამატება"
@@ -565,7 +565,7 @@
         "შემცველობის ხედში კომპონენტების ჩამატება"
       ],
       "Add content": [
-        ""
+        "შემცველობის დამატება"
       ],
       "Add content view": [
         "შემცველობის ხედის დამატება"
@@ -598,7 +598,7 @@
         "ახალი სანიშნის დამატება"
       ],
       "Add one or more host collections to one or more hosts": [
-        ""
+        "ერთი ან მეტი ჰოსტის ერთ ან მეტ ჰოსტების კოლექციაში ჩამატება"
       ],
       "Add products to sync plan": [
         "სინქრის გეგმაში პროდუქტების ჩამატება"
@@ -616,16 +616,13 @@
         "წყაროს დამტება"
       ],
       "Add subscriptions": [
-        ""
+        "გამოწერების დამატება"
       ],
       "Add subscriptions consumed by a manifest from Red Hat Subscription Management": [
         ""
       ],
-      "Add subscriptions to one or more hosts": [
-        "გამოწერის დამატება ერთ ან მეტ ჰოსტზე"
-      ],
       "Add subscriptions using the Add Subscriptions button.": [
-        ""
+        "დაამატეთ გამოწერები გამოწერის დამატების ღილაკით."
       ],
       "Add to a host collection": [
         "ჰოსტის კოლექციაში ჩამატება"
@@ -703,7 +700,7 @@
         ""
       ],
       "Allow multiple content views": [
-        ""
+        "მრავალი შემცველობის ხედების დაშვება"
       ],
       "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host.": [
         ""
@@ -715,7 +712,7 @@
         "ჰოსტისთვის კოლექციის შეცვლა"
       ],
       "Alternate Content Source HTTP Proxy": [
-        ""
+        "ალტერნატიული შემცველობის წყაროს HTTP პროქსი"
       ],
       "Alternate Content Sources": [
         "შემცველობის ალტერნატიული წყაროები"
@@ -751,10 +748,10 @@
         ""
       ],
       "An environment is missing a prior": [
-        ""
+        "გარემოს აკლია წინა"
       ],
       "An error occurred during the sync \\n%{error_message}": [
-        ""
+        "შეცდომა სინქრონიზაციისას \\n%{error_message}"
       ],
       "An error occurred during upload \\n%{error_message}": [
         "შეცდომა ატვირთვისას \\n%{error_message}"
@@ -823,16 +820,16 @@
         "დაშორებული გაშვებით გადატარება"
       ],
       "Approaching end of maintenance support": [
-        ""
+        "ახლოვდება რემონტის მხარდაჭერის დასასრული"
       ],
       "Approaching end of maintenance support (%s)": [
-        ""
+        "ახლოვდება რემონტის მხარდაჭერის დასასრული (%s)"
       ],
       "Approaching end of support": [
-        ""
+        "ახლოვდება მხარდაჭერის დასასრული"
       ],
       "Approaching end of support (%s)": [
-        ""
+        "ახლოვდება მხარდაჭერის დასასრული (%s)"
       ],
       "Arch": [
         "არქიტექტურა"
@@ -865,7 +862,7 @@
         ""
       ],
       "Array of Trace IDs": [
-        ""
+        "ტრეისის ID-ების მასივი"
       ],
       "Array of components to add": [
         "დასამატებელი კომპონენტების მასივი"
@@ -891,12 +888,6 @@
       "Array of pools to add": [
         "დასამატებელი პულების მასივი"
       ],
-      "Array of subscriptions to add": [
-        "დასამატებელი გამოწერების მასივი"
-      ],
-      "Array of subscriptions to remove": [
-        "წასაშლელი გამოწერების მასივი"
-      ],
       "Array of uploads to import": [
         "შემოსატანი ატვირთვების მასივი"
       ],
@@ -914,10 +905,10 @@
         ""
       ],
       "Assign the environment and content view to one or more hosts": [
-        ""
+        "გარემოსა და შემცველობის ხედის ერთი ან მეტი ჰოსტისთვის მინიჭება"
       ],
       "Assign the release version to one or more hosts": [
-        ""
+        "რელიზის ვერსიის ერთი ან მეტი ჰოსტისთვის მინიჭება"
       ],
       "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
@@ -947,25 +938,16 @@
         ""
       ],
       "At least one of the selected items requires the host to reboot": [
-        ""
+        "სულ ცოტა ერთ მონიშნულ ელემენტს ესაჭიროება, რომ ჰოსტი გადაიტვირთოს"
       ],
       "At least one organization must exist.": [
         "საჭიროა არსებობდეს ერთი ორგანიზაცია მაინც."
-      ],
-      "Attach a subscription": [
-        "გამოწერის მიბმა"
-      ],
-      "Attach subscriptions": [
-        "გამოწერების მიმაგრება"
-      ],
-      "Attach subscriptions to %s": [
-        "%s-ზე გამოწერების მიმაგრება"
       ],
       "Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin": [
         ""
       ],
       "Auth URL requires Auth token be set.": [
-        ""
+        "ავთენტიკაციის ბმულს ავთენტიკაციის კოდის მითითება სჭირდება."
       ],
       "Authentication type": [
         "ავთენტიფიკაციის ტიპი"
@@ -986,7 +968,7 @@
         "ხელმისაწვდომია"
       ],
       "Available Entitlements": [
-        ""
+        "ხელმისაწვდომი უფლებები"
       ],
       "Available Repositories": [
         "ხელმისაწვდომი რეპოზიტორიები"
@@ -998,13 +980,10 @@
         ""
       ],
       "Available schema versions": [
-        ""
+        "სქემის ხელმისაწვდომი ვერსიები"
       ],
       "Back": [
         "უკან"
-      ],
-      "Backend System Status": [
-        "უკანაბოლო სისტემის სტატუსი"
       ],
       "Base URL": [
         "ძირითადი URL"
@@ -1031,7 +1010,7 @@
         "საბაზისო ავთენტიკაციის მომხმარებლის სახელი"
       ],
       "Batch size to sync repositories in.": [
-        ""
+        "პაკეტის ზომა მასში რეპოზიტორიების სინქრონიზებისთვის."
       ],
       "Before continuing, ensure that all of the following prerequisites are met:": [
         ""
@@ -1052,10 +1031,10 @@
         "ბეტა"
       ],
       "Bind an entitlement to an allocation": [
-        ""
+        "უფლების გამოყოფაზე მიბმა"
       ],
       "Bind entitlements to an allocation": [
-        ""
+        "უფლებების გამოყოფაზე მიბმა"
       ],
       "Bookmark this search": [
         "ამ ძებნის სანიშნეებში ჩამატება"
@@ -1073,6 +1052,9 @@
         ""
       ],
       "Bootc upgrade via Bootc interface": [
+        ""
+      ],
+      "Booted": [
         ""
       ],
       "Booted Container Images": [
@@ -1199,13 +1181,13 @@
         ""
       ],
       "Cannot add component versions to a non-composite content view": [
-        ""
+        "კომპონენტის ვერსიების არაკომპოზიტურ შემცველობის ხედში ჩამატება შეუძლებელია"
       ],
       "Cannot add composite versions to a composite content view": [
         "კომპოზიტურ შემცველობის ხედში კომპოზიტური ვერსიების დამატება შეუძლებელია"
       ],
       "Cannot add composite versions to another composite content view": [
-        ""
+        "კომპოზიტური ვერსიების სხვა კომპოზიტურ შემცველობის ხედებში ვერ ჩაამატებთ"
       ],
       "Cannot add container push repositories to a rolling content view": [
         ""
@@ -1214,19 +1196,19 @@
         ""
       ],
       "Cannot add default content view to composite content view": [
-        "კომპოზიტურ შემცველობის ხედში ნაგულისხმები შემცველობის ხედის დამატება შეუძლებელია"
+        "კომპოზიტურ შემცველობის ხედში ნაგულისხმევი შემცველობის ხედის დამატება შეუძლებელია"
       ],
       "Cannot add disabled Red Hat product %s to sync plan!": [
         ""
       ],
       "Cannot add disabled products to sync plan!": [
-        ""
+        "სინქრონიზაციის გეგმაში გათიშული პროდუქტების დამატება შეუძლებელია!"
       ],
       "Cannot add generated content view versions to composite content view": [
         "კომპოზიტურ შემცველობის ხედში გენერირებული შემცველობიხ ედის ვერსიის დამატება შეუძლებელია"
       ],
       "Cannot add product %s because it is disabled.": [
-        ""
+        "პროდუქტის %s დამატება შეუძლებელია. ის გათიშულია."
       ],
       "Cannot add repositories to a composite content view": [
         "რეპოზიტორიების კომპოზიტურ შემცველობის ხედში ჩამატება შეუძლებელია"
@@ -1241,7 +1223,7 @@
         ""
       ],
       "Cannot associate a component to a non composite content view": [
-        ""
+        "კომპონენტის არაკომპოზიტურ შემცველობის ხედთან ასოცირება შეუძლებელია"
       ],
       "Cannot be disabled because it is part of a content view": [
         ""
@@ -1250,7 +1232,7 @@
         "ხელით მითითებული რეპოზიტორიების სახელის გამოთვლა შეუძლებელია"
       ],
       "Cannot clone into the Default Content View": [
-        "ნაგულისხმებ შემცველობის ხედში კლონირება შეუძლებელია"
+        "ნაგულისხმევ შემცველობის ხედში კლონირება შეუძლებელია"
       ],
       "Cannot delete '%{view}' due to associated %{dependent}: %{names}.": [
         ""
@@ -1259,10 +1241,10 @@
         "RedHat-ის პროდუქტის შემცველობის წაშლის შეცდომა: %{product}"
       ],
       "Cannot delete from %s, view does not exist there.": [
-        ""
+        "%s-დან წაშლა შეუძლებელია, იქ ხედი არ არსებობს."
       ],
       "Cannot delete product with repositories published in a content view.  Product: %{product}, %{view_versions}": [
-        ""
+        "შემცველობის ხედში გამოცემული რეპოზიტორიების მქონე პროდუქტის წაშლა შეუძლებელია.  პროდუქტი: %{product}, %{view_versions}"
       ],
       "Cannot delete product: %{product} with repositories that are the last affected repository in content view filters. Delete these repositories before deleting product.": [
         ""
@@ -1283,13 +1265,13 @@
         "გარემოში (%s) ყოფნისას ვერსიას ვერ წაშლით"
       ],
       "Cannot delete version while it is in environments: %s": [
-        ""
+        "ვერსიის წაშლა, სანამ ის გარემოებშია, შეუძლებელია: %s"
       ],
       "Cannot delete version while it is in use by composite content views: %s": [
-        ""
+        "ვერსის წაშლა, სანამ ის კომპოზიტურ შემცველობის ხედებში გამოიყენება, შეუძლებელია: %s"
       ],
       "Cannot delete view while it exists in environments": [
-        ""
+        "ხედის წაშლა მაშინ, როცა ის გარემოებში არსებობს, შეუძლებელია"
       ],
       "Cannot import a composite content view": [
         "კომპოზიტური შემცველობის ხედის შემოტანა შეუძლებელია"
@@ -1300,7 +1282,7 @@
       "Cannot incrementally export from a filtered and a non-filtered content view version. The exported content view version '%{content_view} %{current}'  cannot be incrementally updated from version '%{from}.'.  Please do a full export.": [
         ""
       ],
-      "Cannot incrementally export from a incrementally exported version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
+      "Cannot incrementally export from a incrementally updated version and a regular version or vice-versa.  The exported Content View Version '%{content_view} %{current}' cannot be incrementally exported from version '%{from}.' Please do a full export.": [
         ""
       ],
       "Cannot install errata: No errata found for search term '%s'": [
@@ -1322,7 +1304,7 @@
         ""
       ],
       "Cannot publish default content view": [
-        "შემცველობის ნაგულისხმები ხედის გამოქვეყნების შეცდომა"
+        "შემცველობის ნაგულისხმევი ხედის გამოქვეყნების შეცდომა"
       ],
       "Cannot register a system to the '%s' environment": [
         "სისტემის '%s' გარემოში რეგისტრაცია შეუძლებელია"
@@ -1340,13 +1322,13 @@
         ""
       ],
       "Cannot set attribute %{attr} for content type %{type}": [
-        ""
+        "შემცველობის ტიპზე %{type} ატრიბუტის %{attr} დაყენება შეუძლებელია"
       ],
       "Cannot set auto publish to a non-composite content view": [
         ""
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        ""
+        "არა-yum/deb რეპოზიორიების მეტამონაცემების შემოწმების გამოტოვება შეუძლებელია."
       ],
       "Cannot specify components for non-composite views": [
         "არაკომპოზიტური ხედის შემცველობის მითითება შეუძლებელია"
@@ -1436,10 +1418,10 @@
         "ძიების გასუფთავება"
       ],
       "Click here to go to the tasks page for the task.": [
-        ""
+        "ამ ამოცანისთვის ამოცანების გვერდზე გადასასვლელად დააწკაპუნეთ."
       ],
       "Click to see repositories available to add.": [
-        ""
+        "დასამატებლად ხელმისაწვდომი რეპოზიტორიების სანახავად დააწკაპუნეთ."
       ],
       "Click {update} below to save changes.": [
         "ცვლილებების შესანახად დაწკაპუნეთ: {update}."
@@ -1477,9 +1459,6 @@
       "Completed pulp task protection days": [
         ""
       ],
-      "Component": [
-        "კომპონენტი"
-      ],
       "Component Content View": [
         "კომპონენტის შემცველობის ხედი"
       ],
@@ -1505,10 +1484,10 @@
         "გამოთვლითი რესურსის ID-ები"
       ],
       "Configuration still must be updated on {hosts}": [
-        ""
+        "კონფიგურაციის განახლება ჯერ კიდევ საჭიროა: {hosts}"
       ],
       "Configuration updated on Foreman": [
-        ""
+        "Foreman-ზე კონფიგურაცია შეიცვალა"
       ],
       "Confirm Deletion": [
         "წაშლის დადასტურება"
@@ -1545,6 +1524,9 @@
       ],
       "Container image tags": [
         "კონტეინერის ასლის ჭდეები"
+      ],
+      "Container images": [
+        ""
       ],
       "Container manifest lists": [
         "კონტეინერის მანიფესტების სიები"
@@ -1640,7 +1622,7 @@
         ""
       ],
       "Content View Version: '%{cvv}', Product: '%{product}', Repository: '%{repo}' ": [
-        ""
+        "შემცველობის ხედის ვერსია: '%{cvv}', პროდუქტი: '%{product}', რეპოზიტორია: '%{repo}' "
       ],
       "Content View id": [
         "შემცველობის ხედის id"
@@ -1670,7 +1652,7 @@
         "შემცველობის ასატვირთი ფაილები. შეიძლება იყოს ერთი ფაილი ან ფაილების მასივი."
       ],
       "Content host must be unregistered before performing this action.": [
-        ""
+        "ამ ქმედების შესრულებამდე აუცილებელია შემცველობის ჰოსტის რეგისტრაციის გაუქმება."
       ],
       "Content hosts": [
         "შემცველობის ჰოსტები"
@@ -1697,7 +1679,7 @@
         "შემცველობის წყაროს ID"
       ],
       "Content source was not set for host '%{host}'": [
-        ""
+        "შემცველობის წყარო ჰოსტისთვის '%{host}' დაყენებული არაა"
       ],
       "Content type": [
         "შემცველობის ტიპი"
@@ -1730,13 +1712,13 @@
         "შემცველობის ხედი '%{view}' არ იმყოფება გარემოში '%{env}'"
       ],
       "Content view '%{view}' is not in lifecycle environment '%{env}'.": [
-        ""
+        "შემცველობის ხედი '%{view}' არ იმყოფება სიცოცხლის ციკლის გარემოში '%{env}'."
       ],
       "Content view ID": [
         "შემცველობის ხედის ID"
       ],
       "Content view and environment not set for registration.": [
-        ""
+        "შემცველობის ხედი და გარემო რეგისტრაციისთვის დაყენებული არაა."
       ],
       "Content view and lifecycle environment must be provided together": [
         ""
@@ -1748,10 +1730,10 @@
         ""
       ],
       "Content view environments": [
-        ""
+        "შემცველობის ხედის გარემოები"
       ],
       "Content view environments and activation key must all belong to the same organization": [
-        ""
+        "შემცველობის ხედის გარემოები და აქტივაციის გასაღები იგივე ორგანიზაციას უნდა ეკუთვნოდნენ"
       ],
       "Content view environments must have both a content view and an environment": [
         ""
@@ -1766,7 +1748,7 @@
         "შემცველობის ხედის ჭდე"
       ],
       "Content view must be specified": [
-        ""
+        "შემცველობის ხედის მითითება აუცილებელია"
       ],
       "Content view name": [
         "შემცველობის ხედის სახელი"
@@ -1778,10 +1760,10 @@
         "შემცველობის ხედის რიცხვობრივი იდენტიფიკატორი"
       ],
       "Content view promote failure": [
-        ""
+        "შემცველობის ხედის ვერსიის დაწინაურება ჩავარდა"
       ],
       "Content view publish failure": [
-        ""
+        "შემცველობის ხედის გამოცემა ჩავარდა"
       ],
       "Content view version export history identifier": [
         "შემცველობის ხედის ვერსიის გატანის ისტორიის იდენტიფიკატორი"
@@ -1793,7 +1775,7 @@
         "შემცველობის ხედის ვერსიის შემოტანის ისტორიის იდენტიფიკატორი"
       ],
       "Content view version is empty": [
-        ""
+        "შემცველობის ხედის ვერსია ცარიელია"
       ],
       "Content view version is empty or content counts are not up to date": [
         ""
@@ -1850,10 +1832,10 @@
         "%{count} მორჩენილი პაჩის მოძებნის შეცდომა.  ნაპოვნია მხოლოდ: %{found}"
       ],
       "Could not find %{name} resource with id %{id}. %{perms_message}": [
-        ""
+        "რესურსი %{name} id-ით %{id} აღმოჩენილი არაა. %{perms_message}"
       ],
       "Could not find %{name} resources with ids %{ids}": [
-        ""
+        "რესურსი %{name} id-ებით %{ids} აღმოჩენილი არაა"
       ],
       "Could not find Environment with ids: %s": [
         "გარემო ID-ით %s არ არსებობს"
@@ -1886,7 +1868,7 @@
         ""
       ],
       "Could not remove the lifecycle environment from the smart proxy": [
-        ""
+        "ჭკვიანი პროქსიდან სიცოცხლის ციკლის გარემოს წაშლა შეუძლებელია"
       ],
       "Couldn't establish a connection to %s": [
         "%s-სთან დაკავშირების შეცდომა"
@@ -1967,7 +1949,7 @@
         "ჭკვიანი პროქსის, სახელით '%s' პოვნა შეუძლებელია"
       ],
       "Couldn't find specified content view and lifecycle environment.": [
-        ""
+        "მითითებული შემცველობის ხედისა და სიცოცხლის ციკლის გარემოს პოვნა შეუძლებელია."
       ],
       "Couldn't find subject of synchronization": [
         "სინქრონიზაციის საგანი არ არსებობს"
@@ -2054,16 +2036,10 @@
         "ჰოსტების  კოლექციის შექმნა"
       ],
       "Create new activation key": [
-        ""
+        "ახალი აქტივაციის გასაღების შექმნა"
       ],
       "Create organization": [
         "ორგანიზაციის შექმნა"
-      ],
-      "Create package filter rule": [
-        "პაკეტის ფილტრის წესის შექმნა"
-      ],
-      "Create rule": [
-        "წესის შექმნა"
       ],
       "Credentials": [
         "მომხმ/პაროლი"
@@ -2075,7 +2051,7 @@
         "Cron-ის გამოსახულება არასწორია!"
       ],
       "Current organization does not have a manifest imported.": [
-        ""
+        "მიმდინარე ორგანიზაციას მანიფესტი შემოტანილი არ აქვს."
       ],
       "Current organization is not set.": [
         "მიმდინარე ორგანიზაცია დაყენებული არაა."
@@ -2141,7 +2117,7 @@
         "Deb პაკეტები"
       ],
       "Debian packages": [
-        ""
+        "Debian-ის პაკეტები"
       ],
       "Debug Certificate": [
         "გამართვის სერტიფიკტი"
@@ -2150,34 +2126,34 @@
         "გამართვის RPM"
       ],
       "Default Custom Repository download policy": [
-        ""
+        "ნაგულისხმევი ხელით მითითებული რეპოზიტორიის გადმოწერის წესები"
       ],
       "Default HTTP Proxy": [
-        "ნაგულისხმები HTTP პროქსი"
+        "ნაგულისხმევი HTTP პროქსი"
       ],
       "Default HTTP proxy for syncing content": [
-        "შემცველობის სინქისთვის საჭირო ნაგულისხმები HTTP პროქსი"
+        "შემცველობის სინქისთვის საჭირო ნაგულისხმევი HTTP პროქსი"
       ],
       "Default Location where new subscribed hosts will put upon registration": [
         ""
       ],
       "Default PXEGrub template for new Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი PEXGrub-ის შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Default PXEGrub2 template for new Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი PEXGrub2-ის შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Default PXELinux template for new Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი PEXLinux-ის შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Default Red Hat Repository download policy": [
-        ""
+        "ნაგულისხმევი Red Hat-ის რეპოზიტორიის გადმოწერის წესები"
       ],
       "Default Smart Proxy download policy": [
-        ""
+        "ნაგულისხმევი ჭკვიანი პროქსიდან გადმოწერის წესები"
       ],
       "Default System SLA": [
-        "სისტემის ნაგულისხმები SLA"
+        "სისტემის ნაგულისხმევი SLA"
       ],
       "Default and Rolling content view versions cannot be promoted": [
         ""
@@ -2198,22 +2174,22 @@
         ""
       ],
       "Default export format": [
-        ""
+        "ნაგულისხმევი გატნის ფორმატი"
       ],
       "Default export format for content-exports(either 'syncable' or 'importable')": [
         ""
       ],
       "Default finish template for new Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი დასრულების შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Default iPXE template for new Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი iPXE-ის შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Default kexec template for new Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი kexec-ის შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Default location for subscribed hosts": [
-        ""
+        "ნაგულისხმევი მდებარეობა გამოწერილი ჰოსტებისთვის"
       ],
       "Default mirroring policy for custom non-yum repositories (either 'mirror_content_only' or 'additive')": [
         ""
@@ -2222,46 +2198,46 @@
         ""
       ],
       "Default partitioning table for new Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი დანაყოფების ცხრილის შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Default provisioning template for Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი გაშლის შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Default provisioning template for new Atomic Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი გაშლის შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ატომური ოპერაციული სისტემებისთვის"
       ],
       "Default synced OS Atomic template": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის Atomic -ის შაბლონი"
       ],
       "Default synced OS PXEGrub template": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის PEXGrub-ის შაბლონი"
       ],
       "Default synced OS PXEGrub2 template": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის PEXGrub2-ის შაბლონი"
       ],
       "Default synced OS PXELinux template": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის PEXLinux-ის შაბლონი"
       ],
       "Default synced OS finish template": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის დასრულების შაბლონი"
       ],
       "Default synced OS iPXE template": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის iPXE -ის შაბლონი"
       ],
       "Default synced OS kexec template": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის kexec-ის შაბლონი"
       ],
       "Default synced OS partition table": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის დანაყოფების ცხრილის შაბლონი"
       ],
       "Default synced OS provisioning template": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის გაშლის შაბლონი"
       ],
       "Default synced OS user-data": [
-        ""
+        "ნაგულისხმევად სინქრონიზებული ოს-ის მომხმარებლის მონაცემების შაბლონი"
       ],
       "Default user data for new Operating Systems created from synced content": [
-        ""
+        "ნაგულისხმევი მომხმარებლის მონაცემების შაბლონი სინქრონიზებული შემცველობიდან შექმნილი ოპერაციული სისტემებისთვის"
       ],
       "Define RHUI repository paths with guided steps.": [
         ""
@@ -2306,7 +2282,7 @@
         ""
       ],
       "Delete activation key?": [
-        ""
+        "წავშალო აქტივაციის გასაღები?"
       ],
       "Delete all subscriptions attached to activation keys.": [
         "აქტივაციის გასაღებებზე მიბმული ყველა გამოწერის წაშლა."
@@ -2339,7 +2315,7 @@
         "ვერსიების წაშლა"
       ],
       "Deleted %{host_count} %{hosts}": [
-        ""
+        "წაიშალა %{host_count} %{hosts}"
       ],
       "Deleted consumer '%s'": [
         "წაიშალა გამომყენებელი '%s'"
@@ -2450,7 +2426,7 @@
         ""
       ],
       "Digest": [
-        ""
+        "დაიჯესტი"
       ],
       "Directly setting package lists on composite content views is not allowed. Please update the components, then re-publish the composite.": [
         ""
@@ -2464,9 +2440,6 @@
       "Disable Red Hat Insights.": [
         "Red Hat Insights-ის გამორთვა."
       ],
-      "Disable Simple Content Access": [
-        "შემცველობასთან იოლი წვდომის გამორთვა"
-      ],
       "Disable a repository from the set": [
         "სეტიდან რეპოზიტორიის გამორთვა"
       ],
@@ -2477,7 +2450,7 @@
         "გამორთულია"
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
-        ""
+        "'%{subject}'-სთვის მარტივი შემცველობის წვდომის გამორთვის შეცდომა."
       ],
       "Discover Repositories": [
         "რეპოზიტორიების აღმოჩენა"
@@ -2489,10 +2462,10 @@
         "შემცველობის ხედის ეს მასივი არ ჩაამატო"
       ],
       "Do not wait for the ImportUpload action to finish. Default: false": [
-        ""
+        "ImportUpload ქმედების დასრულებას არ დაველოდები. ნაგულისხმევი: ცრუ"
       ],
       "Do not wait for the update action to finish. Default: true": [
-        "არ დაელოდება განახლების დასრულებას. ნაგულისხმები: დიახ"
+        "არ დაელოდება განახლების დასრულებას. ნაგულისხმევი: დიახ"
       ],
       "Domain IDs": [
         "დომენის ID-ები"
@@ -2516,7 +2489,7 @@
         "ნაპოვნია დუბლირებული არტეფაქტი"
       ],
       "Duplicate repositories in content view versions": [
-        ""
+        "დუბლირებული რეპოზიტორიები შემცველობის ხედის ვერსიებში"
       ],
       "Duration": [
         "ხანგრძლოვობა"
@@ -2525,10 +2498,13 @@
         ""
       ],
       "ERRATA ADVISORY": [
-        ""
+        "რჩევები ჰოსტის მორჩენილი პაჩების შესახებ"
       ],
       "Edit": [
         "ჩასწორება"
+      ],
+      "Edit DEB rule": [
+        ""
       ],
       "Edit Flatpak Remote": [
         ""
@@ -2540,7 +2516,7 @@
         "URL-ებისა და ქვებილიკების ჩასწორება"
       ],
       "Edit activation key": [
-        ""
+        "აქტივაციის გასაღების ჩასწორება"
       ],
       "Edit content view assignment": [
         "შემცველობის ხედის მინიჭების ჩასწორება"
@@ -2557,9 +2533,6 @@
       "Edit filter rule": [
         "ფილტრის წესის ჩასწორება"
       ],
-      "Edit package filter rule": [
-        "პაკეტის ფილტრის წესის ჩასწორება"
-      ],
       "Edit products": [
         "პროდუქტების ჩასწორება"
       ],
@@ -2573,13 +2546,13 @@
         "სისტემის დანიშნულების ატრიბუტების ჩასწორება"
       ],
       "Editing Entitlements": [
-        ""
+        "უფლებების ჩასწორება"
       ],
       "Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified": [
         ""
       ],
       "Either environments or versions must be specified.": [
-        ""
+        "გარემოების ან ვერსიების მითითება აუცილებელია."
       ],
       "Either organization ID or environment ID needs to be specified": [
         "ორგანიზაციის ID ან გარემოს ID მითითებული უნდა იყოს"
@@ -2591,7 +2564,7 @@
         ""
       ],
       "Either set the latest content view or the content view version. Cannot set both": [
-        ""
+        "დააყენეთ უახლესი შემცველობის ხედი ან შემცველობის ხედის ვერსია. ორივეს ვერ დააყენებთ"
       ],
       "Empty content view versions": [
         "ცარიელი შემცველობის ხედის ვერსიები"
@@ -2602,11 +2575,8 @@
       "Enable Red Hat repositories": [
         "Red Hat-ის რეპოზიტორიების ჩართვა"
       ],
-      "Enable Simple Content Access": [
-        "შემცველობასთან იოლი წვდომის ჩართვა"
-      ],
       "Enable Tracer": [
-        ""
+        "ტრეისერის ჩართვა"
       ],
       "Enable Traces": [
         "ტრეისების ჩართვა"
@@ -2630,7 +2600,7 @@
         "ჩართული რეპოზიტორიები"
       ],
       "Enabling Simple Content Access failed for '%{subject}'.": [
-        ""
+        "'%{subject}'-სთვის მარტივი შემცველობის წვდომის ჩართვის შეცდომა."
       ],
       "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
         ""
@@ -2669,7 +2639,7 @@
         "გარემო"
       ],
       "Environment ID": [
-        ""
+        "გარემოს ID"
       ],
       "Environment ID and content view ID must be provided together": [
         ""
@@ -2684,7 +2654,7 @@
         "გარემოს იდენტიფიკატორი"
       ],
       "Environment name": [
-        ""
+        "გარემოს სახელი"
       ],
       "Environments": [
         "გარემო"
@@ -2777,10 +2747,10 @@
         ""
       ],
       "Exclude all RPMs not associated to any errata": [
-        ""
+        "არც ერთ მორჩენილ პაჩთან ასოცირებული ყველა RPM-ის გამორიცხვა"
       ],
       "Exclude all module streams not associated to any errata": [
-        ""
+        "არც ერთ მორჩენილ პაჩთან ასოცირებული ყველა მოდულის ნაკადის გამორიცხვა"
       ],
       "Exclude filter": [
         "ფილტრის გამორიცხვა"
@@ -2804,10 +2774,10 @@
         "ვადა მალე გასდით"
       ],
       "Expired ": [
-        ""
+        "ვადაგასულია "
       ],
       "Expires ": [
-        ""
+        "ამოწურვის ვადა "
       ],
       "Export": [
         "გატანა"
@@ -2833,6 +2803,12 @@
       "Export failed: One or more repositories needs to be synced (with Immediate download policy.)": [
         ""
       ],
+      "Export format must be specified for library exports.": [
+        ""
+      ],
+      "Export format must be specified for non-incremental repository exports.": [
+        ""
+      ],
       "Export formats.Choose syncable if the exported content needs to be in a yum format. This option is only available for %{syncable_repos} repositories. Choose importable if the importing server uses the same version  and exported content needs to be one of %{importable_repos} repositories.": [
         ""
       ],
@@ -2846,7 +2822,7 @@
         "გატანილი ვერსია"
       ],
       "Extended support": [
-        ""
+        "გაფართოებული მხარდაჭერა"
       ],
       "Facts successfully updated.": [
         "ფაქტები წარმატებით განახლდა."
@@ -2879,7 +2855,7 @@
         "დაყენებადი მორჩენილი პაჩების გამოთხოვა ერთი ან მეტი ჰოსტისთვის."
       ],
       "Fetch traces for one or more hosts": [
-        ""
+        "ერთი ან მეტი ჰოსტისთვის ტრეისის გამოთხოვა"
       ],
       "Fetching content credentials": [
         "შემცველობის ავტორიზაცის დეტალების გამოთხოვა"
@@ -2909,7 +2885,7 @@
         ""
       ],
       "Filter content view versions that contain the file": [
-        ""
+        "იმ შემცველობის ხედის ვერსიების გაფილტვრა, რომლებიც ფაილს შეიცავენ"
       ],
       "Filter created": [
         "ფილტრი შეიქმნა"
@@ -2927,7 +2903,7 @@
         "კომპოზიტური შემცველობის ხედების გაფილტვრა"
       ],
       "Filter out default content views": [
-        "ნაგულისხმები შემცველობის ხედების გაფილტვრა"
+        "ნაგულისხმევი შემცველობის ხედების გაფილტვრა"
       ],
       "Filter products by host id": [
         "პროდუქტების ჰოსტის ID-ით გაფილტვრა"
@@ -2978,10 +2954,10 @@
         "ფილტრები წაიშალა"
       ],
       "Filters were applied to this version.": [
-        ""
+        "ამ ვერსიაზე ფილტრებია გადატარებული."
       ],
       "Filters will be applied to this content view version.": [
-        ""
+        "ამ შემცველობის ხედის ვერსიაზე ფილტრები გადატარდება."
       ],
       "Find the relative path for each RHUI repository and combine them in a comma-separated list.": [
         ""
@@ -3019,6 +2995,9 @@
       "Flatpak remote updated": [
         ""
       ],
+      "Flatpak repositories cannot be mirrored into Red Hat products. Please select a custom product.": [
+        ""
+      ],
       "Force": [
         "ძალა"
       ],
@@ -3029,7 +3008,7 @@
         ""
       ],
       "Force content view promotion and bypass lifecycle environment restriction": [
-        ""
+        "შემცველობის ხედის ძალით დაწინაურება და სიცოცხლის ციკლის გარემოს შეზღუდვების გამოტოვება"
       ],
       "Force delete the repository by removing it from all content view versions": [
         ""
@@ -3062,7 +3041,7 @@
         "სრული აღწერა"
       ],
       "Full support": [
-        ""
+        "სრული მხარდაჭერა"
       ],
       "GPG Key URL": [
         "GPG გასაღების URL"
@@ -3082,11 +3061,14 @@
       "Generate repository applicability": [
         "ჰოსტის გამოყენებადობის გენერაცია"
       ],
+      "Generate username and password": [
+        ""
+      ],
       "Generated": [
         "გენერირებული"
       ],
       "Generated content views cannot be assigned to hosts or activation keys": [
-        ""
+        "გენერირებული შემცველობის ხედების ჰოსტებზე/აქტივაციის გასაღებებზე მინიჭება შეუძლებელია"
       ],
       "Generated content views cannot be directly published. They can updated only via export.": [
         "გენერირებული შემცველობის ნახვები არ შეიძლება პირდაპირ გამოქვეყნდეს. მათი განახლება შესაძლებელია მხოლოდ გატანის საშუალებით."
@@ -3095,7 +3077,7 @@
         "სრული და არა მხოლოდ გამოწერების მიერ მოწოდებული შემცველობის მიღება"
       ],
       "Get all content available, not just that provided by subscriptions.": [
-        ""
+        "სრული და არა მხოლოდ გამოწერების მიერ მოწოდებული შემცველობის მიღება."
       ],
       "Get content and overrides for the host": [
         "ჰოსტის შემცველობის გადაფარვების მიღება"
@@ -3116,13 +3098,13 @@
         ""
       ],
       "Given criteria doesn't match any DEBs. Try changing your rule.": [
-        ""
+        "მითითებული პირობა არც ერთ DEB ფაილს არ ემთხვევა. სცადეთ, შეცვალოთ თქვენი პირობა."
       ],
       "Given criteria doesn't match any activation keys. Try changing your rule.": [
         ""
       ],
       "Given criteria doesn't match any hosts. Try changing your rule.": [
-        ""
+        "მითითებული პირობა არც ერთ ჰოსტს არ ემთხვევ. სცადეთ, შეცვალოთ თქვენი წესი."
       ],
       "Given criteria doesn't match any non-modular RPMs. Try changing your rule.": [
         ""
@@ -3155,7 +3137,7 @@
         ""
       ],
       "Help": [
-        ""
+        "დახმარება"
       ],
       "Helper": [
         "დამხმარე"
@@ -3194,7 +3176,7 @@
         "ჰოსტი (%{name}) ორგანიზაციას არ მიეკუთვნება"
       ],
       "Host Can Re-Register Only In Build": [
-        ""
+        "ამ აგებაში ჰოსტები მხოლოდ თავიდან შეგიძლიათ დაარეგისტრიროთ"
       ],
       "Host Collection name": [
         "ჰოსტის კოლექციის სახელი"
@@ -3212,16 +3194,16 @@
         "ჰოსტის ID"
       ],
       "Host Limit": [
-        ""
+        "ჰოსტის ლიმიტი"
       ],
       "Host Profile Assume": [
-        ""
+        "ჰოსტის პროფილის წინასწარი ჩათვლა"
       ],
       "Host Profile Can Change In Build": [
-        ""
+        "ამ აგებაში ჰოსტის პროფილი შეიძლება შიეცვალოს"
       ],
       "Host Tasks Workers Pool Size": [
-        ""
+        "ჰოსტის ამოცანების დამხმარე პროცესების პულის ზომა"
       ],
       "Host collection": [
         "ჰოსტის კოლექცია"
@@ -3257,7 +3239,7 @@
         ""
       ],
       "Host errata advisory": [
-        ""
+        "რჩევები ჰოსტის მორჩენილი პაჩების შესახებ"
       ],
       "Host group IDs": [
         "ჰოსტის ჯგუფების ID-ები"
@@ -3380,7 +3362,7 @@
         "სინქის გეგმის ID"
       ],
       "IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type.": [
-        ""
+        "დასაკოპირებელი პროდუქტების სია, რომლიდანაც რეპოზიტორიის ინფორმაცია გამარტივებულ ალტერნატიულ შემცველობის წყაროში დაკოპირდება. პროდუქტები არჩეული შემცველობის ტიპის მქონე სულ ცოტა ერთ რეპოზიტორიას უნდა შეიცავდნენ."
       ],
       "Id of a deb package to find repositories that contain the deb": [
         ""
@@ -3505,11 +3487,8 @@
       "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
         ""
       ],
-      "If specified, remove the first instance of a subscription with matching id and quantity": [
-        "თუ მითითებულია, წაიშლება გამოწერის პირველი გაშვებული ასლი შესაბამისი ID და რაოდენობით"
-      ],
       "If the smart proxies' assigned HTTP proxies should be used": [
-        ""
+        "უნდა იქნას თუ არა გამოყენებული ჭკვიან პროქსიებზე მინიჭებული HTTP პროქსიები"
       ],
       "If this is enabled, a composite content view may not be published or promoted unless the component content view versions that it includes exist in the target environment.": [
         ""
@@ -3551,7 +3530,7 @@
         ""
       ],
       "Ignorable content can be only set for Yum repositories.": [
-        ""
+        "გამოტოვებადი შემცველობის დაყენება მხოლოდ Yum-ის რეპოზიტორიებისთვის შეგიძლიათ."
       ],
       "Ignore %s cannot be set in combination with the 'Complete Mirroring' mirroring policy.": [
         ""
@@ -3572,7 +3551,7 @@
         "იგნორირებული ჰოსტები"
       ],
       "Image": [
-        ""
+        "ასლი"
       ],
       "Image digest": [
         ""
@@ -3605,7 +3584,7 @@
         "შემცველობის ხედის ვერსიის შემოტანა"
       ],
       "Import Default Content View": [
-        "ნაგულისხმები შემცველობის ხედის შემოტანა"
+        "ნაგულისხმევი შემცველობის ხედის შემოტანა"
       ],
       "Import Manifest": [
         "მანიფესტის შემოტანა"
@@ -3635,7 +3614,7 @@
         "რეპოზიტორიის შემოტანა"
       ],
       "Import a subscription manifest to give hosts access to Red Hat content.": [
-        ""
+        "შემოიტანეთ გამოწერის მანიფესტი, რომ ჰოსტებს Red Hat-ის შემცველობასთან წვდომა მისცეთ."
       ],
       "Import new manifest": [
         ""
@@ -3677,13 +3656,13 @@
         ""
       ],
       "Include all RPMs not associated to any errata": [
-        ""
+        "არც ერთ მორჩენილ პაჩთან ასოცირებული ყველა RPM-ის ჩასმა"
       ],
       "Include all module streams not associated to any errata": [
-        ""
+        "არც ერთ მორჩენილ პაჩთან ასოცირებული ყველა მოდულის ნაკადების ჩასმა"
       ],
       "Include content views generated by imports/exports. Defaults to false": [
-        "ჩართეთ შეტანის/გატანის შედეგად წარმოქმნილი შემცველობის ხედები. ნაგულისხმები: გამორთული"
+        "ჩართეთ შეტანის/გატანის შედეგად წარმოქმნილი შემცველობის ხედები. ნაგულისხმევი: გამორთული"
       ],
       "Include filter": [
         "ფილტრის ჩასმა"
@@ -3713,7 +3692,7 @@
         "ინკრემენტული განახლება მიუწვდომელია."
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
-        ""
+        "%{content_view_count} შემცველობის ხედის ვერსიის ინკრემენტული განახლება "
       ],
       "Incremental update": [
         "ინკრემენტული განახლება"
@@ -3773,7 +3752,7 @@
         ""
       ],
       "Installable updates": [
-        ""
+        "დაყენებადი განახლებები"
       ],
       "Installation status": [
         "დაყენების სტატუსი"
@@ -3845,7 +3824,7 @@
         "არასწორი event_type %s"
       ],
       "Invalid export format provided. Format must be one of  %s ": [
-        ""
+        "მითითებული გატანის ფორმატი არასწორია. ფორმატი უნდა იყოს ერთ-ერთი სიიდან  %s "
       ],
       "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'": [
         ""
@@ -3884,7 +3863,7 @@
         "მითითებულია არასწორი პარამეტრები - date_type %s-დან ერთერთი უნდა იყოს"
       ],
       "Invalid params provided - with_content must be one of %s": [
-        ""
+        "მითითებული პარამეტრები არასწორია - with_content_type უნდა იყოს %s-დან ერთ-ერთი"
       ],
       "Invalid path provided. Content can be only imported from file system. ": [
         ""
@@ -3896,13 +3875,13 @@
         "არასწორი რეპოზიტორია მეტამონაცემებში %{repo} შეცდომა=%{error}"
       ],
       "Invalid value specified for Container Image repositories.": [
-        ""
+        "კონტეინერის ასლის რეპოზიტორიებისთვის მითითებული მნიშვნელობა არასწორია."
       ],
       "Invalid value specified for ignorable content.": [
         "დასაიგნორირებელი შემცველობისთვის მითითებული მნიშვნელობა არასწორია."
       ],
       "Invalid value specified for ignorable content. Permissible values %s": [
-        ""
+        "გამოტოვებადი შემცველობის არასწორი მნიშვნელობა. დასაშვები მნიშვნელობებია %s"
       ],
       "Issued": [
         "გამოშვება"
@@ -3911,7 +3890,7 @@
         "გამომცემელი"
       ],
       "It is only allowed for Non-Redhat Yum repositories.": [
-        ""
+        "დაშვებულია, მხოლოდ, არა-Redhat Yum-ის რეპოზიტორიებისთვის."
       ],
       "It's not possible to bulk remove versions from a rolling content view.": [
         ""
@@ -3929,6 +3908,9 @@
         ""
       ],
       "It's not possible to promote a rolling content view.": [
+        ""
+      ],
+      "It's not possible to provide environment_ids for anything other than a rolling content view.": [
         ""
       ],
       "It's not possible to publish a rolling content view.": [
@@ -3992,7 +3974,7 @@
         "Katello: პაკეტების წაშლა ძებნის მოთხოვნის მიხედვით"
       ],
       "Katello: Resolve Traces": [
-        ""
+        "Katello: ტრეისების ამოხსნა"
       ],
       "Katello: Service Restart": [
         "Katello: სერვისის რესტარტი"
@@ -4007,7 +3989,7 @@
         "Katello: პაკეტების განახლება ძებნის მოთხოვნის მიხედვით"
       ],
       "Katello: Upload Profile": [
-        ""
+        "Katello: პროფილის ატვირთვა"
       ],
       "Keep latest packages": [
         ""
@@ -4058,10 +4040,10 @@
         "ბოლო განახლება :"
       ],
       "Last seen": [
-        ""
+        "Ბოლო ნახვა"
       ],
       "Last sync": [
-        ""
+        "ბოლო სინქრონიზაცია"
       ],
       "Last task": [
         "ბოლო ამოცანა"
@@ -4079,10 +4061,10 @@
         ""
       ],
       "Legacy UI": [
-        ""
+        "მოძველებული UI"
       ],
       "Legacy content host UI": [
-        ""
+        "მოძველებული შემცველობის ჰოსტის ინტერფეისი"
       ],
       "Less than": [
         "ნაკლებობა"
@@ -4130,7 +4112,7 @@
         "სიცოცხლის ციკლის გარემოს ID"
       ],
       "Lifecycle environment must be specified": [
-        ""
+        "ცხოვრების ციკლის გარემოების მითითება აუცილებელია"
       ],
       "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made.": [
         ""
@@ -4145,7 +4127,7 @@
         ""
       ],
       "Limit content to Red Hat / custom": [
-        ""
+        "შემცველობის შეზღუდვა Red Hat / ხელით მითითებულზე"
       ],
       "Limit content to enabled / disabled / overridden": [
         "შემცველობის შეზღუდვა ჩართულებზე / გამორთულებზე / გადაარულებზე"
@@ -4214,7 +4196,7 @@
         "ამ შემცველობის ხედზე მიმაგრებული კომპონენტების სია"
       ],
       "List content counts for the smart proxy": [
-        ""
+        "შემცველობის რაოდენობების სია ჭკვიანი პროქსისთვის"
       ],
       "List content view environments": [
         ""
@@ -4298,7 +4280,7 @@
         "ჩართული რეპოზიტორიების სია"
       ],
       "List of errata ids to exclude and not run an action on, (ex: RHSA-2019:1168)": [
-        ""
+        "ქმედებიდან გამოსარიცხი მორჩენილი პაჩების ID-ები (მაგ: RHSA-2019:1168)"
       ],
       "List of errata ids to perform an action on, (ex: RHSA-2019:1168)": [
         "ქმედების გადასატარებელი მორჩენილი პაჩების ID-ები (მაგ: RHSA-2019:1168)"
@@ -4329,6 +4311,9 @@
       ],
       "List of hypervisor guest uuids": [
         "ჰაიპერვიზორის სტუმრების UUID-ების სია"
+      ],
+      "List of lifecycle environments for rolling content views": [
+        ""
       ],
       "List of package group names (Deprecated)": [
         "პაკეტის ჯგუფების სია (მოძველებული)"
@@ -4439,7 +4424,7 @@
         "დაბალი"
       ],
       "Maintenance support": [
-        ""
+        "რემონტის მხარდაჭერა"
       ],
       "Make copy of a content view": [
         "შემცველობის ხედის კოპირება"
@@ -4475,7 +4460,7 @@
         "მანიფესტი წაიშალა"
       ],
       "Manifest does not have a valid subscription": [
-        ""
+        "მანიფესტს სწორი გამოწერა არ გააჩნია"
       ],
       "Manifest expired": [
         ""
@@ -4502,7 +4487,7 @@
         ""
       ],
       "Manifest refresh timeout": [
-        ""
+        "მანიფესტის განახლების ვადა"
       ],
       "Manifest refreshed": [
         "მანიფესტი განახლდა"
@@ -4514,7 +4499,7 @@
         "ხელით ავთენტიკაცია"
       ],
       "Mark Content Host Statuses as Unknown for %s": [
-        ""
+        "%s-სთვის შემცველობის ჰოსტის სტატუსების უცნობად დაყენება"
       ],
       "Matching RPMs based on your created filter rule. Remember, RPM filters don't apply to modular RPMs.": [
         ""
@@ -4622,7 +4607,7 @@
         ""
       ],
       "Multi-entitlement": [
-        ""
+        "მრავალ-უფლებიანი"
       ],
       "Multi-environment activation key(s) affected": [
         ""
@@ -4748,7 +4733,7 @@
         "ახლახანს გამოქვეყნებული"
       ],
       "Newly published version will be the same as the previous version.": [
-        ""
+        "ახლად გამოცემული ვერსია იგივე იქნება, რაც წინა ვერსია იყო."
       ],
       "No": [
         "არა"
@@ -4772,7 +4757,7 @@
         "SLA მორგებული არაა"
       ],
       "No URL found for a container registry. Please check the configuration.": [
-        ""
+        "რეესტრს არც ერთი ბმული შეიცავს. შეამოწმეთ კონფიგურაცია."
       ],
       "No Version of Content View %{component} already exists as a component of the composite Content View %{composite} version %{version}": [
         ""
@@ -4793,7 +4778,7 @@
         "საჩვენებელი არტეფაქტების გარეშე"
       ],
       "No available component content view updates": [
-        ""
+        "კომპონენტის შემცველობის ხედის განახლებების გარეშე"
       ],
       "No available debs found for search term '%s'. Check the host's content view environments and already-installed debs.": [
         ""
@@ -4802,10 +4787,10 @@
         ""
       ],
       "No available repository or filter updates": [
-        ""
+        "რეპოზიტორიის ან ფილტრის განახლებების გარეშე"
       ],
       "No change": [
-        ""
+        "ცვლილების გარეშე"
       ],
       "No content": [
         "შიგთავსის გარეშე"
@@ -4835,13 +4820,13 @@
         "შემცველობის ხედების გარეშე"
       ],
       "No content views available for the selected environment": [
-        ""
+        "მონიშნული გარემოსთვის შემცველობის ხედები ხელმისაწვდომი არაა"
       ],
       "No content views to add yet": [
-        ""
+        "დასამატებელი შემცველობის ხედების გარეშე"
       ],
       "No content views yet": [
-        ""
+        "შემცველობის ხედების გარეშე"
       ],
       "No content_view_version_ids provided": [
         "Content_view_version_ids მიწოდებული არაა"
@@ -4856,22 +4841,22 @@
         ""
       ],
       "No enabled repositories match your search criteria.": [
-        ""
+        "თქვენს ძებნის პირობებს არც ერთი რეპოზიტორია არ ემთხვევა."
       ],
       "No environments": [
         "გარემოების გარეშე"
       ],
       "No errata filter rules yet": [
-        ""
+        "მორჩენლი პაჩების გაფილტვრის წესების გარეშე"
       ],
       "No errata found.": [
         ""
       ],
       "No errata matching given search query": [
-        ""
+        "ძებნის მოთხოვნას მორჩენილი პაჩი არ შეესაბამება"
       ],
       "No errata to add yet": [
-        ""
+        "დასამატებელი მონიშნული პაჩების გარეშე"
       ],
       "No errors": [
         "შეცდომების გარეშე"
@@ -4883,10 +4868,10 @@
         "ფაილი არ ატვირთულა"
       ],
       "No filters yet": [
-        ""
+        "ფილტრების გარეშე"
       ],
       "No history yet": [
-        ""
+        "ისტორიის გარეშე"
       ],
       "No host collections": [
         "ჰოსტის კოლექციების გარეშე"
@@ -4898,13 +4883,13 @@
         "ჯერ ჰოსტების კოლექციები არ გაქვთ"
       ],
       "No hosts found": [
-        ""
+        "ჰოსტები ნაპოვნი არაა"
       ],
       "No hosts registered with subscription-manager found in selection.": [
-        ""
+        "მონიშნულში subscription-manager-ით რეგისტრირებული ჰოსტები ვერ ვიპოვე."
       ],
       "No hosts were specified": [
-        ""
+        "ჰოსტები მითითებული არაა"
       ],
       "No installed debs found for search term '%s'": [
         ""
@@ -4940,7 +4925,7 @@
         "აქტივაციის შესაბამისი გასაღებები ნაპოვნი არაა."
       ],
       "No matching alternate content sources found": [
-        ""
+        "შესაბამის ალტერნატიული შემცველობის წყარო ნაპოვნი არაა"
       ],
       "No matching content views found": [
         "შესაბამისი შემცველბის ხედები ნაპოვნი არაა"
@@ -4964,7 +4949,7 @@
         "შესაბამისი ჰოსტები არ არსებობს."
       ],
       "No matching non-modular RPM found.": [
-        ""
+        "შესატყვისი არამოდულური RPM ვერ ვიპოვე."
       ],
       "No matching packages found": [
         "შესატყვისი პაკეტი ვერ მოიძებნა"
@@ -4976,22 +4961,22 @@
         "რეპოზიტორიის გამოთხოვილი სეტი არ არსებობს"
       ],
       "No matching traces found": [
-        ""
+        "შესაბამისი ტრეისები ვერ ვიპოვე"
       ],
       "No matching version found": [
         "ვერსია არ ემთხვევა"
       ],
       "No module stream filter rules yet": [
-        ""
+        "მოდულის ნაკადის ფილტრის წესები ჯერ აღწერილი არაა"
       ],
       "No module streams to add yet.": [
-        ""
+        "დასამატებელი მოდულის ნაკადები ჯერ აღწერილი არაა."
       ],
       "No new packages installed": [
         "ახალი პაკეტები არ დაყენებულა"
       ],
       "No package groups yet": [
-        ""
+        "პაკეტების ჯგუფების გარეშე"
       ],
       "No packages": [
         "პაკეტების გარეშე"
@@ -5039,13 +5024,13 @@
         "ახლახანს სინქრონიზებული პროდუქტების გარეშე"
       ],
       "No recurring logic tied to the sync plan.": [
-        ""
+        "სინქრონიზაციის გეგმაზე გამეორებადი ლოგიკა მიბმული არაა."
       ],
       "No repositories added yet": [
-        ""
+        "ჯერ რეპოზიტორიები დამატებული არაა"
       ],
       "No repositories available to add": [
-        ""
+        "დასამატებელი რეპოზიტორიების გარეშე"
       ],
       "No repositories available.": [
         "რეპოზიტორიების გარეშე."
@@ -5066,7 +5051,7 @@
         "საჩვენებელი რეპოზიტორიის სეტების გარეშე."
       ],
       "No rules yet": [
-        ""
+        "წესების გარეშე"
       ],
       "No services defined, is this class extended?": [
         "სერვსები აღწერილი არაა. კლასი გაფართოებულია?"
@@ -5075,7 +5060,7 @@
         "დაწყების თარიღი ამჟამად მიუწვდომელია."
       ],
       "No subscriptions match your search criteria.": [
-        ""
+        "თქვენს ძებნის პირობებს არც ერთი გამოწერა არ ემთხვევა."
       ],
       "No syncable repositories found for selected products and options.": [
         "მონიშნული პროდუქტებისა და პარამეტრებისთვის დასასინქრონებელი რეპოზიტორიები აღმოჩენილი არაა."
@@ -5090,7 +5075,7 @@
         ""
       ],
       "No versions yet": [
-        ""
+        "ვერსიების გარეშე"
       ],
       "Non-security errata applicable": [
         "შესატყვისი არა-უსაფრთხოების მორჩენილი პაჩები"
@@ -5126,10 +5111,10 @@
         "ჯერ გამოქვეყნებული არაა"
       ],
       "Note: Deleting a subscription manifest is STRONGLY discouraged.": [
-        ""
+        "გაფრთხილება: გამოწერის მანიფესტის წაშლას *არც ერთ* შემთხვევაში არ გირჩევთ."
       ],
       "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:": [
-        ""
+        "გაფრთხილება: გამოწერის მანიფესტის წაშლას *არც ერთ* შემთხვევაში არ გირჩევთ. მანიფესტის წაშლა გამოიწვევს:"
       ],
       "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available.": [
         ""
@@ -5153,7 +5138,7 @@
         "გამოსაყოფი რიცხვი"
       ],
       "OS": [
-        ""
+        "ოს-ი"
       ],
       "OS restricted to {osRestricted}. If host OS does not match, the repository will not be available on this host.": [
         ""
@@ -5180,7 +5165,7 @@
         "საჭიროებისამებრ"
       ],
       "On the RHUA Instance, check the available repositories.": [
-        ""
+        "RHUA-ის გაშვებულ ასლზე გადაამოწმეთ ხელმისაწვდომი რეპოზიტორიები."
       ],
       "On-disk location for pulp 3 exported repositories": [
         ""
@@ -5230,9 +5215,6 @@
       "Organization ID": [
         "ორგანზაციის ID"
       ],
-      "Organization ID is required": [
-        "ორგანიზაციის ID აუცილებელია"
-      ],
       "Organization ID or title": [
         ""
       ],
@@ -5270,7 +5252,7 @@
         ""
       ],
       "Orphaned Content Protection Time": [
-        ""
+        "მიტოვებული შემცველობის დაცვის დრო"
       ],
       "Orphaned content facets for deleted hosts exist for the content view and environment. Please run rake task : katello:clean_orphaned_facets and try again!": [
         ""
@@ -5288,10 +5270,10 @@
         "Activation_key-ისთვის შემცველობის გადაფარვა"
       ],
       "Override key or name. Note if name is not provided the default name will be 'enabled'": [
-        "პარამეტრის გასაღების ან სახელის გადაფარვა. დაიმახსოვრეთ, რომ თუ სახელი მითითებული არაა, ნაგულისხმები სახელი იქნება 'enabled'"
+        "პარამეტრის გასაღების ან სახელის გადაფარვა. დაიმახსოვრეთ, რომ თუ სახელი მითითებული არაა, ნაგულისხმევი სახელი იქნება 'enabled'"
       ],
       "Override parameter key or name. Note if name is not provided the default name will be 'enabled'": [
-        "პარამეტრის გასაღების ან სახელის გადაფარვა. დაიმახსოვრეთ, რომ თუ სახელი მითითებული არაა, ნაგულისხმები სახელი იქნება 'enabled'"
+        "პარამეტრის გასაღების ან სახელის გადაფარვა. დაიმახსოვრეთ, რომ თუ სახელი მითითებული არაა, ნაგულისხმევი სახელი იქნება 'enabled'"
       ],
       "Override the major version number": [
         "ვერსიის ძირითადი რიცხვის გადაფარვა"
@@ -5300,7 +5282,7 @@
         "ვერსიის მეორადი რიცხვის გადაფარვა"
       ],
       "Override to a boolean value or 'default'": [
-        "ლოგიკურ ან ნაგულისხმებ მნიშვნელობამდე გადაფარვა"
+        "ლოგიკურ ან ნაგულისხმევ მნიშვნელობამდე გადაფარვა"
       ],
       "Override to disabled": [
         "გადაფარვა გამორთვამდე"
@@ -5504,7 +5486,7 @@
         ""
       ],
       "Perform a module stream action via Katello interface": [
-        ""
+        "მოდულის ნაკადის ქმედება Katello-ის ინტერფეისით"
       ],
       "Perform an Incremental Update on one or more Content View Versions": [
         ""
@@ -5522,10 +5504,10 @@
         "ბიბლიოთეკაში რეპოზიტორიის ინკრემენტული გატანის განხორციელება."
       ],
       "Performs an incremental-export of a content view version.": [
-        ""
+        "შემცველობის ხედის ვერსიის ინკრემენტული გატანის შესრულება."
       ],
       "Performs an incremental-export of the repositories in library.": [
-        ""
+        "ბიბლიოთეკაში რეპოზიტორიების ინკრემენტული გატანის შესრულება."
       ],
       "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.": [
         ""
@@ -5543,7 +5525,7 @@
         "დაამატეთ რეპოზიტორიები."
       ],
       "Please create some content views.": [
-        ""
+        "ჯერ შექმენით შემცველობის ხედები."
       ],
       "Please enter a positive number above zero": [
         "შეიყვანეთ ნულზე დიდი დადებითი რიცხვი"
@@ -5573,7 +5555,7 @@
         ""
       ],
       "Please select one from the list below and you will be redirected.": [
-        ""
+        "აირჩიეთ ერთი-ერთი ქვემო სიიდან და გადაგამისამართებთ."
       ],
       "Please wait while the task starts..": [
         "მოითმინეთ, სანამ ამოცანა გაეშვება.."
@@ -5615,7 +5597,7 @@
         "რეპოზიტორიის სეტებში ძებნის პრობლემა"
       ],
       "Problem searching traces": [
-        ""
+        "ტრეისების მოძებნა შეუძლებელია"
       ],
       "Product": [
         "პროდუქტი"
@@ -5651,7 +5633,7 @@
         ""
       ],
       "Product label": [
-        ""
+        "პროდუქტის ჭდე"
       ],
       "Product label '%s' is ambiguous. Try using an id-based container name.": [
         ""
@@ -5716,6 +5698,9 @@
       "Promotion to Environment": [
         "გარემოს წინ წაწევა"
       ],
+      "Provide credentials if the registry requires authentication": [
+        ""
+      ],
       "Provide the required information and click {update} below to save changes.": [
         ""
       ],
@@ -5732,7 +5717,7 @@
         "პროქსები"
       ],
       "Proxy sync failure": [
-        ""
+        "პროქსის სინქრონიზაცია ჩავარდა"
       ],
       "Public": [
         "საჯარო"
@@ -5771,7 +5756,7 @@
         "Pulp"
       ],
       "Pulp 3 export destination filepath": [
-        ""
+        "Pulp 3-ის გატანის სამიზნე ფაილის ბილიკი"
       ],
       "Pulp 3 is not enabled on Smart proxy!": [
         "ჭკვიან პროქსიზე Pulp3 ჩართული არაა!"
@@ -5842,15 +5827,6 @@
       "Quantity of entitlements to bind": [
         ""
       ],
-      "Quantity of specified subscription to remove": [
-        "მითითებული წასაშლელი გამოწერების რაოდენობა"
-      ],
-      "Quantity of this subscription to add": [
-        "დასამატებელი გამოწერების რაოდენობა"
-      ],
-      "Quantity of this subscriptions to add": [
-        "დასამატებელი გამოწერების რაოდენობა"
-      ],
       "Quantity to Allocate": [
         "გამოსაყოფი რაოდენობა"
       ],
@@ -5864,10 +5840,10 @@
         "RH-ის რეპოები"
       ],
       "RHEL Lifecycle status": [
-        ""
+        "RHEL-ის ცხოვრების ციკლის სტატუსი"
       ],
       "RHEL lifecycle": [
-        ""
+        "RHEL-ის ცხოვრების ციკლი"
       ],
       "RHUI": [
         "RHUI"
@@ -5915,28 +5891,28 @@
         "მოყოლილი ჰოსტების თავიდან მინიჭება"
       ],
       "Reboot host": [
-        ""
+        "ჰოსტის გადატვირთვა"
       ],
       "Reboot required": [
         "საჭიროა გადატვირთვა"
       ],
       "Reclaim Space": [
-        ""
+        "ადგილის თავიდან გამოთხოვა"
       ],
       "Reclaim space from On Demand repositories": [
-        ""
+        "სივრცის მოთხოვნა ყველა მოთხოვნით საცავიდან"
       ],
       "Reclaim space from all On Demand repositories on a smart proxy": [
         "მოითხოვეთ სივრცე ყველა მოთხოვნით საცავიდან ჭკვიანი პროქსიზე"
       ],
       "Reclaim space from an On Demand repository": [
-        ""
+        "სივრცის მოთხოვნა ყველა მოთხოვნით რეპოზიტორიიდან"
       ],
       "Recommended Repositories": [
         "რეკომდენდებული რეპოზიტორიები"
       ],
       "Red Hat": [
-        ""
+        "Red Hat"
       ],
       "Red Hat CDN": [
         "Red Hat CDN"
@@ -5951,16 +5927,16 @@
         "Red Hat-ის რეპოზიტორიების გვერდი"
       ],
       "Red Hat content will be consumed from an {type}.": [
-        ""
+        "Red Hat-ის შემცველობა {type}-დან გაიხარჯება."
       ],
       "Red Hat content will be consumed from the {type}.": [
-        ""
+        "Red Hat-ის შემცველობა {type}-დან გაიხარჯება."
       ],
       "Red Hat content will be consumed from {type}.": [
-        ""
+        "Red Hat-ის შემცველობა {type}-დან გაიხარჯება."
       ],
       "Red Hat content will be enabled and consumed via the {type} process.": [
-        ""
+        "Red Hat-ის შემცველობა {type} პროცესის გავლით ჩაირთვება და გახარჯება."
       ],
       "Red Hat products cannot be manipulated.": [
         "Red Hat-ის პროდუქტები ვერ ჩასწორდება."
@@ -5987,7 +5963,7 @@
         ""
       ],
       "Refresh all alternate content sources": [
-        ""
+        "ყველა შემცველობის ალტერნატიული წყაროს განახლება"
       ],
       "Refresh alternate content sources": [
         "შემცველობის ალტერნატიული წყაროების განახლება"
@@ -5996,16 +5972,16 @@
         ""
       ],
       "Refresh applicability": [
-        ""
+        "შესატყვისობის განახლება"
       ],
       "Refresh counts": [
-        ""
+        "განახლების რაოდენობები"
       ],
       "Refresh errata applicability": [
-        ""
+        "მორჩენილი პაჩების შესატყვისობის განახლება"
       ],
       "Refresh package applicability": [
-        ""
+        "პაკეტების შესატყვისობის განახლება"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         ""
@@ -6018,9 +5994,6 @@
       ],
       "Register a host with subscription and information": [
         "დაარეგისტრირეთ ჰოსტი გამოწერით და ინფორმაციით"
-      ],
-      "Register host '%s' before attaching subscriptions": [
-        "ჰოსტის (%s) რეგისტრაცია გამოწერების მინიჭებამდე"
       ],
       "Registered": [
         "რეგისტრირებულია"
@@ -6038,7 +6011,7 @@
         ""
       ],
       "Registering to multiple environments is not enabled.": [
-        ""
+        "ერთზე მეტ გარემოში რეგისტრაცია ჩართული არაა."
       ],
       "Registration details": [
         "რეგისტრაციის დეტალები"
@@ -6052,20 +6025,23 @@
       "Registry name pattern will result in invalid container image name of member repositories": [
         ""
       ],
-      "Related composite content views": [
+      "Registry token expiration time": [
         ""
+      ],
+      "Related composite content views": [
+        "შესაბამისი კომპოზიტური შემცველობის ხედები"
       ],
       "Related composite content views: ": [
-        ""
+        "შესაბამისი კომპოზიტური შემცველობის ხედები: "
       ],
       "Related content views": [
-        ""
+        "შესაბამისი შემცველობის ხედები"
       ],
       "Related content views will appear here when created.": [
         ""
       ],
       "Related content views: ": [
-        ""
+        "შესაბამისი შემცველობის ხედები: "
       ],
       "Release": [
         "გამოცემა"
@@ -6089,10 +6065,10 @@
         "მონაცემების თავიდან ცატვირთვა"
       ],
       "Remote execution is enabled.": [
-        ""
+        "დაშორებული შესრულება ჩართულია."
       ],
       "Remote execution job '${description}' failed.": [
-        ""
+        "დავალების '${description}' დაშორებული გაშვების შეცდომა."
       ],
       "Remove": [
         "წაშლა"
@@ -6143,7 +6119,7 @@
         "მოდულის ნაკადის წაშლა"
       ],
       "Remove one or more host collections from one or more hosts": [
-        ""
+        "ერთი ან მეტი ჰოსტიდან ერთი ან მეტი ჰოსტის კოლექციის წაშლა"
       ],
       "Remove one or more subscriptions from an upstream manifest": [
         ""
@@ -6162,18 +6138,6 @@
       ],
       "Remove products from sync plan": [
         "სინქრის გეგმიდან პროდუქტების წაშლა"
-      ],
-      "Remove subscriptions": [
-        "გამოწერის წაშლა"
-      ],
-      "Remove subscriptions from %s": [
-        "გამოწერების წაშლა %s-დან"
-      ],
-      "Remove subscriptions from a host": [
-        ""
-      ],
-      "Remove subscriptions from one or more hosts": [
-        "გამოწერის წაშლა ერთი ან მეტი ჰოსტიდან"
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "წაშალეთ ვერსიები შემცველობის ხედიდან და ხელახლა მინიჭეთ სისტემები და გასაღებები"
@@ -6203,13 +6167,13 @@
         ""
       ],
       "Repo ID": [
-        ""
+        "რეპოზიტორიის ID"
       ],
       "Repo Type": [
         "რეპოს ტიპი"
       ],
       "Repo label": [
-        ""
+        "რეპოს ჭდე"
       ],
       "Repositories": [
         "საცავები"
@@ -6233,7 +6197,7 @@
         ""
       ],
       "Repository %{label} failed to synchronize": [
-        ""
+        "რეპოზიტორიის %{label} სინქრონიზაცია ჩავარდა"
       ],
       "Repository '%(repoName)s' has been disabled.": [
         "რეპოზიტორია '%(repoName)s' გაითიშა."
@@ -6242,7 +6206,7 @@
         "რეპოზიტორია '%(repoName)s' ჩაირთო."
       ],
       "Repository ID": [
-        ""
+        "რეპოზიტორიის ID"
       ],
       "Repository Id associated with the kickstart repo used for provisioning": [
         ""
@@ -6251,7 +6215,7 @@
         ""
       ],
       "Repository cannot be disabled since it has already been promoted.": [
-        ""
+        "რეპოზიტორიას ვერ გამორთავთ, რადგან ის უკვე დაწინაურებულია."
       ],
       "Repository has already been cloned to %{cv_name} in environment %{to_env}": [
         ""
@@ -6266,7 +6230,7 @@
         ""
       ],
       "Repository name": [
-        ""
+        "რეპოზიტორიის სახელი"
       ],
       "Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema.": [
         ""
@@ -6311,10 +6275,10 @@
         ""
       ],
       "Repository sync failure": [
-        ""
+        "რეპოზიტორიის სინქრონიზაცია ჩავარდა"
       ],
       "Repository type": [
-        ""
+        "რეპოზიტორიის ტიპი"
       ],
       "Republish Repositories of %{name} %{version}": [
         "%{name} %{version}-ის რეპოზიტორიების თავიდან გამოცემა"
@@ -6323,7 +6287,7 @@
         "ვერსიების რეპოზიტორიების თავიდან გამოჩენა"
       ],
       "Republish repository metadata": [
-        ""
+        "რეპოზიტორიის მეტამონაცემების თავიდან გამოქვეყნება"
       ],
       "Requested access to '%s' is denied": [
         ""
@@ -6335,10 +6299,10 @@
         "მოთხოვნები სწორ yaml-ს არ წარმოადგენენ."
       ],
       "Requirements yaml should be a key-value pair structure.": [
-        ""
+        "მოთხოვნების yaml ფაილს გასაღები-მნიშვნელობის წყვილების სტრუქტურ უნდა ჰქონდეს."
       ],
       "Requirements yaml should have a 'collections' key": [
-        ""
+        "მოთხოვნების yaml ფაილს 'collections' გასაღები უნდა ჰქონდოდა"
       ],
       "Requires Virt-Who": [
         "ესაჭიროება Virt-Who"
@@ -6353,19 +6317,19 @@
         "მოდულის ნაკადის საწყის მდგომარეობაზე დაბრუნება"
       ],
       "Reset to default": [
-        "ნაგულისხმებ მნიშვნელობაზე დაბრუნება"
+        "ნაგულისხმევ მნიშვნელობაზე დაბრუნება"
       ],
       "Reset to the default state": [
-        "ნაგულისხმებ მდგომარეობაზე დაბრუნება"
+        "ნაგულისხმევ მდგომარეობაზე დაბრუნება"
       ],
       "Resolve traces": [
-        ""
+        "ტრეისების ამოხსნა"
       ],
       "Resolve traces for one or more hosts": [
-        ""
+        "ერთი ან მეტი ჰოსტისთვის ტრეისის ამოხსნა"
       ],
       "Resolve traces via Katello interface": [
-        ""
+        "ტრეისების Katello-ის ინტერფეისით ამოხსნა"
       ],
       "Resource": [
         "რესურსი"
@@ -6393,6 +6357,9 @@
       ],
       "Return Red Hat (non-custom) products only": [
         "მხოლოდ Red Hat-ის (არა-ხელით მითითებული) პროდუქტების დაბრუნება"
+      ],
+      "Return a list of installed debs distinct by name": [
+        ""
       ],
       "Return a list of installed packages distinct by name": [
         ""
@@ -6433,7 +6400,7 @@
       "Return only errata of a particular severity (None, Low, Moderate, Important, Critical)": [
         ""
       ],
-      "Return only errata of a particular type (security, bugfix, enhancement)": [
+      "Return only errata of a particular type (security, bugfix, enhancement, other)": [
         ""
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
@@ -6458,7 +6425,7 @@
         ""
       ],
       "Return same, different or all results": [
-        ""
+        "იგივე, განსხვავებული ან ყველა შედეგის დაბრუნება"
       ],
       "Return subscriptions that match installed products of the specified host": [
         ""
@@ -6470,7 +6437,7 @@
         ""
       ],
       "Return the content of a repo gpg key, used directly by yum": [
-        ""
+        "აბრუნებს რეპოზიტორიის GPG გასაღების შემცველობას. გამოიყენება პირდაპირ yum-ის მიერ"
       ],
       "Return the enabled content types": [
         "აბრუნებს შემცველობის ჩართულ ტიპებს"
@@ -6503,10 +6470,10 @@
         ""
       ],
       "Review the information below and click ": [
-        ""
+        "გადახედეთ ინფორმას და დააწკაპუნეთ "
       ],
       "Review your currently selected changes for ": [
-        ""
+        "გადაავლეთ თვალი თქვენს ამჟამად არჩეულ ცვლილებებს სამიზნისთვის "
       ],
       "Role": [
         "როლი"
@@ -6536,7 +6503,7 @@
         "სინქრონიზაციის გეგმის გაშვება:"
       ],
       "Run job invocation": [
-        ""
+        "დავალების ჩასწორების გაშვება"
       ],
       "Running": [
         "მიმდინარეობს შესრულება"
@@ -6574,6 +6541,9 @@
       "Save": [
         "შენახვა"
       ],
+      "Save Environments": [
+        ""
+      ],
       "Saving alternate content source...": [
         "შემცველობის ალტერნატიული წყაროს შენახვა..."
       ],
@@ -6584,10 +6554,10 @@
         ""
       ],
       "Schema version 1": [
-        ""
+        "სქემის ვერსია 1"
       ],
       "Schema version 2": [
-        ""
+        "სქემის ვერსია 2"
       ],
       "Search": [
         "ძებნა"
@@ -6596,7 +6566,7 @@
         "საძებნი სტრიქონი"
       ],
       "Search available Debian packages": [
-        ""
+        "ხელმისაწვდომი Debian-ის პაკეტების ძებნა"
       ],
       "Search available packages": [
         "ხელმისაწვდომი პაკეტების ძებნა"
@@ -6605,7 +6575,7 @@
         "ჰოსტების კოლექციების ძებნა"
       ],
       "Search pattern (defaults to '*')": [
-        "ძებნის შაბლონი (ნაგულისხმებად \\\"*\\\""
+        "ძებნის შაბლონი (ნაგულისხმევად \\\"*\\\""
       ],
       "Search string": [
         "საძებნი სტრიქონი"
@@ -6662,7 +6632,7 @@
         "აირჩიეთ კლიენტის გასაღები"
       ],
       "Select a content source first": [
-        ""
+        "ჯერ აირჩიეთ შემცველობის წყარო"
       ],
       "Select a content view": [
         "შემცველობის წყაროს არჩევა"
@@ -6674,7 +6644,7 @@
         ""
       ],
       "Select a lifecycle environment first": [
-        ""
+        "ჯერ აირჩიეთ ცხოვრების ციკლის გარემო"
       ],
       "Select a lifecycle environment from the available promotion paths to promote new version.": [
         ""
@@ -6686,7 +6656,7 @@
         ""
       ],
       "Select a source": [
-        ""
+        "აირჩიეთ წყარო"
       ],
       "Select action": [
         ""
@@ -6716,7 +6686,7 @@
         ""
       ],
       "Select attributes for ${akDetails.name}": [
-        ""
+        "აირჩიეთ ატრიბუტები ${akDetails.name}-სთვის"
       ],
       "Select available version of ${truncate(cvName)} to use": [
         ""
@@ -6773,7 +6743,7 @@
         "აირჩიეთ პროდუქტები"
       ],
       "Select products to associate to this source.": [
-        ""
+        "აირჩიეთ ამ წყაროსთან ასოცირებული პროდუქტები."
       ],
       "Select repository sets": [
         ""
@@ -6782,7 +6752,7 @@
         "აირჩიეთ მწკრივი"
       ],
       "Select smart proxies to be used with this source.": [
-        ""
+        "აირჩიეთ ამ წყაროსთან ერთად გამოსაყენებელი ჭკვიანი პროქსიები."
       ],
       "Select smart proxy": [
         "აირჩიეთ ჭკვიანი პროქსი"
@@ -6820,11 +6790,14 @@
       "Service Level (SLA)": [
         "სერვისის დონე (SLA)"
       ],
+      "Service level": [
+        ""
+      ],
       "Service level of host": [
         "ჰოსტის სერვისის დონე"
       ],
-      "Service level to be used for autoheal": [
-        "ავტომატურ წამლობაში გამოყენებული სერვისის დონე"
+      "Service level, e.g. SELF-SUPPORT": [
+        ""
       ],
       "Set content overrides": [
         ""
@@ -6849,9 +6822,6 @@
       ],
       "Sets the system purpose usage": [
         "სისტემის დანიშნულების გამოყენების დაყენება"
-      ],
-      "Sets whether the Host will autoheal subscriptions upon checkin": [
-        ""
       ],
       "Setting 'default_location_subscribed_hosts' is not set to a valid location.": [
         ""
@@ -6911,7 +6881,7 @@
         "ყველას ჩვენება"
       ],
       "Show all repository sets": [
-        ""
+        "ყველა რეპოზიტორიის სეტის ჩვენება"
       ],
       "Show an activation key": [
         "აქტივაციის გასაღების ჩვენება"
@@ -6935,7 +6905,7 @@
         "სრული აღწერის ჩვენება"
       ],
       "Show hosts associated to an activation key": [
-        ""
+        "აქტივაციის გასაღებთან ასოცირებული ჰოსტების ჩვენება"
       ],
       "Show organization": [
         "ორგანიზაციის ჩვენება"
@@ -6947,7 +6917,7 @@
         "შემცველობის ჰოსტისთვის ხელმისაწვდომი რელიზების ჩვენება"
       ],
       "Show repositories": [
-        ""
+        "რეპოზიტორიების ჩვენება"
       ],
       "Show repositories enabled on the host that are known to Katello": [
         "Katello-სთვის ცნობილ ჰოსტზე ჩართული რეპოზიტორიების ჩვენება"
@@ -6965,10 +6935,10 @@
         "ვერსიის ინფორმაციის ჩვენება"
       ],
       "Simple Content Access has been disabled for '%{subject}'.": [
-        ""
+        "'%{subject}'-სთვის მარტივი შემცველობის წვდომა გათიშულია."
       ],
       "Simple Content Access has been enabled for '%{subject}'.": [
-        ""
+        "'%{subject}'-სთვის მარტივი შემცველობის წვდომა ჩაირთო."
       ],
       "Simple Content Access is the only supported content access mode": [
         ""
@@ -6989,18 +6959,21 @@
         "ჭკვიანი პროქსიები"
       ],
       "Smart proxy ID": [
-        ""
+        "ჭკვიანი პროქსის ID"
       ],
       "Smart proxy IDs": [
         "ჭკვიანი პროქსის ID-ები"
       ],
       "Smart proxy content count refresh has started in the background": [
-        ""
+        "ჭკვიანი პროქსის შემცველობის რაოდენობის განახლება ფონურად გაეშვა"
       ],
       "Smart proxy content source not found!": [
         "ჭკვიანი პროქსის შემცველობის წყარო არ არსებობს!"
       ],
       "Smart proxy name": [
+        "ჭკვიანი პროქსის სახელი"
+      ],
+      "Smart proxy verify content checksum has started in the background": [
         ""
       ],
       "Sockets": [
@@ -7028,10 +7001,10 @@
         ""
       ],
       "Some hosts are not registered as content hosts and will be ignored.": [
-        ""
+        "ზოგიერთი ჰოსტი არაა დარეგისტრირებული, როგორც შემცველობის ჰოსტი და გამოტოვებული იქნება."
       ],
       "Some of your inputs contain errors. Please update them and save your changes again.": [
-        ""
+        "თქვენი ზოგიერთი შეყვანილი ინფორმაცია შეცდომებს შეიცავს. განაახლეთ ისინი და თავიდან შეინახეთ თქვენი ცვლილებები."
       ],
       "Some services are not properly started. See the About page for more information.": [
         ""
@@ -7117,7 +7090,7 @@
       "Something went wrong while refreshing alternate content sources: ": [
         ""
       ],
-      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error.response)}": [
+      "Something went wrong while refreshing content counts: ${getResponseErrorMsgs(error?.response)}": [
         ""
       ],
       "Something went wrong while removing a filter rule! ${getResponseErrorMsgs(error.response)}": [
@@ -7186,8 +7159,11 @@
       "Something went wrong while updating the content source. See the logs for more information": [
         ""
       ],
-      "Something went wrong! Please check server logs!": [
+      "Something went wrong while verifying content checksums: ${getResponseErrorMsgs(error?.response)}": [
         ""
+      ],
+      "Something went wrong! Please check server logs!": [
+        "რაღაც არასწორია ! გადაამოწმეთ სერვერის ჟურნალი!"
       ],
       "Sort field and order, eg. 'id DESC'": [
         "ველის დალაგება და დახარისხება. მაგ: ' id DESC'"
@@ -7250,7 +7226,7 @@
         "ნაკადი"
       ],
       "Streamed": [
-        ""
+        "დასტრიმულია"
       ],
       "Streams based on the host based on the installation status": [
         "ჰოსტის დაყენების სტატუსზე დამოკიდებული ნაკადები"
@@ -7273,9 +7249,6 @@
       "Subscription Details": [
         "გამოწერის დეტალები"
       ],
-      "Subscription ID": [
-        "გამოწერის ID"
-      ],
       "Subscription Info": [
         "გამოწერის ინფორმაცია"
       ],
@@ -7290,12 +7263,6 @@
       ],
       "Subscription Name": [
         "გამოწერის სახელი"
-      ],
-      "Subscription Pool id": [
-        "გამოწერების პულის ID"
-      ],
-      "Subscription Pool uuid": [
-        "გამოწერების პულის UUID"
       ],
       "Subscription UUID": [
         "გამოწერის UUID"
@@ -7313,7 +7280,7 @@
         "გამოწერის იდენტიფიკატორი"
       ],
       "Subscription manager name registration fact": [
-        ""
+        "გამოწერის მმართველის სახელის რეგისტრაციის ფაქტი"
       ],
       "Subscription manager name registration fact strict matching": [
         ""
@@ -7325,7 +7292,7 @@
         "გამოწერის გარეშე"
       ],
       "Subscription was not persisted - %{error_message}": [
-        ""
+        "გამოწერამ ვერ გაუძლო - %{error_message}"
       ],
       "Subscriptions": [
         "გამოწერები"
@@ -7334,7 +7301,7 @@
         "მოკლევადიანი გამოწერები"
       ],
       "Subscriptions have been saved and are being updated. ": [
-        ""
+        "გამოწერები შენახულია და მიმდინარეობს მათი განახლება. "
       ],
       "Subscriptions service": [
         "გამოწერის სერვისი"
@@ -7349,7 +7316,7 @@
         "%s ჰოსტი წარმატებით ჩაემატა."
       ],
       "Successfully added %{count} content host(s) to host collection %{host_collection}.": [
-        ""
+        "%{count} შემცველობის ჰოსტი ჰოსტი კოლექციაში %{host_collection} წარმატებით ჩაემატა."
       ],
       "Successfully changed sync plan for %s product(s)": [
         "%s პროდუქტის სინქის გეგმა წარმატებით შეიცვალა"
@@ -7379,7 +7346,7 @@
         "მხარდაჭერის ტპი"
       ],
       "Support ended": [
-        ""
+        "მხარდაჭერა დასრულდა"
       ],
       "Supported Content Types": [
         "შემცველობის მხარდაჭერილი ტიპები"
@@ -7388,7 +7355,7 @@
         "სინქი გაუქმებულია"
       ],
       "Sync Connect Timeout": [
-        ""
+        "სინქის მიერთების ვადა"
       ],
       "Sync Content View on Smart Proxy(ies)": [
         "შემცველობის ხედის ჭკვიან პროქსიებზე სინქრონიზაცია"
@@ -7415,10 +7382,10 @@
         ""
       ],
       "Sync Sock Connect Timeout": [
-        ""
+        "სინქის სოკეტთან მიერთების ვადა"
       ],
       "Sync Sock Read Timeout": [
-        ""
+        "სუნქის სოკეტიდან წაკითხვის ვადა"
       ],
       "Sync Status": [
         "სინქის სტატუსი"
@@ -7430,7 +7397,7 @@
         "სინქრონიზაციის მიმოხილვა %s-სთვის"
       ],
       "Sync Total Timeout": [
-        ""
+        "სრული სინქის ვადა"
       ],
       "Sync a repository": [
         "რეპოზიტორიის სინქრონიზაცია"
@@ -7457,13 +7424,16 @@
         "სინქის მდგომარეობა"
       ],
       "Synced": [
-        ""
+        "სინქრონიზებულია"
       ],
       "Synced ": [
         "სინქრონიზებულია "
       ],
       "Synced Content": [
         "დასინქრონებული შემცველობა"
+      ],
+      "Synced container images content": [
+        ""
       ],
       "Synchronize": [
         "სინქრონიზაცია"
@@ -7523,7 +7493,7 @@
         "ამოცანა გაეშვა: ${task.humanized.action}."
       ],
       "Task ID": [
-        ""
+        "ამოცანის ID"
       ],
       "Task canceled": [
         "ამოცანა გაუქმდა"
@@ -7532,19 +7502,19 @@
         "ამოცანის დეტალები"
       ],
       "Task details": [
-        ""
+        "ამოცანის დეტალები"
       ],
       "Task result": [
-        ""
+        "ამოცანის შედეგი"
       ],
       "Task state": [
-        ""
+        "ამოცანის მდგომარეობა"
       ],
       "Temporary": [
         "დროებითი"
       ],
       "The '%s' environment cannot contain a changeset!": [
-        ""
+        "'%s' გარემო არ შეიძლება, ცვლილებების სეტს შეიცავდეს!"
       ],
       "The Alternate Content Source type": [
         "შემცველობის ალტერნატიული წყაროს ტიპი"
@@ -7553,10 +7523,10 @@
         ""
       ],
       "The Foreman Client repository is enabled. ": [
-        ""
+        "Foreman-ის კლიენტის რეპოზიტორია ჩართულია. "
       ],
       "The Foreman Client repository is synced. ": [
-        ""
+        "Foreman-ის კლიენტის რეპოზიტორია დასინქრონებულია. "
       ],
       "The Foreman Client repository set is enabled for the host. ": [
         ""
@@ -7583,7 +7553,7 @@
         "კონტენტის ნაგულისხმევი ხედის რედაქტირება, გამოქვეყნება ან წაშლა შეუძლებელია."
       ],
       "The default content view cannot be promoted": [
-        "ნაგულიხმები შემცველობის ხედის წახალისება სეუზლებელია"
+        "ნაგულისხმევი შემცველობის ხედის წახალისება სეუზლებელია"
       ],
       "The description for the content view version": [
         "შემცველობის ხედის ვერსის აღწერა"
@@ -7598,13 +7568,13 @@
         ""
       ],
       "The erratum filter rule end date is in an invalid format or type.": [
-        ""
+        "მორჩენილი პაჩის ფილტრის წესის დასრულების თარიღი არასწორი ფორმატის ან ტიპისაა."
       ],
       "The erratum filter rule start date is in an invalid format or type.": [
-        ""
+        "მორჩენილი პაჩის ფილტრის წესის დასაწყისის თარიღი არასწორი ფორმატის ან ტიპისაა."
       ],
       "The erratum type must be an array. Invalid value provided": [
-        ""
+        "მორჩენილი პაჩების ტიპი მასივს უნდა წარმოადგენდეს. მითითებული მნიშვნელობა არასწორია"
       ],
       "The field to sort the data by. Defaults to the created date.": [
         ""
@@ -7684,6 +7654,9 @@
       "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts.": [
         ""
       ],
+      "The provided incremental export format '%{provided}' must match the previous export's format '%{previous}'. Consider using 'from_history_id' to point to a matching export.": [
+        ""
+      ],
       "The repository is already enabled": [
         "რეპოზიტორია უკვე ჩართულია"
       ],
@@ -7700,7 +7673,7 @@
         "მოთხოვნილი რესურსი მითითებულ ორგანიზაციას არ ეკუთვნის"
       ],
       "The requested traces were not found for this host": [
-        ""
+        "ამ ჰოსტისთვის მოთხოვნილი ტრეისები ნაპოვნი არაა"
       ],
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
         ""
@@ -7711,11 +7684,8 @@
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
         ""
       ],
-      "The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled": [
-        "მითითებული ორგანიზაცია შემცველობის მარტივი წვდომის რეჟიმშია. გამოწერების მიმაგრება გამორთულია"
-      ],
       "The subscription cannot be found upstream": [
-        ""
+        "გამოწერა აღმავალზე ნაპოვნი არაა"
       ],
       "The subscription is no longer available": [
         "ხელმოწერა ხელმისაწვდომი აღარაა"
@@ -7736,7 +7706,7 @@
         ""
       ],
       "There are no Manifests to display": [
-        ""
+        "საჩვენებელი მანიფესტების გარეშე"
       ],
       "There are no Subscriptions to display": [
         "საჩვენებელი გამოწერების გარეშე"
@@ -7799,25 +7769,25 @@
         "ჰოსტი subscription-manager-ით დარეგისტრირებული არაა."
       ],
       "This Organization's subscription manifest has expired. Please import a new manifest.": [
-        ""
+        "ორგანიზაციის გამოწერის ვადა ამოიწურა. შემოიტანეთ ახალი მანიფესტი."
       ],
       "This action doesn't support package groups": [
         "ამ ქმედებას პაკეტის ჯგუფების მხარდაჭერა არ გააჩნია"
       ],
       "This action should only be taken for debugging purposes.": [
-        ""
+        "ეს ქმედება, მხოლოდ, გამართვის მიზნით უნდა გამოიყენოთ."
       ],
       "This action should only be taken in extreme circumstances or for debugging purposes.": [
-        ""
+        "ეს ქმედება, მხოლოდ, გამართვის მიზნით, განსაკუთრებულ შემთხვევებში უნდა გამოიყენოთ."
       ],
       "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \\\"%{name}\\\" before deleting.": [
         ""
       ],
       "This certificate allows a user to view the repositories in any environment from a browser.": [
-        ""
+        "ეს სერტიფიკატი საშუალებას აძლევს მომხმარებლებს, რომ რეპოზიტორიები ბრაუზერიდან ნებისმიერ გარემოში დაათვალიეროს."
       ],
       "This content view does not have any versions associated.": [
-        ""
+        "ამჟამად ამ შემცველობის ხედისთვის ვერსიები არ გაგაჩნიათ."
       ],
       "This content view version doesn't have a history.": [
         "შემცველობის ხედის ამ ვერსიას ისტორია არ გააჩნია."
@@ -7829,7 +7799,7 @@
         ""
       ],
       "This content view will be deleted. Changes will be effective after clicking Delete.": [
-        ""
+        "ეს შემცველობის ხედი წაიშლება. ცვლილებები ძალაში წაშლის ღილაკზე დაწკაპუნების შემდეგ შევა."
       ],
       "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode.": [
         ""
@@ -7855,20 +7825,14 @@
       "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
         ""
       ],
-      "This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.": [
-        "ამ მასპინძლის ორგანიზაცია არის შემცველობის მარტივი წვდომის რეჟიმში. გამოწერების მიმაგრება გამორთულია."
-      ],
-      "This host's organization is in Simple Content Access mode. Auto-attach is disabled": [
-        ""
-      ],
       "This is disabled because a manifest task is in progress": [
         "გამორთულია იმიტომ, რომ გაშვებულია მანიფესტთან დაკავშირებული ამოცანა"
       ],
       "This is disabled because a manifest-related task is in progress.": [
-        ""
+        "გამორთულია იმიტომ, რომ გაშვებულია მანიფესტთან დაკავშირებული ამოცანა."
       ],
       "This is disabled because no connection could be made to the upstream Manifest.": [
-        ""
+        "ეს გათიშულია, რადგან აღმავლის მანიფესტთან კავშირის დამყარება ვერ მოხერხდა."
       ],
       "This is disabled because no manifest exists": [
         "გამორთულია იმიტომ, რომ მანიფესტი არ არსებობს"
@@ -7898,13 +7862,13 @@
         "სერვისი ხელმისაწვდომია მხოლოდ ავთენტიფიცირებული მომხმარებლებისათვის"
       ],
       "This shows repositories that are used in a typical setup.": [
-        ""
+        "აჩვენებს ჩვეულებრივი დაყენების დროს გამოყენებულ რეპოზიტორიებს."
       ],
       "This subscription is not relevant to the current organization.": [
-        ""
+        "ეს გამოერა მიმდინარე ორგანიზაციას არ შეესაბამება."
       ],
       "This version has not been promoted to any environments.": [
-        ""
+        "ეს ვერსია არც ერთ გარემომდე არ წახალისებულა."
       ],
       "This version is not promoted to any environments.": [
         "ეს ვერსია არც ერთ გარემომდე არ წახალისებულა."
@@ -7921,11 +7885,14 @@
       "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned.": [
         ""
       ],
+      "Time in minutes before registry access tokens expire.": [
+        ""
+      ],
       "Time to expire yum metadata in seconds. Only relevant for custom yum repositories.": [
         ""
       ],
       "Timeout when refreshing a manifest (in seconds)": [
-        ""
+        "მოლოდინის დრო მანიფესტის განახლებისას (წამებში)"
       ],
       "Timestamp": [
         "დროის შტამპი"
@@ -7934,6 +7901,9 @@
         "სათაური"
       ],
       "To change content view environments, a specific organization must be selected from the organization context.": [
+        ""
+      ],
+      "To continue with Red Hat Flatpak remote, you need to generate your username and password in": [
         ""
       ],
       "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system.": [
@@ -7949,7 +7919,7 @@
         ""
       ],
       "To get started, add a filter rule to this filter": [
-        ""
+        "დასაწყისისთვის ამ ფილტრს ფილტრის წესი დაამატეთ"
       ],
       "To get started, add this host to a host collection.": [
         "დასაწყებად ეს ჰოსტი ჰოსტების კოლექციაში ჩაამატეთ."
@@ -7973,7 +7943,7 @@
         "სულ ბიჯები: "
       ],
       "Tracer": [
-        ""
+        "ტრეისერი"
       ],
       "Tracer helps administrators identify applications that need to be restarted after a system is patched.": [
         ""
@@ -7985,10 +7955,10 @@
         "ტრეისები"
       ],
       "Traces are being enabled": [
-        ""
+        "მიმდინარეობს ტრეისების ჩართვა"
       ],
       "Traces are not enabled": [
-        ""
+        "ტრეისები ჩართული არაა"
       ],
       "Traces help administrators identify applications that need to be restarted after a system is patched.": [
         ""
@@ -8000,22 +7970,16 @@
         ""
       ],
       "Traces not available": [
-        ""
+        "ტრეისები მიუწვდომელია"
       ],
       "Traces that require logout cannot be restarted remotely": [
-        ""
+        "ტრეისები, რომლებსაც სისტემიდან გასვლა ესაჭიროებათ, დაშორებულად ვერ გაეშვება"
       ],
       "Traces will be shown here to a user with the appropriate permissions.": [
         ""
       ],
       "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy.": [
         ""
-      ],
-      "Trigger an auto-attach of subscriptions": [
-        "ჩართეთ გამოწერების ავტომატური მიმაგრება"
-      ],
-      "Trigger an auto-attach of subscriptions on one or more hosts": [
-        "ერთ ან მეტ ჰოსტზე გამოწერების ავტომატური მიმაგრების ტრიგერი"
       ],
       "Try changing your search criteria.": [
         "სცადეთ შეცვალოთ ძებნის მოთხოვნები."
@@ -8057,7 +8021,7 @@
         "URL \\\"/\\\"-ით უნდა მთავრდებოდეს"
       ],
       "URL of a PyPI content source such as https://pypi.org.": [
-        ""
+        "PyPI-ის შემცველობის ბმული. მაგ: https://pypi.org."
       ],
       "URL of an OSTree repository.": [
         "OSTree-ის რეპოზიტორიის URL."
@@ -8093,13 +8057,19 @@
         ""
       ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
-        ""
+        "ალტერნატიული შემცველობის წყაროს წაშლა შეუძლებელია. ან წაშლის წვდომა არ გაგაჩნიათ, ან ალტერნატიული შემცველობის წყაროები არ არსებობენ."
       ],
       "Unable to detect pulp storage": [
         "Pulp-ის საცავის პოვნა შეუძლებელია"
       ],
       "Unable to detect puppet path": [
         "Puppet-ის ბილიკის პოვნა შეუძლებელია"
+      ],
+      "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
+        ""
+      ],
+      "Unable to find a base content view to use for incremental export. Please run a complete export instead.": [
+        ""
       ],
       "Unable to find a content view with ID %s": [
         ""
@@ -8116,12 +8086,6 @@
       "Unable to import in to Content View specified in the metadata - '%{name}'. The 'import_only' attribute for the content view is set to false. To mark this Content View as importable, have your system administrator run the following command on the server. ": [
         ""
       ],
-      "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment.": [
-        ""
-      ],
-      "Unable to incrementally export. Do a Full Export on the repository content.": [
-        ""
-      ],
       "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.": [
         ""
       ],
@@ -8135,10 +8099,10 @@
         ""
       ],
       "Unable to refresh any alternate content source. You either do not have the permission to refresh, or no alternate content sources exist.": [
-        ""
+        "ალტერნატიული შემცველობის წყაროების განახლება შეუძლებელია. ან განახლების წვდომა არ გაგაჩნიათ, ან ალტერნატიული შემცველობის წყაროები არ არსებობენ."
       ],
       "Unable to refresh any alternate content source. You either do not have the permission to refresh, or none of the alternate content sources exist.": [
-        ""
+        "ალტერნატიული შემცველობის წყაროს განახლება შეუძლებელია. ან განახლების წვდომა არ გაგაჩნიათ, ან ალტერნატიული შემცველობის წყაროები არ არსებობენ."
       ],
       "Unable to refresh host-repository mapping": [
         ""
@@ -8162,16 +8126,13 @@
         ""
       ],
       "Unable to update the repository list": [
-        "რეოზიტორიების სიის განახლების შეცდომა"
+        "რეპოზიტორიების სიის განახლების შეცდომა"
       ],
       "Unable to update the user-repository mapping": [
         ""
       ],
       "Unapplied Errata": [
         "გადაუტარებელი მორჩენილი პაჩი"
-      ],
-      "Unattach a subscription": [
-        "გამოწერის მოხსნა"
       ],
       "Unfiltered params array: %s.": [
         "პარამეტრების გაუფილტრავი მასივი: %s."
@@ -8188,8 +8149,14 @@
       "Unknown errata status": [
         "მორჩენილი პაჩის უცნობი სტატუსი"
       ],
-      "Unknown traces status": [
+      "Unknown library export format '%s'.": [
         ""
+      ],
+      "Unknown repository export format '%s'.": [
+        ""
+      ],
+      "Unknown traces status": [
+        "ტრეისების უცნობი სტატუსი"
       ],
       "Unlimited": [
         "შეუზღუდავი"
@@ -8210,7 +8177,7 @@
         "CDN-ის მხარდაუჭერელი რესურსი"
       ],
       "Unsupported event type %{type}. Supported: %{types}": [
-        ""
+        "მოვლენის მხარდაუჭერელი ტიპი %{type}. მხარდაჭერილი ტიპებია: %{types}"
       ],
       "Up-to date": [
         "განახლებულია"
@@ -8225,7 +8192,7 @@
         "CDN-ის კონფიგურაციის განახლება"
       ],
       "Update Content Counts": [
-        ""
+        "შემცველობის რაოდენობის განახლება"
       ],
       "Update Content Overrides": [
         "შემცველობის გადაფარვის განახლება"
@@ -8249,7 +8216,7 @@
         "შემცველობის ხედის ვერსიის განახლება"
       ],
       "Update a filter rule. The parameters included should be based upon the filter type.": [
-        ""
+        "ფილტრის წესის განახლება. გადაცემული პარამეტრები ფილტრის ტიპზეა დამოკიდებული."
       ],
       "Update a flatpak remote": [
         ""
@@ -8276,7 +8243,7 @@
         "ორგანიზაციაში გარემოს განახლება"
       ],
       "Update content counts for the smart proxy": [
-        ""
+        "შემცველობის რაოდენობების განახლება ჭკვიანი პროქსისთვის"
       ],
       "Update content view environments for host": [
         ""
@@ -8285,7 +8252,7 @@
         ""
       ],
       "Update hosts manually": [
-        ""
+        "ჰოსტების ხელით განახლება"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "განაახლეთ დაყენებული პაკეტები, ჩართული რეპოები და მოდულები"
@@ -8348,10 +8315,10 @@
         "პროდუქტის განახლება"
       ],
       "Updates available: Component content view versions have been updated.": [
-        ""
+        "ხელმისაწვდომია განახლებები: კომპონენტის შემცველობის ხედის ვერსიები განახლდა."
       ],
       "Updates available: Repositories and/or filters have changed.": [
-        ""
+        "ხელმისაწვდომია განახლებები: რეპოზიტორიები ან/და ფილტრები შეიცვალა."
       ],
       "Updating Package...": [
         "პაკეტის განახლება..."
@@ -8402,7 +8369,7 @@
         "ატვირთვის სამიზნე"
       ],
       "Upload package / repos profile": [
-        ""
+        "პაკეტის / რეპოზიტორიის პროფილის ატვირთვა"
       ],
       "Upload request id": [
         "ატვირთვის მოთხოვნის ID"
@@ -8521,6 +8488,9 @@
       "Value must either be a boolean or 'default' for 'enabled'": [
         ""
       ],
+      "Verify Content Checksum": [
+        ""
+      ],
       "Verify SSL": [
         "SSL-ის შემოწმება"
       ],
@@ -8588,37 +8558,40 @@
         ""
       ],
       "View %{view} has not been promoted to %{env}": [
-        ""
+        "ხედი %{view} %{env}-მდე არ დაწინაურებულა"
       ],
       "View Filters": [
-        ""
+        "ფილტრების ნახვა"
       ],
       "View Subscription Usage": [
-        ""
+        "გამოწერების გამოყენების ნახვა"
       ],
       "View a report of the affected hosts": [
         "მოყოლილი ჰოსტების ანგარიშის ნახვა"
       ],
       "View applicable errata": [
-        ""
+        "განკუთვნილი მორჩენილი პაჩების ნახვა"
       ],
       "View by": [
         "დალაგება"
       ],
-      "View content views": [
+      "View container images in the local registry using the Synced tab. View container images booted by image mode hosts using the Booted tab. The Booted tab also shows images outside of the local container registry.": [
         ""
+      ],
+      "View content views": [
+        "შემცველობის ხედების ნახვა"
       ],
       "View details": [
         ""
       ],
       "View documentation": [
-        ""
+        "იხილეთ დოკუმენტაცია"
       ],
       "View matching content": [
         "შესატყვისი შემცველობის ნახვა"
       ],
       "View sync status": [
-        ""
+        "სინქრონიზაციის სტატუსის ნახვა"
       ],
       "View tasks ": [
         "ამოცანების ნახვა "
@@ -8672,7 +8645,7 @@
         ""
       ],
       "Whether or not to regenerate the repository on disk. Default: true": [
-        "დაგენერირდება დისკზე რეპოზიტორია თავიდან, თუ არა. ნაგულისხმები: დიახ"
+        "დაგენერირდება დისკზე რეპოზიტორია თავიდან, თუ არა. ნაგულისხმევი: დიახ"
       ],
       "Whether or not to return filters applied to the content view version": [
         ""
@@ -8714,16 +8687,16 @@
         "ორგანიზაციის მშობლის ჩასწორება არ შეგიძლიათ. ეს ფუნქცია გამორთულია."
       ],
       "You cannot set an organization's parent_id. This feature is disabled.": [
-        ""
+        "ორგანიზაციის parent_id-ის დაყენება არ შეგიძლიათ. ეს ფუნქცია გათიშულია."
       ],
       "You currently don't have any ${selectedContentType}.": [
-        ""
+        "ჯერ ${selectedContentType} არ გაგაჩნიათ."
       ],
       "You currently don't have any alternate content sources.": [
         "ამჟამად ალტერნტიული შემცველობის წყაროები არ გაგაჩნიათ."
       ],
       "You currently don't have any related content views.": [
-        ""
+        "ამჟამად არც ერთი შესაბამისი შემცველობის ხედი არ გაგაჩნიათ."
       ],
       "You currently don't have any repositories associated with this content.": [
         "ამ შემცველობათან ასოცირებული რეპოზიტორია არ გაგაჩნიათ."
@@ -8732,19 +8705,19 @@
         "ამჟამად ამ ფილტრში ჩასამატებლად არც ერთი რეპოზორია არ გაგაჩნიათ."
       ],
       "You currently have no content views to display": [
-        ""
+        "ამჟამად საჩვენებელი შემცველობის ხედები არ გაგაჩნიათ"
       ],
       "You do not have permissions to delete %s": [
         "%s-ის წაშლის წვდომა არ გაგაჩნიათ"
       ],
       "You have not set a default organization on the user %s.": [
-        "მომხმარებელზე (%s) ნაგულისხმები ორგანიზაცია დაყენებული არ იქნება."
+        "მომხმარებელზე (%s) ნაგულისხმევი ორგანიზაცია დაყენებული არ იქნება."
       ],
       "You have subscriptions expiring within %s days": [
         "თქვენი გამოწერის ვადა %s დღეში გადის"
       ],
       "You have unsaved changes. Do you want to exit without saving your changes?": [
-        ""
+        "გაქვთ შეუნახავი ცვლილებები. გნებავთ გახვიდეთ ცვლილებების შენახვის გარეშე?"
       ],
       "You must select at least one host.": [
         ""
@@ -8762,7 +8735,7 @@
         "%s-ის სინქის უფლება არ გაქვთ"
       ],
       "You're making changes to %(entitlementCount)s entitlement(s)": [
-        ""
+        "შეგაქვთ ცვლილებები ელემენტში %(entitlementCount)s entitlement(s)"
       ],
       "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.": [
         ""
@@ -8783,19 +8756,19 @@
         "თქვენმა ძებნამ შესაბამისი ${name} არ დააბრუნა."
       ],
       "Your search returned no matching DEBs.": [
-        ""
+        "თქვენი ძებნის შესაბამისი DEB ფაილები ნაპოვნი არაა."
       ],
       "Your search returned no matching Module streams.": [
         "ძებნამ მოდულის ნაკადები არ დააბრუნა."
       ],
       "Your search returned no matching activation keys.": [
-        ""
+        "თქვენი ძებნის პირობებს არც ერთი აქტივაციის გასაღები არ ემთხვევა."
       ],
       "Your search returned no matching hosts.": [
-        ""
+        "თქვენს ძებნის პირობებში არც ერთი ჰოსტი არ ჯდება."
       ],
       "Your search returned no matching non-modular RPMs.": [
-        ""
+        "თქვენი ძებნის შესაბამისი არამოდულური RPM ფაილები ნაპოვნი არაა."
       ],
       "Yum": [
         "Yum"
@@ -8893,17 +8866,14 @@
       "attempted to sync without a feed URL": [
         "სინქრონიზაციის მცდელობა წყაროს URL-ის გარეშე"
       ],
-      "auto attach subscriptions upon registration": [
-        "რეგისტრაციისას გამოწერის ავტომატური მიბმა"
-      ],
       "base url to perform repo discovery on": [
         "რეპოზიტორიის აღმოჩენის საცდელი საბაზისო URL"
       ],
       "bug fix": [
-        ""
+        "შეცდ. გასწ"
       ],
       "bug fixes": [
-        ""
+        "შეცდომების გასწორებები"
       ],
       "bulk add filter rules": [
         "ბევრი ფილტრის წესის დამატება"
@@ -8969,10 +8939,10 @@
         "%s-ზე მეტ სიმბოლოს არ უნდა შეიცავდეს"
       ],
       "change the host's content source.": [
-        ""
+        "ჰოსტის შემცველობის წყაროს შეცვლა."
       ],
       "checking %s task status": [
-        ""
+        "%s ამოცანის სტატუსის შემოწმება"
       ],
       "checking Pulp task status": [
         "pulp-ის ამოცანის სტატუსის შემოწმება"
@@ -8996,7 +8966,7 @@
         ""
       ],
       "content view component ID. Identifier of the component association": [
-        ""
+        "შემცველობის ხედის კომპონენტის ID. კომპონენტის ასოციაციის იდენტიფიკატორი"
       ],
       "content view filter identifier": [
         "შემცველობის ხედის ფილტრის იდენტიფიკატორი"
@@ -9008,7 +8978,7 @@
         "შემცველობის ხედის იდენტიფიკატორი"
       ],
       "content view identifier of the component who's latest version is desired": [
-        ""
+        "შემცველობის ხედის იდენტიფიკატორი კომპონენტისთვის, რომლის უახლესი ვერსიაც სასურველია"
       ],
       "content view node publish": [
         "შემცველობის ხედის კვანძის გამოქვეყნება"
@@ -9038,16 +9008,16 @@
         "შემცველობის ხედის შესადარებელი ვერსიები"
       ],
       "create a custom product": [
-        ""
+        "მორგებული პროდუქტის შექმნა"
       ],
       "create a filter for a content view": [
         "შემცველობის ხედის ფილტრის შექმნა"
       ],
       "day": [
-        ""
+        "დღე"
       ],
       "days": [
-        ""
+        "დღე"
       ],
       "deb, package, package group, or docker tag names": [
         "deb-ის, პაკეტის, პაკეტების ჯგუფის ან docker-ის ჭდის სახელები"
@@ -9086,10 +9056,10 @@
         "სინქრონიზაციის ჩართ/გამორთ"
       ],
       "enhancement": [
-        ""
+        "გაუმჯობესება"
       ],
       "enhancements": [
-        ""
+        "გაუმჯობესებები"
       ],
       "environment identifier": [
         "გარემოს იდენტიფიკატორი"
@@ -9167,7 +9137,7 @@
         "შემცველობის ხედის ძალით დაწინაურება და სიცოცხლის ციკლის გარემოს შეზღუდვების გამოტოვება"
       ],
       "foreman-tasks service not running or is not ready yet": [
-        ""
+        "სერვისი foreman-tasks გაშვებული ან ჯერ მზად არაა"
       ],
       "has already been taken": [
         "უკვე აღებულია"
@@ -9179,10 +9149,10 @@
         "ამ პროდუქტისთვის უკვე აღებულია."
       ],
       "here": [
-        ""
+        "აქ"
       ],
       "host": [
-        ""
+        "ჰოსტი"
       ],
       "host collection name to filter by": [
         "ჰოსტის კოლქციის გასაფილტრი სახელი"
@@ -9212,7 +9182,7 @@
         "თუ ჩართულია Katello გადაამოწმებს, აღმავალი URL-ის სერტიფიკატი დამოწმებულია თუ არა სანდო CA-ის მიერ"
       ],
       "initiating %s task": [
-        ""
+        "%s ამოცანის ინიციალიზაცია"
       ],
       "initiating Pulp task": [
         "pulp-ის ამოცანის ინიციალიზაცია"
@@ -9263,7 +9233,7 @@
         "არასწორი ტიპისაა. უნდა იყოს ერთ-ერთი შემდეგიდან: %s"
       ],
       "is not allowed for ACS. Must be one of the following: %s": [
-        ""
+        "დაუშვებელია ACS-სთვის. უნდა იყოს ერთ-ერთი: %s"
       ],
       "is not enabled. must be one of the following: %s": [
         "ჩართული არაა. უნდა იყოს ერთ-ერთი: %s"
@@ -9329,7 +9299,7 @@
         "უნდა იყოს %s -დან ერთ-ერთი"
       ],
       "must be true or false": [
-        ""
+        "უნდა იყოს ან \\\"true\\\" ან \\\"false\\\""
       ],
       "must be unique within one organization": [
         "ერთი ორგანიზაციის უნიკალური უნდა იყოს"
@@ -9389,7 +9359,7 @@
         "არა"
       ],
       "no global default": [
-        "გლობალური ნაგულისხმების გარეშე"
+        "გლობალური ნაგულისხმევის გარეშე"
       ],
       "obtain manifest history for subscriptions": [
         "გამოწერების მანიფესტის ისტორიის მიღება"
@@ -9488,22 +9458,22 @@
         ""
       ],
       "root-node of single-resource responses (optional)": [
-        ""
+        "ერთი რესურსის პასუხის საწყისი კვანძი (არასავალდებულო)"
       ],
       "rule identifier": [
         "წესის იდენტიფიკატორი"
       ],
       "security advisories": [
-        ""
+        "უსაფრთხოების რეკომენდაციები"
       ],
       "security advisory": [
-        ""
+        "უსაფრთხოების რეკომენდაცია"
       ],
       "selected host": [
-        ""
+        "მონიშნული ჰოსტი"
       ],
       "selected hosts": [
-        ""
+        "მონიშნული ჰოსტები"
       ],
       "service level": [
         "სერვისის დონე"
@@ -9521,19 +9491,16 @@
         "ფილტრის ინფორმაციის ჩვენება"
       ],
       "show repositories in Library and the default content view": [
-        ""
+        "რეპოზიტორიების ჩვენება ბიბლიოთეკაში და ნაგულისხმევ შემცველობის ხედში"
       ],
       "some executors are not responding, check %{status_url}": [
-        ""
+        "ზოგიერთი შემსრულებელი არ მპასუხობს. იხილეთ %{status_url}"
       ],
       "specifies if content should be included or excluded, default: inclusion=false": [
         ""
       ],
       "start datetime of synchronization": [
         "სინქრონიზაციის დასაწყისის თარითი და დრო"
-      ],
-      "subscriptions not specified": [
-        "გამოწერები მითითებული არაა"
       ],
       "sync plan description": [
         "სინქის გეგმის აღწერა"
@@ -9545,7 +9512,7 @@
         "სინქის გეგმის რიცხვობრივი იდენტიფიკატორი"
       ],
       "system registration": [
-        ""
+        "სისტემის რეგისტრაცია"
       ],
       "the documentation.": [
         ""
@@ -9554,25 +9521,25 @@
         ""
       ],
       "the host": [
-        ""
+        "ჰოსტი"
       ],
       "the hosts": [
-        ""
+        "ჰოსტები"
       ],
       "to": [
         "სადამდე"
       ],
       "true if the latest version of the component's content view is desired": [
-        ""
+        "ჩართულია, თუ სასურველია კომპონენტის შემცველობის ხედის უახლესი ვერსია"
       ],
       "true if the latest version of the components content view is desired": [
-        ""
+        "ჩართულია, თუ სასურველია კომპონენტების შემცველობის ხედის ბოლო ვერსია"
       ],
       "true if this repository can be published via HTTP": [
         "ჩართულია, თუ ეს რეპოზიტორია შეიძლება გამოქვეყნდეს HTTP-ის საშუალებით"
       ],
       "type of filter (e.g. deb, rpm, package_group, erratum, erratum_id, erratum_date, docker, modulemd)": [
-        ""
+        "ფილტრის ტიპი (მაგ: deb, rpm, package_group, erratum, erratum_id, erratum_date, docker, modulemd)"
       ],
       "types of filters": [
         "ფილტრების ტპი"
@@ -9617,7 +9584,7 @@
         "შემცველობის ხედის ჩანართების ნახვა."
       ],
       "waiting for %s to finish the task": [
-        ""
+        "%s ამოცანის დასრულების მოლოდინი"
       ],
       "waiting for Pulp to finish the task %s": [
         "pulp-ის მოლოდინი, სანამ ამოცანა დასრულდება: %s"
@@ -9644,7 +9611,7 @@
         "მონიშნულია {0} ჩანაწერი"
       ],
       "{enableRedHatRepos} or {createACustomProduct}.": [
-        ""
+        "{enableRedHatRepos} ან {createACustomProduct}."
       ],
       "{numberOfActivationKeys} activation key will be assigned to content view {cvName} in": [
         ""
@@ -9659,10 +9626,10 @@
         ""
       ],
       "{versionOrVersions} {versionList} will be deleted and will no longer be available for promotion.": [
-        ""
+        "{versionOrVersions} {versionList} წაიშლება და დასაწინაურებლად ხელმისაწვდომი აღარ იქნება."
       ],
       "{versionOrVersions} {versionList} will be removed from the following environments:": [
-        ""
+        "{versionOrVersions} {versionList} წაიშლება შემდეგი გარემოებიდან:"
       ],
       "{versionOrVersions} {versionList} will be removed from the listed environment and will no longer be available for promotion.": [
         ""
@@ -9671,7 +9638,7 @@
         ""
       ],
       "{versionOrVersions} {versionList} will be removed from the {envLabel} environment.": [
-        ""
+        "{versionOrVersions} {versionList} წაიშლება გარემოდან {envLabel}."
       ]
     }
   }
