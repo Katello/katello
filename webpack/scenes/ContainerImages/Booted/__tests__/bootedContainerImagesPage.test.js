@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, act } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../test-utils/nockWrapper';
 import BootedContainerImagesPage from '../BootedContainerImagesPage';
 import bootcImagesData from './bootedContainerImages.fixtures';
 
