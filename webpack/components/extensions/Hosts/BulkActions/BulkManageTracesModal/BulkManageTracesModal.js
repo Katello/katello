@@ -88,7 +88,7 @@ const BulkManageTracesModal = ({
   } : undefined;
 
   const {
-    results = [], total = 0, per_page: perPage = 20, page = 1, subtotal = 0,
+    results = [], total = 0, per_page: perPage = 7, page = 1, subtotal = 0,
   } = apiResponse || {};
 
   const {
@@ -246,7 +246,7 @@ const BulkManageTracesModal = ({
 
   // Minimal customSearchProps to satisfy TableIndexPage's search bar requirements
   const customSearchProps = {
-    controller: 'katello_host_tracers',
+    controller: 'katello_host_tracer',
     autocomplete: {
       id: 'searchBar-traces',
       url: foremanApi.getApiUrl('/hosts/bulk/traces/auto_complete_search'),
