@@ -357,7 +357,6 @@ const BulkManageTracesModal = ({
       )}
       {isOpen && (
         <TableIndexPage
-          header={__('Traces')}
           columns={columns}
           showCheckboxes
           apiUrl={bulkTracesUrl}
