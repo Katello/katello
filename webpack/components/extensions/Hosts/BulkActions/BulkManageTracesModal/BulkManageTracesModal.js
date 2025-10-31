@@ -126,8 +126,8 @@ const BulkManageTracesModal = ({
   }, [bulkTracesParams, setAPIOptions]);
 
   // Wrap replacementResponse in the structure that TableIndexPage expects from useAPI
-  // Always provide when modal is open to prevent TableIndexPage from making its own GET request
-  const replacementResponse = isOpen ? {
+  // Only provide when modal is open AND we have valid params to prevent bad requests
+  const replacementResponse = (isOpen && bulkTracesParams.organization_id) ? {
     response: apiResponse || {},
     status: apiStatus || 'PENDING',
     setAPIOptions: wrappedSetAPIOptions,
