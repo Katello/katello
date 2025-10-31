@@ -1,9 +1,0 @@
-<div class="row">
-  <h3><%= _('Pulp node') %></h3>
-</div>
-<%= show_feature_version('pulpnode') %>
-<div class="row">
-  <div class="pulp_status" data-ajax-url="<%= pulp_status_smart_proxy_path(@smart_proxy) %>">
-    <%= spinner %>
-  </div>
-</div>
