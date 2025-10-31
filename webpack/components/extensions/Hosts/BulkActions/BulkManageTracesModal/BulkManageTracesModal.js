@@ -96,10 +96,9 @@ const BulkManageTracesModal = ({
   }, [isOpen, fetchBulkParams, orgId]);
 
   // Fetch traces when modal opens using Foreman's useAPI hook
-  // Only activate useAPI when we have valid params AND a non-empty search query
-  // Wait for search to be populated to avoid "No hosts specified" error
-  const hasValidSearch = bulkTracesParams.included?.search !== undefined &&
-    bulkTracesParams.included?.search !== '';
+  // Only activate useAPI when we have valid params AND search is defined
+  // Wait for search to be populated (empty string "" is valid - matches all hosts)
+  const hasValidSearch = bulkTracesParams.included?.search !== undefined;
   const hasValidParams = isOpen &&
     !!bulkTracesParams.organization_id &&
     hasValidSearch;
@@ -129,8 +128,8 @@ const BulkManageTracesModal = ({
 
   // Wrap setAPIOptions to merge pagination params with bulkTracesParams
   const wrappedSetAPIOptions = useCallback((options) => {
-    // Only make request if we have valid bulkTracesParams (organization_id AND valid search)
-    if (!bulkTracesParams.organization_id || !hasValidSearch) {
+    // Only make request if we have valid bulkTracesParams (organization_id AND search is defined)
+    if (!bulkTracesParams.organization_id || bulkTracesParams.included?.search === undefined) {
       return;
     }
     const mergedParams = {
@@ -138,7 +137,7 @@ const BulkManageTracesModal = ({
       ...(options.params || {}),
     };
     setAPIOptions({ ...options, params: mergedParams });
-  }, [bulkTracesParams, setAPIOptions, hasValidSearch]);
+  }, [bulkTracesParams, setAPIOptions]);
 
   // Wrap replacementResponse in the structure that TableIndexPage expects from useAPI
   // Always provide when modal is open to prevent TableIndexPage from making its own GET request

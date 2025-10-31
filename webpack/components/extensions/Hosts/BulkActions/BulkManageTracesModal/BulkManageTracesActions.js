@@ -1,5 +1,6 @@
 import { API_OPERATIONS, post, put } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { addToast } from 'foremanReact/components/ToastsList/slice';
 import { foremanApi } from '../../../../../services/api';
 import { BULK_TRACES_KEY } from './BulkManageTracesConstants';
@@ -17,11 +18,32 @@ export const getBulkHostTraces = (orgId, hostSearch, params = {}) => post({
   },
 });
 
+const rexJobLink = id => ({
+  children: __('Go to job details'),
+  href: urlBuilder('job_invocations', '', id),
+});
+
 export const resolveBulkTraces = ({ traceSearch, bulkParams }) => (dispatch) => {
-  const successToast = () => dispatch(addToast({
-    type: 'success',
-    message: __('Trace resolution job has been initiated.'),
-  }));
+  const successToast = (response) => {
+    // Backend returns an array of job_invocations, typically one for bulk traces
+    const jobInvocations = response?.data || [];
+    const firstJob = jobInvocations[0];
+
+    if (firstJob?.id) {
+      const message = __(`Job '${firstJob.description}' has started.`);
+      dispatch(addToast({
+        type: 'info',
+        message,
+        link: rexJobLink(firstJob.id),
+        sticky: true,
+      }));
+    } else {
+      dispatch(addToast({
+        type: 'success',
+        message: __('Trace resolution job has been initiated.'),
+      }));
+    }
+  };
 
   const errorToast = error => dispatch(addToast({
     type: 'error',
