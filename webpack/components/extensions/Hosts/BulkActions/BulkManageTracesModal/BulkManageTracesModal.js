@@ -54,7 +54,10 @@ const TracesRowSelectTd = ({
 );
 
 TracesRowSelectTd.propTypes = {
-  rowData: PropTypes.object.isRequired,
+  rowData: PropTypes.shape({
+    id: PropTypes.number,
+    app_type: PropTypes.string,
+  }).isRequired,
   selectOne: PropTypes.func.isRequired,
   isSelected: PropTypes.func.isRequired,
   idColumnName: PropTypes.string,

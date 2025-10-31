@@ -126,6 +126,7 @@ test('Restart button is enabled when a trace is selected', async (done) => {
   // Select a trace
   await patientlyWaitFor(() => {
     const checkboxes = getAllByRole('checkbox');
+    // eslint-disable-next-line promise/prefer-await-to-callbacks
     const firstCheckbox = checkboxes.find(cb => !cb.disabled);
     firstCheckbox.click();
   });
@@ -189,6 +190,7 @@ test('Warning banner is shown when static traces are selected', async (done) => 
   // Select the static trace (systemd - id:1)
   await patientlyWaitFor(() => {
     const checkboxes = getAllByRole('checkbox');
+    // eslint-disable-next-line promise/prefer-await-to-callbacks
     const firstCheckbox = checkboxes.find(cb => !cb.disabled);
     expect(firstCheckbox).toBeTruthy();
     firstCheckbox.click();
@@ -236,6 +238,7 @@ test('Disables checkboxes for session-type traces', async (done) => {
   await patientlyWaitFor(() => {
     expect(queryByText('bash')).toBeInTheDocument();
     const checkboxes = getAllByRole('checkbox');
+    // eslint-disable-next-line promise/prefer-await-to-callbacks
     const disabledCheckboxes = checkboxes.filter(cb => cb.disabled);
     // At least one checkbox should be disabled (the bash session trace)
     expect(disabledCheckboxes.length).toBeGreaterThan(0);
@@ -322,6 +325,7 @@ test('Customize and restart link has correct URL when traces selected', async (d
   // Select a trace first
   await patientlyWaitFor(() => {
     const checkboxes = getAllByRole('checkbox');
+    // eslint-disable-next-line promise/prefer-await-to-callbacks
     const firstCheckbox = checkboxes.find(cb => !cb.disabled);
     firstCheckbox.click();
   });
