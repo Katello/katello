@@ -303,7 +303,8 @@ module Katello
     def find_traces
       if params[:trace_search].present?
         # Use search query to find traces
-        @traces = scoped_search(Katello::HostTracer.resolvable, nil, nil, resource_class: Katello::HostTracer)
+        search_results = scoped_search(Katello::HostTracer.resolvable, nil, nil, resource_class: Katello::HostTracer)
+        @traces = search_results[:results]
       elsif params[:trace_ids].present?
         # Backward compatibility: use trace IDs
         throw_resources_not_found(name: 'host trace', expected_ids: params[:trace_ids]) do
