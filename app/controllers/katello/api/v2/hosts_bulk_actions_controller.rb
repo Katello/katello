@@ -154,7 +154,8 @@ module Katello
 
     api :PUT, "/hosts/bulk/resolve_traces", N_("Resolve traces for one or more hosts")
     param_group :bulk_params
-    param :trace_ids, Array, :required => true, :desc => N_("Array of Trace IDs")
+    param :trace_ids, Array, :required => false, :desc => N_("Array of Trace IDs")
+    param :trace_search, String, :required => false, :desc => N_("Search query for traces")
     def resolve_traces
       result = Katello::HostTraceManager.resolve_traces(@traces)
 
@@ -300,8 +301,16 @@ module Katello
     end
 
     def find_traces
-      throw_resources_not_found(name: 'host trace', expected_ids: params[:trace_ids]) do
-        @traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
+      if params[:trace_search].present?
+        # Use search query to find traces
+        @traces = scoped_search(Katello::HostTracer.resolvable, nil, nil, resource_class: Katello::HostTracer)
+      elsif params[:trace_ids].present?
+        # Backward compatibility: use trace IDs
+        throw_resources_not_found(name: 'host trace', expected_ids: params[:trace_ids]) do
+          @traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
+        end
+      else
+        fail HttpErrors::BadRequest, _("Either trace_search or trace_ids must be provided")
       end
     end
 

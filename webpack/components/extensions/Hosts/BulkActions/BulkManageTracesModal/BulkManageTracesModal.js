@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -20,7 +20,6 @@ import {
 } from '@patternfly/react-core/deprecated';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { noop } from 'foremanReact/common/helpers';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
@@ -45,19 +44,30 @@ const BulkManageTracesModal = ({
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
 
-  const bulkTracesUrl = foremanApi.getApiUrl('/hosts/bulk/traces');
+  const bulkTracesUrl = `${foremanApi.getApiUrl('/hosts/bulk/traces')}?per_page=7`;
 
   // Get API state from Redux - includes both response and status
   const apiState = useSelector(state => state.API?.[BULK_TRACES_KEY]);
   const apiResponse = apiState?.response;
   const apiStatus = apiState?.status;
 
-  // Only call useAPI if we don't already have data (avoids overriding mocked test data)
-  const shouldFetch = isOpen && fetchBulkParams && apiResponse?.results === undefined;
+  // Memoize the bulk traces params to keep them stable
+  const bulkTracesParams = useMemo(() => {
+    if (!isOpen || !fetchBulkParams) return {};
+    const searchQuery = fetchBulkParams();
+    return {
+      organization_id: orgId,
+      included: {
+        search: searchQuery,
+      },
+    };
+  }, [isOpen, fetchBulkParams, orgId]);
 
   // Fetch traces when modal opens using Foreman's useAPI hook
+  // Only activate useAPI when we have valid params (organization_id is present)
+  const shouldActivateAPI = isOpen && !!bulkTracesParams.organization_id;
   const { setAPIOptions } = useAPI(
-    shouldFetch ? 'post' : null,
+    shouldActivateAPI ? 'post' : null,
     bulkTracesUrl,
     {
       key: BULK_TRACES_KEY,
@@ -65,26 +75,29 @@ const BulkManageTracesModal = ({
   );
 
   // Update API options when modal opens with fresh params
-  // Only fetch if we don't already have results (prevents refetch in tests with mocked data)
+  // Only fetch if modal just opened (no status yet) and we have valid params
   useEffect(() => {
-    if (isOpen && fetchBulkParams && apiResponse?.results === undefined) {
-      const searchQuery = fetchBulkParams();
-      const bulkTracesParams = {
-        organization_id: orgId,
-        included: {
-          search: searchQuery,
-        },
-      };
+    if (isOpen && fetchBulkParams && !apiStatus &&
+        bulkTracesParams.organization_id) {
       setAPIOptions({ params: bulkTracesParams });
     }
-  }, [isOpen, fetchBulkParams, orgId, setAPIOptions, apiResponse]);
+  }, [isOpen, fetchBulkParams, setAPIOptions, bulkTracesParams, apiStatus]);
+
+  // Wrap setAPIOptions to merge pagination params with bulkTracesParams
+  const wrappedSetAPIOptions = useCallback((options) => {
+    const mergedParams = {
+      ...bulkTracesParams,
+      ...(options.params || {}),
+    };
+    setAPIOptions({ ...options, params: mergedParams });
+  }, [bulkTracesParams, setAPIOptions]);
 
   // Wrap replacementResponse in the structure that TableIndexPage expects from useAPI
-  // Only provide when we have data, otherwise let TableIndexPage handle the API call
-  const replacementResponse = (isOpen && apiResponse) ? {
-    response: apiResponse,
+  // Always provide when modal is open to prevent TableIndexPage from making its own GET request
+  const replacementResponse = isOpen ? {
+    response: apiResponse || {},
     status: apiStatus || 'PENDING',
-    setAPIOptions,
+    setAPIOptions: wrappedSetAPIOptions,
   } : undefined;
 
   const {
@@ -96,10 +109,13 @@ const BulkManageTracesModal = ({
     isSelected,
     selectedCount: tracesSelectedCount,
     selectPage,
+    selectAll,
     selectNone,
     areAllRowsSelected,
     areAllRowsOnPageSelected,
     selectedResults,
+    selectAllMode,
+    fetchBulkParams: fetchTracesBulkParams,
     hasInteracted,
   } = useBulkSelect({
     results,
@@ -108,7 +124,8 @@ const BulkManageTracesModal = ({
     initialSearchQuery: '',
   });
 
-  const willRestartHost = containsStaticType(selectedResults);
+  // When in selectAllMode, we may not have all results loaded, so be conservative
+  const willRestartHost = selectAllMode || containsStaticType(selectedResults);
 
   const handleModalClose = () => {
     selectNone();
@@ -116,9 +133,9 @@ const BulkManageTracesModal = ({
   };
 
   const handleRestart = () => {
-    const traceIds = selectedResults.map(trace => trace.id);
+    const traceSearch = fetchTracesBulkParams();
     dispatch(resolveBulkTraces({
-      traceIds,
+      traceSearch,
       bulkParams: {
         organization_id: orgId,
         included: {
@@ -131,8 +148,7 @@ const BulkManageTracesModal = ({
 
   const customizedRexUrl = () => {
     if (tracesSelectedCount === 0) return '#';
-    const traceIds = selectedResults.map(trace => trace.id);
-    const traceSearch = `id ^ (${traceIds.join(',')})`;
+    const traceSearch = fetchTracesBulkParams();
     return resolveTraceUrl({
       hostSearch: fetchBulkParams(),
       search: traceSearch,
@@ -214,7 +230,7 @@ const BulkManageTracesModal = ({
           areAllRowsSelected,
           areAllRowsOnPageSelected,
         }}
-        selectAll={noop}
+        selectAll={selectAll}
         totalCount={total}
         areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
         areAllRowsSelected={areAllRowsSelected()}
@@ -309,7 +325,7 @@ const BulkManageTracesModal = ({
           header={__('Traces')}
           columns={columns}
           showCheckboxes
-          apiUrl={foremanApi.getApiUrl('/hosts/bulk/traces')}
+          apiUrl={bulkTracesUrl}
           apiOptions={{ key: BULK_TRACES_KEY }}
           customSearchProps={customSearchProps}
           creatable={false}
