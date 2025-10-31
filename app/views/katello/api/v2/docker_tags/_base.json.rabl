@@ -18,6 +18,7 @@ child :docker_manifest => :manifest do
   attributes :schema_version, :digest, :manifest_type
   attributes :labels, :annotations
   attributes :is_bootable, :is_flatpak
+  attributes :created_at, :updated_at
 
   node :manifests, :if => lambda { |m| m.manifest_type == 'list' } do |manifest|
     manifest.docker_manifests.map do |child_manifest|
@@ -30,6 +31,8 @@ child :docker_manifest => :manifest do
         :annotations => child_manifest.annotations,
         :is_bootable => child_manifest.is_bootable,
         :is_flatpak => child_manifest.is_flatpak,
+        :created_at => child_manifest.created_at,
+        :updated_at => child_manifest.updated_at,
       }
     end
   end
@@ -42,6 +45,7 @@ if @organization
         :id => repo.id,
         :name => repo.name,
         :full_path => repo.full_path,
+        :library_instance => repo.library_instance?,
       }
       attributes
     end
@@ -58,6 +62,9 @@ if @organization
 else
   child :repositories => :repositories do
     attributes :id, :name, :full_path
+    node :library_instance do |repo|
+      repo.library_instance?
+    end
   end
 
   child :product => :product do

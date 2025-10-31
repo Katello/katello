@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
@@ -18,8 +19,8 @@ import {
 import Pagination from 'foremanReact/components/Pagination';
 import EmptyPage from 'foremanReact/routes/common/EmptyPage';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { capitalize } from '../../utils/helpers';
-import { orgId } from '../../services/api';
+import { capitalize } from '../../../utils/helpers';
+import { orgId } from '../../../services/api';
 import './SyncedContainerImagesPage.scss';
 
 const SYNCED_CONTAINER_IMAGES_KEY = 'SYNCED_CONTAINER_IMAGES';
@@ -53,7 +54,11 @@ const SyncedContainerImagesPage = () => {
   const getDigest = (tag) => {
     const manifest = tag.manifest || tag.manifest_schema1 || tag.manifest_schema2;
     if (!manifest || !manifest.digest) return 'N/A';
-    return manifest.digest;
+    return (
+      <Link to={`/labs/container_images/${tag.id}`}>
+        {manifest.digest}
+      </Link>
+    );
   };
 
   const getProductLink = (tag) => {
@@ -308,7 +313,11 @@ const SyncedContainerImagesPage = () => {
                       <Td className="empty-cell" />
                       <Td className="empty-cell" />
                       <Td dataLabel={__('Manifest digest')}>
-                        {childManifest.digest || 'N/A'}
+                        {childManifest.digest ? (
+                          <Link to={`/labs/container_images/${tag.id}?manifest=${childManifest.id}`}>
+                            {childManifest.digest}
+                          </Link>
+                        ) : 'N/A'}
                       </Td>
                       <Td dataLabel={__('Type')}>
                         {formatManifestType(childManifest)}
