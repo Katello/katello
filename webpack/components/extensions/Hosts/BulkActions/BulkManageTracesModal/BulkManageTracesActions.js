@@ -17,7 +17,7 @@ export const getBulkHostTraces = (orgId, hostSearch, params = {}) => post({
   },
 });
 
-export const resolveBulkTraces = ({ traceIds, bulkParams }) => (dispatch) => {
+export const resolveBulkTraces = ({ traceSearch, bulkParams }) => (dispatch) => {
   const successToast = () => dispatch(addToast({
     type: 'success',
     message: __('Trace resolution job has been initiated.'),
@@ -33,7 +33,7 @@ export const resolveBulkTraces = ({ traceIds, bulkParams }) => (dispatch) => {
     key: `${BULK_TRACES_KEY}_RESOLVE`,
     url: foremanApi.getApiUrl('/hosts/bulk/resolve_traces'),
     params: {
-      trace_ids: traceIds,
+      trace_search: traceSearch,
       ...bulkParams,
     },
     handleSuccess: successToast,
