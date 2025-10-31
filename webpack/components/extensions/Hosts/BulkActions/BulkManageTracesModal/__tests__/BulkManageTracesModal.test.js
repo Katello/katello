@@ -243,11 +243,7 @@ test('Disables checkboxes for session-type traces', async (done) => {
   done();
 });
 
-test.skip('Shows friendly empty state when no traces found', async (done) => {
-  // This test verifies that the empty state message is shown when there are no traces.
-  // Skipped because the test environment has difficulties with the TableIndexPage empty state
-  // rendering, though the functionality works correctly in the actual application
-  // (emptyMessage prop is properly passed to TableIndexPage).
+test('Renders modal with empty results without error', async (done) => {
   const emptyTraces = {
     results: [],
     total: 0,
@@ -274,21 +270,17 @@ test.skip('Shows friendly empty state when no traces found', async (done) => {
       isOpen
       closeModal={jest.fn()}
       selectedCount={5}
-      fetchBulkParams={() => 'name ^ (host1,host2,host3,host4,host5)'}
+      fetchBulkParams={() => ''} // Empty search - use mocked Redux state
       orgId={1}
     />
   );
-  const { getByText, queryByText } = renderWithRedux(jsx, customRenderOptions);
+  const { queryByText } = renderWithRedux(jsx, customRenderOptions);
 
-  // Wait for modal to render
-  await patientlyWaitFor(() => {
-    expect(getByText('Restart applications')).toBeInTheDocument();
-  });
-
-  // Wait for empty state message to appear
+  // Wait for empty state message to appear (from TableIndexPage EmptyPage component)
   await patientlyWaitFor(() => {
     expect(queryByText('The selected hosts do not show any applications needing restart.')).toBeInTheDocument();
   });
+
   done();
 });
 
