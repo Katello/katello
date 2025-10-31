@@ -96,38 +96,53 @@ const BulkManageTracesModal = ({
   }, [isOpen, fetchBulkParams, orgId]);
 
   // Fetch traces when modal opens using Foreman's useAPI hook
-  // Only activate useAPI when we have valid params (organization_id is present)
-  const shouldActivateAPI = isOpen && !!bulkTracesParams.organization_id;
+  // Only activate useAPI when we have valid params AND a non-empty search query
+  // Wait for search to be populated to avoid "No hosts specified" error
+  const hasValidSearch = bulkTracesParams.included?.search !== undefined &&
+    bulkTracesParams.included?.search !== '';
+  const hasValidParams = isOpen &&
+    !!bulkTracesParams.organization_id &&
+    hasValidSearch;
+
+  // Track whether we've set the params (to avoid activating method before params are set)
+  const [paramsReady, setParamsReady] = useState(false);
+  const shouldActivateAPI = hasValidParams && paramsReady;
+
   const { setAPIOptions } = useAPI(
     shouldActivateAPI ? 'post' : null,
     bulkTracesUrl,
     {
       key: BULK_TRACES_KEY,
-      params: shouldActivateAPI ? bulkTracesParams : undefined,
     },
   );
 
-  // Update API options when modal opens with fresh params
-  // Only fetch if modal just opened (no status yet) and we have valid params
+  // Set params first, THEN mark as ready to activate
   useEffect(() => {
-    if (isOpen && fetchBulkParams && !apiStatus &&
-        bulkTracesParams.organization_id) {
+    if (hasValidParams && !paramsReady) {
       setAPIOptions({ params: bulkTracesParams });
+      setParamsReady(true);
+    } else if (!hasValidParams && paramsReady) {
+      // Reset when modal closes
+      setParamsReady(false);
     }
-  }, [isOpen, fetchBulkParams, setAPIOptions, bulkTracesParams, apiStatus]);
+  }, [hasValidParams, paramsReady, bulkTracesParams, setAPIOptions]);
 
   // Wrap setAPIOptions to merge pagination params with bulkTracesParams
   const wrappedSetAPIOptions = useCallback((options) => {
+    // Only make request if we have valid bulkTracesParams (organization_id AND valid search)
+    if (!bulkTracesParams.organization_id || !hasValidSearch) {
+      return;
+    }
     const mergedParams = {
       ...bulkTracesParams,
       ...(options.params || {}),
     };
     setAPIOptions({ ...options, params: mergedParams });
-  }, [bulkTracesParams, setAPIOptions]);
+  }, [bulkTracesParams, setAPIOptions, hasValidSearch]);
 
   // Wrap replacementResponse in the structure that TableIndexPage expects from useAPI
-  // Only provide when modal is open AND we have valid params to prevent bad requests
-  const replacementResponse = (isOpen && bulkTracesParams.organization_id) ? {
+  // Always provide when modal is open to prevent TableIndexPage from making its own GET request
+  const replacementResponse = isOpen ? {
     response: apiResponse || {},
     status: apiStatus || 'PENDING',
     setAPIOptions: wrappedSetAPIOptions,
