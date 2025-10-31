@@ -7,5 +7,6 @@ if params.key?(:include_permissions)
     node(:can_import_manifest) { user.can?("import_manifest") }
     node(:can_delete_manifest) { user.can?("delete_manifest") }
     node(:can_edit_organizations) { user.can?("edit_organizations") }
+    node(:can_view_subscriptions) { user.can?("view_subscriptions") }
   end
 end

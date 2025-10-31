@@ -80,6 +80,7 @@ module Katello
         can_import_manifest
         can_delete_manifest
         can_edit_organizations
+        can_view_subscriptions
       ]
       expected_permissions.each do |permission|
         assert_includes(nodes, permission)
@@ -154,6 +155,34 @@ module Katello
 
       assert_response :success
       assert_template 'api/v2/subscriptions/show'
+    end
+
+    def test_index_requires_view_subscriptions_permission
+      # Test that a user without view_subscriptions permission gets denied
+      non_admin_user = User.find(users(:one).id)
+      # Create a role without view_subscriptions permission
+      role = Role.create(name: 'No Subscriptions View')
+      non_admin_user.roles = [role]
+      non_admin_user.organizations = [@organization]
+      login_user(non_admin_user)
+
+      get :index, params: { :organization_id => @organization.id }
+      
+      assert_response 403 # Forbidden
+    end
+
+    def test_index_allows_user_with_view_subscriptions_permission
+      # Test that a user WITH view_subscriptions permission gets access
+      non_admin_user = User.find(users(:one).id)
+      role = Role.find_by(name: "Register hosts") # This role has view_subscriptions
+      non_admin_user.roles = [role]
+      non_admin_user.organizations = [@organization]
+      login_user(non_admin_user)
+
+      get :index, params: { :organization_id => @organization.id }
+      
+      assert_response :success
+      assert_template 'api/v2/subscriptions/index'
     end
 
     def test_blank_upload

@@ -37,6 +37,11 @@ export const requestSuccessResponse = Immutable({
     by: 'cp_id',
     order: 'asc',
   },
+  can_import_manifest: true,
+  can_delete_manifest: true,
+  can_manage_subscription_allocations: true,
+  can_edit_organizations: true,
+  can_view_subscriptions: true,
   results: [
     {
       id: 3,
