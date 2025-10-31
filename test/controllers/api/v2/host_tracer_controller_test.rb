@@ -49,7 +49,7 @@ module Katello
       results = JSON.parse(response.body)
 
       assert results.is_a?(Array)
-      assert results.any? { |item| item['part']&.include?('httpd') || item['label']&.include?('httpd') }
+      assert(results.any? { |item| item['part']&.include?('httpd') || item['label']&.include?('httpd') })
     end
   end
 end
