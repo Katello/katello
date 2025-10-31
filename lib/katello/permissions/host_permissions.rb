@@ -59,6 +59,7 @@ Foreman::AccessControl.permission(:view_hosts).actions.concat [
   'katello/api/v2/host_tracer/index',
   'katello/api/v2/host_tracer/resolve',
   'katello/api/v2/host_tracer/auto_complete_search',
+  'katello/api/v2/host_tracer/bulk_auto_complete_search',
   'katello/remote_execution/new',
   'katello/remote_execution/create',
   'katello/api/v2/repository_sets/index',
