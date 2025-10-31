@@ -267,6 +267,7 @@ const BulkManageTracesModal = ({
       id: 'searchBar-traces',
       url: foremanApi.getApiUrl('/hosts/bulk/traces/auto_complete_search'),
       searchQuery: '',
+      apiParams: { organization_id: orgId },
     },
   };
 

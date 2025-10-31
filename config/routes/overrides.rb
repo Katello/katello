@@ -72,6 +72,7 @@ Foreman::Application.routes.draw do
             match '/bulk/environment_content_view' => 'hosts_bulk_actions#environment_content_view', :via => :put
             match '/bulk/release_version' => 'hosts_bulk_actions#release_version', :via => :put
             match '/bulk/traces' => 'hosts_bulk_actions#traces', :via => :post
+            match '/bulk/traces/auto_complete_search' => 'host_tracer#bulk_auto_complete_search', :via => :get
             match '/bulk/resolve_traces' => 'hosts_bulk_actions#resolve_traces', :via => :put
             match '/bulk/system_purpose' => 'hosts_bulk_actions#system_purpose', :via => :put
             match '/bulk/available_incremental_updates' => 'hosts_bulk_actions#available_incremental_updates', :via => :post

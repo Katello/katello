@@ -37,5 +37,19 @@ module Katello
 
       assert_equal task.id, body['id']
     end
+
+    def test_bulk_auto_complete_search
+      Katello::HostTracer.create(host_id: @host1.id, application: 'httpd', app_type: 'daemon', helper: 'systemctl restart httpd')
+      Katello::HostTracer.create(host_id: @host1.id, application: 'systemd', app_type: 'static', helper: 'reboot')
+
+      get :bulk_auto_complete_search, params: { organization_id: @host1.organization_id, search: 'application = ' }
+
+      assert_response :success
+
+      results = JSON.parse(response.body)
+
+      assert results.is_a?(Array)
+      assert results.any? { |item| item['part']&.include?('httpd') || item['label']&.include?('httpd') }
+    end
   end
 end
