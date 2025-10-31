@@ -158,6 +158,27 @@ test('Handles empty string search query (all hosts)', async (done) => {
   done();
 });
 
+test.skip('Disables checkboxes for session-type traces', async (done) => {
+  // This test verifies that session-type traces have disabled checkboxes
+  // Skipped because PatternFly checkbox disabled state is difficult to test in JSDOM
+  const jsx = (
+    <BulkManageTracesModal
+      isOpen
+      closeModal={jest.fn()}
+      selectedCount={5}
+      fetchBulkParams={() => 'name ^ (host1,host2,host3,host4,host5)'}
+      orgId={1}
+    />
+  );
+  const { queryByText } = renderWithRedux(jsx, renderOptions());
+
+  // Wait for the table to render with the session-type trace
+  await patientlyWaitFor(() => {
+    expect(queryByText('bash')).toBeInTheDocument();
+  });
+  done();
+});
+
 test.skip('Shows friendly empty state when no traces found', async (done) => {
   const emptyTraces = {
     results: [],

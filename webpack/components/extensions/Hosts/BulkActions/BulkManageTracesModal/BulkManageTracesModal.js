@@ -18,12 +18,12 @@ import {
   DropdownToggle,
   DropdownToggleAction,
 } from '@patternfly/react-core/deprecated';
+import { Td } from '@patternfly/react-table';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
-import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
 import { getPageStats } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { resolveBulkTraces } from './BulkManageTracesActions';
@@ -32,6 +32,36 @@ import { resolveTraceUrl } from '../../../HostDetails/Tabs/customizedRexUrlHelpe
 import { foremanApi } from '../../../../../services/api';
 
 const containsStaticType = (results = []) => results.some(result => result.app_type === 'static');
+
+// Custom RowSelectTd that disables checkboxes for non-selectable rows (session type)
+const TracesRowSelectTd = ({
+  rowData,
+  selectOne,
+  isSelected,
+  idColumnName = 'id',
+}) => (
+  <Td
+    select={{
+      rowIndex: rowData[idColumnName],
+      onSelect: (_event, isSelecting) => {
+        selectOne(isSelecting, rowData[idColumnName], rowData);
+      },
+      isSelected: isSelected(rowData[idColumnName]),
+      isDisabled: rowData.app_type === 'session',
+    }}
+  />
+);
+
+TracesRowSelectTd.propTypes = {
+  rowData: PropTypes.object.isRequired,
+  selectOne: PropTypes.func.isRequired,
+  isSelected: PropTypes.func.isRequired,
+  idColumnName: PropTypes.string,
+};
+
+TracesRowSelectTd.defaultProps = {
+  idColumnName: 'id',
+};
 
 const BulkManageTracesModal = ({
   isOpen,
@@ -71,6 +101,7 @@ const BulkManageTracesModal = ({
     bulkTracesUrl,
     {
       key: BULK_TRACES_KEY,
+      params: shouldActivateAPI ? bulkTracesParams : undefined,
     },
   );
 
@@ -332,7 +363,7 @@ const BulkManageTracesModal = ({
           creatable={false}
           replacementResponse={replacementResponse}
           selectionToolbar={selectionToolbar}
-          rowSelectTd={RowSelectTd}
+          rowSelectTd={TracesRowSelectTd}
           selectOne={selectOne}
           isSelected={isSelected}
           isRowSelectable={result => result.app_type !== 'session'}
