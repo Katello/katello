@@ -74,7 +74,7 @@ const BulkManageTracesModal = ({
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
 
-  const bulkTracesUrl = `${foremanApi.getApiUrl('/hosts/bulk/traces')}?per_page=7`;
+  const bulkTracesUrl = foremanApi.getApiUrl('/hosts/bulk/traces');
 
   // Get API state from Redux - includes both response and status
   const apiState = useSelector(state => state.API?.[BULK_TRACES_KEY]);
@@ -90,6 +90,7 @@ const BulkManageTracesModal = ({
       included: {
         search: searchQuery,
       },
+      per_page: 5,
     };
   }, [isOpen, fetchBulkParams, orgId]);
 
