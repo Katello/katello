@@ -17,6 +17,7 @@ import {
   DropdownItem,
   DropdownToggle,
   DropdownToggleAction,
+  DropdownDirection,
 } from '@patternfly/react-core/deprecated';
 import { Td } from '@patternfly/react-table';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
@@ -216,6 +217,7 @@ const BulkManageTracesModal = ({
         <Dropdown
           aria-label="bulk_restart_dropdown"
           ouiaId="bulk_restart_dropdown"
+          direction={DropdownDirection.up}
           toggle={
             <DropdownToggle
               aria-label="bulk_restart"
