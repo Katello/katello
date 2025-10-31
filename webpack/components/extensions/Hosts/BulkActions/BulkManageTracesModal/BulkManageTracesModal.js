@@ -286,7 +286,12 @@ const BulkManageTracesModal = ({
       title: __('Helper'),
       wrapper: ({ app_type: appType, helper }) => (
         <>
-          {appType === 'static' && <ExclamationTriangleIcon />}{' '}
+          {appType === 'static' && (
+            <ExclamationTriangleIcon
+              aria-label={__('Reboot required')}
+              title={__('This application requires a host reboot')}
+            />
+          )}{' '}
           {helper}
         </>
       ),
