@@ -1,5 +1,10 @@
 module Katello
   module Events
+    # Event handler for retrying composite content view auto-publish when a lock conflict occurs.
+    # This is used in conjunction with Dynflow chaining:
+    # - Dynflow chaining coordinates sibling component CV publishes to avoid race conditions
+    # - Event-based retry handles the case when a composite CV publish is already running
+    # See: ContentViewVersion#auto_publish_composites!
     class AutoPublishCompositeView
       EVENT_TYPE = 'auto_publish_composite_view'.freeze
 
