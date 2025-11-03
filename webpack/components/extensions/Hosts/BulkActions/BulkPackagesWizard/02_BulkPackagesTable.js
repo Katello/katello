@@ -12,7 +12,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
 import { getControllerSearchProps } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
-import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
+import { RowSelectTd } from 'foremanReact/components/PF4/TableIndexPage/RowSelectTd';
 import { getPageStats } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
 import { BulkPackagesWizardContext, getPackagesUrl } from './BulkPackagesWizard';
 import katelloApi from '../../../../../services/api';
