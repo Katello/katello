@@ -115,9 +115,9 @@ module Actions
 
         def run
           version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-          # Pass the current task's execution plan ID so auto_publish can coordinate
+          # Pass the current execution plan ID so auto_publish can coordinate
           # with other component CV publishes using Dynflow chaining
-          version.auto_publish_composites!(task.external_id)
+          version.auto_publish_composites!(execution_plan_id)
 
           output[:content_view_id] = input[:content_view_id]
           output[:content_view_version_id] = input[:content_view_version_id]

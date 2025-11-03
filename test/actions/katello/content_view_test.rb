@@ -249,7 +249,7 @@ module ::Actions::Katello::ContentView
     end
 
     context 'run phase' do
-      it 'triggers auto-publish for composite views using chaining' do
+      it 'triggers auto-publish for composite views' do
         composite_view = katello_content_views(:composite_view)
         action.stubs(:task).returns(success_task)
 
@@ -258,20 +258,18 @@ module ::Actions::Katello::ContentView
                           composite_content_view: composite_view,
                           content_view: content_view)
 
-        # Mock the task relation to simulate no other component tasks running
-        task_relation = mock('task_relation')
-        task_relation.expects(:select).returns([])
-        ForemanTasks::Task::DynflowTask.expects(:for_action)
-          .with(::Actions::Katello::ContentView::Publish)
-          .returns(task_relation)
-        task_relation.expects(:where).with(state: ['planning', 'planned', 'running']).returns(task_relation)
+        # Mock the task relations to simulate no scheduled, no running composite, no sibling tasks
+        ForemanTasks::Task::DynflowTask.stubs(:for_action)
+          .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
+          .then.returns(stub(where: stub(select: []))) # Running composite check: none
+          .then.returns(stub(where: stub(select: []))) # Sibling check: none
 
         # Expect async_task to be called (no siblings, so no chaining)
         ForemanTasks.expects(:async_task).with(
           ::Actions::Katello::ContentView::Publish,
           composite_view,
           anything,
-          triggered_by: anything
+          triggered_by_id: anything
         )
 
         plan_action action, content_view
@@ -283,7 +281,7 @@ module ::Actions::Katello::ContentView
 
         # Should not trigger any auto-publish tasks
         ForemanTasks.expects(:async_task).never
-        ForemanTasks.expects(:chain).never
+        ForemanTasks.dynflow.world.expects(:chain).never
 
         plan_action action, katello_content_views(:no_environment_view)
         run_action action
