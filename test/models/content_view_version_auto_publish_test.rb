@@ -69,7 +69,7 @@ module Katello
         .then.returns(stub(where: stub(select: []))) # Running composite check: none
         .then.returns(stub(where: stub(select: [sibling_task]))) # Sibling check: found sibling
 
-      ForemanTasks.expects(:chain).with(
+      ForemanTasks.dynflow.world.expects(:chain).with(
         [task_id2],
         ::Actions::Katello::ContentView::Publish,
         @composite_cv,
@@ -102,7 +102,7 @@ module Katello
         .returns(stub(where: scheduled_relation))
 
       # Should not create any new task
-      ForemanTasks.expects(:chain).never
+      ForemanTasks.dynflow.world.expects(:chain).never
       ForemanTasks.expects(:async_task).never
 
       @component1_version.auto_publish_composites!(task_id)
@@ -123,7 +123,7 @@ module Katello
         @composite_cv.id
       ).yields(event_attrs)
 
-      ForemanTasks.expects(:chain).never
+      ForemanTasks.dynflow.world.expects(:chain).never
       ForemanTasks.expects(:async_task).never
 
       @component1_version.auto_publish_composites!(task_id)

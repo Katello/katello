@@ -269,6 +269,12 @@ Don't write unnecessary comments in tests. When writing a new test, look at surr
 - test length, where possible
 - length and quantity of comments (don't be too wordy)
 
+### Code Documentation
+
+Avoid YARD-style documentation (`@param`, `@return`) in Ruby code. Use single-line comments describing what the method does, not how.
+
+Example: `# Returns :scheduled, :running, or nil based on task status`
+
 ### Test Commands Reference
 
 **CRITICAL: Never use `bundle exec rake test TEST=...` for individual tests. Always use `ktest`.**
