@@ -1,5 +1,6 @@
 module Katello
   # this is Katello's host bulk actions controller, not to be confused with Foreman's
+  # rubocop:disable Metrics/ClassLength
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include ::Api::V2::BulkHostsExtension
     include Katello::Concerns::Api::V2::ContentOverridesController
@@ -48,8 +49,14 @@ module Katello
           host_collection.save!
 
           final_count = host_collection.host_ids.count - pre_host_collection_count
-          display_messages << _("Successfully added %{count} content host(s) to host collection %{host_collection}.") %
-              {:count => final_count, :host_collection => host_collection.name }
+          msg = if final_count == 0
+                  _("All selected hosts were already members of host collection %{host_collection}.") %
+                              {:host_collection => host_collection.name }
+                else
+                  _("Added %{count} host(s) to host collection %{host_collection}.") %
+                              {:count => final_count, :host_collection => host_collection.name }
+                end
+          display_messages << msg
         end
       end
 
@@ -71,7 +78,7 @@ module Katello
           host_collection.save!
 
           final_count = pre_host_collection_count - host_collection.host_ids.count
-          display_messages << _("Successfully removed %{count} content host(s) from host collection %{host_collection}.") %
+          display_messages << _("Removed %{count} host(s) from host collection %{host_collection}.") %
               {:count => final_count, :host_collection => host_collection.name }
         end
       end
