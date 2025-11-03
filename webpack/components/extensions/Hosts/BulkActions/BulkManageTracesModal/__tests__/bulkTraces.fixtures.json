@@ -1,0 +1,30 @@
+{
+  "results": [
+    {
+      "id": 1,
+      "application": "systemd",
+      "helper": "reboot",
+      "app_type": "static",
+      "reboot_required": true
+    },
+    {
+      "id": 2,
+      "application": "httpd",
+      "helper": "systemctl restart httpd",
+      "app_type": "daemon",
+      "reboot_required": false
+    },
+    {
+      "id": 3,
+      "application": "bash",
+      "helper": null,
+      "app_type": "session",
+      "reboot_required": false
+    }
+  ],
+  "total": 3,
+  "per_page": 20,
+  "page": 1,
+  "subtotal": 3,
+  "selectable": 2
+}

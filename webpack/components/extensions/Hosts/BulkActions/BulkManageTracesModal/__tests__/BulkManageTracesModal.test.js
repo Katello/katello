@@ -1,52 +1,25 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../../test-utils/nockWrapper';
+import { foremanApi } from '../../../../../../services/api';
 import BulkManageTracesModal from '../BulkManageTracesModal';
 import { BULK_TRACES_KEY } from '../BulkManageTracesConstants';
+import mockTraces from './bulkTraces.fixtures.json';
 
-const mockTraces = {
-  results: [
-    {
-      id: 1,
-      application: 'systemd',
-      helper: 'reboot',
-      app_type: 'static',
-      reboot_required: true,
-    },
-    {
-      id: 2,
-      application: 'httpd',
-      helper: 'systemctl restart httpd',
-      app_type: 'daemon',
-      reboot_required: false,
-    },
-    {
-      id: 3,
-      application: 'bash',
-      helper: null,
-      app_type: 'session',
-      reboot_required: false,
-    },
-  ],
-  total: 3,
-  per_page: 20,
-  page: 1,
-  subtotal: 3,
-  selectable: 2,
-};
+const bulkTracesUrl = foremanApi.getApiUrl('/hosts/bulk/traces');
+const autocompleteUrl = '/hosts/bulk/traces/auto_complete_search';
 
 const renderOptions = () => ({
   apiNamespace: BULK_TRACES_KEY,
-  initialState: {
-    API: {
-      [BULK_TRACES_KEY]: {
-        response: mockTraces,
-        status: 'RESOLVED',
-      },
-    },
-  },
 });
 
 test('Displays modal title', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -61,10 +34,18 @@ test('Displays modal title', async (done) => {
   await patientlyWaitFor(() => {
     expect(getByText('Restart applications')).toBeInTheDocument();
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Displays traces in the table', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -80,10 +61,18 @@ test('Displays traces in the table', async (done) => {
   await patientlyWaitFor(() => {
     expect(queryByText('systemd') || queryByText('Application')).toBeTruthy();
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Restart button is disabled when no traces selected', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -101,10 +90,18 @@ test('Restart button is disabled when no traces selected', async (done) => {
     expect(restartButton).toBeInTheDocument();
     expect(restartButton).toBeDisabled();
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Restart button is enabled when a trace is selected', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -137,7 +134,9 @@ test('Restart button is enabled when a trace is selected', async (done) => {
       btn.textContent.includes('Restart') || btn.textContent.includes('Reboot'));
     expect(restartButton).not.toBeDisabled();
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Warning banner is not shown when no static traces', async (done) => {
@@ -146,17 +145,11 @@ test('Warning banner is not shown when no static traces', async (done) => {
     results: mockTraces.results.filter(t => t.app_type !== 'static'),
   };
 
-  const customRenderOptions = {
-    apiNamespace: BULK_TRACES_KEY,
-    initialState: {
-      API: {
-        [BULK_TRACES_KEY]: {
-          response: tracesWithoutStatic,
-          status: 'RESOLVED',
-        },
-      },
-    },
-  };
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, tracesWithoutStatic);
 
   const jsx = (
     <BulkManageTracesModal
@@ -167,15 +160,23 @@ test('Warning banner is not shown when no static traces', async (done) => {
       orgId={1}
     />
   );
-  const { queryByText } = renderWithRedux(jsx, customRenderOptions);
+  const { queryByText } = renderWithRedux(jsx, renderOptions());
 
   await patientlyWaitFor(() => {
     expect(queryByText(/requires the hosts to reboot/i)).not.toBeInTheDocument();
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Warning banner is shown when static traces are selected', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -200,10 +201,18 @@ test('Warning banner is shown when static traces are selected', async (done) => 
   await patientlyWaitFor(() => {
     expect(queryByText(/requires the hosts to reboot/i)).toBeInTheDocument();
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Handles empty string search query (all hosts)', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -219,10 +228,18 @@ test('Handles empty string search query (all hosts)', async (done) => {
   await patientlyWaitFor(() => {
     expect(queryByText('systemd') || queryByText('Application')).toBeTruthy();
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Disables checkboxes for session-type traces', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -243,7 +260,9 @@ test('Disables checkboxes for session-type traces', async (done) => {
     // At least one checkbox should be disabled (the bash session trace)
     expect(disabledCheckboxes.length).toBeGreaterThan(0);
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Renders modal with empty results without error', async (done) => {
@@ -256,17 +275,11 @@ test('Renders modal with empty results without error', async (done) => {
     selectable: 0,
   };
 
-  const customRenderOptions = {
-    apiNamespace: BULK_TRACES_KEY,
-    initialState: {
-      API: {
-        [BULK_TRACES_KEY]: {
-          response: emptyTraces,
-          status: 'RESOLVED',
-        },
-      },
-    },
-  };
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, emptyTraces);
 
   const jsx = (
     <BulkManageTracesModal
@@ -277,17 +290,24 @@ test('Renders modal with empty results without error', async (done) => {
       orgId={1}
     />
   );
-  const { queryByText } = renderWithRedux(jsx, customRenderOptions);
+  const { queryByText } = renderWithRedux(jsx, renderOptions());
 
   // Wait for empty state message to appear (from TableIndexPage EmptyPage component)
   await patientlyWaitFor(() => {
     expect(queryByText('The selected hosts do not show any applications needing restart.')).toBeInTheDocument();
   });
 
-  done();
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Customize and restart dropdown is disabled when no traces selected', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -307,10 +327,18 @@ test('Customize and restart dropdown is disabled when no traces selected', async
     // Split button should be disabled when no traces selected
     expect(dropdownToggle).toBeDisabled();
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
 
 test('Customize and restart link has correct URL when traces selected', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .post(bulkTracesUrl)
+    .query(true)
+    .reply(200, mockTraces);
+
   const jsx = (
     <BulkManageTracesModal
       isOpen
@@ -352,5 +380,7 @@ test('Customize and restart link has correct URL when traces selected', async (d
     expect(href).toContain('job_invocations/new');
     expect(href).toContain('feature=katello_host_tracer_resolve');
   });
-  done();
+
+  assertNockRequest(autocompleteScope, done);
+  assertNockRequest(scope);
 });
