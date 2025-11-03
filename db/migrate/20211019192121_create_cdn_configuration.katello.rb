@@ -23,7 +23,7 @@ class CreateCdnConfiguration < ActiveRecord::Migration[6.0]
     ::Organization.all.each do |org|
       FakeCdnConfiguration.where(
         organization_id: org.id,
-        url: org.redhat_provider.repository_url || ::Katello::Resources::CDN::CdnResource.redhat_cdn_url
+        url: org.redhat_provider&.repository_url || ::Katello::Resources::CDN::CdnResource.redhat_cdn_url
       ).first_or_create!
     end
 
