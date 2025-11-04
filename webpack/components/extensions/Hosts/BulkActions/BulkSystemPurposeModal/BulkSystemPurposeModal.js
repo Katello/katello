@@ -11,7 +11,6 @@ import {
   FormSelectOption,
   TextContent,
   Text,
-  TextVariants,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
@@ -221,7 +220,7 @@ const BulkSystemPurposeModal = ({
       <TextContent>
         <Text ouiaId="bulk-system-purpose-description">
           <FormattedMessage
-            defaultMessage="This will update the system purpose for {hosts}."
+            defaultMessage="This will update the system purpose for {hosts}. Not all releases may be compatible with all selected hosts."
             values={{
               hosts: (
                 <strong>
@@ -239,9 +238,6 @@ const BulkSystemPurposeModal = ({
             }}
             id="bulk-system-purpose-description-i18n"
           />
-        </Text>
-        <Text component={TextVariants.small} ouiaId="bulk-system-purpose-helper-text">
-          {__('Not all releases may be compatible with all selected hosts.')}
         </Text>
       </TextContent>
 
