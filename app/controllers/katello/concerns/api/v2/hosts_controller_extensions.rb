@@ -19,8 +19,8 @@ module Katello
           scope = super(options)
           # Eager load host_collections for index action to avoid N+1 queries
           # Using preload to force loading even if not accessed
-          if params[:action] == 'index'
-            scope = scope.preload(:host_collections) if scope.respond_to?(:preload)
+          if params[:action] == 'index' && scope.respond_to?(:preload)
+            scope = scope.preload(:host_collections)
           end
           scope
         end
