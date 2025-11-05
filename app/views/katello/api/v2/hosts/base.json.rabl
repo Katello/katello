@@ -27,3 +27,12 @@ if @facet
     end
   end
 end
+
+node :host_collections do
+  @resource.host_collections.map do |hc|
+    {
+      :id => hc.id,
+      :name => hc.name,
+    }
+  end
+end
