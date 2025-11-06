@@ -345,7 +345,7 @@ module Katello
         pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
         @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id, :content_source_id => pulp3_proxy.id)
         Setting[:retain_build_profile_upon_unregistration] = false
-        assert_equal false, Setting[:retain_build_profile_upon_unregistration]
+        refute Setting[:retain_build_profile_upon_unregistration]
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
 
         ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
@@ -373,7 +373,7 @@ module Katello
         original_content_source = @host.content_facet.content_source
 
         Setting[:retain_build_profile_upon_unregistration] = true
-        assert_equal true, Setting[:retain_build_profile_upon_unregistration]
+        assert Setting[:retain_build_profile_upon_unregistration]
 
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
 
@@ -405,7 +405,7 @@ module Katello
 
         # Set the setting to false to verify that re-registration preserves data regardless
         Setting[:retain_build_profile_upon_unregistration] = false
-        assert_equal false, Setting[:retain_build_profile_upon_unregistration]
+        refute Setting[:retain_build_profile_upon_unregistration]
 
         # Mock the necessary methods for re-registration
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
