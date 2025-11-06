@@ -389,7 +389,7 @@ module Katello
         assert_nil @host.content_facet.uuid
       end
 
-      def test_re_register_host_preserves_build_profile_regardless_of_setting
+      def test_re_register_host_preserves_build_profile_regardless_of_setting # rubocop:disable Metrics/AbcSize
         # Setup existing host with content facet
         ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
