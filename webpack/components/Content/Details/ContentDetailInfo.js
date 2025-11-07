@@ -18,7 +18,7 @@ const createRows = (details, mapping) => {
 };
 
 const ContentDetailInfo = ({ contentDetails, displayMap }) => (
-  <Table ouiaId="content-details-info-table">
+  <Table ouiaid="content-details-info-table">
     <tbody>
       {createRows(contentDetails, displayMap)}
     </tbody>
