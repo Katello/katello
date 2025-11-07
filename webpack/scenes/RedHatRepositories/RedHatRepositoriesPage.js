@@ -98,7 +98,7 @@ class RedHatRepositoriesPage extends Component {
               {__('Enabled Repositories')}
               <FieldLevelHelp content={__('Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.')} />
               <Button
-                ouiaId="export-csv-button"
+                ouiaid="export-csv-button"
                 className="pull-right"
                 onClick={() => { api.open('/repositories.csv', repoParams); }}
               >

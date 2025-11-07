@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import toJson from 'enzyme-to-json';
+import { render } from '@testing-library/react';
 
 import RepositoryTypeIcon from '../RepositoryTypeIcon';
 
@@ -11,18 +10,63 @@ describe('RepositoryTypeIcon component', () => {
   });
 
   describe('rendering', () => {
-    test('it should get rendered correctly', () => {
-      const component = mount(<RepositoryTypeIcon {...getBaseProps()} />);
+    test('renders without errors for unknown type', () => {
+      const { container } = render(<RepositoryTypeIcon {...getBaseProps()} />);
+      expect(container.firstChild).toBeInTheDocument();
 
-      expect(toJson(component)).toMatchSnapshot();
+      // Verify it renders a question icon for unknown types (legacy PF3 icon)
+      const icon = container.querySelector('.fa-question');
+      expect(icon).toBeInTheDocument();
     });
 
-    test('it should get rendered correctly when type is provided', () => {
-      const props = getBaseProps();
-      props.type = 'yum';
-      const component = mount(<RepositoryTypeIcon {...props} />);
+    test('renders yum repository icon', () => {
+      const props = { ...getBaseProps(), type: 'yum' };
+      const { container } = render(<RepositoryTypeIcon {...props} />);
+      expect(container.firstChild).toBeInTheDocument();
 
-      expect(toJson(component)).toMatchSnapshot();
+      // Verify it renders the PatternFly bundle icon for yum repositories
+      const icon = container.querySelector('.pficon-bundle');
+      expect(icon).toBeInTheDocument();
+    });
+
+    test('renders file repository icon', () => {
+      const props = { ...getBaseProps(), type: 'file' };
+      const { container } = render(<RepositoryTypeIcon {...props} />);
+      expect(container.firstChild).toBeInTheDocument();
+
+      // Verify it renders the file icon for file repositories
+      const icon = container.querySelector('.fa-file');
+      expect(icon).toBeInTheDocument();
+    });
+
+    test('renders debug repository icon', () => {
+      const props = { ...getBaseProps(), type: 'debug' };
+      const { container } = render(<RepositoryTypeIcon {...props} />);
+      expect(container.firstChild).toBeInTheDocument();
+
+      // Verify it renders the bug icon for debug repositories
+      const icon = container.querySelector('.fa-bug');
+      expect(icon).toBeInTheDocument();
+    });
+
+    test('renders containerimage repository icon', () => {
+      const props = { ...getBaseProps(), type: 'containerimage' };
+      const { container } = render(<RepositoryTypeIcon {...props} />);
+      expect(container.firstChild).toBeInTheDocument();
+
+      // Verify it renders the cube icon for container image repositories
+      const icon = container.querySelector('.fa-cube');
+      expect(icon).toBeInTheDocument();
+    });
+
+    test('renders kickstart repository icon', () => {
+      const props = { ...getBaseProps(), type: 'kickstart' };
+      const { container } = render(<RepositoryTypeIcon {...props} />);
+      expect(container.firstChild).toBeInTheDocument();
+
+      // Verify it renders the futbol icon for kickstart repositories
+      const icon = container.querySelector('.fa-futbol-o');
+      expect(icon).toBeInTheDocument();
     });
   });
 });
