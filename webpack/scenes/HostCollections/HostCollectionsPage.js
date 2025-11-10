@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { HOST_COLLECTIONS_KEY } from './HostCollectionsConstants';
 import CreateHostCollectionModal from './Create/CreateHostCollectionModal';
 import CopyHostCollectionModal from './Copy/CopyHostCollectionModal';
@@ -26,17 +25,16 @@ const HostCollectionsPage = () => {
   const columns = {
     name: {
       title: __('Name'),
-      wrapper: ({ id, name, permissions = {} }) =>
-        (permissions.view_host_collections ? (
-          <a href={urlBuilder('host_collections', '', id)}>{name}</a>
-        ) : (
-          <span>{name}</span>
-        )),
+      wrapper: ({ id, name }) => (
+        <a href={`/labs/host_collections/${id}`}>{name}</a>
+      ),
       isSorted: true,
     },
     total_hosts: {
       title: __('Content Hosts'),
-      wrapper: ({ total_hosts: totalHosts }) => totalHosts || 0,
+      wrapper: ({ id, total_hosts: totalHosts }) => (
+        <a href={`/labs/host_collections/${id}#hosts`}>{totalHosts || 0}</a>
+      ),
     },
     max_hosts: {
       title: __('Limit'),

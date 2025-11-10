@@ -19,14 +19,14 @@ const CopyHostCollectionModal = ({ isOpen, onClose, hostCollection }) => {
   const [newName, setNewName] = useState(`Copy of ${hostCollection?.name || ''}`);
   const [copying, setCopying] = useState(false);
 
-  const handleSuccess = () => {
+  const handleSuccess = (data) => {
     setCopying(false);
     dispatch(addToast({
       type: 'success',
       message: __('Host collection copied successfully'),
     }));
     onClose();
-    window.location.reload();
+    window.location.href = `/labs/host_collections/${data.id}`;
   };
 
   const handleError = (error) => {

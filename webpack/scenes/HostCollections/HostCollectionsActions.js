@@ -22,7 +22,7 @@ export const copyHostCollection =
   (id, newName, handleSuccess, handleError) => async (dispatch) => {
     try {
       const { data } = await api.post(`${baseApiUrl}/${id}/copy`, {
-        new_name: newName,
+        host_collection: { name: newName },
       });
       dispatch(apiSuccess(API_OPERATIONS.COPY, data));
       if (handleSuccess) handleSuccess(data);

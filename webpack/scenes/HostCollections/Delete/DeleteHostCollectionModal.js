@@ -25,7 +25,7 @@ const DeleteHostCollectionModal = ({ isOpen, onClose, hostCollection }) => {
       message: __('Host collection deleted successfully'),
     }));
     onClose();
-    window.location.reload();
+    window.location.href = '/labs/host_collections';
   };
 
   const handleError = (error) => {
