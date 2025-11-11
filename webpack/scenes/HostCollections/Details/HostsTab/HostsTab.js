@@ -1,21 +1,44 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
+import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
+import { get } from 'foremanReact/redux/API';
 import {
   Button,
   Card,
   CardBody,
+  ToolbarItem,
 } from '@patternfly/react-core';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
+import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
 import { removeHostsFromCollection, getHostCollection } from '../HostCollectionDetailsActions';
 import AddHostsModal from './AddHostsModal';
 
 const HostsTab = ({ hostCollectionId }) => {
   const dispatch = useDispatch();
-  const [selectedHosts, setSelectedHosts] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const response = useSelector(state =>
+    selectAPIResponse(state, `HOST_COLLECTION_${hostCollectionId}_HOSTS`));
+  const { results = [], total = 0, per_page: perPage = 20, ...metadata } = response;
+
+  const {
+    selectOne,
+    isSelected,
+    selectedResults,
+    selectNone,
+    selectAll,
+    selectPage,
+    selectedCount,
+    areAllRowsOnPageSelected,
+    areAllRowsSelected,
+  } = useBulkSelect({
+    results,
+    metadata: { ...metadata, total, page: perPage },
+  });
 
   const columns = {
     name: {
@@ -49,35 +72,68 @@ const HostsTab = ({ hostCollectionId }) => {
     return filter;
   };
 
-  const handleRemoveSelected = () => {
-    if (selectedHosts.length === 0) return;
-
-    const hostIds = selectedHosts.map(host => host.id);
-    dispatch(removeHostsFromCollection(hostCollectionId, hostIds, () => {
-      setSelectedHosts([]);
-      dispatch(getHostCollection(hostCollectionId));
+  const refreshHostsTable = () => {
+    dispatch(get({
+      key: `HOST_COLLECTION_${hostCollectionId}_HOSTS`,
+      url: '/api/hosts?include_permissions=true',
+      params: {
+        search: restrictedSearchQuery(''),
+      },
     }));
   };
 
-  const actionButtons = [
-    <Button
-      key="add-hosts"
-      variant="secondary"
-      onClick={() => setIsAddModalOpen(true)}
-      ouiaId="add-hosts-button"
-    >
-      {__('Add Hosts')}
-    </Button>,
-    <Button
-      key="remove-selected"
-      variant="secondary"
-      onClick={handleRemoveSelected}
-      isDisabled={selectedHosts.length === 0}
-      ouiaId="remove-hosts-button"
-    >
-      {__('Remove Selected')}
-    </Button>,
-  ];
+  const handleRemoveSelected = () => {
+    if (selectedCount === 0) return;
+
+    // Get selected host IDs - works for both individual selections and select-all mode
+    const hostIds = selectedResults.length > 0
+      ? selectedResults.map(host => host.id)
+      : results.filter(host => isSelected(host.id)).map(host => host.id);
+
+    dispatch(removeHostsFromCollection(hostCollectionId, hostIds, () => {
+      selectNone();
+      dispatch(getHostCollection(hostCollectionId));
+      refreshHostsTable();
+    }));
+  };
+
+  const selectionToolbar = (
+    <ToolbarItem key="selectAll">
+      <SelectAllCheckbox
+        selectAll={selectAll}
+        selectPage={selectPage}
+        selectNone={selectNone}
+        selectedCount={selectedCount}
+        pageRowCount={results.length}
+        totalCount={total}
+        areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
+        areAllRowsSelected={areAllRowsSelected()}
+      />
+    </ToolbarItem>
+  );
+
+  const customToolbarItems = (
+    <>
+      <Button
+        key="add-hosts"
+        variant="primary"
+        onClick={() => setIsAddModalOpen(true)}
+        ouiaId="add-hosts-button"
+        style={{ marginRight: '8px' }}
+      >
+        {__('Add Hosts')}
+      </Button>
+      <Button
+        key="remove-selected"
+        variant="secondary"
+        onClick={handleRemoveSelected}
+        isDisabled={selectedCount === 0}
+        ouiaId="remove-hosts-button"
+      >
+        {__('Remove Selected')}
+      </Button>
+    </>
+  );
 
   const emptyContentTitle = __('No hosts yet');
   const emptyContentBody = __('Add hosts to this host collection using the Add Hosts button.');
@@ -96,11 +152,13 @@ const HostsTab = ({ hostCollectionId }) => {
             header={__('Hosts')}
             controller="hosts"
             columns={columns}
-            actionButtons={actionButtons}
+            customToolbarItems={customToolbarItems}
+            selectionToolbar={selectionToolbar}
             restrictedSearchQuery={restrictedSearchQuery}
             creatable={false}
-            selectionEnabled
-            onSelect={setSelectedHosts}
+            showCheckboxes
+            selectOne={selectOne}
+            isSelected={isSelected}
             emptyContentTitle={emptyContentTitle}
             emptyContentBody={emptyContentBody}
             emptySearchTitle={emptySearchTitle}
@@ -115,6 +173,7 @@ const HostsTab = ({ hostCollectionId }) => {
         onHostsAdded={() => {
           setIsAddModalOpen(false);
           dispatch(getHostCollection(hostCollectionId));
+          refreshHostsTable();
         }}
       />
     </>

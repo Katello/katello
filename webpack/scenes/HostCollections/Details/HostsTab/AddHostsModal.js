@@ -1,34 +1,60 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
+import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import {
   Modal,
   ModalVariant,
   Button,
+  ToolbarItem,
 } from '@patternfly/react-core';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
+import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
 import { addHostsToCollection } from '../HostCollectionDetailsActions';
 
 const AddHostsModal = ({
   isOpen, onClose, hostCollectionId, onHostsAdded,
 }) => {
   const dispatch = useDispatch();
-  const [selectedHosts, setSelectedHosts] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
 
+  const response = useSelector(state =>
+    selectAPIResponse(state, `HOST_COLLECTION_${hostCollectionId}_AVAILABLE_HOSTS`));
+  const { results = [], total = 0, per_page: perPage = 20, ...metadata } = response;
+
+  const {
+    selectOne,
+    isSelected,
+    selectedResults,
+    selectNone,
+    selectAll,
+    selectPage,
+    selectedCount,
+    areAllRowsOnPageSelected,
+    areAllRowsSelected,
+  } = useBulkSelect({
+    results,
+    metadata: { ...metadata, total, page: perPage },
+  });
+
   const handleAddHosts = () => {
-    if (selectedHosts.length === 0) return;
+    if (selectedCount === 0) return;
 
     setIsAdding(true);
-    const hostIds = selectedHosts.map(host => host.id);
+    // Get selected host IDs - works for both individual selections and select-all mode
+    const hostIds = selectedResults.length > 0
+      ? selectedResults.map(host => host.id)
+      : results.filter(host => isSelected(host.id)).map(host => host.id);
+
     dispatch(addHostsToCollection(
       hostCollectionId,
       hostIds,
       () => {
         setIsAdding(false);
-        setSelectedHosts([]);
+        selectNone();
         if (onHostsAdded) onHostsAdded();
       },
       () => {
@@ -53,6 +79,21 @@ const AddHostsModal = ({
     },
   };
 
+  const selectionToolbar = (
+    <ToolbarItem key="selectAll">
+      <SelectAllCheckbox
+        selectAll={selectAll}
+        selectPage={selectPage}
+        selectNone={selectNone}
+        selectedCount={selectedCount}
+        pageRowCount={results.length}
+        totalCount={total}
+        areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
+        areAllRowsSelected={areAllRowsSelected()}
+      />
+    </ToolbarItem>
+  );
+
   const emptyContentTitle = __('No available hosts');
   const emptyContentBody = __('All hosts are already in this collection, or there are no hosts in the organization.');
   const emptySearchTitle = __('No matching hosts found');
@@ -70,7 +111,7 @@ const AddHostsModal = ({
           key="add"
           variant="primary"
           onClick={handleAddHosts}
-          isDisabled={selectedHosts.length === 0 || isAdding}
+          isDisabled={selectedCount === 0 || isAdding}
           isLoading={isAdding}
           ouiaId="add-hosts-submit-button"
         >
@@ -88,7 +129,7 @@ const AddHostsModal = ({
       ]}
     >
       <TableIndexPage
-        apiUrl="/katello/api/hosts"
+        apiUrl="/api/hosts"
         apiOptions={{
           key: `HOST_COLLECTION_${hostCollectionId}_AVAILABLE_HOSTS`,
           params: {
@@ -98,8 +139,11 @@ const AddHostsModal = ({
         header={__('Available Hosts')}
         controller="hosts"
         columns={columns}
-        selectionEnabled
-        onSelect={setSelectedHosts}
+        selectionToolbar={selectionToolbar}
+        creatable={false}
+        showCheckboxes
+        selectOne={selectOne}
+        isSelected={isSelected}
         emptyContentTitle={emptyContentTitle}
         emptyContentBody={emptyContentBody}
         emptySearchTitle={emptySearchTitle}

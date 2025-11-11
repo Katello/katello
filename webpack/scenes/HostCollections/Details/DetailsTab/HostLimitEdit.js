@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -18,6 +18,12 @@ const HostLimitEdit = ({ hostCollection, hostCollectionId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUnlimited, setIsUnlimited] = useState(hostCollection?.unlimitedHosts || false);
   const [maxHosts, setMaxHosts] = useState(hostCollection?.maxHosts || 1);
+
+  // Update local state when hostCollection data changes
+  useEffect(() => {
+    setIsUnlimited(hostCollection?.unlimitedHosts || false);
+    setMaxHosts(hostCollection?.maxHosts || 1);
+  }, [hostCollection?.unlimitedHosts, hostCollection?.maxHosts]);
 
   const handleSave = () => {
     const params = {
@@ -89,7 +95,7 @@ const HostLimitEdit = ({ hostCollection, hostCollectionId }) => {
             id="unlimited-checkbox"
             label={__('Unlimited')}
             isChecked={isUnlimited}
-            onChange={setIsUnlimited}
+            onChange={(_event, checked) => setIsUnlimited(checked)}
             ouiaId="unlimited-checkbox"
           />
         </FlexItem>
