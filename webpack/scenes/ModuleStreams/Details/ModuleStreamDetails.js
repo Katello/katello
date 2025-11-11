@@ -36,7 +36,7 @@ class ModuleStreamDetails extends Component {
     } = moduleStreamDetails;
 
     const resource = {
-      nameField: 'name',
+      nameField: 'name_stream_version_context',
       resourceUrl: api.getApiUrl('/module_streams'),
       switcherItemUrl: '/module_streams/:id',
     };
