@@ -230,6 +230,15 @@ Foreman::Plugin.register :katello do
        :parent => :lab_features_menu,
        :turbolinks => false
 
+  menu :labs_menu,
+       :host_collections_lab,
+       :url => '/labs/host_collections',
+       :url_hash => {:controller => 'katello/api/v2/host_collections_controller',
+                     :action => 'index'},
+       :caption => N_('Host Collections'),
+       :parent => :lab_features_menu,
+       :turbolinks => false
+
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 

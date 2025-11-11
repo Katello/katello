@@ -43,8 +43,8 @@ const HostsTab = ({ hostCollectionId }) => {
   const columns = {
     name: {
       title: __('Name'),
-      wrapper: ({ id, name }) => (
-        <a href={urlBuilder('hosts', '', id)}>{name}</a>
+      wrapper: ({ name }) => (
+        <a href={`/new/hosts/${name}#/Overview`}>{name}</a>
       ),
       isSorted: true,
     },
