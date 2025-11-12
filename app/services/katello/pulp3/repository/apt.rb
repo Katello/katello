@@ -71,14 +71,22 @@ module Katello
         end
 
         def version_missing_structure_content?
-          # There may be old pulp_deb repo versions that have no package_release_components to go with the packages.
+          # There may be old pulp_deb repo versions that have no structure content for some or all packages.
           # This could be because packages were uploaded with Katello < 4.12
           # It may also affect filtered CV versions created with very old Katello versions.
           # This method can identify such cases, so that we may fall back to simple publishing.
+          #
+          # Note: For performance reasons, we identify affected repos using a heuristic.
+          # Namely, repo versions that have more packages than PRC (package_release_components) are affected.
+          # In theory, there could be repo versions where some packages have multiple PRC, while others have zero.
+          # If this results in an overall PRC count > than the number of packages, then the repo version is not
+          # identified as affected. We have not seen such cases in the real world, and checking each package
+          # individually would be prohibitively inefficent.
           return false if repo.version_href.blank?
-          version = pulp_primary_api.repository_versions_api.read(repo.version_href)
-          apt_content_types = version&.content_summary&.present&.keys
-          return apt_content_types.include?('deb.package') && !apt_content_types.include?('deb.package_release_component')
+          version_content = pulp_primary_api.repository_versions_api.read(repo.version_href).content_summary.present
+          packages = version_content.fetch('deb.package', {:count => 0})
+          prc = version_content.fetch('deb.package_release_component', {:count => 0})
+          return packages.fetch(:count) > prc.fetch(:count)
         end
 
         def publication_options(repository)
