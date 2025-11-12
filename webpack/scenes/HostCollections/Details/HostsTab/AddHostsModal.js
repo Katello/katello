@@ -71,11 +71,17 @@ const AddHostsModal = ({
       ),
       isSorted: true,
     },
-    lifecycle_environment_name: {
+    lifecycle_environment: {
       title: __('Lifecycle Environment'),
+      wrapper: ({ content_facet_attributes }) => (
+        content_facet_attributes?.lifecycle_environment?.name || ''
+      ),
     },
-    content_view_name: {
+    content_view: {
       title: __('Content View'),
+      wrapper: ({ content_facet_attributes }) => (
+        content_facet_attributes?.content_view?.name || ''
+      ),
     },
   };
 
