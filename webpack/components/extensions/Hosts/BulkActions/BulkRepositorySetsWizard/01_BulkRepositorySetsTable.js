@@ -14,7 +14,7 @@ import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHo
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import { Table } from 'foremanReact/components/PF4/TableIndexPage/Table/Table';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
+import { RowSelectTd } from 'foremanReact/components/PF4/TableIndexPage/RowSelectTd';
 import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
 import { noop } from 'foremanReact/common/helpers';
 
