@@ -386,6 +386,32 @@ module Katello
       assert_equal [job_invocation], body
     end
 
+    def test_resolve_traces_with_empty_search
+      job_invocation = {"description" => "Restart Services", "id" => 1, "job_category" => "Katello"}
+      host_one_trace
+      host_two_trace
+
+      Katello::HostTraceManager.expects(:resolve_traces).returns([job_invocation])
+
+      put :resolve_traces, params: { :trace_search => "" }
+
+      assert_response :success
+
+      body = JSON.parse(response.body)
+
+      assert_equal [job_invocation], body
+    end
+
+    def test_resolve_traces_without_params
+      put :resolve_traces, params: {}
+
+      assert_response :bad_request
+
+      body = JSON.parse(response.body)
+
+      assert_includes body['displayMessage'], 'Either trace_search or trace_ids must be provided'
+    end
+
     def test_resolve_traces_permission
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @destroy_permission]

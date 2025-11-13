@@ -301,8 +301,9 @@ module Katello
     end
 
     def find_traces
-      if params[:trace_search].present?
-        # Use search query to find traces
+      if params.key?(:trace_search)
+        # Use search query to find traces (empty string means all)
+        params[:search] = params[:trace_search]
         search_results = scoped_search(Katello::HostTracer.resolvable, nil, nil, resource_class: Katello::HostTracer)
         @traces = search_results[:results]
       elsif params[:trace_ids].present?
