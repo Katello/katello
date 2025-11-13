@@ -18,6 +18,7 @@ module Katello
     scoped_search :on => :application, :complete_value => true
     scoped_search :on => :app_type, :complete_value => true
     scoped_search :on => :helper, :complete_value => true
+    scoped_search :relation => :host, :on => :name, :rename => :host, :complete_value => true
 
     def reboot_required?
       self.app_type == TRACE_APP_TYPE_STATIC

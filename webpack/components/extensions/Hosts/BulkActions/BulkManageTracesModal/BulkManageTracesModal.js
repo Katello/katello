@@ -293,11 +293,16 @@ const BulkManageTracesModal = ({
     application: {
       title: __('Application'),
       isSorted: true,
-      weight: 40,
+      weight: 30,
+    },
+    host: {
+      title: __('Host'),
+      isSorted: true,
+      weight: 30,
     },
     app_type: {
       title: __('Type'),
-      weight: 20,
+      weight: 15,
     },
     helper: {
       title: __('Helper'),
@@ -312,7 +317,7 @@ const BulkManageTracesModal = ({
           {helper}
         </>
       ),
-      weight: 40,
+      weight: 25,
     },
   };
 

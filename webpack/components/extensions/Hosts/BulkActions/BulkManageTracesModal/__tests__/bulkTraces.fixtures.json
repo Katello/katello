@@ -5,21 +5,27 @@
       "application": "systemd",
       "helper": "reboot",
       "app_type": "static",
-      "reboot_required": true
+      "reboot_required": true,
+      "host_id": 101,
+      "host": "host1.example.com"
     },
     {
       "id": 2,
       "application": "httpd",
       "helper": "systemctl restart httpd",
       "app_type": "daemon",
-      "reboot_required": false
+      "reboot_required": false,
+      "host_id": 102,
+      "host": "host2.example.com"
     },
     {
       "id": 3,
       "application": "bash",
       "helper": null,
       "app_type": "session",
-      "reboot_required": false
+      "reboot_required": false,
+      "host_id": 103,
+      "host": "host3.example.com"
     }
   ],
   "total": 3,
