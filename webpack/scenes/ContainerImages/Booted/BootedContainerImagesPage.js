@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Table, Thead, Th, Tbody, Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
@@ -22,7 +23,7 @@ import { STATUS } from '../containerImagesHelpers';
 import TableEmptyState from '../TableEmptyState';
 import BOOTED_CONTAINER_IMAGES_KEY, { BOOTED_CONTAINER_IMAGES_API_PATH } from './BootedContainerImagesConstants';
 
-const BootedContainerImagesPage = () => {
+const BootedContainerImagesPage = ({ showHeader }) => {
   const foremanHostsPageUrl = useForemanHostsPageUrl();
   const columns = {
     bootc_booted_image: {
@@ -104,6 +105,7 @@ const BootedContainerImagesPage = () => {
     <TableIndexPage
       apiUrl={BOOTED_CONTAINER_IMAGES_API_PATH}
       apiOptions={apiOptions}
+      header={showHeader ? __('Booted container images') : undefined}
       createable={false}
       isDeleteable={false}
       controller="/katello/api/v2/host_bootc_images"
@@ -203,6 +205,14 @@ const BootedContainerImagesPage = () => {
       </>
     </TableIndexPage>
   );
+};
+
+BootedContainerImagesPage.propTypes = {
+  showHeader: PropTypes.bool,
+};
+
+BootedContainerImagesPage.defaultProps = {
+  showHeader: true,
 };
 
 export default BootedContainerImagesPage;

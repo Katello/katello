@@ -48,6 +48,19 @@ if @organization
         :library_instance => repo.library_instance?,
         :product_id => repo.product&.id,
         :product_name => repo.product&.name,
+        :kt_environment => (if repo.environment
+                              {
+                                :id => repo.environment.id,
+                                :name => repo.environment.name,
+                              }
+                            end),
+        :content_view_version => (if repo.content_view_version
+                                    {
+                                      :id => repo.content_view_version.id,
+                                      :name => repo.content_view_version.name,
+                                      :content_view_id => repo.content_view_version.content_view_id,
+                                    }
+                                  end),
       }
       attributes
     end
@@ -72,6 +85,23 @@ else
     end
     node :product_name do |repo|
       repo.product&.name
+    end
+    node :kt_environment do |repo|
+      if repo.environment
+        {
+          :id => repo.environment.id,
+          :name => repo.environment.name,
+        }
+      end
+    end
+    node :content_view_version do |repo|
+      if repo.content_view_version
+        {
+          :id => repo.content_view_version.id,
+          :name => repo.content_view_version.name,
+          :content_view_id => repo.content_view_version.content_view_id,
+        }
+      end
     end
   end
 

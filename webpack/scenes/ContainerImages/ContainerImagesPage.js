@@ -76,7 +76,7 @@ const ContainerImagesPage = () => {
         </StackItem>
         <StackItem>
           {activeTabKey === 0 && <SyncedContainerImagesPage />}
-          {activeTabKey === 1 && <BootedContainerImagesPage />}
+          {activeTabKey === 1 && <BootedContainerImagesPage showHeader={false} />}
         </StackItem>
       </Stack>
     </PageSection>
