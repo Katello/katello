@@ -46,7 +46,7 @@ const SyncResultCell = ({ repo }) => {
   const taskUrl = syncId ? foremanUrl(`/foreman_tasks/tasks/${syncId}`) : null;
 
   const labelContent = (
-    <Label color={color} icon={icon} ouiaId="sync-result-label">
+    <Label color={color} icon={icon}>
       {taskUrl ? (
         <a href={taskUrl} target="_blank" rel="noopener noreferrer">
           {label}
@@ -65,7 +65,7 @@ const SyncResultCell = ({ repo }) => {
 
     if (errorText && errorText.length > 0) {
       return (
-        <Tooltip content={errorText} ouiaId="sync-error-tooltip">
+        <Tooltip content={errorText}>
           {labelContent}
         </Tooltip>
       );
