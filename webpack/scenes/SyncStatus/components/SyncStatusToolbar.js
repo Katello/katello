@@ -20,12 +20,13 @@ const SyncStatusToolbar = ({
   onToggleActiveOnly,
   isSyncDisabled,
 }) => (
-  <Toolbar isSticky>
+  <Toolbar isSticky ouiaId="sync-status-toolbar">
     <ToolbarContent>
       <ToolbarItem>
         <Button
           variant="secondary"
           onClick={onExpandAll}
+          ouiaId="expand-all-button"
         >
           {__('Expand All')}
         </Button>
@@ -34,6 +35,7 @@ const SyncStatusToolbar = ({
         <Button
           variant="secondary"
           onClick={onCollapseAll}
+          ouiaId="collapse-all-button"
         >
           {__('Collapse All')}
         </Button>
@@ -42,6 +44,7 @@ const SyncStatusToolbar = ({
         <Button
           variant="secondary"
           onClick={onSelectAll}
+          ouiaId="select-all-button"
         >
           {__('Select All')}
         </Button>
@@ -50,6 +53,7 @@ const SyncStatusToolbar = ({
         <Button
           variant="secondary"
           onClick={onSelectNone}
+          ouiaId="select-none-button"
         >
           {__('Select None')}
         </Button>
@@ -60,6 +64,7 @@ const SyncStatusToolbar = ({
           label={__('Active Only')}
           isChecked={showActiveOnly}
           onChange={onToggleActiveOnly}
+          ouiaId="active-only-switch"
         />
       </ToolbarItem>
       <ToolbarItem align={{ default: 'alignRight' }}>
@@ -67,6 +72,7 @@ const SyncStatusToolbar = ({
           variant="primary"
           onClick={onSyncNow}
           isDisabled={isSyncDisabled || selectedRepoIds.length === 0}
+          ouiaId="sync-now-button"
         >
           {__('Synchronize Now')}
         </Button>

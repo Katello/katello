@@ -7,7 +7,6 @@ import SYNC_STATUS_KEY, {
   CANCEL_SYNC_KEY,
 } from './SyncStatusConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
-import { renderTaskStartedToast } from '../Tasks/helpers';
 
 export const syncStatusErrorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);

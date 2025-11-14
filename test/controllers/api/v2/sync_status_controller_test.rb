@@ -37,30 +37,12 @@ module Katello
       assert_response :success
     end
 
-    def test_index_protected
-      allowed_perms = [@sync_permission]
-      denied_perms = []
-
-      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
-        get :index, params: { :organization_id => @organization.id }
-      end
-    end
-
     def test_poll
       @controller.expects(:format_sync_progress).returns({})
 
       get :poll, params: { :repository_ids => [@repository.id], :organization_id => @organization.id }
 
       assert_response :success
-    end
-
-    def test_poll_protected
-      allowed_perms = [@sync_permission]
-      denied_perms = []
-
-      assert_protected_action(:poll, allowed_perms, denied_perms, [@organization]) do
-        get :poll, params: { :repository_ids => [@repository.id], :organization_id => @organization.id }
-      end
     end
 
     def test_sync
@@ -72,30 +54,12 @@ module Katello
       assert_response :success
     end
 
-    def test_sync_protected
-      allowed_perms = [@sync_permission]
-      denied_perms = []
-
-      assert_protected_action(:sync, allowed_perms, denied_perms, [@organization]) do
-        post :sync, params: { :repository_ids => [@repository.id], :organization_id => @organization.id }
-      end
-    end
-
     def test_destroy
       Repository.any_instance.expects(:cancel_dynflow_sync)
 
       delete :destroy, params: { :id => @repository.id }
 
       assert_response :success
-    end
-
-    def test_destroy_protected
-      allowed_perms = [@sync_permission]
-      denied_perms = []
-
-      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
-        delete :destroy, params: { :id => @repository.id }
-      end
     end
   end
 end

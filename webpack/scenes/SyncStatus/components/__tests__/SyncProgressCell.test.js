@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent } from '@testing-library/react';
 import SyncProgressCell from '../SyncProgressCell';
 import { SYNC_STATE_RUNNING } from '../../SyncStatusConstants';
 
@@ -14,6 +13,10 @@ describe('SyncProgressCell', () => {
     raw_state: SYNC_STATE_RUNNING,
   };
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('renders progress bar when syncing', () => {
     render(<SyncProgressCell repo={runningRepo} onCancelSync={mockOnCancelSync} />);
     expect(screen.getByText('Syncing')).toBeInTheDocument();
@@ -25,12 +28,11 @@ describe('SyncProgressCell', () => {
     expect(cancelButton).toBeInTheDocument();
   });
 
-  it('calls onCancelSync when cancel button is clicked', async () => {
-    const user = userEvent.setup();
+  it('calls onCancelSync when cancel button is clicked', () => {
     render(<SyncProgressCell repo={runningRepo} onCancelSync={mockOnCancelSync} />);
 
     const cancelButton = screen.getByLabelText('Cancel sync');
-    await user.click(cancelButton);
+    fireEvent.click(cancelButton);
 
     expect(mockOnCancelSync).toHaveBeenCalledWith(1);
   });
@@ -40,9 +42,10 @@ describe('SyncProgressCell', () => {
       ...runningRepo,
       is_running: false,
     };
-    const { container } = render(
-      <SyncProgressCell repo={notRunningRepo} onCancelSync={mockOnCancelSync} />
-    );
+    const { container } = render(<SyncProgressCell
+      repo={notRunningRepo}
+      onCancelSync={mockOnCancelSync}
+    />);
     expect(container.firstChild).toBeNull();
   });
 });

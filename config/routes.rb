@@ -18,6 +18,7 @@ Katello::Engine.routes.draw do
   get '/katello/providers/redhat_provider', to: redirect('/redhat_repositories')
   match '/redhat_repositories' => 'react#index', :via => [:get]
 
+  get '/katello/sync_management', to: redirect('/sync_management')
   match '/sync_management' => 'react#index', :via => [:get]
 
   match '/subscriptions' => 'react#index', :via => [:get]
