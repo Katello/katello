@@ -24,7 +24,6 @@ const SyncProgressCell = ({ repo, onCancelSync }) => {
           value={progressValue}
           title={__('Syncing')}
           size="sm"
-          ouiaId={`progress-${id}`}
         />
       </FlexItem>
       <FlexItem>
