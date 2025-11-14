@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import { Progress, Button, Flex, FlexItem } from '@patternfly/react-core';
 import { TimesIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { SYNC_STATE_RUNNING } from '../SyncStatusConstants';
 
 const SyncProgressCell = ({ repo, onCancelSync }) => {
-  const { is_running, progress, raw_state, id } = repo;
+  const {
+    isRunning, progress, rawState, id,
+  } = propsToCamelCase(repo);
 
-  if (!is_running || raw_state !== SYNC_STATE_RUNNING) {
+  if (!isRunning || rawState !== SYNC_STATE_RUNNING) {
     return null;
   }
 
@@ -21,6 +24,7 @@ const SyncProgressCell = ({ repo, onCancelSync }) => {
           value={progressValue}
           title={__('Syncing')}
           size="sm"
+          ouiaId={`progress-${id}`}
         />
       </FlexItem>
       <FlexItem>
@@ -28,6 +32,7 @@ const SyncProgressCell = ({ repo, onCancelSync }) => {
           variant="plain"
           aria-label={__('Cancel sync')}
           onClick={() => onCancelSync(id)}
+          ouiaId={`cancel-sync-${id}`}
         >
           <TimesIcon />
         </Button>

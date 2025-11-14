@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Table,
@@ -67,7 +67,7 @@ const SyncStatusTable = ({
   const visibleRows = useMemo(() => {
     if (!showActiveOnly) return buildTreeRows;
 
-    return buildTreeRows.filter(row => {
+    return buildTreeRows.filter((row) => {
       if (row.type !== 'repo') return true;
       const status = repoStatuses[row.id];
       return status?.is_running;
@@ -75,7 +75,7 @@ const SyncStatusTable = ({
   }, [buildTreeRows, showActiveOnly, repoStatuses]);
 
   const toggleExpand = (nodeId) => {
-    setExpandedNodeIds(prev => {
+    setExpandedNodeIds((prev) => {
       if (prev.includes(nodeId)) {
         return prev.filter(id => id !== nodeId);
       }
@@ -118,6 +118,7 @@ const SyncStatusTable = ({
               isChecked={isSelected}
               onChange={() => onSelectRepo(row.id)}
               aria-label={__('Select repository')}
+              ouiaId={`checkbox-${row.id}`}
             />
           )}
           {' '}
@@ -154,9 +155,10 @@ const SyncStatusTable = ({
       aria-label={__('Sync Status')}
       variant="compact"
       isTreeTable
+      ouiaId="sync-status-table"
     >
       <Thead>
-        <Tr>
+        <Tr ouiaId="sync-status-table-header">
           <Th>{__('Product / Repository')}</Th>
           <Th>{__('Start Time')}</Th>
           <Th>{__('Duration')}</Th>
@@ -172,8 +174,8 @@ const SyncStatusTable = ({
 };
 
 SyncStatusTable.propTypes = {
-  products: PropTypes.arrayOf(PropTypes.object).isRequired,
-  repoStatuses: PropTypes.objectOf(PropTypes.object).isRequired,
+  products: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  repoStatuses: PropTypes.objectOf(PropTypes.shape({})).isRequired,
   selectedRepoIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   onSelectRepo: PropTypes.func.isRequired,
   onCancelSync: PropTypes.func.isRequired,

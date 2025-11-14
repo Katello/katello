@@ -8,7 +8,8 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import Loading from 'foremanReact/components/Loading';
-import getSyncStatus, {
+import {
+  getSyncStatus,
   pollSyncStatus,
   syncRepositories,
   cancelSync,
@@ -60,9 +61,9 @@ const SyncStatusPage = () => {
   // Update repo statuses from poll data
   useEffect(() => {
     if (pollData && Array.isArray(pollData)) {
-      setRepoStatuses(prev => {
+      setRepoStatuses((prev) => {
         const updated = { ...prev };
-        pollData.forEach(status => {
+        pollData.forEach((status) => {
           if (status.id) {
             updated[status.id] = status;
           }
@@ -99,7 +100,7 @@ const SyncStatusPage = () => {
     const ancestorNodeIds = new Set();
 
     const findAncestors = (nodes, ancestors = []) => {
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         const currentAncestors = [...ancestors];
         const nodeId = `${node.type}-${node.id}`;
 
@@ -135,7 +136,7 @@ const SyncStatusPage = () => {
   const getAllRepoIds = useCallback(() => {
     const repoIds = [];
     const traverse = (nodes) => {
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         if (node.type === 'repo') {
           repoIds.push(node.id);
         }
@@ -155,29 +156,23 @@ const SyncStatusPage = () => {
       .filter(([_, status]) => status?.is_running === true)
       .map(([id]) => parseInt(id, 10));
 
-    console.log('Polling check:', { syncingIds, hasTimer: !!pollTimerRef.current, repoStatuses });
-
     if (syncingIds.length > 0 && !pollTimerRef.current) {
       // Start polling
-      console.log('Starting polling timer for repos:', syncingIds);
       pollTimerRef.current = setInterval(() => {
         // Use ref to get current repo statuses instead of stale closure value
         const currentSyncingIds = Object.entries(repoStatusesRef.current)
           .filter(([_, status]) => status?.is_running === true)
           .map(([id]) => parseInt(id, 10));
-        console.log('Polling repos:', currentSyncingIds);
         if (currentSyncingIds.length > 0) {
           dispatch(pollSyncStatus(currentSyncingIds));
         } else {
           // No more syncing repos, clear the timer
-          console.log('No more syncing repos, clearing timer inside interval');
           clearInterval(pollTimerRef.current);
           pollTimerRef.current = null;
         }
       }, POLL_INTERVAL);
     } else if (syncingIds.length === 0 && pollTimerRef.current) {
       // Stop polling
-      console.log('Stopping polling timer');
       clearInterval(pollTimerRef.current);
       pollTimerRef.current = null;
     }
@@ -192,7 +187,7 @@ const SyncStatusPage = () => {
   }, [repoStatuses, dispatch]);
 
   const handleSelectRepo = (repoId) => {
-    setSelectedRepoIds(prev => {
+    setSelectedRepoIds((prev) => {
       if (prev.includes(repoId)) {
         return prev.filter(id => id !== repoId);
       }
@@ -211,7 +206,7 @@ const SyncStatusPage = () => {
   const handleExpandAll = () => {
     const allNodeIds = [];
     const traverse = (nodes) => {
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         if (node.children || node.repos) {
           allNodeIds.push(`${node.type}-${node.id}`);
         }
@@ -234,16 +229,13 @@ const SyncStatusPage = () => {
       dispatch(syncRepositories(
         selectedRepoIds,
         (response) => {
-          console.log('Sync response:', response);
           setIsSyncing(false);
           // Update repo statuses immediately from sync response
           if (response?.data && Array.isArray(response.data)) {
-            console.log('Updating repo statuses from sync response:', response.data);
-            setRepoStatuses(prev => {
+            setRepoStatuses((prev) => {
               const updated = { ...prev };
-              response.data.forEach(status => {
+              response.data.forEach((status) => {
                 if (status.id) {
-                  console.log(`Setting status for repo ${status.id}:`, status);
                   updated[status.id] = status;
                 }
               });
@@ -256,7 +248,7 @@ const SyncStatusPage = () => {
         () => {
           // Error handler - reset syncing state
           setIsSyncing(false);
-        }
+        },
       ));
     }
   };
@@ -279,31 +271,29 @@ const SyncStatusPage = () => {
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
-        <Title headingLevel="h1">{__('Sync Status')}</Title>
+        <Title headingLevel="h1" ouiaId="sync-status-title">{__('Sync Status')}</Title>
       </PageSection>
-      <PageSection>
-        <SyncStatusToolbar
-          selectedRepoIds={selectedRepoIds}
-          onSyncNow={handleSyncNow}
-          onExpandAll={handleExpandAll}
-          onCollapseAll={handleCollapseAll}
-          onSelectAll={handleSelectAll}
-          onSelectNone={handleSelectNone}
-          showActiveOnly={showActiveOnly}
-          onToggleActiveOnly={handleToggleActiveOnly}
-          isSyncDisabled={isSyncing}
-        />
-        <SyncStatusTable
-          products={syncStatusData?.products || []}
-          repoStatuses={repoStatuses}
-          selectedRepoIds={selectedRepoIds}
-          onSelectRepo={handleSelectRepo}
-          onCancelSync={handleCancelSync}
-          expandedNodeIds={expandedNodeIds}
-          setExpandedNodeIds={setExpandedNodeIds}
-          showActiveOnly={showActiveOnly}
-        />
-      </PageSection>
+      <SyncStatusToolbar
+        selectedRepoIds={selectedRepoIds}
+        onSyncNow={handleSyncNow}
+        onExpandAll={handleExpandAll}
+        onCollapseAll={handleCollapseAll}
+        onSelectAll={handleSelectAll}
+        onSelectNone={handleSelectNone}
+        showActiveOnly={showActiveOnly}
+        onToggleActiveOnly={handleToggleActiveOnly}
+        isSyncDisabled={isSyncing}
+      />
+      <SyncStatusTable
+        products={syncStatusData?.products || []}
+        repoStatuses={repoStatuses}
+        selectedRepoIds={selectedRepoIds}
+        onSelectRepo={handleSelectRepo}
+        onCancelSync={handleCancelSync}
+        expandedNodeIds={expandedNodeIds}
+        setExpandedNodeIds={setExpandedNodeIds}
+        showActiveOnly={showActiveOnly}
+      />
     </>
   );
 };

@@ -8,8 +8,7 @@ import {
   BanIcon,
   PauseCircleIcon,
 } from '@patternfly/react-icons';
-import { translate as __ } from 'foremanReact/common/I18n';
-import { foremanUrl } from 'foremanReact/common/helpers';
+import { foremanUrl, propsToCamelCase } from 'foremanReact/common/helpers';
 import {
   SYNC_STATE_STOPPED,
   SYNC_STATE_ERROR,
@@ -20,32 +19,34 @@ import {
 } from '../SyncStatusConstants';
 
 const SyncResultCell = ({ repo }) => {
-  const { raw_state, state, start_time, sync_id, error_details } = repo;
+  const {
+    rawState, state, startTime, syncId, errorDetails,
+  } = propsToCamelCase(repo);
 
   const getVariantAndIcon = () => {
-    switch (raw_state) {
-      case SYNC_STATE_STOPPED:
-        return { color: 'green', icon: <CheckCircleIcon /> };
-      case SYNC_STATE_ERROR:
-        return { color: 'red', icon: <ExclamationCircleIcon /> };
-      case SYNC_STATE_CANCELED:
-        return { color: 'orange', icon: <BanIcon /> };
-      case SYNC_STATE_PAUSED:
-        return { color: 'blue', icon: <PauseCircleIcon /> };
-      case SYNC_STATE_NEVER_SYNCED:
-        return { color: 'grey', icon: <ExclamationTriangleIcon /> };
-      default:
-        return { color: 'grey', icon: null };
+    switch (rawState) {
+    case SYNC_STATE_STOPPED:
+      return { color: 'green', icon: <CheckCircleIcon /> };
+    case SYNC_STATE_ERROR:
+      return { color: 'red', icon: <ExclamationCircleIcon /> };
+    case SYNC_STATE_CANCELED:
+      return { color: 'orange', icon: <BanIcon /> };
+    case SYNC_STATE_PAUSED:
+      return { color: 'blue', icon: <PauseCircleIcon /> };
+    case SYNC_STATE_NEVER_SYNCED:
+      return { color: 'grey', icon: <ExclamationTriangleIcon /> };
+    default:
+      return { color: 'grey', icon: null };
     }
   };
 
   const { color, icon } = getVariantAndIcon();
-  const label = SYNC_STATE_LABELS[raw_state] || state;
+  const label = SYNC_STATE_LABELS[rawState] || state;
 
-  const taskUrl = sync_id ? foremanUrl(`/foreman_tasks/tasks/${sync_id}`) : null;
+  const taskUrl = syncId ? foremanUrl(`/foreman_tasks/tasks/${syncId}`) : null;
 
   const labelContent = (
-    <Label color={color} icon={icon}>
+    <Label color={color} icon={icon} ouiaId="sync-result-label">
       {taskUrl ? (
         <a href={taskUrl} target="_blank" rel="noopener noreferrer">
           {label}
@@ -53,18 +54,18 @@ const SyncResultCell = ({ repo }) => {
       ) : (
         label
       )}
-      {start_time && ` - ${start_time}`}
+      {startTime && ` - ${startTime}`}
     </Label>
   );
 
-  if (error_details) {
-    const errorText = Array.isArray(error_details)
-      ? error_details.join('\n')
-      : error_details;
+  if (errorDetails) {
+    const errorText = Array.isArray(errorDetails)
+      ? errorDetails.join('\n')
+      : errorDetails;
 
     if (errorText && errorText.length > 0) {
       return (
-        <Tooltip content={errorText}>
+        <Tooltip content={errorText} ouiaId="sync-error-tooltip">
           {labelContent}
         </Tooltip>
       );
@@ -80,7 +81,10 @@ SyncResultCell.propTypes = {
     state: PropTypes.string,
     start_time: PropTypes.string,
     sync_id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    error_details: PropTypes.any,
+    error_details: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.arrayOf(PropTypes.string),
+    ]),
   }).isRequired,
 };
 

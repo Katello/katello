@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent } from '@testing-library/react';
 import SyncStatusToolbar from '../SyncStatusToolbar';
 
 describe('SyncStatusToolbar', () => {
@@ -15,6 +14,10 @@ describe('SyncStatusToolbar', () => {
     onToggleActiveOnly: jest.fn(),
   };
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('renders all action buttons', () => {
     render(<SyncStatusToolbar {...mockProps} />);
 
@@ -25,12 +28,11 @@ describe('SyncStatusToolbar', () => {
     expect(screen.getByText('Synchronize Now')).toBeInTheDocument();
   });
 
-  it('calls onSyncNow when Synchronize Now is clicked', async () => {
-    const user = userEvent.setup();
+  it('calls onSyncNow when Synchronize Now is clicked', () => {
     render(<SyncStatusToolbar {...mockProps} />);
 
     const syncButton = screen.getByText('Synchronize Now');
-    await user.click(syncButton);
+    fireEvent.click(syncButton);
 
     expect(mockProps.onSyncNow).toHaveBeenCalled();
   });
@@ -43,22 +45,20 @@ describe('SyncStatusToolbar', () => {
     expect(syncButton).toBeDisabled();
   });
 
-  it('calls onExpandAll when Expand All is clicked', async () => {
-    const user = userEvent.setup();
+  it('calls onExpandAll when Expand All is clicked', () => {
     render(<SyncStatusToolbar {...mockProps} />);
 
     const expandButton = screen.getByText('Expand All');
-    await user.click(expandButton);
+    fireEvent.click(expandButton);
 
     expect(mockProps.onExpandAll).toHaveBeenCalled();
   });
 
-  it('toggles active only switch', async () => {
-    const user = userEvent.setup();
+  it('toggles active only switch', () => {
     render(<SyncStatusToolbar {...mockProps} />);
 
     const activeOnlySwitch = screen.getByLabelText('Active Only');
-    await user.click(activeOnlySwitch);
+    fireEvent.click(activeOnlySwitch);
 
     expect(mockProps.onToggleActiveOnly).toHaveBeenCalled();
   });
