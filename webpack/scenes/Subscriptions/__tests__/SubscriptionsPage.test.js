@@ -106,6 +106,147 @@ describe('subscriptions page', () => {
     expect(toJson(permissionDeniedPage)).toMatchSnapshot();
   });
 
+  it('should render <PermissionDenied /> when organization load fails with 403', async () => {
+    const orgWith403Error = {
+      loading: false,
+      error: {
+        response: {
+          status: 403,
+        },
+      },
+    };
+    const pageWithOrgError = shallow(<SubscriptionsPage
+      setModalOpen={noop}
+      setModalClosed={noop}
+      organization={orgWith403Error}
+      subscriptions={successState}
+      subscriptionTableSettings={settingsSuccessState}
+      loadTables={loadTables}
+      loadTableColumns={loadTableColumns}
+      createColumns={createColumns}
+      updateColumns={updateColumns}
+      loadSubscriptions={loadSubscriptions}
+      loadAvailableQuantities={loadAvailableQuantities}
+      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
+      updateQuantity={updateQuantity}
+      handleStartTask={handleStartTask}
+      handleFinishedTask={handleFinishedTask}
+      pollTaskUntilDone={noop}
+      pollBulkSearch={noop}
+      pollTasks={pollTasks}
+      cancelPollTasks={noop}
+      deleteSubscriptions={() => {}}
+      resetTasks={noop}
+      uploadManifest={noop}
+      deleteManifest={noop}
+      refreshManifest={noop}
+      updateSearchQuery={noop}
+      openManageManifestModal={noop}
+      closeManageManifestModal={noop}
+      openDeleteModal={noop}
+      closeDeleteModal={noop}
+      disableDeleteButton={noop}
+      enableDeleteButton={noop}
+    />);
+    expect(pageWithOrgError.find('PermissionDenied')).toHaveLength(1);
+  });
+
+  it('should render <PermissionDenied /> when organization load fails with 404', async () => {
+    const orgWith404Error = {
+      loading: false,
+      error: {
+        response: {
+          status: 404,
+        },
+      },
+    };
+    const pageWithOrgError = shallow(<SubscriptionsPage
+      setModalOpen={noop}
+      setModalClosed={noop}
+      organization={orgWith404Error}
+      subscriptions={successState}
+      subscriptionTableSettings={settingsSuccessState}
+      loadTables={loadTables}
+      loadTableColumns={loadTableColumns}
+      createColumns={createColumns}
+      updateColumns={updateColumns}
+      loadSubscriptions={loadSubscriptions}
+      loadAvailableQuantities={loadAvailableQuantities}
+      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
+      updateQuantity={updateQuantity}
+      handleStartTask={handleStartTask}
+      handleFinishedTask={handleFinishedTask}
+      pollTaskUntilDone={noop}
+      pollBulkSearch={noop}
+      pollTasks={pollTasks}
+      cancelPollTasks={noop}
+      deleteSubscriptions={() => {}}
+      resetTasks={noop}
+      uploadManifest={noop}
+      deleteManifest={noop}
+      refreshManifest={noop}
+      updateSearchQuery={noop}
+      openManageManifestModal={noop}
+      closeManageManifestModal={noop}
+      openDeleteModal={noop}
+      closeDeleteModal={noop}
+      disableDeleteButton={noop}
+      enableDeleteButton={noop}
+    />);
+
+    expect(pageWithOrgError.find('PermissionDenied')).toHaveLength(1);
+  });
+
+  it('should not render <PermissionDenied /> when organization is still loading', async () => {
+    const orgStillLoading = {
+      loading: true,
+      error: {
+        response: {
+          status: 403,
+        },
+      },
+    };
+    const pageWithLoadingOrg = shallow(<SubscriptionsPage
+      setModalOpen={noop}
+      setModalClosed={noop}
+      organization={orgStillLoading}
+      subscriptions={successState}
+      subscriptionTableSettings={settingsSuccessState}
+      loadTables={loadTables}
+      loadTableColumns={loadTableColumns}
+      createColumns={createColumns}
+      updateColumns={updateColumns}
+      loadSubscriptions={loadSubscriptions}
+      loadAvailableQuantities={loadAvailableQuantities}
+      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
+      updateQuantity={updateQuantity}
+      handleStartTask={handleStartTask}
+      handleFinishedTask={handleFinishedTask}
+      pollTaskUntilDone={noop}
+      pollBulkSearch={noop}
+      pollTasks={pollTasks}
+      cancelPollTasks={noop}
+      deleteSubscriptions={() => {}}
+      resetTasks={noop}
+      uploadManifest={noop}
+      deleteManifest={noop}
+      refreshManifest={noop}
+      updateSearchQuery={noop}
+      openManageManifestModal={noop}
+      closeManageManifestModal={noop}
+      openDeleteModal={noop}
+      closeDeleteModal={noop}
+      disableDeleteButton={noop}
+      enableDeleteButton={noop}
+    />);
+
+    // Should not show PermissionDenied while organization is still loading
+    expect(pageWithLoadingOrg.find('PermissionDenied')).toHaveLength(0);
+  });
+
   it('should poll tasks when org changes', async () => {
     page.setProps({ organization: { id: 1 } });
 
