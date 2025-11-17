@@ -12,6 +12,7 @@ import {
   FlexItem,
   Popover,
   Badge,
+  Button,
   DescriptionList,
   DescriptionListGroup,
   DescriptionListDescription as Dd,
@@ -206,9 +207,9 @@ const hostsIndexColumnExtensions = [
               </Flex>
             }
           >
-            <FlexItem>
+            <Button variant="plain" style={{ padding: 0, color: 'inherit' }} ouiaId="content-view-environments-button">
               {truncate(contentViewEnvironments.map(cve => cve.label).join(', '), 35)}
-            </FlexItem>
+            </Button>
           </Popover>
         </Flex>
       );
@@ -236,6 +237,49 @@ const hostsIndexColumnExtensions = [
     },
     weight: 2600,
     isSorted: true,
+  },
+  {
+    columnName: 'host_collections',
+    title: __('Host collections'),
+    wrapper: (hostDetails) => {
+      const hostCollections = hostDetails?.host_collections ?? [];
+      if (hostCollections.length === 0) return '—';
+
+      // Show count badge if more than one collection
+      if (hostCollections.length > 1) {
+        return (
+          <Flex>
+            <FlexItem>
+              <Badge isRead>{hostCollections.length}</Badge>
+            </FlexItem>
+            <Popover
+              id="host-collections-tooltip"
+              className="host-collections-tooltip"
+              maxWidth="34rem"
+              headerContent={hostDetails.display_name}
+              bodyContent={
+                <Flex direction={{ default: 'column' }}>
+                  {hostCollections.map((hc, index) => (
+                    <FlexItem key={hc.id}>
+                      <Text component={TextVariants.p} ouiaId={`host-collection-name-${index}`}>{hc.name}</Text>
+                    </FlexItem>
+                  ))}
+                </Flex>
+              }
+            >
+              <Button variant="plain" style={{ padding: 0, color: 'inherit' }} ouiaId="host-collections-button">
+                {truncate(hostCollections.map(hc => hc.name).join(', '), 35)}
+              </Button>
+            </Popover>
+          </Flex>
+        );
+      }
+
+      // Just show the name if only one collection
+      return truncate(hostCollections[0].name, 35);
+    },
+    weight: 2700,
+    isSorted: false,
   },
 ];
 
