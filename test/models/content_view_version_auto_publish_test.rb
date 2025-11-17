@@ -39,45 +39,37 @@ module Katello
                         :latest => true)
     end
 
-    def test_auto_publish_with_no_sibling_tasks_triggers_immediately
+    def test_auto_publish_schedules_event_when_no_composite_activity
       task_id = SecureRandom.uuid
 
-      # Stub to return no scheduled, no running composite, no sibling tasks
+      # Stub to return no scheduled, no running composite
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
         .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
         .then.returns(stub(where: stub(select: [])))  # Running composite check: none
-        .then.returns(stub(where: stub(select: [])))  # Sibling check: none
 
-      ForemanTasks.expects(:async_task).with(
-        ::Actions::Katello::ContentView::Publish,
-        @composite_cv,
-        anything,
-        triggered_by_id: @component1_version.id
-      ).returns(stub(id: SecureRandom.uuid))
+      ::Katello::EventQueue.expects(:push_event).with(
+        ::Katello::Events::AutoPublishCompositeView::EVENT_TYPE,
+        @composite_cv.id
+      )
 
       @component1_version.auto_publish_composites!(task_id)
     end
 
-    def test_auto_publish_with_sibling_tasks_uses_chaining
-      task_id1 = SecureRandom.uuid
-      task_id2 = SecureRandom.uuid
+    def test_auto_publish_schedules_event_when_composite_running
+      task_id = SecureRandom.uuid
+      running_task = stub(external_id: SecureRandom.uuid, input: { 'content_view' => { 'id' => @composite_cv.id } })
 
-      sibling_task = stub(external_id: task_id2, input: { 'content_view' => { 'id' => @component_cv2.id } })
-
+      # Stub to return no scheduled but a running composite
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
         .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
-        .then.returns(stub(where: stub(select: []))) # Running composite check: none
-        .then.returns(stub(where: stub(select: [sibling_task]))) # Sibling check: found sibling
+        .then.returns(stub(where: stub(select: [running_task]))) # Running composite check: found running
 
-      ForemanTasks.dynflow.world.expects(:chain).with(
-        [task_id2],
-        ::Actions::Katello::ContentView::Publish,
-        @composite_cv,
-        anything,
-        triggered_by_id: @component1_version.id
-      ).returns(stub(id: SecureRandom.uuid))
+      ::Katello::EventQueue.expects(:push_event).with(
+        ::Katello::Events::AutoPublishCompositeView::EVENT_TYPE,
+        @composite_cv.id
+      )
 
-      @component1_version.auto_publish_composites!(task_id1)
+      @component1_version.auto_publish_composites!(task_id)
     end
 
     def test_auto_publish_skips_when_composite_already_scheduled
@@ -101,84 +93,11 @@ module Katello
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
         .returns(stub(where: scheduled_relation))
 
-      # Should not create any new task
-      ForemanTasks.dynflow.world.expects(:chain).never
-      ForemanTasks.expects(:async_task).never
+      # Should not schedule event when already scheduled
+      ::Katello::EventQueue.expects(:push_event).never
 
       @component1_version.auto_publish_composites!(task_id)
     end
 
-    def test_auto_publish_schedules_event_when_composite_running
-      task_id = SecureRandom.uuid
-      running_task = stub(external_id: SecureRandom.uuid, input: { 'content_view' => { 'id' => @composite_cv.id } })
-
-      ForemanTasks::Task::DynflowTask.stubs(:for_action)
-        .returns(stub(where: stub(any?: false))) # Scheduled check: none
-        .then.returns(stub(where: stub(select: [running_task]))) # Running check: found running task
-
-      # Should schedule event instead of creating task
-      event_attrs = {}
-      ::Katello::EventQueue.expects(:push_event).with(
-        ::Katello::Events::AutoPublishCompositeView::EVENT_TYPE,
-        @composite_cv.id
-      ).yields(event_attrs)
-
-      ForemanTasks.dynflow.world.expects(:chain).never
-      ForemanTasks.expects(:async_task).never
-
-      @component1_version.auto_publish_composites!(task_id)
-    end
-
-    def test_auto_publish_handles_lock_conflict_gracefully
-      task_id = SecureRandom.uuid
-
-      ForemanTasks::Task::DynflowTask.stubs(:for_action)
-        .returns(stub(where: stub(any?: false))) # Scheduled check: none
-        .then.returns(stub(where: stub(select: [])))  # Running composite check: none
-        .then.returns(stub(where: stub(select: [])))  # Sibling check: none
-
-      lock = stub('required_lock')
-      conflicting_task = stub(id: 123)
-      conflicting_lock = stub(task: conflicting_task)
-
-      ForemanTasks.expects(:async_task).raises(ForemanTasks::Lock::LockConflict.new(lock, [conflicting_lock]))
-      ::Katello::UINotifications::ContentView::AutoPublishFailure.expects(:deliver!).with(@composite_cv)
-
-      assert_nothing_raised do
-        @component1_version.auto_publish_composites!(task_id)
-      end
-    end
-
-    def test_find_sibling_component_publish_tasks_finds_running_tasks
-      task_id1 = SecureRandom.uuid
-      task_id2 = SecureRandom.uuid
-
-      # Create mock running tasks
-      task1 = stub(external_id: task_id1, input: { 'content_view' => { 'id' => @component_cv1.id } })
-      task2 = stub(external_id: task_id2, input: { 'content_view' => { 'id' => @component_cv2.id } })
-
-      ForemanTasks::Task::DynflowTask.stubs(:for_action).returns(stub(where: stub(select: [task1, task2])))
-
-      current_task_id = SecureRandom.uuid
-      result = @component1_version.send(:find_sibling_component_publish_tasks, @composite_cv, current_task_id)
-
-      # Should include both sibling tasks but exclude current task
-      assert_equal 2, result.length
-      assert_includes result, task_id1
-      assert_includes result, task_id2
-      assert_not_includes result, current_task_id
-    end
-
-    def test_find_sibling_tasks_excludes_non_component_tasks
-      task_id = SecureRandom.uuid
-
-      # The select block will filter out tasks for CVs that aren't components
-      ForemanTasks::Task::DynflowTask.stubs(:for_action).returns(stub(where: stub(select: [])))
-
-      result = @component1_version.send(:find_sibling_component_publish_tasks, @composite_cv, task_id)
-
-      # Should exclude current task and other CV's task
-      assert_empty result
-    end
   end
 end

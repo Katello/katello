@@ -374,16 +374,12 @@ module Katello
           when :scheduled
             Rails.logger.info("Composite CV #{composite_cv.name} publish already scheduled, skipping duplicate")
             next
-          when :running
-            # A composite publish is currently running - we need to schedule another one
-            # after it finishes to include this new component version
-            Rails.logger.info("Composite CV #{composite_cv.name} publish running, scheduling event for retry")
-            schedule_auto_publish_event(composite_cv, description)
+          when :running, nil
+            # Either composite is running or no composite activity detected
+            # Schedule event to trigger composite publish with proper coordination
+            Rails.logger.info("Composite CV #{composite_cv.name} scheduling auto-publish event")
+            schedule_auto_publish_event(composite_cv, description, component_task_id)
             next
-          when nil
-            # No composite publish running or scheduled - trigger one now
-            sibling_task_ids = find_sibling_component_publish_tasks(composite_cv, component_task_id)
-            trigger_composite_publish(composite_cv, sibling_task_ids, description)
           end
         end
       end
@@ -411,9 +407,9 @@ module Katello
     end
 
     # Schedule an event to retry composite publish after current one finishes
-    def schedule_auto_publish_event(composite_cv, description)
+    def schedule_auto_publish_event(composite_cv, description, component_task_id)
       ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_cv.id) do |attrs|
-        attrs[:metadata] = { description: description, version_id: self.id }
+        attrs[:metadata] = { description: description, version_id: self.id, calling_task_id: component_task_id }
       end
     end
 
@@ -429,16 +425,28 @@ module Katello
       false
     end
 
-    # Trigger a composite publish, either immediately or chained to sibling tasks
-    def trigger_composite_publish(composite_cv, sibling_task_ids, description)
-      if sibling_task_ids.any?
-        trigger_chained_composite_publish(composite_cv, sibling_task_ids, description)
-      else
-        trigger_immediate_composite_publish(composite_cv, description)
-      end
+    # Trigger a composite publish with coordination for sibling tasks.
+    # Checks for running component CV publishes and chains if necessary.
+    def self.trigger_composite_publish_with_coordination(composite_cv, description, triggered_by_version_id, calling_task_id: nil)
+      # Find currently running component CV publish tasks
+      component_cv_ids = composite_cv.components.pluck(:content_view_id)
+      running_tasks = ForemanTasks::Task::DynflowTask
+        .for_action(::Actions::Katello::ContentView::Publish)
+        .where(state: ['planning', 'planned', 'running'])
+        .select do |task|
+          task_input = task.input
+          task_input && component_cv_ids.include?(task_input.dig('content_view', 'id'))
+        end
+
+      sibling_task_ids = running_tasks.map(&:external_id)
+      # Exclude the calling component task to avoid self-dependency
+      sibling_task_ids.reject! { |id| id == calling_task_id } if calling_task_id
+
+      trigger_publish_with_sibling_tasks(composite_cv, sibling_task_ids, description, triggered_by_version_id)
     rescue ForemanTasks::Lock::LockConflict => e
       Rails.logger.info("Composite CV #{composite_cv.name} publish lock conflict: #{e.class} - #{e.message}")
       ::Katello::UINotifications::ContentView::AutoPublishFailure.deliver!(composite_cv)
+      raise
     rescue StandardError => e
       Rails.logger.error("Failed to auto-publish composite CV #{composite_cv.name}: #{e.class} - #{e.message}")
       Rails.logger.debug(e.backtrace.join("\n")) if e.backtrace
@@ -446,48 +454,26 @@ module Katello
       raise
     end
 
-    # Trigger a chained composite publish that waits for sibling tasks
-    def trigger_chained_composite_publish(composite_cv, sibling_task_ids, description)
-      ForemanTasks.dynflow.world.chain(
-        sibling_task_ids,
-        ::Actions::Katello::ContentView::Publish,
-        composite_cv,
-        description,
-        triggered_by_id: self.id
-      )
+    # Trigger a composite publish, chaining to sibling tasks if any exist
+    def self.trigger_publish_with_sibling_tasks(composite_cv, sibling_task_ids, description, triggered_by_version_id)
+      if sibling_task_ids.any?
+        ForemanTasks.dynflow.world.chain(
+          sibling_task_ids,
+          ::Actions::Katello::ContentView::Publish,
+          composite_cv,
+          description,
+          triggered_by_id: triggered_by_version_id
+        )
+      else
+        ForemanTasks.async_task(
+          ::Actions::Katello::ContentView::Publish,
+          composite_cv,
+          description,
+          triggered_by_id: triggered_by_version_id
+        )
+      end
     end
 
-    # Trigger an immediate composite publish
-    def trigger_immediate_composite_publish(composite_cv, description)
-      ForemanTasks.async_task(
-        ::Actions::Katello::ContentView::Publish,
-        composite_cv,
-        description,
-        triggered_by_id: self.id
-      )
-    end
-
-    # Find sibling component publish tasks that should be waited for
-    def find_sibling_component_publish_tasks(composite_cv, current_task_id)
-      # Get all component CV IDs for this composite
-      component_cv_ids = composite_cv.components.pluck(:content_view_id)
-
-      # Find all currently running publish tasks for these component CVs
-      running_tasks = ForemanTasks::Task::DynflowTask
-        .for_action(::Actions::Katello::ContentView::Publish)
-        .where(state: ['planning', 'planned', 'running'])
-        .select do |task|
-          # Check if task is publishing one of the component CVs
-          task_input = task.input
-          task_input && component_cv_ids.include?(task_input.dig('content_view', 'id'))
-        end
-
-      task_ids = running_tasks.map(&:external_id)
-
-      # Exclude the current task - if we're running this code, the current task
-      # has already reached its Finalize step and doesn't need to be waited for
-      task_ids.reject { |id| id == current_task_id }
-    end
 
     # Find active (planning/planned/running) composite publish tasks (does NOT check scheduled tasks)
     def find_active_composite_publish_tasks(composite_cv)
