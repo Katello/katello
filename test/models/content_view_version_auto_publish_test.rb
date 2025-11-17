@@ -45,7 +45,7 @@ module Katello
       # Stub to return no scheduled, no running composite
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
         .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
-        .then.returns(stub(where: stub(select: [])))  # Running composite check: none
+        .then.returns(stub(where: stub(select: []))) # Running composite check: none
 
       ::Katello::EventQueue.expects(:push_event).with(
         ::Katello::Events::AutoPublishCompositeView::EVENT_TYPE,
@@ -99,5 +99,21 @@ module Katello
       @component1_version.auto_publish_composites!(task_id)
     end
 
+    def test_scheduled_task_for_composite_handles_errors_gracefully
+      task_id = SecureRandom.uuid
+      composite_task = stub(external_id: task_id)
+
+      # Mock dynflow world to raise an error when loading delayed plan
+      world_stub = ForemanTasks.dynflow.world
+      persistence_stub = stub
+      persistence_stub.stubs(:load_delayed_plan).raises(Dynflow::Error, "Delayed plan not found")
+      world_stub.stubs(:persistence).returns(persistence_stub)
+
+      # Should log error and return false instead of raising
+      Rails.logger.expects(:error).with(regexp_matches(/Failed to check scheduled task/))
+
+      result = @component1_version.send(:scheduled_task_for_composite?, composite_task, @composite_cv)
+      refute result
+    end
   end
 end
