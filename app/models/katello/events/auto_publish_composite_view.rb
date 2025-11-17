@@ -25,10 +25,14 @@ module Katello
         return unless composite_view
 
         begin
-          ForemanTasks.async_task(::Actions::Katello::ContentView::Publish,
-                              composite_view,
-                              metadata[:description],
-                              triggered_by: metadata[:version_id])
+          # Use the same coordination logic as auto_publish_composites! to check for
+          # running component tasks and chain if necessary
+          ::Katello::ContentViewVersion.trigger_composite_publish_with_coordination(
+            composite_view,
+            metadata[:description],
+            metadata[:version_id],
+            calling_task_id: metadata[:calling_task_id]
+          )
         rescue => e
           self.retry = true if e.is_a?(ForemanTasks::Lock::LockConflict)
           deliver_failure_notification
