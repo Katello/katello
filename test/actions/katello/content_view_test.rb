@@ -249,7 +249,7 @@ module ::Actions::Katello::ContentView
     end
 
     context 'run phase' do
-      it 'triggers auto-publish for composite views' do
+      it 'schedules event for composite views' do
         composite_view = katello_content_views(:composite_view)
         action.stubs(:task).returns(success_task)
 
@@ -258,18 +258,15 @@ module ::Actions::Katello::ContentView
                           composite_content_view: composite_view,
                           content_view: content_view)
 
-        # Mock the task relations to simulate no scheduled, no running composite, no sibling tasks
+        # Mock the task relations to simulate no scheduled composite
         ForemanTasks::Task::DynflowTask.stubs(:for_action)
           .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
           .then.returns(stub(where: stub(select: []))) # Running composite check: none
-          .then.returns(stub(where: stub(select: []))) # Sibling check: none
 
-        # Expect async_task to be called (no siblings, so no chaining)
-        ForemanTasks.expects(:async_task).with(
-          ::Actions::Katello::ContentView::Publish,
-          composite_view,
-          anything,
-          triggered_by_id: anything
+        # Expect event to be scheduled
+        ::Katello::EventQueue.expects(:push_event).with(
+          ::Katello::Events::AutoPublishCompositeView::EVENT_TYPE,
+          composite_view.id
         )
 
         plan_action action, content_view
@@ -279,9 +276,8 @@ module ::Actions::Katello::ContentView
       it 'does nothing for non-composite view' do
         action.stubs(:task).returns(success_task)
 
-        # Should not trigger any auto-publish tasks
-        ForemanTasks.expects(:async_task).never
-        ForemanTasks.dynflow.world.expects(:chain).never
+        # Should not trigger any auto-publish events
+        ::Katello::EventQueue.expects(:push_event).never
 
         plan_action action, katello_content_views(:no_environment_view)
         run_action action

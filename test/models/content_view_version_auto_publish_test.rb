@@ -45,7 +45,7 @@ module Katello
       # Stub to return no scheduled, no running composite
       ForemanTasks::Task::DynflowTask.stubs(:for_action)
         .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
-        .then.returns(stub(where: stub(select: [])))  # Running composite check: none
+        .then.returns(stub(where: stub(select: []))) # Running composite check: none
 
       ::Katello::EventQueue.expects(:push_event).with(
         ::Katello::Events::AutoPublishCompositeView::EVENT_TYPE,
@@ -98,6 +98,5 @@ module Katello
 
       @component1_version.auto_publish_composites!(task_id)
     end
-
   end
 end
