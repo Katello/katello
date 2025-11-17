@@ -14,6 +14,16 @@ module Katello
             super
           end
         end
+
+        def resource_scope(options = {})
+          scope = super(options)
+          # Eager load host_collections for index action to avoid N+1 queries
+          # Using preload to force loading even if not accessed
+          if params[:action] == 'index' && scope.respond_to?(:preload)
+            scope = scope.preload(:host_collections)
+          end
+          scope
+        end
       end
 
       included do
