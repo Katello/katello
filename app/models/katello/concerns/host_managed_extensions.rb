@@ -279,7 +279,7 @@ module Katello
 
       def import_package_profile(simple_packages)
         found = import_package_profile_in_bulk(simple_packages)
-        sync_package_associations(found.map(&:id).uniq)
+        sync_package_associations(simple_packages, found)
       end
 
       def import_package_profile_in_bulk(simple_packages)
@@ -311,7 +311,7 @@ module Katello
         end
         InstalledPackage.import(installed_packages, validate: false, on_duplicate_key_ignore: true)
         #re-lookup all imported to pickup any duplicates/conflicts
-        imported = InstalledPackage.where(:nvrea => installed_packages.map(&:nvrea)).select(:id).to_a
+        imported = InstalledPackage.where(:nvrea => installed_packages.map(&:nvrea)).select(:id, :nvrea).to_a
 
         if imported.count != installed_packages.count
           Rails.logger.warn("Mismatch found in installed package insertion, expected #{installed_packages.count} but only could find #{imported.count}.  This is most likley a bug.")
@@ -407,28 +407,30 @@ module Katello
         end
       end
 
-      def sync_package_associations(new_installed_package_ids)
+      def sync_package_associations(simple_packages, found_packages)
+        new_package_ids = found_packages.map(&:id).uniq
+
+        # Build validated package associations records to insert or update (fallback to nil if invalid)
+        # O(n) for n packages
+        packages_by_nvra = found_packages.index_by(&:nvrea)
+        records_to_upsert = simple_packages.filter_map do |simple_package|
+          package = packages_by_nvra[simple_package.nvrea]
+          next unless package
+
+          # Validate persistence value or set to nil (we skip activerecord validation as part of bulk operations below)
+          persistence = Katello::HostInstalledPackage::PERSISTENCE_VALUES.include?(simple_package.persistence) ? simple_package.persistence : nil
+
+          { host_id: self.id, installed_package_id: package.id, persistence: persistence }
+        end
+
+        # Apply db operations in a transaction with retry logic
+        # O(n) for n packages existing + new
         Katello::Util::Support.active_record_retry do
           old_associated_ids = self.reload.installed_package_ids
-          table_name = self.host_installed_packages.table_name
+          delete_ids = old_associated_ids - new_package_ids
 
-          new_ids = new_installed_package_ids - old_associated_ids
-          delete_ids = old_associated_ids - new_installed_package_ids
-
-          queries = []
-
-          if delete_ids.any?
-            queries << "DELETE FROM #{table_name} WHERE host_id=#{self.id} AND installed_package_id IN (#{delete_ids.join(', ')})"
-          end
-
-          unless new_ids.empty?
-            inserts = new_ids.map { |unit_id| "(#{unit_id.to_i}, #{self.id.to_i})" }
-            queries << "INSERT INTO #{table_name} (installed_package_id, host_id) VALUES #{inserts.join(', ')}"
-          end
-
-          queries.each do |query|
-            ActiveRecord::Base.connection.execute(query)
-          end
+          self.host_installed_packages.where(installed_package_id: delete_ids).delete_all unless delete_ids.empty?
+          Katello::HostInstalledPackage.upsert_all(records_to_upsert, unique_by: [:host_id, :installed_package_id]) unless records_to_upsert.empty?
         end
       end
 

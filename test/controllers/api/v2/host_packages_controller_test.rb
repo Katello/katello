@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require "katello_test_helper"
 
 module Katello
@@ -47,11 +45,26 @@ module Katello
     end
 
     def test_include_latest_upgradable
-      HostPackagePresenter.expects(:with_latest).with(anything, @host)
+      HostPackagePresenter.expects(:package_map).with(anything, @host, true, true).returns([])
 
       get :index, params: { :host_id => @host.id, :include_latest_upgradable => true }
 
       assert_response :success
+    end
+
+    def test_index_includes_persistence
+      installed_pkg = @host.installed_packages.first
+      Katello::HostInstalledPackage.where(host: @host, installed_package: installed_pkg).update_all(persistence: 'transient')
+
+      get :index, params: { :host_id => @host.id }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      results = response_data['results']
+
+      package = results.find { |p| p['id'] == installed_pkg.id }
+      assert package, "Package #{installed_pkg.id} not found in results"
+      assert_equal 'transient', package['persistence']
     end
 
     def test_view_permissions
