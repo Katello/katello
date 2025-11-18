@@ -344,7 +344,7 @@ const BulkSystemPurposeModal = ({
 
 BulkSystemPurposeModal.propTypes = {
   isOpen: PropTypes.bool,
-  closeModal: PropTypes.func,
+  closeModal: PropTypes.func.isRequired,
   selectedCount: PropTypes.number.isRequired,
   orgId: PropTypes.number.isRequired,
   fetchBulkParams: PropTypes.func.isRequired,
@@ -352,7 +352,6 @@ BulkSystemPurposeModal.propTypes = {
 
 BulkSystemPurposeModal.defaultProps = {
   isOpen: false,
-  closeModal: () => {},
 };
 
 export default BulkSystemPurposeModal;

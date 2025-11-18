@@ -24,37 +24,37 @@ export const buildSystemPurposeOptions = (
     noChangeValue = '__no_change__',
   } = config;
 
-  // Helper to convert option string to {label, value} object
-  const optionToObject = option => ({
-    label: option || __('(unset)'),
-    value: option || '',
-  });
-
-  // Build unique set of all options
-  const uniqOptions = new Set([
-    ...(includeNoChange ? [] : ['']), // Include empty string for single edit
+  // Collect all unique non-empty options
+  const allOptions = new Set([
     ...(defaultOptions ?? []),
     ...(additionalOptions ?? []),
     ...(currentSelected ? [currentSelected] : []),
     ...(initialOption ? [initialOption] : []),
   ]);
 
-  // Remove null/undefined
-  uniqOptions.delete(null);
-  uniqOptions.delete(undefined);
+  // Remove falsy values (null, undefined, empty string)
+  allOptions.delete(null);
+  allOptions.delete(undefined);
+  allOptions.delete('');
 
-  // Convert to option objects
-  const options = [...uniqOptions].map(optionToObject);
+  // Convert strings to option objects
+  const options = [...allOptions].map(option => ({
+    label: option,
+    value: option,
+  }));
 
-  // For bulk operations, prepend "No change" and ensure "(unset)" is included
+  // Build final option list
+  const unsetOption = { label: __('(unset)'), value: '' };
+
   if (includeNoChange) {
+    // Bulk mode: "No change", "(unset)", then all options
     return [
       { label: __('No change'), value: noChangeValue },
-      optionToObject(''), // "(unset)" option
-      ...options.filter(opt => opt.value !== ''), // All other options except empty
+      unsetOption,
+      ...options,
     ];
   }
 
-  // For single edit, return as-is
-  return options;
+  // Single edit mode: "(unset)", then all options
+  return [unsetOption, ...options];
 };
