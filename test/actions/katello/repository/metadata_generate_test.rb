@@ -8,9 +8,11 @@ module Actions
 
     let(:action_class) { ::Actions::Katello::Repository::MetadataGenerate }
     let(:pulp_metadata_generate_class) { ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata }
+    let(:candlepin_product_content_update_class) { ::Actions::Candlepin::Product::ContentUpdate }
     let(:success_task) { ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good") }
     let(:yum_repo) { katello_repositories(:fedora_17_x86_64) }
     let(:yum_repo2) { katello_repositories(:fedora_17_x86_64_dev) }
+    let(:deb_repo) { katello_repositories(:debian_10_amd64) }
     let(:action_options) do
       {
         :source_repository => nil,
@@ -27,6 +29,7 @@ module Actions
 
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
             action_options)
+      refute_action_planned(action, candlepin_product_content_update_class)
     end
 
     it 'plans a yum refresh in other location' do
@@ -76,6 +79,34 @@ module Actions
       yum_action_options[:matching_content] = not_falsey
       assert_action_planned_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
                                 yum_action_options)
+    end
+
+    it 'plans a deb metadata generate' do
+      action = create_action(action_class)
+      action.stubs(:task).returns(success_task)
+      action.expects(:action_subject).with(deb_repo)
+      deb_repo.expects(:deb_content_url_options).returns("/?comp=main&rel=bookworm")
+
+      plan_action(action, deb_repo)
+
+      assert_equal(deb_repo.content.content_url, "/custom/Debian_12/Debian_12_amd64_main/?comp=main&rel=bookworm")
+      assert_action_planned_with(action, pulp_metadata_generate_class, deb_repo, SmartProxy.pulp_primary,
+            action_options)
+      refute_action_planned(action, candlepin_product_content_update_class)
+    end
+
+    it 'plans a deb metadata generate with changed deb_content_url_options' do
+      action = create_action(action_class)
+      action.stubs(:task).returns(success_task)
+      action.expects(:action_subject).with(deb_repo)
+      deb_repo.expects(:deb_content_url_options).returns("/?comp=main,contrib&rel=bookworm")
+
+      plan_action(action, deb_repo)
+
+      assert_equal(deb_repo.content.content_url, "/custom/Debian_12/Debian_12_amd64_main/?comp=main&rel=bookworm")
+      assert_action_planned_with(action, pulp_metadata_generate_class, deb_repo, SmartProxy.pulp_primary,
+            action_options)
+      assert_action_planned(action, candlepin_product_content_update_class)
     end
   end
 end

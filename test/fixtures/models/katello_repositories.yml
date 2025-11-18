@@ -26,6 +26,7 @@ debian_10_amd64:
 debian_10_amd64_duplicate:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_duplicate_root) %>
   pulp_id:              Debian_10_duplicate
+  content_id:           114
   relative_path:        'ACME_Corporation/library/debian_10_duplicate_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
