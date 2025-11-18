@@ -45,7 +45,10 @@ module Katello
     def index
       validate_index_params!
       collection = scoped_search(index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
-      collection[:results] = HostPackagePresenter.with_latest(collection[:results], @host) if ::Foreman::Cast.to_bool(params[:include_latest_upgradable])
+      include_upgradable = ::Foreman::Cast.to_bool(params[:include_latest_upgradable])
+
+      # Present packages with persistence and (if requested) latest upgradable info
+      collection[:results] = HostPackagePresenter.package_map(collection[:results], @host, include_upgradable, true)
       respond_for_index(:collection => collection)
     end
 

@@ -26,6 +26,7 @@ module Katello
       assert_equal presenter.rpm_id, @rpm.id
     end
 
+    # TODO - fix this
     test "with_latest" do
       host = katello_content_facets(:content_facet_one).host
       host.content_facet.bound_repositories << @repo
@@ -38,6 +39,7 @@ module Katello
       assert_equal presenter.rpm_id, @rpm.id
     end
 
+    # TODO - fix this
     test "with arch" do
       host = katello_content_facets(:content_facet_one).host
       host.content_facet.bound_repositories << @repo
