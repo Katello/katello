@@ -30,6 +30,14 @@ deb_content_v3:
   content_url:  /custom/Debian_12/Debian_10_amd64_main/?comp=main&rel=buster
   content_type: "deb"
 
+deb_content_empty:
+  name:         debian
+  label:        debian
+  cp_content_id: 114
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  content_url:  /custom/Debian_12/Debian_12_amd64_main/?comp=empty&rel=katello
+  content_type: "deb"
+
 some_content:
   name:         Fedora
   cp_content_id: 1
