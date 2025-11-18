@@ -4,6 +4,7 @@ import { errorToast, renderTaskStartedToast } from '../../../../../scenes/Tasks/
 import { foremanApi } from '../../../../../services/api';
 
 export const BULK_SYSTEM_PURPOSE_KEY = 'BULK_SYSTEM_PURPOSE';
+export const BULK_RELEASE_VERSION_KEY = 'BULK_RELEASE_VERSION';
 
 export const bulkUpdateHostSystemPurpose =
   (params, handleSuccess, handleError) => put({
@@ -23,7 +24,7 @@ export const bulkUpdateHostSystemPurpose =
 export const bulkUpdateHostReleaseVersion =
   (params, handleSuccess, handleError) => put({
     type: API_OPERATIONS.PUT,
-    key: BULK_SYSTEM_PURPOSE_KEY,
+    key: BULK_RELEASE_VERSION_KEY,
     url: foremanApi.getApiUrl('/hosts/bulk/release_version'),
     successToast: () => __('Host release version updating.'),
     handleSuccess: (response) => {

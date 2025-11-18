@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -32,6 +32,7 @@ import {
   bulkUpdateHostSystemPurpose,
   bulkUpdateHostReleaseVersion,
   BULK_SYSTEM_PURPOSE_KEY,
+  BULK_RELEASE_VERSION_KEY,
 } from './actions';
 
 const NO_CHANGE = '__no_change__';
@@ -48,6 +49,9 @@ const BulkSystemPurposeModal = ({
   const [selectedServiceLevel, setSelectedServiceLevel] = useState(NO_CHANGE);
   const [selectedReleaseVersion, setSelectedReleaseVersion] = useState(NO_CHANGE);
   const [availableReleaseVersions, setAvailableReleaseVersions] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [sysPurposeDispatched, setSysPurposeDispatched] = useState(false);
+  const [releaseVersionDispatched, setReleaseVersionDispatched] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -58,7 +62,14 @@ const BulkSystemPurposeModal = ({
   const availableServiceLevels = orgDetails?.serviceLevels ?? [];
   const { roles: availableRoles, usage: availableUsages } = availableSyspurposeAttributes;
 
-  const updateStatus = useSelector(state => selectAPIStatus(state, BULK_SYSTEM_PURPOSE_KEY));
+  const sysPurposeStatus = useSelector(state =>
+    selectAPIStatus(state, BULK_SYSTEM_PURPOSE_KEY));
+  const releaseVersionStatus = useSelector(state =>
+    selectAPIStatus(state, BULK_RELEASE_VERSION_KEY));
+
+  // Check if either API call is pending
+  const isUpdating =
+    sysPurposeStatus === STATUS.PENDING || releaseVersionStatus === STATUS.PENDING;
 
   useEffect(() => {
     if (orgId && orgStatus !== STATUS.RESOLVED) {
@@ -88,14 +99,38 @@ const BulkSystemPurposeModal = ({
     return () => { canceled = true; };
   }, [isOpen, orgId]);
 
-  const handleModalClose = () => {
+  const handleModalClose = useCallback(() => {
     setSelectedRole(NO_CHANGE);
     setSelectedUsage(NO_CHANGE);
     setSelectedServiceLevel(NO_CHANGE);
     setSelectedReleaseVersion(NO_CHANGE);
     setAvailableReleaseVersions([]);
+    setIsSaving(false);
+    setSysPurposeDispatched(false);
+    setReleaseVersionDispatched(false);
     closeModal();
-  };
+  }, [closeModal]);
+
+  // Close modal when all dispatched API calls complete
+  useEffect(() => {
+    if (!isSaving) return;
+
+    const sysPurposeComplete =
+      !sysPurposeDispatched || sysPurposeStatus !== STATUS.PENDING;
+    const releaseVersionComplete =
+      !releaseVersionDispatched || releaseVersionStatus !== STATUS.PENDING;
+
+    if (sysPurposeComplete && releaseVersionComplete) {
+      handleModalClose();
+    }
+  }, [
+    isSaving,
+    sysPurposeDispatched,
+    releaseVersionDispatched,
+    sysPurposeStatus,
+    releaseVersionStatus,
+    handleModalClose,
+  ]);
 
   const roleOptions = buildSystemPurposeOptions(
     defaultRoles,
@@ -135,8 +170,10 @@ const BulkSystemPurposeModal = ({
       },
     };
 
-    // Track if we've made any API calls
-    let apiCallsMade = false;
+    // Start saving process
+    setIsSaving(true);
+    setSysPurposeDispatched(false);
+    setReleaseVersionDispatched(false);
 
     // Call system purpose endpoint if any system purpose fields changed
     if (selectedRole !== NO_CHANGE ||
@@ -154,12 +191,8 @@ const BulkSystemPurposeModal = ({
         sysPurposeParams.service_level = selectedServiceLevel;
       }
 
-      dispatch(bulkUpdateHostSystemPurpose(
-        sysPurposeParams,
-        handleModalClose,
-        handleModalClose,
-      ));
-      apiCallsMade = true;
+      dispatch(bulkUpdateHostSystemPurpose(sysPurposeParams));
+      setSysPurposeDispatched(true);
     }
 
     // Call release version endpoint if release version changed
@@ -169,17 +202,8 @@ const BulkSystemPurposeModal = ({
         release_version: selectedReleaseVersion,
       };
 
-      dispatch(bulkUpdateHostReleaseVersion(
-        releaseParams,
-        apiCallsMade ? null : handleModalClose, // Only close modal once
-        handleModalClose,
-      ));
-      apiCallsMade = true;
-    }
-
-    // If we didn't make any API calls, just close the modal
-    if (!apiCallsMade) {
-      handleModalClose();
+      dispatch(bulkUpdateHostReleaseVersion(releaseParams));
+      setReleaseVersionDispatched(true);
     }
   };
 
@@ -189,8 +213,8 @@ const BulkSystemPurposeModal = ({
       ouiaId="bulk-system-purpose-modal-save-button"
       variant="primary"
       onClick={handleSave}
-      isDisabled={!hasChanges() || updateStatus === STATUS.PENDING}
-      isLoading={updateStatus === STATUS.PENDING}
+      isDisabled={!hasChanges() || isUpdating}
+      isLoading={isUpdating}
     >
       {__('Save')}
     </Button>,
@@ -245,10 +269,10 @@ const BulkSystemPurposeModal = ({
         <FormGroup label={__('Role')} fieldId="bulk-system-purpose-role">
           <FormSelect
             value={selectedRole}
-            onChange={event => setSelectedRole(event.target.value)}
+            onChange={(_event, value) => setSelectedRole(value)}
             id="bulk-system-purpose-role"
             ouiaId="bulk-system-purpose-role-select"
-            isDisabled={updateStatus === STATUS.PENDING}
+            isDisabled={isUpdating}
           >
             {roleOptions.map(option => (
               <FormSelectOption
@@ -263,10 +287,10 @@ const BulkSystemPurposeModal = ({
         <FormGroup label={__('Usage')} fieldId="bulk-system-purpose-usage">
           <FormSelect
             value={selectedUsage}
-            onChange={event => setSelectedUsage(event.target.value)}
+            onChange={(_event, value) => setSelectedUsage(value)}
             id="bulk-system-purpose-usage"
             ouiaId="bulk-system-purpose-usage-select"
-            isDisabled={updateStatus === STATUS.PENDING}
+            isDisabled={isUpdating}
           >
             {usageOptions.map(option => (
               <FormSelectOption
@@ -281,10 +305,10 @@ const BulkSystemPurposeModal = ({
         <FormGroup label={__('Service level (SLA)')} fieldId="bulk-system-purpose-sla">
           <FormSelect
             value={selectedServiceLevel}
-            onChange={event => setSelectedServiceLevel(event.target.value)}
+            onChange={(_event, value) => setSelectedServiceLevel(value)}
             id="bulk-system-purpose-sla"
             ouiaId="bulk-system-purpose-sla-select"
-            isDisabled={updateStatus === STATUS.PENDING}
+            isDisabled={isUpdating}
           >
             {serviceLevelOptions.map(option => (
               <FormSelectOption
@@ -299,10 +323,10 @@ const BulkSystemPurposeModal = ({
         <FormGroup label={__('Release version')} fieldId="bulk-system-purpose-release">
           <FormSelect
             value={selectedReleaseVersion}
-            onChange={event => setSelectedReleaseVersion(event.target.value)}
+            onChange={(_event, value) => setSelectedReleaseVersion(value)}
             id="bulk-system-purpose-release"
             ouiaId="bulk-system-purpose-release-select"
-            isDisabled={updateStatus === STATUS.PENDING}
+            isDisabled={isUpdating}
           >
             {releaseVersionOptions.map(option => (
               <FormSelectOption
