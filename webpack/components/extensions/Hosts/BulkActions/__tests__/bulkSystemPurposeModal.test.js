@@ -135,7 +135,7 @@ test('Helper text is displayed for release version', async (done) => {
   const { getByText } = renderWithRedux(jsx, renderOptions());
 
   await patientlyWaitFor(() => {
-    expect(getByText(/Not all releases may be compatible with all selected hosts/i))
+    expect(getByText(/Not all release versions may be compatible with all selected hosts/i))
       .toBeInTheDocument();
   });
 
@@ -313,7 +313,7 @@ test("Selecting '(unset)' option in dropdown sends expected value", async () => 
 
   // Wait for modal to fully load with releases
   await patientlyWaitFor(() => {
-    expect(getByText(/Not all releases may be compatible with all selected hosts/i))
+    expect(getByText(/Not all release versions may be compatible with all selected hosts/i))
       .toBeInTheDocument();
     assertNockRequest(releasesScope);
   });

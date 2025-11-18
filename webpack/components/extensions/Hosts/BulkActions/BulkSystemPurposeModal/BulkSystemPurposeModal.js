@@ -244,7 +244,7 @@ const BulkSystemPurposeModal = ({
       <TextContent>
         <Text ouiaId="bulk-system-purpose-description">
           <FormattedMessage
-            defaultMessage="This will update the system purpose for {hosts}. Not all releases may be compatible with all selected hosts."
+            defaultMessage="This will update the system purpose for {hosts}. Not all release versions may be compatible with all selected hosts. Release version and system purpose attributes will not work with unregistered hosts."
             values={{
               hosts: (
                 <strong>
