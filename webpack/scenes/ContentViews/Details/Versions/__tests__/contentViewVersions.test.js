@@ -438,6 +438,12 @@ test('Shows call-to-action when there are no versions', async (done) => {
     .get(cvFiltersPath)
     .reply(200, contentViewFilterData);
 
+  const cvRepositoriesPath = api.getApiUrl('/content_views/5/repositories');
+  const repositoriesScope = nockInstance
+    .get(cvRepositoriesPath)
+    .query(true)
+    .reply(200, { results: [] });
+
   const { getByText, queryByText } = renderWithRedux(
     withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
@@ -456,6 +462,7 @@ test('Shows call-to-action when there are no versions', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(filterScope);
+  assertNockRequest(repositoriesScope);
   act(done);
 });
 

@@ -731,6 +731,16 @@ module Katello
       root.url.present?
     end
 
+    def flatpak_dependencies?
+      return false unless root.docker?
+      return false if root.docker_upstream_name.blank?
+
+      flatpak_repo = FlatpakRemoteRepository.find_by(name: root.docker_upstream_name)
+      return false unless flatpak_repo
+
+      flatpak_repo.repository_dependencies.any?
+    end
+
     def related_resources
       self.product
     end

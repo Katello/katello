@@ -15,8 +15,8 @@ import {
   selectEnvironmentPathsStatus,
 } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
 import { stopPollingTask } from '../../Tasks/TaskActions';
-import { cvVersionTaskPollingKey } from '../ContentViewsConstants';
-import { getContentViewFilters } from '../Details/ContentViewDetailActions';
+import { cvVersionTaskPollingKey, ADDED } from '../ContentViewsConstants';
+import { getContentViewFilters, getContentViewRepositories } from '../Details/ContentViewDetailActions';
 import { truncate } from '../../../utils/helpers';
 
 const PublishContentViewWizard = ({
@@ -77,6 +77,7 @@ const PublishContentViewWizard = ({
     () => {
       dispatch(getEnvironmentPaths());
       dispatch(getContentViewFilters(cvId, {}));
+      dispatch(getContentViewRepositories(cvId, {}, ADDED));
     },
     [dispatch, cvId],
   );

@@ -27,13 +27,15 @@ module Katello
 
     def repository_dependencies
       manifest_dependencies&.map(&:remote_repository)
+        &.select { |dep| dep.flatpak_remote_id == flatpak_remote_id && dep.id != id }
+        &.uniq(&:id) || []
     end
 
     def last_mirrored_task
-      label = ::Actions::Katello::Flatpak::MirrorRemoteRepository.name
-      type = ::Katello::FlatpakRemoteRepository.name
-      ForemanTasks::Task.search_for("label = #{label} and resource_type = #{type} and resource_id = #{self.id}")
-        .order("started_at desc")
+      ForemanTasks::Task.for_resource(self)
+        .where(label: ::Actions::Katello::Flatpak::MirrorRemoteRepository.name)
+        .order(started_at: :desc)
+        .limit(1)
         .first
     end
 

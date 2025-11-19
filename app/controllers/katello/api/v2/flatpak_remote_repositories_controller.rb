@@ -55,8 +55,17 @@ module Katello
     param :product_id, :number, :desc => N_("Product ID to mirror the remote repository to")
     param :product_name, String, :desc => N_("Name of the product to mirror the remote repository to")
     param :organization_id, :number, :desc => N_("organization identifier")
+    param :dependency_ids, Array, :desc => N_("Array of dependency repository IDs to mirror along with the main repository")
     def mirror
-      task = async_task(::Actions::Katello::Flatpak::MirrorRemoteRepository, @flatpak_remote_repository, @product)
+      # Collect all repositories to mirror (dependencies + main)
+      repos_to_mirror = params[:dependency_ids].present? ? find_dependency_repositories.to_a : []
+      repos_to_mirror << @flatpak_remote_repository
+
+      task = async_task(::Actions::BulkAction,
+                        ::Actions::Katello::Flatpak::MirrorRemoteRepository,
+                        repos_to_mirror,
+                        @product.id)
+
       respond_for_async :resource => task
     end
 
@@ -81,6 +90,19 @@ module Katello
     end
 
     private
+
+    def find_dependency_repositories
+      dependency_ids = params[:dependency_ids] || []
+      repos = FlatpakRemoteRepository.readable.where(id: dependency_ids)
+
+      if repos.count != dependency_ids.count
+        missing_ids = dependency_ids - repos.pluck(:id)
+        msg = _("Could not find dependency repositories with IDs: %{ids}. Proceeding with found repositories.") % { ids: missing_ids.join(', ') }
+        Rails.logger.debug(msg)
+      end
+
+      repos
+    end
 
     def find_and_validate_product_for_mirroring
       if params[:product_id]

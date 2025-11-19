@@ -15,7 +15,7 @@ import InactiveText from '../components/InactiveText';
 import ComponentEnvironments from '../Details/ComponentContentViews/ComponentEnvironments';
 import { selectEnvironmentPaths, selectEnvironmentPathsStatus } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
 import WizardHeader from '../components/WizardHeader';
-import { selectCVFilters, selectCVFiltersStatus } from '../Details/ContentViewDetailSelectors';
+import { selectCVFilters, selectCVFiltersStatus, selectCVRepos, selectCVReposStatus } from '../Details/ContentViewDetailSelectors';
 import { truncate } from '../../../utils/helpers';
 
 const CVPublishReview = ({
@@ -28,8 +28,11 @@ const CVPublishReview = ({
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
   const cvFiltersResponse = useSelector(state => selectCVFilters(state, id));
   const cvFiltersStatus = useSelector(state => selectCVFiltersStatus(state, id));
+  const cvReposResponse = useSelector(state => selectCVRepos(state, id));
+  const cvReposStatus = useSelector(state => selectCVReposStatus(state, id));
   const environmentPathLoading = environmentPathStatus === STATUS.PENDING;
   const cvFiltersLoading = cvFiltersStatus === STATUS.PENDING;
+  const cvReposLoading = cvReposStatus === STATUS.PENDING;
 
   const promotedToEnvironments = useMemo(() => {
     if (!environmentPathLoading) {
@@ -48,6 +51,14 @@ const CVPublishReview = ({
     return [];
   }, [cvFiltersResponse, cvFiltersLoading]);
 
+  const hasFlatpakDependencies = useMemo(() => {
+    if (!cvReposLoading) {
+      const { results } = cvReposResponse || {};
+      return results?.some(repo => repo.flatpak_dependencies) || false;
+    }
+    return false;
+  }, [cvReposResponse, cvReposLoading]);
+
   return (
     <>
       <WizardHeader
@@ -62,6 +73,15 @@ const CVPublishReview = ({
               isInline
               isPlain
               title={__('Filters will be applied to this content view version.')}
+              style={{ marginTop: '24px' }}
+            />)}
+            {hasFlatpakDependencies && (
+            <Alert
+              ouiaId="flatpak-dependencies-alert"
+              variant="info"
+              isInline
+              isPlain
+              title={__('Make sure the runtimes required by the Flatpak apps in this content view are available to the host(s).')}
               style={{ marginTop: '24px' }}
             />)}
           </>

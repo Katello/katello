@@ -23,21 +23,22 @@ module ::Actions::Katello::Flatpak
       it 'plans' do
         action = create_action(action_class)
         action.stubs(:task).returns(success_task)
-        product.expects(:add_repo).with({
-                                          name: remote_repository.name,
-                                          label: remote_repository.label,
-                                          url: remote_repository.flatpak_remote&.registry_url,
-                                          description: 'Mirrored from: ' + remote_repository.flatpak_remote.name,
-                                          product_id: product.id,
-                                          content_type: 'docker',
-                                          docker_upstream_name: "rhel9/flatpak-runtime",
-                                          include_tags: ["latest"],
-                                          upstream_username: nil,
-                                          upstream_password: nil,
-                                          unprotected: true,
-                                          mirroring_policy: Setting[:default_non_yum_mirroring_policy],
-                                        }).returns(random_root)
-        plan_action action, remote_repository, product
+        ::Katello::Product.any_instance.expects(:add_repo).with(
+                                                                 {
+                                                                   name: remote_repository.name,
+                                                                   label: remote_repository.label,
+                                                                   url: remote_repository.flatpak_remote&.registry_url,
+                                                                   description: 'Mirrored from: ' + remote_repository.flatpak_remote.name,
+                                                                   product_id: product.id,
+                                                                   content_type: 'docker',
+                                                                   docker_upstream_name: "rhel9/flatpak-runtime",
+                                                                   include_tags: ["latest"],
+                                                                   upstream_username: nil,
+                                                                   upstream_password: nil,
+                                                                   unprotected: true,
+                                                                   mirroring_policy: Setting[:default_non_yum_mirroring_policy],
+                                                                 }).returns(random_root)
+        plan_action action, remote_repository, product.id
         assert_action_planned_with(action, ::Actions::Katello::Repository::CreateRoot, random_root)
       end
     end
