@@ -68,6 +68,10 @@ node :last_sync_words do |object|
   end
 end
 
+node :flatpak_dependencies do |object|
+  object.flatpak_dependencies?
+end
+
 child :content_view => :content_view do |_repo|
   attribute :id, :name
 end

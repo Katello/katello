@@ -14,3 +14,9 @@ export const selectFlatpakRemoteDetailStatus =
 
 export const selectFlatpakRemoteDetailError =
   (state, id) => selectAPIError(state, flatpakRemoteDetailsKey(id));
+
+export const selectRemoteRepository = (state, repoId) =>
+  selectAPIResponse(state, `FLATPAK_REMOTE_REPOSITORY_${repoId}`) || {};
+
+export const selectRemoteRepositoryStatus = (state, repoId) =>
+  selectAPIStatus(state, `FLATPAK_REMOTE_REPOSITORY_${repoId}`) || STATUS.PENDING;
