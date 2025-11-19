@@ -24,6 +24,7 @@ import { getHostAvailableReleaseVersions, getAKAvailableReleaseVersions, getOrga
 import HOST_DETAILS_KEY from '../../HostDetailsConstants';
 import { defaultUsages, defaultRoles, defaultServiceLevels } from './SystemPurposeConstants';
 import { getActivationKey } from '../../../../../scenes/ActivationKeys/Details/ActivationKeyActions';
+import { buildSystemPurposeOptions } from './helpers';
 
 const SystemPurposeEditModal = ({
   closeModal, name, purposeRole, purposeUsage,
@@ -80,33 +81,41 @@ const SystemPurposeEditModal = ({
     },
   });
 
-  // Building the dropdown options is a bit complex because they come from several sources:
-  // 1. The hard-coded set of default values (defaultOptions)
-  // 2. The set of available values from the API (additionalOptions)
-  // 3. The value actually set on the host (initialOption - this need not be a value from 1 or 2)
-  // We then need to combine these values into a single set of options, and ensure that
-  // (a) (unset) appears first;
-  // (b) there are no duplicate options;
-  // (c) that the currently selected option always appears (currentSelected); and
-  // (d) that the order of the items doesn't change unexpectedly.
-  const buildOptions = (defaultOptions, additionalOptions, currentSelected, initialOption) => {
-    const optionToObject = option => ({ label: option || __('(unset)'), value: option });
-    const uniqOptions = new Set(['', ...defaultOptions ?? [], ...additionalOptions ?? [], currentSelected, initialOption]);
-    uniqOptions.delete(null);
-    uniqOptions.delete(undefined);
-    return [...[...uniqOptions]?.map(optionToObject)];
-  };
+  const roleOptions = buildSystemPurposeOptions(
+    defaultRoles,
+    availableRoles,
+    {
+      currentSelected: selectedRole,
+      initialOption: purposeRole,
+    },
+  );
 
-  const roleOptions =
-    buildOptions(defaultRoles, availableRoles, selectedRole, purposeRole);
-  const usageOptions =
-    buildOptions(defaultUsages, availableUsages, selectedUsage, purposeUsage);
+  const usageOptions = buildSystemPurposeOptions(
+    defaultUsages,
+    availableUsages,
+    {
+      currentSelected: selectedUsage,
+      initialOption: purposeUsage,
+    },
+  );
 
-  const serviceLevelOptions =
-    buildOptions(defaultServiceLevels, availableServiceLevels, selectedServiceLevel, serviceLevel);
+  const serviceLevelOptions = buildSystemPurposeOptions(
+    defaultServiceLevels,
+    availableServiceLevels,
+    {
+      currentSelected: selectedServiceLevel,
+      initialOption: serviceLevel,
+    },
+  );
 
-  const releaseVersionOptions =
-    buildOptions([], availableReleaseVersions, selectedReleaseVersion, releaseVersion);
+  const releaseVersionOptions = buildSystemPurposeOptions(
+    [],
+    availableReleaseVersions,
+    {
+      currentSelected: selectedReleaseVersion,
+      initialOption: releaseVersion,
+    },
+  );
 
   const handleSave = (event) => {
     event.preventDefault();

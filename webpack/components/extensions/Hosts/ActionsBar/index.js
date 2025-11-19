@@ -42,6 +42,7 @@ const HostActionsBar = () => {
       'bulk-errata-wizard',
       'bulk-repo-sets-wizard',
       'bulk-change-host-collections-modal',
+      'bulk-system-purpose-modal',
     ].forEach((id) => {
       dispatch(addModal({ id }));
     });
@@ -50,6 +51,7 @@ const HostActionsBar = () => {
   const { setModalOpen: openBulkPackagesWizardModal } = useForemanModal({ id: 'bulk-packages-wizard' });
   const { setModalOpen: openBulkErrataWizardModal } = useForemanModal({ id: 'bulk-errata-wizard' });
   const { setModalOpen: openBulkRepositorySetsWizardModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
+  const { setModalOpen: openBulkSystemPurposeModal } = useForemanModal({ id: 'bulk-system-purpose-modal' });
 
   const orgId = useForemanOrganization()?.id;
 
@@ -112,6 +114,15 @@ const HostActionsBar = () => {
                 description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change content view environments, a specific organization must be selected from the organization context.')} />}
               >
                 {__('Content view environments')}
+              </MenuItem>
+              <MenuItem
+                itemId="bulk-system-purpose-dropdown-item"
+                key="bulk-system-purpose-dropdown-item"
+                onClick={openBulkSystemPurposeModal}
+                isDisabled={selectedCount === 0 || !orgId}
+                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change system purpose, a specific organization must be selected from the organization context.')} />}
+              >
+                {__('System purpose')}
               </MenuItem>
             </MenuList>
           </MenuContent>
