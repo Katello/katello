@@ -363,7 +363,7 @@ module Katello
 
       Katello::HostTraceManager.expects(:resolve_traces).with([host_one_trace]).returns([job_invocation])
 
-      put :resolve_traces, params: { :trace_ids => [host_one_trace.id] }
+      put :resolve_traces, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :trace_ids => [host_one_trace.id] }
 
       assert_response :success
 
@@ -377,7 +377,7 @@ module Katello
 
       Katello::HostTraceManager.expects(:resolve_traces).returns([job_invocation])
 
-      put :resolve_traces, params: { :trace_search => "id ^ (#{host_one_trace.id})" }
+      put :resolve_traces, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :trace_search => "id ^ (#{host_one_trace.id})" }
 
       assert_response :success
 
@@ -393,7 +393,7 @@ module Katello
 
       Katello::HostTraceManager.expects(:resolve_traces).returns([job_invocation])
 
-      put :resolve_traces, params: { :trace_search => "" }
+      put :resolve_traces, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :trace_search => "" }
 
       assert_response :success
 
@@ -403,7 +403,7 @@ module Katello
     end
 
     def test_resolve_traces_without_params
-      put :resolve_traces, params: {}
+      put :resolve_traces, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id }
 
       assert_response :bad_request
 
@@ -419,7 +419,7 @@ module Katello
       host_one_trace
 
       assert_protected_action(:resolve_traces, good_perms, bad_perms) do
-        put :resolve_traces, params: { trace_ids: [host_one_trace.id] }
+        put :resolve_traces, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :trace_ids => [host_one_trace.id] }
       end
     end
 

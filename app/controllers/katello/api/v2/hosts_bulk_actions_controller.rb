@@ -10,7 +10,7 @@ module Katello
     before_action :find_host_collections, only: [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_action :find_environment, only: [:environment_content_view]
     before_action :find_content_view, only: [:environment_content_view]
-    before_action :find_editable_hosts, except: [:destroy_hosts, :resolve_traces, :change_content_source]
+    before_action :find_editable_hosts, except: [:destroy_hosts, :change_content_source]
     before_action :find_deletable_hosts, only: [:destroy_hosts]
     before_action :find_readable_hosts, only: [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, only: [:available_incremental_updates]
@@ -301,15 +301,18 @@ module Katello
     end
 
     def find_traces
+      # Scope traces to only those belonging to editable hosts
+      base_scope = Katello::HostTracer.resolvable.where(host_id: @hosts.pluck(:id))
+
       if params.key?(:trace_search)
         # Use search query to find traces (empty string means all)
         params[:search] = params[:trace_search]
-        search_results = scoped_search(Katello::HostTracer.resolvable, nil, nil, resource_class: Katello::HostTracer)
+        search_results = scoped_search(base_scope, nil, nil, resource_class: Katello::HostTracer)
         @traces = search_results[:results]
       elsif params[:trace_ids].present?
         # Backward compatibility: use trace IDs
         throw_resources_not_found(name: 'host trace', expected_ids: params[:trace_ids]) do
-          @traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
+          @traces = base_scope.where(id: params[:trace_ids])
         end
       else
         fail HttpErrors::BadRequest, _("Either trace_search or trace_ids must be provided")

@@ -8,6 +8,7 @@
  * @requires Notification
  * @requires Nutupane
  * @requires BastionConfig
+ * @requires CurrentOrganization
  * @requires hostIds
  * @required ContentHostsHelper
  * @requires translate
@@ -17,8 +18,15 @@
  */
 /*jshint camelcase:false*/
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesController',
-    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'hostIds', 'ContentHostsHelper', 'translate',
-    function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, hostIds, ContentHostsHelper, translate) {
+    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'CurrentOrganization', 'hostIds', 'ContentHostsHelper', 'translate',
+    function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, CurrentOrganization, hostIds, ContentHostsHelper, translate) {
+
+        function actionParams(traceids) {
+            var params = hostIds;
+            params.organization_id = CurrentOrganization;
+            params.trace_ids = traceids;
+            return params;
+        }
 
         var tracesNutupane = new Nutupane(HostBulkAction, hostIds, 'traces');
         tracesNutupane.enableSelectAllResults();
@@ -44,9 +52,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesContro
                     Notification.setErrorMessage(responseError);
                 });
             };
-            /* eslint-disable camelcase */
-            HostBulkAction.resolveTraces({trace_ids: traceids}, onSuccess, onFailure);
-            /* eslint-enable camelcase */
+
+            HostBulkAction.resolveTraces(actionParams(traceids), onSuccess, onFailure);
         };
 
         $scope.rebootRequired = function() {
