@@ -436,6 +436,108 @@ module Katello
       capsule_content.smart_proxy.expects(:container_gateway_users).returns(::User.where(login: 'secret_admin'))
       capsule_content.smart_proxy.sync_container_gateway
     end
+
+    def test_sync_container_gateway_with_hosts
+      environment = katello_environments(:library)
+      with_pulp3_features(capsule_content.smart_proxy)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+
+      host = FactoryBot.build(:host, :with_content, :with_subscription,
+                              :content_view => @view,
+                              :lifecycle_environment => @library)
+      host.content_facet.content_source = capsule_content.smart_proxy
+      host.subscription_facet.uuid = 'test-uuid-123'
+      ::Katello::Resources::Candlepin::Consumer.stubs(:update)
+      host.save!
+
+      ProxyAPI::ContainerGateway.any_instance.expects(:repository_list).returns(true)
+      update_hosts_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:update_hosts).with do |arg|
+        arg[:hosts].length == 1 && arg[:hosts].first[:uuid] == 'test-uuid-123'
+      end
+      update_hosts_expectation.returns(true)
+      host_mapping_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:host_repository_mapping).with do |arg|
+        arg[:hosts].length == 1 && arg[:hosts].first.key?('test-uuid-123')
+      end
+      host_mapping_expectation.returns(true)
+
+      capsule_content.smart_proxy.expects(:container_gateway_users).returns([])
+      capsule_content.smart_proxy.sync_container_gateway
+    end
+
+    def test_sync_container_gateway_skips_nil_uuid
+      environment = katello_environments(:library)
+      with_pulp3_features(capsule_content.smart_proxy)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+
+      ::Katello::Resources::Candlepin::Consumer.stubs(:update)
+
+      host_with_uuid = FactoryBot.build(:host, :with_content, :with_subscription,
+                                        :content_view => @view,
+                                        :lifecycle_environment => @library)
+      host_with_uuid.content_facet.content_source = capsule_content.smart_proxy
+      host_with_uuid.subscription_facet.uuid = 'valid-uuid'
+      host_with_uuid.save!
+
+      host_without_uuid = FactoryBot.build(:host, :with_content, :with_subscription,
+                                           :content_view => @view,
+                                           :lifecycle_environment => @library)
+      host_without_uuid.content_facet.content_source = capsule_content.smart_proxy
+      host_without_uuid.subscription_facet.uuid = nil
+      host_without_uuid.save!
+
+      ProxyAPI::ContainerGateway.any_instance.expects(:repository_list).returns(true)
+      update_hosts_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:update_hosts).with do |arg|
+        arg[:hosts].length == 1 && arg[:hosts].first[:uuid] == 'valid-uuid'
+      end
+      update_hosts_expectation.returns(true)
+      host_mapping_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:host_repository_mapping).with do |arg|
+        arg[:hosts].length == 1 && arg[:hosts].first.key?('valid-uuid')
+      end
+      host_mapping_expectation.returns(true)
+
+      capsule_content.smart_proxy.expects(:container_gateway_users).returns([])
+      capsule_content.smart_proxy.sync_container_gateway
+    end
+
+    def test_update_host_repositories
+      ::Katello::Resources::Candlepin::Consumer.stubs(:update)
+      host = FactoryBot.build(:host, :with_content, :with_subscription,
+                              :content_view => @view,
+                              :lifecycle_environment => @library)
+      host.subscription_facet.uuid = 'host-uuid-456'
+      host.save!
+
+      update_repo_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:update_host_repositories).with do |arg|
+        arg[:hosts].length == 1 && arg[:hosts].first.key?('host-uuid-456')
+      end
+      update_repo_expectation.returns(true)
+
+      @proxy.update_host_repositories(host)
+    end
+
+    def test_update_host_repositories_with_nil_uuid
+      ::Katello::Resources::Candlepin::Consumer.stubs(:update)
+      host = FactoryBot.build(:host, :with_content, :with_subscription,
+                              :content_view => @view,
+                              :lifecycle_environment => @library)
+      host.subscription_facet.uuid = nil
+      host.save!
+
+      ProxyAPI::ContainerGateway.any_instance.expects(:update_host_repositories).never
+
+      @proxy.update_host_repositories(host)
+    end
+
+    def test_update_host_repositories_without_subscription_facet
+      host = FactoryBot.build(:host, :with_content,
+                              :content_view => @view,
+                              :lifecycle_environment => @library)
+      host.save!
+
+      ProxyAPI::ContainerGateway.any_instance.expects(:update_host_repositories).never
+
+      @proxy.update_host_repositories(host)
+    end
   end
 
   class SmartProxyPulp3Test < ActiveSupport::TestCase
