@@ -132,6 +132,15 @@ module Katello
         SmartProxy.joins(:smart_proxy_alternate_content_sources).where('katello_smart_proxy_alternate_content_sources.smart_proxy_id' => self.id)
       end
 
+      def subscription_facets
+        ::Katello::Host::SubscriptionFacet
+          .joins(:host => :content_facet)
+          .includes(:host)
+          .where('katello_content_facets.content_source_id = ?', id)
+          .where.not('katello_subscription_facets.uuid' => nil)
+          .distinct
+      end
+
       def registration_url
         url = self.setting('Registration', 'registration_url').presence || self.url
         URI(url)
@@ -230,20 +239,38 @@ module Katello
       end
 
       def sync_container_gateway
-        if has_feature?(::SmartProxy::CONTAINER_GATEWAY_FEATURE)
+        return unless has_feature?(::SmartProxy::CONTAINER_GATEWAY_FEATURE)
+
+        begin
           update_container_repo_list
+        rescue StandardError => e
+          Rails.logger.error("Failed to update container repository list for #{name}: #{e.message}")
+          Rails.logger.debug(e.backtrace.join("\n"))
+        end
+
+        begin
           users = container_gateway_users
           update_user_container_repo_mapping(users) if users.any?
-          if content_facets.any?
-            update_container_gateway_hosts
-            update_host_container_repo_mapping(content_facets)
+        rescue StandardError => e
+          Rails.logger.error("Failed to update user container repository mapping for #{name}: #{e.message}")
+          Rails.logger.debug(e.backtrace.join("\n"))
+        end
+
+        begin
+          facets = subscription_facets
+          if facets.exists?
+            update_container_gateway_hosts(facets)
+            update_host_container_repo_mapping(facets)
           end
+        rescue StandardError => e
+          Rails.logger.error("Failed to update host container gateway data for #{name}: #{e.message}")
+          Rails.logger.debug(e.backtrace.join("\n"))
         end
       end
 
-      def update_container_gateway_hosts
-        # This method updates the hosts that are registered with the container gateway.
-        hosts = self.content_facets.map do |facet|
+      def update_container_gateway_hosts(facets = nil)
+        facets ||= subscription_facets
+        hosts = facets.map do |facet|
           {
             uuid: facet.uuid,
           }
@@ -285,9 +312,9 @@ module Katello
         ProxyAPI::ContainerGateway.new(url: self.url).user_repository_mapping(user_repo_map)
       end
 
-      def update_host_container_repo_mapping(content_facets)
+      def update_host_container_repo_mapping(subscription_facets)
         host_repo_map = { hosts: [] }
-        content_facets.each do |facet|
+        subscription_facets.each do |facet|
           repositories = ::Katello::Repository.readable_docker_catalog(facet.host)
           host_repo_map[:hosts] << { facet.uuid => build_repo_list(repositories) }
         end
@@ -295,10 +322,10 @@ module Katello
       end
 
       def update_host_repositories(host)
-        return unless host&.content_facet&.uuid
+        return unless host&.subscription_facet&.uuid
         host_repos = { hosts: [] }
         repositories = ::Katello::Repository.readable_docker_catalog(host)
-        host_repos[:hosts] << { host.content_facet.uuid => build_repo_list(repositories) }
+        host_repos[:hosts] << { host.subscription_facet.uuid => build_repo_list(repositories) }
         ProxyAPI::ContainerGateway.new(url: self.url).update_host_repositories(host_repos)
       end
 
