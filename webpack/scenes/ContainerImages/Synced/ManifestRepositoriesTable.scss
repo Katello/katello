@@ -1,0 +1,37 @@
+.manifest-repositories-table-wrapper {
+  // Remove extra padding from TableIndexPage sections
+  .pf-v5-c-page__main-section.table-title-section,
+  .pf-v5-c-page__main-section.table-toolbar-section,
+  .pf-v5-c-page__main-section.table-section {
+    padding: 0;
+  }
+
+  // Hide the page title section completely
+  .table-title-section {
+    display: none;
+  }
+
+  // Prevent table headers from wrapping or truncating
+  .pf-v5-c-table {
+    table-layout: auto;
+
+    .pf-v5-c-table__th {
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      max-width: none;
+
+      .pf-v5-c-table__text {
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
+      }
+    }
+
+    // Add vertical padding to table cells for better spacing when content wraps
+    .pf-v5-c-table__td {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+  }
+}

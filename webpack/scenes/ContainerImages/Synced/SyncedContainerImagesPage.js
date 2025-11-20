@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Thead, Th, Tbody, Tr, Td } from '@patternfly/react-table';
+import { Table, Thead, Th, Tbody, Tr, Td, ActionsColumn } from '@patternfly/react-table';
 import { Button } from '@patternfly/react-core';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
@@ -28,6 +28,7 @@ import {
   STATUS,
 } from '../containerImagesHelpers';
 import LabelsAnnotationsModal from '../LabelsAnnotationsModal';
+import PullablePathsModal from './PullablePathsModal';
 import TableEmptyState from '../TableEmptyState';
 import './SyncedContainerImagesPage.scss';
 
@@ -37,6 +38,8 @@ const SYNCED_CONTAINER_IMAGES_API_PATH = '/katello/api/v2/docker_tags';
 const SyncedContainerImagesPage = () => {
   const [showLabelsModal, setShowLabelsModal] = useState(false);
   const [selectedManifest, setSelectedManifest] = useState(null);
+  const [showPullablePathsModal, setShowPullablePathsModal] = useState(false);
+  const [selectedTag, setSelectedTag] = useState(null);
 
   const getManifestType = (tag) => {
     const manifest = getManifest(tag);
@@ -69,6 +72,11 @@ const SyncedContainerImagesPage = () => {
   const openLabelsModal = (manifest) => {
     setSelectedManifest(manifest);
     setShowLabelsModal(true);
+  };
+
+  const openPullablePathsModal = (tag) => {
+    setSelectedTag(tag);
+    setShowPullablePathsModal(true);
   };
 
   const expandedTags = useSet([]);
@@ -289,6 +297,16 @@ const SyncedContainerImagesPage = () => {
                       {columns[k].wrapper ? columns[k].wrapper(tag) : tag[k]}
                     </Td>
                   ))}
+                  <Td isActionCell>
+                    <ActionsColumn
+                      items={[
+                        {
+                          title: __('View pullable paths'),
+                          onClick: () => openPullablePathsModal(tag),
+                        },
+                      ]}
+                    />
+                  </Td>
                 </Tr>
                 {hasChildManifests && manifest.manifests.map((childManifest, childIndex) => {
                   const isLastChild = childIndex === manifest.manifests.length - 1;
@@ -327,6 +345,7 @@ const SyncedContainerImagesPage = () => {
                           <span>N/A</span>
                         )}
                       </Td>
+                      <Td className="empty-cell" />
                     </Tr>
                   );
                 })}
@@ -350,6 +369,12 @@ const SyncedContainerImagesPage = () => {
           digest={selectedManifest?.digest || ''}
           labels={selectedManifest?.labels || {}}
           annotations={selectedManifest?.annotations || {}}
+        />
+        <PullablePathsModal
+          show={showPullablePathsModal}
+          setIsOpen={setShowPullablePathsModal}
+          repositories={selectedTag?.repositories || []}
+          tagName={selectedTag?.name || ''}
         />
       </>
     </TableIndexPage>

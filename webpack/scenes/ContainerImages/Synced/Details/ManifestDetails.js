@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import {
@@ -15,12 +15,14 @@ import {
   Label,
   Flex,
   FlexItem,
+  ExpandableSection,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import Loading from 'foremanReact/components/Loading';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import EmptyStateMessage from '../../../../components/Table/EmptyStateMessage';
+import ManifestRepositoriesTable from '../ManifestRepositoriesTable';
 import {
   getManifest,
   getShortDigest,
@@ -39,6 +41,7 @@ const ManifestDetails = () => {
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const searchParams = new URLSearchParams(location.search);
   const manifestId = searchParams.get('manifest');
@@ -82,12 +85,14 @@ const ManifestDetails = () => {
   const shortDigest = getShortDigest(digest);
   const manifestType = formatManifestType(manifest);
 
-  // Filter to show only library repositories
-  const libraryRepositories = manifestData.repositories?.filter(repo =>
-    repo.library_instance) || [];
+  const repositories = manifestData.repositories || [];
+  const libraryRepositories = repositories.filter(repo => repo.library_instance);
 
   const labels = manifest?.labels || {};
+  const annotations = manifest?.annotations || {};
   const labelKeys = Object.keys(labels);
+  const annotationKeys = Object.keys(annotations);
+  const hasLabelsOrAnnotations = labelKeys.length > 0 || annotationKeys.length > 0;
 
   return (
     <PageSection variant="light">
@@ -188,19 +193,37 @@ const ManifestDetails = () => {
               </TextContent>
             </GridItem>
 
-            <GridItem span={6} />
+            <GridItem span={12}>
+              <ExpandableSection
+                toggleText={__('Content views, lifecycle environments, pullable paths')}
+                onToggle={(_event, expanded) => setIsExpanded(expanded)}
+                isExpanded={isExpanded}
+              >
+                <ManifestRepositoriesTable
+                  repositories={repositories}
+                  tagName={manifestData.name}
+                />
+              </ExpandableSection>
+            </GridItem>
 
             <GridItem span={6}>
               <TextContent>
-                <Text component={TextVariants.h6} ouiaId="manifest-labels-label">{__('Labels')}</Text>
-                {labelKeys.length === 0 ? (
-                  <div>{__('No labels')}</div>
+                <Text component={TextVariants.h6} ouiaId="manifest-labels-label">{__('Labels | Annotations')}</Text>
+                {!hasLabelsOrAnnotations ? (
+                  <div>{__('No labels or annotations')}</div>
                 ) : (
                   <Flex spaceItems={{ default: 'spaceItemsSm' }} flexWrap={{ default: 'wrap' }}>
                     {labelKeys.map(key => (
-                      <FlexItem key={key}>
+                      <FlexItem key={`label-${key}`}>
                         <Label color="grey">
                           {key} = {labels[key]}
+                        </Label>
+                      </FlexItem>
+                    ))}
+                    {annotationKeys.map(key => (
+                      <FlexItem key={`annotation-${key}`}>
+                        <Label color="grey">
+                          {key} = {annotations[key]}
                         </Label>
                       </FlexItem>
                     ))}

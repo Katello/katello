@@ -43,11 +43,11 @@ describe('ManifestDetails', () => {
     expect(getByText('Digest')).toBeInTheDocument();
     expect(getByText('Creation')).toBeInTheDocument();
     expect(getByText('Modified')).toBeInTheDocument();
-    expect(getByText('Labels')).toBeInTheDocument();
+    expect(getByText('Labels | Annotations')).toBeInTheDocument();
 
     // Check values
     expect(getAllByText('v1.0')[0]).toBeInTheDocument();
-    expect(getByText('ubi9-container')).toBeInTheDocument();
+    expect(getAllByText('ubi9-container')[0]).toBeInTheDocument();
 
     // Check labels are displayed
     expect(getByText(/architecture/)).toBeInTheDocument();
@@ -71,49 +71,22 @@ describe('ManifestDetails', () => {
     expect(getByText('Loading')).toBeInTheDocument();
   });
 
-  test('Displays only library repositories', async () => {
-    const scope = nockInstance
-      .get(manifestDetailsPath(2))
-      .query(true)
-      .reply(200, manifestDetailsData);
-
-    const { getByText, queryByText } = renderWithRedux(
-      withManifestRoute(<ManifestDetails />),
-      renderOptions(2),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('ubi9-container')).toBeInTheDocument();
-    });
-
-    // Should display Repositories label
-    expect(getByText('Repositories')).toBeInTheDocument();
-
-    // Should show library repository
-    expect(getByText('ubi9-container')).toBeInTheDocument();
-
-    // Should NOT show non-library repository
-    expect(queryByText('ubi9-container-dev')).not.toBeInTheDocument();
-
-    assertNockRequest(scope);
-  });
-
   test('Repository links are clickable and have correct URLs', async () => {
     const scope = nockInstance
       .get(manifestDetailsPath(2))
       .query(true)
       .reply(200, manifestDetailsData);
 
-    const { getByText } = renderWithRedux(
+    const { getAllByText } = renderWithRedux(
       withManifestRoute(<ManifestDetails />),
       renderOptions(2),
     );
 
     await patientlyWaitFor(() => {
-      expect(getByText('ubi9-container')).toBeInTheDocument();
+      expect(getAllByText('ubi9-container')[0]).toBeInTheDocument();
     });
 
-    const repoLink = getByText('ubi9-container').closest('a');
+    const repoLink = getAllByText('ubi9-container')[0].closest('a');
     expect(repoLink).toBeInTheDocument();
     expect(repoLink).toHaveAttribute('href', '/products/5/repositories/10');
     expect(repoLink).toHaveAttribute('target', '_blank');
@@ -122,12 +95,13 @@ describe('ManifestDetails', () => {
     assertNockRequest(scope);
   });
 
-  test('Displays "No labels" when labels are empty', async () => {
+  test('Displays "No labels or annotations" when both are empty', async () => {
     const dataWithoutLabels = {
       ...manifestDetailsData,
       manifest: {
         ...manifestDetailsData.manifest,
         labels: {},
+        annotations: {},
       },
     };
 
@@ -142,7 +116,46 @@ describe('ManifestDetails', () => {
     );
 
     await patientlyWaitFor(() => {
-      expect(getByText('No labels')).toBeInTheDocument();
+      expect(getByText('No labels or annotations')).toBeInTheDocument();
+    });
+
+    assertNockRequest(scope);
+  });
+
+  test('Displays both labels and annotations when present', async () => {
+    const dataWithAnnotations = {
+      ...manifestDetailsData,
+      manifest: {
+        ...manifestDetailsData.manifest,
+        labels: {
+          'io.buildah.version': '1.37.1',
+        },
+        annotations: {
+          'org.opencontainers.image.url': 'https://github.com/docker-library/busybox',
+          'org.opencontainers.image.version': '1.37.0-uclibc',
+        },
+      },
+    };
+
+    const scope = nockInstance
+      .get(manifestDetailsPath(2))
+      .query(true)
+      .reply(200, dataWithAnnotations);
+
+    const { getByText } = renderWithRedux(
+      withManifestRoute(<ManifestDetails />),
+      renderOptions(2),
+    );
+
+    await patientlyWaitFor(() => {
+      // Check label is displayed
+      expect(getByText(/io.buildah.version/)).toBeInTheDocument();
+      expect(getByText(/1.37.1/)).toBeInTheDocument();
+      // Check annotations are displayed
+      expect(getByText(/org.opencontainers.image.url/)).toBeInTheDocument();
+      expect(getByText(/https:\/\/github.com\/docker-library\/busybox/)).toBeInTheDocument();
+      expect(getByText(/org.opencontainers.image.version/)).toBeInTheDocument();
+      expect(getByText(/1.37.0-uclibc/)).toBeInTheDocument();
     });
 
     assertNockRequest(scope);
@@ -265,49 +278,6 @@ describe('ManifestDetails', () => {
     expect(getByText('Name')).toBeInTheDocument();
     expect(getByText('Repositories')).toBeInTheDocument();
     expect(getByText('Digest')).toBeInTheDocument();
-
-    assertNockRequest(scope);
-  });
-
-  test('Displays N/A when no library repositories are present', async () => {
-    const dataWithoutLibraryRepos = {
-      ...manifestDetailsData,
-      repositories: [
-        {
-          id: 1,
-          name: 'non-library-repo',
-          library_instance: false,
-        },
-        {
-          id: 2,
-          name: 'another-non-library-repo',
-          library_instance: false,
-        },
-      ],
-    };
-
-    const scope = nockInstance
-      .get(manifestDetailsPath(2))
-      .query(true)
-      .reply(200, dataWithoutLibraryRepos);
-
-    const { getByText, queryByText } = renderWithRedux(
-      withManifestRoute(<ManifestDetails />),
-      renderOptions(2),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('v1.0')).toBeInTheDocument();
-    });
-
-    // Repository field should show N/A when no library repositories
-    expect(getByText('Repositories')).toBeInTheDocument();
-    const repositoryValues = queryByText('N/A');
-    expect(repositoryValues).toBeInTheDocument();
-
-    // Non-library repos should not be displayed
-    expect(queryByText('non-library-repo')).not.toBeInTheDocument();
-    expect(queryByText('another-non-library-repo')).not.toBeInTheDocument();
 
     assertNockRequest(scope);
   });
