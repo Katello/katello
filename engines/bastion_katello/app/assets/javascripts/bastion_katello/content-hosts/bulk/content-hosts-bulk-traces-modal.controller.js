@@ -20,15 +20,18 @@
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesController',
     ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'CurrentOrganization', 'hostIds', 'ContentHostsHelper', 'translate',
     function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, CurrentOrganization, hostIds, ContentHostsHelper, translate) {
+        var tracesNutupane;
 
         function actionParams(traceids) {
             var params = hostIds;
+            /* eslint-disable camelcase */
             params.organization_id = CurrentOrganization;
             params.trace_ids = traceids;
+            /* eslint-enable camelcase */
             return params;
         }
 
-        var tracesNutupane = new Nutupane(HostBulkAction, hostIds, 'traces');
+        tracesNutupane = new Nutupane(HostBulkAction, hostIds, 'traces');
         tracesNutupane.enableSelectAllResults();
         tracesNutupane.primaryOnly = true;
         $scope.table = tracesNutupane.table;
