@@ -29,7 +29,11 @@ module Katello
       end
 
       def context_urls
-        super.merge(rhsm_url: smart_proxy.rhsm_url, pulp_content_url: smart_proxy.pulp_content_url)
+        super.merge(
+          rhsm_url: smart_proxy.rhsm_url,
+          https_rhsm_url: smart_proxy.https_rhsm_url,
+          pulp_content_url: smart_proxy.pulp_content_url
+        )
       end
 
       def default_location

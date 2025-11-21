@@ -695,12 +695,16 @@ module Katello
         URI::HTTPS.build(host: registration_url.host, path: pulp_content_url.path)
       end
 
+      def https_rhsm_url
+        URI::HTTPS.build(host: registration_url.host, path: rhsm_url.path)
+      end
+
       def audit_capsule_sync
         write_audit(action: "sync capsule", comment: _('Successfully synced capsule.'), audited_changes: {})
       end
 
       class ::SmartProxy::Jail < ::Safemode::Jail
-        allow :rhsm_url, :pulp_content_url, :load_balancer_pulp_content_url, :registration_url
+        allow :rhsm_url, :pulp_content_url, :load_balancer_pulp_content_url, :https_rhsm_url, :registration_url
       end
     end
   end
