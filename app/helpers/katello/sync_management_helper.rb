@@ -29,26 +29,58 @@ module Katello
     end
 
     module RepoMethods
+      # Format a repository as a hash for the API
+      def format_repo(repo)
+        {
+          :id => repo.id,
+          :name => repo.name,
+          :type => "repo",
+        }
+      end
+
+      # Recursively check if a node has any repositories
+      def has_repos?(node)
+        return true if node[:repos].present? && node[:repos].any?
+        return false unless node[:children].present?
+        node[:children].any? { |child| has_repos?(child) }
+      end
+
+      # Filter out nodes with no repositories
+      def filter_empty_nodes(nodes)
+        nodes.select { |node| has_repos?(node) }.map do |node|
+          if node[:children].present?
+            node.merge(:children => filter_empty_nodes(node[:children]))
+          else
+            node
+          end
+        end
+      end
+
       # returns all repos in hash representation with minors and arch children included
       def collect_repos(products, env, include_feedless = true)
         products.map do |prod|
           minor_repos, repos_without_minor = collect_minor(prod.repos(env, nil, include_feedless))
-          { :name => prod.name, :object => prod, :id => prod.id, :type => "product", :repos => repos_without_minor,
-            :children => minors(minor_repos), :organization => prod.organization.name }
+          { :name => prod.name, :object => prod, :id => prod.id, :type => "product",
+            :repos => repos_without_minor.map { |r| format_repo(r) },
+            :children => minors(minor_repos, prod.id), :organization => prod.organization.name }
         end
       end
 
       # returns all minors in hash representation with arch children included
-      def minors(minor_repos)
+      def minors(minor_repos, product_id)
         minor_repos.map do |minor, repos|
-          { :name => minor, :id => minor, :type => "minor", :children => arches(repos), :repos => [] }
+          minor_id = "#{product_id}-#{minor}"
+          { :name => minor, :id => minor_id, :type => "minor",
+            :children => arches(repos, minor_id), :repos => [] }
         end
       end
 
       # returns all archs in hash representation
-      def arches(arch_repos)
+      def arches(arch_repos, parent_id)
         collect_arches(arch_repos).map do |arch, repos|
-          { :name => arch, :id => arch, :type => "arch", :children => [], :repos => repos }
+          arch_id = "#{parent_id}-#{arch}"
+          { :name => arch, :id => arch_id, :type => "arch", :children => [],
+            :repos => repos.map { |r| format_repo(r) } }
         end
       end
 
