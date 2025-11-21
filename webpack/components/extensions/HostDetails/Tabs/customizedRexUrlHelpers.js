@@ -55,8 +55,9 @@ export const packagesUpdateUrl = ({
   inputs: { [PACKAGES_SEARCH_QUERY]: search, [SELECTED_UPDATE_VERSIONS]: versions },
 });
 
-export const resolveTraceUrl = ({ hostname, search }) => createJob({
+export const resolveTraceUrl = ({ hostname, hostSearch, search }) => createJob({
   hostname,
+  hostSearch,
   feature: REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE,
   inputs: { [TRACES_SEARCH_QUERY]: search },
 });

@@ -363,13 +363,53 @@ module Katello
 
       Katello::HostTraceManager.expects(:resolve_traces).with([host_one_trace]).returns([job_invocation])
 
-      put :resolve_traces, params: { :trace_ids => [host_one_trace.id] }
+      put :resolve_traces, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :trace_ids => [host_one_trace.id] }
 
       assert_response :success
 
       body = JSON.parse(response.body)
 
       assert_equal [job_invocation], body
+    end
+
+    def test_resolve_traces_with_search
+      job_invocation = {"description" => "Restart Services", "id" => 1, "job_category" => "Katello"}
+
+      Katello::HostTraceManager.expects(:resolve_traces).returns([job_invocation])
+
+      put :resolve_traces, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :trace_search => "id ^ (#{host_one_trace.id})" }
+
+      assert_response :success
+
+      body = JSON.parse(response.body)
+
+      assert_equal [job_invocation], body
+    end
+
+    def test_resolve_traces_with_empty_search
+      job_invocation = {"description" => "Restart Services", "id" => 1, "job_category" => "Katello"}
+      host_one_trace
+      host_two_trace
+
+      Katello::HostTraceManager.expects(:resolve_traces).returns([job_invocation])
+
+      put :resolve_traces, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :trace_search => "" }
+
+      assert_response :success
+
+      body = JSON.parse(response.body)
+
+      assert_equal [job_invocation], body
+    end
+
+    def test_resolve_traces_without_params
+      put :resolve_traces, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id }
+
+      assert_response :bad_request
+
+      body = JSON.parse(response.body)
+
+      assert_includes body['displayMessage'], 'Either trace_search or trace_ids must be provided'
     end
 
     def test_resolve_traces_permission
@@ -379,7 +419,7 @@ module Katello
       host_one_trace
 
       assert_protected_action(:resolve_traces, good_perms, bad_perms) do
-        put :resolve_traces, params: { trace_ids: [host_one_trace.id] }
+        put :resolve_traces, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :trace_ids => [host_one_trace.id] }
       end
     end
 

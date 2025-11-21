@@ -43,6 +43,7 @@ const HostActionsBar = () => {
       'bulk-repo-sets-wizard',
       'bulk-change-host-collections-modal',
       'bulk-system-purpose-modal',
+      'bulk-manage-traces-modal',
     ].forEach((id) => {
       dispatch(addModal({ id }));
     });
@@ -52,6 +53,7 @@ const HostActionsBar = () => {
   const { setModalOpen: openBulkErrataWizardModal } = useForemanModal({ id: 'bulk-errata-wizard' });
   const { setModalOpen: openBulkRepositorySetsWizardModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
   const { setModalOpen: openBulkSystemPurposeModal } = useForemanModal({ id: 'bulk-system-purpose-modal' });
+  const { setModalOpen: openBulkManageTracesModal } = useForemanModal({ id: 'bulk-manage-traces-modal' });
 
   const orgId = useForemanOrganization()?.id;
 
@@ -64,73 +66,84 @@ const HostActionsBar = () => {
   }
 
   return (
-    <MenuItem
-      itemId="content-flyout-item"
-      key="content-flyout"
-      isDisabled={selectedCount === 0}
-      flyoutMenu={(
-        <Menu ouiaId="content-flyout-menu" onSelect={() => setMenuOpen(false)}>
-          <MenuContent>
-            <MenuList>
-              <MenuItem
-                itemId="bulk-packages-wizard-dropdown-item"
-                key="bulk-packages-wizard-dropdown-item"
-                onClick={openBulkPackagesWizardModal}
-                isDisabled={selectedCount === 0 || !orgId}
-                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host packages, a specific organization must be selected from the organization context.')} />}
-              >
-                {__('Packages')}
-              </MenuItem>
-              <MenuItem
-                itemId="bulk-errata-wizard-dropdown-item"
-                key="bulk-errata-wizard-dropdown-item"
-                onClick={openBulkErrataWizardModal}
-                isDisabled={selectedCount === 0}
-              >
-                {__('Errata')}
-              </MenuItem>
-              <MenuItem
-                itemId="bulk-repo-sets-wizard-dropdown-item"
-                key="bulk-repo-sets-wizard-dropdown-item"
-                onClick={openBulkRepositorySetsWizardModal}
-                isDisabled={selectedCount === 0 || !orgId}
-                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host content overrides, a specific organization must be selected from the organization context.')} />}
-              >
-                {__('Repository sets')}
-              </MenuItem>
-              <MenuItem
-                itemId="change-content-s-dropdown-item"
-                key="change-content-source-dropdown-item"
-                to={href}
-                isDisabled={selectedCount === 0}
-              >
-                {__('Content source')}
-              </MenuItem>
-              <MenuItem
-                itemId="bulk-change-cv-dropdown-item"
-                key="bulk-change-cv-dropdown-item"
-                onClick={openBulkChangeCVModal}
-                isDisabled={selectedCount === 0 || !orgId}
-                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change content view environments, a specific organization must be selected from the organization context.')} />}
-              >
-                {__('Content view environments')}
-              </MenuItem>
-              <MenuItem
-                itemId="bulk-system-purpose-dropdown-item"
-                key="bulk-system-purpose-dropdown-item"
-                onClick={openBulkSystemPurposeModal}
-                isDisabled={selectedCount === 0 || !orgId}
-                description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change system purpose, a specific organization must be selected from the organization context.')} />}
-              >
-                {__('System purpose')}
-              </MenuItem>
-            </MenuList>
-          </MenuContent>
-        </Menu>
-        )}
-    >
-      {__('Manage content')}
-    </MenuItem>
+    <>
+      <MenuItem
+        itemId="content-flyout-item"
+        key="content-flyout"
+        isDisabled={selectedCount === 0}
+        flyoutMenu={(
+          <Menu ouiaId="content-flyout-menu" onSelect={() => setMenuOpen(false)}>
+            <MenuContent>
+              <MenuList>
+                <MenuItem
+                  itemId="bulk-packages-wizard-dropdown-item"
+                  key="bulk-packages-wizard-dropdown-item"
+                  onClick={openBulkPackagesWizardModal}
+                  isDisabled={selectedCount === 0 || !orgId}
+                  description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host packages, a specific organization must be selected from the organization context.')} />}
+                >
+                  {__('Packages')}
+                </MenuItem>
+                <MenuItem
+                  itemId="bulk-errata-wizard-dropdown-item"
+                  key="bulk-errata-wizard-dropdown-item"
+                  onClick={openBulkErrataWizardModal}
+                  isDisabled={selectedCount === 0}
+                >
+                  {__('Errata')}
+                </MenuItem>
+                <MenuItem
+                  itemId="bulk-repo-sets-wizard-dropdown-item"
+                  key="bulk-repo-sets-wizard-dropdown-item"
+                  onClick={openBulkRepositorySetsWizardModal}
+                  isDisabled={selectedCount === 0 || !orgId}
+                  description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host content overrides, a specific organization must be selected from the organization context.')} />}
+                >
+                  {__('Repository sets')}
+                </MenuItem>
+                <MenuItem
+                  itemId="change-content-s-dropdown-item"
+                  key="change-content-source-dropdown-item"
+                  to={href}
+                  isDisabled={selectedCount === 0}
+                >
+                  {__('Content source')}
+                </MenuItem>
+                <MenuItem
+                  itemId="bulk-change-cv-dropdown-item"
+                  key="bulk-change-cv-dropdown-item"
+                  onClick={openBulkChangeCVModal}
+                  isDisabled={selectedCount === 0 || !orgId}
+                  description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change content view environments, a specific organization must be selected from the organization context.')} />}
+                >
+                  {__('Content view environments')}
+                </MenuItem>
+                <MenuItem
+                  itemId="bulk-system-purpose-dropdown-item"
+                  key="bulk-system-purpose-dropdown-item"
+                  onClick={openBulkSystemPurposeModal}
+                  isDisabled={selectedCount === 0 || !orgId}
+                  description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change system purpose, a specific organization must be selected from the organization context.')} />}
+                >
+                  {__('System purpose')}
+                </MenuItem>
+              </MenuList>
+            </MenuContent>
+          </Menu>
+          )}
+      >
+        {__('Manage content')}
+      </MenuItem>
+      <MenuItem
+        itemId="bulk-manage-traces-menu-item"
+        key="bulk-manage-traces-menu-item"
+        onClick={openBulkManageTracesModal}
+        isDisabled={selectedCount === 0 || !orgId}
+        description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage traces, a specific organization must be selected from the organization context.')} />}
+      >
+        {__('Manage traces')}
+      </MenuItem>
+    </>
   );
 };
 

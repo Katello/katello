@@ -8,6 +8,7 @@
  * @requires Notification
  * @requires Nutupane
  * @requires BastionConfig
+ * @requires CurrentOrganization
  * @requires hostIds
  * @required ContentHostsHelper
  * @requires translate
@@ -17,10 +18,20 @@
  */
 /*jshint camelcase:false*/
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesController',
-    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'hostIds', 'ContentHostsHelper', 'translate',
-    function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, hostIds, ContentHostsHelper, translate) {
+    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'CurrentOrganization', 'hostIds', 'ContentHostsHelper', 'translate',
+    function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, CurrentOrganization, hostIds, ContentHostsHelper, translate) {
+        var tracesNutupane;
 
-        var tracesNutupane = new Nutupane(HostBulkAction, hostIds, 'traces');
+        function actionParams(traceids) {
+            var params = hostIds;
+            /* eslint-disable camelcase */
+            params.organization_id = CurrentOrganization;
+            params.trace_ids = traceids;
+            /* eslint-enable camelcase */
+            return params;
+        }
+
+        tracesNutupane = new Nutupane(HostBulkAction, hostIds, 'traces');
         tracesNutupane.enableSelectAllResults();
         tracesNutupane.primaryOnly = true;
         $scope.table = tracesNutupane.table;
@@ -44,9 +55,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesContro
                     Notification.setErrorMessage(responseError);
                 });
             };
-            /* eslint-disable camelcase */
-            HostBulkAction.resolveTraces({trace_ids: traceids}, onSuccess, onFailure);
-            /* eslint-enable camelcase */
+
+            HostBulkAction.resolveTraces(actionParams(traceids), onSuccess, onFailure);
         };
 
         $scope.rebootRequired = function() {
