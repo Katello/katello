@@ -392,7 +392,7 @@ Foreman::Plugin.register :katello do
 
       setting 'allow_multiple_content_views',
         type: :boolean,
-        default: false,
+        default: true,
         full_name: N_('Allow multiple content views'),
         description: N_("Allow hosts or activation keys to be associated with multiple content view environments")
 
