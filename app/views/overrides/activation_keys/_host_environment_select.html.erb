@@ -35,7 +35,7 @@
   <% if using_hostgroups_page? %>
     <%= select_tag env_select_id, lifecycle_environment_options(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :lifecycle_environment)), :class => 'form-control',  :name => env_select_name %>
   <% elsif cv_lce_disabled? %>
-    <% host_or_hostgroup_lce = (@host.lifecycle_environments.empty? && @host.hostgroup.present? && @host.hostgroup.lifecycle_environment.present?) ? fetch_lifecycle_environment(@host.hostgroup) : fetch_lifecycle_environment(@host) %>
+    <% host_or_hostgroup_lce = (@host.content_view_environments.empty? && @host.hostgroup.present? && @host.hostgroup.lifecycle_environment.present?) ? fetch_lifecycle_environment(@host.hostgroup) : fetch_lifecycle_environment(@host) %>
     <%= hidden_field_tag 'host[content_facet_attributes][lifecycle_environment_id]', host_or_hostgroup_lce.try(:id) %>
     <%= select_tag env_select_id, lifecycle_environment_options(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :lifecycle_environment)), :class => 'form-control',  :name => env_select_name, :disabled => true %>
   <% else %>
