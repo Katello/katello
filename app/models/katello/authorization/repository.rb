@@ -48,18 +48,7 @@ module Katello
           end
 
           base_scope = Katello::Repository.non_archived.docker_type
-          host_repos = base_scope.where(id: repo_ids)
-
-          table_name = Repository.table_name
-          in_unauth_environments = Repository.joins(:environment)
-                                             .where("#{Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true)
-                                             .select(:id)
-
-          if in_unauth_environments.exists?
-            return host_repos.or(base_scope.joins(:root).where("#{table_name}.id in (?)", in_unauth_environments))
-          else
-            return host_repos
-          end
+          return base_scope.where(id: repo_ids)
         end
         readable_docker_catalog_as(User.current)
       end

@@ -294,6 +294,56 @@ module Katello
         body = JSON.parse(response.body)
         assert_equal(["busybox", "empty_organization-puppet_product-busybox", "id/1/2/container-push-repo"], body['repositories'].compact.sort)
       end
+
+      it "cert auth does not show unauthenticated repos from other LCEs" do
+        # Set up library repo that host will have access to
+        @docker_repo.set_container_repository_name
+        assert @docker_repo.save!
+        @docker_repo.environment.registry_unauthenticated_pull = false
+        assert @docker_repo.environment.save!
+
+        # Set up a dev environment repo with unauthenticated pull enabled
+        dev_repo = katello_repositories(:busybox_dev)
+        dev_repo.set_container_repository_name
+        assert dev_repo.save!
+        dev_repo.environment.registry_unauthenticated_pull = true
+        assert dev_repo.environment.save!
+
+        # Create a host registered to Library environment with acme_default CV
+        # busybox (@docker_repo) is in library environment with acme_default CV
+        host = FactoryBot.create(:host, :with_content, :with_subscription,
+                                 :content_view => katello_content_views(:acme_default),
+                                 :lifecycle_environment => katello_environments(:library),
+                                 :organization => @organization)
+
+        # Mock certificate authentication for the host
+        uuid = host.content_facet.uuid
+        client_cert = mock('client_cert')
+        client_cert.stubs(:uuid).returns(uuid)
+        ::Cert::RhsmClient.expects(:new).returns(client_cert)
+        @controller.expects(:cert_present?).returns(true)
+        @controller.expects(:cert_from_request).returns('cert_data')
+        @controller.expects(:authenticate_client).returns(true)
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        get :catalog
+        assert_response 200
+        body = JSON.parse(response.body)
+
+        repos = body['repositories'].compact
+
+        # Host should see @docker_repo from its registered Library LCE
+        assert_includes repos, @docker_repo.container_repository_name,
+          "Host should see repos from its registered LCE (Library)"
+
+        # Host should NOT see dev repos even though dev has unauthenticated pull enabled
+        # because dev environment is not in the host's registered LCEs
+        refute_includes repos, dev_repo.container_repository_name,
+          "Host should not see unauthenticated repos from non-registered LCEs (dev)"
+      end
     end
 
     describe "docker search" do
