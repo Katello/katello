@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
@@ -21,79 +21,55 @@ import { createSubscriptionParams } from './SubscriptionActions.js';
 import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTIONS_SERVICE_DOC_URL } from './SubscriptionConstants';
 import './SubscriptionsPage.scss';
 
-class SubscriptionsPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedRows: [],
-      availableQuantitiesLoaded: false,
-    };
-  }
+const SubscriptionsPage = ({
+  resetTasks,
+  handleStartTask,
+  handleFinishedTask,
+  isTaskPending,
+  isPollingTask,
+  hasUpstreamConnection,
+  loadAvailableQuantities,
+  organization,
+  isManifestImported,
+  pingUpstreamSubscriptions,
+  subscriptions,
+  task,
+  cancelPollTasks,
+  loadSubscriptions,
+  loadTableColumns,
+  loadTables,
+  pollTasks,
+  subscriptionTableSettings,
+  deleteModalOpened,
+  openDeleteModal,
+  closeDeleteModal,
+  deleteButtonDisabled,
+  disableDeleteButton,
+  enableDeleteButton,
+  searchQuery,
+  updateSearchQuery,
+  activePermissions,
+  setModalOpen,
+  uploadManifest,
+  deleteManifest,
+  refreshManifest,
+  updateQuantity,
+  deleteSubscriptions,
+  createColumns,
+  updateColumns,
+}) => {
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [availableQuantitiesLoaded, setAvailableQuantitiesLoaded] = useState(false);
+  const prevPropsRef = useRef({});
 
-  componentDidMount() {
-    this.props.resetTasks();
-    // Always load data, even if organization doesn't have an ID yet
-    // This allows us to detect permission errors
-    this.loadData();
-  }
+  const loadData = useCallback(async () => {
+    pollTasks();
+    loadSubscriptions();
+    await loadTables();
+    loadTableColumns(subscriptionTableSettings);
+  }, [pollTasks, loadSubscriptions, loadTables, loadTableColumns, subscriptionTableSettings]);
 
-  componentDidUpdate(prevProps) {
-    const {
-      handleStartTask,
-      handleFinishedTask,
-      isTaskPending,
-      isPollingTask,
-      hasUpstreamConnection,
-      loadAvailableQuantities,
-      organization,
-      isManifestImported,
-      pingUpstreamSubscriptions,
-      subscriptions,
-      task,
-    } = this.props;
-
-    if (task) {
-      if (isPollingTask) {
-        if (prevProps.isTaskPending && !isTaskPending) {
-          handleFinishedTask(task);
-        }
-      } else {
-        handleStartTask(task);
-      }
-    }
-
-    if (organization) {
-      if (!prevProps.organization || prevProps.organization.id !== organization.id) {
-        this.loadData();
-        if (isManifestImported) {
-          pingUpstreamSubscriptions();
-          this.state.availableQuantitiesLoaded = false;
-        }
-      }
-    }
-
-    if (hasUpstreamConnection) {
-      const subscriptionsChanged = subscriptions.results !== prevProps.subscriptions.results;
-      if (subscriptionsChanged || !this.state.availableQuantitiesLoaded) {
-        const poolIds = filterRHSubscriptions(subscriptions.results).map(subs => subs.id);
-        if (poolIds.length > 0) {
-          loadAvailableQuantities({ poolIds });
-          this.state.availableQuantitiesLoaded = true;
-        }
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.cancelPollTasks();
-  }
-
-  getDisabledReason(deleteButton) {
-    const {
-      hasUpstreamConnection,
-      task,
-      isManifestImported,
-    } = this.props;
+  const getDisabledReason = useCallback((deleteButton) => {
     let disabledReason = null;
 
     if (!hasUpstreamConnection) {
@@ -107,222 +83,255 @@ class SubscriptionsPage extends Component {
     }
 
     return disabledReason;
+  }, [hasUpstreamConnection, task, isManifestImported]);
+
+  const handleSelectedRowsChange = useCallback((rows) => {
+    setSelectedRows(rows);
+  }, []);
+
+  // Initial mount: reset tasks and load data if organization exists
+  useEffect(() => {
+    resetTasks();
+
+    if (organization?.id) {
+      loadData();
+    }
+  }, [resetTasks, organization?.id, loadData]);
+
+  // Cleanup on unmount
+  useEffect(() => () => {
+    cancelPollTasks();
+  }, [cancelPollTasks]);
+
+  // Handle task lifecycle
+  useEffect(() => {
+    const prevProps = prevPropsRef.current;
+
+    if (task) {
+      if (isPollingTask) {
+        if (prevProps.isTaskPending && !isTaskPending) {
+          handleFinishedTask(task);
+        }
+      } else {
+        handleStartTask(task);
+      }
+    }
+
+    prevPropsRef.current = { ...prevPropsRef.current, isTaskPending };
+  }, [task, isPollingTask, isTaskPending, handleStartTask, handleFinishedTask]);
+
+  // Handle organization changes
+  useEffect(() => {
+    const prevProps = prevPropsRef.current;
+
+    if (organization && (!prevProps.organization ||
+        prevProps.organization.id !== organization.id)) {
+      loadData();
+      if (isManifestImported) {
+        pingUpstreamSubscriptions();
+        setAvailableQuantitiesLoaded(false);
+      }
+    }
+
+    prevPropsRef.current = { ...prevPropsRef.current, organization };
+  }, [organization, isManifestImported, loadData, pingUpstreamSubscriptions]);
+
+  // Handle available quantities loading
+  useEffect(() => {
+    if (hasUpstreamConnection && subscriptions.results) {
+      const poolIds = filterRHSubscriptions(subscriptions.results).map(subs => subs.id);
+      if (poolIds.length > 0 && !availableQuantitiesLoaded) {
+        loadAvailableQuantities({ poolIds });
+        setAvailableQuantitiesLoaded(true);
+      }
+    }
+  }, [hasUpstreamConnection, subscriptions.results, availableQuantitiesLoaded,
+    loadAvailableQuantities]);
+
+  const currentOrg = orgId();
+
+  // If organization failed to load (404/403), the user doesn't have
+  // permission to view this organization. Show permission denied
+  // regardless of whether subscriptions returned results
+  if (organization?.error && !organization.loading) {
+    const statusCode = organization.error.response?.status;
+
+    if (statusCode === 404 || statusCode === 403) {
+      const errorMessage = 'You do not have permission to view this organization.';
+      return <PermissionDenied missingPermissions={[errorMessage]} />;
+    }
   }
 
-  handleSelectedRowsChange = (selectedRows) => {
-    this.setState({ selectedRows });
+  // Basic permissions - should we even show this page?
+  if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
+    return <PermissionDenied missingPermissions={subscriptions.missingPermissions} />;
+  }
+
+  // Granular permissions
+  const permissions = propsToCamelCase(activePermissions);
+  const {
+    canDeleteManifest,
+    canManageSubscriptionAllocations,
+    canImportManifest,
+    canEditOrganizations,
+  } = permissions;
+  const disableManifestActions = !!task || !hasUpstreamConnection;
+
+  const openManageManifestModal = () => setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
+
+  const tableColumns = Immutable.asMutable(subscriptions.tableColumns, { deep: true });
+  const onSearch = (search) => {
+    loadSubscriptions({ search });
   };
 
-  async loadData() {
-    const {
-      loadSubscriptions,
-      loadTableColumns,
-      loadTables,
-      pollTasks,
-      subscriptionTableSettings,
-    } = this.props;
+  const onDeleteSubscriptions = (rows) => {
+    deleteSubscriptions(rows);
+    handleSelectedRowsChange([]);
+    closeDeleteModal();
+  };
 
-    pollTasks();
-    loadSubscriptions();
-    await loadTables();
-    loadTableColumns(subscriptionTableSettings);
-  }
+  const toggleDeleteButton = rowsSelected =>
+    (rowsSelected ? enableDeleteButton() : disableDeleteButton());
 
-  render() {
-    const currentOrg = orgId();
-    const {
-      deleteModalOpened, openDeleteModal, closeDeleteModal,
-      deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
-      searchQuery, updateSearchQuery, hasUpstreamConnection,
-      task, activePermissions, subscriptions, subscriptionTableSettings, isManifestImported,
-      organization,
-    } = this.props;
-
-    // If organization failed to load (404/403), the user doesn't have
-    // permission to view this organization. Show permission denied
-    // regardless of whether subscriptions returned results
-    if (organization?.error && !organization.loading) {
-      const statusCode = organization.error.response?.status;
-
-      if (statusCode === 404 || statusCode === 403) {
-        const errorMessage = 'You do not have permission to view this organization.';
-        return <PermissionDenied missingPermissions={[errorMessage]} />;
+  const csvParams = createSubscriptionParams({ search: searchQuery });
+  const getEnabledColumns = (columns) => {
+    const enabledColumns = [];
+    columns.forEach((column) => {
+      if (column.value) {
+        enabledColumns.push(column.key);
       }
+    });
+
+    return enabledColumns;
+  };
+  const toolTipOnclose = (columns) => {
+    const enabledColumns = getEnabledColumns(columns);
+    loadTableColumns({ columns: enabledColumns });
+
+    if (isEmpty(subscriptionTableSettings)) {
+      createColumns({ name: SUBSCRIPTION_TABLE_NAME, columns: enabledColumns });
+    } else {
+      const updatedOptions = { ...subscriptionTableSettings, columns: enabledColumns };
+      updateColumns(updatedOptions);
     }
-
-    // Basic permissions - should we even show this page?
-    if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
-      return <PermissionDenied missingPermissions={subscriptions.missingPermissions} />;
+  };
+  const toolTipOnChange = (columns) => {
+    loadTableColumns({ columns: getEnabledColumns(columns) });
+  };
+  const columns = subscriptions.selectedTableColumns;
+  const emptyStateData = isManifestImported
+    ? {
+      header: __('There are no Subscriptions to display'),
+      description: __('Add subscriptions using the Add Subscriptions button.'),
+      action: {
+        title: __('Add subscriptions'),
+        url: '/subscriptions/add',
+      },
     }
-    // Granular permissions
-    const permissions = propsToCamelCase(activePermissions);
-    const {
-      canDeleteManifest,
-      canManageSubscriptionAllocations,
-      canImportManifest,
-      canEditOrganizations,
-    } = permissions;
-    const disableManifestActions = !!task || !hasUpstreamConnection;
-
-    const openManageManifestModal = () => this.props.setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
-
-    const tableColumns = Immutable.asMutable(subscriptions.tableColumns, { deep: true });
-    const onSearch = (search) => {
-      this.props.loadSubscriptions({ search });
+    : {
+      header: __('There are no Subscriptions to display'),
+      description: __('Import a subscription manifest to give hosts access to Red Hat content.'),
+      action: {
+        onClick: () => openManageManifestModal(),
+        title: __('Import a Manifest'),
+      },
     };
 
-    const onDeleteSubscriptions = (selectedRows) => {
-      this.props.deleteSubscriptions(selectedRows);
-      this.handleSelectedRowsChange([]);
-      closeDeleteModal();
-    };
-
-    const toggleDeleteButton = rowsSelected =>
-      (rowsSelected ? enableDeleteButton() : disableDeleteButton());
-
-    const csvParams = createSubscriptionParams({ search: searchQuery });
-    const getEnabledColumns = (columns) => {
-      const enabledColumns = [];
-      columns.forEach((column) => {
-        if (column.value) {
-          enabledColumns.push(column.key);
-        }
-      });
-
-      return enabledColumns;
-    };
-    const toolTipOnclose = (columns) => {
-      const enabledColumns = getEnabledColumns(columns);
-      const { loadTableColumns, createColumns, updateColumns } = this.props;
-      loadTableColumns({ columns: enabledColumns });
-
-      if (isEmpty(subscriptionTableSettings)) {
-        createColumns({ name: SUBSCRIPTION_TABLE_NAME, columns: enabledColumns });
-      } else {
-        const options = { ...subscriptionTableSettings };
-        options.columns = enabledColumns;
-        updateColumns(options);
-      }
-    };
-    const toolTipOnChange = (columns) => {
-      const { loadTableColumns } = this.props;
-
-      loadTableColumns({ columns: getEnabledColumns(columns) });
-    };
-    const columns = subscriptions.selectedTableColumns;
-    const emptyStateData = isManifestImported
-      ? {
-        header: __('There are no Subscriptions to display'),
-        description: __('Add subscriptions using the Add Subscriptions button.'),
-        action: {
-          title: __('Add subscriptions'),
-          url: '/subscriptions/add',
-        },
-      }
-      : {
-        header: __('There are no Subscriptions to display'),
-        description: __('Import a subscription manifest to give hosts access to Red Hat content.'),
-        action: {
-          onClick: () => openManageManifestModal(),
-          title: __('Import a Manifest'),
-        },
-      };
-
-    const SCAPopoverContent = (
-      <FormattedMessage
-        id="sca-popover-content"
-        values={{
-          br: <br />,
-          subscriptionsService: <a href={SUBSCRIPTIONS_SERVICE_DOC_URL} target="_blank" rel="noreferrer">{__('Subscriptions service')}</a>,
-        }}
-        defaultMessage={__(`This page shows the subscriptions available from this organization's subscription manifest.
+  const SCAPopoverContent = (
+    <FormattedMessage
+      id="sca-popover-content"
+      values={{
+        br: <br />,
+        subscriptionsService: <a href={SUBSCRIPTIONS_SERVICE_DOC_URL} target="_blank" rel="noreferrer">{__('Subscriptions service')}</a>,
+      }}
+      defaultMessage={__(`This page shows the subscriptions available from this organization's subscription manifest.
         {br}
         Learn more about your overall subscription usage with the {subscriptionsService}.`)}
-      />
-    );
-    return (
-      <Grid bsClass="container-fluid" id="subscriptions-page">
-        <Row>
-          <Col sm={12}>
-            <Flex alignItems={{ default: 'alignItemsBaseline' }}>
-              <FlexItem>
-                <h1>{__('Subscriptions')}</h1>
-              </FlexItem>
-              {isManifestImported && (
-              <FlexItem>
-                <Popover
-                  aria-label="sca-popover"
-                  bodyContent={SCAPopoverContent}
-                >
-                  <span style={{ cursor: 'pointer', position: 'relative', top: '-0.2em' }}>
-                    <OutlinedQuestionCircleIcon>Toggle popover</OutlinedQuestionCircleIcon>
-                  </span>
-                </Popover>
-              </FlexItem>
-              )}
-            </Flex>
+    />
+  );
 
-            <SubscriptionsToolbar
+  return (
+    <Grid bsClass="container-fluid" id="subscriptions-page">
+      <Row>
+        <Col sm={12}>
+          <Flex alignItems={{ default: 'alignItemsBaseline' }}>
+            <FlexItem>
+              <h1>{__('Subscriptions')}</h1>
+            </FlexItem>
+            {isManifestImported && (
+            <FlexItem>
+              <Popover
+                aria-label="sca-popover"
+                bodyContent={SCAPopoverContent}
+              >
+                <span style={{ cursor: 'pointer', position: 'relative', top: '-0.2em' }}>
+                  <OutlinedQuestionCircleIcon>Toggle popover</OutlinedQuestionCircleIcon>
+                </span>
+              </Popover>
+            </FlexItem>
+            )}
+          </Flex>
+
+          <SubscriptionsToolbar
+            canManageSubscriptionAllocations={canManageSubscriptionAllocations}
+            isManifestImported={isManifestImported}
+            disableManifestActions={disableManifestActions}
+            disableManifestReason={getDisabledReason()}
+            disableDeleteButton={deleteButtonDisabled}
+            disableDeleteReason={getDisabledReason(true)}
+            disableAddButton={disableManifestActions}
+            autocompleteQueryParams={{ organization_id: currentOrg }}
+            updateSearchQuery={updateSearchQuery}
+            onDeleteButtonClick={openDeleteModal}
+            onSearch={onSearch}
+            onManageManifestButtonClick={openManageManifestModal}
+            onExportCsvButtonClick={() => { api.open('/subscriptions.csv', csvParams); }}
+            tableColumns={tableColumns}
+            toolTipOnChange={toolTipOnChange}
+            toolTipOnclose={toolTipOnclose}
+          />
+
+          <ManageManifestModal
+            canImportManifest={canImportManifest}
+            canDeleteManifest={canDeleteManifest}
+            canEditOrganizations={canEditOrganizations}
+            taskInProgress={!!task}
+            disableManifestActions={disableManifestActions}
+            disabledReason={getDisabledReason()}
+            upload={uploadManifest}
+            delete={deleteManifest}
+            refresh={refreshManifest}
+          />
+
+          <div id="subscriptions-table" className="modal-container">
+            <SubscriptionsTable
               canManageSubscriptionAllocations={canManageSubscriptionAllocations}
-              isManifestImported={isManifestImported}
-              disableManifestActions={disableManifestActions}
-              disableManifestReason={this.getDisabledReason()}
-              disableDeleteButton={deleteButtonDisabled}
-              disableDeleteReason={this.getDisabledReason(true)}
-              disableAddButton={disableManifestActions}
-              autocompleteQueryParams={{ organization_id: currentOrg }}
-              updateSearchQuery={updateSearchQuery}
-              onDeleteButtonClick={openDeleteModal}
-              onSearch={onSearch}
-              onManageManifestButtonClick={openManageManifestModal}
-              onExportCsvButtonClick={() => { api.open('/subscriptions.csv', csvParams); }}
-              tableColumns={tableColumns}
-              toolTipOnChange={toolTipOnChange}
-              toolTipOnclose={toolTipOnclose}
+              loadSubscriptions={loadSubscriptions}
+              tableColumns={columns}
+              updateQuantity={updateQuantity}
+              emptyState={emptyStateData}
+              subscriptions={subscriptions}
+              subscriptionDeleteModalOpen={deleteModalOpened}
+              onSubscriptionDeleteModalClose={closeDeleteModal}
+              onDeleteSubscriptions={onDeleteSubscriptions}
+              toggleDeleteButton={toggleDeleteButton}
+              task={task}
+              selectedRows={selectedRows}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              selectionEnabled={!disableManifestActions}
             />
-
-            <ManageManifestModal
-              canImportManifest={canImportManifest}
-              canDeleteManifest={canDeleteManifest}
-              canEditOrganizations={canEditOrganizations}
-              taskInProgress={!!task}
-              disableManifestActions={disableManifestActions}
-              disabledReason={this.getDisabledReason()}
-              upload={this.props.uploadManifest}
-              delete={this.props.deleteManifest}
-              refresh={this.props.refreshManifest}
+            <ModalProgressBar
+              show={!!task}
+              container={document.getElementById('subscriptions-table')}
+              title={task ? task.humanized.action : null}
+              progress={task ? Math.round(task.progress * 100) : 0}
             />
-
-            <div id="subscriptions-table" className="modal-container">
-              <SubscriptionsTable
-                canManageSubscriptionAllocations={canManageSubscriptionAllocations}
-                loadSubscriptions={this.props.loadSubscriptions}
-                tableColumns={columns}
-                updateQuantity={this.props.updateQuantity}
-                emptyState={emptyStateData}
-                subscriptions={this.props.subscriptions}
-                subscriptionDeleteModalOpen={deleteModalOpened}
-                onSubscriptionDeleteModalClose={closeDeleteModal}
-                onDeleteSubscriptions={onDeleteSubscriptions}
-                toggleDeleteButton={toggleDeleteButton}
-                task={task}
-                selectedRows={this.state.selectedRows}
-                onSelectedRowsChange={this.handleSelectedRowsChange}
-                selectionEnabled={!disableManifestActions}
-              />
-              <ModalProgressBar
-                show={!!task}
-                container={document.getElementById('subscriptions-table')}
-                title={task ? task.humanized.action : null}
-                progress={task ? Math.round(task.progress * 100) : 0}
-              />
-            </div>
-          </Col>
-        </Row>
-      </Grid>
-    );
-  }
-}
+          </div>
+        </Col>
+      </Row>
+    </Grid>
+  );
+};
 
 SubscriptionsPage.propTypes = {
   pingUpstreamSubscriptions: PropTypes.func.isRequired,

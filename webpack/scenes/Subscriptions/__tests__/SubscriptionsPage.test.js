@@ -1,102 +1,133 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import toJson from 'enzyme-to-json';
 import SubscriptionsPage from '../SubscriptionsPage';
 import { successState, settingsSuccessState, permissionDeniedState } from './subscriptions.fixtures';
-import { loadAvailableQuantities, loadSubscriptions, updateQuantity, loadTableColumns } from '../SubscriptionActions';
+import { loadAvailableQuantities, updateQuantity } from '../SubscriptionActions';
 import { pingUpstreamSubscriptions } from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
 import { checkSimpleContentAccessEligible } from '../Manifest/ManifestActions';
 import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
-jest.mock('foremanReact/components/PermissionDenied');
+jest.mock('foremanReact/components/PermissionDenied', () => ({
+  __esModule: true, default: ({ missingPermissions }) => <div>PermissionDenied: {missingPermissions.join(', ')}</div>,
+}));
 jest.mock('foremanReact/components/ForemanModal', () => (<div>ForemanModal Mock</div>));
+jest.mock('../Manifest/', () => ({
+  __esModule: true, default: () => <div>ManageManifestModal Mock</div>,
+}));
+jest.mock('../components/SubscriptionsTable', () => ({
+  SubscriptionsTable: () => <div>SubscriptionsTable Mock</div>,
+}));
+jest.mock('../components/SubscriptionsToolbar', () => ({
+  __esModule: true, default: () => <div>SubscriptionsToolbar Mock</div>,
+}));
 
-const loadTables = () => new Promise((resolve) => {
+const loadTables = jest.fn(() => new Promise((resolve) => {
   resolve();
-});
+}));
 
 const pollTasks = jest.fn();
 const handleStartTask = jest.fn();
 const handleFinishedTask = jest.fn();
+const mockLoadSubscriptions = jest.fn();
+const mockLoadTableColumns = jest.fn();
 
 afterEach(() => {
   pollTasks.mockClear();
   handleStartTask.mockClear();
   handleFinishedTask.mockClear();
+  mockLoadSubscriptions.mockClear();
+  mockLoadTableColumns.mockClear();
+  loadTables.mockClear();
 });
 
 describe('subscriptions page', () => {
-  const noop = () => {};
-  const organization = { owner_details: { upstreamConsumer: {} } };
-  const page = shallow(<SubscriptionsPage
-    setModalOpen={noop}
-    setModalClosed={noop}
-    organization={organization}
-    subscriptions={successState}
-    subscriptionTableSettings={settingsSuccessState}
-    loadTables={loadTables}
-    loadTableColumns={loadTableColumns}
-    createColumns={createColumns}
-    updateColumns={updateColumns}
-    loadSubscriptions={loadSubscriptions}
-    loadAvailableQuantities={loadAvailableQuantities}
-    pingUpstreamSubscriptions={pingUpstreamSubscriptions}
-    checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
-    updateQuantity={updateQuantity}
-    handleStartTask={handleStartTask}
-    handleFinishedTask={handleFinishedTask}
-    pollTaskUntilDone={noop}
-    pollBulkSearch={noop}
-    pollTasks={pollTasks}
-    cancelPollTasks={noop}
-    deleteSubscriptions={() => {}}
-    resetTasks={noop}
-    uploadManifest={noop}
-    deleteManifest={noop}
-    refreshManifest={noop}
-    updateSearchQuery={noop}
-    openManageManifestModal={noop}
-    closeManageManifestModal={noop}
-    openDeleteModal={noop}
-    closeDeleteModal={noop}
-    disableDeleteButton={noop}
-    enableDeleteButton={noop}
-  />);
+  let page;
+  let permissionDeniedPage;
 
-  const permissionDeniedPage = shallow(<SubscriptionsPage
-    setModalOpen={noop}
-    setModalClosed={noop}
-    organization={organization}
-    subscriptions={permissionDeniedState}
-    subscriptionTableSettings={settingsSuccessState}
-    loadTables={loadTables}
-    loadTableColumns={loadTableColumns}
-    createColumns={createColumns}
-    updateColumns={updateColumns}
-    loadSubscriptions={loadSubscriptions}
-    loadAvailableQuantities={loadAvailableQuantities}
-    pingUpstreamSubscriptions={pingUpstreamSubscriptions}
-    checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
-    updateQuantity={updateQuantity}
-    handleStartTask={handleStartTask}
-    handleFinishedTask={handleFinishedTask}
-    pollTaskUntilDone={noop}
-    pollBulkSearch={noop}
-    pollTasks={pollTasks}
-    cancelPollTasks={noop}
-    deleteSubscriptions={() => {}}
-    resetTasks={noop}
-    uploadManifest={noop}
-    deleteManifest={noop}
-    refreshManifest={noop}
-    updateSearchQuery={noop}
-    openManageManifestModal={noop}
-    closeManageManifestModal={noop}
-    openDeleteModal={noop}
-    closeDeleteModal={noop}
-    disableDeleteButton={noop}
-    enableDeleteButton={noop}
-  />);
+  const noop = () => {
+  };
+  const organization = { owner_details: { upstreamConsumer: {} } };
+
+  beforeEach(() => {
+    page = mount(<SubscriptionsPage
+      setModalOpen={noop}
+      setModalClosed={noop}
+      organization={organization}
+      subscriptions={successState}
+      subscriptionTableSettings={settingsSuccessState}
+      loadTables={loadTables}
+      loadTableColumns={mockLoadTableColumns}
+      createColumns={createColumns}
+      updateColumns={updateColumns}
+      loadSubscriptions={mockLoadSubscriptions}
+      loadAvailableQuantities={loadAvailableQuantities}
+      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
+      updateQuantity={updateQuantity}
+      handleStartTask={handleStartTask}
+      handleFinishedTask={handleFinishedTask}
+      pollTaskUntilDone={noop}
+      pollBulkSearch={noop}
+      pollTasks={pollTasks}
+      cancelPollTasks={noop}
+      deleteSubscriptions={() => {
+      }}
+      resetTasks={noop}
+      uploadManifest={noop}
+      deleteManifest={noop}
+      refreshManifest={noop}
+      updateSearchQuery={noop}
+      openManageManifestModal={noop}
+      closeManageManifestModal={noop}
+      openDeleteModal={noop}
+      closeDeleteModal={noop}
+      disableDeleteButton={noop}
+      enableDeleteButton={noop}
+    />);
+
+    permissionDeniedPage = mount(<SubscriptionsPage
+      setModalOpen={noop}
+      setModalClosed={noop}
+      organization={organization}
+      subscriptions={permissionDeniedState}
+      subscriptionTableSettings={settingsSuccessState}
+      loadTables={loadTables}
+      loadTableColumns={mockLoadTableColumns}
+      createColumns={createColumns}
+      updateColumns={updateColumns}
+      loadSubscriptions={mockLoadSubscriptions}
+      loadAvailableQuantities={loadAvailableQuantities}
+      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
+      updateQuantity={updateQuantity}
+      handleStartTask={handleStartTask}
+      handleFinishedTask={handleFinishedTask}
+      pollTaskUntilDone={noop}
+      pollBulkSearch={noop}
+      pollTasks={pollTasks}
+      cancelPollTasks={noop}
+      deleteSubscriptions={() => {
+      }}
+      resetTasks={noop}
+      uploadManifest={noop}
+      deleteManifest={noop}
+      refreshManifest={noop}
+      updateSearchQuery={noop}
+      openManageManifestModal={noop}
+      closeManageManifestModal={noop}
+      openDeleteModal={noop}
+      closeDeleteModal={noop}
+      disableDeleteButton={noop}
+      enableDeleteButton={noop}
+    />);
+  });
+
+  afterEach(() => {
+    if (page) page.unmount();
+    if (permissionDeniedPage) permissionDeniedPage.unmount();
+  });
 
   it('should render', async () => {
     expect(toJson(page)).toMatchSnapshot();
@@ -248,13 +279,24 @@ describe('subscriptions page', () => {
   });
 
   it('should poll tasks when org changes', async () => {
-    page.setProps({ organization: { id: 1 } });
+    await act(async () => {
+      page.setProps({ organization: { id: 1 } });
+    });
+    page.update();
 
     expect(pollTasks).toHaveBeenCalled();
+    expect(mockLoadSubscriptions).toHaveBeenCalled();
+    expect(loadTables).toHaveBeenCalled();
+    expect(mockLoadTableColumns).toHaveBeenCalled();
   });
 
   it('should not poll tasks if org has not changed', async () => {
-    page.setProps({ simpleContentAccess: true });
+    pollTasks.mockClear(); // Clear calls from mount
+
+    await act(async () => {
+      page.setProps({ simpleContentAccess: true });
+    });
+    page.update();
 
     expect(pollTasks).not.toHaveBeenCalled();
   });
@@ -267,8 +309,15 @@ describe('subscriptions page', () => {
       },
     };
 
-    page.setProps({ isTaskPending: true, isPollingTask: true });
-    page.setProps({ task: mockTask, isPollingTask: true, isTaskPending: false });
+    await act(async () => {
+      page.setProps({ isTaskPending: true, isPollingTask: true });
+    });
+    page.update();
+
+    await act(async () => {
+      page.setProps({ task: mockTask, isPollingTask: true, isTaskPending: false });
+    });
+    page.update();
 
     expect(handleFinishedTask).toHaveBeenCalledWith(mockTask);
   });
