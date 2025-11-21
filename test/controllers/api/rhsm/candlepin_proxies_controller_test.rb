@@ -112,6 +112,7 @@ module Katello
       end
 
       it "should not register with multiple envs" do
+        Setting[:allow_multiple_content_views] = false
         ::Katello::RegistrationManager.expects(:process_registration).never
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environments => [{id: @content_view_environment.cp_id}, {id: @content_view_environment.cp_id}], :facts => @facts })
