@@ -26,6 +26,13 @@ export const getRemoteRepositories = frId => () =>
     params: { organization_id: orgId() },
   });
 
+export const getRemoteRepository = repoId => get({
+  type: API_OPERATIONS.GET,
+  key: `FLATPAK_REMOTE_REPOSITORY_${repoId}`,
+  url: api.getApiUrl(`/flatpak_remote_repositories/${repoId}`),
+  params: { organization_id: orgId() },
+});
+
 export const updateFlatpakRemote = (frId, params, handleSuccess, handleError) => put({
   type: API_OPERATIONS.PUT,
   key: flatpakRemoteDetailsKey(frId),
@@ -46,6 +53,7 @@ export const updateFlatpakRemote = (frId, params, handleSuccess, handleError) =>
 export const mirrorFlatpakRepository = (
   flatpakRepoId,
   productName,
+  dependencyIds,
   handleSuccess,
   handleError,
 ) =>
@@ -53,10 +61,18 @@ export const mirrorFlatpakRepository = (
     type: API_OPERATIONS.POST,
     key: flatpakRemoteRepositoriesKey(flatpakRepoId),
     url: api.getApiUrl(`/flatpak_remote_repositories/${flatpakRepoId}/mirror`),
-    params: { product_name: productName, organization_id: orgId() },
+    params: {
+      product_name: productName,
+      organization_id: orgId(),
+      ...(dependencyIds?.length > 0 && { dependency_ids: dependencyIds }),
+    },
     handleSuccess: (response) => {
       if (handleSuccess) handleSuccess(response);
-      return renderTaskStartedToast(response.data);
+      const hasDependencies = dependencyIds?.length > 0;
+      const message = hasDependencies
+        ? __('Mirroring flatpak repository with dependencies has started')
+        : __('Mirroring flatpak repository has started');
+      return renderTaskStartedToast(response.data, message);
     },
     handleError,
     errorToast: error => getResponseErrorMsgs(error.response),

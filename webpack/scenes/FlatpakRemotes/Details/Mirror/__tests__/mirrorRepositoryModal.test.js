@@ -50,6 +50,14 @@ test('Can open mirror repository modal', async () => {
     .query(true)
     .reply(200, []);
 
+  const repoDetailsScope = nockInstance
+    .get(api.getApiUrl('/flatpak_remote_repositories/1'))
+    .query(true)
+    .reply(200, {
+      ...frDetailData.repositories[0],
+      repository_dependencies: [],
+    });
+
   const { getByText, getByRole } = renderWithRedux(
     withFRRoute(<FlatpakRemoteDetails />),
     renderOptions,
@@ -80,6 +88,7 @@ test('Can open mirror repository modal', async () => {
   assertNockRequest(scopeRepos);
   assertNockRequest(productAutocompleteScope);
   assertNockRequest(flatpakRepoAutocompleteScope);
+  assertNockRequest(repoDetailsScope);
 });
 
 test('Can successfully mirror a repository', async () => {
@@ -111,6 +120,14 @@ test('Can successfully mirror a repository', async () => {
     .get(api.getApiUrl('/flatpak_remote_repositories/auto_complete_search'))
     .query(true)
     .reply(200, []);
+
+  const repoDetailsScope = nockInstance
+    .get(api.getApiUrl('/flatpak_remote_repositories/1'))
+    .query(true)
+    .reply(200, {
+      ...frDetailData.repositories[0],
+      repository_dependencies: [],
+    });
 
   const mirrorScope = nockInstance
     .post(api.getApiUrl(`/flatpak_remote_repositories/${selectedRepo.id}/mirror`), {
@@ -164,4 +181,5 @@ test('Can successfully mirror a repository', async () => {
   assertNockRequest(scopeRepos);
   assertNockRequest(productAutocompleteScope);
   assertNockRequest(flatpakRepoAutocompleteScope);
+  assertNockRequest(repoDetailsScope);
 });

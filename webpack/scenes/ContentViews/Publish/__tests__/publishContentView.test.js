@@ -16,6 +16,7 @@ const cvPublishPath = api.getApiUrl('/content_views/1/publish');
 
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
 const cvFiltersPath = api.getApiUrl('/content_view_filters?content_view_id=1');
+const cvRepositoriesPath = api.getApiUrl('/content_views/1/repositories');
 
 test('Can call API and show Wizard', async (done) => {
   const scope = nockInstance
@@ -25,6 +26,10 @@ test('Can call API and show Wizard', async (done) => {
   const filterScope = nockInstance
     .get(cvFiltersPath)
     .reply(200, contentViewFilterData);
+  const repositoriesScope = nockInstance
+    .get(cvRepositoriesPath)
+    .query(true)
+    .reply(200, { results: [] });
 
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
@@ -39,6 +44,7 @@ test('Can call API and show Wizard', async (done) => {
 
   assertNockRequest(scope);
   assertNockRequest(filterScope);
+  assertNockRequest(repositoriesScope);
   done();
 });
 
@@ -68,6 +74,10 @@ test('Can show wizard with duplicate repository warning for composite CV', async
   const filterScope = nockInstance
     .get(cvFiltersPath)
     .reply(200, contentViewFilterData);
+  const repositoriesScope = nockInstance
+    .get(cvRepositoriesPath)
+    .query(true)
+    .reply(200, { results: [] });
 
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvCompositeDetailsData}
@@ -82,6 +92,7 @@ test('Can show wizard with duplicate repository warning for composite CV', async
 
   assertNockRequest(scope);
   assertNockRequest(filterScope);
+  assertNockRequest(repositoriesScope);
   done();
 });
 
@@ -96,6 +107,10 @@ test('Can show wizard without duplicate repository warning for composite CV', as
   const filterScope = nockInstance
     .get(cvFiltersPath)
     .reply(200, contentViewFilterData);
+  const repositoriesScope = nockInstance
+    .get(cvRepositoriesPath)
+    .query(true)
+    .reply(200, { results: [] });
 
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvCompositeDetailsData}
@@ -110,6 +125,7 @@ test('Can show wizard without duplicate repository warning for composite CV', as
 
   assertNockRequest(scope);
   assertNockRequest(filterScope);
+  assertNockRequest(repositoriesScope);
   done();
 });
 
@@ -121,6 +137,10 @@ test('Can show Wizard and show environment paths', async (done) => {
   const filterScope = nockInstance
     .get(cvFiltersPath)
     .reply(200, contentViewFilterData);
+  const repositoriesScope = nockInstance
+    .get(cvRepositoriesPath)
+    .query(true)
+    .reply(200, { results: [] });
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(environmentPathsData);
 
@@ -142,6 +162,7 @@ test('Can show Wizard and show environment paths', async (done) => {
   useSelectorMock.mockClear();
   assertNockRequest(scope);
   assertNockRequest(filterScope);
+  assertNockRequest(repositoriesScope);
   done();
 });
 
@@ -153,6 +174,10 @@ test('Can show and hide force promotion alert', async (done) => {
   const filterScope = nockInstance
     .get(cvFiltersPath)
     .reply(200, contentViewFilterData);
+  const repositoriesScope = nockInstance
+    .get(cvRepositoriesPath)
+    .query(true)
+    .reply(200, { results: [] });
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(environmentPathsData);
 
@@ -202,6 +227,7 @@ test('Can show and hide force promotion alert', async (done) => {
   useSelectorMock.mockClear();
   assertNockRequest(scope);
   assertNockRequest(filterScope);
+  assertNockRequest(repositoriesScope);
   done();
 });
 
@@ -213,6 +239,10 @@ test('Can show Wizard form and move to review', async (done) => {
   const filterScope = nockInstance
     .get(cvFiltersPath)
     .reply(200, contentViewFilterData);
+  const repositoriesScope = nockInstance
+    .get(cvRepositoriesPath)
+    .query(true)
+    .reply(200, { results: [] });
 
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
@@ -235,6 +265,7 @@ test('Can show Wizard form and move to review', async (done) => {
   useSelectorMock.mockClear();
   assertNockRequest(scope);
   assertNockRequest(filterScope);
+  assertNockRequest(repositoriesScope);
   done();
 });
 
@@ -246,6 +277,10 @@ test('Can move to Finish step and publish CV', async (done) => {
   const filterScope = nockInstance
     .get(cvFiltersPath)
     .reply(200, contentViewFilterData);
+  const repositoriesScope = nockInstance
+    .get(cvRepositoriesPath)
+    .query(true)
+    .reply(200, { results: [] });
   const cvPublishParams = {
     id: 1, versionCount: 5, description: '', environment_ids: [], is_force_promote: false,
   };
@@ -268,6 +303,7 @@ test('Can move to Finish step and publish CV', async (done) => {
 
   assertNockRequest(scope);
   assertNockRequest(filterScope);
+  assertNockRequest(repositoriesScope);
   assertNockRequest(publishScope);
   done();
   act(done); // stop listening for nocks

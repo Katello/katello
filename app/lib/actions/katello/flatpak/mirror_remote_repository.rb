@@ -2,8 +2,12 @@ module Actions
   module Katello
     module Flatpak
       class MirrorRemoteRepository < Actions::EntryAction
-        def plan(remote_repository, product)
+        def plan(remote_repository, product_id)
           action_subject(remote_repository)
+
+          # Look up product from ID
+          product = ::Katello::Product.find(product_id)
+
           repo_params = {
             name: remote_repository.name,
             label: remote_repository.label,
