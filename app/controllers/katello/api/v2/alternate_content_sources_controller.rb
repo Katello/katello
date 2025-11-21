@@ -14,6 +14,9 @@ module Katello
       param :description, String, desc: N_("Description for the alternate content source"), required: false
       param :base_url, String, desc: N_('Base URL for finding alternate content'), required: false
       param :subpaths, Array, desc: N_('Path suffixes for finding alternate content'), required: false
+      param :distributions, Array, desc: N_('Debian distributions (e.g., bookworm, bullseye)'), required: false
+      param :components, Array, desc: N_('Debian components (e.g., main, contrib)'), required: false
+      param :architectures, Array, desc: N_('Debian architectures (e.g., amd64, arm64)'), required: false
       param :smart_proxy_ids, Array, desc: N_("Ids of smart proxies to associate"), required: false
       param :smart_proxy_names, Array, desc: N_("Names of smart proxies to associate"), required: false
       param :upstream_username, String, desc: N_("Basic authentication username"), required: false
@@ -119,10 +122,24 @@ module Katello
       keys = [
         :name, :label, :description, {smart_proxy_ids: []}, {smart_proxy_names: []}, :content_type,
         :alternate_content_source_type, :use_http_proxies, :base_url, {subpaths: []}, :upstream_username,
-        :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl, {product_ids: []}
+        :upstream_password, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :verify_ssl, {product_ids: []},
+        :distributions, :components, :architectures
       ]
 
-      params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
+      p = params.require(:alternate_content_source).permit(*keys).to_h.with_indifferent_access
+
+      if p[:content_type] == 'deb'
+        [:distributions, :components, :architectures].each do |k|
+          v = p[k]
+          p[k] =
+            case v
+            when String then v.strip.split(/[,\s]+/).reject(&:blank?)
+            when Array then v.map(&:to_s).map(&:strip).reject(&:blank?)
+            else []
+            end
+        end
+      end
+      p
     end
 
     def find_smart_proxies

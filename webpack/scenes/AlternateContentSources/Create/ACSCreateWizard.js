@@ -42,6 +42,9 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
   const [caCertName, setCACertName] = useState('');
   const [productIds, setProductIds] = useState([]);
   const [productNames, setProductNames] = useState([]);
+  const [distributions, setDistributions] = useState('');
+  const [components, setComponents] = useState('');
+  const [architectures, setArchitectures] = useState('');
   const dispatch = useDispatch();
 
   useEffect(
@@ -56,7 +59,12 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
   const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
   const urlValidated = (url === '' || isValidUrl(url, acsType)) ? 'default' : 'error';
 
-  const urlAndPathsValid = () => url !== '' && urlValidated !== 'error' && subPathValidated !== 'error';
+  const urlAndPathsValid = () => {
+    const baseOk = url !== '' && urlValidated !== 'error' && subPathValidated !== 'error';
+    const isDebCustom = contentType == 'deb' && acsType === 'custom';
+    const hasDists = (distributions || '').trim().split(/[,\s]+/).filter(Boolean).length > 0;
+    return baseOk && (!isDebCustom || hasDists);
+  };
 
   const credentialsFilled = () => {
     if (authentication === 'manual') {
@@ -182,6 +190,12 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
       setCACert,
       caCertName,
       setCACertName,
+      distributions,
+      setDistributions,
+      components,
+      setComponents,
+      architectures,
+      setArchitectures,
     }}
     >
       <Wizard

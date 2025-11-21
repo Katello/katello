@@ -16,11 +16,19 @@ import { areSubPathsValid, isValidUrl } from '../../helpers';
 
 const AcsUrlPaths = () => {
   const {
-    acsType, url, setUrl, subpaths, setSubpaths,
+    acsType, url, setUrl, subpaths, setSubpaths, contentType,
+    distributions, setDistributions,
+    components, setComponents,
+    architectures, setArchitectures,
   } = useContext(ACSCreateContext);
 
   const urlValidated = (url === '' || isValidUrl(url, acsType)) ? 'default' : 'error';
   const subPathValidated = areSubPathsValid(subpaths) ? 'default' : 'error';
+  const debMode = contentType == 'deb';
+  const needDistributions = debMode && acsType === 'custom';
+  const toList = (s) => (s || '').trim().split(/[,\s]+/).filter(Boolean);
+  const distributionValidated =
+        (!needDistributions || toList(distributions).length > 0) ? 'default' : 'error';
 
   const baseURLplaceholder = acsType === 'rhui' ?
     'https://rhui-server.example.com/pulp/content' :
@@ -80,28 +88,74 @@ const AcsUrlPaths = () => {
           </ClipboardCopy>
         </>
         }
-        <FormGroup
-          label={__('Subpaths')}
-          type="string"
-        >
-          <TextArea
-            placeholder="test/repo1/, test/repo2/,"
-            value={subpaths}
-            validated={subPathValidated}
-            onChange={(_event, value) => setSubpaths(value)}
-            name="acs_subpath_field"
-            id="acs_subpath_field"
-            aria-label="acs_subpath_field"
-          />
-          {subPathValidated === 'error' && (
-            <FormHelperText>
-              <HelperText>
-                <HelperTextItem variant="error">
-                  {__('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')}
-                </HelperTextItem>
-              </HelperText>
-            </FormHelperText>)}
-        </FormGroup>
+        {!debMode ? (
+          <FormGroup
+            label={__('Subpaths')}
+            type="string"
+          >
+            <TextArea
+              placeholder="test/repo1/, test/repo2/,"
+              value={subpaths}
+              validated={subPathValidated}
+              onChange={(_event, value) => setSubpaths(value)}
+              name="acs_subpath_field"
+              id="acs_subpath_field"
+              aria-label="acs_subpath_field"
+            />
+            {subPathValidated === 'error' && (
+              <FormHelperText>
+                <HelperText>
+                  <HelperTextItem variant="error">
+                    {__('Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.')}
+                  </HelperTextItem>
+                </HelperText>
+              </FormHelperText>)}
+          </FormGroup>
+        ) : (
+          <>
+            <FormGroup
+              label={__('Distributions')}
+              isRequired={acsType === 'custom'}
+              fieldId="acs_distributions"
+            >
+              <TextInput
+                id="acs_distributions"
+                name="acs_distributions"
+                placeholder="bookworm bullseye"
+                value={distributions}
+                onChange={(_e, v) => setDistributions(v)}
+                validated={distributionValidated}
+              />
+              {distributionValidated === 'error' && (
+                <FormHelperText>
+                  <HelperText>
+                    <HelperTextItem variant="error">
+                      {__('At least one distribution is required for custom Deb ACS.')}
+                    </HelperTextItem>
+                  </HelperText>
+                </FormHelperText>
+              )}
+            </FormGroup>
+            <FormGroup label={__('Components')} fieldId="acs_components">
+              <TextInput
+                id="acs_components"
+                name="acs_components"
+                placeholder="main contrib"
+                value={components}
+                onChange={(_e, v) => setComponents(v)}
+              />
+            </FormGroup>
+            <FormGroup label={__('Architectures')} fieldId="acs_architectures">
+              <TextInput
+                id="acs_architectures"
+                name="acs_architectures"
+                placeholder="amd64 arm64"
+                value={architectures}
+                onChange={(_e, v) => setArchitectures(v)}
+              />
+            </FormGroup>
+          </>
+        )}
       </Form>
     </>
   );
