@@ -1,7 +1,6 @@
 module Katello
   class SimplePackage
-    # {"epoch", "name", "arch", "version", "vendor", "release"}
-    attr_accessor :vendor, :arch, :epoch, :version, :release, :name
+    attr_accessor :vendor, :arch, :epoch, :version, :release, :name, :persistence
 
     def initialize(params = {})
       params.each_pair { |k, v| instance_variable_set("@#{k}", v) unless v.nil? }
