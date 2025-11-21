@@ -21,8 +21,13 @@ module Katello
           end
         end
 
-        if (rhsm_url = host.content_source&.rhsm_url)
-          info['parameters']['rhsm_url'] = rhsm_url.to_s
+        begin
+          if (rhsm_url = host.content_source&.rhsm_url)
+            info['parameters']['rhsm_url'] = rhsm_url.to_s
+          end
+        rescue Katello::Errors::InvalidConfiguration => e
+          Rails.logger.error("Failed to retrieve RHSM URL for host #{host.name}: #{e.message}")
+          # Skip rhsm_url parameter - allows Puppet to continue working
         end
 
         if (content_url = host.content_source&.pulp_content_url)

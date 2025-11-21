@@ -677,14 +677,32 @@ module Katello
       end
 
       def rhsm_url
-        if (rhsm_url_setting = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url').presence)
-          URI(rhsm_url_setting)
-        else
-          # TODO: get this from routes
-          uri = URI.parse(Setting[:foreman_url])
-          uri.path = '/rhsm'
-          uri
+        rhsm_url_setting = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url').presence
+
+        url = if rhsm_url_setting
+                URI(rhsm_url_setting)
+              else
+                # TODO: get this from routes
+                uri = URI.parse(Setting[:foreman_url])
+                uri.path = '/rhsm'
+                uri
+              end
+
+        # RHSM requires HTTPS for certificate-based authentication
+        unless url.scheme == 'https'
+          error_msg = if rhsm_url_setting
+                        _("Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. " \
+                          "Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.") % { proxy: name, url: url.to_s }
+                      else
+                        _("Smart Proxy '%{proxy}': RHSM URL must use HTTPS protocol. The URL is derived from the 'foreman_url' setting. " \
+                          "Current value: '%{url}'. Please update the 'foreman_url' setting to use HTTPS.") % { proxy: name, url: url.to_s }
+                      end
+
+          Rails.logger.error("RHSM HTTPS validation failed for Smart Proxy '#{name}': #{error_msg}")
+          fail Katello::Errors::InvalidConfiguration, error_msg
         end
+
+        url
       end
 
       def pulp_content_url

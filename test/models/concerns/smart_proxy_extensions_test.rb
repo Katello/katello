@@ -413,6 +413,56 @@ module Katello
       assert_equal 'https://rhsm.example.com/rhsm', proxy.rhsm_url.to_s
     end
 
+    def test_rhsm_url_rejects_http_in_rhsm_url_setting
+      proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+      feature = proxy.smart_proxy_feature_by_name(::SmartProxy::PULP3_FEATURE)
+      feature.settings['rhsm_url'] = 'http://rhsm.example.com/rhsm'
+      feature.save!
+
+      exception = assert_raises(Katello::Errors::InvalidConfiguration) do
+        proxy.rhsm_url
+      end
+
+      assert_includes exception.message, 'must use HTTPS protocol'
+      assert_includes exception.message, 'http://rhsm.example.com/rhsm'
+      assert_includes exception.message, "has an 'rhsm_url' setting"
+      assert_includes exception.message, proxy.name
+    end
+
+    def test_rhsm_url_rejects_http_in_foreman_url
+      Setting[:foreman_url] = 'http://foreman.example.com/'
+      proxy = FactoryBot.build(:smart_proxy, :with_pulp3)
+
+      exception = assert_raises(Katello::Errors::InvalidConfiguration) do
+        proxy.rhsm_url
+      end
+
+      assert_includes exception.message, 'must use HTTPS protocol'
+      assert_includes exception.message, 'http://foreman.example.com/rhsm'
+      assert_includes exception.message, "'foreman_url' setting"
+      assert_includes exception.message, proxy.name
+    end
+
+    def test_rhsm_url_accepts_https_in_rhsm_url_setting
+      proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+      feature = proxy.smart_proxy_feature_by_name(::SmartProxy::PULP3_FEATURE)
+      feature.settings['rhsm_url'] = 'https://rhsm.example.com/rhsm'
+      feature.save!
+
+      result = proxy.rhsm_url
+      assert_equal 'https', result.scheme
+      assert_equal 'https://rhsm.example.com/rhsm', result.to_s
+    end
+
+    def test_rhsm_url_accepts_https_in_foreman_url
+      Setting[:foreman_url] = 'https://foreman.example.com/'
+      proxy = FactoryBot.build(:smart_proxy, :with_pulp3)
+
+      result = proxy.rhsm_url
+      assert_equal 'https', result.scheme
+      assert_equal 'https://foreman.example.com/rhsm', result.to_s
+    end
+
     def test_sync_container_gateway
       environment = katello_environments(:library)
       with_pulp3_features(capsule_content.smart_proxy)
