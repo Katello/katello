@@ -1,183 +1,720 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`subscriptions page should render <PermissionDenied /> when permissions are missing 1`] = `
-<PermissionDenied
-  missingPermissions={
-    Array [
-      "view_subscriptions",
-    ]
+<SubscriptionsPage
+  activePermissions={
+    Object {
+      "can_import_manifest": false,
+      "can_manage_subscription_allocations": false,
+    }
   }
-  primaryButton={null}
-/>
+  cancelPollTasks={[Function]}
+  checkSimpleContentAccessEligible={[Function]}
+  closeDeleteModal={[Function]}
+  closeManageManifestModal={[Function]}
+  createColumns={[Function]}
+  deleteButtonDisabled={true}
+  deleteManifest={[Function]}
+  deleteModalOpened={false}
+  deleteSubscriptions={[Function]}
+  disableDeleteButton={[Function]}
+  enableDeleteButton={[Function]}
+  handleFinishedTask={[MockFunction]}
+  handleStartTask={[MockFunction]}
+  hasUpstreamConnection={false}
+  isManifestImported={false}
+  loadAvailableQuantities={[Function]}
+  loadSubscriptions={
+    [MockFunction] {
+      "calls": Array [
+        Array [],
+        Array [],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  loadTableColumns={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Object {
+            "tables": Object {
+              "columns": Array [
+                "id",
+                "product_id",
+                "contract_number",
+                "start_date",
+                "end_date",
+              ],
+              "created_at": "2018-06-12 17:05:03 -0600",
+              "id": 22,
+              "loading": false,
+              "name": "Katello::Subscriptions",
+              "updated_at": "2018-06-20 13:55:42 -0600",
+            },
+          },
+        ],
+        Array [
+          Object {
+            "tables": Object {
+              "columns": Array [
+                "id",
+                "product_id",
+                "contract_number",
+                "start_date",
+                "end_date",
+              ],
+              "created_at": "2018-06-12 17:05:03 -0600",
+              "id": 22,
+              "loading": false,
+              "name": "Katello::Subscriptions",
+              "updated_at": "2018-06-20 13:55:42 -0600",
+            },
+          },
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  loadTables={
+    [MockFunction] {
+      "calls": Array [
+        Array [],
+        Array [],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": Promise {},
+        },
+        Object {
+          "type": "return",
+          "value": Promise {},
+        },
+      ],
+    }
+  }
+  openDeleteModal={[Function]}
+  openManageManifestModal={[Function]}
+  organization={
+    Object {
+      "owner_details": Object {
+        "upstreamConsumer": Object {},
+      },
+    }
+  }
+  pingUpstreamSubscriptions={[Function]}
+  pollBulkSearch={[Function]}
+  pollTaskUntilDone={[Function]}
+  pollTasks={
+    [MockFunction] {
+      "calls": Array [
+        Array [],
+        Array [],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  refreshManifest={[Function]}
+  resetTasks={[Function]}
+  searchQuery=""
+  setModalClosed={[Function]}
+  setModalOpen={[Function]}
+  subscriptionTableSettings={
+    Object {
+      "tables": Object {
+        "columns": Array [
+          "id",
+          "product_id",
+          "contract_number",
+          "start_date",
+          "end_date",
+        ],
+        "created_at": "2018-06-12 17:05:03 -0600",
+        "id": 22,
+        "loading": false,
+        "name": "Katello::Subscriptions",
+        "updated_at": "2018-06-20 13:55:42 -0600",
+      },
+    }
+  }
+  subscriptions={
+    Object {
+      "availableQuantities": null,
+      "itemCount": 0,
+      "loading": false,
+      "missingPermissions": Array [
+        "view_subscriptions",
+      ],
+      "pagination": Object {
+        "page": 1,
+        "perPage": 2,
+      },
+      "quantitiesLoading": false,
+      "results": Array [],
+      "search": undefined,
+      "searchIsActive": false,
+      "selectedTableColumns": Array [],
+      "tableColumns": Array [],
+    }
+  }
+  updateColumns={[Function]}
+  updateQuantity={[Function]}
+  updateSearchQuery={[Function]}
+  uploadManifest={[Function]}
+>
+  <_default
+    missingPermissions={
+      Array [
+        "view_subscriptions",
+      ]
+    }
+  >
+    <div>
+      PermissionDenied: 
+      view_subscriptions
+    </div>
+  </_default>
+</SubscriptionsPage>
 `;
 
 exports[`subscriptions page should render 1`] = `
-<Grid
-  bsClass="container-fluid"
-  componentClass="div"
-  fluid={false}
-  id="subscriptions-page"
->
-  <Row
-    bsClass="row"
-    componentClass="div"
-  >
-    <Col
-      bsClass="col"
-      componentClass="div"
-      sm={12}
-    >
-      <Flex
-        alignItems={
+<SubscriptionsPage
+  activePermissions={
+    Object {
+      "can_import_manifest": false,
+      "can_manage_subscription_allocations": false,
+    }
+  }
+  cancelPollTasks={[Function]}
+  checkSimpleContentAccessEligible={[Function]}
+  closeDeleteModal={[Function]}
+  closeManageManifestModal={[Function]}
+  createColumns={[Function]}
+  deleteButtonDisabled={true}
+  deleteManifest={[Function]}
+  deleteModalOpened={false}
+  deleteSubscriptions={[Function]}
+  disableDeleteButton={[Function]}
+  enableDeleteButton={[Function]}
+  handleFinishedTask={[MockFunction]}
+  handleStartTask={[MockFunction]}
+  hasUpstreamConnection={false}
+  isManifestImported={false}
+  loadAvailableQuantities={[Function]}
+  loadSubscriptions={
+    [MockFunction] {
+      "calls": Array [
+        Array [],
+        Array [],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  loadTableColumns={
+    [MockFunction] {
+      "calls": Array [
+        Array [
           Object {
-            "default": "alignItemsBaseline",
-          }
-        }
-      >
-        <FlexItem>
-          <h1>
-            Subscriptions
-          </h1>
-        </FlexItem>
-      </Flex>
-      <SubscriptionsToolbar
-        autocompleteQueryParams={
-          Object {
-            "organization_id": 1,
-          }
-        }
-        canManageSubscriptionAllocations={false}
-        disableAddButton={true}
-        disableDeleteButton={true}
-        disableDeleteReason="This is disabled because no connection could be made to the upstream Manifest."
-        disableManifestActions={true}
-        disableManifestReason="This is disabled because no connection could be made to the upstream Manifest."
-        isManifestImported={false}
-        onDeleteButtonClick={[Function]}
-        onExportCsvButtonClick={[Function]}
-        onManageManifestButtonClick={[Function]}
-        onSearch={[Function]}
-        tableColumns={Array []}
-        toolTipOnChange={[Function]}
-        toolTipOnclose={[Function]}
-        updateSearchQuery={[Function]}
-      />
-      <Connect(ManageManifestModal)
-        canImportManifest={false}
-        delete={[Function]}
-        disableManifestActions={true}
-        disabledReason="This is disabled because no connection could be made to the upstream Manifest."
-        refresh={[Function]}
-        taskInProgress={false}
-        upload={[Function]}
-      />
-      <div
-        className="modal-container"
-        id="subscriptions-table"
-      >
-        <SubscriptionsTable
-          canManageSubscriptionAllocations={false}
-          emptyState={
-            Object {
-              "action": Object {
-                "onClick": [Function],
-                "title": "Import a Manifest",
-              },
-              "description": "Import a subscription manifest to give hosts access to Red Hat content.",
-              "header": "There are no Subscriptions to display",
-            }
-          }
-          loadSubscriptions={[Function]}
-          onDeleteSubscriptions={[Function]}
-          onSelectedRowsChange={[Function]}
-          onSubscriptionDeleteModalClose={[Function]}
-          selectedRows={Array []}
-          selectionEnabled={false}
-          subscriptionDeleteModalOpen={false}
-          subscriptions={
-            Object {
-              "availableQuantities": null,
-              "itemCount": 81,
-              "loading": false,
-              "pagination": Object {
-                "page": 1,
-                "perPage": 2,
-              },
-              "quantitiesLoading": false,
-              "results": Array [
-                Object {
-                  "account_number": null,
-                  "available": -2,
-                  "consumed": 1,
-                  "contract_number": null,
-                  "cores": null,
-                  "cp_id": "ff8080815ea5ea44015ea617b1a5000b",
-                  "end_date": "2047-09-14 15:18:44 -0500",
-                  "id": 3,
-                  "instance_multiplier": 1,
-                  "multi_entitlement": null,
-                  "name": "zoo",
-                  "product_host_count": 1,
-                  "product_id": "853987721546",
-                  "product_name": "zoo",
-                  "quantity": -1,
-                  "ram": null,
-                  "sockets": null,
-                  "stacking_id": null,
-                  "start_date": "2017-09-21 16:18:44 -0400",
-                  "subscription_id": 2,
-                  "support_level": null,
-                  "type": "NORMAL",
-                  "unmapped_guest": false,
-                  "virt_only": false,
-                  "virt_who": false,
-                },
-                Object {
-                  "account_number": null,
-                  "available": -1,
-                  "consumed": 0,
-                  "contract_number": null,
-                  "cores": null,
-                  "cp_id": "ff8080815ea5ea44015ebb08e95a0024",
-                  "end_date": "2047-09-18 16:54:36 -0500",
-                  "id": 4,
-                  "instance_multiplier": 1,
-                  "multi_entitlement": null,
-                  "name": "hsdfhsdh",
-                  "product_host_count": 0,
-                  "product_id": "947637693017",
-                  "product_name": "hsdfhsdh",
-                  "quantity": -1,
-                  "ram": null,
-                  "sockets": null,
-                  "stacking_id": null,
-                  "start_date": "2017-09-25 17:54:36 -0400",
-                  "subscription_id": 3,
-                  "support_level": null,
-                  "type": "NORMAL",
-                  "unmapped_guest": false,
-                  "virt_only": false,
-                  "virt_who": false,
-                },
+            "tables": Object {
+              "columns": Array [
+                "id",
+                "product_id",
+                "contract_number",
+                "start_date",
+                "end_date",
               ],
-              "search": undefined,
-              "searchIsActive": false,
-              "selectedTableColumns": Array [],
-              "tableColumns": Array [],
-            }
-          }
-          tableColumns={Array []}
-          toggleDeleteButton={[Function]}
-          updateQuantity={[Function]}
-        />
-        <ModalProgressBar
-          container={null}
-          progress={0}
-          show={false}
-          title={null}
-        />
-      </div>
-    </Col>
-  </Row>
-</Grid>
+              "created_at": "2018-06-12 17:05:03 -0600",
+              "id": 22,
+              "loading": false,
+              "name": "Katello::Subscriptions",
+              "updated_at": "2018-06-20 13:55:42 -0600",
+            },
+          },
+        ],
+        Array [
+          Object {
+            "tables": Object {
+              "columns": Array [
+                "id",
+                "product_id",
+                "contract_number",
+                "start_date",
+                "end_date",
+              ],
+              "created_at": "2018-06-12 17:05:03 -0600",
+              "id": 22,
+              "loading": false,
+              "name": "Katello::Subscriptions",
+              "updated_at": "2018-06-20 13:55:42 -0600",
+            },
+          },
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  loadTables={
+    [MockFunction] {
+      "calls": Array [
+        Array [],
+        Array [],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": Promise {},
+        },
+        Object {
+          "type": "return",
+          "value": Promise {},
+        },
+      ],
+    }
+  }
+  openDeleteModal={[Function]}
+  openManageManifestModal={[Function]}
+  organization={
+    Object {
+      "owner_details": Object {
+        "upstreamConsumer": Object {},
+      },
+    }
+  }
+  pingUpstreamSubscriptions={[Function]}
+  pollBulkSearch={[Function]}
+  pollTaskUntilDone={[Function]}
+  pollTasks={
+    [MockFunction] {
+      "calls": Array [
+        Array [],
+        Array [],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  refreshManifest={[Function]}
+  resetTasks={[Function]}
+  searchQuery=""
+  setModalClosed={[Function]}
+  setModalOpen={[Function]}
+  subscriptionTableSettings={
+    Object {
+      "tables": Object {
+        "columns": Array [
+          "id",
+          "product_id",
+          "contract_number",
+          "start_date",
+          "end_date",
+        ],
+        "created_at": "2018-06-12 17:05:03 -0600",
+        "id": 22,
+        "loading": false,
+        "name": "Katello::Subscriptions",
+        "updated_at": "2018-06-20 13:55:42 -0600",
+      },
+    }
+  }
+  subscriptions={
+    Object {
+      "availableQuantities": null,
+      "itemCount": 81,
+      "loading": false,
+      "pagination": Object {
+        "page": 1,
+        "perPage": 2,
+      },
+      "quantitiesLoading": false,
+      "results": Array [
+        Object {
+          "account_number": null,
+          "available": -2,
+          "consumed": 1,
+          "contract_number": null,
+          "cores": null,
+          "cp_id": "ff8080815ea5ea44015ea617b1a5000b",
+          "end_date": "2047-09-14 15:18:44 -0500",
+          "id": 3,
+          "instance_multiplier": 1,
+          "multi_entitlement": null,
+          "name": "zoo",
+          "product_host_count": 1,
+          "product_id": "853987721546",
+          "product_name": "zoo",
+          "quantity": -1,
+          "ram": null,
+          "sockets": null,
+          "stacking_id": null,
+          "start_date": "2017-09-21 16:18:44 -0400",
+          "subscription_id": 2,
+          "support_level": null,
+          "type": "NORMAL",
+          "unmapped_guest": false,
+          "virt_only": false,
+          "virt_who": false,
+        },
+        Object {
+          "account_number": null,
+          "available": -1,
+          "consumed": 0,
+          "contract_number": null,
+          "cores": null,
+          "cp_id": "ff8080815ea5ea44015ebb08e95a0024",
+          "end_date": "2047-09-18 16:54:36 -0500",
+          "id": 4,
+          "instance_multiplier": 1,
+          "multi_entitlement": null,
+          "name": "hsdfhsdh",
+          "product_host_count": 0,
+          "product_id": "947637693017",
+          "product_name": "hsdfhsdh",
+          "quantity": -1,
+          "ram": null,
+          "sockets": null,
+          "stacking_id": null,
+          "start_date": "2017-09-25 17:54:36 -0400",
+          "subscription_id": 3,
+          "support_level": null,
+          "type": "NORMAL",
+          "unmapped_guest": false,
+          "virt_only": false,
+          "virt_who": false,
+        },
+      ],
+      "search": undefined,
+      "searchIsActive": false,
+      "selectedTableColumns": Array [],
+      "tableColumns": Array [],
+    }
+  }
+  updateColumns={[Function]}
+  updateQuantity={[Function]}
+  updateSearchQuery={[Function]}
+  uploadManifest={[Function]}
+>
+  <Grid
+    bsClass="container-fluid"
+    componentClass="div"
+    fluid={false}
+    id="subscriptions-page"
+  >
+    <div
+      className="container-fluid"
+      id="subscriptions-page"
+    >
+      <Row
+        bsClass="row"
+        componentClass="div"
+      >
+        <div
+          className="row"
+        >
+          <Col
+            bsClass="col"
+            componentClass="div"
+            sm={12}
+          >
+            <div
+              className="col-sm-12"
+            >
+              <Flex
+                alignItems={
+                  Object {
+                    "default": "alignItemsBaseline",
+                  }
+                }
+              >
+                <div
+                  className="pf-v5-l-flex pf-m-align-items-baseline"
+                >
+                  <FlexItem>
+                    <div
+                      className=""
+                    >
+                      <h1>
+                        Subscriptions
+                      </h1>
+                    </div>
+                  </FlexItem>
+                </div>
+              </Flex>
+              <_default
+                autocompleteQueryParams={
+                  Object {
+                    "organization_id": 1,
+                  }
+                }
+                canManageSubscriptionAllocations={false}
+                disableAddButton={true}
+                disableDeleteButton={true}
+                disableDeleteReason="This is disabled because no connection could be made to the upstream Manifest."
+                disableManifestActions={true}
+                disableManifestReason="This is disabled because no connection could be made to the upstream Manifest."
+                isManifestImported={false}
+                onDeleteButtonClick={[Function]}
+                onExportCsvButtonClick={[Function]}
+                onManageManifestButtonClick={[Function]}
+                onSearch={[Function]}
+                tableColumns={Array []}
+                toolTipOnChange={[Function]}
+                toolTipOnclose={[Function]}
+                updateSearchQuery={[Function]}
+              >
+                <div>
+                  SubscriptionsToolbar Mock
+                </div>
+              </_default>
+              <_default
+                canImportManifest={false}
+                delete={[Function]}
+                disableManifestActions={true}
+                disabledReason="This is disabled because no connection could be made to the upstream Manifest."
+                refresh={[Function]}
+                taskInProgress={false}
+                upload={[Function]}
+              >
+                <div>
+                  ManageManifestModal Mock
+                </div>
+              </_default>
+              <div
+                className="modal-container"
+                id="subscriptions-table"
+              >
+                <SubscriptionsTable
+                  canManageSubscriptionAllocations={false}
+                  emptyState={
+                    Object {
+                      "action": Object {
+                        "onClick": [Function],
+                        "title": "Import a Manifest",
+                      },
+                      "description": "Import a subscription manifest to give hosts access to Red Hat content.",
+                      "header": "There are no Subscriptions to display",
+                    }
+                  }
+                  loadSubscriptions={
+                    [MockFunction] {
+                      "calls": Array [
+                        Array [],
+                        Array [],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": undefined,
+                        },
+                        Object {
+                          "type": "return",
+                          "value": undefined,
+                        },
+                      ],
+                    }
+                  }
+                  onDeleteSubscriptions={[Function]}
+                  onSelectedRowsChange={[Function]}
+                  onSubscriptionDeleteModalClose={[Function]}
+                  selectedRows={Array []}
+                  selectionEnabled={false}
+                  subscriptionDeleteModalOpen={false}
+                  subscriptions={
+                    Object {
+                      "availableQuantities": null,
+                      "itemCount": 81,
+                      "loading": false,
+                      "pagination": Object {
+                        "page": 1,
+                        "perPage": 2,
+                      },
+                      "quantitiesLoading": false,
+                      "results": Array [
+                        Object {
+                          "account_number": null,
+                          "available": -2,
+                          "consumed": 1,
+                          "contract_number": null,
+                          "cores": null,
+                          "cp_id": "ff8080815ea5ea44015ea617b1a5000b",
+                          "end_date": "2047-09-14 15:18:44 -0500",
+                          "id": 3,
+                          "instance_multiplier": 1,
+                          "multi_entitlement": null,
+                          "name": "zoo",
+                          "product_host_count": 1,
+                          "product_id": "853987721546",
+                          "product_name": "zoo",
+                          "quantity": -1,
+                          "ram": null,
+                          "sockets": null,
+                          "stacking_id": null,
+                          "start_date": "2017-09-21 16:18:44 -0400",
+                          "subscription_id": 2,
+                          "support_level": null,
+                          "type": "NORMAL",
+                          "unmapped_guest": false,
+                          "virt_only": false,
+                          "virt_who": false,
+                        },
+                        Object {
+                          "account_number": null,
+                          "available": -1,
+                          "consumed": 0,
+                          "contract_number": null,
+                          "cores": null,
+                          "cp_id": "ff8080815ea5ea44015ebb08e95a0024",
+                          "end_date": "2047-09-18 16:54:36 -0500",
+                          "id": 4,
+                          "instance_multiplier": 1,
+                          "multi_entitlement": null,
+                          "name": "hsdfhsdh",
+                          "product_host_count": 0,
+                          "product_id": "947637693017",
+                          "product_name": "hsdfhsdh",
+                          "quantity": -1,
+                          "ram": null,
+                          "sockets": null,
+                          "stacking_id": null,
+                          "start_date": "2017-09-25 17:54:36 -0400",
+                          "subscription_id": 3,
+                          "support_level": null,
+                          "type": "NORMAL",
+                          "unmapped_guest": false,
+                          "virt_only": false,
+                          "virt_who": false,
+                        },
+                      ],
+                      "search": undefined,
+                      "searchIsActive": false,
+                      "selectedTableColumns": Array [],
+                      "tableColumns": Array [],
+                    }
+                  }
+                  tableColumns={Array []}
+                  toggleDeleteButton={[Function]}
+                  updateQuantity={[Function]}
+                >
+                  <div>
+                    SubscriptionsTable Mock
+                  </div>
+                </SubscriptionsTable>
+                <ModalProgressBar
+                  container={null}
+                  progress={0}
+                  show={false}
+                  title={null}
+                >
+                  <Modal
+                    actions={Array []}
+                    appendTo={null}
+                    aria-describedby=""
+                    aria-label="modal-progress-bar"
+                    aria-labelledby=""
+                    className=""
+                    disableFocusTrap={true}
+                    hasNoBodyWrapper={false}
+                    id="modal-progress-bar"
+                    isOpen={false}
+                    onClose={[Function]}
+                    ouiaId="modal-progress-bar"
+                    ouiaSafe={true}
+                    position="default"
+                    showClose={false}
+                    title={null}
+                    titleIconVariant={null}
+                    titleLabel=""
+                    variant="small"
+                  >
+                    <Portal
+                      containerInfo={<body />}
+                    >
+                      <ModalContent
+                        actions={Array []}
+                        aria-describedby=""
+                        aria-label="modal-progress-bar"
+                        aria-labelledby=""
+                        backdropId="pf-modal-part-3"
+                        boxId="modal-progress-bar"
+                        className=""
+                        descriptorId="pf-modal-part-2"
+                        disableFocusTrap={true}
+                        hasNoBodyWrapper={false}
+                        id="modal-progress-bar"
+                        isOpen={false}
+                        labelId="pf-modal-part-1"
+                        onClose={[Function]}
+                        ouiaId="modal-progress-bar"
+                        ouiaSafe={true}
+                        position="default"
+                        showClose={false}
+                        title={null}
+                        titleIconVariant={null}
+                        titleLabel=""
+                        variant="small"
+                      />
+                    </Portal>
+                  </Modal>
+                </ModalProgressBar>
+              </div>
+            </div>
+          </Col>
+        </div>
+      </Row>
+    </div>
+  </Grid>
+</SubscriptionsPage>
 `;
