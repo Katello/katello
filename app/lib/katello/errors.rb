@@ -180,5 +180,7 @@ module Katello
     end
 
     class InvalidExportFormat < StandardError; end
+
+    class InvalidConfiguration < StandardError; end
   end
 end

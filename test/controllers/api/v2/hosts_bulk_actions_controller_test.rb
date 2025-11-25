@@ -501,6 +501,7 @@ module Katello
       cert_path = Rails.root.join('test/static_fixtures/certificates/example.com.crt')
       Setting[:server_ca_file] = cert_path
       Setting[:ssl_ca_file] = cert_path
+      Setting[:foreman_url] = 'https://foreman.example.com'
     end
   end
 end
