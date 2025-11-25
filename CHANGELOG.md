@@ -1,4 +1,4 @@
-# 4.19.0 (2025-11-11)
+# 4.19.0 (2025-11-25)
 
 ## Features
 
@@ -9,7 +9,7 @@
  * Global Registration: As a user, I can easily setup certs in the /etc/containers/certs.d/hostname/ directory ([#38455](https://projects.theforeman.org/issues/38455), [6e1f42d9](https://github.com/Katello/katello.git/commit/6e1f42d98966b41bf5b55957d24769976da9f3cf))
 
 ### Hosts
- * As a user I want to be able to change the host collection of multiple hosts ([#38829](https://projects.theforeman.org/issues/38829), [6625fe75](https://github.com/Katello/katello.git/commit/6625fe75ffea36a14666d26d1f8d314851b970a0))
+ * As a user I want to be able to change the host collection of multiple hosts ([#38829](https://projects.theforeman.org/issues/38829), [6625fe75](https://github.com/Katello/katello.git/commit/6625fe75ffea36a14666d26d1f8d314851b970a0), [7978ce3c](https://github.com/Katello/katello.git/commit/7978ce3c117d683fb91271968afa97c913ce22ad))
  * Add bulk Repository Sets wizard to new All Hosts page ([#38353](https://projects.theforeman.org/issues/38353), [5b64949b](https://github.com/Katello/katello.git/commit/5b64949b046fc600efe432b525edaa6de75ea822))
  * Add Debian support to the new All Hosts --> Manage packages wizard ([#38186](https://projects.theforeman.org/issues/38186), [94e97713](https://github.com/Katello/katello.git/commit/94e97713e1caaa4919e79f58794d4f94170d43ee))
 
@@ -38,6 +38,16 @@
 
 ## Bug Fixes
 
+### Content Views
+ * Expand structured APT fallback mechanism for deb content ([#38907](https://projects.theforeman.org/issues/38907), [3994a3ae](https://github.com/Katello/katello.git/commit/3994a3aef6ac83732b87b713863fafe03af02763))
+ * 500 error is creating rolling CV via API with no environments ([#38726](https://projects.theforeman.org/issues/38726), [a053c92d](https://github.com/Katello/katello.git/commit/a053c92d0fa4413400d6032492fc6b90224d31f6))
+ * Can't create CV from create CV form since empty environment id is passed for all CV types. ([#38721](https://projects.theforeman.org/issues/38721), [d79a2032](https://github.com/Katello/katello.git/commit/d79a20324d1e4ec73b959916018751be9f677117))
+
+### Hosts
+ * TypeError: Cannot read properties of undefined (reading 'RowSelectTd') errors on HostsIndex wizards ([#38882](https://projects.theforeman.org/issues/38882), [7c3c7fa8](https://github.com/Katello/katello.git/commit/7c3c7fa8770c5e0f49ac537e596d5a8aabd5990e))
+ * Bulk Errata Wizard should only show installable Errata ([#38687](https://projects.theforeman.org/issues/38687), [27921d16](https://github.com/Katello/katello.git/commit/27921d16398d7852349808fc72fb863e5042028a))
+ * Need an option to retain build profile information like cve, lce and ks repo id on unregistering hosts ([#38671](https://projects.theforeman.org/issues/38671), [abf3d607](https://github.com/Katello/katello.git/commit/abf3d6078ace9a3055256f77e011e4e7a379728d))
+
 ### Repositories
  * Missing product ID arg shows Ruby error when mirroring flatpak ([#38874](https://projects.theforeman.org/issues/38874), [24107480](https://github.com/Katello/katello.git/commit/241074805b8995c88b0061d5668e3b06437c44c9))
  * Repetitive recalculation of Katello::RepositoryTypeManager.enabled_repository_types makes katello:correct_repositories very slow ([#38838](https://projects.theforeman.org/issues/38838), [3a4bf49f](https://github.com/Katello/katello.git/commit/3a4bf49f481113b03811db52fe8ff1ad8cf9492f))
@@ -54,6 +64,7 @@
 
 ### Subscriptions
  * Katello should not send cp-consumer or cp-user header to hosted Candlepin ([#38845](https://projects.theforeman.org/issues/38845), [053c677f](https://github.com/Katello/katello.git/commit/053c677f7e1de9b0ea4f2d73d2edced24deb4c80))
+ * Content > Subscriptions stuck in loading state if organization GET ends with 403 ([#38774](https://projects.theforeman.org/issues/38774), [a165abc7](https://github.com/Katello/katello.git/commit/a165abc7feafcce2217cf492e491189ae159db11))
  * Calls to upstream Candlepin consumer fail when using an apiUrl from manifest ([#38724](https://projects.theforeman.org/issues/38724), [8f4da281](https://github.com/Katello/katello.git/commit/8f4da2816a1a44f99dfda030056fe28b53978ddd))
 
 ### Errata Management
@@ -72,16 +83,8 @@
  * UpdateRollingTest sometimes fails based on array order ([#38745](https://projects.theforeman.org/issues/38745), [ad0659ae](https://github.com/Katello/katello.git/commit/ad0659ae7ab2914f2d3fa37097a1770ed4305bcd))
  * Random content unit test failures ([#38670](https://projects.theforeman.org/issues/38670), [b8c26b82](https://github.com/Katello/katello.git/commit/b8c26b82f9c77f901c467184dcce25cc58aa67a8))
 
-### Content Views
- * 500 error is creating rolling CV via API with no environements ([#38726](https://projects.theforeman.org/issues/38726), [a053c92d](https://github.com/Katello/katello.git/commit/a053c92d0fa4413400d6032492fc6b90224d31f6))
- * Can't create CV from create CV form since empty environment id is passed for all CV types. ([#38721](https://projects.theforeman.org/issues/38721), [d79a2032](https://github.com/Katello/katello.git/commit/d79a20324d1e4ec73b959916018751be9f677117))
-
 ### Organizations and Locations
  * Raw backend error displayed on submitting blank 'New Organisation' form ([#38701](https://projects.theforeman.org/issues/38701), [e1e45f7d](https://github.com/Katello/katello.git/commit/e1e45f7d0bb59eacabee7687c72512612f9d4294))
-
-### Hosts
- * Bulk Errata Wizard should only show installable Errata ([#38687](https://projects.theforeman.org/issues/38687), [27921d16](https://github.com/Katello/katello.git/commit/27921d16398d7852349808fc72fb863e5042028a))
- * Need an option to retain build profile information like cve, lce and ks repo id on unregistering hosts ([#38671](https://projects.theforeman.org/issues/38671), [abf3d607](https://github.com/Katello/katello.git/commit/abf3d6078ace9a3055256f77e011e4e7a379728d))
 
 ### Activation Key
  * Multiple content view environments for activation keys do not follow prioritization rules ([#38651](https://projects.theforeman.org/issues/38651))
