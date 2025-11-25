@@ -115,15 +115,25 @@ export default (state = initialState, action) => {
     });
   }
 
-  case SUBSCRIPTIONS_FAILURE:
+  case SUBSCRIPTIONS_FAILURE: {
+    // Try multiple paths to extract permission errors
+    const explicitMissingPermissions = get(action, ['payload', 'messages', 0, 'missing_permissions']);
+    const statusCode = get(action, ['payload', 'result', 'response', 'status']);
+    const errorMessages = get(action, ['payload', 'messages'], []);
+
+    // If we got a 403 Forbidden or 404 Not Found, treat it as a permission error
+    let missingPermissions = explicitMissingPermissions;
+    if (!missingPermissions && (statusCode === 403 || statusCode === 404)) {
+      // Use error messages as missing permissions
+      missingPermissions = errorMessages.length > 0 ? errorMessages : ['view_subscriptions'];
+    }
+
     return state
       .set('loading', false)
       .set('results', [])
       .set('itemCount', 0)
-      .set(
-        'missingPermissions',
-        get(action, ['payload', 'messages', 0, 'missing_permissions']),
-      );
+      .set('missingPermissions', missingPermissions);
+  }
 
   case SUBSCRIPTIONS_QUANTITIES_REQUEST:
     return state.merge({

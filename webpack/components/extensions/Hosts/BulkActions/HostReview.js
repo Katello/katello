@@ -11,7 +11,7 @@ import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableInde
 import { HOSTS_API_PATH } from 'foremanReact/routes/Hosts/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import SelectAllCheckbox from 'foremanReact/components/PF4/TableIndexPage/Table/SelectAllCheckbox';
-import { RowSelectTd } from 'foremanReact/components/HostsIndex/RowSelectTd';
+import { RowSelectTd } from 'foremanReact/components/PF4/TableIndexPage/RowSelectTd';
 import { getPageStats } from 'foremanReact/components/PF4/TableIndexPage/Table/helpers';
 
 const HostReview = ({

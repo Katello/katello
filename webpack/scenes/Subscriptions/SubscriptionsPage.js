@@ -32,11 +32,9 @@ class SubscriptionsPage extends Component {
 
   componentDidMount() {
     this.props.resetTasks();
-
-    const { id } = this.props.organization;
-    if (id) { // navigating from another react page
-      this.loadData();
-    }
+    // Always load data, even if organization doesn't have an ID yet
+    // This allows us to detect permission errors
+    this.loadData();
   }
 
   componentDidUpdate(prevProps) {
@@ -137,7 +135,21 @@ class SubscriptionsPage extends Component {
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
       searchQuery, updateSearchQuery, hasUpstreamConnection,
       task, activePermissions, subscriptions, subscriptionTableSettings, isManifestImported,
+      organization,
     } = this.props;
+
+    // If organization failed to load (404/403), the user doesn't have
+    // permission to view this organization. Show permission denied
+    // regardless of whether subscriptions returned results
+    if (organization?.error && !organization.loading) {
+      const statusCode = organization.error.response?.status;
+
+      if (statusCode === 404 || statusCode === 403) {
+        const errorMessage = 'You do not have permission to view this organization.';
+        return <PermissionDenied missingPermissions={[errorMessage]} />;
+      }
+    }
+
     // Basic permissions - should we even show this page?
     if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
       return <PermissionDenied missingPermissions={subscriptions.missingPermissions} />;
@@ -343,6 +355,11 @@ SubscriptionsPage.propTypes = {
         name: PropTypes.string,
         webUrl: PropTypes.string,
         uuid: PropTypes.string,
+      }),
+    }),
+    error: PropTypes.shape({
+      response: PropTypes.shape({
+        status: PropTypes.number,
       }),
     }),
   }),
