@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.19.0.pre.master",
+        "Project-Id-Version": "katello 4.19.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ondřej Gajdušek, 2025",
+        "Last-Translator": "진선재, 2025",
         "Language-Team": "Korean (https://app.transifex.com/foreman/teams/114/ko/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -109,6 +109,9 @@
       ],
       "${selectedContentType} will appear here when created.": [
         "${selectedContentType} 생성되면 여기에 나타납니다."
+      ],
+      "${totalCount} labels and annotations": [
+        ""
       ],
       "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?": [
         "%s %s에는 삭제 후 다시 연결해야 하는 호스트 %s 및 호스트 그룹 %s가 있습니다. %s를 삭제하시겠습니까?"
@@ -461,6 +464,9 @@
       "About page": [
         "정보 페이지"
       ],
+      "Abstract async task": [
+        ""
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "Red Hat Subscription Management에 대한 액세스가 금지되어 있습니다. 이를 변경하려면 콘텐츠 설정 '서브스크립션 연결 활성화됨'을 업데이트하세요."
       ],
@@ -608,6 +614,9 @@
       "Add repositories with package groups to content view to select them here.": [
         "패키지 그룹이 있는 리포지토리를 콘텐츠 뷰에 추가하여 여기에서 선택할 수 있습니다."
       ],
+      "Add rolling repo clone": [
+        ""
+      ],
       "Add rule": [
         "규칙 추가"
       ],
@@ -626,11 +635,17 @@
       "Add to a host collection": [
         "호스트 컬렉션 복사"
       ],
+      "Add to host collections": [
+        ""
+      ],
       "Added": [
         "추가됨"
       ],
       "Added %s": [
         "%s 추가됨"
+      ],
+      "Added %{count} host(s) to host collection %{host_collection}.": [
+        ""
       ],
       "Added Content:": [
         "추가된 컨텐츠: "
@@ -673,6 +688,9 @@
       ],
       "All errata up-to-date": [
         "모든 에라타는 최신 상태입니다."
+      ],
+      "All selected hosts were already members of host collection %{host_collection}.": [
+        ""
       ],
       "All subpaths must have a slash at the end and none at the front": [
         "모든 하위 경로에는 끝에 슬래시가 있어야 하며 앞에는 슬래시가 없어야 합니다."
@@ -754,6 +772,9 @@
       ],
       "An error occurred during upload \\n%{error_message}": [
         "업로드 중 오류가 발생했습니다. \\n%{error_message}"
+      ],
+      "An error occurred while updating host collections": [
+        ""
       ],
       "An option to specify how many ostree commits to traverse.": [
         "이동할 ostree 커밋 수를 지정하는 옵션입니다."
@@ -1039,6 +1060,9 @@
       ],
       "Bookmarks marked as public are available to all users": [
         "공개로 표시된 북마크는 모든 사용자가 사용할 수 있습니다."
+      ],
+      "Bootable": [
+        ""
       ],
       "Bootc rollback via Bootc interface": [
         "Bootc 인터페이스를 통한 Bootc 롤백"
@@ -1364,6 +1388,9 @@
       "Change content view environments": [
         "콘텐츠 뷰 환경 변경"
       ],
+      "Change host collections": [
+        ""
+      ],
       "Change host content source": [
         "호스트 콘텐츠 소스 변경"
       ],
@@ -1450,6 +1477,9 @@
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "컨테이너 이미지 리포지토리에 동기화할 태그의 쉼표로 구분된 목록"
+      ],
+      "Commit upload": [
+        ""
       ],
       "Compare": [
         "비교"
@@ -1805,14 +1835,26 @@
       "Copy": [
         "복사"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "활성키 복사 "
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "콘텐츠 뷰 복사"
       ],
       "Copy to clipboard": [
         "클립보드에 복사"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        ""
       ],
       "Cores per socket": [
         "소켓당 코어 수 "
@@ -2027,17 +2069,35 @@
       "Create content view": [
         "콘텐츠 뷰 만들기"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "필터 생성"
       ],
       "Create host collection": [
         "호스트 컬렉션 만들기"
       ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
+        ""
+      ],
       "Create new activation key": [
         "새로운 활성화 키 생성"
       ],
       "Create organization": [
         "조직 생성 "
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
+      ],
+      "Creation": [
+        ""
       ],
       "Credentials": [
         "자격 증명"
@@ -2300,11 +2360,35 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         "이 리포지토리를 마지막으로 연관된 리포지토리로 하는 콘텐츠 뷰 필터를 삭제합니다. 기본값은 true입니다. false인 경우 이러한 필터는 이제 콘텐츠 뷰의 모든 리포지토리에 적용됩니다."
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Red Hat 공급자에서 매니페스트 삭제 "
       ],
       "Delete multiple filters from a content view": [
         "콘텐츠 뷰에서 여러 필터 삭제"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete orphaned migrated repositories": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         "버전 삭제"
@@ -2405,6 +2489,12 @@
       "Destroy an environment in an organization": [
         "조직에서 환경 삭제 "
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         "하나 이상의 대체 콘텐츠 소스를 삭제합니다."
       ],
@@ -2449,6 +2539,9 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         "'%{subject}'에 대해 간단한 콘텐츠 액세스 비활성화에 실패했습니다."
+      ],
+      "Discover": [
+        ""
       ],
       "Discover Repositories": [
         "리포지터리 검색 "
@@ -2585,9 +2678,6 @@
       "Enable repository sets": [
         "리포지터리 세트 활성화"
       ],
-      "Enable structured APT for deb content": [
-        "deb 콘텐츠를 위해 구조화된 APT 활성화"
-      ],
       "Enable/Disable auto publish of composite view": [
         "합성 뷰의 자동 게시 활성화/비활성화"
       ],
@@ -2648,6 +2738,9 @@
       "Environment cannot be in its own promotion path": [
         "환경은 자체 승격 경로에 존재할 수 없음 "
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "환경 식별자"
       ],
@@ -2686,6 +2779,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "에라타의 에라타 ID (RHSA-2012:108)"
+      ],
+      "Errata mail": [
+        ""
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "UUID %s가 있는 삭제된 콘텐츠 패싯에 대한 에라타 상태가 업데이트되지 않음 "
@@ -2852,6 +2948,9 @@
       "Fetch installable errata for one or more hosts.": [
         "하나 이상의 호스트에 대한 설치 가능한 오류를 가져옵니다."
       ],
+      "Fetch pxe files": [
+        ""
+      ],
       "Fetch traces for one or more hosts": [
         "하나 이상의 호스트에 대한 추적을 가져옵니다."
       ],
@@ -2945,6 +3044,9 @@
       "Filter versions that are components in the specified composite version": [
         "지정된 복합 버전에 있는 구성 요소인 버전을 필터링 "
       ],
+      "Filtered index content": [
+        ""
+      ],
       "Filters": [
         "필터 "
       ],
@@ -2965,6 +3067,9 @@
       ],
       "Finished": [
         "마쳤음"
+      ],
+      "Flatpak": [
+        ""
       ],
       "Flatpak Remote ${name} created": [
         "Flatpak 원격 ${name} 생성됨"
@@ -3055,6 +3160,9 @@
       ],
       "Generate host applicability": [
         "호스트 적용성 생성"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "리포지토리 적용성 생성"
@@ -3296,6 +3404,12 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         "정렬된 결고를 정렬하는 방법 (예: 오름차순의 ASC) "
       ],
+      "Hypervisors": [
+        ""
+      ],
+      "Hypervisors update": [
+        ""
+      ],
       "ID": [
         "ID"
       ],
@@ -3482,9 +3596,6 @@
       "If product certificates should be used to authenticate to a custom CDN.": [
         "사용자 지정 CDN에 대한 인증에 제품 인증서를 사용해야 하는지 여부입니다."
       ],
-      "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
-        "설정된 경우 Katello에서 새로 생성된 APT 리포지터리는 동기화되는 원격 리포지토리와 동일한 리포지토리 구조를 사용합니다. 'foreman-rake katello:migrate_content_for_deb'를 실행하여 기존 APT 리포지터리를 해당 설정과 일치하도록 마이그레이션할 수 있습니다."
-      ],
       "If the smart proxies' assigned HTTP proxies should be used": [
         "스마트 프록시에 할당된 HTTP 프록시를 사용해야 하는 경우"
       ],
@@ -3614,6 +3725,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "호스트가 Red Hat 콘텐츠에 액세스할 수 있도록 서브스크립션 매니페스트를 가져옵니다."
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         "새로운 매니페스트 가져오기"
       ],
@@ -3622,6 +3736,12 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "가져오기 전용 콘텐츠 뷰는 직접 게시할 수 없습니다. 콘텐츠는 뷰로 가져오기를 통해서만 업데이트할 수 있습니다."
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "리포지터리에 업로드 가져오기 "
@@ -3689,6 +3809,9 @@
       "Incremental Update incomplete.": [
         "증분 업데이트가 완료되지 않았습니다. "
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        ""
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 콘텐츠 뷰 버전의 증분 업데이트"
       ],
@@ -3701,11 +3824,26 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "복합 %{name} v버전 %{version}에 대해 증분 업데이트가 지정되었지만 구성 요소가 업데이트되지 않았습니다."
       ],
+      "Index content": [
+        ""
+      ],
+      "Index errata": [
+        ""
+      ],
+      "Index module streams": [
+        ""
+      ],
+      "Index package groups": [
+        ""
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "정보 유형은 다음 중 하나이어야 합니다 [ %{list} ]"
       ],
       "Inherit from Repository": [
         "리포지토리에서 상속"
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "동기화 계획에 연결된 제품 동기화 시작"
@@ -3782,8 +3920,14 @@
       "Installing Package...": [
         "패키지 설치 중..."
       ],
+      "Instance update": [
+        ""
+      ],
       "Instance-based": [
         "인스턴스 기반 "
+      ],
+      "Insufficient space for selected hosts": [
+        ""
       ],
       "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.": [
         "지정한 객체를 해석하여 지정한 객체에 연결할 수 있는 호스트 컬렉션만 반환합니다. 값 '호스트'가 지원됩니다."
@@ -4019,6 +4163,15 @@
       "Label of the flatpak remote": [
         "flatpak 원격의 레이블"
       ],
+      "Labels": [
+        ""
+      ],
+      "Labels and annotations": [
+        ""
+      ],
+      "Labels | Annotations": [
+        ""
+      ],
       "Last check-in:": [
         "마지막 체크인:"
       ],
@@ -4120,6 +4273,9 @@
       ],
       "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
         "기본 스마트 프록시에서는 라이프사이클 환경을 수정할 수 없습니다. 모든 라이프사이클 환경의 콘텐츠는 이 스마트 프록시에 존재합니다."
+      ],
+      "Limit": [
+        ""
       ],
       "Limit actions to content in the host's environment.": [
         "호스트 환경 내의 콘텐츠에 대한 작업을 제한합니다."
@@ -4451,11 +4607,17 @@
       "Manifest": [
         "매니페스트"
       ],
+      "Manifest Details": [
+        ""
+      ],
       "Manifest History": [
         "매니페스트 기록 "
       ],
       "Manifest deleted": [
         "매니페스트 삭제됨"
+      ],
+      "Manifest digest": [
+        ""
       ],
       "Manifest does not have a valid subscription": [
         "매니페스트에 유효한 서브스크립션이 없습니다."
@@ -4541,6 +4703,9 @@
       "Messaging connection": [
         "메시징 연결"
       ],
+      "Metadata generate": [
+        ""
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "'완전 미러링' 리포지터리에서 메타데이터 재게시는 위험합니다. 미러링 정책을 변경하고 다시 시도하세요. 또는 '강제' 매개변수를 사용하여 로컬에서 메타데이터를 재생성하세요. 다음 동기화에서 업스트림 리포지터리의 메타데이터는 '완전 미러링' 리포지터리의 로컬 메타데이터를 덮어씁니다."
       ],
@@ -4577,6 +4742,9 @@
       "Moderate": [
         "중간 수준"
       ],
+      "Modified": [
+        ""
+      ],
       "Modify via remote execution": [
         "원격 실행을 통해 수정"
       ],
@@ -4603,6 +4771,15 @@
       ],
       "Multi Content View Environment": [
         "다중 콘텐츠 뷰 환경"
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
+        ""
       ],
       "Multi-entitlement": [
         "멀티 인타이틀먼트 "
@@ -4897,6 +5074,9 @@
       ],
       "No items have been specified.": [
         "지정된 항목이 없습니다."
+      ],
+      "No labels": [
+        ""
       ],
       "No manifest file uploaded": [
         "업로드된 매니페스트 파일이 없음 "
@@ -5236,6 +5416,9 @@
       ],
       "Organization label '%s' is ambiguous. Try using an id-based container name.": [
         "조직 레이블 '%s '는 모호합니다. id 기반 컨테이너 이름을 사용해 보세요."
+      ],
+      "Organization must be specified when providing product by name.": [
+        ""
       ],
       "Organization not found": [
         "조직을 찾을 수 없습니다"
@@ -5636,6 +5819,9 @@
       "Product label '%s' is ambiguous. Try using an id-based container name.": [
         "제품 라벨 '%s '는 모호합니다. id 기반 컨테이너 이름을 사용해 보세요."
       ],
+      "Product must be specified.": [
+        ""
+      ],
       "Product name": [
         "제품 이름 "
       ],
@@ -5798,6 +5984,9 @@
       "Pulp task error": [
         "Pulp 작업 오류 "
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         "Python 패키지"
       ],
@@ -5897,6 +6086,9 @@
       "Reclaim Space": [
         "공간 회수"
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         "온디맨드 리포지토리에서 공간 회수"
       ],
@@ -5963,6 +6155,9 @@
       "Refresh all alternate content sources": [
         "모든 대체 콘텐츠 소스 새로 고침"
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         "대체 콘텐츠 소스 새로 고침"
       ],
@@ -5975,14 +6170,26 @@
       "Refresh counts": [
         "새로 고침 횟수"
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
         "에라타 적용 가능성 새로 고침"
+      ],
+      "Refresh if needed": [
+        ""
       ],
       "Refresh package applicability": [
         "패키지 적용 가능성 새로 고침"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Red Hat 공급자에 대해 이전에 가져온 매니페스트를 새로 고침 "
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         "소스 새로 고침"
@@ -6024,6 +6231,9 @@
         "레지스트리 이름 패턴으로 인해 멤버 리포지터리의 잘못된 컨테이너 이미지 이름이 생성됩니다."
       ],
       "Registry token expiration time": [
+        ""
+      ],
+      "Reindex subscriptions": [
         ""
       ],
       "Related composite content views": [
@@ -6101,6 +6311,9 @@
       "Remove from environments": [
         "환경에서 제거"
       ],
+      "Remove from host collections": [
+        ""
+      ],
       "Remove host from collections": [
         "컬렉션에서 호스트 제거"
       ],
@@ -6122,6 +6335,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "업스트림 매니페스트에서 하나 이상의 서브스크립션 제거"
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Katello 인터페이스를 통해 패키지 그룹 삭제"
       ],
@@ -6137,11 +6353,23 @@
       "Remove products from sync plan": [
         "동기화 계획에서 제품 삭제 "
       ],
+      "Remove rolling repo clone": [
+        ""
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
+      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "컨텐츠 뷰에서 버전 및 환경 삭제 후 시스템 및 키 다시 지정 "
       ],
       "Remove versions from environments": [
         "환경에서 버전 제거"
+      ],
+      "Removed %{count} host(s) from host collection %{host_collection}.": [
+        ""
       ],
       "Removed component from content view": [
         "콘텐츠 보기에서 구성 요소를 제거했습니다."
@@ -6161,6 +6389,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "모든 환경에서 이 버전을 제거해도 버전은 삭제되지 않습니다. 버전은 나중에 승격에 사용할 수 있습니다."
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         "대상 컴퓨터에서 콘텐츠 소스를 교체"
       ],
@@ -6179,11 +6410,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "CDN 구성이 Air-gapped(연결 끊김)로 설정되어 있는 동안에는 리포지터리를 사용할 수 없습니다."
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "선택한 콘텐츠 뷰 버전에 공통된 리포지토리는 병합되어 각 콘텐츠 뷰 버전의 모든 콘텐츠를 합친 복합 콘텐츠 뷰가 생성됩니다."
       ],
       "Repositories from published Content Views are not allowed.": [
         "공개된 컨텐츠 뷰에서 리포지터리는 허용되지 않습니다. "
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repository": [
         "리포지터리 "
@@ -6349,6 +6586,9 @@
       ],
       "Result": [
         "결과 "
+      ],
+      "Retain build profile upon unregistration": [
+        ""
       ],
       "Retrieve a single errata for a host": [
         "호스트에 대한 단일 에라타를 가져옵니다."
@@ -6542,6 +6782,21 @@
       "Save Environments": [
         ""
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "대체 콘텐츠 소스를 저장 중입니다..."
       ],
@@ -6550,6 +6805,12 @@
       ],
       "Scan a flatpak remote": [
         "flatpak 원격 스캔"
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
+        ""
       ],
       "Schema version 1": [
         "스키마 버전 1"
@@ -6598,6 +6859,9 @@
       ],
       "Security errata installable": [
         "보안 에라타 설치 가능"
+      ],
+      "See child manifests": [
+        ""
       ],
       "Select": [
         "선택 "
@@ -6709,6 +6973,9 @@
       ],
       "Select host collection(s) to remove from host {hostName}.": [
         "{hostName} 호스트에서 제거할 호스트 컬렉션을 선택하세요."
+      ],
+      "Select host collections to change their associations with {selectedHosts}. Changing host collection will affect all your selected hosts. Some hosts may already be in your chosen collections.": [
+        ""
       ],
       "Select hosts to assign to %s": [
         "%s에 할당할 호스트 선택 "
@@ -6829,6 +7096,9 @@
       ],
       "Severity must be one of: %s": [
         "심각도는 다음 중 하나여야 합니다. %s"
+      ],
+      "Show ${remainingCount} more": [
+        ""
       ],
       "Show %s": [
         "%s 표시"
@@ -7313,9 +7583,6 @@
       "Successfully added %s Host(s).": [
         "%s개의 호스트를 추가했습니다."
       ],
-      "Successfully added %{count} content host(s) to host collection %{host_collection}.": [
-        "호스트 컬렉션 %{host_collection}에 %{count} 컨텐츠 호스트를 성공적으로 추가했습니다. "
-      ],
       "Successfully changed sync plan for %s product(s)": [
         "%s 제품의 동기화 계획을 성공적으로 변경했습니다 "
       ],
@@ -7327,9 +7594,6 @@
       ],
       "Successfully removed %s Host(s).": [
         "%s개의 호스트를 삭제했습니다."
-      ],
-      "Successfully removed %{count} content host(s) from host collection %{host_collection}.": [
-        "호스트 컬렉션 %{host_collection}에서 %{count} 컨텐츠 호스트를 성공적으로 삭제했습니다. "
       ],
       "Successfully synced capsule.": [
         "캡슐을 성공적으로 동기화했습니다."
@@ -7348,6 +7612,9 @@
       ],
       "Supported Content Types": [
         "지원되는 콘텐츠 유형"
+      ],
+      "Sync": [
+        ""
       ],
       "Sync Canceled": [
         "동기화 취소 "
@@ -7403,6 +7670,9 @@
       "Sync all repositories for a product": [
         "제품의 모든 리포지터리 동기화"
       ],
+      "Sync capsule": [
+        ""
+      ],
       "Sync complete.": [
         "동기화가 완료되었습니다. "
       ],
@@ -7421,6 +7691,9 @@
       "Sync state": [
         "동기화 상태"
       ],
+      "Syncable export": [
+        ""
+      ],
       "Synced": [
         "동기화됨"
       ],
@@ -7429,9 +7702,6 @@
       ],
       "Synced Content": [
         "동기화된 콘텐츠"
-      ],
-      "Synced container images content": [
-        ""
       ],
       "Synchronize": [
         "동기화 "
@@ -7474,6 +7744,9 @@
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
         "시스템 목적은 네트워크에서 시스템의 용도를 설정할 수 있으며 Red Hat Hybrid Cloud Console의 서브스크립션 서비스에서 보고 정확도를 향상시킬 수 있습니다."
+      ],
+      "Tag": [
+        ""
       ],
       "Tag name": [
         "태그 이름"
@@ -7925,6 +8198,9 @@
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
         "콘텐츠 뷰에서 특정 콘텐츠를 포함하거나 제외하려면 필터를 만듭니다. 필터가 없으면 콘텐츠 뷰에는 추가된 리포지토리의 모든 것이 포함됩니다."
       ],
+      "To manage host collections, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "To manage host content overrides, a specific organization must be selected from the organization context.": [
         "호스트 콘텐츠 재정의를 관리하려면 조직 컨텍스트에서 특정 조직을 선택해야 합니다."
       ],
@@ -8243,14 +8519,26 @@
       "Update content counts for the smart proxy": [
         "스마트 프록시에 대한 콘텐츠 수 업데이트"
       ],
+      "Update content urls": [
+        ""
+      ],
       "Update content view environments for host": [
         "호스트에 대한 콘텐츠 뷰 환경 업데이트"
       ],
       "Update content view environments for host %s": [
         "호스트%s에 대한 콘텐츠 뷰 환경 업데이트"
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         "호스트를 수동으로 업데이트"
+      ],
+      "Update http proxy": [
+        ""
+      ],
+      "Update http proxy details": [
+        ""
       ],
       "Update installed packages, enabled repos, module inventory": [
         "설치된 패키지, 활성화된 리포지토리, 모듈 인벤토리 업데이트"
@@ -8267,11 +8555,20 @@
       "Update packages via Katello interface": [
         "Katello 인터페이스를 통해 패키지 업데이트"
       ],
+      "Update redhat repository": [
+        ""
+      ],
       "Update release version for host": [
         "호스트에 대한 릴리스 버전 업데이트"
       ],
       "Update release version for host %s": [
         "호스트%s에 대한 릴리스 버전 업데이트"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "재시작이 필요한 서비스 업데이트"
@@ -8363,6 +8660,12 @@
       "Upload a subscription manifest": [
         "서브스크립션 매니페스트 업로드 "
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "업로드 "
       ],
@@ -8371,6 +8674,9 @@
       ],
       "Upload request id": [
         "요청 ID 업로드 "
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "Candlepin 업스트림"
@@ -8487,10 +8793,13 @@
         "값은 '활성화됨'의 경우 부울이거나 '기본값'이어야 합니다."
       ],
       "Verify Content Checksum": [
-        ""
+        "컨텐츠 Checksum 확인"
       ],
       "Verify SSL": [
         "SSL 확인 "
+      ],
+      "Verify checksum": [
+        ""
       ],
       "Verify checksum for content on smart proxy": [
         "스마트 프록시의 콘텐츠에 대한 체크섬 확인"
@@ -8585,6 +8894,15 @@
       "View documentation": [
         "문서 보기"
       ],
+      "View here": [
+        ""
+      ],
+      "View labels and annotations": [
+        ""
+      ],
+      "View labels and annotations for image ": [
+        ""
+      ],
       "View matching content": [
         "일치하는 콘텐츠 보기"
       ],
@@ -8623,6 +8941,9 @@
       ],
       "When \\\"Upstream URL\\\" is set, \\\"Releases/Distributions\\\" must also be set!": [
         "\\\"업스트림 URL\\\"이 설정되면 \\\"릴리스/배포\\\"도 설정해야 합니다!"
+      ],
+      "When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration.": [
+        ""
       ],
       "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')": [
         "subscription-manager를 통해 호스트를 등록할 때 지정된 팩트(‘fact.fact’ 형식)을 강제로 사용합니다."

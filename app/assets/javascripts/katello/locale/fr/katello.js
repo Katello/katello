@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.19.0.pre.master",
+        "Project-Id-Version": "katello 4.19.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ondřej Gajdušek, 2025",
+        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2025",
         "Language-Team": "French (https://app.transifex.com/foreman/teams/114/fr/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -109,6 +109,9 @@
       ],
       "${selectedContentType} will appear here when created.": [
         "${selectedContentType} apparaîtra ici lors de sa création."
+      ],
+      "${totalCount} labels and annotations": [
+        ""
       ],
       "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?": [
         "%s%s a %s Hôtes et %s Groupes d’hôtes qui devront être réassociés après la suppression. Supprimer %s ?"
@@ -463,6 +466,9 @@
       "About page": [
         "Page d'accueil"
       ],
+      "Abstract async task": [
+        ""
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "L'accès à la gestion des abonnements Red Hat est interdit. Si vous souhaitez modifier cette interdiction, veuillez mettre à jour le paramètre de contenu \\\"Connexion aux abonnements activée\\\"."
       ],
@@ -610,6 +616,9 @@
       "Add repositories with package groups to content view to select them here.": [
         "Ajouter des référentiels avec des groupes de paquets à l’affichage de contenu pour les sélectionner ici."
       ],
+      "Add rolling repo clone": [
+        ""
+      ],
       "Add rule": [
         "Ajouter une règle"
       ],
@@ -628,11 +637,17 @@
       "Add to a host collection": [
         "Ajouter à une collection d'hôtes"
       ],
+      "Add to host collections": [
+        ""
+      ],
       "Added": [
         "Ajouté"
       ],
       "Added %s": [
         "%s Ajouté"
+      ],
+      "Added %{count} host(s) to host collection %{host_collection}.": [
+        ""
       ],
       "Added Content:": [
         "Contenu ajouté :"
@@ -675,6 +690,9 @@
       ],
       "All errata up-to-date": [
         "Tous les errata sont à jour"
+      ],
+      "All selected hosts were already members of host collection %{host_collection}.": [
+        ""
       ],
       "All subpaths must have a slash at the end and none at the front": [
         "Tous les sous-chemins doivent avoir une barre oblique à la fin et aucune au début"
@@ -756,6 +774,9 @@
       ],
       "An error occurred during upload \\n%{error_message}": [
         "Une erreur s'est produite lors de la synchronisation %{error_message}"
+      ],
+      "An error occurred while updating host collections": [
+        ""
       ],
       "An option to specify how many ostree commits to traverse.": [
         "Une option pour spécifier le nombre de commits ostree à parcourir."
@@ -1043,6 +1064,9 @@
       ],
       "Bookmarks marked as public are available to all users": [
         "Les signets marqués comme étant publics sont disponibles à tous les utilisateurs"
+      ],
+      "Bootable": [
+        ""
       ],
       "Bootc rollback via Bootc interface": [
         "Restauration de Bootc via l'interface Bootc"
@@ -1368,6 +1392,9 @@
       "Change content view environments": [
         "Modifier les environnements d'affichage de contenu"
       ],
+      "Change host collections": [
+        ""
+      ],
       "Change host content source": [
         "Changer la source du contenu de l'hôte"
       ],
@@ -1454,6 +1481,9 @@
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "Liste de balises séparées par des virgules à synchroniser pour le référentiel d'images des conteneurs"
+      ],
+      "Commit upload": [
+        ""
       ],
       "Compare": [
         "Comparez"
@@ -1809,14 +1839,26 @@
       "Copy": [
         "Copie"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "Copier une clé d'activation|"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "Copier l’affichage de contenu"
       ],
       "Copy to clipboard": [
         "Copier dans le presse-papiers"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        ""
       ],
       "Cores per socket": [
         "Cores par socket"
@@ -2031,17 +2073,35 @@
       "Create content view": [
         "Créer Affichage du contenu"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "Créer un filtre"
       ],
       "Create host collection": [
         "Créer Collection d'hôtes"
       ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
+        ""
+      ],
       "Create new activation key": [
         "Créer une nouvelle clé d'activation"
       ],
       "Create organization": [
         "Créer une organisation"
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
+      ],
+      "Creation": [
+        ""
       ],
       "Credentials": [
         "Identifiants"
@@ -2304,11 +2364,35 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         "Supprimez les filtres d'affichage de contenu qui ont ce référentiel comme dernier référentiel associé. La valeur par défaut est vrai. S'ils sont sur faux, ces filtres s'appliqueront désormais à tous les référentiels dans la vue du contenu."
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Supprimer le fichier manifeste du fournisseur Red Hat"
       ],
       "Delete multiple filters from a content view": [
         "Supprimer plusieurs filtres d'affichage de contenu"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete orphaned migrated repositories": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         "Supprimer la version"
@@ -2409,6 +2493,12 @@
       "Destroy an environment in an organization": [
         "Détruire un environnement dans une organisation"
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         "Détruire une ou plusieurs sources de contenu alternatives"
       ],
@@ -2453,6 +2543,9 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         "La désactivation de l'accès au contenu simple a échoué pour '%{subject}'."
+      ],
+      "Discover": [
+        ""
       ],
       "Discover Repositories": [
         "Découvrir des référentiels"
@@ -2589,9 +2682,6 @@
       "Enable repository sets": [
         "Activer les ensembles de référentiels"
       ],
-      "Enable structured APT for deb content": [
-        "Activer l'APT structuré pour le contenu deb"
-      ],
       "Enable/Disable auto publish of composite view": [
         "Activer/désactiver la publication automatique de la vue composite"
       ],
@@ -2652,6 +2742,9 @@
       "Environment cannot be in its own promotion path": [
         "L'environnement ne peut pas se trouver dans son propre chemin de promotion"
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "Identifiant d'environnement"
       ],
@@ -2690,6 +2783,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "Id de l'erratum (RHSA-2012:108)"
+      ],
+      "Errata mail": [
+        ""
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "Les statuts d'errata ne sont pas mis à jour pour la facette de contenu supprimée avec UUID %s"
@@ -2856,6 +2952,9 @@
       "Fetch installable errata for one or more hosts.": [
         "Récupérer les errata installables pour un ou plusieurs hôtes."
       ],
+      "Fetch pxe files": [
+        ""
+      ],
       "Fetch traces for one or more hosts": [
         "Rechercher traces pour un ou plusieurs hôtes"
       ],
@@ -2949,6 +3048,9 @@
       "Filter versions that are components in the specified composite version": [
         "Filtrer les versions composantes dans la version composite spécifiée"
       ],
+      "Filtered index content": [
+        ""
+      ],
       "Filters": [
         "Filtres"
       ],
@@ -2969,6 +3071,9 @@
       ],
       "Finished": [
         "Terminé"
+      ],
+      "Flatpak": [
+        ""
       ],
       "Flatpak Remote ${name} created": [
         "Télécommande Flatpak ${name} créé"
@@ -3059,6 +3164,9 @@
       ],
       "Generate host applicability": [
         "Générer l'applicabilité à l'hôte"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "Générer l'applicabilité du référentiel"
@@ -3300,6 +3408,12 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Comment classer les résultats triés (ex : ASC for pour croissant)"
       ],
+      "Hypervisors": [
+        ""
+      ],
+      "Hypervisors update": [
+        ""
+      ],
       "ID": [
         "ID"
       ],
@@ -3486,9 +3600,6 @@
       "If product certificates should be used to authenticate to a custom CDN.": [
         "Si les certificats de produit doivent être utilisés pour s’authentifier auprès d’un CDN personnalisé."
       ],
-      "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
-        "Si ce paramètre est défini, les référentiel APT nouvellement créés dans Katello utiliseront la même structure de référentiel que les référentiels distants à partir desquels ils sont synchronisés. Vous pouvez migrer les référentiels APT existants pour qu'ils correspondent au paramètre, en exécutant « foreman-rake katello:migrate_structure_content_for_deb »."
-      ],
       "If the smart proxies' assigned HTTP proxies should be used": [
         "Si les proxys HTTP attribués aux proxys smart doivent être utilisés"
       ],
@@ -3618,6 +3729,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "Importez un manifeste d'abonnement pour permettre aux hôtes d'accéder au contenu Red Hat."
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         "Importer un nouveau manifeste"
       ],
@@ -3626,6 +3740,12 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "Les affichages de contenu importés ne peuvent pas être publiés directement. Le contenu ne peut être mis à jour qu'en l'important dans la vue."
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "Importer les téléchargements dans un référentiel"
@@ -3693,6 +3813,9 @@
       "Incremental Update incomplete.": [
         "Mise à jour incrémentielle incomplète."
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        ""
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Mise à jour incrémentielle de %{content_view_count}Version(s) d'affichage de contenu "
       ],
@@ -3705,11 +3828,26 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "Mise à jour croissante spécifiée pour le composite %{name} version %{version}, mais aucun composant mis à jour."
       ],
+      "Index content": [
+        ""
+      ],
+      "Index errata": [
+        ""
+      ],
+      "Index module streams": [
+        ""
+      ],
+      "Index package groups": [
+        ""
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Le type Informable doit être l'un parmi [%{list} ]"
       ],
       "Inherit from Repository": [
         "Hérité du référentiel"
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "Initier une synchronisation des produits attachés au plan de synchronisation"
@@ -3786,8 +3924,14 @@
       "Installing Package...": [
         "Installation du paquet..."
       ],
+      "Instance update": [
+        ""
+      ],
       "Instance-based": [
         "Basé sur l'instance"
+      ],
+      "Insufficient space for selected hosts": [
+        ""
       ],
       "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.": [
         "Interprète l'objet spécifié à retourner uniquement les Collections d'hôtes qui peuvent être associées à l'objet spécifié. La valeur 'hôte' est prise en charge."
@@ -4023,6 +4167,15 @@
       "Label of the flatpak remote": [
         "Libellé flatpak remote"
       ],
+      "Labels": [
+        ""
+      ],
+      "Labels and annotations": [
+        ""
+      ],
+      "Labels | Annotations": [
+        ""
+      ],
       "Last check-in:": [
         "Dernière vérification :"
       ],
@@ -4124,6 +4277,9 @@
       ],
       "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
         "Les environnements du cycle de vie ne peuvent pas être modifiés sur le proxy smart par défaut.  Le contenu de tous les environnements de cycle de vie existera sur ce proxy smart."
+      ],
+      "Limit": [
+        ""
       ],
       "Limit actions to content in the host's environment.": [
         "Limitez les actions au contenu de l'environnement de l'hôte."
@@ -4455,11 +4611,17 @@
       "Manifest": [
         "Manifeste"
       ],
+      "Manifest Details": [
+        ""
+      ],
       "Manifest History": [
         "L'historique du manifeste"
       ],
       "Manifest deleted": [
         "Manifeste supprimé"
+      ],
+      "Manifest digest": [
+        ""
       ],
       "Manifest does not have a valid subscription": [
         "Le manifeste n’a pas d’abonnement valide"
@@ -4545,6 +4707,9 @@
       "Messaging connection": [
         "Connexion à la messagerie"
       ],
+      "Metadata generate": [
+        ""
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "La republication des métadonnées est risquée sur les référentiels « Complete Mirroring ». Modifiez la politique de mise en miroir et réessayez. Vous pouvez également utiliser le paramètre « force » pour régénérer les métadonnées localement. Lors de la prochaine synchronisation, les métadonnées du référentiel en amont écraseront les métadonnées locales des référentiels « Complete Mirroring »."
       ],
@@ -4581,6 +4746,9 @@
       "Moderate": [
         "Modéré"
       ],
+      "Modified": [
+        ""
+      ],
       "Modify via remote execution": [
         "Modifier via l'exécution à distance"
       ],
@@ -4607,6 +4775,15 @@
       ],
       "Multi Content View Environment": [
         "Environnement d'affichage multi-contenu"
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
+        ""
       ],
       "Multi-entitlement": [
         "Droits d’accès multiples"
@@ -4901,6 +5078,9 @@
       ],
       "No items have been specified.": [
         "Aucun objet n'a été spécifié."
+      ],
+      "No labels": [
+        ""
       ],
       "No manifest file uploaded": [
         "Aucun fichier manifeste téléchargé"
@@ -5240,6 +5420,9 @@
       ],
       "Organization label '%s' is ambiguous. Try using an id-based container name.": [
         "Le libellé d'organisation '%s \\\" est ambigu. Essayez d'utiliser un nom de conteneur basé sur un identifiant."
+      ],
+      "Organization must be specified when providing product by name.": [
+        ""
       ],
       "Organization not found": [
         "Organisation non trouvée"
@@ -5640,6 +5823,9 @@
       "Product label '%s' is ambiguous. Try using an id-based container name.": [
         "Le libellé du produit '%s \\\" est ambigu. Essayez d'utiliser un nom de conteneur basé sur un identifiant."
       ],
+      "Product must be specified.": [
+        ""
+      ],
       "Product name": [
         "Nom du produit"
       ],
@@ -5802,6 +5988,9 @@
       "Pulp task error": [
         "Erreur de tâche pulp"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         "Paquet Python"
       ],
@@ -5901,6 +6090,9 @@
       "Reclaim Space": [
         "Récupération d’espace"
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         "Récupérer l’espace en provenance des référentiels Sur demande"
       ],
@@ -5967,6 +6159,9 @@
       "Refresh all alternate content sources": [
         "Actualiser toutes les sources de contenu alternatives"
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         "Réactualiser les sources de contenu alternatives"
       ],
@@ -5979,14 +6174,26 @@
       "Refresh counts": [
         "Actualiser le nombre"
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
         "Actualiser l'applicabilité des errata"
+      ],
+      "Refresh if needed": [
+        ""
       ],
       "Refresh package applicability": [
         "Actualiser l’applicabilité du package"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Actualiser le fichier manifeste importé précédemment pour le fournisseur de Red Hat"
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         "Source de rafraîchissement"
@@ -6028,6 +6235,9 @@
         "Le modèle de nom de registre entraînera l'invalidation du nom de l'image de conteneur des référentiels membres"
       ],
       "Registry token expiration time": [
+        ""
+      ],
+      "Reindex subscriptions": [
         ""
       ],
       "Related composite content views": [
@@ -6105,6 +6315,9 @@
       "Remove from environments": [
         "Supprimer des environnements"
       ],
+      "Remove from host collections": [
+        ""
+      ],
       "Remove host from collections": [
         "Retirer l'hôte des collections"
       ],
@@ -6126,6 +6339,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "Supprimer un ou plusieurs abonnements d'un manifeste amont"
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Supprimer un groupe de packages via l'interface Katello"
       ],
@@ -6141,11 +6357,23 @@
       "Remove products from sync plan": [
         "Supprimer les produits du plan de sync"
       ],
+      "Remove rolling repo clone": [
+        ""
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
+      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Supprimer les versions et/ou les environnements de l'affichage de contenu et assigner les systèmes et les clés à nouveau"
       ],
       "Remove versions from environments": [
         "Supprimer les versions des environnements"
+      ],
+      "Removed %{count} host(s) from host collection %{host_collection}.": [
+        ""
       ],
       "Removed component from content view": [
         "Composant supprimé de l'affichage du contenu"
@@ -6165,6 +6393,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "Supprimer cette version de tous les environnement n’aura pas pour effet de supprimer la version. La version sera toujours disponible pour une promotion ultérieure."
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         "Remplacer la source de contenu sur la machine cible"
       ],
@@ -6183,11 +6414,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "Les référentiels ne sont pas disponibles pour l'activation lorsque la configuration du CDN est définie sur Air-gapped (déconnecté)."
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "Les référentiels communs aux versions d'affichage de contenu sélectionnées fusionneront, ce qui donnera une vue de contenu composite qui est une union de tout le contenu de chacune des versions d'affichage de contenu."
       ],
       "Repositories from published Content Views are not allowed.": [
         "Les référentiels des affichages de contenu publiés ne sont pas autorisés."
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repository": [
         "Référentiel"
@@ -6353,6 +6590,9 @@
       ],
       "Result": [
         "Résultat"
+      ],
+      "Retain build profile upon unregistration": [
+        ""
       ],
       "Retrieve a single errata for a host": [
         "Extraire un seul errata de l'hôte"
@@ -6546,6 +6786,21 @@
       "Save Environments": [
         ""
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "Mise à jour de la source de contenu alternatif..."
       ],
@@ -6554,6 +6809,12 @@
       ],
       "Scan a flatpak remote": [
         "Numériser une télécommande Flatpak"
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
+        ""
       ],
       "Schema version 1": [
         "Schéma Version 1"
@@ -6602,6 +6863,9 @@
       ],
       "Security errata installable": [
         "Errata de sécurité installable"
+      ],
+      "See child manifests": [
+        ""
       ],
       "Select": [
         "Sélectionner"
@@ -6714,6 +6978,9 @@
       "Select host collection(s) to remove from host {hostName}.": [
         "Sélectionnez la ou les collections d'hôtes à supprimer de l'hôte {hostName}."
       ],
+      "Select host collections to change their associations with {selectedHosts}. Changing host collection will affect all your selected hosts. Some hosts may already be in your chosen collections.": [
+        ""
+      ],
       "Select hosts to assign to %s": [
         "Sélectionner les hôtes à assigner à %s"
       ],
@@ -6793,7 +7060,7 @@
         "Niveau de service (SLA)"
       ],
       "Service level": [
-        ""
+        "Niveau de service"
       ],
       "Service level of host": [
         "Niveau de service (SLA) de l’hôte"
@@ -6833,6 +7100,9 @@
       ],
       "Severity must be one of: %s": [
         "Une sévérité doit être choisie parmi %s"
+      ],
+      "Show ${remainingCount} more": [
+        ""
       ],
       "Show %s": [
         "Afficher %s"
@@ -7317,9 +7587,6 @@
       "Successfully added %s Host(s).": [
         "%s Hôte(s) ajoutés."
       ],
-      "Successfully added %{count} content host(s) to host collection %{host_collection}.": [
-        "%{count} hôte(s) de contenu a/ont été ajouté(s) à la collection d'hôtes %{host_collection}."
-      ],
       "Successfully changed sync plan for %s product(s)": [
         "Le plan de sync de %s produit(s) a été modifié avec succès"
       ],
@@ -7331,9 +7598,6 @@
       ],
       "Successfully removed %s Host(s).": [
         "%s Hôte(s) supprimés."
-      ],
-      "Successfully removed %{count} content host(s) from host collection %{host_collection}.": [
-        "%{count}hôte(s) de contenu a/ont été supprimé(s) de la collection d'hôtes %{host_collection}."
       ],
       "Successfully synced capsule.": [
         "La capsule a été synchronisée avec succès."
@@ -7352,6 +7616,9 @@
       ],
       "Supported Content Types": [
         "Types de contenu pris en charge"
+      ],
+      "Sync": [
+        ""
       ],
       "Sync Canceled": [
         "Sync Annulée"
@@ -7407,6 +7674,9 @@
       "Sync all repositories for a product": [
         "Synchroniser tous les référentiels d'un produit"
       ],
+      "Sync capsule": [
+        ""
+      ],
       "Sync complete.": [
         "Sync Terminée."
       ],
@@ -7425,6 +7695,9 @@
       "Sync state": [
         "État de synchronisation"
       ],
+      "Syncable export": [
+        ""
+      ],
       "Synced": [
         "Synchronisé"
       ],
@@ -7433,9 +7706,6 @@
       ],
       "Synced Content": [
         "Contenu synchronisé"
-      ],
-      "Synced container images content": [
-        ""
       ],
       "Synchronize": [
         "Synchroniser"
@@ -7478,6 +7748,9 @@
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
         "L'objectif du système vous permet de définir l'utilisation prévue du système sur votre réseau et améliore la précision des rapports dans le service Abonnements de la console Red Hat Hybrid Cloud."
+      ],
+      "Tag": [
+        ""
       ],
       "Tag name": [
         "Nom de la balise"
@@ -7929,6 +8202,9 @@
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
         "Pour inclure ou exclure un contenu spécifique de l’affichage de contenu, créez un filtre. Sans filtre, l’affichage de contenu inclut tout ce qui provient des référentiels ajoutés."
       ],
+      "To manage host collections, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "To manage host content overrides, a specific organization must be selected from the organization context.": [
         "Pour gérer les remplacements de contenu d'hôte, une organisation spécifique doit être sélectionnée dans le contexte de l'organisation."
       ],
@@ -8247,14 +8523,26 @@
       "Update content counts for the smart proxy": [
         "Mettre à jour le nombre de contenus pour le proxy intelligent"
       ],
+      "Update content urls": [
+        ""
+      ],
       "Update content view environments for host": [
         "Mettre à jour les environnements d'affichage de contenu pour l'hôte"
       ],
       "Update content view environments for host %s": [
         "Mettre à jour les environnements d'affichage de contenu pour l'hôte %s"
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         "Mettre à jour les hôtes manuellement"
+      ],
+      "Update http proxy": [
+        ""
+      ],
+      "Update http proxy details": [
+        ""
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Mise à jour des packages installés, activation des repos, inventaire des modules"
@@ -8271,11 +8559,20 @@
       "Update packages via Katello interface": [
         "Mise à jour du paquet via l'interface Katello"
       ],
+      "Update redhat repository": [
+        ""
+      ],
       "Update release version for host": [
         "Mettre à jour la version de publication pour l'hôte"
       ],
       "Update release version for host %s": [
         "Mettre à jour la version de publication pour l'hôte %s"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "Mise à jour des services nécessitant un redémarrage"
@@ -8367,6 +8664,12 @@
       "Upload a subscription manifest": [
         "Télécharger un fichier manifeste d'abonnement"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "Téléverser vers"
       ],
@@ -8375,6 +8678,9 @@
       ],
       "Upload request id": [
         "Télécharger l'id de requête"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "Chandelle en amont"
@@ -8491,10 +8797,13 @@
         "La valeur doit être soit un booléen, soit la valeur par défaut de \\\"enabled\\\""
       ],
       "Verify Content Checksum": [
-        ""
+        "Vérifier la somme de contrôle du contenu"
       ],
       "Verify SSL": [
         "Vérifier SSL"
+      ],
+      "Verify checksum": [
+        ""
       ],
       "Verify checksum for content on smart proxy": [
         "Vérifier la somme de contrôle du contenu sur le proxy intelligent"
@@ -8589,6 +8898,15 @@
       "View documentation": [
         "Voir la documentation"
       ],
+      "View here": [
+        ""
+      ],
+      "View labels and annotations": [
+        ""
+      ],
+      "View labels and annotations for image ": [
+        ""
+      ],
       "View matching content": [
         "Afficher le contenu correspondant"
       ],
@@ -8627,6 +8945,9 @@
       ],
       "When \\\"Upstream URL\\\" is set, \\\"Releases/Distributions\\\" must also be set!": [
         "Lorsque \\\"Upstream URL\\\" est défini, \\\"Releases/Distributions\\\" doit également être défini !"
+      ],
+      "When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration.": [
+        ""
       ],
       "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')": [
         "Lors de l'enregistrement d'un hôte via le gestionnaire d'abonnement, il faut forcer l'utilisation du fact spécifié (sous la forme de \\\"fact.fact\\\")"

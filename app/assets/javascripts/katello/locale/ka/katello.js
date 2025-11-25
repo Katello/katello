@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.19.0.pre.master",
+        "Project-Id-Version": "katello 4.19.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2025",
@@ -109,6 +109,9 @@
       ],
       "${selectedContentType} will appear here when created.": [
         "როცა შეიქმება, ${selectedContentType} აქ გამოჩნდება."
+      ],
+      "${totalCount} labels and annotations": [
+        ""
       ],
       "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?": [
         ""
@@ -462,6 +465,9 @@
       "About page": [
         "გვერდის შესახებ"
       ],
+      "Abstract async task": [
+        ""
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
       ],
@@ -609,6 +615,9 @@
       "Add repositories with package groups to content view to select them here.": [
         ""
       ],
+      "Add rolling repo clone": [
+        ""
+      ],
       "Add rule": [
         "წესის დამატება"
       ],
@@ -627,11 +636,17 @@
       "Add to a host collection": [
         "ჰოსტის კოლექციაში ჩამატება"
       ],
+      "Add to host collections": [
+        ""
+      ],
       "Added": [
         "დამატებულია"
       ],
       "Added %s": [
         "%s დაემატა"
+      ],
+      "Added %{count} host(s) to host collection %{host_collection}.": [
+        ""
       ],
       "Added Content:": [
         "დამატებული შემცველობა:"
@@ -674,6 +689,9 @@
       ],
       "All errata up-to-date": [
         "ყველა მორჩენილი პაჩი განახლებულია"
+      ],
+      "All selected hosts were already members of host collection %{host_collection}.": [
+        ""
       ],
       "All subpaths must have a slash at the end and none at the front": [
         "ყველა ქვებილიკს / ბოლოში უნდა ჰქონდეს, დასაწყისში კი არა"
@@ -755,6 +773,9 @@
       ],
       "An error occurred during upload \\n%{error_message}": [
         "შეცდომა ატვირთვისას \\n%{error_message}"
+      ],
+      "An error occurred while updating host collections": [
+        ""
       ],
       "An option to specify how many ostree commits to traverse.": [
         ""
@@ -1040,6 +1061,9 @@
         "ამ ძებნის სანიშნეებში ჩამატება"
       ],
       "Bookmarks marked as public are available to all users": [
+        ""
+      ],
+      "Bootable": [
         ""
       ],
       "Bootc rollback via Bootc interface": [
@@ -1366,6 +1390,9 @@
       "Change content view environments": [
         ""
       ],
+      "Change host collections": [
+        ""
+      ],
       "Change host content source": [
         "ჰოსტის შემცველობის წყაროს შეცვლა"
       ],
@@ -1451,6 +1478,9 @@
         ""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
+        ""
+      ],
+      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1807,14 +1837,26 @@
       "Copy": [
         "კოპირება"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "აქტივაციის გასაღების კოპირება"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "შემცველობის ხედის კოპირება"
       ],
       "Copy to clipboard": [
         "ბუფერში კოპირება"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        ""
       ],
       "Cores per socket": [
         "ბირთვი თითო სოკეტზე"
@@ -2029,17 +2071,35 @@
       "Create content view": [
         "შემცველობის ხედის შექმნა"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "ფილტრის შექმნა"
       ],
       "Create host collection": [
         "ჰოსტების  კოლექციის შექმნა"
       ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
+        ""
+      ],
       "Create new activation key": [
         "ახალი აქტივაციის გასაღების შექმნა"
       ],
       "Create organization": [
         "ორგანიზაციის შექმნა"
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
+      ],
+      "Creation": [
+        ""
       ],
       "Credentials": [
         "მომხმ/პაროლი"
@@ -2302,11 +2362,35 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "მანიფესტის წაშლა Red Hat-ის მომწოდებლიდან"
       ],
       "Delete multiple filters from a content view": [
         "შემცველობის ხედიდან ერთე მეტი ფილტრის წაშლა"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete orphaned migrated repositories": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         "ვერსიის წაშლა"
@@ -2407,6 +2491,12 @@
       "Destroy an environment in an organization": [
         "ორგანიზაციაში გარემოს განადგურება"
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         "ერთი ან მეტი ალტერნატიული შემცველობის განადგურება"
       ],
@@ -2451,6 +2541,9 @@
       ],
       "Disabling Simple Content Access failed for '%{subject}'.": [
         "'%{subject}'-სთვის მარტივი შემცველობის წვდომის გამორთვის შეცდომა."
+      ],
+      "Discover": [
+        ""
       ],
       "Discover Repositories": [
         "რეპოზიტორიების აღმოჩენა"
@@ -2587,9 +2680,6 @@
       "Enable repository sets": [
         "რეპოზიტორიის სეტების ჩართვა"
       ],
-      "Enable structured APT for deb content": [
-        ""
-      ],
       "Enable/Disable auto publish of composite view": [
         "კომპოზიტური ხედის ავტომატური გამოცემის ჩართ/გამორთ"
       ],
@@ -2650,6 +2740,9 @@
       "Environment cannot be in its own promotion path": [
         "გარემო თავისი თავის წახალისების ბილიკს არ შეუძლება წარმოადგენდეს"
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "გარემოს იდენტიფიკატორი"
       ],
@@ -2688,6 +2781,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "მორჩენილი პაჩის ID (RHSA-2012:108)"
+      ],
+      "Errata mail": [
+        ""
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2854,6 +2950,9 @@
       "Fetch installable errata for one or more hosts.": [
         "დაყენებადი მორჩენილი პაჩების გამოთხოვა ერთი ან მეტი ჰოსტისთვის."
       ],
+      "Fetch pxe files": [
+        ""
+      ],
       "Fetch traces for one or more hosts": [
         "ერთი ან მეტი ჰოსტისთვის ტრეისის გამოთხოვა"
       ],
@@ -2947,6 +3046,9 @@
       "Filter versions that are components in the specified composite version": [
         "ფილტრის ვერსიები, რომლებიც მითითებულ კომპოზიტის ვერსიაში კომპონენტები არიან"
       ],
+      "Filtered index content": [
+        ""
+      ],
       "Filters": [
         "ფილტრები"
       ],
@@ -2967,6 +3069,9 @@
       ],
       "Finished": [
         "დასრულებულია"
+      ],
+      "Flatpak": [
+        ""
       ],
       "Flatpak Remote ${name} created": [
         ""
@@ -3057,6 +3162,9 @@
       ],
       "Generate host applicability": [
         "ჰოსტის გამოყენებადობის გენერაცია"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "ჰოსტის გამოყენებადობის გენერაცია"
@@ -3298,6 +3406,12 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         "დახარისხებული შედეგების დალაგების წესი (მაგ: ASC აღმავლისთვის)"
       ],
+      "Hypervisors": [
+        ""
+      ],
+      "Hypervisors update": [
+        ""
+      ],
       "ID": [
         ""
       ],
@@ -3484,9 +3598,6 @@
       "If product certificates should be used to authenticate to a custom CDN.": [
         ""
       ],
-      "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
-        ""
-      ],
       "If the smart proxies' assigned HTTP proxies should be used": [
         "უნდა იქნას თუ არა გამოყენებული ჭკვიან პროქსიებზე მინიჭებული HTTP პროქსიები"
       ],
@@ -3616,6 +3727,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "შემოიტანეთ გამოწერის მანიფესტი, რომ ჰოსტებს Red Hat-ის შემცველობასთან წვდომა მისცეთ."
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         ""
       ],
@@ -3624,6 +3738,12 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "მხოლოდ შემოტანადი შემცველობის ხედები არ შეიძლება პირდაპირ გამოქვეყნდეს. შემცველობის განახლება მხოლოდ ხედში შემოტანითაა შესაძლებელი."
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "ატვირთულების შეტანა რეპოზიტორიაში"
@@ -3691,6 +3811,9 @@
       "Incremental Update incomplete.": [
         "ინკრემენტული განახლება მიუწვდომელია."
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        ""
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} შემცველობის ხედის ვერსიის ინკრემენტული განახლება "
       ],
@@ -3703,11 +3826,26 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         ""
       ],
+      "Index content": [
+        ""
+      ],
+      "Index errata": [
+        ""
+      ],
+      "Index module streams": [
+        ""
+      ],
+      "Index package groups": [
+        ""
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         ""
       ],
       "Inherit from Repository": [
         "მემკვიდრეობით რეპოზიტორიიდან"
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         ""
@@ -3784,8 +3922,14 @@
       "Installing Package...": [
         "პაკეტის დაყენება..."
       ],
+      "Instance update": [
+        ""
+      ],
       "Instance-based": [
         "გაშვებულ ასლზე-ბაზირებული"
+      ],
+      "Insufficient space for selected hosts": [
+        ""
       ],
       "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.": [
         ""
@@ -4021,6 +4165,15 @@
       "Label of the flatpak remote": [
         ""
       ],
+      "Labels": [
+        ""
+      ],
+      "Labels and annotations": [
+        ""
+      ],
+      "Labels | Annotations": [
+        ""
+      ],
       "Last check-in:": [
         "ბოლო მომართვა:"
       ],
@@ -4121,6 +4274,9 @@
         "ცხოვრების ციკლის გარემო: {lce}"
       ],
       "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
+        ""
+      ],
+      "Limit": [
         ""
       ],
       "Limit actions to content in the host's environment.": [
@@ -4453,11 +4609,17 @@
       "Manifest": [
         "მანიფესტი"
       ],
+      "Manifest Details": [
+        ""
+      ],
       "Manifest History": [
         "მანიფესტის ისტორია"
       ],
       "Manifest deleted": [
         "მანიფესტი წაიშალა"
+      ],
+      "Manifest digest": [
+        ""
       ],
       "Manifest does not have a valid subscription": [
         "მანიფესტს სწორი გამოწერა არ გააჩნია"
@@ -4543,6 +4705,9 @@
       "Messaging connection": [
         "შეერთება შეტყობინებების სერვერთან"
       ],
+      "Metadata generate": [
+        ""
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -4579,6 +4744,9 @@
       "Moderate": [
         "საშუალო"
       ],
+      "Modified": [
+        ""
+      ],
       "Modify via remote execution": [
         ""
       ],
@@ -4604,6 +4772,15 @@
         ""
       ],
       "Multi Content View Environment": [
+        ""
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -4899,6 +5076,9 @@
       ],
       "No items have been specified.": [
         "ელემენტები მითითებული არაა."
+      ],
+      "No labels": [
+        ""
       ],
       "No manifest file uploaded": [
         "მანიფესტი ფაილი არ ატვირთულა"
@@ -5237,6 +5417,9 @@
         "ორგანიზაციის ჭდე"
       ],
       "Organization label '%s' is ambiguous. Try using an id-based container name.": [
+        ""
+      ],
+      "Organization must be specified when providing product by name.": [
         ""
       ],
       "Organization not found": [
@@ -5638,6 +5821,9 @@
       "Product label '%s' is ambiguous. Try using an id-based container name.": [
         ""
       ],
+      "Product must be specified.": [
+        ""
+      ],
       "Product name": [
         "პროდუქტის სახელი"
       ],
@@ -5800,6 +5986,9 @@
       "Pulp task error": [
         "Pulp-ის ამოცანის შეცდომა"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         "Python-ის პაკეტი"
       ],
@@ -5899,6 +6088,9 @@
       "Reclaim Space": [
         "ადგილის თავიდან გამოთხოვა"
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         "სივრცის მოთხოვნა ყველა მოთხოვნით საცავიდან"
       ],
@@ -5965,6 +6157,9 @@
       "Refresh all alternate content sources": [
         "ყველა შემცველობის ალტერნატიული წყაროს განახლება"
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         "შემცველობის ალტერნატიული წყაროების განახლება"
       ],
@@ -5977,13 +6172,25 @@
       "Refresh counts": [
         "განახლების რაოდენობები"
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
         "მორჩენილი პაჩების შესატყვისობის განახლება"
+      ],
+      "Refresh if needed": [
+        ""
       ],
       "Refresh package applicability": [
         "პაკეტების შესატყვისობის განახლება"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
+        ""
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
         ""
       ],
       "Refresh source": [
@@ -6026,6 +6233,9 @@
         ""
       ],
       "Registry token expiration time": [
+        ""
+      ],
+      "Reindex subscriptions": [
         ""
       ],
       "Related composite content views": [
@@ -6103,6 +6313,9 @@
       "Remove from environments": [
         "გარემოებიდან წაშლა"
       ],
+      "Remove from host collections": [
+        ""
+      ],
       "Remove host from collections": [
         "ჰოსტის კოლექციიდან წაშლა"
       ],
@@ -6124,6 +6337,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "პაკეტების ჯგუფის წაშლა Katello-ის ინტერფეისიდან"
       ],
@@ -6139,11 +6355,23 @@
       "Remove products from sync plan": [
         "სინქრის გეგმიდან პროდუქტების წაშლა"
       ],
+      "Remove rolling repo clone": [
+        ""
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
+      ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "წაშალეთ ვერსიები შემცველობის ხედიდან და ხელახლა მინიჭეთ სისტემები და გასაღებები"
       ],
       "Remove versions from environments": [
         "გარემოებიდან ვერსიების წაშლა"
+      ],
+      "Removed %{count} host(s) from host collection %{host_collection}.": [
+        ""
       ],
       "Removed component from content view": [
         "კომპონენტი შემცველობის ხედიდან წაიშალა"
@@ -6161,6 +6389,9 @@
         ""
       ],
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
+        ""
+      ],
+      "Repair": [
         ""
       ],
       "Replace content source on the target machine": [
@@ -6181,10 +6412,16 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
+        ""
+      ],
+      "Repositories gpg reset": [
         ""
       ],
       "Repository": [
@@ -6351,6 +6588,9 @@
       ],
       "Result": [
         "შედეგი"
+      ],
+      "Retain build profile upon unregistration": [
+        ""
       ],
       "Retrieve a single errata for a host": [
         "ჰოსტის ერთი მორჩენილი პაჩის მიღება"
@@ -6544,6 +6784,21 @@
       "Save Environments": [
         ""
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "შემცველობის ალტერნატიული წყაროს შენახვა..."
       ],
@@ -6551,6 +6806,12 @@
         ""
       ],
       "Scan a flatpak remote": [
+        ""
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
         ""
       ],
       "Schema version 1": [
@@ -6600,6 +6861,9 @@
       ],
       "Security errata installable": [
         "დაყენებადი უსაფრთხოების მორჩენილი პაჩები"
+      ],
+      "See child manifests": [
+        ""
       ],
       "Select": [
         "_არჩევა"
@@ -6712,6 +6976,9 @@
       "Select host collection(s) to remove from host {hostName}.": [
         ""
       ],
+      "Select host collections to change their associations with {selectedHosts}. Changing host collection will affect all your selected hosts. Some hosts may already be in your chosen collections.": [
+        ""
+      ],
       "Select hosts to assign to %s": [
         "აირჩიეთ %s-ზე მისანიჭებელი ჰოსტები"
       ],
@@ -6791,7 +7058,7 @@
         "სერვისის დონე (SLA)"
       ],
       "Service level": [
-        ""
+        "სერვისის დონე"
       ],
       "Service level of host": [
         "ჰოსტის სერვისის დონე"
@@ -6831,6 +7098,9 @@
       ],
       "Severity must be one of: %s": [
         "სიმწვავე უნდა იყოს ერთ ერთი სიიდან: %s"
+      ],
+      "Show ${remainingCount} more": [
+        ""
       ],
       "Show %s": [
         "%s-ის ჩვენება"
@@ -7315,9 +7585,6 @@
       "Successfully added %s Host(s).": [
         "%s ჰოსტი წარმატებით ჩაემატა."
       ],
-      "Successfully added %{count} content host(s) to host collection %{host_collection}.": [
-        "%{count} შემცველობის ჰოსტი ჰოსტი კოლექციაში %{host_collection} წარმატებით ჩაემატა."
-      ],
       "Successfully changed sync plan for %s product(s)": [
         "%s პროდუქტის სინქის გეგმა წარმატებით შეიცვალა"
       ],
@@ -7329,9 +7596,6 @@
       ],
       "Successfully removed %s Host(s).": [
         "%s ჰოსტი წარმატებით წაიშალა."
-      ],
-      "Successfully removed %{count} content host(s) from host collection %{host_collection}.": [
-        "%{count} შემცველობის ჰოსტი ჰოსტის კოლექციიდან %{host_collection} წარმატებით წაიშალა."
       ],
       "Successfully synced capsule.": [
         "კაფსულის სინქრონიზაცია წარმატებულია."
@@ -7350,6 +7614,9 @@
       ],
       "Supported Content Types": [
         "შემცველობის მხარდაჭერილი ტიპები"
+      ],
+      "Sync": [
+        ""
       ],
       "Sync Canceled": [
         "სინქი გაუქმებულია"
@@ -7405,6 +7672,9 @@
       "Sync all repositories for a product": [
         "პროდუქტის ყველა რეპოზიტორიის სინქრონიზაცია"
       ],
+      "Sync capsule": [
+        ""
+      ],
       "Sync complete.": [
         "სინქრონიზაცია დასრულდა."
       ],
@@ -7423,6 +7693,9 @@
       "Sync state": [
         "სინქის მდგომარეობა"
       ],
+      "Syncable export": [
+        ""
+      ],
       "Synced": [
         "სინქრონიზებულია"
       ],
@@ -7431,9 +7704,6 @@
       ],
       "Synced Content": [
         "დასინქრონებული შემცველობა"
-      ],
-      "Synced container images content": [
-        ""
       ],
       "Synchronize": [
         "სინქრონიზაცია"
@@ -7475,6 +7745,9 @@
         "სისტემის დანიშნულების ატრიბუტები განახლდა"
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
+        ""
+      ],
+      "Tag": [
         ""
       ],
       "Tag name": [
@@ -7927,6 +8200,9 @@
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
         ""
       ],
+      "To manage host collections, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "To manage host content overrides, a specific organization must be selected from the organization context.": [
         ""
       ],
@@ -8245,14 +8521,26 @@
       "Update content counts for the smart proxy": [
         "შემცველობის რაოდენობების განახლება ჭკვიანი პროქსისთვის"
       ],
+      "Update content urls": [
+        ""
+      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         "ჰოსტების ხელით განახლება"
+      ],
+      "Update http proxy": [
+        ""
+      ],
+      "Update http proxy details": [
+        ""
       ],
       "Update installed packages, enabled repos, module inventory": [
         "განაახლეთ დაყენებული პაკეტები, ჩართული რეპოები და მოდულები"
@@ -8269,11 +8557,20 @@
       "Update packages via Katello interface": [
         "პაკეტების განახლება Katello-ის ინტერფეისიდან"
       ],
+      "Update redhat repository": [
+        ""
+      ],
       "Update release version for host": [
         "ჰოსტის რელიზის ვერსიის განახლება"
       ],
       "Update release version for host %s": [
         "რელიზის ვერსიის განახლება ჰოსტისთვის: %s"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "იმ სერვისების განახლება, რომელსაც თავიდან გაშვება სჭირდებათ"
@@ -8365,6 +8662,12 @@
       "Upload a subscription manifest": [
         "გამოწერის მანიფესტის ატვირთვა"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "ატვირთვის სამიზნე"
       ],
@@ -8373,6 +8676,9 @@
       ],
       "Upload request id": [
         "ატვირთვის მოთხოვნის ID"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "აღმავალი Candlepin"
@@ -8489,10 +8795,13 @@
         ""
       ],
       "Verify Content Checksum": [
-        ""
+        "შემცველობის საკონტროლო ჯამის შემოწმება"
       ],
       "Verify SSL": [
         "SSL-ის შემოწმება"
+      ],
+      "Verify checksum": [
+        ""
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -8587,6 +8896,15 @@
       "View documentation": [
         "იხილეთ დოკუმენტაცია"
       ],
+      "View here": [
+        ""
+      ],
+      "View labels and annotations": [
+        ""
+      ],
+      "View labels and annotations for image ": [
+        ""
+      ],
       "View matching content": [
         "შესატყვისი შემცველობის ნახვა"
       ],
@@ -8624,6 +8942,9 @@
         ""
       ],
       "When \\\"Upstream URL\\\" is set, \\\"Releases/Distributions\\\" must also be set!": [
+        ""
+      ],
+      "When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration.": [
         ""
       ],
       "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')": [
