@@ -2,7 +2,7 @@
 /* eslint import/no-unresolved: [2, { ignore: [foremanReact/*] }] */
 /* eslint-disable import/no-unresolved */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -18,111 +18,112 @@ import { getSetsComponent, getEnabledComponent } from './helpers';
 import api from '../../services/api';
 import { EXPORT_SYNC } from '../Subscriptions/Manifest/CdnConfigurationTab/CdnConfigurationConstants';
 
-class RedHatRepositoriesPage extends Component {
-  componentDidMount() {
-    this.loadData();
+const RedHatRepositoriesPage = ({
+  loadOrganization,
+  loadEnabledRepos,
+  loadRepositorySets,
+  updateRecommendedRepositorySets,
+  enabledRepositories,
+  repositorySets,
+  organization,
+}) => {
+  useEffect(() => {
+    loadOrganization();
+    loadEnabledRepos();
+    loadRepositorySets({ search: { filters: ['rpm'] } });
+  }, [loadOrganization, loadEnabledRepos, loadRepositorySets]);
+
+  const { repoParams } = createEnabledRepoParams(enabledRepositories);
+
+  if (!isEmpty(repositorySets.missingPermissions)) {
+    return <PermissionDenied missingPermissions={repositorySets.missingPermissions} />;
   }
-
-  loadData() {
-    this.props.loadOrganization();
-    this.props.loadEnabledRepos();
-    this.props.loadRepositorySets({ search: { filters: ['rpm'] } });
+  if (!isEmpty(enabledRepositories.missingPermissions)) {
+    return <PermissionDenied missingPermissions={enabledRepositories.missingPermissions} />;
   }
-
-  render() {
-    const { enabledRepositories, repositorySets, organization } = this.props;
-    const { repoParams } = createEnabledRepoParams(enabledRepositories);
-
-    if (!isEmpty(repositorySets.missingPermissions)) {
-      return <PermissionDenied missingPermissions={repositorySets.missingPermissions} />;
-    }
-    if (!isEmpty(enabledRepositories.missingPermissions)) {
-      return <PermissionDenied missingPermissions={enabledRepositories.missingPermissions} />;
-    }
-    if (!(organization?.cdn_configuration)) {
-      return <Skeleton />;
-    }
-    if (organization.cdn_configuration.type === EXPORT_SYNC) {
-      return (
-        <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
-          <h1>{__('Red Hat Repositories')}</h1>
-          <Row className="toolbar-pf">
-            <Col>
-              <Alert
-                ouiaId="repo-sets-alert"
-                variant="info"
-                className="repo-sets-alert"
-                isInline
-                title={__('CDN configuration is set to Export Sync (disconnected). Repository enablement/disablement is not permitted on this page.')}
-              />
-            </Col>
-          </Row>
-        </Grid>
-      );
-    }
-
+  if (!(organization?.cdn_configuration)) {
+    return <Skeleton />;
+  }
+  if (organization.cdn_configuration.type === EXPORT_SYNC) {
     return (
       <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
         <h1>{__('Red Hat Repositories')}</h1>
         <Row className="toolbar-pf">
-          <Col sm={12}>
-            <SearchBar />
-          </Col>
-        </Row>
-
-        <Row className="row-eq-height">
-          <Col sm={6} className="available-repositories-container">
-            <div className="available-repositories-header">
-              <h2>{__('Available Repositories')}</h2>
-              <RecommendedRepositorySetsToggler
-                enabled={repositorySets.recommended}
-                onChange={value => this.props.updateRecommendedRepositorySets(value)}
-                className="recommended-repositories-toggler"
-              />
-            </div>
-            <LoadingState loading={repositorySets.loading} loadingText={__('Loading')}>
-              {getSetsComponent(
-                repositorySets,
-                (pagination) => {
-                  this.props.loadRepositorySets({
-                    ...pagination,
-                    search: repositorySets.search,
-                  });
-                },
-              )}
-            </LoadingState>
-          </Col>
-
-          <Col sm={6} className="enabled-repositories-container">
-            <h2>
-              {__('Enabled Repositories')}
-              <FieldLevelHelp content={__('Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.')} />
-              <Button
-                ouiaid="export-csv-button"
-                className="pull-right"
-                onClick={() => { api.open('/repositories.csv', repoParams); }}
-              >
-                {__('Export as CSV')}
-              </Button>
-            </h2>
-
-            <LoadingState loading={enabledRepositories.loading} loadingText={__('Loading')}>
-              {getEnabledComponent(
-                enabledRepositories,
-                (pagination) => {
-                  this.props.loadEnabledRepos({
-                    ...pagination,
-                    search: enabledRepositories.search,
-                  });
-                },
-              )}
-            </LoadingState>
+          <Col>
+            <Alert
+              ouiaId="repo-sets-alert"
+              variant="info"
+              className="repo-sets-alert"
+              isInline
+              title={__('CDN configuration is set to Export Sync (disconnected). Repository enablement/disablement is not permitted on this page.')}
+            />
           </Col>
         </Row>
       </Grid>
     );
   }
-}
+
+  return (
+    <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
+      <h1>{__('Red Hat Repositories')}</h1>
+      <Row className="toolbar-pf">
+        <Col sm={12}>
+          <SearchBar />
+        </Col>
+      </Row>
+
+      <Row className="row-eq-height">
+        <Col sm={6} className="available-repositories-container">
+          <div className="available-repositories-header">
+            <h2>{__('Available Repositories')}</h2>
+            <RecommendedRepositorySetsToggler
+              enabled={repositorySets.recommended}
+              onChange={value => updateRecommendedRepositorySets(value)}
+              className="recommended-repositories-toggler"
+            />
+          </div>
+          <LoadingState loading={repositorySets.loading} loadingText={__('Loading')}>
+            {getSetsComponent(
+              repositorySets,
+              (pagination) => {
+                loadRepositorySets({
+                  ...pagination,
+                  search: repositorySets.search,
+                });
+              },
+            )}
+          </LoadingState>
+        </Col>
+
+        <Col sm={6} className="enabled-repositories-container">
+          <h2>
+            {__('Enabled Repositories')}
+            <FieldLevelHelp content={__('Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.')} />
+            <Button
+              ouiaid="export-csv-button"
+              className="pull-right"
+              onClick={() => { api.open('/repositories.csv', repoParams); }}
+            >
+              {__('Export as CSV')}
+            </Button>
+          </h2>
+
+          <LoadingState loading={enabledRepositories.loading} loadingText={__('Loading')}>
+            {getEnabledComponent(
+              enabledRepositories,
+              (pagination) => {
+                loadEnabledRepos({
+                  ...pagination,
+                  search: enabledRepositories.search,
+                });
+              },
+            )}
+          </LoadingState>
+        </Col>
+      </Row>
+    </Grid>
+  );
+};
 
 RedHatRepositoriesPage.propTypes = {
   loadOrganization: PropTypes.func.isRequired,
