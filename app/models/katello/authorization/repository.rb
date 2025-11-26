@@ -38,7 +38,9 @@ module Katello
       end
 
       def readable_docker_catalog(host = nil)
-        if host
+        #If host is identified in the request via certs or IP addr, and the host is registered (uuid != nil), show only
+        # available repos in host's LCE scope
+        if host && host&.content_facet&.uuid
           repo_ids = []
           if host&.content_view_environments&.any?
             repo_ids = host.content_view_environments.flat_map do |cve|
@@ -48,18 +50,7 @@ module Katello
           end
 
           base_scope = Katello::Repository.non_archived.docker_type
-          host_repos = base_scope.where(id: repo_ids)
-
-          table_name = Repository.table_name
-          in_unauth_environments = Repository.joins(:environment)
-                                             .where("#{Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true)
-                                             .select(:id)
-
-          if in_unauth_environments.exists?
-            return host_repos.or(base_scope.joins(:root).where("#{table_name}.id in (?)", in_unauth_environments))
-          else
-            return host_repos
-          end
+          return base_scope.where(id: repo_ids)
         end
         readable_docker_catalog_as(User.current)
       end
