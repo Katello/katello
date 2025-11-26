@@ -24,5 +24,6 @@ module Katello
     scoped_search :on => :release
     scoped_search :on => :arch
     scoped_search :on => :vendor, :complete_value => true
+    scoped_search :relation => :host_installed_packages, :on => :persistence, :complete_value => true
   end
 end
