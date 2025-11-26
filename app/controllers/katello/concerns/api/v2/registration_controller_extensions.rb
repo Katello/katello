@@ -19,15 +19,6 @@ module Katello
         end
       end
 
-      def host_setup_extension
-        if params['host']['lifecycle_environment_id']
-          @host.content_facet.assign_single_environment(content_view_id: @host&.content_views&.first&.id, lifecycle_environment_id: params['host']['lifecycle_environment_id'])
-          @host.update_candlepin_associations
-        end
-
-        super
-      end
-
       def context_urls
         super.merge(rhsm_url: smart_proxy.rhsm_url, pulp_content_url: smart_proxy.pulp_content_url)
       end
