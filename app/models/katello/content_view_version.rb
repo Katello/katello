@@ -361,17 +361,136 @@ module Katello
       save!
     end
 
-    def auto_publish_composites!
-      metadata = {
-        description: _("Auto Publish - Triggered by '%s'") % self.name,
-        triggered_by: self.id,
-      }
+    def auto_publish_composites!(component_task_id)
+      description = _("Auto Publish - Triggered by '%s'") % self.name
+
       self.content_view.auto_publish_components.pluck(:composite_content_view_id).each do |composite_id|
-        ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id) do |attrs|
-          attrs[:metadata] = metadata
+        composite_cv = ::Katello::ContentView.find(composite_id)
+
+        composite_cv.with_lock do
+          status = composite_publish_status(composite_cv)
+
+          case status
+          when :scheduled
+            Rails.logger.info("Composite CV #{composite_cv.name} publish already scheduled, skipping duplicate")
+            next
+          when :running, nil
+            # Either composite is running or no composite activity detected
+            # Schedule event to trigger composite publish with proper coordination
+            Rails.logger.info("Composite CV #{composite_cv.name} scheduling auto-publish event")
+            schedule_auto_publish_event(composite_cv, description, component_task_id)
+            next
+          end
         end
       end
     end
+
+    class << self
+      # Trigger a composite publish with coordination for sibling tasks.
+      # Checks for running component CV publishes and chains if necessary.
+      def trigger_composite_publish_with_coordination(composite_cv, description, triggered_by_version_id, calling_task_id: nil)
+        # Find currently running component CV publish tasks
+        component_cv_ids = composite_cv.components.pluck(:content_view_id)
+        running_tasks = ForemanTasks::Task::DynflowTask
+          .for_action(::Actions::Katello::ContentView::Publish)
+          .where(state: ['planning', 'planned', 'running'])
+          .select do |task|
+            task_input = task.input
+            task_input && component_cv_ids.include?(task_input.dig('content_view', 'id'))
+          end
+
+        sibling_task_ids = running_tasks.map(&:external_id)
+        # Exclude the calling component task to avoid self-dependency
+        sibling_task_ids.reject! { |id| id == calling_task_id } if calling_task_id
+
+        trigger_publish_with_sibling_tasks(composite_cv, sibling_task_ids, description, triggered_by_version_id)
+      rescue ForemanTasks::Lock::LockConflict => e
+        Rails.logger.info("Composite CV #{composite_cv.name} publish lock conflict: #{e.class} - #{e.message}")
+        ::Katello::UINotifications::ContentView::AutoPublishFailure.deliver!(composite_cv)
+        raise
+      rescue StandardError => e
+        Rails.logger.error("Failed to auto-publish composite CV #{composite_cv.name}: #{e.class} - #{e.message}")
+        Rails.logger.debug(e.backtrace.join("\n")) if e.backtrace
+        ::Katello::UINotifications::ContentView::AutoPublishFailure.deliver!(composite_cv)
+        raise
+      end
+
+      # Trigger a composite publish, chaining to sibling tasks if any exist
+      def trigger_publish_with_sibling_tasks(composite_cv, sibling_task_ids, description, triggered_by_version_id)
+        if sibling_task_ids.any?
+          ForemanTasks.dynflow.world.chain(
+            sibling_task_ids,
+            ::Actions::Katello::ContentView::Publish,
+            composite_cv,
+            description,
+            triggered_by_id: triggered_by_version_id
+          )
+        else
+          ForemanTasks.async_task(
+            ::Actions::Katello::ContentView::Publish,
+            composite_cv,
+            description,
+            triggered_by_id: triggered_by_version_id
+          )
+        end
+      end
+    end
+
+    private
+
+    # Returns :scheduled, :running, or nil based on composite CV publish task status
+    def composite_publish_status(composite_cv)
+      # Check scheduled tasks first (they don't have input populated yet)
+      scheduled_tasks = ForemanTasks::Task::DynflowTask
+        .for_action(::Actions::Katello::ContentView::Publish)
+        .where(state: 'scheduled')
+
+      if scheduled_tasks.any? { |task| scheduled_task_for_composite?(task, composite_cv) }
+        return :scheduled
+      end
+
+      # Check running tasks (these have input populated)
+      if find_active_composite_publish_tasks(composite_cv).any?
+        return :running
+      end
+
+      nil
+    end
+
+    # Schedule an event to retry composite publish after current one finishes
+    def schedule_auto_publish_event(composite_cv, description, component_task_id)
+      ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_cv.id) do |attrs|
+        attrs[:metadata] = { description: description, version_id: self.id, calling_task_id: component_task_id }
+      end
+    end
+
+    # Check if a scheduled task is for the given composite CV by inspecting delayed plan args
+    def scheduled_task_for_composite?(task, composite_cv)
+      delayed_plan = ForemanTasks.dynflow.world.persistence.load_delayed_plan(task.external_id)
+      return false if delayed_plan.nil?
+
+      args = delayed_plan.args
+      args.first.is_a?(::Katello::ContentView) && args.first.id == composite_cv.id
+    rescue NoMethodError, TypeError, Dynflow::Error
+      Rails.logger.error("Failed to check scheduled task for composite CV #{composite_cv.name}: #{e.message}")
+      false
+    end
+
+    # Find active (planning/planned/running) composite publish tasks (does NOT check scheduled tasks)
+    def find_active_composite_publish_tasks(composite_cv)
+      relevant_tasks = ForemanTasks::Task::DynflowTask
+        .for_action(::Actions::Katello::ContentView::Publish)
+        .where(state: ['planning', 'planned', 'running'])
+        .select do |task|
+          # Check if task is publishing the composite CV
+          task_input = task.input
+          task_input && task_input.dig('content_view', 'id') == composite_cv.id
+        end
+
+      relevant_tasks.map(&:external_id)
+    end
+
+    public
 
     def repository_type_counts_map
       counts = {}

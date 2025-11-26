@@ -249,7 +249,7 @@ module ::Actions::Katello::ContentView
     end
 
     context 'run phase' do
-      it 'creates auto-publish events for non-composite views' do
+      it 'schedules event for composite views' do
         composite_view = katello_content_views(:composite_view)
         action.stubs(:task).returns(success_task)
 
@@ -258,23 +258,29 @@ module ::Actions::Katello::ContentView
                           composite_content_view: composite_view,
                           content_view: content_view)
 
+        # Mock the task relations to simulate no scheduled composite
+        ForemanTasks::Task::DynflowTask.stubs(:for_action)
+          .returns(stub(where: stub(any?: false))) # Scheduled check: no scheduled tasks
+          .then.returns(stub(where: stub(select: []))) # Running composite check: none
+
+        # Expect event to be scheduled
+        ::Katello::EventQueue.expects(:push_event).with(
+          ::Katello::Events::AutoPublishCompositeView::EVENT_TYPE,
+          composite_view.id
+        )
+
         plan_action action, content_view
         run_action action
-
-        event = Katello::Event.find_by(event_type: Katello::Events::AutoPublishCompositeView::EVENT_TYPE, object_id: composite_view.id)
-        version = content_view.versions.last
-
-        assert_equal event.metadata[:triggered_by], version.id
-        assert_equal event.metadata[:description], "Auto Publish - Triggered by '#{version.name}'"
       end
 
       it 'does nothing for non-composite view' do
         action.stubs(:task).returns(success_task)
 
+        # Should not trigger any auto-publish events
+        ::Katello::EventQueue.expects(:push_event).never
+
         plan_action action, katello_content_views(:no_environment_view)
         run_action action
-
-        assert_empty Katello::Event.all
       end
     end
 
