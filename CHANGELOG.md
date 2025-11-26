@@ -1,3 +1,16 @@
+# 4.17.2 Fallingwater (2025-11-26)
+
+## Bug Fixes
+
+### Hammer
+ * Hammer host info command fields contain abbreviations ([#38703](https://projects.theforeman.org/issues/38703), [01964f16](https://github.com/Katello/hammer-cli-katello.git/commit/01964f168e2d4c63b7af8efe805ee79a24c65536), [9258e0af](https://github.com/Katello/hammer-cli-katello.git/commit/9258e0af0fbab281d0300ca1e4cf691781ddaf41))
+
+### Content Views
+ * Error "Katello::Resources::Candlepin::Environment: 404 Not Found" When Deleting Rolling Content View ([#38689](https://projects.theforeman.org/issues/38689), [21b4d5c6](https://github.com/Katello/katello.git/commit/21b4d5c61d2b7e364ce9d8b0b49c07639c368205))
+ * Repo removal from a rolling CV does not trigger the Capsule sync ([#38561](https://projects.theforeman.org/issues/38561), [6966677d](https://github.com/Katello/katello.git/commit/6966677dc3e91bcd5832ecf0feebeb1eb5845ca3))
+
+### Other
+ * Async Repository::CapsuleSync tasks that don't find any relevant proxies to sync sometimes end up in failing state ([#38546](https://projects.theforeman.org/issues/38546), [a1f951cd](https://github.com/Katello/katello.git/commit/a1f951cd55e7cf58de7413caf70b374164dfce6d))
 # 4.17.1 Fallingwater (2025-07-31)
 
 ## Bug Fixes
