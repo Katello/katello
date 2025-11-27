@@ -251,7 +251,7 @@ module Katello
     def test_deb_requires_distributions_for_custom
       @deb_acs.deb_releases = nil
       error = assert_raises(ActiveRecord::RecordInvalid) { @deb_acs.save! }
-      assert_match 'Distributions must be provided for deb alternate content sources', error.message
+      assert_match 'Deb releases must be provided for deb alternate content sources', error.message
     end
   end
 end
