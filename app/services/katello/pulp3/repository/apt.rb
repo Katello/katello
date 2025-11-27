@@ -27,7 +27,7 @@ module Katello
         def pulp_components
           return [] if repo.version_href.blank?
           return ["all"] if version_missing_structure_content?
-          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| x.plain_component }.uniq
+          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| x.plain_component }.uniq.sort
         end
 
         def sanitize_pulp_distribution(distribution)
@@ -40,7 +40,7 @@ module Katello
         def pulp_distributions
           return [] if repo.version_href.blank?
           return ["default"] if version_missing_structure_content?
-          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| sanitize_pulp_distribution(x.distribution) }.uniq
+          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| sanitize_pulp_distribution(x.distribution) }.uniq.sort
         end
 
         def remote_options
