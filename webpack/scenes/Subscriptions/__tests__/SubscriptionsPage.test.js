@@ -1,109 +1,104 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import toJson from 'enzyme-to-json';
+import { render, screen, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { act } from 'react-dom/test-utils';
 import SubscriptionsPage from '../SubscriptionsPage';
 import { successState, settingsSuccessState, permissionDeniedState } from './subscriptions.fixtures';
-import { loadAvailableQuantities, loadSubscriptions, updateQuantity, loadTableColumns } from '../SubscriptionActions';
+import { loadAvailableQuantities, updateQuantity } from '../SubscriptionActions';
 import { pingUpstreamSubscriptions } from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
 import { checkSimpleContentAccessEligible } from '../Manifest/ManifestActions';
 import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
-jest.mock('foremanReact/components/PermissionDenied');
+jest.mock('foremanReact/components/PermissionDenied', () => ({
+  __esModule: true, default: ({ missingPermissions }) => <div>PermissionDenied: {missingPermissions.join(', ')}</div>,
+}));
 jest.mock('foremanReact/components/ForemanModal', () => (<div>ForemanModal Mock</div>));
+jest.mock('../Manifest/', () => ({
+  __esModule: true, default: () => <div>ManageManifestModal Mock</div>,
+}));
+jest.mock('../components/SubscriptionsTable', () => ({
+  SubscriptionsTable: () => <div>SubscriptionsTable Mock</div>,
+}));
+jest.mock('../components/SubscriptionsToolbar', () => ({
+  __esModule: true, default: () => <div>SubscriptionsToolbar Mock</div>,
+}));
 
-const loadTables = () => new Promise((resolve) => {
+const loadTables = jest.fn(() => new Promise((resolve) => {
   resolve();
-});
+}));
 
 const pollTasks = jest.fn();
 const handleStartTask = jest.fn();
 const handleFinishedTask = jest.fn();
+const mockLoadSubscriptions = jest.fn();
+const mockLoadTableColumns = jest.fn();
 
 afterEach(() => {
   pollTasks.mockClear();
   handleStartTask.mockClear();
   handleFinishedTask.mockClear();
+  mockLoadSubscriptions.mockClear();
+  mockLoadTableColumns.mockClear();
+  loadTables.mockClear();
 });
 
 describe('subscriptions page', () => {
-  const noop = () => {};
+  const noop = () => {
+  };
   const organization = { owner_details: { upstreamConsumer: {} } };
-  const page = shallow(<SubscriptionsPage
-    setModalOpen={noop}
-    setModalClosed={noop}
-    organization={organization}
-    subscriptions={successState}
-    subscriptionTableSettings={settingsSuccessState}
-    loadTables={loadTables}
-    loadTableColumns={loadTableColumns}
-    createColumns={createColumns}
-    updateColumns={updateColumns}
-    loadSubscriptions={loadSubscriptions}
-    loadAvailableQuantities={loadAvailableQuantities}
-    pingUpstreamSubscriptions={pingUpstreamSubscriptions}
-    checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
-    updateQuantity={updateQuantity}
-    handleStartTask={handleStartTask}
-    handleFinishedTask={handleFinishedTask}
-    pollTaskUntilDone={noop}
-    pollBulkSearch={noop}
-    pollTasks={pollTasks}
-    cancelPollTasks={noop}
-    deleteSubscriptions={() => {}}
-    resetTasks={noop}
-    uploadManifest={noop}
-    deleteManifest={noop}
-    refreshManifest={noop}
-    updateSearchQuery={noop}
-    openManageManifestModal={noop}
-    closeManageManifestModal={noop}
-    openDeleteModal={noop}
-    closeDeleteModal={noop}
-    disableDeleteButton={noop}
-    enableDeleteButton={noop}
-  />);
 
-  const permissionDeniedPage = shallow(<SubscriptionsPage
-    setModalOpen={noop}
-    setModalClosed={noop}
-    organization={organization}
-    subscriptions={permissionDeniedState}
-    subscriptionTableSettings={settingsSuccessState}
-    loadTables={loadTables}
-    loadTableColumns={loadTableColumns}
-    createColumns={createColumns}
-    updateColumns={updateColumns}
-    loadSubscriptions={loadSubscriptions}
-    loadAvailableQuantities={loadAvailableQuantities}
-    pingUpstreamSubscriptions={pingUpstreamSubscriptions}
-    checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
-    updateQuantity={updateQuantity}
-    handleStartTask={handleStartTask}
-    handleFinishedTask={handleFinishedTask}
-    pollTaskUntilDone={noop}
-    pollBulkSearch={noop}
-    pollTasks={pollTasks}
-    cancelPollTasks={noop}
-    deleteSubscriptions={() => {}}
-    resetTasks={noop}
-    uploadManifest={noop}
-    deleteManifest={noop}
-    refreshManifest={noop}
-    updateSearchQuery={noop}
-    openManageManifestModal={noop}
-    closeManageManifestModal={noop}
-    openDeleteModal={noop}
-    closeDeleteModal={noop}
-    disableDeleteButton={noop}
-    enableDeleteButton={noop}
-  />);
+  const getDefaultProps = (subscriptionState = successState) => ({
+    setModalOpen: noop,
+    setModalClosed: noop,
+    organization,
+    subscriptions: subscriptionState,
+    subscriptionTableSettings: settingsSuccessState,
+    loadTables,
+    loadTableColumns: mockLoadTableColumns,
+    createColumns,
+    updateColumns,
+    loadSubscriptions: mockLoadSubscriptions,
+    loadAvailableQuantities,
+    pingUpstreamSubscriptions,
+    checkSimpleContentAccessEligible,
+    updateQuantity,
+    handleStartTask,
+    handleFinishedTask,
+    pollTaskUntilDone: noop,
+    pollBulkSearch: noop,
+    pollTasks,
+    cancelPollTasks: noop,
+    deleteSubscriptions: () => {},
+    resetTasks: noop,
+    uploadManifest: noop,
+    deleteManifest: noop,
+    refreshManifest: noop,
+    updateSearchQuery: noop,
+    openManageManifestModal: noop,
+    closeManageManifestModal: noop,
+    openDeleteModal: noop,
+    closeDeleteModal: noop,
+    disableDeleteButton: noop,
+    enableDeleteButton: noop,
+  });
 
   it('should render', async () => {
-    expect(toJson(page)).toMatchSnapshot();
+    render(<SubscriptionsPage {...getDefaultProps()} />);
+
+    expect(screen.getByText('Subscriptions')).toBeInTheDocument();
+    expect(screen.getByText('SubscriptionsToolbar Mock')).toBeInTheDocument();
+    expect(screen.getByText('SubscriptionsTable Mock')).toBeInTheDocument();
+    expect(screen.getByText('ManageManifestModal Mock')).toBeInTheDocument();
   });
 
   it('should render <PermissionDenied /> when permissions are missing', async () => {
-    expect(toJson(permissionDeniedPage)).toMatchSnapshot();
+    render(<SubscriptionsPage {...getDefaultProps(permissionDeniedState)} />);
+
+    // Check that PermissionDenied is rendered
+    expect(screen.getByText(/PermissionDenied:/)).toBeInTheDocument();
+
+    // Should not render the normal subscriptions page content
+    expect(screen.queryByText('SubscriptionsTable Mock')).not.toBeInTheDocument();
   });
 
   it('should render <PermissionDenied /> when organization load fails with 403', async () => {
@@ -115,41 +110,14 @@ describe('subscriptions page', () => {
         },
       },
     };
-    const pageWithOrgError = shallow(<SubscriptionsPage
-      setModalOpen={noop}
-      setModalClosed={noop}
+
+    render(<SubscriptionsPage
+      {...getDefaultProps()}
       organization={orgWith403Error}
-      subscriptions={successState}
-      subscriptionTableSettings={settingsSuccessState}
-      loadTables={loadTables}
-      loadTableColumns={loadTableColumns}
-      createColumns={createColumns}
-      updateColumns={updateColumns}
-      loadSubscriptions={loadSubscriptions}
-      loadAvailableQuantities={loadAvailableQuantities}
-      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
-      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
-      updateQuantity={updateQuantity}
-      handleStartTask={handleStartTask}
-      handleFinishedTask={handleFinishedTask}
-      pollTaskUntilDone={noop}
-      pollBulkSearch={noop}
-      pollTasks={pollTasks}
-      cancelPollTasks={noop}
-      deleteSubscriptions={() => {}}
-      resetTasks={noop}
-      uploadManifest={noop}
-      deleteManifest={noop}
-      refreshManifest={noop}
-      updateSearchQuery={noop}
-      openManageManifestModal={noop}
-      closeManageManifestModal={noop}
-      openDeleteModal={noop}
-      closeDeleteModal={noop}
-      disableDeleteButton={noop}
-      enableDeleteButton={noop}
     />);
-    expect(pageWithOrgError.find('PermissionDenied')).toHaveLength(1);
+
+    expect(screen.getByText(/PermissionDenied:/)).toBeInTheDocument();
+    expect(screen.getByText(/You do not have permission to view this organization/)).toBeInTheDocument();
   });
 
   it('should render <PermissionDenied /> when organization load fails with 404', async () => {
@@ -161,42 +129,14 @@ describe('subscriptions page', () => {
         },
       },
     };
-    const pageWithOrgError = shallow(<SubscriptionsPage
-      setModalOpen={noop}
-      setModalClosed={noop}
+
+    render(<SubscriptionsPage
+      {...getDefaultProps()}
       organization={orgWith404Error}
-      subscriptions={successState}
-      subscriptionTableSettings={settingsSuccessState}
-      loadTables={loadTables}
-      loadTableColumns={loadTableColumns}
-      createColumns={createColumns}
-      updateColumns={updateColumns}
-      loadSubscriptions={loadSubscriptions}
-      loadAvailableQuantities={loadAvailableQuantities}
-      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
-      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
-      updateQuantity={updateQuantity}
-      handleStartTask={handleStartTask}
-      handleFinishedTask={handleFinishedTask}
-      pollTaskUntilDone={noop}
-      pollBulkSearch={noop}
-      pollTasks={pollTasks}
-      cancelPollTasks={noop}
-      deleteSubscriptions={() => {}}
-      resetTasks={noop}
-      uploadManifest={noop}
-      deleteManifest={noop}
-      refreshManifest={noop}
-      updateSearchQuery={noop}
-      openManageManifestModal={noop}
-      closeManageManifestModal={noop}
-      openDeleteModal={noop}
-      closeDeleteModal={noop}
-      disableDeleteButton={noop}
-      enableDeleteButton={noop}
     />);
 
-    expect(pageWithOrgError.find('PermissionDenied')).toHaveLength(1);
+    expect(screen.getByText(/PermissionDenied:/)).toBeInTheDocument();
+    expect(screen.getByText(/You do not have permission to view this organization/)).toBeInTheDocument();
   });
 
   it('should not render <PermissionDenied /> when organization is still loading', async () => {
@@ -208,53 +148,85 @@ describe('subscriptions page', () => {
         },
       },
     };
-    const pageWithLoadingOrg = shallow(<SubscriptionsPage
-      setModalOpen={noop}
-      setModalClosed={noop}
+
+    render(<SubscriptionsPage
+      {...getDefaultProps()}
       organization={orgStillLoading}
-      subscriptions={successState}
-      subscriptionTableSettings={settingsSuccessState}
-      loadTables={loadTables}
-      loadTableColumns={loadTableColumns}
-      createColumns={createColumns}
-      updateColumns={updateColumns}
-      loadSubscriptions={loadSubscriptions}
-      loadAvailableQuantities={loadAvailableQuantities}
-      pingUpstreamSubscriptions={pingUpstreamSubscriptions}
-      checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
-      updateQuantity={updateQuantity}
-      handleStartTask={handleStartTask}
-      handleFinishedTask={handleFinishedTask}
-      pollTaskUntilDone={noop}
-      pollBulkSearch={noop}
-      pollTasks={pollTasks}
-      cancelPollTasks={noop}
-      deleteSubscriptions={() => {}}
-      resetTasks={noop}
-      uploadManifest={noop}
-      deleteManifest={noop}
-      refreshManifest={noop}
-      updateSearchQuery={noop}
-      openManageManifestModal={noop}
-      closeManageManifestModal={noop}
-      openDeleteModal={noop}
-      closeDeleteModal={noop}
-      disableDeleteButton={noop}
-      enableDeleteButton={noop}
     />);
 
     // Should not show PermissionDenied while organization is still loading
-    expect(pageWithLoadingOrg.find('PermissionDenied')).toHaveLength(0);
+    expect(screen.queryByText(/PermissionDenied:/)).not.toBeInTheDocument();
+  });
+
+  it('should render loading state when subscriptions are loading', () => {
+    const loadingSubscriptionsState = {
+      ...successState,
+      loading: true,
+      results: [],
+    };
+
+    render(<SubscriptionsPage
+      {...getDefaultProps(loadingSubscriptionsState)}
+    />);
+
+    expect(screen.getByText('SubscriptionsTable Mock')).toBeInTheDocument();
+  });
+
+  it('should render empty state when manifest is imported but no subscriptions', () => {
+    const emptySubscriptionsState = {
+      ...successState,
+      loading: false,
+      results: [],
+    };
+
+    render(<SubscriptionsPage
+      {...getDefaultProps(emptySubscriptionsState)}
+      isManifestImported
+    />);
+
+    // SubscriptionsTable should be rendered (emptyState is passed as prop)
+    expect(screen.getByText('SubscriptionsTable Mock')).toBeInTheDocument();
+  });
+
+  it('should render empty state prompting manifest import when no manifest', () => {
+    const emptySubscriptionsState = {
+      ...successState,
+      loading: false,
+      results: [],
+    };
+
+    render(<SubscriptionsPage
+      {...getDefaultProps(emptySubscriptionsState)}
+      isManifestImported={false}
+    />);
+
+    // SubscriptionsTable should be rendered
+    expect(screen.getByText('SubscriptionsTable Mock')).toBeInTheDocument();
   });
 
   it('should poll tasks when org changes', async () => {
-    page.setProps({ organization: { id: 1 } });
+    const { rerender } = render(<SubscriptionsPage {...getDefaultProps()} />);
 
-    expect(pollTasks).toHaveBeenCalled();
+    await act(async () => {
+      rerender(<SubscriptionsPage {...getDefaultProps()} organization={{ id: 1 }} />);
+    });
+
+    await waitFor(() => {
+      expect(pollTasks).toHaveBeenCalled();
+      expect(mockLoadSubscriptions).toHaveBeenCalled();
+      expect(loadTables).toHaveBeenCalled();
+      expect(mockLoadTableColumns).toHaveBeenCalled();
+    });
   });
 
   it('should not poll tasks if org has not changed', async () => {
-    page.setProps({ simpleContentAccess: true });
+    const { rerender } = render(<SubscriptionsPage {...getDefaultProps()} />);
+
+    pollTasks.mockClear(); // Clear calls from mount
+
+    await act(async () => {
+      rerender(<SubscriptionsPage {...getDefaultProps()} simpleContentAccess />);
+    });
 
     expect(pollTasks).not.toHaveBeenCalled();
   });
@@ -267,9 +239,23 @@ describe('subscriptions page', () => {
       },
     };
 
-    page.setProps({ isTaskPending: true, isPollingTask: true });
-    page.setProps({ task: mockTask, isPollingTask: true, isTaskPending: false });
+    const { rerender } = render(<SubscriptionsPage
+      {...getDefaultProps()}
+      isTaskPending
+      isPollingTask
+    />);
 
-    expect(handleFinishedTask).toHaveBeenCalledWith(mockTask);
+    await act(async () => {
+      rerender(<SubscriptionsPage
+        {...getDefaultProps()}
+        task={mockTask}
+        isPollingTask
+        isTaskPending={false}
+      />);
+    });
+
+    await waitFor(() => {
+      expect(handleFinishedTask).toHaveBeenCalledWith(mockTask);
+    });
   });
 });
