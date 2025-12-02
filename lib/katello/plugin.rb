@@ -331,7 +331,6 @@ Foreman::Plugin.register :katello do
 
   # Katello variables for Host Registration
   extend_allowed_registration_vars :activation_keys
-  extend_allowed_registration_vars :lifecycle_environment_id
   extend_allowed_registration_vars :force
   extend_allowed_registration_vars :ignore_subman_errors
   extend_allowed_registration_vars :setup_container_registry_certs
@@ -392,7 +391,7 @@ Foreman::Plugin.register :katello do
 
       setting 'allow_multiple_content_views',
         type: :boolean,
-        default: false,
+        default: true,
         full_name: N_('Allow multiple content views'),
         description: N_("Allow hosts or activation keys to be associated with multiple content view environments")
 
