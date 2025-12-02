@@ -25,7 +25,7 @@ module Katello
     scoped_search :on => :arch
     scoped_search :on => :vendor, :complete_value => true
     scoped_search :relation => :host_installed_packages, :on => :persistence,
-                  :complete_value => Katello::HostInstalledPackage::PERSISTENCE_VALUES.index_by(&:itself),
+                  :complete_value => Katello::HostInstalledPackage::PERSISTENCE_VALUES.index_by(&:to_sym),
                   :only_explicit => true
   end
 end
