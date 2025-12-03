@@ -24,7 +24,7 @@ import SyncStatusToolbar from './components/SyncStatusToolbar';
 import SyncStatusTable from './components/SyncStatusTable';
 import './SyncStatus.scss';
 
-const POLL_INTERVAL = 5000; // Poll every 5 seconds
+const POLL_INTERVAL = 1000; // Poll every 1 second
 
 const SyncStatusPage = () => {
   const dispatch = useDispatch();
@@ -74,14 +74,8 @@ const SyncStatusPage = () => {
   const selectedRepoIds = Array.from(selectionSet);
 
   // Use refs for mutable values that don't need to trigger re-renders
-  const repoStatusesRef = React.useRef(repoStatuses);
-  const pollTimerRef = React.useRef(null);
   const hasAutoExpandedRef = React.useRef(false);
-
-  // Update ref whenever repo statuses change
-  useEffect(() => {
-    repoStatusesRef.current = repoStatuses;
-  }, [repoStatuses]);
+  const pollTimerRef = React.useRef(null);
 
   // Load initial data
   useEffect(() => {
@@ -179,16 +173,12 @@ const SyncStatusPage = () => {
     if (syncingIds.length > 0 && !pollTimerRef.current) {
       // Start polling
       pollTimerRef.current = setInterval(() => {
-        // Use ref to get current repo statuses instead of stale closure value
-        const currentSyncingIds = Object.entries(repoStatusesRef.current)
+        const currentSyncingIds = Object.entries(repoStatuses)
           .filter(([_, status]) => status?.is_running === true)
           .map(([id]) => parseInt(id, 10));
+
         if (currentSyncingIds.length > 0) {
           dispatch(pollSyncStatus(currentSyncingIds));
-        } else {
-          // No more syncing repos, clear the timer
-          clearInterval(pollTimerRef.current);
-          pollTimerRef.current = null;
         }
       }, POLL_INTERVAL);
     } else if (syncingIds.length === 0 && pollTimerRef.current) {

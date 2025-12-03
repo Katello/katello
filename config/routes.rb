@@ -2,16 +2,6 @@ Katello::Engine.routes.draw do
   scope :katello, :path => '/katello' do
     match ':kt_path/auto_complete_search', :action => :auto_complete_search, :controller => :auto_complete_search, :via => :get
 
-    # Old sync_management controller kept for backward compatibility
-    # Uncomment if needed for rollback
-    # resources :sync_management, :only => [:destroy] do
-    #   collection do
-    #     get :index
-    #     get :sync_status
-    #     post :sync
-    #   end
-    # end
-
     match '/remote_execution' => 'remote_execution#create', :via => [:post]
   end
 

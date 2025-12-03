@@ -8,10 +8,7 @@ import SYNC_STATUS_KEY, {
 } from './SyncStatusConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
 
-export const syncStatusErrorToast = (error) => {
-  const message = getResponseErrorMsgs(error.response);
-  return message;
-};
+export const syncStatusErrorToast = error => getResponseErrorMsgs(error.response);
 
 export const getSyncStatus = (extraParams = {}) => get({
   type: API_OPERATIONS.GET,

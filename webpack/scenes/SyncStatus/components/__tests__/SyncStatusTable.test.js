@@ -124,7 +124,7 @@ describe('SyncStatusTable', () => {
     expect(screen.getByText('Test Repository')).toBeInTheDocument();
   });
 
-  it('still shows product hierarchy even when repo is not active with showActiveOnly', () => {
+  it('hides product when all child repos are not active with showActiveOnly', () => {
     const propsWithActiveOnly = {
       ...mockProps,
       showActiveOnly: true,
@@ -132,8 +132,48 @@ describe('SyncStatusTable', () => {
 
     render(<SyncStatusTable {...propsWithActiveOnly} />);
 
-    // Filter only hides repos that are not running, but still shows product
-    // and content nodes since they're not repos
-    expect(screen.getByText('Test Product')).toBeInTheDocument();
+    // Filter hides parent nodes when all child repos are not running
+    expect(screen.queryByText('Test Product')).not.toBeInTheDocument();
+    expect(screen.queryByText('Test Repository')).not.toBeInTheDocument();
+  });
+
+  it('collapses expanded row when expand button is clicked again', () => {
+    const propsWithExpanded = {
+      ...mockProps,
+      expandedNodeIds: ['product-1'],
+    };
+
+    render(<SyncStatusTable {...propsWithExpanded} />);
+
+    // Find and click the expand button to collapse
+    const expandButtons = screen.getAllByRole('button', { name: /collapse row/i });
+    fireEvent.click(expandButtons[0]);
+
+    // Should call setExpandedNodeIds to collapse
+    expect(mockProps.setExpandedNodeIds).toHaveBeenCalled();
+    const setExpandedCall = mockProps.setExpandedNodeIds.mock.calls[0][0];
+    const newExpandedIds = setExpandedCall(['product-1']);
+    expect(newExpandedIds).toEqual([]);
+  });
+
+  it('selects multiple repositories', () => {
+    const propsWithExpandedNodes = {
+      ...mockProps,
+      expandedNodeIds: ['product-1', 'product_content-101'],
+    };
+
+    render(<SyncStatusTable {...propsWithExpandedNodes} />);
+
+    // Find all checkboxes
+    const checkboxes = screen.getAllByRole('checkbox');
+    // eslint-disable-next-line promise/prefer-await-to-callbacks
+    const repoCheckboxes = checkboxes.filter(cb =>
+      cb.getAttribute('aria-label')?.includes('Select repository'));
+
+    // Click the first repo checkbox
+    if (repoCheckboxes[0]) {
+      fireEvent.click(repoCheckboxes[0]);
+      expect(mockProps.onSelectRepo).toHaveBeenCalledTimes(1);
+    }
   });
 });

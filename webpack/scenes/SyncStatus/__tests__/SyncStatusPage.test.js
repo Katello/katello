@@ -90,3 +90,21 @@ test('Displays empty state when no products exist', async () => {
 
   assertNockRequest(scope);
 });
+
+test('Handles API error (500) gracefully', async () => {
+  const scope = nockInstance
+    .get(syncStatusPath)
+    .query(true)
+    .reply(500, { error: 'Internal Server Error' });
+
+  const { queryByText } = renderWithRedux(<SyncStatusPage />, renderOptions);
+
+  await patientlyWaitFor(() => {
+    // Page should still render the header even with error
+    expect(queryByText('Sync Status')).toBeInTheDocument();
+    // Products won't be shown since API failed
+    expect(queryByText('Test Product')).toBeNull();
+  });
+
+  assertNockRequest(scope);
+});

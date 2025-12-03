@@ -39,15 +39,15 @@ module Katello
       end
 
       # Recursively check if a node has any repositories
-      def has_repos?(node)
+      def repos?(node)
         return true if node[:repos].present? && node[:repos].any?
-        return false unless node[:children].present?
-        node[:children].any? { |child| has_repos?(child) }
+        return false if node[:children].blank?
+        node[:children].any? { |child| repos?(child) }
       end
 
       # Filter out nodes with no repositories
       def filter_empty_nodes(nodes)
-        nodes.select { |node| has_repos?(node) }.map do |node|
+        nodes.select { |node| repos?(node) }.map do |node|
           if node[:children].present?
             node.merge(:children => filter_empty_nodes(node[:children]))
           else

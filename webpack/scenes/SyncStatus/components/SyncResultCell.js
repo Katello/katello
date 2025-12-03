@@ -58,9 +58,14 @@ const SyncResultCell = ({ repo }) => {
   );
 
   if (errorDetails) {
-    const errorText = Array.isArray(errorDetails)
-      ? errorDetails.join('\n')
-      : errorDetails;
+    let errorText;
+    if (Array.isArray(errorDetails)) {
+      errorText = errorDetails.join('\n');
+    } else if (typeof errorDetails === 'object') {
+      errorText = JSON.stringify(errorDetails, null, 2);
+    } else {
+      errorText = String(errorDetails);
+    }
 
     if (errorText && errorText.length > 0) {
       return (
@@ -80,9 +85,11 @@ SyncResultCell.propTypes = {
     state: PropTypes.string,
     start_time: PropTypes.string,
     sync_id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    // error_details can be string, array, or object from API
     error_details: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.arrayOf(PropTypes.string),
+      PropTypes.object,
     ]),
   }).isRequired,
 };

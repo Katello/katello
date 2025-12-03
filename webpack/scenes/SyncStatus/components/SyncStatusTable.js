@@ -83,7 +83,18 @@ const SyncStatusTable = ({
   const buildTreeRows = useMemo(() => {
     const rows = [];
 
-    const addRow = (node, level, parent, posinset, isHidden) => {
+    // Helper to check if a node will be visible (for setsize calculation)
+    const isNodeVisible = (node) => {
+      if (!showActiveOnly) return true;
+      if (node.type === 'repo') {
+        const status = repoStatuses[node.id];
+        return status?.is_running;
+      }
+      // For non-repo nodes, they're visible if shown
+      return true;
+    };
+
+    const addRow = (node, level, parent, posinset, ariaSetSize, isHidden) => {
       const nodeId = `${node.type}-${node.id}`;
       const hasChildren = (node.children && node.children.length > 0) ||
                           (node.repos && node.repos.length > 0);
@@ -95,6 +106,7 @@ const SyncStatusTable = ({
         level,
         parent,
         posinset,
+        ariaSetSize,
         isHidden,
         hasChildren,
         isExpanded,
@@ -105,28 +117,58 @@ const SyncStatusTable = ({
         const reposToRender = node.repos || [];
         const allChildren = [...childrenToRender, ...reposToRender];
 
+        // Calculate visible siblings for aria-setsize
+        const visibleChildren = allChildren.filter(isNodeVisible);
+        const visibleCount = visibleChildren.length;
+
         allChildren.forEach((child, idx) => {
-          addRow(child, level + 1, nodeId, idx + 1, !isExpanded || isHidden);
+          // Use position among all children for posinset, but visible count for setsize
+          addRow(child, level + 1, nodeId, idx + 1, visibleCount, !isExpanded || isHidden);
         });
       }
     };
 
+    // For root products, calculate visible products
+    const visibleProducts = products.filter(isNodeVisible);
     products.forEach((product, idx) => {
-      addRow(product, 1, null, idx + 1, false);
+      addRow(product, 1, null, idx + 1, visibleProducts.length, false);
     });
 
     return rows;
-  }, [products, expandedNodeIds]);
+  }, [products, expandedNodeIds, showActiveOnly, repoStatuses]);
 
   // Filter rows based on active only setting
   const visibleRows = useMemo(() => {
     if (!showActiveOnly) return buildTreeRows;
 
-    return buildTreeRows.filter((row) => {
-      if (row.type !== 'repo') return true;
-      const status = repoStatuses[row.id];
-      return status?.is_running;
+    // Build parent->children map
+    const parentToChildren = {};
+    buildTreeRows.forEach((row) => {
+      if (row.parent) {
+        if (!parentToChildren[row.parent]) parentToChildren[row.parent] = [];
+        parentToChildren[row.parent].push(row);
+      }
     });
+
+    // Recursive helper functions for visibility checking
+    // hasVisibleChildren must be defined before isRowVisible due to ESLint rules
+    function hasVisibleChildren(row) {
+      const children = parentToChildren[row.nodeId] || [];
+      // eslint-disable-next-line no-use-before-define
+      return children.some(child => isRowVisible(child));
+    }
+
+    // Check if a row should be visible
+    function isRowVisible(row) {
+      if (row.type === 'repo') {
+        const status = repoStatuses[row.id];
+        return status?.is_running;
+      }
+      // For non-repo nodes (product, minor, arch), visible if has visible children
+      return hasVisibleChildren(row);
+    }
+
+    return buildTreeRows.filter(row => isRowVisible(row));
   }, [buildTreeRows, showActiveOnly, repoStatuses]);
 
   const toggleExpand = (nodeId) => {
@@ -150,13 +192,21 @@ const SyncStatusTable = ({
     // Get checkbox state for selectable nodes
     const nodeCheckboxState = isSelectableNode ? getNodeCheckboxState(row) : null;
 
-    const treeRow = {
-      onCollapse: row.hasChildren ? () => toggleExpand(row.nodeId) : () => {},
+    // Build treeRow props - minimal for leaf nodes, full for expandable nodes
+    const treeRow = row.hasChildren ? {
+      onCollapse: () => toggleExpand(row.nodeId),
       props: {
         'aria-level': row.level,
         'aria-posinset': row.posinset,
-        'aria-setsize': row.hasChildren ? (row.children?.length || 0) + (row.repos?.length || 0) : 0,
+        'aria-setsize': row.ariaSetSize || 0,
         isExpanded: row.isExpanded,
+        isHidden: row.isHidden,
+      },
+    } : {
+      props: {
+        'aria-level': row.level,
+        'aria-posinset': row.posinset,
+        'aria-setsize': 0, // MUST be 0 for leaf nodes to hide expand button
         isHidden: row.isHidden,
       },
     };
@@ -164,7 +214,7 @@ const SyncStatusTable = ({
     return (
       <TreeRowWrapper
         key={row.nodeId}
-        row={treeRow}
+        row={row.hasChildren ? treeRow : { props: treeRow.props }}
       >
         <Td dataLabel={__('Name')} treeRow={treeRow}>
           {isRepo && (
@@ -190,8 +240,32 @@ const SyncStatusTable = ({
               ouiaId={`checkbox-${row.type}-${row.id}`}
             />
           )}
-          {' '}
-          {row.name}
+          <span
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              if (isRepo && !status?.is_running) {
+                onSelectRepo(row.id, row);
+              } else if (isSelectableNode) {
+                onSelectProduct(row);
+              }
+            }}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                if (isRepo && !status?.is_running) {
+                  onSelectRepo(row.id, row);
+                } else if (isSelectableNode) {
+                  onSelectProduct(row);
+                }
+              }
+            }}
+            style={{
+              cursor: (isRepo && status?.is_running) ? 'default' : 'pointer',
+              marginLeft: (isRepo || isSelectableNode) ? '0.5rem' : '0',
+            }}
+          >
+            {row.name}
+          </span>
           {row.organization && ` (${row.organization})`}
         </Td>
         <Td dataLabel={__('Started at')}>
@@ -237,14 +311,13 @@ const SyncStatusTable = ({
   };
 
   return (
-    <div style={{ paddingTop: '8px' }}>
-      <Table
-        aria-label={__('Sync Status')}
-        variant="compact"
-        isTreeTable
-        isStickyHeader
-        ouiaId="sync-status-table"
-      >
+    <Table
+      aria-label={__('Sync Status')}
+      variant="compact"
+      isTreeTable
+      isStickyHeader
+      ouiaId="sync-status-table"
+    >
       <Thead>
         <Tr ouiaId="sync-status-table-header">
           <Th
@@ -273,7 +346,6 @@ const SyncStatusTable = ({
         {visibleRows.map(row => renderRow(row))}
       </Tbody>
     </Table>
-    </div>
   );
 };
 

@@ -15,7 +15,7 @@ const SyncProgressCell = ({ repo, onCancelSync }) => {
     return null;
   }
 
-  const progressValue = progress?.progress || 0;
+  const progressValue = Math.max(0, Math.min(100, progress?.progress || 0));
 
   return (
     <Flex alignItems={{ default: 'alignItemsCenter' }}>
