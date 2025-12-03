@@ -8,73 +8,38 @@ import {
   Switch,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
+import TreeSelectAllCheckbox from './TreeSelectAllCheckbox';
 
 const SyncStatusToolbar = ({
   selectedRepoIds,
   onSyncNow,
-  onExpandAll,
-  onCollapseAll,
-  onSelectAll,
-  onSelectNone,
   showActiveOnly,
   onToggleActiveOnly,
   isSyncDisabled,
+  selectAllCheckboxProps,
 }) => (
   <Toolbar isSticky ouiaId="sync-status-toolbar">
-    <ToolbarContent>
+    <ToolbarContent alignItems={{ default: 'alignItemsCenter' }} style={{ minHeight: '41px' }}>
       <ToolbarItem>
-        <Button
-          variant="secondary"
-          onClick={onExpandAll}
-          ouiaId="expand-all-button"
-        >
-          {__('Expand All')}
-        </Button>
+        <TreeSelectAllCheckbox {...selectAllCheckboxProps} />
       </ToolbarItem>
-      <ToolbarItem>
-        <Button
-          variant="secondary"
-          onClick={onCollapseAll}
-          ouiaId="collapse-all-button"
-        >
-          {__('Collapse All')}
-        </Button>
-      </ToolbarItem>
-      <ToolbarItem>
-        <Button
-          variant="secondary"
-          onClick={onSelectAll}
-          ouiaId="select-all-button"
-        >
-          {__('Select All')}
-        </Button>
-      </ToolbarItem>
-      <ToolbarItem>
-        <Button
-          variant="secondary"
-          onClick={onSelectNone}
-          ouiaId="select-none-button"
-        >
-          {__('Select None')}
-        </Button>
-      </ToolbarItem>
-      <ToolbarItem>
+      <ToolbarItem alignSelf="center">
         <Switch
-          id="active-only-switch"
-          label={__('Active Only')}
+          id="show-syncing-only-switch"
+          label={__('Show syncing only')}
           isChecked={showActiveOnly}
           onChange={onToggleActiveOnly}
-          ouiaId="active-only-switch"
+          ouiaId="show-syncing-only-switch"
         />
       </ToolbarItem>
-      <ToolbarItem align={{ default: 'alignRight' }}>
+      <ToolbarItem>
         <Button
           variant="primary"
           onClick={onSyncNow}
           isDisabled={isSyncDisabled || selectedRepoIds.length === 0}
-          ouiaId="sync-now-button"
+          ouiaId="sync-button"
         >
-          {__('Synchronize Now')}
+          {__('Synchronize')}
         </Button>
       </ToolbarItem>
     </ToolbarContent>
@@ -84,13 +49,16 @@ const SyncStatusToolbar = ({
 SyncStatusToolbar.propTypes = {
   selectedRepoIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   onSyncNow: PropTypes.func.isRequired,
-  onExpandAll: PropTypes.func.isRequired,
-  onCollapseAll: PropTypes.func.isRequired,
-  onSelectAll: PropTypes.func.isRequired,
-  onSelectNone: PropTypes.func.isRequired,
   showActiveOnly: PropTypes.bool.isRequired,
   onToggleActiveOnly: PropTypes.func.isRequired,
   isSyncDisabled: PropTypes.bool,
+  selectAllCheckboxProps: PropTypes.shape({
+    selectNone: PropTypes.func.isRequired,
+    selectAll: PropTypes.func.isRequired,
+    selectedCount: PropTypes.number.isRequired,
+    totalCount: PropTypes.number.isRequired,
+    areAllRowsSelected: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
 SyncStatusToolbar.defaultProps = {

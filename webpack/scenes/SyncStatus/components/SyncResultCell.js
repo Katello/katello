@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label, Tooltip } from '@patternfly/react-core';
+import { Tooltip } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -20,42 +20,41 @@ import {
 
 const SyncResultCell = ({ repo }) => {
   const {
-    rawState, state, startTime, syncId, errorDetails,
+    rawState, state, syncId, errorDetails,
   } = propsToCamelCase(repo);
 
-  const getVariantAndIcon = () => {
+  const getIcon = () => {
     switch (rawState) {
     case SYNC_STATE_STOPPED:
-      return { color: 'green', icon: <CheckCircleIcon /> };
+      return <CheckCircleIcon color="green" />;
     case SYNC_STATE_ERROR:
-      return { color: 'red', icon: <ExclamationCircleIcon /> };
+      return <ExclamationCircleIcon color="red" />;
     case SYNC_STATE_CANCELED:
-      return { color: 'orange', icon: <BanIcon /> };
+      return <BanIcon color="orange" />;
     case SYNC_STATE_PAUSED:
-      return { color: 'blue', icon: <PauseCircleIcon /> };
+      return <PauseCircleIcon color="blue" />;
     case SYNC_STATE_NEVER_SYNCED:
-      return { color: 'grey', icon: <ExclamationTriangleIcon /> };
+      return <ExclamationTriangleIcon />;
     default:
-      return { color: 'grey', icon: null };
+      return null;
     }
   };
 
-  const { color, icon } = getVariantAndIcon();
+  const icon = getIcon();
   const label = SYNC_STATE_LABELS[rawState] || state;
 
   const taskUrl = syncId ? foremanUrl(`/foreman_tasks/tasks/${syncId}`) : null;
 
-  const labelContent = (
-    <Label color={color} icon={icon}>
-      {taskUrl ? (
+  const content = (
+    <>
+      {icon} {taskUrl ? (
         <a href={taskUrl} target="_blank" rel="noopener noreferrer">
           {label}
         </a>
       ) : (
         label
       )}
-      {startTime && ` - ${startTime}`}
-    </Label>
+    </>
   );
 
   if (errorDetails) {
@@ -66,13 +65,13 @@ const SyncResultCell = ({ repo }) => {
     if (errorText && errorText.length > 0) {
       return (
         <Tooltip content={errorText}>
-          {labelContent}
+          <span>{content}</span>
         </Tooltip>
       );
     }
   }
 
-  return labelContent;
+  return content;
 };
 
 SyncResultCell.propTypes = {

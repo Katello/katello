@@ -1,0 +1,16 @@
+// Sticky toolbar and table header coordination
+// Target the toolbar by its ouiaId
+[data-ouia-component-id="sync-status-toolbar"] {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 400 !important;
+}
+
+// Target the table by its ouiaId and offset the sticky header
+[data-ouia-component-id="sync-status-table"] {
+  thead {
+    position: sticky !important;
+    top: 70px !important;
+    z-index: 300 !important;
+  }
+}

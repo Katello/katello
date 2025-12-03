@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   PageSection,
@@ -8,6 +8,7 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import Loading from 'foremanReact/components/Loading';
+import { useSelectionSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import {
   getSyncStatus,
   pollSyncStatus,
@@ -21,6 +22,7 @@ import {
 } from './SyncStatusSelectors';
 import SyncStatusToolbar from './components/SyncStatusToolbar';
 import SyncStatusTable from './components/SyncStatusTable';
+import './SyncStatus.scss';
 
 const POLL_INTERVAL = 5000; // Poll every 5 seconds
 
@@ -30,11 +32,46 @@ const SyncStatusPage = () => {
   const syncStatusStatus = useSelector(selectSyncStatusStatus);
   const pollData = useSelector(selectSyncStatusPoll);
 
-  const [selectedRepoIds, setSelectedRepoIds] = useState([]);
   const [expandedNodeIds, setExpandedNodeIds] = useState([]);
   const [showActiveOnly, setShowActiveOnly] = useState(false);
   const [repoStatuses, setRepoStatuses] = useState({});
   const [isSyncing, setIsSyncing] = useState(false);
+
+  // Flatten tree to get all repos for selection
+  const allRepos = useMemo(() => {
+    const repos = [];
+    const traverse = (nodes) => {
+      nodes.forEach((node) => {
+        if (node.type === 'repo') {
+          repos.push(node);
+        }
+        if (node.children) traverse(node.children);
+        if (node.repos) traverse(node.repos);
+      });
+    };
+    if (syncStatusData?.products) {
+      traverse(syncStatusData.products);
+    }
+    return repos;
+  }, [syncStatusData]);
+
+  // Use selection hook from Foreman
+  const {
+    selectOne,
+    selectPage,
+    selectNone,
+    selectedCount,
+    areAllRowsSelected,
+    isSelected,
+    selectionSet,
+  } = useSelectionSet({
+    results: allRepos,
+    metadata: { selectable: allRepos.length },
+    isSelectable: () => true,
+  });
+
+  // Get selected repo IDs from selectionSet
+  const selectedRepoIds = Array.from(selectionSet);
 
   // Use refs for mutable values that don't need to trigger re-renders
   const repoStatusesRef = React.useRef(repoStatuses);
@@ -132,23 +169,6 @@ const SyncStatusPage = () => {
     }
   }, [syncStatusData, repoStatuses]);
 
-  // Get all repository IDs from the tree
-  const getAllRepoIds = useCallback(() => {
-    const repoIds = [];
-    const traverse = (nodes) => {
-      nodes.forEach((node) => {
-        if (node.type === 'repo') {
-          repoIds.push(node.id);
-        }
-        if (node.children) traverse(node.children);
-        if (node.repos) traverse(node.repos);
-      });
-    };
-    if (syncStatusData?.products) {
-      traverse(syncStatusData.products);
-    }
-    return repoIds;
-  }, [syncStatusData]);
 
   // Start/stop polling based on whether there are active syncs
   useEffect(() => {
@@ -186,21 +206,55 @@ const SyncStatusPage = () => {
     };
   }, [repoStatuses, dispatch]);
 
-  const handleSelectRepo = (repoId) => {
-    setSelectedRepoIds((prev) => {
-      if (prev.includes(repoId)) {
-        return prev.filter(id => id !== repoId);
+  const handleSelectRepo = (repoId, repoData) => {
+    const isCurrentlySelected = isSelected(repoId);
+    selectOne(!isCurrentlySelected, repoId, repoData);
+  };
+
+  // Product selection handler - selects/deselects all child repos
+  const handleSelectProduct = (product) => {
+    // Get all child repo IDs and all descendant node IDs
+    const childRepos = [];
+    const descendantNodeIds = [];
+    const getChildRepos = (node) => {
+      const nodeId = `${node.type}-${node.id}`;
+      // Track all nodes with children (products, minors, archs)
+      if (node.children || node.repos) {
+        descendantNodeIds.push(nodeId);
       }
-      return [...prev, repoId];
-    });
-  };
+      if (node.type === 'repo') {
+        childRepos.push(node);
+      }
+      if (node.children) {
+        node.children.forEach(getChildRepos);
+      }
+      if (node.repos) {
+        node.repos.forEach(getChildRepos);
+      }
+    };
+    getChildRepos(product);
 
-  const handleSelectAll = () => {
-    setSelectedRepoIds(getAllRepoIds());
-  };
+    // Check if all children are selected
+    const allChildrenSelected = childRepos.length > 0 &&
+      childRepos.every(repo => isSelected(repo.id));
 
-  const handleSelectNone = () => {
-    setSelectedRepoIds([]);
+    if (allChildrenSelected) {
+      // Deselect all children
+      childRepos.forEach(repo => selectOne(false, repo.id, repo));
+    } else {
+      // Select all children and expand all descendant nodes to show selected children
+      childRepos.forEach(repo => selectOne(true, repo.id, repo));
+      // Auto-expand all descendant nodes
+      setExpandedNodeIds((prev) => {
+        const newExpanded = [...prev];
+        descendantNodeIds.forEach((nodeId) => {
+          if (!newExpanded.includes(nodeId)) {
+            newExpanded.push(nodeId);
+          }
+        });
+        return newExpanded;
+      });
+    }
   };
 
   const handleExpandAll = () => {
@@ -264,6 +318,35 @@ const SyncStatusPage = () => {
     setShowActiveOnly(prev => !prev);
   };
 
+  // Single repository sync handler
+  const handleSyncRepo = (repoId) => {
+    setIsSyncing(true);
+    dispatch(syncRepositories(
+      [repoId],
+      (response) => {
+        setIsSyncing(false);
+        // Update repo statuses immediately from sync response
+        if (response?.data && Array.isArray(response.data)) {
+          setRepoStatuses((prev) => {
+            const updated = { ...prev };
+            response.data.forEach((status) => {
+              if (status.id) {
+                updated[status.id] = status;
+              }
+            });
+            return updated;
+          });
+        }
+        // Also poll immediately to get latest status
+        dispatch(pollSyncStatus([repoId]));
+      },
+      () => {
+        // Error handler - reset syncing state
+        setIsSyncing(false);
+      },
+    ));
+  };
+
   if (syncStatusStatus === STATUS.PENDING) {
     return <Loading />;
   }
@@ -273,27 +356,37 @@ const SyncStatusPage = () => {
       <PageSection variant={PageSectionVariants.light}>
         <Title headingLevel="h1" ouiaId="sync-status-title">{__('Sync Status')}</Title>
       </PageSection>
-      <SyncStatusToolbar
-        selectedRepoIds={selectedRepoIds}
-        onSyncNow={handleSyncNow}
-        onExpandAll={handleExpandAll}
-        onCollapseAll={handleCollapseAll}
-        onSelectAll={handleSelectAll}
-        onSelectNone={handleSelectNone}
-        showActiveOnly={showActiveOnly}
-        onToggleActiveOnly={handleToggleActiveOnly}
-        isSyncDisabled={isSyncing}
-      />
-      <SyncStatusTable
-        products={syncStatusData?.products || []}
-        repoStatuses={repoStatuses}
-        selectedRepoIds={selectedRepoIds}
-        onSelectRepo={handleSelectRepo}
-        onCancelSync={handleCancelSync}
-        expandedNodeIds={expandedNodeIds}
-        setExpandedNodeIds={setExpandedNodeIds}
-        showActiveOnly={showActiveOnly}
-      />
+      <PageSection variant={PageSectionVariants.default} padding={{ default: 'noPadding' }}>
+        <SyncStatusToolbar
+          selectedRepoIds={selectedRepoIds}
+          onSyncNow={handleSyncNow}
+          showActiveOnly={showActiveOnly}
+          onToggleActiveOnly={handleToggleActiveOnly}
+          isSyncDisabled={isSyncing}
+          selectAllCheckboxProps={{
+            selectNone,
+            selectAll: selectPage, // No pagination, so selectAll = selectPage
+            selectedCount,
+            totalCount: allRepos.length,
+            areAllRowsSelected: areAllRowsSelected(),
+          }}
+        />
+        <SyncStatusTable
+          products={syncStatusData?.products || []}
+          repoStatuses={repoStatuses}
+          selectedRepoIds={selectedRepoIds}
+          onSelectRepo={handleSelectRepo}
+          onSelectProduct={handleSelectProduct}
+          onSyncRepo={handleSyncRepo}
+          onCancelSync={handleCancelSync}
+          expandedNodeIds={expandedNodeIds}
+          setExpandedNodeIds={setExpandedNodeIds}
+          showActiveOnly={showActiveOnly}
+          isSelected={isSelected}
+          onExpandAll={handleExpandAll}
+          onCollapseAll={handleCollapseAll}
+        />
+      </PageSection>
     </>
   );
 };
