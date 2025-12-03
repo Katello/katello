@@ -39,12 +39,16 @@ describe('SyncStatusTable', () => {
   const mockProps = {
     products: mockProducts,
     repoStatuses: mockRepoStatuses,
-    selectedRepoIds: [],
     onSelectRepo: jest.fn(),
+    onSelectProduct: jest.fn(),
+    onSyncRepo: jest.fn(),
     onCancelSync: jest.fn(),
     expandedNodeIds: [],
     setExpandedNodeIds: jest.fn(),
     showActiveOnly: false,
+    isSelected: jest.fn(() => false),
+    onExpandAll: jest.fn(),
+    onCollapseAll: jest.fn(),
   };
 
   beforeEach(() => {
@@ -54,9 +58,8 @@ describe('SyncStatusTable', () => {
   it('renders table with column headers', () => {
     render(<SyncStatusTable {...mockProps} />);
 
-    expect(screen.getByText('Product / Repository')).toBeInTheDocument();
-    expect(screen.getByText('Start Time')).toBeInTheDocument();
-    expect(screen.getByText('Duration')).toBeInTheDocument();
+    expect(screen.getByText('Product | Repository')).toBeInTheDocument();
+    expect(screen.getByText('Started at')).toBeInTheDocument();
     expect(screen.getByText('Details')).toBeInTheDocument();
     expect(screen.getByText('Progress / Result')).toBeInTheDocument();
   });
@@ -88,11 +91,11 @@ describe('SyncStatusTable', () => {
     const checkboxes = screen.getAllByRole('checkbox');
     // eslint-disable-next-line promise/prefer-await-to-callbacks
     const repoCheckbox = checkboxes.find(cb =>
-      cb.getAttribute('aria-label')?.includes('Test Repository'));
+      cb.getAttribute('aria-label')?.includes('Select repository'));
 
     if (repoCheckbox) {
       fireEvent.click(repoCheckbox);
-      expect(mockProps.onSelectRepo).toHaveBeenCalledWith(1);
+      expect(mockProps.onSelectRepo).toHaveBeenCalled();
     }
   });
 

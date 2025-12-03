@@ -13,9 +13,9 @@ export const SYNC_STATE_CANCELED = 'canceled';
 export const SYNC_STATE_PAUSED = 'paused';
 
 export const SYNC_STATE_LABELS = {
-  [SYNC_STATE_STOPPED]: __('Syncing Complete'),
-  [SYNC_STATE_ERROR]: __('Sync Incomplete'),
-  [SYNC_STATE_NEVER_SYNCED]: __('Never Synced'),
+  [SYNC_STATE_STOPPED]: __('Syncing complete'),
+  [SYNC_STATE_ERROR]: __('Sync incomplete'),
+  [SYNC_STATE_NEVER_SYNCED]: __('Never synced'),
   [SYNC_STATE_RUNNING]: __('Running'),
   [SYNC_STATE_CANCELED]: __('Canceled'),
   [SYNC_STATE_PAUSED]: __('Paused'),

@@ -60,14 +60,12 @@ test('Displays toolbar with action buttons', async () => {
     .query(true)
     .reply(200, mockSyncStatusData);
 
-  const { queryByText } = renderWithRedux(<SyncStatusPage />, renderOptions);
+  const { getAllByText, queryByText } = renderWithRedux(<SyncStatusPage />, renderOptions);
 
   await patientlyWaitFor(() => {
-    expect(queryByText('Expand All')).toBeInTheDocument();
-    expect(queryByText('Collapse All')).toBeInTheDocument();
-    expect(queryByText('Select All')).toBeInTheDocument();
-    expect(queryByText('Select None')).toBeInTheDocument();
-    expect(queryByText('Synchronize Now')).toBeInTheDocument();
+    // Switch renders label twice (on/off states), so use getAllByText
+    expect(getAllByText('Show syncing only').length).toBeGreaterThan(0);
+    expect(queryByText('Synchronize')).toBeInTheDocument();
   });
 
   assertNockRequest(scope);

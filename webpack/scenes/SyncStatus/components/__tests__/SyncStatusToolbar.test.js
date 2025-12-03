@@ -6,59 +6,59 @@ describe('SyncStatusToolbar', () => {
   const mockProps = {
     selectedRepoIds: [1, 2],
     onSyncNow: jest.fn(),
-    onExpandAll: jest.fn(),
-    onCollapseAll: jest.fn(),
-    onSelectAll: jest.fn(),
-    onSelectNone: jest.fn(),
     showActiveOnly: false,
     onToggleActiveOnly: jest.fn(),
+    selectAllCheckboxProps: {
+      selectNone: jest.fn(),
+      selectAll: jest.fn(),
+      selectedCount: 2,
+      totalCount: 10,
+      areAllRowsSelected: false,
+    },
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders all action buttons', () => {
+  it('renders toolbar with selection checkbox and sync button', () => {
     render(<SyncStatusToolbar {...mockProps} />);
 
-    expect(screen.getByText('Expand All')).toBeInTheDocument();
-    expect(screen.getByText('Collapse All')).toBeInTheDocument();
-    expect(screen.getByText('Select All')).toBeInTheDocument();
-    expect(screen.getByText('Select None')).toBeInTheDocument();
-    expect(screen.getByText('Synchronize Now')).toBeInTheDocument();
+    expect(screen.getByText('2 selected')).toBeInTheDocument();
+    expect(screen.getByText('Synchronize')).toBeInTheDocument();
+    // Switch renders label twice (on/off states), so use getAllByText
+    expect(screen.getAllByText('Show syncing only').length).toBeGreaterThan(0);
   });
 
-  it('calls onSyncNow when Synchronize Now is clicked', () => {
+  it('calls onSyncNow when Synchronize is clicked', () => {
     render(<SyncStatusToolbar {...mockProps} />);
 
-    const syncButton = screen.getByText('Synchronize Now');
+    const syncButton = screen.getByText('Synchronize');
     fireEvent.click(syncButton);
 
     expect(mockProps.onSyncNow).toHaveBeenCalled();
   });
 
-  it('disables Synchronize Now when no repos selected', () => {
-    const props = { ...mockProps, selectedRepoIds: [] };
+  it('disables Synchronize when no repos selected', () => {
+    const props = {
+      ...mockProps,
+      selectedRepoIds: [],
+      selectAllCheckboxProps: {
+        ...mockProps.selectAllCheckboxProps,
+        selectedCount: 0,
+      },
+    };
     render(<SyncStatusToolbar {...props} />);
 
-    const syncButton = screen.getByText('Synchronize Now');
+    const syncButton = screen.getByText('Synchronize');
     expect(syncButton).toBeDisabled();
   });
 
-  it('calls onExpandAll when Expand All is clicked', () => {
+  it('toggles show syncing only switch', () => {
     render(<SyncStatusToolbar {...mockProps} />);
 
-    const expandButton = screen.getByText('Expand All');
-    fireEvent.click(expandButton);
-
-    expect(mockProps.onExpandAll).toHaveBeenCalled();
-  });
-
-  it('toggles active only switch', () => {
-    render(<SyncStatusToolbar {...mockProps} />);
-
-    const activeOnlySwitch = screen.getByLabelText('Active Only');
-    fireEvent.click(activeOnlySwitch);
+    const showSyncingSwitch = screen.getByLabelText('Show syncing only');
+    fireEvent.click(showSyncingSwitch);
 
     expect(mockProps.onToggleActiveOnly).toHaveBeenCalled();
   });
