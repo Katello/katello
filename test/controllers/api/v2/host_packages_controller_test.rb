@@ -86,6 +86,61 @@ module Katello
       end
     end
 
+    def test_containerfile_install_command
+      installed_pkg = @host.installed_packages.first
+      Katello::HostInstalledPackage.where(host: @host, installed_package: installed_pkg).update_all(persistence: 'transient')
+
+      get :containerfile_install_command, params: { :host_id => @host.id }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      assert response_data.key?('command')
+      assert response_data.key?('message')
+      assert_nil response_data['message']
+      assert_match(/^RUN dnf install -y/, response_data['command'])
+      assert_match(/#{installed_pkg.nvrea}/, response_data['command'])
+    end
+
+    def test_containerfile_install_command_with_search
+      installed_pkg = @host.installed_packages.first
+      Katello::HostInstalledPackage.where(host: @host, installed_package: installed_pkg).update_all(persistence: 'transient')
+
+      get :containerfile_install_command, params: { :host_id => @host.id, :search => "name=#{installed_pkg.name}" }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      assert_match(/#{installed_pkg.nvrea}/, response_data['command'])
+      assert_nil response_data['message']
+    end
+
+    def test_containerfile_install_command_only_transient
+      transient_pkg = @host.installed_packages.first
+      persistent_pkg = @host.installed_packages.second
+      Katello::HostInstalledPackage.where(host: @host, installed_package: transient_pkg).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: persistent_pkg).update_all(persistence: 'persistent')
+
+      get :containerfile_install_command, params: { :host_id => @host.id }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      assert_match(/#{transient_pkg.nvrea}/, response_data['command'])
+      refute_match(/#{persistent_pkg.nvrea}/, response_data['command'])
+      assert_nil response_data['message']
+    end
+
+    def test_containerfile_install_command_no_transient_packages
+      @host.installed_packages.each do |pkg|
+        Katello::HostInstalledPackage.where(host: @host, installed_package: pkg).update_all(persistence: 'persistent')
+      end
+
+      get :containerfile_install_command, params: { :host_id => @host.id }
+
+      assert_response :not_found
+      response_data = JSON.parse(response.body)
+      assert_nil response_data['command']
+      assert_equal "No transient packages found", response_data['message']
+    end
+
     private
 
     def set_request_headers

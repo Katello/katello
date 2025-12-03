@@ -9,8 +9,8 @@ module Katello
 
     before_action :require_packages_or_groups, :only => [:install, :remove]
     before_action :require_packages_only, :only => [:upgrade]
-    before_action :find_editable_host_with_facet, :except => [:index, :installed_packages]
-    before_action :find_host, :only => :index
+    before_action :find_editable_host_with_facet, :except => [:index, :installed_packages, :containerfile_install_command]
+    before_action :find_host, :only => [:index, :containerfile_install_command]
 
     resource_description do
       api_version 'v2'
@@ -50,6 +50,31 @@ module Katello
       # Present packages with persistence and (if requested) latest upgradable info
       collection[:results] = HostPackagePresenter.package_map(collection[:results], @host, include_upgradable, true)
       respond_for_index(:collection => collection)
+    end
+
+    api :GET, "/hosts/:host_id/transient_packages/containerfile_install_command", N_("Return a containerfile command to install transient packages")
+    param :host_id, :number, :required => true, :desc => N_("ID of the host")
+    param_group :search, ::Katello::Api::V2::ApiController
+    add_scoped_search_description_for(Katello::InstalledPackage)
+    def containerfile_install_command
+      collection = scoped_search(transient_index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
+      if collection[:results].empty?
+        render json: {
+          command: nil,
+          message: "No transient packages found"
+        },
+        status: :not_found
+      else
+        render json: {
+          command: "RUN dnf install -y #{collection[:results].map(&:nvrea).join(' ')}",
+          message: nil
+        },
+        status: :ok
+      end
+    end
+
+    def transient_index_relation
+      @host.installed_packages.where(katello_host_installed_packages: { persistence: 'transient' })
     end
 
     def index_relation
