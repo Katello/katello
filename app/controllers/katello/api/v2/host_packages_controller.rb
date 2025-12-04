@@ -61,13 +61,13 @@ module Katello
       if collection[:results].empty?
         render json: {
           command: nil,
-          message: "No transient packages found"
+          message: "No transient packages found",
         },
         status: :not_found
       else
         render json: {
-          command: "RUN dnf install -y #{collection[:results].map(&:nvrea).join(' ')}",
-          message: nil
+          command: "RUN dnf install -y #{collection[:results].map { |pkg| Shellwords.escape(pkg.nvrea) }.join(' ')}",
+          message: nil,
         },
         status: :ok
       end

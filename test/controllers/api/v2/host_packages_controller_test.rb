@@ -141,6 +141,92 @@ module Katello
       assert_equal "No transient packages found", response_data['message']
     end
 
+    def test_containerfile_install_command_search_no_match
+      installed_pkg = @host.installed_packages.first
+      Katello::HostInstalledPackage.where(host: @host, installed_package: installed_pkg).update_all(persistence: 'transient')
+
+      get :containerfile_install_command, params: { :host_id => @host.id, :search => "name=nonexistent-package" }
+
+      assert_response :not_found
+      response_data = JSON.parse(response.body)
+      assert_nil response_data['command']
+      assert_equal "No transient packages found", response_data['message']
+    end
+
+    def test_containerfile_install_command_permissions
+      ::Host.any_instance.stubs(:check_host_registration).returns(true)
+
+      good_perms = [@view_permission]
+      bad_perms = [@update_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:containerfile_install_command, good_perms, bad_perms) do
+        user = User.current
+        as_admin do
+          user.update_attribute(:organizations, [taxonomies(:organization1)])
+          @host.update_attribute(:organization, taxonomies(:organization1))
+          user.update_attribute(:locations, [taxonomies(:location1)])
+          @host.update_attribute(:location, taxonomies(:location1))
+        end
+
+        get :containerfile_install_command, params: { :host_id => @host.id }
+      end
+    end
+
+    def test_containerfile_install_command_unauthorized_org
+      ::Host.any_instance.stubs(:check_host_registration).returns(true)
+
+      installed_pkg = @host.installed_packages.first
+      Katello::HostInstalledPackage.where(host: @host, installed_package: installed_pkg).update_all(persistence: 'transient')
+
+      user = User.find(users(:restricted).id)
+      as_admin do
+        user.update_attribute(:organizations, [taxonomies(:organization2)])
+        user.update_attribute(:locations, [taxonomies(:location1)])
+        @host.update_attribute(:organization, taxonomies(:organization1))
+        setup_user_with_permissions(:view_hosts, user)
+      end
+
+      login_user(user)
+      get :containerfile_install_command, params: { :host_id => @host.id }
+
+      assert_response :not_found
+    end
+
+    def test_containerfile_install_command_multiple_packages
+      pkg1 = @host.installed_packages.first
+      pkg2 = @host.installed_packages.second
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg1).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg2).update_all(persistence: 'transient')
+
+      get :containerfile_install_command, params: { :host_id => @host.id }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      command = response_data['command']
+
+      assert_match(/^RUN dnf install -y/, command)
+      assert_match(/#{pkg1.nvrea}/, command)
+      assert_match(/#{pkg2.nvrea}/, command)
+      assert(command.include?("#{pkg1.nvrea} #{pkg2.nvrea}") || command.include?("#{pkg2.nvrea} #{pkg1.nvrea}"), "Packages should be space-separated")
+    end
+
+    def test_containerfile_install_command_excludes_nil_persistence
+      transient_pkg = @host.installed_packages.first
+      nil_persistence_pkg = @host.installed_packages.second
+
+      Katello::HostInstalledPackage.where(host: @host, installed_package: transient_pkg).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: nil_persistence_pkg).update_all(persistence: nil)
+
+      get :containerfile_install_command, params: { :host_id => @host.id }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      command = response_data['command']
+
+      assert_match(/#{transient_pkg.nvrea}/, command)
+      refute_match(/#{nil_persistence_pkg.nvrea}/, command)
+    end
+
     private
 
     def set_request_headers
