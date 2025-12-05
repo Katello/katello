@@ -67,6 +67,22 @@ module Katello
       assert_equal 'transient', package['persistence']
     end
 
+    def test_index_sort_by_persistence
+      pkg1 = @host.installed_packages.first
+      pkg2 = @host.installed_packages.second
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg1).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg2).update_all(persistence: 'persistent')
+
+      get :index, params: { :host_id => @host.id, :sort_by => 'persistence', :sort_order => 'asc' }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      results = response_data['results']
+
+      assert_equal 'persistent', results.first['persistence']
+      assert_equal 'transient', results.last['persistence']
+    end
+
     def test_view_permissions
       ::Host.any_instance.stubs(:check_host_registration).returns(true)
 

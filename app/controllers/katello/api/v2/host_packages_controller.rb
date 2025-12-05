@@ -44,7 +44,18 @@ module Katello
     add_scoped_search_description_for(Katello::InstalledPackage)
     def index
       validate_index_params!
-      collection = scoped_search(index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
+      options = { :resource_class => ::Katello::InstalledPackage }
+
+      # Handle persistence sorting (normal scoped_search cannot handle this join for multiple hosts)
+      if params[:sort_by] == 'persistence'
+        options[:custom_sort] = lambda do |query|
+          query.joins(:host_installed_packages)
+            .where(katello_host_installed_packages: {host_id: @host.id})
+            .order("katello_host_installed_packages.persistence #{sanitize_sort_order(params[:sort_order])}")
+        end
+      end
+
+      collection = scoped_search(index_relation, :name, :asc, options)
       include_upgradable = ::Foreman::Cast.to_bool(params[:include_latest_upgradable])
 
       # Present packages with persistence and (if requested) latest upgradable info
@@ -143,6 +154,14 @@ module Katello
     def validate_index_params!
       if params[:status].present? && !VERSION_STATUSES.include?(params[:status])
         fail _("Status must be one of: %s" % VERSION_STATUSES.join(', '))
+      end
+    end
+
+    def sanitize_sort_order(sort_order)
+      if sort_order.present? && ['asc', 'desc'].include?(sort_order.downcase)
+        sort_order.downcase
+      else
+        'asc'
       end
     end
   end
