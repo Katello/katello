@@ -40,8 +40,8 @@ module Katello
 
       assert_includes results.map { |rpm| rpm['name'] }, @rpm.name
       assert_equal InstalledPackage.first.name, results[0]['name']
-      assert_equal InstalledPackage.second.name, results[0]['name']
-      assert_operator results.size, :<, InstalledPackage.all.count
+      assert_equal InstalledPackage.second.name, results[1]['name']
+      assert_equal results.size, InstalledPackage.all.count
     end
 
     def test_include_latest_upgradable
@@ -243,7 +243,7 @@ module Katello
       @rpm = katello_rpms(:one)
       @rpm2 = katello_rpms(:two)
       @host.installed_packages << Katello::InstalledPackage.create(name: @rpm.name, nvra: @rpm.nvra, version: @rpm.version, release: @rpm.release, nvrea: @rpm.nvrea, arch: @rpm.arch)
-      @host.installed_packages << Katello::InstalledPackage.create(name: @rpm.name, nvra: @rpm2.nvra, version: @rpm2.version, release: @rpm2.release, nvrea: @rpm2.nvrea, arch: @rpm2.arch)
+      @host.installed_packages << Katello::InstalledPackage.create(name: @rpm2.name, nvra: @rpm2.nvra, version: @rpm2.version, release: @rpm2.release, nvrea: @rpm2.nvrea, arch: @rpm2.arch)
       @host.reload
     end
   end
