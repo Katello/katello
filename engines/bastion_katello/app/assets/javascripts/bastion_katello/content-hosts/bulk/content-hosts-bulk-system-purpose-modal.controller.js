@@ -53,7 +53,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSystemPurpos
         $scope.performAction = function () {
             HostBulkAction.systemPurpose(actionParams(), function (task) {
             $scope.ok();
-            $scope.transitionTo('content-hosts.bulk-task', {taskId: task.id});
+            $scope.transitionTo('tasks.details', {taskId: task.id});
         }, function (response) {
             angular.forEach(response.data.errors, function (error) {
                 Notification.setErrorMessage(error);

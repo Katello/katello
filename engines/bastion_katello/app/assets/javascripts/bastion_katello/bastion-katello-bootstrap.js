@@ -33,8 +33,8 @@ var BASTION_MODULES = [
   'Bastion.subscriptions',
   'Bastion.sync-plans',
   'Bastion.http-proxies',
-  'Bastion.host-collections',
   'Bastion.content-hosts',
+  'Bastion.host-collections',
   'Bastion.tasks',
   'Bastion.settings'
 ];

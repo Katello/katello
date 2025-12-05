@@ -57,7 +57,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkEnvironmentM
         $scope.performAction = function () {
             HostBulkAction.environmentContentView(actionParams(), function (task) {
                 $scope.ok();
-                $state.go('content-hosts.bulk-task', {taskId: task.id});
+                $state.go('tasks.details', {taskId: task.id});
             }, function (response) {
                 angular.forEach(response.data.errors, function (error) {
                     Notification.setErrorMessage(error);

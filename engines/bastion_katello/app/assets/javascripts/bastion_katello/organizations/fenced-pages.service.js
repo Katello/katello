@@ -10,7 +10,6 @@ angular.module('Bastion.organizations').service('FencedPages', ['$state',
     function ($state) {
         var fencedPages = [
             'activation-keys',
-            'content-hosts',
             'content-views',
             'docker-tags',
             'errata',

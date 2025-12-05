@@ -37,7 +37,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
             success = function (response) {
                 $scope.contentNutupane.invalidate();
                 $scope.ok();
-                $scope.transitionTo('content-hosts.bulk-task', {taskId: response.id});
+                $scope.transitionTo('tasks.details', {taskId: response.id});
             };
 
             error = function (response) {
