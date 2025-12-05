@@ -2,9 +2,8 @@ import React, { useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   DropdownItem,
-  Divider,
 } from '@patternfly/react-core';
-import { CubeIcon, UndoIcon, RedoIcon } from '@patternfly/react-icons';
+import { CubeIcon, RedoIcon } from '@patternfly/react-icons';
 
 import { translate as __ } from 'foremanReact/common/I18n';
 import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
@@ -48,15 +47,6 @@ const HostActionsBar = () => {
 
   return (
     <>
-      <DropdownItem
-        ouiaId="katello-legacy-contenthost-ui"
-        key="katello-legacy-contenthost-ui"
-        to={foremanUrl(`/content_hosts/${hostDetails?.id}`)}
-        icon={<UndoIcon />}
-      >
-        {__('Legacy content host UI')}
-      </DropdownItem>
-      <Divider key="separator" />
       {showRecalculate && (
         <DropdownItem
           ouiaId="katello-refresh-applicability"

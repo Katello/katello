@@ -1,7 +1,7 @@
 module Katello
   module ErrataMailerHelper
     def content_host_errata_path(host)
-      "#{Setting[:foreman_url]}/content_hosts/#{host.id}/errata"
+      "#{Setting[:foreman_url]}#{Rails.application.routes.url_helpers.host_details_page_path(host.name)}#/Content/errata"
     end
 
     def content_view_environment_errata_path(content_view, environment)

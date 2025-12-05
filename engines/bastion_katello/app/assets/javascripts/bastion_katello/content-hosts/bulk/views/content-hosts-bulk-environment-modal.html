@@ -1,0 +1,72 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 translate data-block="modal-header" translate>Content Host Bulk Content</h4>
+
+  <div data-block="modal-body">
+    <h4 translate>Assign Lifecycle Environment and Content View</h4>
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <div bst-alert="info" ng-show="showConfirm">
+      <span translate>
+        Are you sure you want to assign the {{ table.numSelected }} content host(s) selected to {{ selected.contentView.name }} in {{ selected.environment.name }}?
+      </span>
+      <div>
+        <button type="button" class="btn btn-default" ng-click="showConfirm = false; performAction()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="showConfirm = false;" translate>No</button>
+      </div>
+    </div>
+
+    <div path-selector="environments"
+         ng-model="selected.environment"
+         mode="singleSelect"
+         disable-trigger="disableEnvironmentSelection">
+    </div>
+
+    <form name="contentHostContentForm" class="form" ng-hide="content.workingMode">
+
+      <div>
+        <label translate>Content View:</label>
+
+        <i ng-show="fetchingContentViews" class="fa fa-spinner inline-icon fa-spin"></i>
+        <select ng-hide="fetchingContentViews || contentViews.length === 0 || !selected.environment"
+                type="select"
+                ng-options="cv as cv.name for cv in contentViews"
+                ng-model="selected.contentView">
+        </select>
+
+        <p class="page-error" ng-show="!fetchingContentViews && contentViews.length === 0" translate>
+          No content views exist for {{selected.environment.name}}
+        </p>
+
+        <p class="page-error" ng-show="!fetchingContentViews && !selected.environment" translate>
+          Please select an environment.
+        </p>
+      </div>
+
+      <button class="btn btn-default"
+              type="button"
+              ng-hide="denied('edit_hosts')"
+              ng-click="showConfirm = true;"
+              ng-disabled="disableAssignButton(confirm)">
+        <span translate>Assign</span>
+      </button>
+
+    </form>
+    <div class="help-block" style="text-align:left;">
+      <p translate>
+        Changing the Content View will not affect the Content Hosts until their next checkin.
+        To update the Content Hosts immediately run the following command:
+      </p>
+      <code># subscription-manager refresh</code>
+    </div>
+  </div>
+
+  <div data-block="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
+      Done
+    </button>
+  </div>
+</div>

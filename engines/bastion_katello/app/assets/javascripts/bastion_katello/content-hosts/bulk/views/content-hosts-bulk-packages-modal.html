@@ -1,0 +1,173 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header" translate>Update Packages</h4>
+
+  <div data-block="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <div bst-feature-flag="remote_actions">
+      <p bst-alert="warning" ng-hide="hostToolingEnabled">
+        <span translate>
+          Performing host package actions is disabled because Katello is not configured for Remote Execution.
+          </span>
+      </p>
+      <p bst-alert="warning">
+        <span translate>
+          Group package actions are being deprecated, and will be removed in a future version.
+          </span>
+      </p>
+    </div>
+
+    <span uib-dropdown class="input-group-btn">
+      <button class="btn btn-default"
+              type="button"
+              translate
+              ng-hide="denied('edit_hosts')"
+              ng-click="confirmContentAction('update all', content)"
+              ng-disabled="(table.numSelected === 0) || !hostToolingEnabled">
+        Update All Packages
+      </button>
+      <button uib-dropdown-toggle class="btn btn-default"
+              ng-show="remoteExecutionPresent"
+              ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
+              type="button" id="update-all-use-remote-execution">
+        <span class="caret"></span>
+      </button>
+      <ul uib-dropdown-menu role="menu" aria-labelledby="install-use-remote-execution">
+        <li role="presentation"><a ng-click="performViaRemoteExecution('update all', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+        <li role="presentation"><a ng-click="performViaRemoteExecution('update all', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+      </ul>
+    </span>
+
+    <form id="packageActionForm" name="packageActionForm" class="form" method="post" action="/katello/remote_execution">
+      <input type="hidden" name="name" ng-value="content.content"/>
+      <input type="hidden" name="remote_action" ng-value="packageActionFormValues.remoteAction"/>
+      <input type="hidden" name="bulk_host_ids" ng-value="packageActionFormValues.bulkHostIds"/>
+      <input type="hidden" name="authenticity_token" ng-value="packageActionFormValues.authenticityToken"/>
+      <input type="hidden" name="customize" ng-value="packageActionFormValues.customize"/>
+      <input type="hidden" ng-if="allHostsSelected" name="scoped_search" ng-value="packageActionFormValues.scopedSearch"/>
+    </form>
+
+    <div ng-form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')" novalidate>
+      <div>
+        <label class="radio-inline" for="package">
+          <input id="package" type="radio"
+                 ng-model="content.contentType"
+                 ng-change="updatePlaceholder(content.contentType)"
+                 ng-disabled="content.confirm"
+                 value="package"/>
+          <span translate>Package</span>
+        </label>
+        <label class="radio-inline" for="package_group">
+          <input id="package_group" type="radio"
+                 ng-model="content.contentType"
+                 ng-change="updatePlaceholder(content.contentType)"
+                 ng-disabled="content.confirm"
+                 value="package_group"/>
+          <span translate>Package Group (Deprecated)</span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <input class="form-control"
+               type="text"
+               stop-event="click"
+               placeholder="{{ content.placeholder }}"
+               ng-model="content.content"
+               ng-disabled="content.confirm"
+               required/>
+      </div>
+
+      <div class = "bottom-padded-content">
+      <span uib-dropdown class="input-group-btn">
+        <button class="btn btn-default" type="button"
+                translate
+                ng-hide="denied('edit_hosts')"
+                ng-click="confirmContentAction('install', content)"
+                ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm || !hostToolingEnabled">
+          Install
+        </button>
+        <button uib-dropdown-toggle class="btn btn-default"
+                ng-show="remoteExecutionPresent"
+                ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
+                type="button" id="install-use-remote-execution">
+          <span class="caret"></span>
+        </button>
+        <ul uib-dropdown-menu role="menu" aria-labelledby="install-use-remote-execution">
+          <li role="presentation"><a ng-click="performViaRemoteExecution('install', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+          <li role="presentation"><a ng-click="performViaRemoteExecution('install', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+        </ul>
+      </span>
+
+      <span uib-dropdown class="input-group-btn">
+        <button class="btn btn-default" type="button"
+                translate
+                ng-hide="denied('edit_hosts')"
+                ng-click="confirmContentAction('update', content)"
+                ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm || !hostToolingEnabled"
+                ng-hide="content.contentType == 'errata'">
+          Update
+        </button>
+        <button uib-dropdown-toggle class="btn btn-default"
+                ng-hide="!remoteExecutionPresent || denied('edit_hosts')"
+                ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
+                type="button" id="update-use-remote-execution">
+          <span class="caret"></span>
+        </button>
+        <ul uib-dropdown-menu role="menu" aria-labelledby="update-use-remote-execution">
+          <li role="presentation"><a ng-click="performViaRemoteExecution('update', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+          <li role="presentation"><a ng-click="performViaRemoteExecution('update', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+        </ul>
+      </span>
+
+      <span uib-dropdown class="input-group-btn">
+        <button class="btn btn-default" type="button"
+                translate
+                ng-hide="content.contentType == 'errata' || denied('edit_hosts')"
+                ng-click="confirmContentAction('remove', content)"
+                ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm || !hostToolingEnabled">
+          Remove
+        </button>
+        <button uib-dropdown-toggle class="btn btn-default"
+                ng-hide="!remoteExecutionPresent || denied('edit_hosts')"
+                ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
+                type="button" id="remove-use-remote-execution">
+          <span class="caret"></span>
+        </button>
+        <ul uib-dropdown-menu role="menu" aria-labelledby="remove-use-remote-execution">
+          <li role="presentation"><a ng-click="performViaRemoteExecution('remove', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+          <li role="presentation"><a ng-click="performViaRemoteExecution('remove', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+        </ul>
+      </span>
+      </div>
+
+      <div class="inline-confirmation" ng-show="content.confirm">
+        <div class="confirmation_text" ng-show="content.action == 'install'" translate>
+          Are you sure you want to install {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?
+        </div>
+        <div class="confirmation_text" ng-show="content.action == 'update'" translate>
+          Are you sure you want to update {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?
+        </div>
+        <div class="confirmation_text" ng-show="content.action == 'remove'" translate>
+          Are you sure you want to remove {{ content.content }} from the {{ getSelectedSystemIds().length }} system(s) selected?
+        </div>
+        <div class="confirmation_text" ng-show="content.action == 'update all'" translate>
+          Are you sure you want to update all packages on the {{ getSelectedSystemIds().length }} system(s) selected?
+        </div>
+
+        <button type="submit" class="btn btn-default" ng-click="performContentAction()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="content.confirm = false" translate>No</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div data-block="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
+      Done
+    </button>
+  </div>
+</div>

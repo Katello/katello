@@ -1,0 +1,66 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h2 data-block="modal-header" translate>Assign System Purpose</h2>
+
+  <div data-block="modal-body">
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <div bst-alert="info">
+      <span translate>
+        This change will be applied to <b>{{ hostCount }} systems.</b>
+      </span>
+    </div>
+    <br />
+
+    <form name="contentHostContentForm" class="form" ng-hide="content.workingMode">
+      <div><b>
+        <dl class="dl-horizontal dl-horizontal-left">
+        <dt><label translate>Service Level (SLA):</label></dt>
+
+        <dd><select type="select"
+                    ng-options="item for item in defaultServiceLevels"
+                    ng-model="selectedServiceLevels"
+                    id="selectedServiceLevels"
+                    >
+        </select></dd>
+        <br /><br />
+
+        <dt style="margin-left: -50px;"><label translate>Usage Type:</label></dt>
+
+        <dd><select type="select"
+                ng-options="item for item in defaultUsages"
+                ng-model="selectedUsages"
+                id="selectedUsages"
+                >
+        </select></dd>
+        <br /><br />
+
+        <dt style="margin-left: -98px;"><label translate>Role:</label></dt>
+
+        <dd><select type="select"
+                ng-options="item for item in defaultRoles"
+                ng-model="selectedRoles"
+                id="selectedRoles"
+                >
+        </select></dd>
+        </dl></b>
+      </div>
+    </form>
+  </div>
+
+  <div data-block="modal-footer">
+    <button class="btn btn-primary"
+            type="button"
+            ng-click="performAction()">
+      <span translate>Assign</span>
+    </button>
+
+    <button type="button" class="btn btn-default" ng-click="cancel()" translate>
+      Cancel
+    </button>
+  </div>
+</div>

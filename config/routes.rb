@@ -15,6 +15,32 @@ Katello::Engine.routes.draw do
 
   get '/katello/providers/redhat_provider', to: redirect('/redhat_repositories')
   get '/content_hosts', to: redirect(Rails.application.routes.url_helpers.new_hosts_index_page_path)
+
+  # Redirect legacy content host detail pages to new host details
+  # Note: :id can be either hostname or database ID (friendly-id gem)
+  constraints(id: /[^\/]+/) do
+    get '/content_hosts/:id', to: redirect { |params, _|
+      # The friendly-id gem allows both name and ID to work, so just pass through
+      host_identifier = params[:id]
+      Rails.application.routes.url_helpers.host_details_page_path(host_identifier)
+    }
+    get '/content_hosts/:id/:tab', to: redirect { |params, _|
+      host_identifier = params[:id]
+      tab_map = {
+        'errata' => 'errata',
+        'packages' => 'packages',
+        'debs' => 'debs',
+        'module-streams' => 'module-streams',
+      }
+      top_level_tab_map = {
+        'traces' => 'Traces',
+      }
+      fragment = tab_map[params[:tab]].present? ? "#/Content/#{tab_map[params[:tab]]}" : ''
+      fragment = "#/#{top_level_tab_map[params[:tab]]}" if top_level_tab_map[params[:tab]].present?
+      "#{Rails.application.routes.url_helpers.host_details_page_path(host_identifier)}#{fragment}"
+    }
+  end
+
   match '/redhat_repositories' => 'react#index', :via => [:get]
 
   match '/subscriptions' => 'react#index', :via => [:get]

@@ -99,6 +99,9 @@
 
 //= require "bastion_katello/dates/dates.module.js"
 
+//= require "bastion_katello/content-hosts/content-hosts.module.js"
+//= require_tree "./content-hosts"
+
 //= require "bastion_katello/i18n/translations.js"
 
 //= require "bastion_katello/bastion-katello-bootstrap.js"

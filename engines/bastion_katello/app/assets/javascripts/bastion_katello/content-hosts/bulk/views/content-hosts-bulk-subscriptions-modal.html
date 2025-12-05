@@ -1,0 +1,126 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header" translate>
+    Content Host Bulk Subscriptions
+  </h4>
+
+  <div data-block="modal-body">
+
+    <div class="row">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-default" ng-click="autoAttach()" ng-disabled="table.numSelected > 0 || simpleContentAccessEnabled">
+          <span translate>Auto-Attach</span>
+        </button>
+
+        <p class="help-text" translate ng-show="table.numSelected === 0 && !simpleContentAccessEnabled">
+          Auto-attach available subscriptions to all selected hosts.
+        </p>
+
+        <p>
+        <div content-access-mode-banner></div>
+        </p>
+
+        <p class="help-text" translate ng-show="table.numSelected > 0 && !simpleContentAccessEnabled">
+          Auto-attach uses all available subscriptions, not a selected subset.
+        </p>
+      </div>
+    </div>
+
+    <div bst-alert="info">
+      <span translate>
+        This action will affect only those Content Hosts that require a change.
+        If the Content Host does not have the selected Subscription no action will take place.
+      </span>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <div data-extend-template="layouts/partials/table.html">
+      <div data-block="list-actions">
+        <button class="btn btn-primary" type="button"
+                translate
+                ng-hide="denied('edit_hosts', host)"
+                ng-disabled="table.numSelected === 0 || isWorking"
+                ng-click="addSelected()">
+          Add Selected
+        </button>
+
+        <button class="btn btn-primary" type="button"
+                translate
+                ng-hide="denied('edit_hosts', host)"
+                ng-disabled="table.numSelected === 0 || isWorking"
+                ng-click="removeSelected()">
+          Remove Selected
+        </button>
+      </div>
+
+      <span data-block="no-rows-message" translate>
+          You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu
+      </span>
+
+      <span data-block="no-search-results-message" translate>
+        Your search returned zero Subscriptions.
+      </span>
+
+      <div data-block="table">
+        <table bst-table="table" ng-class="{'table-mask': table.working}"
+               class="table table-striped table-bordered">
+          <thead>
+          <tr bst-table-head row-select>
+            <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity (To Add)</span></th>
+            <th bst-table-column="attached" sortable><span translate>Attached</span></th>
+            <th bst-table-column="type"><span translate>Type</span></th>
+            <th bst-table-column="startDate" sortable><span translate>Starts</span></th>
+            <th bst-table-column="endDate" sortable><span translate>Expires</span></th>
+            <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
+            <th bst-table-column="contractNumber" sortable><span translate>Contract</span></th>
+            <th bst-table-column="accountNumber" sortable><span translate>Account</span></th>
+          </tr>
+          </thead>
+
+          <tbody>
+            <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
+              <td class="row-select"></td>
+              <td colspan="8">
+                <a ng-click="ok();"  ui-sref="subscription.info({subscriptionId: subscription.id})" class="confined-text">
+                  {{ name }}
+                </a>
+              </td>
+            </tr>
+
+            <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
+              <td bst-table-cell>
+                   <span ng-hide="subscription.multi_entitlement">
+                     1
+                   </span>
+                <select ng-hide="!subscription.multi_entitlement"
+                        ng-model="subscription.amount"
+                        ng-options="amount for amount in getAmountSelectorValues(subscription)"
+                    >
+                  <option value="">{{ "Automatic" | translate }}</option>
+                </select>
+              </td>
+              <td bst-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
+              <td bst-table-cell><div subscription-type="subscription"></div></td>
+              <td bst-table-cell><div subscription-start-date="subscription"></div></td>
+              <td bst-table-cell><date date="subscription.end_date" ></date></td>
+              <td bst-table-cell>{{ subscription.support_level }}</td>
+              <td bst-table-cell>{{ subscription.contract_number }}</td>
+              <td bst-table-cell>{{ subscription.account_number }}</td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div data-block="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
+      Done
+    </button>
+  </div>
+</div>
