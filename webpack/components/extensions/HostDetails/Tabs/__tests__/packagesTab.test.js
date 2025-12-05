@@ -510,7 +510,7 @@ test('Sets initial search query from url params', async (done) => {
     .query({ ...defaultQuery, search: `name=${firstPackage.name}` })
     .reply(200, { ...mockPackagesData, results: [firstPackage] });
 
-  jest.spyOn(hooks, 'useUrlParams').mockImplementation(() => ({
+  const urlParamsSpy = jest.spyOn(hooks, 'useUrlParams').mockImplementation(() => ({
     searchParam: `name=${firstPackage.name}`,
   }));
 
@@ -521,6 +521,87 @@ test('Sets initial search query from url params', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
+  urlParamsSpy.mockRestore();
   act(done); // Pass jest callback to confirm test is done
+});
+
+test('Shows persistence column for bootc hosts', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const bootcFacetAttributes = {
+    ...contentFacetAttributes,
+    bootc_booted_image: 'quay.io/someimage:latest',
+  };
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const { getAllByText, getByText } = renderWithRedux(
+    <PackagesTab />,
+    renderOptions(bootcFacetAttributes),
+  );
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+  expect(getByText('Persistence')).toBeInTheDocument();
+  expect(getByText('Persistent')).toBeInTheDocument();
+  expect(getByText('Transient')).toBeInTheDocument();
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
+test('Does not show persistence column for non-bootc hosts', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const { getAllByText, queryByText } = renderWithRedux(<PackagesTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+  expect(queryByText('Persistence')).not.toBeInTheDocument();
+  expect(queryByText('Persistent')).not.toBeInTheDocument();
+  expect(queryByText('Transient')).not.toBeInTheDocument();
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
+test('Capitalizes persistence values and shows dash for null', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const bootcFacetAttributes = {
+    ...contentFacetAttributes,
+    bootc_booted_image: 'quay.io/someimage:latest',
+  };
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const { getAllByText, container } = renderWithRedux(
+    <PackagesTab />,
+    renderOptions(bootcFacetAttributes),
+  );
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+
+  const tableCells = container.querySelectorAll('tbody tr td');
+  const persistenceCells = Array.from(tableCells).filter(cell =>
+    cell.textContent === 'Persistent' ||
+    cell.textContent === 'Transient' ||
+    cell.textContent === '—');
+
+  expect(persistenceCells.length).toBeGreaterThan(0);
+  expect(getAllByText('Persistent')).toHaveLength(1);
+  expect(getAllByText('Transient')).toHaveLength(1);
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
 });
 
