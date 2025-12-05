@@ -174,14 +174,29 @@ export const PackagesTab = () => {
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
   const errorSearchTitle = __('Problem searching packages');
-  const columnHeaders = [
+
+  const isBootcHost = hostIsImageMode({ hostDetails });
+  const columnHeaders = isBootcHost ? [
+    __('Package'),
+    __('Persistence'),
+    __('Status'),
+    __('Installed version'),
+    __('Upgradable to'),
+  ] :
+  [
     __('Package'),
     __('Status'),
     __('Installed version'),
     __('Upgradable to'),
   ];
 
-  const COLUMNS_TO_SORT_PARAMS = {
+  const COLUMNS_TO_SORT_PARAMS = isBootcHost ? 
+  {
+    [columnHeaders[0]]: 'nvra',
+    [columnHeaders[1]]: 'persistence',
+    [columnHeaders[3]]: 'version',
+  } :
+  {
     [columnHeaders[0]]: 'nvra',
     [columnHeaders[2]]: 'version',
   };
@@ -541,6 +556,7 @@ export const PackagesTab = () => {
               const {
                 id,
                 name: packageName,
+                persistence: persistence,
                 nvra: installedVersion,
                 rpm_id: rpmId,
                 upgradable_versions: upgradableVersions,
@@ -599,6 +615,9 @@ export const PackagesTab = () => {
                       : packageName
                     }
                   </Td>
+                  {isBootcHost && (
+                    <Td>{pkg.persistence ? (pkg.persistence.charAt(0).toUpperCase() + pkg.persistence.slice(1)) : '—'}</Td>
+                  )}
                   <Td><PackagesStatus {...pkg} /></Td>
                   <Td>{installedVersion.replace(`${packageName}-`, '')}</Td>
                   <Td>
