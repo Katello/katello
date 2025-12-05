@@ -14,6 +14,7 @@ Katello::Engine.routes.draw do
   end
 
   get '/katello/providers/redhat_provider', to: redirect('/redhat_repositories')
+  get '/content_hosts', to: redirect(Rails.application.routes.url_helpers.new_hosts_index_page_path)
   match '/redhat_repositories' => 'react#index', :via => [:get]
 
   match '/subscriptions' => 'react#index', :via => [:get]
