@@ -113,6 +113,8 @@ Foreman::Application.routes.draw do
             end
           end
         end
+
+        match '/hosts/:host_id/transient_packages/containerfile_install_command' => 'host_packages#containerfile_install_command', :via => :get
       end
     end
   end

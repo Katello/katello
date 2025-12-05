@@ -100,6 +100,12 @@ npm run test:watch                              # Watch mode
 **Authorization:**
 - Permissions: `app/models/katello/authorization/[resource].rb`
 - Role definitions: `lib/katello/engine.rb`
+- **CRITICAL - Permission Registration**: `lib/katello/permissions/[resource]_permissions.rb`
+  - **ALL controller actions requiring authorization MUST be registered here**
+  - Add to appropriate permission (`:view_hosts`, `:edit_hosts`, etc.)
+  - Format: `'katello/api/v2/[controller]/[action]'`
+  - Example: `'katello/api/v2/host_packages/containerfile_install_command'`
+  - **Forgetting this will cause 403 errors even if controller authorization is correct**
 
 ### Environment Quick Reference
 
@@ -171,8 +177,12 @@ sudo systemctl status candlepin
 2. **Route**: Add to `config/routes/api/v2.rb`
 3. **Controller**: Create in `app/controllers/katello/api/v2/[resource]_controller.rb`
 4. **Authorization**: Update `app/models/katello/authorization/[resource].rb`
-5. **View**: Create RABL template in `app/views/katello/api/v2/[resource]/`
-6. **Test**: Run `ktest test/controllers/katello/api/v2/[resource]_controller_test.rb`
+5. **CRITICAL - Permission Registration**: Add action to `lib/katello/permissions/[resource]_permissions.rb`
+   - Find the appropriate permission (`:view_hosts`, `:edit_hosts`, etc.)
+   - Add line: `'katello/api/v2/[controller]/[action]'`
+   - **This step is required or you will get 403 errors in permission tests**
+6. **View**: Create RABL template in `app/views/katello/api/v2/[resource]/`
+7. **Test**: Run `ktest test/controllers/katello/api/v2/[resource]_controller_test.rb`
 
 ### Adding New Model
 1. **Migration**: `cd $GITDIR/foreman && bundle exec rails g migration CreateKatello[ModelName]`

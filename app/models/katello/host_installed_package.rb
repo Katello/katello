@@ -9,5 +9,8 @@ module Katello
 
     # Technically this validation is skipped during bulk operations, but it's here for safety in case of future code changes
     validates :persistence, inclusion: { in: PERSISTENCE_VALUES }, allow_nil: true
+
+    scope :transient, -> { where(persistence: 'transient') }
+    scope :persistent, -> { where(persistence: 'persistent') }
   end
 end

@@ -56,6 +56,7 @@ Foreman::AccessControl.permission(:view_hosts).actions.concat [
   'katello/api/v2/hosts_bulk_actions/module_streams',
   'katello/api/v2/host_debs/index',
   'katello/api/v2/host_packages/index',
+  'katello/api/v2/host_packages/containerfile_install_command',
   'katello/api/v2/host_tracer/index',
   'katello/api/v2/host_tracer/resolve',
   'katello/api/v2/host_tracer/auto_complete_search',
