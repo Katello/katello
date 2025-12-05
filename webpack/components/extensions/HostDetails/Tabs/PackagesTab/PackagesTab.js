@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   ActionList,
   ActionListItem,
@@ -22,7 +22,6 @@ import { FormattedMessage } from 'react-intl';
 import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText, ActionsColumn } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { HOST_DETAILS_KEY } from 'foremanReact/components/HostDetails/consts';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { useSet, useBulkSelect, useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
@@ -123,6 +122,11 @@ UpdateVersionsSelect.defaultProps = {
   upgradableVersionSelectOpen: null,
 };
 
+const formatPersistence = (persistence) => {
+  if (!persistence) return '—';
+  return persistence.charAt(0).toUpperCase() + persistence.slice(1);
+};
+
 export const PackagesTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const {
@@ -174,17 +178,32 @@ export const PackagesTab = () => {
   const emptySearchTitle = __('No matching packages found');
   const emptySearchBody = __('Try changing your search settings.');
   const errorSearchTitle = __('Problem searching packages');
-  const columnHeaders = [
+
+  const isBootCHost = hostIsImageMode({ hostDetails });
+  const columnHeaders = isBootCHost ? [
     __('Package'),
+    __('Persistence'),
     __('Status'),
     __('Installed version'),
     __('Upgradable to'),
-  ];
+  ] :
+    [
+      __('Package'),
+      __('Status'),
+      __('Installed version'),
+      __('Upgradable to'),
+    ];
 
-  const COLUMNS_TO_SORT_PARAMS = {
-    [columnHeaders[0]]: 'nvra',
-    [columnHeaders[2]]: 'version',
-  };
+  const COLUMNS_TO_SORT_PARAMS = isBootCHost ?
+    {
+      [columnHeaders[0]]: 'nvra',
+      [columnHeaders[1]]: 'persistence',
+      [columnHeaders[3]]: 'version',
+    } :
+    {
+      [columnHeaders[0]]: 'nvra',
+      [columnHeaders[2]]: 'version',
+    };
 
   const {
     pfSortParams, apiSortParams,
@@ -211,7 +230,6 @@ export const PackagesTab = () => {
   const { results, ...metadata } = response;
   const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectHostPackagesStatus(state));
-  const dispatch = useDispatch();
   const {
     selectOne,
     isSelected,
@@ -286,17 +304,9 @@ export const PackagesTab = () => {
     isPolling: isInstallInProgress,
   } = useRexJobPolling(packageInstallAction, getHostDetails({ hostname }));
 
-  const refreshHostDetails = () => dispatch({
-    type: 'API_GET',
-    payload: {
-      key: HOST_DETAILS_KEY,
-      url: `/api/hosts/${hostname}`,
-    },
-  });
-
   const {
     triggerJobStart: triggerRecalculate, lastCompletedJob: lastCompletedRecalculate,
-  } = useRexJobPolling(() => runSubmanRepos(hostname, refreshHostDetails));
+  } = useRexJobPolling(() => runSubmanRepos(hostname), getHostDetails({ hostname }));
 
   const handleRefreshApplicabilityClick = () => {
     setIsBulkActionOpen(false);
@@ -486,7 +496,7 @@ export const PackagesTab = () => {
   return (
     <div>
       <div id="packages-tab">
-        {hostIsImageMode({ hostDetails }) && <ImageModeHostAlert />}
+        {isBootCHost && <ImageModeHostAlert />}
         <TableWrapper
           {...{
             metadata,
@@ -599,6 +609,9 @@ export const PackagesTab = () => {
                       : packageName
                     }
                   </Td>
+                  {isBootCHost && (
+                    <Td>{formatPersistence(pkg.persistence)}</Td>
+                  )}
                   <Td><PackagesStatus {...pkg} /></Td>
                   <Td>{installedVersion.replace(`${packageName}-`, '')}</Td>
                   <Td>

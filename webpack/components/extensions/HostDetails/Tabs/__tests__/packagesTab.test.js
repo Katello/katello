@@ -510,7 +510,7 @@ test('Sets initial search query from url params', async (done) => {
     .query({ ...defaultQuery, search: `name=${firstPackage.name}` })
     .reply(200, { ...mockPackagesData, results: [firstPackage] });
 
-  jest.spyOn(hooks, 'useUrlParams').mockImplementation(() => ({
+  const urlParamsSpy = jest.spyOn(hooks, 'useUrlParams').mockImplementation(() => ({
     searchParam: `name=${firstPackage.name}`,
   }));
 
@@ -521,6 +521,171 @@ test('Sets initial search query from url params', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
+  urlParamsSpy.mockRestore();
   act(done); // Pass jest callback to confirm test is done
+});
+
+test('Shows persistence column for bootc hosts', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const bootcFacetAttributes = {
+    ...contentFacetAttributes,
+    bootc_booted_image: 'quay.io/someimage:latest',
+  };
+
+  const bootcRenderOptions = {
+    apiNamespace: HOST_PACKAGES_KEY,
+    initialState: {
+      API: {
+        HOST_DETAILS: {
+          response: {
+            id: 1,
+            name: hostname,
+            content_facet_attributes: { ...bootcFacetAttributes },
+            display_name: hostname,
+          },
+          status: 'RESOLVED',
+        },
+      },
+    },
+  };
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const { getAllByText, getByText } = renderWithRedux(
+    <PackagesTab />,
+    bootcRenderOptions,
+  );
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+  expect(getByText('Persistence')).toBeInTheDocument();
+  expect(getByText('Persistent')).toBeInTheDocument();
+  expect(getByText('Transient')).toBeInTheDocument();
+  expect(getAllByText('—').length).toBeGreaterThan(0);
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
+test('Does not show persistence column for non-bootc hosts', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const { getAllByText, queryByText } = renderWithRedux(<PackagesTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+  expect(queryByText('Persistence')).not.toBeInTheDocument();
+  expect(queryByText('Persistent')).not.toBeInTheDocument();
+  expect(queryByText('Transient')).not.toBeInTheDocument();
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
+test('Can sort by persistence column', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const bootcFacetAttributes = {
+    ...contentFacetAttributes,
+    bootc_booted_image: 'quay.io/someimage:latest',
+  };
+
+  const bootcRenderOptions = {
+    apiNamespace: HOST_PACKAGES_KEY,
+    initialState: {
+      API: {
+        HOST_DETAILS: {
+          response: {
+            id: 1,
+            name: hostname,
+            content_facet_attributes: { ...bootcFacetAttributes },
+            display_name: hostname,
+          },
+          status: 'RESOLVED',
+        },
+      },
+    },
+  };
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const sortedQuery = {
+    ...defaultQueryWithoutSearch,
+    sort_by: 'persistence',
+    sort_order: 'asc',
+  };
+
+  const scope2 = nockInstance
+    .get(hostPackages)
+    .query(sortedQuery)
+    .reply(200, mockPackagesData);
+
+  const { getAllByText, getByText } = renderWithRedux(
+    <PackagesTab />,
+    bootcRenderOptions,
+  );
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+
+  const persistenceHeader = getByText('Persistence');
+  fireEvent.click(persistenceHeader);
+
+  await patientlyWaitFor(() => {
+    assertNockRequest(scope2);
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
+test('Can trigger refresh package applicability', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const refreshApplicabilityScope = nockInstance
+    .post(jobInvocations, {
+      job_invocation: {
+        inputs: {},
+        search_query: `name ^ (${hostname})`,
+        feature: REX_FEATURES.KATELLO_UPLOAD_PROFILE,
+      },
+    })
+    .reply(201, { id: 123, description: 'Upload package profile' });
+
+  const {
+    getByText,
+    getAllByText,
+    getByRole,
+  } = renderWithRedux(<PackagesTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+
+  const kebabDropdown = getByRole('button', { name: 'bulk_actions' });
+  await patientlyWaitFor(() => expect(kebabDropdown).toBeInTheDocument());
+  fireEvent.click(kebabDropdown);
+
+  const refreshAction = getByText('Refresh package applicability');
+  await patientlyWaitFor(() => expect(refreshAction).toBeInTheDocument());
+  await act(async () => {
+    fireEvent.click(refreshAction);
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(refreshApplicabilityScope, done);
 });
 
