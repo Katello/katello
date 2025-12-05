@@ -1,6 +1,6 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { foremanUrl } from 'foremanReact/common/helpers';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 
 export const subscriptionTypeFormatter = (value, { rowData }) => {
   let cellContent;
@@ -8,7 +8,7 @@ export const subscriptionTypeFormatter = (value, { rowData }) => {
   if (rowData.virt_only === false) {
     cellContent = __('Physical');
   } else if (rowData.hypervisor) {
-    const hypervisorLink = foremanUrl(`/content_hosts/${rowData.hypervisor.id}`);
+    const hypervisorLink = urlBuilder(`new/hosts/${rowData.hypervisor.id}`, '');
     cellContent = (
       <span>
         {__('Guests of')}

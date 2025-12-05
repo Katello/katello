@@ -39,7 +39,7 @@ module Katello
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
       assert_includes email.body.encoded, @errata_host.name
-      assert_includes email.body.encoded, "http://luna.example.net/hosts/#{@errata_host.name}#/Content/errata"
+      assert_includes email.body.encoded, "http://luna.example.net/new/hosts/#{@errata_host.name}#/Content/errata"
     end
 
     def test_sync_errata
