@@ -70,11 +70,11 @@ Foreman::Plugin.register :katello do
          :turbolinks => false
 
     menu :top_menu,
-         :booted_container_images,
-         :caption => N_('Booted Container Images'),
-         :url_hash => {:controller => 'katello/api/v2/host_bootc_images',
-                       :action => 'bootc_images'},
-         :url => '/booted_container_images',
+         :container_images,
+         :caption => N_('Container Images'),
+         :url_hash => {:controller => 'katello/api/v2/container_images_controller',
+                       :action => 'index'},
+         :url => '/container_images',
          :engine => Katello::Engine,
          :turbolinks => false
 
@@ -219,15 +219,6 @@ Foreman::Plugin.register :katello do
        :engine => Katello::Engine,
        :parent => :hosts_menu,
        :after => :content_hosts,
-       :turbolinks => false
-
-  menu :labs_menu,
-       :container_images,
-       :url => '/labs/container_images',
-       :url_hash => {:controller => 'katello/api/v2/container_images_controller',
-                     :action => 'index'},
-       :caption => N_('Container Images'),
-       :parent => :lab_features_menu,
        :turbolinks => false
 
   extend_template_helpers Katello::KatelloUrlsHelper

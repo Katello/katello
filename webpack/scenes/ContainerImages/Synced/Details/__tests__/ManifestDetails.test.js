@@ -8,12 +8,12 @@ import { DOCKER_TAG_DETAILS_KEY } from '../ManifestDetailsActions';
 import manifestDetailsData from './manifestDetails.fixtures.json';
 import manifestListData from './manifestList.fixtures.json';
 
-const withManifestRoute = component => <Route path="/labs/container_images/:id([0-9]+)">{component}</Route>;
+const withManifestRoute = component => <Route path="/container_images/:id([0-9]+)">{component}</Route>;
 
 const renderOptions = (tagId = 2) => ({
   apiNamespace: `${DOCKER_TAG_DETAILS_KEY}_${tagId}`,
   routerParams: {
-    initialEntries: [{ pathname: `/labs/container_images/${tagId}` }],
+    initialEntries: [{ pathname: `/container_images/${tagId}` }],
     initialIndex: 1,
   },
 });
@@ -170,7 +170,7 @@ describe('ManifestDetails', () => {
     const customRenderOptions = {
       apiNamespace: `${DOCKER_TAG_DETAILS_KEY}_1`,
       routerParams: {
-        initialEntries: [{ pathname: '/labs/container_images/1', search: '?manifest=102' }],
+        initialEntries: [{ pathname: '/container_images/1', search: '?manifest=102' }],
         initialIndex: 1,
       },
     };
