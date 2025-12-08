@@ -273,6 +273,10 @@ Foreman::Plugin.register :katello do
       common_class = 'hidden-tablet hidden-xs ellipsis'
       use_pagelet :hosts_table_column_header, :name
       use_pagelet :hosts_table_column_content, :name
+      add_pagelet :hosts_table_column_header, key: :bootc_booted_image, label: _('Type'), sortable: true, class: common_class, width: '10%',
+                  export_data: CsvExporter::ExportDefinition.new('content_facet_attributes.bootc_booted_image', label: 'Image Type')
+      add_pagelet :hosts_table_column_content, key: :bootc_booted_image, class: common_class, callback: ->(host) { host.content_facet&.bootc_booted_image }
+
       add_pagelet :hosts_table_column_header, key: :rhel_lifecycle_status, label: _('RHEL Lifecycle status'), sortable: true, class: common_class, width: '10%', export_key: 'rhel_lifecycle_status'
       add_pagelet :hosts_table_column_content, key: :rhel_lifecycle_status, class: common_class, callback: ->(host) { host_status_icon(host.rhel_lifecycle_global_status) }
 
@@ -280,17 +284,25 @@ Foreman::Plugin.register :katello do
                   export_data: [:security, :bugfix, :enhancement].map { |kind| CsvExporter::ExportDefinition.new("installable_updates.#{kind}", callback: ->(host) { (host.content_facet_attributes&.errata_counts || {})[kind] }) } +
                                [:rpm, :deb].map { |kind| CsvExporter::ExportDefinition.new("installable_packages.#{kind}", callback: ->(host) { host&.content_facet_attributes&.public_send("upgradable_#{kind}_count".to_sym) || 0 }) }
       add_pagelet :hosts_table_column_content, key: :installable_updates, class: common_class, callback: ->(host) { errata_counts(host) }
-      use_pagelet :hosts_table_column_header, :os_title
-      use_pagelet :hosts_table_column_content, :os_title
-      add_pagelet :hosts_table_column_header, key: :lifecycle_environment, label: _('Lifecycle environment'), sortable: true, class: common_class, width: '10%',
-                  export_data: CsvExporter::ExportDefinition.new('single_lifecycle_environment', label: 'Lifecycle Environment')
-      add_pagelet :hosts_table_column_content, key: :lifecycle_environment, class: common_class, callback: ->(host) { host.content_facet&.single_lifecycle_environment&.name }
-      add_pagelet :hosts_table_column_header, key: :content_view, label: _('Content view'), sortable: true, class: common_class, width: '10%', export_data: CsvExporter::ExportDefinition.new('single_content_view', label: 'Content View')
-      add_pagelet :hosts_table_column_content, key: :content_view, class: common_class, callback: ->(host) { host.content_facet&.single_content_view&.name }
-      add_pagelet :hosts_table_column_header, key: :registered_at, label: _('Registered'), sortable: true, class: common_class, width: '10%', export_data: CsvExporter::ExportDefinition.new('subscription_facet_attributes.registered_at', label: 'Registered')
-      add_pagelet :hosts_table_column_content, key: :registered_at, class: common_class, callback: ->(host) { host_registered_time(host) }
       add_pagelet :hosts_table_column_header, key: :last_checkin, label: _('Last checkin'), sortable: true, class: common_class, width: '10%', export_data: CsvExporter::ExportDefinition.new('subscription_facet_attributes.last_checkin', label: 'Last Checkin')
       add_pagelet :hosts_table_column_content, key: :last_checkin, class: common_class, callback: ->(host) { host_checkin_time(host) }
+      add_pagelet :hosts_table_column_header, key: :content_view_environments, label: _('Content View Environments'), class: common_class, width: '15%',
+                  export_data: CsvExporter::ExportDefinition.new('content_view_environment_labels', label: 'Content View Environments', callback: ->(host) { host.content_view_environment_labels })
+      add_pagelet :hosts_table_column_content, key: :content_view_environments, class: common_class, callback: ->(host) { host.content_view_environment_labels }
+      add_pagelet :hosts_table_column_header, key: :lifecycle_environment, label: _('Lifecycle environment'), sortable: true, class: common_class, width: '10%',
+                  export_data: CsvExporter::ExportDefinition.new('single_lifecycle_environment', label: 'Lifecycle Environment', callback: ->(host) { host.content_facet&.single_lifecycle_environment&.name })
+      add_pagelet :hosts_table_column_content, key: :lifecycle_environment, class: common_class, callback: ->(host) { host.content_facet&.single_lifecycle_environment&.name }
+      add_pagelet :hosts_table_column_header, key: :content_view, label: _('Content view'), sortable: true, class: common_class, width: '10%',
+                  export_data: CsvExporter::ExportDefinition.new('single_content_view', label: 'Content View', callback: ->(host) { host.content_facet&.single_content_view&.name })
+      add_pagelet :hosts_table_column_content, key: :content_view, class: common_class, callback: ->(host) { host.content_facet&.single_content_view&.name }
+      add_pagelet :hosts_table_column_header, key: :content_source, label: _('Content Source'), sortable: true, class: common_class, width: '12%',
+                  export_data: CsvExporter::ExportDefinition.new('content_facet_attributes.content_source_name', label: 'Content Source')
+      add_pagelet :hosts_table_column_content, key: :content_source, class: common_class, callback: ->(host) { host.content_facet&.content_source&.name }
+      add_pagelet :hosts_table_column_header, key: :registered_at, label: _('Registered'), sortable: true, class: common_class, width: '10%', export_data: CsvExporter::ExportDefinition.new('subscription_facet_attributes.registered_at', label: 'Registered')
+      add_pagelet :hosts_table_column_content, key: :registered_at, class: common_class, callback: ->(host) { host_registered_time(host) }
+      add_pagelet :hosts_table_column_header, key: :host_collections, label: _('Host Collections'), class: common_class, width: '15%',
+                  export_data: CsvExporter::ExportDefinition.new('host_collections', label: 'Host Collections', callback: ->(host) { host.host_collections.map(&:name).join(', ') })
+      add_pagelet :hosts_table_column_content, key: :host_collections, class: common_class, callback: ->(host) { host.host_collections.map(&:name).join(', ') }
     end
   end
 

@@ -5,6 +5,8 @@ module Katello
       include ForemanTasks::Triggers
 
       module Overrides
+        DEFAULT_KATELLO_COLUMNS = [:installable_updates, :content_view_environments, :registered_at, :last_checkin].freeze
+
         def action_permission
           case params[:action]
           when 'change_content_source'
@@ -13,13 +15,41 @@ module Katello
             super
           end
         end
+
+        def csv_pagelets
+          base_pagelets = super
+          # Only append Katello pagelets for /new/hosts.csv
+          return base_pagelets unless request.path.start_with?('/new/hosts')
+
+          # Get Katello pagelets from the :content profile
+          if @selected_columns
+            # User has customized columns - use their selection
+            katello_pagelets = Pagelets::Manager.pagelets_at('hosts/_list', 'hosts_table_column_header', profile: :content, filter: { selected: @selected_columns })
+          else
+            # No customization - use default Katello columns matching content_hosts method
+            all_katello_pagelets = Pagelets::Manager.pagelets_at('hosts/_list', 'hosts_table_column_header', profile: :content)
+            katello_pagelets = all_katello_pagelets.select { |p| DEFAULT_KATELLO_COLUMNS.include?(p.opts[:key]) }
+          end
+
+          # Exclude pagelets that are already in base (like :name which uses use_pagelet)
+          existing_keys = base_pagelets.map { |p| p.opts[:key] }
+          katello_pagelets = katello_pagelets.reject { |p| existing_keys.include?(p.opts[:key]) }
+
+          base_pagelets + katello_pagelets
+        end
       end
 
       included do
         prepend Overrides
 
         def included_associations(include = [])
-          [:host_traces] + super
+          base_associations = super
+          # Only add Katello associations for /new/hosts.csv
+          return base_associations unless request.path.start_with?('/new/hosts')
+
+          katello_associations = [:host_traces, :subscription_facet, :content_facet,
+                                  :applicable_rpms, :content_view_environments]
+          katello_associations + base_associations
         end
 
         def update_multiple_taxonomies(type)
