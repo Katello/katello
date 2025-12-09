@@ -3,9 +3,9 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.19.0.rc1",
+        "Project-Id-Version": "katello 4.19.0.rc2",
         "Report-Msgid-Bugs-To": "",
-        "PO-Revision-Date": "2025-11-25 16:30+0000",
+        "PO-Revision-Date": "2025-12-09 15:35+0000",
         "Last-Translator": "FULL NAME <EMAIL@ADDRESS>",
         "Language-Team": "LANGUAGE <LL@li.org>",
         "Language": "",
