@@ -7,7 +7,7 @@ import FlatpakRemotesForm from './FlatpakRemoteform';
 const EditFlatpakModal = ({ show, setIsOpen, remoteData }) => (
   <Modal
     ouiaId="edit-flatpak-modal"
-    title={__('Edit Flatpak Remote')}
+    title={__('Edit Flatpak remote')}
     variant={ModalVariant.medium}
     isOpen={show}
     onClose={() => { setIsOpen(false); }}

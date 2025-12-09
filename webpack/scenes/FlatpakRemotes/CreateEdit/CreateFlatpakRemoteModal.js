@@ -7,7 +7,7 @@ import FlatpakRemotesForm from './FlatpakRemoteform';
 const CreateFlatpakModal = ({ show, setIsOpen, hasRedhatRemote }) => (
   <Modal
     ouiaId="create-flatpak-modal"
-    title={__('Create Flatpak Remote')}
+    title={__('Create Flatpak remote')}
     variant={ModalVariant.medium}
     isOpen={show}
     onClose={() => { setIsOpen(false); }}
