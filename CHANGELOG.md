@@ -1,4 +1,4 @@
-# 4.19.0 (2025-11-25)
+# 4.19.0 (2025-12-09)
 
 ## Features
 
@@ -48,6 +48,10 @@
  * Bulk Errata Wizard should only show installable Errata ([#38687](https://projects.theforeman.org/issues/38687), [27921d16](https://github.com/Katello/katello.git/commit/27921d16398d7852349808fc72fb863e5042028a))
  * Need an option to retain build profile information like cve, lce and ks repo id on unregistering hosts ([#38671](https://projects.theforeman.org/issues/38671), [abf3d607](https://github.com/Katello/katello.git/commit/abf3d6078ace9a3055256f77e011e4e7a379728d))
 
+### Container
+ * Unauth container content from different orgs shows up for registered hosts ([#38878](https://projects.theforeman.org/issues/38878), [89bef9c6](https://github.com/Katello/katello.git/commit/89bef9c67c4cc5d4d59f55e61178b74228319383))
+ * Untagged manifests remain tagged in Katello ([#38865](https://projects.theforeman.org/issues/38865), [9e07e0bf](https://github.com/Katello/katello.git/commit/9e07e0bff8d043452fc710798e1ea38853d7f589))
+
 ### Repositories
  * Missing product ID arg shows Ruby error when mirroring flatpak ([#38874](https://projects.theforeman.org/issues/38874), [24107480](https://github.com/Katello/katello.git/commit/241074805b8995c88b0061d5668e3b06437c44c9))
  * Repetitive recalculation of Katello::RepositoryTypeManager.enabled_repository_types makes katello:correct_repositories very slow ([#38838](https://projects.theforeman.org/issues/38838), [3a4bf49f](https://github.com/Katello/katello.git/commit/3a4bf49f481113b03811db52fe8ff1ad8cf9492f))
@@ -55,9 +59,6 @@
  * Error while synchronizing concurrently RPM content - PG::TRDeadlockDetected: ERROR:  deadlock detected ([#38789](https://projects.theforeman.org/issues/38789), [a66ca1b2](https://github.com/Katello/katello.git/commit/a66ca1b2d64dc01847aa30eda4cad0ceb18ed682))
  * Refactor Flatpak pages to use TableIndexPage component ([#38776](https://projects.theforeman.org/issues/38776), [d67b96c0](https://github.com/Katello/katello.git/commit/d67b96c0c4e163e8f94faf4892aba2876bbba6ec))
  * Debian repos are not displayed in the Repository Set Management on the Content Hosts page ([#38296](https://projects.theforeman.org/issues/38296), [d6cf242d](https://github.com/Katello/katello.git/commit/d6cf242d01e1fea3cdfdf64262c8282b4e87b038))
-
-### Container
- * Untagged manifests remain tagged in Katello ([#38865](https://projects.theforeman.org/issues/38865), [9e07e0bf](https://github.com/Katello/katello.git/commit/9e07e0bff8d043452fc710798e1ea38853d7f589))
 
 ### Hammer
  * Remove entitlements-related Hammer commands and fields ([#38847](https://projects.theforeman.org/issues/38847), [5cc7fd8d](https://github.com/Katello/hammer-cli-katello.git/commit/5cc7fd8def3b954a90292f083bdd83ee8043024b))
@@ -67,10 +68,14 @@
  * Content > Subscriptions stuck in loading state if organization GET ends with 403 ([#38774](https://projects.theforeman.org/issues/38774), [a165abc7](https://github.com/Katello/katello.git/commit/a165abc7feafcce2217cf492e491189ae159db11))
  * Calls to upstream Candlepin consumer fail when using an apiUrl from manifest ([#38724](https://projects.theforeman.org/issues/38724), [8f4da281](https://github.com/Katello/katello.git/commit/8f4da2816a1a44f99dfda030056fe28b53978ddd))
 
+### Roles and Permissions
+ * Adjust tests to taxonomy checks being done as part of authorization checks ([#38844](https://projects.theforeman.org/issues/38844), [33f5ba99](https://github.com/Katello/katello.git/commit/33f5ba99a6f0dbf35c59e8b76edf36051f97e4e1), [1f234b5a](https://github.com/Katello/katello.git/commit/1f234b5a3065b426b830465115c7f86d87edfccb))
+
 ### Errata Management
  * /hosts/bulk/applicable_errata API is listing installable hosts ([#38824](https://projects.theforeman.org/issues/38824), [0774dc1c](https://github.com/Katello/katello.git/commit/0774dc1c757bca8e68cd7f902f789028a5d60174))
  * Web UI shows incorrect host count when applying an erratum ([#38550](https://projects.theforeman.org/issues/38550), [24ab5f97](https://github.com/Katello/katello.git/commit/24ab5f97fedd90a31eeed6ba42abebfdd3d0c895))
  * Allow for scoped search of 'other' errata types ([#38135](https://projects.theforeman.org/issues/38135), [62ac9abf](https://github.com/Katello/katello.git/commit/62ac9abf08caf9ef3b15bcceb8bb331b7d793b4c))
+ * Host details content page does not display 'other' type errata ([#38005](https://projects.theforeman.org/issues/38005), [6d5f7f7a](https://github.com/Katello/katello.git/commit/6d5f7f7a9fa52ed8e798d136af3ca07ef7c6fb02))
 
 ### Foreman Proxy Content
  * Pulpcore 3.85 breaks n-1 capsule syncing: gpgcheck cannot be nil ([#38808](https://projects.theforeman.org/issues/38808), [dfc038fa](https://github.com/Katello/katello.git/commit/dfc038fa974cee5c6d5ac7e71fd6eb22a768cb81))
@@ -97,7 +102,9 @@
  * Change content source JS console error: Cannot update a component ('ConnectFunction') while rendering a different component ('Context.Consumer') ([#37256](https://projects.theforeman.org/issues/37256), [1a92fe1e](https://github.com/Katello/katello.git/commit/1a92fe1e8672366f37bc4022695a4f292a5ec84d))
 
 ### Other
- * WebUI broken in nightly: "__FOREMAN_VENDOR__REACT__ is not defined" ([#38584](https://projects.theforeman.org/issues/38584))
  * Async Repository::CapsuleSync tasks that don't find any relevant proxies to sync sometimes end up in failing state ([#38546](https://projects.theforeman.org/issues/38546), [a1f951cd](https://github.com/Katello/katello.git/commit/a1f951cd55e7cf58de7413caf70b374164dfce6d))
+ * Capsule container repo complete sync fails with 'find' nil error ([#38922](https://projects.theforeman.org/issues/38922), [509c9ae8](https://github.com/Katello/katello.git/commit/509c9ae830223d2f3dcd307b5e7cb55a458d2cf7))
+ * Republish repository metadata action should update deb content URL options when needed ([#38912](https://projects.theforeman.org/issues/38912), [c5beb0a5](https://github.com/Katello/katello.git/commit/c5beb0a5f404ef8538de855f5ed767c4c296070d))
+ * WebUI broken in nightly: "__FOREMAN_VENDOR__REACT__ is not defined" ([#38584](https://projects.theforeman.org/issues/38584))
  * IPv6 addresses in HTTP proxy URL breaks CDN content retrieval ([#38545](https://projects.theforeman.org/issues/38545), [d6096128](https://github.com/Katello/katello.git/commit/d609612833b63cbc1c6a586ea66abea0e0f71564))
  * undefined method `repository_url' for nil:NilClass ([#37077](https://projects.theforeman.org/issues/37077), [07fdfc35](https://github.com/Katello/katello.git/commit/07fdfc359faade860fc0254e406063a163681043))
