@@ -59,15 +59,20 @@ const SyncResultCell = ({ repo }) => {
 
   if (errorDetails) {
     let errorText;
-    if (Array.isArray(errorDetails)) {
-      errorText = errorDetails.join('\n');
+
+    // Handle {messages: [...]} format from backend (matches old jQuery)
+    if (errorDetails.messages && Array.isArray(errorDetails.messages)) {
+      errorText = errorDetails.messages.join('\n');
+    } else if (Array.isArray(errorDetails)) {
+      errorText = errorDetails.length > 0 ? errorDetails.join('\n') : '';
     } else if (typeof errorDetails === 'object') {
-      errorText = JSON.stringify(errorDetails, null, 2);
+      // Only stringify if object has keys
+      errorText = Object.keys(errorDetails).length > 0 ? JSON.stringify(errorDetails, null, 2) : '';
     } else {
       errorText = String(errorDetails);
     }
 
-    if (errorText && errorText.length > 0) {
+    if (errorText && errorText.trim().length > 0) {
       return (
         <Tooltip content={errorText}>
           <span>{content}</span>
