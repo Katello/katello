@@ -3,6 +3,7 @@
  * @name  Bastion.content-hosts.controller:ContentHostsBulkSystemPurposeModalController
  *
  * @requires $scope
+ * @requires $window
  * @requires $uibModalInstance
  * @requires HostBulkAction
  * @requires Organization
@@ -14,8 +15,8 @@
  *   A controller for providing bulk action functionality for setting system purpose values
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkSystemPurposeModalController',
-    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Organization', 'CurrentOrganization', 'Notification', 'hostIds',
-    function ($scope, $uibModalInstance, HostBulkAction, Organization, CurrentOrganization, Notification, hostIds) {
+    ['$scope', '$window', '$uibModalInstance', 'HostBulkAction', 'Organization', 'CurrentOrganization', 'Notification', 'hostIds',
+    function ($scope, $window, $uibModalInstance, HostBulkAction, Organization, CurrentOrganization, Notification, hostIds) {
 
         $scope.organization = Organization.get({id: CurrentOrganization});
 
@@ -53,7 +54,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSystemPurpos
         $scope.performAction = function () {
             HostBulkAction.systemPurpose(actionParams(), function (task) {
             $scope.ok();
-            $scope.transitionTo('tasks.details', {taskId: task.id});
+            $window.location.href = '/foreman_tasks/tasks/' + task.id;
         }, function (response) {
             angular.forEach(response.data.errors, function (error) {
                 Notification.setErrorMessage(error);
