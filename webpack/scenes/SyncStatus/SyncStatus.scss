@@ -3,8 +3,8 @@
 .pf-v5-c-toolbar.pf-m-sticky[data-ouia-component-id="sync-status-toolbar"] {
   position: sticky;
   top: 0;
-  z-index: 400;
-  box-shadow: none;
+  // Use Patternfly's standard z-index for sticky toolbar to avoid conflicts with notification drawer
+  z-index: var(--pf-v5-c-toolbar--m-sticky--ZIndex);
 }
 
 // Target the table by its ouiaId and offset the sticky header
@@ -12,7 +12,8 @@
   thead {
     position: sticky;
     top: 70px;
-    z-index: 300;
+    // Use Patternfly's standard z-index for sticky table headers
+    z-index: var(--pf-v5-c-table--m-sticky-header--cell--ZIndex);
   }
 
   // Fix for progress bar cell overflow in Firefox
