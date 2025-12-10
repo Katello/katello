@@ -88,7 +88,7 @@ module Katello
 
       assert_response :success
       body = JSON.parse(response.body)
-      assert body['id'], "Response should include task id for redirect to /foreman_tasks/tasks/:id"
+      assert body.key?('id'), "Response should include task id for redirect to /foreman_tasks/tasks/:id"
     end
 
     def test_system_purpose
@@ -110,7 +110,7 @@ module Katello
 
       assert_response :success
       body = JSON.parse(response.body)
-      assert body['id'], "Response should include task id for redirect to /foreman_tasks/tasks/:id"
+      assert body.key?('id'), "Response should include task id for redirect to /foreman_tasks/tasks/:id"
     end
 
     def test_system_purpose_permission
