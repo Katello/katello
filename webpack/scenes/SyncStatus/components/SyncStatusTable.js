@@ -192,6 +192,21 @@ const SyncStatusTable = ({
     // Get checkbox state for selectable nodes
     const nodeCheckboxState = isSelectableNode ? getNodeCheckboxState(row) : null;
 
+    // Helper to get controlled checkbox value (never undefined, supports null for indeterminate)
+    const getRepoCheckboxValue = () => {
+      if (status?.is_running) return false;
+      // Repo checkboxes only need true/false (no indeterminate), so use Boolean()
+      return Boolean(isRepoSelected);
+    };
+
+    const getNodeCheckboxValue = () => {
+      if (!nodeCheckboxState) return false;
+      if (nodeCheckboxState.isIndeterminate) return null;
+      const { isChecked } = nodeCheckboxState;
+      // Explicitly convert to boolean, except preserve null for indeterminate
+      return isChecked === true;
+    };
+
     // Build treeRow props - minimal for leaf nodes, full for expandable nodes
     const treeRow = row.hasChildren ? {
       onCollapse: () => toggleExpand(row.nodeId),
@@ -220,7 +235,7 @@ const SyncStatusTable = ({
           {isRepo && (
             <Checkbox
               id={`checkbox-${row.id}`}
-              isChecked={status?.is_running ? false : isRepoSelected}
+              isChecked={getRepoCheckboxValue()}
               isDisabled={status?.is_running}
               onChange={() => onSelectRepo(row.id, row)}
               aria-label={__('Select repository')}
@@ -230,11 +245,7 @@ const SyncStatusTable = ({
           {isSelectableNode && (
             <Checkbox
               id={`checkbox-${row.type}-${row.id}`}
-              isChecked={
-                nodeCheckboxState?.isIndeterminate
-                  ? null
-                  : (nodeCheckboxState?.isChecked || false)
-              }
+              isChecked={getNodeCheckboxValue()}
               onChange={() => onSelectProduct(row)}
               aria-label={__('Select node')}
               ouiaId={`checkbox-${row.type}-${row.id}`}
