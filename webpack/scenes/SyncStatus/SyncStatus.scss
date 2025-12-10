@@ -14,4 +14,17 @@
     top: 70px;
     z-index: 300;
   }
+
+  // Fix for progress bar cell overflow in Firefox
+  // The 4th column (Progress / Result) contains Flex containers that can overflow in Firefox
+  tbody tr td:nth-child(4) {
+    vertical-align: middle;
+    overflow: hidden;
+
+    // Ensure flex container respects cell boundaries
+    .pf-v5-l-flex {
+      max-height: 100%;
+      align-items: center;
+    }
+  }
 }
