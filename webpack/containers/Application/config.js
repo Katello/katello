@@ -15,7 +15,6 @@ import ContentDetails from '../../scenes/Content/Details';
 import withHeader from './withHeaders';
 import ChangeContentSource from '../../scenes/Hosts/ChangeContentSource';
 import AlternateContentSource from '../../scenes/AlternateContentSources';
-import BootedContainerImages from '../../scenes/ContainerImages/Booted';
 import ContainerImages from '../../scenes/ContainerImages';
 import ManifestDetails from '../../scenes/ContainerImages/Synced/Details';
 import FlatpakRemotes from '../../scenes/FlatpakRemotes';
@@ -91,15 +90,11 @@ export const links = [
     exact: false,
   },
   {
-    path: 'booted_container_images',
-    component: WithOrganization(withHeader(BootedContainerImages, { title: __('Booted container images') })),
-  },
-  {
-    path: 'labs/container_images',
+    path: 'container_images',
     component: WithOrganization(withHeader(ContainerImages, { title: __('Container Images') })),
   },
   {
-    path: 'labs/container_images/:id([0-9]+)',
+    path: 'container_images/:id([0-9]+)',
     component: WithOrganization(withHeader(ManifestDetails, { title: __('Manifest Details') })),
   },
   {

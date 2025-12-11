@@ -50,7 +50,7 @@ const SyncedContainerImagesPage = () => {
     const manifest = getManifest(tag);
     if (!manifest || !manifest.digest) return 'N/A';
     return (
-      <Link to={`/labs/container_images/${tag.id}`}>
+      <Link to={`/container_images/${tag.id}`}>
         {manifest.digest}
       </Link>
     );
@@ -321,7 +321,7 @@ const SyncedContainerImagesPage = () => {
                       <Td className="empty-cell" />
                       <Td dataLabel={__('Manifest digest')}>
                         {childManifest.digest ? (
-                          <Link to={`/labs/container_images/${tag.id}?manifest=${childManifest.id}`}>
+                          <Link to={`/container_images/${tag.id}?manifest=${childManifest.id}`}>
                             {childManifest.digest}
                           </Link>
                         ) : 'N/A'}

@@ -100,10 +100,10 @@ const ManifestDetails = () => {
         <GridItem span={12}>
           <Breadcrumb ouiaId="manifest-details-breadcrumb">
             <BreadcrumbItem
-              to="/labs/container_images"
+              to="/container_images"
               onClick={(e) => {
                 e.preventDefault();
-                history.push('/labs/container_images');
+                history.push('/container_images');
               }}
             >
               {__('Container images')}
