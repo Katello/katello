@@ -57,6 +57,8 @@ module Katello
     param_group :search, ::Katello::Api::V2::ApiController
     add_scoped_search_description_for(Katello::InstalledPackage)
     def containerfile_install_command
+      # We need to pass the full result param to avoid pagination but retain other scoped search features.
+      params[:full_result] = true
       collection = scoped_search(transient_index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
       if collection[:results].empty?
         render json: {
