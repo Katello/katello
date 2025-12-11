@@ -3,7 +3,7 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
     include Katello::Concerns::Api::V2::RepositoryContentController
 
-    before_action :find_host, only: [:index]
+    before_action :find_host, only: [:index, :auto_complete_search]
 
     resource_description do
       api_version 'v2'
