@@ -307,18 +307,6 @@ module Katello
       view_options
     end
 
-    def content_host_overview_button(host)
-      return [] unless host.content_facet || host.subscription_facet
-      [{
-        :button => link_to(
-          _('Content'),
-          "/content_hosts/#{host.id}",
-          :title => _("Host content and subscription details"),
-          :class => 'btn btn-default'),
-        :priority => 900,
-      }]
-    end
-
     def hosts_change_content_source
       [{ action: [_('Change Content Source'), '/change_host_content_source', false], priority: 100 }]
     end

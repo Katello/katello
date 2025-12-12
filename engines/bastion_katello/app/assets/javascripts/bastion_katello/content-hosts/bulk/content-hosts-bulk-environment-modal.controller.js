@@ -16,8 +16,8 @@
  *   A controller for providing bulk action functionality for setting content view and environment
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkEnvironmentModalController',
-    ['$scope', '$state', '$uibModalInstance', 'HostBulkAction', 'Organization', 'CurrentOrganization', 'ContentView', 'Notification', 'hostIds',
-    function ($scope, $state, $uibModalInstance, HostBulkAction, Organization, CurrentOrganization, ContentView, Notification, hostIds) {
+    ['$scope', '$window', '$uibModalInstance', 'HostBulkAction', 'Organization', 'CurrentOrganization', 'ContentView', 'Notification', 'hostIds',
+    function ($scope, $window, $uibModalInstance, HostBulkAction, Organization, CurrentOrganization, ContentView, Notification, hostIds) {
 
         function actionParams() {
             var params = hostIds;
@@ -57,7 +57,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkEnvironmentM
         $scope.performAction = function () {
             HostBulkAction.environmentContentView(actionParams(), function (task) {
                 $scope.ok();
-                $state.go('content-hosts.bulk-task', {taskId: task.id});
+                $window.location.href = '/foreman_tasks/tasks/' + task.id;
             }, function (response) {
                 angular.forEach(response.data.errors, function (error) {
                     Notification.setErrorMessage(error);

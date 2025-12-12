@@ -62,48 +62,6 @@ class HostsControllerTest < ActionController::TestCase
     assert_equal_arrays orig_cves, @host.content_facet.content_view_environment_ids
   end
 
-  context 'csv' do
-    setup do
-      models
-      @host = FactoryBot.create(:host, :with_content, :lifecycle_environment => @library,
-                                        :content_view => @library_dev_staging_view)
-      @host2 = FactoryBot.create(:host, :with_content, :organization_id => @host.organization_id,
-                                       :content_view => @library_dev_staging_view,
-                                       :lifecycle_environment =>  @library)
-    end
-
-    def test_csv_export
-      get :content_hosts, params: { :format => 'csv', :organization_id => @host.organization_id }
-
-      assert_equal "text/csv; charset=utf-8", response.headers["Content-Type"]
-      assert_equal "no-cache", response.headers["Cache-Control"]
-      assert_equal "attachment; filename=\"hosts-#{Date.today}.csv\"", response.headers["Content-Disposition"]
-
-      csv_body = CSV.parse(response.body)
-
-      expected_columns = [
-        'Name',
-        'Installable Updates - Security',
-        'Installable Updates - Bug Fixes',
-        'Installable Updates - Enhancements',
-        'Installable Updates - Package Count',
-        'OS',
-        'Content View Environments',
-        'Registered',
-        'Last Checkin',
-      ]
-
-      assert_equal expected_columns, csv_body.first
-      assert_equal @host.organization.hosts.count + 1, csv_body.count
-    end
-
-    def test_csv_export_search
-      get :content_hosts, params: { :format => 'csv', :organization_id => @host.organization_id, :search => "name = #{@host.name}" }
-      buf = response.stream.instance_variable_get(:@buf)
-      assert_equal 2, buf.count
-    end
-  end
-
   context 'destroy with katello overrides' do
     let(:host) do
       FactoryBot.create(:host, :managed)

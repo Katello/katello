@@ -7,8 +7,6 @@ module Katello
       module Overrides
         def action_permission
           case params[:action]
-          when 'content_hosts'
-            'view'
           when 'change_content_source'
             'edit'
           else
@@ -54,25 +52,6 @@ module Katello
         def submit_multiple_destroy
           task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Destroy, @hosts)
           redirect_to(foreman_tasks_task_path(task.id))
-        end
-
-        def content_hosts
-          respond_to do |format|
-            format.csv do
-              @hosts = resource_base_with_search.where(organization_id: params[:organization_id])
-                         .preload(:subscription_facet, :host_statuses, :operatingsystem,
-                                  :applicable_rpms, :content_view_environments)
-              csv_response(@hosts,
-                [:name, 'content_facet.installable_security_errata_count',
-                 'content_facet.installable_bugfix_errata_count', 'content_facet.installable_enhancement_errata_count',
-                 'content_facet.upgradable_rpm_count', :operatingsystem, :content_view_environment_names,
-                 'subscription_facet.registered_at', 'subscription_facet.last_checkin'],
-                ['Name', 'Installable Updates - Security',
-                 'Installable Updates - Bug Fixes', 'Installable Updates - Enhancements',
-                 'Installable Updates - Package Count', 'OS', 'Content View Environments',
-                 'Registered', 'Last Checkin'])
-            end
-          end
         end
 
         def change_content_source_data

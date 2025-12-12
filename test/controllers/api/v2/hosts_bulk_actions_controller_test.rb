@@ -87,6 +87,8 @@ module Katello
       put :environment_content_view, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :environment_id => @library.id, :content_view_id => @view_2.id }
 
       assert_response :success
+      body = JSON.parse(response.body)
+      assert body.key?('id'), "Response should include task id for redirect to /foreman_tasks/tasks/:id"
     end
 
     def test_system_purpose
@@ -107,6 +109,8 @@ module Katello
                                      :purpose_usage => host_purpose_usage}
 
       assert_response :success
+      body = JSON.parse(response.body)
+      assert body.key?('id'), "Response should include task id for redirect to /foreman_tasks/tasks/:id"
     end
 
     def test_system_purpose_permission
