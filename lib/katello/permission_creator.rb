@@ -326,7 +326,7 @@ module Katello
                            'katello/api/v2/products_bulk_actions' => [:sync_products],
                            'katello/api/v2/repositories_bulk_actions' => [:sync_repositories, :reclaim_space_from_repositories],
                            'katello/api/v2/sync' => [:index],
-                           'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy],
+                           'katello/api/v2/sync_status' => [:index, :poll, :sync, :destroy],
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :syncable

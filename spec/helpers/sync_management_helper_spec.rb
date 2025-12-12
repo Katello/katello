@@ -74,12 +74,12 @@ module Katello
     end
 
     describe "#minors" do
-      subject { object.minors('1' => [Repository.new(:root => RootRepository.new)]).first }
+      subject { object.minors({'1' => [Repository.new(:root => RootRepository.new)]}, 'test-product').first }
       it { value(subject.keys).must_include(:id, :name) }
     end
 
     describe "#arches" do
-      subject { object.arches([Repository.new(:root => RootRepository.new(:arch => 'i386'))]).first }
+      subject { object.arches([Repository.new(:root => RootRepository.new(:arch => 'i386'))], 'test-parent').first }
       it { value(subject.keys).must_include(:id, :name) }
     end
   end
