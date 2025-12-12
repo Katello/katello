@@ -1,5 +1,6 @@
 require 'katello_test_helper'
 
+# rubocop:disable Metrics/ClassLength
 module Katello
   class Api::V2::AlternateContentSourcesControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
@@ -8,6 +9,8 @@ module Katello
       @acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @acs_rhui = katello_alternate_content_sources(:yum_alternate_content_source_rhui)
       @acs_simplified = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
+      @deb_acs = katello_alternate_content_sources(:deb_alternate_content_source)
+      @deb_simplified = katello_alternate_content_sources(:deb_simplified_alternate_content_source)
       @ca = katello_gpg_keys(:real_ca)
       @cert = katello_gpg_keys(:real_cert)
       @key = katello_gpg_keys(:real_key)
@@ -24,6 +27,8 @@ module Katello
       @acs.ssl_client_key = @key
       @acs.subpaths = ['content/', 'isos/', 'packages/']
       @acs.save!
+      @deb_acs.save!
+      @deb_simplified.save!
     end
 
     def setup
@@ -76,6 +81,54 @@ module Katello
         use_http_proxies: @acs.use_http_proxies,
         upstream_username: @acs.upstream_username,
         upstream_password: @acs.upstream_password,
+      }
+      assert_response :success
+      assert_template 'api/v2/common/create'
+    end
+
+    def test_create_deb
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@deb_acs)
+
+      assert_sync_task(::Actions::Katello::AlternateContentSource::Create) do |acs, smart_proxies|
+        assert_equal acs.attributes.except('id', 'label'), @deb_acs.attributes.except('id', 'label')
+        assert_equal [@smart_proxy.id], smart_proxies.pluck(:id)
+      end
+
+      post :create, params: {
+        name: @deb_acs.name,
+        smart_proxy_ids: [@smart_proxy.id],
+        ssl_ca_cert_id: @ca.id,
+        ssl_client_cert_id: @cert.id,
+        ssl_client_key_id: @key.id,
+        content_type: @deb_acs.content_type,
+        base_url: @deb_acs.base_url,
+        subpaths: @deb_acs.subpaths,
+        deb_releases: @deb_acs.deb_releases,
+        deb_components: @deb_acs.deb_components,
+        deb_architectures: @deb_acs.deb_architectures,
+        alternate_content_source_type: @deb_acs.alternate_content_source_type,
+        verify_ssl: @deb_acs.verify_ssl,
+        upstream_username: @deb_acs.upstream_username,
+        upstream_password: @deb_acs.upstream_password,
+      }
+      assert_response :success
+      assert_template 'api/v2/common/create'
+    end
+
+    def test_create_deb_simplified
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@deb_simplified)
+
+      assert_sync_task(::Actions::Katello::AlternateContentSource::Create) do |acs, smart_proxies|
+        assert_equal acs.attributes.except('id', 'label'), @deb_simplified.attributes.except('id', 'label')
+        assert_equal [@smart_proxy.id], smart_proxies.pluck(:id)
+      end
+
+      post :create, params: {
+        name: @deb_simplified.name,
+        smart_proxy_ids: [@smart_proxy.id],
+        content_type: @deb_simplified.content_type,
+        alternate_content_source_type: @deb_simplified.alternate_content_source_type,
+        product_ids: [@product.id],
       }
       assert_response :success
       assert_template 'api/v2/common/create'
@@ -264,6 +317,26 @@ module Katello
       assert_template 'api/v2/alternate_content_sources/show'
     end
 
+    def test_update_deb
+      assert_sync_task(::Actions::Katello::AlternateContentSource::Update) do |acs, smart_proxies|
+        assert_equal acs.attributes.except('id', 'label'), @deb_acs.attributes.except('id', 'label')
+        assert_equal [@smart_proxy.id], smart_proxies.pluck(:id)
+      end
+
+      put :update, params: {
+        id: @deb_acs.id,
+        name: @deb_acs.name,
+        smart_proxy_ids: [@smart_proxy.id],
+        content_type: @deb_acs.content_type,
+        base_url: @deb_acs.base_url,
+        subpaths: @deb_acs.subpaths,
+        alternate_content_source_type: @deb_acs.alternate_content_source_type,
+        verify_ssl: @deb_acs.verify_ssl,
+      }
+      assert_response :success
+      assert_template 'api/v2/alternate_content_sources/show'
+    end
+
     def test_update_bad_base_url
       @acs.base_url = 'not a path'
 
@@ -346,6 +419,20 @@ module Katello
       post :refresh, params: { :id => @acs.id }
 
       assert_response :success
+    end
+
+    def test_create_deb_invalid_params_mix
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@deb_simplified)
+      post :create, params: {
+        name: @deb_simplified.name + "_bad",
+        smart_proxy_ids: [@smart_proxy.id],
+        content_type: @deb_simplified.content_type,
+        alternate_content_source_type: @deb_simplified.alternate_content_source_type,
+        product_ids: [@product.id],
+        verify_ssl: true,
+        base_url: "https://should/not/be/here",
+      }
+      assert_response :unprocessable_entity
     end
   end
 end
