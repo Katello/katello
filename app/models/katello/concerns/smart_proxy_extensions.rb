@@ -276,6 +276,13 @@ module Katello
           }
         end
         ProxyAPI::ContainerGateway.new(url: self.url).update_hosts({ hosts: hosts })
+      rescue StandardError => e
+        if e.is_a?(ProxyAPI::ProxyException) && e.wrapped_exception.is_a?(RestClient::NotFound)
+          Rails.logger.warn("Capsule #{name} does not support the update_hosts endpoint (likely running an older version). Skipping host updates.")
+        else
+          Rails.logger.warn("Failed to update hosts for capsule #{name}: #{e.message}")
+          Rails.logger.warn(e.backtrace.join("\n"))
+        end
       end
 
       def update_container_repo_list
@@ -319,6 +326,13 @@ module Katello
           host_repo_map[:hosts] << { facet.uuid => build_repo_list(repositories) }
         end
         ProxyAPI::ContainerGateway.new(url: self.url).host_repository_mapping(host_repo_map)
+      rescue StandardError => e
+        if e.is_a?(ProxyAPI::ProxyException) && e.wrapped_exception.is_a?(RestClient::NotFound)
+          Rails.logger.warn("Capsule #{name} does not support the host_repository_mapping endpoint (likely running an older version). Skipping host-repository mapping updates.")
+        else
+          Rails.logger.warn("Failed to update host-repository mapping for capsule #{name}: #{e.message}")
+          Rails.logger.warn(e.backtrace.join("\n"))
+        end
       end
 
       def update_host_repositories(host)
