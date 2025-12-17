@@ -3,8 +3,9 @@
 .pf-v5-c-toolbar.pf-m-sticky[data-ouia-component-id="sync-status-toolbar"] {
   position: sticky;
   top: 0;
-  // Use Patternfly's standard z-index for sticky toolbar to avoid conflicts with notification drawer
-  z-index: var(--pf-v5-c-toolbar--m-sticky--ZIndex);
+  // Toolbar needs higher z-index than table header (which uses 100) so dropdowns appear above it
+  // Using explicit value higher than table but lower than notification drawer (which uses 300)
+  z-index: 200;
 }
 
 // Target the table by its ouiaId and offset the sticky header
