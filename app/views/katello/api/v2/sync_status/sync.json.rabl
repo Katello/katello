@@ -1,4 +1,4 @@
-collection @collection => :results
+collection @collection
 
 node do |item|
   item

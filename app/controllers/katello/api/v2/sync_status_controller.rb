@@ -35,7 +35,7 @@ module Katello
       repos = Repository.where(:id => params[:repository_ids]).readable
       statuses = repos.map { |repo| format_sync_progress(repo) }
 
-      render :json => statuses
+      respond_for_index(:collection => statuses)
     end
 
     api :POST, "/sync_status/sync", N_("Synchronize repositories")
@@ -52,7 +52,7 @@ module Katello
         collected << format_sync_progress(repo)
       end
 
-      render :json => collected
+      respond_for_index(:collection => collected)
     end
 
     api :DELETE, "/sync_status/:id", N_("Cancel repository synchronization")
