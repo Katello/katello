@@ -127,7 +127,11 @@ const FlatpakRemotesForm = ({ setModalOpen, remoteData, hasRedhatRemote }) => {
         actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
         actionLinks={
           <React.Fragment>
-            <AlertActionLink onClick={() => setUrl('https://flatpaks.redhat.io/rhel')}>
+            <AlertActionLink onClick={() => {
+              setUrl('https://flatpaks.redhat.io/rhel');
+              setName(__('Red Hat remote'));
+            }}
+            >
               {__('Add Red Hat flatpak remote')}
             </AlertActionLink>
             <AlertActionLink component="a" href="https://access.redhat.com/terms-based-registry/" target="_blank">

@@ -5,7 +5,9 @@ extends 'katello/api/v2/flatpak_remotes/permissions'
 
 node :has_redhat_flatpak_remote do
   User.as_anonymous_admin do
-    ::Katello::FlatpakRemote.unscoped.where("url LIKE ?", "%flatpaks.redhat.io%").exists?
+    query = ::Katello::FlatpakRemote.where("url LIKE ?", "%flatpaks.redhat.io%")
+    query = query.where(organization_id: @organization.id) if @organization
+    query.exists?
   end
 end
 
