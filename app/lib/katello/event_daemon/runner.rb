@@ -58,6 +58,7 @@ module Katello
           File.open(lock_file, 'r') do |lockfile|
             lockfile.flock(File::LOCK_EX)
             return nil if started? # ensure it wasn't started while we waited for the lock
+            @monitor = Katello::EventDaemon::Monitor.new(@services)
             start_monitor_thread
             write_pid_file
 
@@ -81,7 +82,7 @@ module Katello
         def start_monitor_thread
           @monitor_thread = Thread.new do
             Rails.application.executor.wrap do
-              Katello::EventDaemon::Monitor.new(@services).start
+              @monitor.start
             end
           end
         end

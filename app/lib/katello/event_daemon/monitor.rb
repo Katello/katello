@@ -7,15 +7,15 @@ module Katello
         @services.keys.each do |service_name|
           @service_statuses[service_name] = { running: 'starting' }
         end
+        write_statuses_to_cache
       end
 
       def start
-        write_statuses_to_cache
-        loop do
-          Rails.application.executor.wrap do
+        ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+          loop do
             check_services
+            sleep 5
           end
-          sleep 15
         end
       end
 
