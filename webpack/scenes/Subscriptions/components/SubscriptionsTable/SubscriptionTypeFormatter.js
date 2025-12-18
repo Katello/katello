@@ -8,7 +8,7 @@ export const subscriptionTypeFormatter = (value, { rowData }) => {
   if (rowData.virt_only === false) {
     cellContent = __('Physical');
   } else if (rowData.hypervisor) {
-    const hypervisorLink = urlBuilder('content_hosts', '', rowData.hypervisor.id);
+    const hypervisorLink = urlBuilder(`new/hosts/${rowData.hypervisor.id}`, '');
     cellContent = (
       <span>
         {__('Guests of')}

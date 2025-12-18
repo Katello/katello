@@ -200,17 +200,6 @@ Foreman::Plugin.register :katello do
   end
 
   menu :top_menu,
-       :content_hosts,
-       :caption => N_('Content Hosts'),
-       :url => '/content_hosts',
-       :url_hash => {:controller => 'api/v2/hosts',
-                     :action => 'index'},
-       :engine => Katello::Engine,
-       :parent => :hosts_menu,
-       :after => :newhost,
-       :turbolinks => false
-
-  menu :top_menu,
        :host_collections,
        :caption => N_('Host Collections'),
        :url => '/host_collections',
@@ -352,7 +341,6 @@ Foreman::Plugin.register :katello do
   end
 
   describe_host do
-    overview_buttons_provider :content_host_overview_button
     multiple_actions_provider :hosts_change_content_source
   end
 

@@ -3,22 +3,16 @@
  * @name  Bastion.content-hosts
  *
  * @description
- *   Module for content hosts related functionality.
+ *   Module for content hosts bulk actions functionality.
+ *   Note: Legacy Content Hosts UI has been removed. This module now only
+ *   contains bulk action modals used by Host Collections.
  */
 angular.module('Bastion.content-hosts', [
     'ngResource',
-    'ui.router',
     'Bastion',
     'Bastion.i18n',
     'Bastion.common',
-    'Bastion.components',
-    'Bastion.components.formatters',
-    'Bastion.organizations',
-    'Bastion.subscriptions',
-    'Bastion.capsules',
     'Bastion.hosts',
     'Bastion.errata',
-    'Bastion.host-collections',
-    'Bastion.repository-sets',
-    'Bastion.dates'
+    'Bastion.host-collections'
 ]);

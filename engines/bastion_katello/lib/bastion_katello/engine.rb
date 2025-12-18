@@ -18,7 +18,6 @@ module BastionKatello
         :pages => %w(
           activation_keys
           content_credentials
-          content_hosts
           debs
           docker_tags
           files

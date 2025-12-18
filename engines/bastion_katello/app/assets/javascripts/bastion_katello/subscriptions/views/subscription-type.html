@@ -12,7 +12,7 @@
 </div>
 <div ng-if="subscription.virt_only === true && subscription.hypervisor">
   <span translate> Guests of </span>
-  <a ui-sref="content-host.info({hostId: subscription.hypervisor.id })">
+  <a ng-href="/new/hosts/{{ subscription.hypervisor.name }}">
     {{ subscription.hypervisor.name }}
   </a>
 </div>

@@ -9,15 +9,6 @@
      *   the root scope and also checks routes to send the user to a 404.
      */
     function KatelloFeatures(FeatureFlag) {
-        var remoteActions = [
-            'content-host.provisioning',
-            'content-hosts.bulk-actions.packages',
-            'content-hosts.bulk-actions.errata.list',
-            'content-hosts.bulk-actions.erratum',
-            'content-hosts.bulk-actions.errata.content-hosts',
-            'content-hosts.bulk-actions.environment'
-        ];
-
         var customProducts = [
             'products.new.form',
             'products.discovery',
@@ -31,7 +22,6 @@
             'content-credential.repositories'
         ];
 
-        FeatureFlag.addStates('remote_actions', remoteActions);
         FeatureFlag.addStates('custom_products', customProducts);
     }
 
