@@ -2,14 +2,6 @@ Katello::Engine.routes.draw do
   scope :katello, :path => '/katello' do
     match ':kt_path/auto_complete_search', :action => :auto_complete_search, :controller => :auto_complete_search, :via => :get
 
-    resources :sync_management, :only => [:destroy] do
-      collection do
-        get :index
-        get :sync_status
-        post :sync
-      end
-    end
-
     match '/remote_execution' => 'remote_execution#create', :via => [:post]
   end
 
@@ -42,6 +34,9 @@ Katello::Engine.routes.draw do
   end
 
   match '/redhat_repositories' => 'react#index', :via => [:get]
+
+  get '/katello/sync_management', to: redirect('/sync_management')
+  match '/sync_management' => 'react#index', :via => [:get]
 
   match '/subscriptions' => 'react#index', :via => [:get]
   match '/subscriptions/*page' => 'react#index', :via => [:get]
