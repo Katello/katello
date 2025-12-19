@@ -32,10 +32,6 @@ module Actions
             ::Katello::HOST_TASKS_QUEUE
           end
 
-          def resource_locks
-            :link
-          end
-
           def hostname(host_id)
             content_facet = ::Katello::Host::ContentFacet.find_by_host_id(host_id)
             content_facet&.host&.name
