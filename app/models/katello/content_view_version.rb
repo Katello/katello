@@ -361,16 +361,18 @@ module Katello
       save!
     end
 
-    def auto_publish_composites!
-      metadata = {
+    def auto_publish_options
+      {
         description: _("Auto Publish - Triggered by '%s'") % self.name,
         triggered_by: self.id,
       }
-      self.content_view.auto_publish_components.pluck(:composite_content_view_id).each do |composite_id|
-        ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id) do |attrs|
-          attrs[:metadata] = metadata
-        end
-      end
+    end
+
+    def auto_publish_composites!
+      auto_publish_composites = content_view.auto_publish_component_composites
+      return unless auto_publish_composites.any?
+
+      ForemanTasks.async_task(Actions::BulkAction, Actions::Katello::ContentView::AutoPublish, auto_publish_composites, auto_publish_options)
     end
 
     def repository_type_counts_map

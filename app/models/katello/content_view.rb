@@ -451,6 +451,10 @@ module Katello
       component_composites.where(latest: true).joins(:composite_content_view).where(self.class.table_name => { auto_publish: true })
     end
 
+    def auto_publish_component_composites
+      Katello::ContentView.where(id: auto_publish_components.pluck(:composite_content_view_id))
+    end
+
     def publish_repositories(override_components = nil)
       repositories = composite? ? repositories_to_publish_by_library_instance(override_components).values : repositories_to_publish
       repositories.each do |repos|
