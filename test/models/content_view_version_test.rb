@@ -251,5 +251,24 @@ module Katello
       assert_equal filters_json["applied_filters"].first["rules"].size, 1
       assert_equal filters_json["applied_filters"].first["rules"].first["name"], "abc*"
     end
+
+    def test_auto_publish_composites
+      composite_views = [mock(:composite_view)]
+      version = FactoryBot.build_stubbed(:katello_content_view_version)
+      version.content_view.expects(:auto_publish_component_composites).returns(composite_views)
+
+      ForemanTasks.expects(:async_task).with(Actions::BulkAction, Actions::Katello::ContentView::AutoPublish, composite_views, version.auto_publish_options)
+
+      version.auto_publish_composites!
+    end
+
+    def test_auto_publish_composites_no_composites
+      version = FactoryBot.build_stubbed(:katello_content_view_version)
+      version.content_view.expects(:auto_publish_component_composites).returns([])
+
+      ForemanTasks.expects(:async_task).never
+
+      version.auto_publish_composites!
+    end
   end
 end
