@@ -207,7 +207,7 @@ Foreman::Plugin.register :katello do
                      :action => 'index'},
        :engine => Katello::Engine,
        :parent => :hosts_menu,
-       :after => :content_hosts,
+       :after => :newhost,
        :turbolinks => false
 
   extend_template_helpers Katello::KatelloUrlsHelper
