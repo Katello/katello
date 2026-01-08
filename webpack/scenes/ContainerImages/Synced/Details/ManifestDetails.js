@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import {
   Breadcrumb,
@@ -38,7 +38,6 @@ import {
 const ManifestDetails = () => {
   const { id } = useParams();
   const tagId = Number(id);
-  const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -99,13 +98,7 @@ const ManifestDetails = () => {
       <Grid hasGutter span={12}>
         <GridItem span={12}>
           <Breadcrumb ouiaId="manifest-details-breadcrumb">
-            <BreadcrumbItem
-              to="/container_images"
-              onClick={(e) => {
-                e.preventDefault();
-                history.push('/container_images');
-              }}
-            >
+            <BreadcrumbItem to="/container_images">
               {__('Container images')}
             </BreadcrumbItem>
             <BreadcrumbItem isActive>{shortDigest}</BreadcrumbItem>

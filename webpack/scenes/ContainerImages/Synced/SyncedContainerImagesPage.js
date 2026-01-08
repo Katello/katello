@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Table, Thead, Th, Tbody, Tr, Td, ActionsColumn } from '@patternfly/react-table';
 import { Button } from '@patternfly/react-core';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
@@ -50,9 +49,9 @@ const SyncedContainerImagesPage = () => {
     const manifest = getManifest(tag);
     if (!manifest || !manifest.digest) return 'N/A';
     return (
-      <Link to={`/container_images/${tag.id}`}>
+      <a href={`/container_images/${tag.id}`}>
         {manifest.digest}
-      </Link>
+      </a>
     );
   };
 
@@ -321,9 +320,9 @@ const SyncedContainerImagesPage = () => {
                       <Td className="empty-cell" />
                       <Td dataLabel={__('Manifest digest')}>
                         {childManifest.digest ? (
-                          <Link to={`/container_images/${tag.id}?manifest=${childManifest.id}`}>
+                          <a href={`/container_images/${tag.id}?manifest=${childManifest.id}`}>
                             {childManifest.digest}
-                          </Link>
+                          </a>
                         ) : 'N/A'}
                       </Td>
                       <Td dataLabel={__('Type')}>
