@@ -7,6 +7,11 @@ module Katello
     UP_TO_DATE = "up-to-date".freeze
     VERSION_STATUSES = [UPGRADABLE, UP_TO_DATE].freeze
 
+    PERSISTENCE_TRANSIENT = "transient".freeze
+    PERSISTENCE_PERSISTENT = "persistent".freeze
+    PERSISTENCE_NIL = "nil".freeze
+    PERSISTENCE_TYPES = [PERSISTENCE_TRANSIENT, PERSISTENCE_PERSISTENT, PERSISTENCE_NIL].freeze
+
     before_action :require_packages_or_groups, :only => [:install, :remove]
     before_action :require_packages_only, :only => [:upgrade]
     before_action :find_editable_host_with_facet, :except => [:index, :installed_packages, :containerfile_install_command]
@@ -40,6 +45,7 @@ module Katello
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param :include_latest_upgradable, :boolean, :desc => N_("Also include the latest upgradable package version for each host package")
     param :status, String, :desc => N_("Return only packages of a particular status (upgradable or up-to-date)"), :required => false
+    param :persistence, String, :desc => N_("Return only packages of a particular persistence (transient, persistent, or nil)"), :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::InstalledPackage)
     def index
@@ -65,29 +71,26 @@ module Katello
 
     api :GET, "/hosts/:host_id/transient_packages/containerfile_install_command", N_("Return a containerfile command to install transient packages")
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
+    param :include_unknown_persistence, :bool, :required => false, :desc => N_("Include packages with unknown persistence in addition to transient packages")
     param_group :search, ::Katello::Api::V2::ApiController
     add_scoped_search_description_for(Katello::InstalledPackage)
     def containerfile_install_command
       # We need to pass the full result param to avoid pagination but retain other scoped search features.
       params[:full_result] = true
-      collection = scoped_search(transient_index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
+      collection = scoped_search(containerfile_index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
       if collection[:results].empty?
         render json: {
           command: nil,
-          message: "No transient packages found",
+          packageCount: 0,
         },
-        status: :not_found
+        status: :ok
       else
         render json: {
           command: "RUN dnf install -y #{collection[:results].map { |pkg| Shellwords.escape(pkg.nvrea) }.join(' ')}",
-          message: nil,
+          packageCount: collection[:results].length,
         },
         status: :ok
       end
-    end
-
-    def transient_index_relation
-      @host.installed_packages.where(katello_host_installed_packages: { persistence: 'transient' })
     end
 
     def index_relation
@@ -99,7 +102,22 @@ module Katello
                    when 'upgradable' then packages.where(name: upgradable_packages)
                    end
       end
+      if params[:persistence].present?
+        packages = case params[:persistence]
+                   when PERSISTENCE_TRANSIENT then packages.where(katello_host_installed_packages: { persistence: PERSISTENCE_TRANSIENT })
+                   when PERSISTENCE_PERSISTENT then packages.where(katello_host_installed_packages: { persistence: PERSISTENCE_PERSISTENT })
+                   when PERSISTENCE_NIL then packages.where(katello_host_installed_packages: { persistence: nil })
+                   end
+      end
       packages
+    end
+
+    def containerfile_index_relation
+      relation = @host.installed_packages.where(katello_host_installed_packages: { persistence: PERSISTENCE_TRANSIENT })
+      if ::Foreman::Cast.to_bool(params[:include_unknown_persistence])
+        relation = relation.or(@host.installed_packages.where(katello_host_installed_packages: { persistence: nil }))
+      end
+      relation
     end
 
     def resource_class
@@ -156,6 +174,9 @@ module Katello
     def validate_index_params!
       if params[:status].present? && !VERSION_STATUSES.include?(params[:status])
         fail _("Status must be one of: %s" % VERSION_STATUSES.join(', '))
+      end
+      if params[:persistence].present? && !PERSISTENCE_TYPES.include?(params[:persistence])
+        fail _("Persistence must be one of: %s" % PERSISTENCE_TYPES.join(', '))
       end
     end
 

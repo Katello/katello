@@ -83,6 +83,64 @@ module Katello
       assert_equal 'transient', results.last['persistence']
     end
 
+    def test_index_filter_by_transient
+      pkg1 = @host.installed_packages.first
+      pkg2 = @host.installed_packages.second
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg1).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg2).update_all(persistence: 'persistent')
+
+      get :index, params: { :host_id => @host.id, :persistence => 'transient' }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      results = response_data['results']
+
+      assert_equal 1, results.length
+      assert_equal pkg1.id, results.first['id']
+      assert_equal 'transient', results.first['persistence']
+    end
+
+    def test_index_filter_by_persistent
+      pkg1 = @host.installed_packages.first
+      pkg2 = @host.installed_packages.second
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg1).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg2).update_all(persistence: 'persistent')
+
+      get :index, params: { :host_id => @host.id, :persistence => 'persistent' }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      results = response_data['results']
+
+      assert_equal 1, results.length
+      assert_equal pkg2.id, results.first['id']
+      assert_equal 'persistent', results.first['persistence']
+    end
+
+    def test_index_filter_by_nil
+      pkg1 = @host.installed_packages.first
+      pkg2 = @host.installed_packages.second
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg1).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg2).update_all(persistence: nil)
+
+      get :index, params: { :host_id => @host.id, :persistence => 'nil' }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      results = response_data['results']
+
+      assert_equal 1, results.length
+      assert_equal pkg2.id, results.first['id']
+      assert_nil results.first['persistence']
+    end
+
+    def test_index_invalid_persistence_value
+      get :index, params: { :host_id => @host.id, :persistence => 'invalid' }
+
+      assert_response :error
+      assert_match(/Persistence must be one of/, response.body)
+    end
+
     def test_view_permissions
       ::Host.any_instance.stubs(:check_host_registration).returns(true)
 
@@ -111,8 +169,8 @@ module Katello
       assert_response :success
       response_data = JSON.parse(response.body)
       assert response_data.key?('command')
-      assert response_data.key?('message')
-      assert_nil response_data['message']
+      assert response_data.key?('packageCount')
+      assert_equal 1, response_data['packageCount']
       assert_match(/^RUN dnf install -y/, response_data['command'])
       assert_match(/#{installed_pkg.nvrea}/, response_data['command'])
     end
@@ -126,7 +184,7 @@ module Katello
       assert_response :success
       response_data = JSON.parse(response.body)
       assert_match(/#{installed_pkg.nvrea}/, response_data['command'])
-      assert_nil response_data['message']
+      assert_equal 1, response_data['packageCount']
     end
 
     def test_containerfile_install_command_only_transient
@@ -141,7 +199,7 @@ module Katello
       response_data = JSON.parse(response.body)
       assert_match(/#{transient_pkg.nvrea}/, response_data['command'])
       refute_match(/#{persistent_pkg.nvrea}/, response_data['command'])
-      assert_nil response_data['message']
+      assert_equal 1, response_data['packageCount']
     end
 
     def test_containerfile_install_command_no_transient_packages
@@ -151,10 +209,10 @@ module Katello
 
       get :containerfile_install_command, params: { :host_id => @host.id }
 
-      assert_response :not_found
+      assert_response :success
       response_data = JSON.parse(response.body)
       assert_nil response_data['command']
-      assert_equal "No transient packages found", response_data['message']
+      assert_equal 0, response_data['packageCount']
     end
 
     def test_containerfile_install_command_search_no_match
@@ -163,10 +221,10 @@ module Katello
 
       get :containerfile_install_command, params: { :host_id => @host.id, :search => "name=nonexistent-package" }
 
-      assert_response :not_found
+      assert_response :success
       response_data = JSON.parse(response.body)
       assert_nil response_data['command']
-      assert_equal "No transient packages found", response_data['message']
+      assert_equal 0, response_data['packageCount']
     end
 
     def test_containerfile_install_command_permissions
@@ -224,6 +282,29 @@ module Katello
       assert_match(/#{pkg1.nvrea}/, command)
       assert_match(/#{pkg2.nvrea}/, command)
       assert(command.include?("#{pkg1.nvrea} #{pkg2.nvrea}") || command.include?("#{pkg2.nvrea} #{pkg1.nvrea}"), "Packages should be space-separated")
+      assert_equal 2, response_data['packageCount']
+    end
+
+    def test_containerfile_install_command_three_packages
+      pkg1 = @host.installed_packages.first
+      pkg2 = @host.installed_packages.second
+      rpm3 = katello_rpms(:three)
+      pkg3 = Katello::InstalledPackage.create(name: rpm3.name, nvra: rpm3.nvra, version: rpm3.version, release: rpm3.release, nvrea: rpm3.nvrea, arch: rpm3.arch)
+      @host.installed_packages << pkg3
+
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg1).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg2).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: pkg3).update_all(persistence: 'transient')
+
+      get :containerfile_install_command, params: { :host_id => @host.id }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+
+      assert_equal 3, response_data['packageCount']
+      assert_match(/#{pkg1.nvrea}/, response_data['command'])
+      assert_match(/#{pkg2.nvrea}/, response_data['command'])
+      assert_match(/#{pkg3.nvrea}/, response_data['command'])
     end
 
     def test_containerfile_install_command_excludes_nil_persistence
@@ -241,6 +322,25 @@ module Katello
 
       assert_match(/#{transient_pkg.nvrea}/, command)
       refute_match(/#{nil_persistence_pkg.nvrea}/, command)
+      assert_equal 1, response_data['packageCount']
+    end
+
+    def test_containerfile_install_command_includes_nil_persistence_when_requested
+      transient_pkg = @host.installed_packages.first
+      nil_persistence_pkg = @host.installed_packages.second
+
+      Katello::HostInstalledPackage.where(host: @host, installed_package: transient_pkg).update_all(persistence: 'transient')
+      Katello::HostInstalledPackage.where(host: @host, installed_package: nil_persistence_pkg).update_all(persistence: nil)
+
+      get :containerfile_install_command, params: { :host_id => @host.id, :include_unknown_persistence => true }
+
+      assert_response :success
+      response_data = JSON.parse(response.body)
+      command = response_data['command']
+
+      assert_match(/#{transient_pkg.nvrea}/, command)
+      assert_match(/#{nil_persistence_pkg.nvrea}/, command)
+      assert_equal 2, response_data['packageCount']
     end
 
     private

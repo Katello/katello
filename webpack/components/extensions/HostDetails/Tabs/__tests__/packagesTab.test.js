@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act, within } from 'react-testing-lib-wrapper';
 import * as hooks from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
@@ -560,7 +560,8 @@ test('Shows persistence column for bootc hosts', async (done) => {
   );
 
   await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
-  expect(getByText('Persistence')).toBeInTheDocument();
+  // "Persistence" appears twice: once in dropdown, once in table header
+  expect(getAllByText('Persistence').length).toBeGreaterThanOrEqual(1);
   expect(getByText('Persistent')).toBeInTheDocument();
   expect(getByText('Transient')).toBeInTheDocument();
   expect(getAllByText('—').length).toBeGreaterThan(0);
@@ -583,6 +584,29 @@ test('Does not show persistence column for non-bootc hosts', async (done) => {
   expect(queryByText('Persistence')).not.toBeInTheDocument();
   expect(queryByText('Persistent')).not.toBeInTheDocument();
   expect(queryByText('Transient')).not.toBeInTheDocument();
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
+test('Does not show containerfile button for non-bootc hosts', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  // eslint-disable-next-line max-len
+  const { getAllByText, getByRole, queryByRole } = renderWithRedux(<PackagesTab />, renderOptions());
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+
+  const kebabDropdown = getByRole('button', { name: 'bulk_actions' });
+  fireEvent.click(kebabDropdown);
+
+  const containerfileButton = queryByRole('menuitem', { name: 'containerfile_install_command' });
+  expect(containerfileButton).not.toBeInTheDocument();
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
@@ -629,14 +653,15 @@ test('Can sort by persistence column', async (done) => {
     .query(sortedQuery)
     .reply(200, mockPackagesData);
 
-  const { getAllByText, getByText } = renderWithRedux(
+  const { getAllByText, getByRole } = renderWithRedux(
     <PackagesTab />,
     bootcRenderOptions,
   );
 
   await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
 
-  const persistenceHeader = getByText('Persistence');
+  // Click the persistence column header to sort
+  const persistenceHeader = getByRole('columnheader', { name: 'Persistence' });
   fireEvent.click(persistenceHeader);
 
   await patientlyWaitFor(() => {
@@ -687,5 +712,193 @@ test('Can trigger refresh package applicability', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(refreshApplicabilityScope, done);
+});
+
+test('Can filter by package persistence', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const bootcFacetAttributes = {
+    ...contentFacetAttributes,
+    bootc_booted_image: 'quay.io/someimage:latest',
+  };
+
+  const bootcRenderOptions = {
+    apiNamespace: HOST_PACKAGES_KEY,
+    initialState: {
+      API: {
+        HOST_DETAILS: {
+          response: {
+            id: 1,
+            name: hostname,
+            content_facet_attributes: { ...bootcFacetAttributes },
+            display_name: hostname,
+          },
+          status: 'RESOLVED',
+        },
+      },
+    },
+  };
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const scope2 = nockInstance
+    .get(hostPackages)
+    .query({ ...defaultQuery, persistence: 'transient' })
+    .reply(200, { ...mockPackagesData, results: [secondPackage] });
+
+  const {
+    queryByText,
+    getByRole,
+    getAllByText,
+    getByText,
+  } = renderWithRedux(<PackagesTab />, bootcRenderOptions);
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+  expect(getByText('Persistent', { ignore: ['button', 'title'] })).toBeInTheDocument();
+  expect(getByText('coreutils', { ignore: ['button', 'title'] })).toBeInTheDocument();
+  expect(getByText('chrony', { ignore: ['button', 'title'] })).toBeInTheDocument();
+
+  // Find and click the persistence dropdown using a stable selector
+  const persistenceContainer = document.querySelector('[aria-label="select Persistence container"]');
+  const persistenceDropdown = within(persistenceContainer).getByRole('button');
+  fireEvent.click(persistenceDropdown);
+  const transient = getByRole('option', { name: 'select Transient' });
+  fireEvent.click(transient);
+  await patientlyWaitFor(() => {
+    expect(queryByText('chrony')).toBeInTheDocument();
+    expect(queryByText('coreutils')).not.toBeInTheDocument();
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(scope2);
+  act(done);
+});
+
+test('Can open containerfile install command modal with selected packages', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const bootcFacetAttributes = {
+    ...contentFacetAttributes,
+    bootc_booted_image: 'quay.io/someimage:latest',
+  };
+
+  const bootcRenderOptions = {
+    apiNamespace: HOST_PACKAGES_KEY,
+    initialState: {
+      API: {
+        HOST_DETAILS: {
+          response: {
+            id: 1,
+            name: hostname,
+            content_facet_attributes: { ...bootcFacetAttributes },
+            display_name: hostname,
+          },
+          status: 'RESOLVED',
+        },
+      },
+    },
+  };
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const containerfileScope = nockInstance
+    .get('/api/hosts/1/transient_packages/containerfile_install_command')
+    .query(() => true)
+    .reply(200, {
+      command: 'RUN dnf install -y chrony-3.3-3.el8.x86_64',
+      packageCount: 1,
+    })
+    .persist();
+
+  const {
+    getByText,
+    getAllByText,
+    getByRole,
+    queryByText,
+    getByDisplayValue,
+  } = renderWithRedux(<PackagesTab />, bootcRenderOptions);
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+
+  getByRole('checkbox', { name: 'Select row 0' }).click();
+  getByRole('checkbox', { name: 'Select row 1' }).click();
+
+  const kebabDropdown = getByRole('button', { name: 'bulk_actions' });
+  await patientlyWaitFor(() => expect(kebabDropdown).toBeInTheDocument());
+  fireEvent.click(kebabDropdown);
+
+  const containerfileAction = getByText(/Generate containerfile install command.*2 packages selected/);
+  await patientlyWaitFor(() => expect(containerfileAction).toBeInTheDocument());
+  expect(containerfileAction).not.toHaveAttribute('disabled');
+  await act(async () => {
+    fireEvent.click(containerfileAction);
+  });
+
+  // Modal should be open - wait for the command to load
+  await patientlyWaitFor(() => {
+    expect(queryByText('Containerfile Install Command')).toBeInTheDocument();
+  });
+
+  // Wait for the API call to complete and the command to appear
+  await patientlyWaitFor(() => {
+    expect(getByDisplayValue(/RUN dnf install -y chrony/)).toBeInTheDocument();
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(containerfileScope, done);
+});
+
+test('Containerfile install command button is disabled when no packages selected', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const bootcFacetAttributes = {
+    ...contentFacetAttributes,
+    bootc_booted_image: 'quay.io/someimage:latest',
+  };
+
+  const bootcRenderOptions = {
+    apiNamespace: HOST_PACKAGES_KEY,
+    initialState: {
+      API: {
+        HOST_DETAILS: {
+          response: {
+            id: 1,
+            name: hostname,
+            content_facet_attributes: { ...bootcFacetAttributes },
+            display_name: hostname,
+          },
+          status: 'RESOLVED',
+        },
+      },
+    },
+  };
+
+  const scope = nockInstance
+    .get(hostPackages)
+    .query(defaultQuery)
+    .reply(200, mockPackagesData);
+
+  const {
+    getAllByText,
+    getByRole,
+  } = renderWithRedux(<PackagesTab />, bootcRenderOptions);
+
+  await patientlyWaitFor(() => expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument());
+
+  const kebabDropdown = getByRole('button', { name: 'bulk_actions' });
+  fireEvent.click(kebabDropdown);
+
+  const containerfileButton = getByRole('menuitem', { name: 'containerfile_install_command' });
+  await patientlyWaitFor(() => expect(containerfileButton).toBeInTheDocument());
+  expect(containerfileButton).toHaveAttribute('aria-disabled', 'true');
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
 });
 
