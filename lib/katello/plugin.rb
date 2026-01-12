@@ -422,13 +422,6 @@ Foreman::Plugin.register :katello do
         description: N_("Default PXELinux template for new Operating Systems created from synced content"),
         collection: proc { katello_template_setting_values("PXELinux") }
 
-      setting 'katello_default_PXEGrub',
-        type: :string,
-        default: 'Kickstart default PXEGrub',
-        full_name: N_('Default synced OS PXEGrub template'),
-        description: N_("Default PXEGrub template for new Operating Systems created from synced content"),
-        collection: proc { katello_template_setting_values("PXEGrub") }
-
       setting 'katello_default_PXEGrub2',
         type: :string,
         default: 'Kickstart default PXEGrub2',

@@ -25,7 +25,7 @@ module Katello
         all_related_os = find_related_os
         return false if all_related_os.nil?
 
-        boot_loader_template_kinds = TemplateKind.where(name: ["PXELinux", "PXEGrub", "PXEGrub2", "iPXE"]).pluck(:id)
+        boot_loader_template_kinds = TemplateKind.where(name: ["PXELinux", "PXEGrub2", "iPXE"]).pluck(:id)
         provision_template_kinds = TemplateKind.where(name: ["provision", "finish"]).pluck(:id)
 
         all_related_os.each do |related_os|
