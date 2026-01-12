@@ -18,10 +18,9 @@ import {
   SelectOption,
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
-import { FormattedMessage } from 'react-intl';
 import { TableVariant, Thead, Tbody, Tr, Th, Td, TableText, ActionsColumn } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
-import { translate as __ } from 'foremanReact/common/I18n';
+import { translate as __, sprintf, ngettext as n__ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { useSet, useBulkSelect, useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
@@ -36,12 +35,15 @@ import {
 import { selectHostPackagesStatus } from './HostPackagesSelectors';
 import {
   HOST_PACKAGES_KEY, PACKAGES_VERSION_STATUSES, VERSION_STATUSES_TO_PARAM,
+  PACKAGES_PERSISTENCE_STATUSES, PERSISTENCE_STATUSES_TO_PARAM,
+  PERSISTENCE_PARAM_TRANSIENT, PERSISTENCE_PARAM_PERSISTENT,
 } from './HostPackagesConstants';
 import { removePackage, updatePackage, removePackages, updatePackages, installPackageBySearch } from '../RemoteExecutionActions';
 import { katelloPackageUpdateUrl, packagesUpdateUrl } from '../customizedRexUrlHelpers';
 import './PackagesTab.scss';
 import hostIdNotReady, { getHostDetails } from '../../HostDetailsActions';
 import PackageInstallModal from './PackageInstallModal';
+import ContainerfileInstallCommandModal from './ContainerfileInstallCommandModal';
 import {
   hasRequiredPermissions as can,
   missingRequiredPermissions as cannot,
@@ -124,7 +126,9 @@ UpdateVersionsSelect.defaultProps = {
 
 const formatPersistence = (persistence) => {
   if (!persistence) return '—';
-  return persistence.charAt(0).toUpperCase() + persistence.slice(1);
+  if (persistence === PERSISTENCE_PARAM_TRANSIENT) return __('Transient');
+  if (persistence === PERSISTENCE_PARAM_PERSISTENT) return __('Persistent');
+  return '—';
 };
 
 export const PackagesTab = () => {
@@ -136,13 +140,19 @@ export const PackagesTab = () => {
 
   const { searchParam, status: statusParam } = useUrlParams();
   const PACKAGE_STATUS = __('Status');
+  const PACKAGE_PERSISTENCE = __('Persistence');
   const [packageStatusSelected, setPackageStatusSelected] = useState(statusParam ?? PACKAGE_STATUS);
-  const activeFilters = [packageStatusSelected];
-  const defaultFilters = [PACKAGE_STATUS];
+  const [packagePersistenceSelected, setPackagePersistenceSelected] = useState(PACKAGE_PERSISTENCE);
+  const activeFilters = [packagePersistenceSelected, packageStatusSelected];
+  const defaultFilters = [PACKAGE_PERSISTENCE, PACKAGE_STATUS];
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const closeModal = () => setIsModalOpen(false);
+  const [isPackageInstallModalOpen, setIsPackageInstallModalOpen] = useState(false);
+  const closePackageInstallModal = () => setIsPackageInstallModalOpen(false);
+  const [isContainerfileModalOpen, setIsContainerfileModalOpen] = useState(false);
+  const [containerfileSearchParams, setContainerfileSearchParams] = useState(null);
+  const [containerfileSelectedCount, setContainerfileSelectedCount] = useState(0);
+  const closeContainerfileModal = () => setIsContainerfileModalOpen(false);
   const showActions = can(invokeRexJobs, userPermissionsFromHostDetails({ hostDetails }));
 
   const [isActionOpen, setIsActionOpen] = useState(false);
@@ -221,9 +231,13 @@ export const PackagesTab = () => {
       if (packageStatusSelected !== PACKAGE_STATUS) {
         modifiedParams.status = VERSION_STATUSES_TO_PARAM[packageStatusSelected];
       }
+      if (packagePersistenceSelected !== PACKAGE_PERSISTENCE) {
+        modifiedParams.persistence = PERSISTENCE_STATUSES_TO_PARAM[packagePersistenceSelected];
+      }
       return getInstalledPackagesWithLatest(hostId, { ...apiSortParams, ...modifiedParams });
     },
-    [hostId, PACKAGE_STATUS, packageStatusSelected, apiSortParams],
+    [hostId, PACKAGE_STATUS, packageStatusSelected, PACKAGE_PERSISTENCE,
+      packagePersistenceSelected, apiSortParams],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_PACKAGES_KEY));
@@ -321,8 +335,25 @@ export const PackagesTab = () => {
 
   const handleInstallPackagesClick = () => {
     setIsBulkActionOpen(false);
-    setIsModalOpen(true);
+    setIsPackageInstallModalOpen(true);
   };
+
+  const handleContainerfileCommandClick = () => {
+    const selected = fetchBulkParams();
+    setContainerfileSearchParams(selected);
+    setContainerfileSelectedCount(selectedCount);
+    setIsBulkActionOpen(false);
+    setIsContainerfileModalOpen(true);
+  };
+
+  const containerfileCommandButtonString = sprintf(
+    n__(
+      'Generate containerfile install command (%s package selected)',
+      'Generate containerfile install command (%s packages selected)',
+      selectedCount,
+    ),
+    selectedCount,
+  );
 
   const removePackageViaRemoteExecution = packageName => triggerPackageRemove(packageName);
 
@@ -413,11 +444,7 @@ export const PackagesTab = () => {
       component="button"
       onClick={handleInstallPackagesClick}
     >
-      <FormattedMessage
-        id="install-packages"
-        defaultMessage="{count, plural, one {Install package} other {Install packages}}"
-        values={{ count: selectedCount }}
-      />
+      {n__('Install package', 'Install packages', selectedCount)}
     </DropdownItem>,
     <DropdownItem
       aria-label="refresh_applicability"
@@ -428,7 +455,19 @@ export const PackagesTab = () => {
     >
       {__('Refresh package applicability')}
     </DropdownItem>,
-  ];
+    isBootCHost && (
+      <DropdownItem
+        aria-label="containerfile_install_command"
+        ouiaId="containerfile_install_command"
+        key="containerfile_install_command"
+        component="button"
+        onClick={handleContainerfileCommandClick}
+        isDisabled={selectedCount === 0}
+      >
+        {containerfileCommandButtonString}
+      </DropdownItem>
+    ),
+  ].filter(Boolean);
 
   const handlePackageStatusSelected = newStatus => setPackageStatusSelected((prevStatus) => {
     if (prevStatus === newStatus) {
@@ -436,6 +475,15 @@ export const PackagesTab = () => {
     }
     return newStatus;
   });
+
+  const handlePackagePersistenceSelected = (newPersistence) => {
+    setPackagePersistenceSelected((prevPersistence) => {
+      if (prevPersistence === newPersistence) {
+        return PACKAGE_PERSISTENCE;
+      }
+      return newPersistence;
+    });
+  };
 
   const actionButtons = showActions ? (
     <Split hasGutter>
@@ -479,6 +527,18 @@ export const PackagesTab = () => {
 
   const statusFilters = (
     <Split hasGutter>
+      {isBootCHost && (
+        <SplitItem>
+          <SelectableDropdown
+            id="package-persistence-dropdown"
+            title={PACKAGE_PERSISTENCE}
+            showTitle={false}
+            items={Object.values(PACKAGES_PERSISTENCE_STATUSES)}
+            selected={packagePersistenceSelected}
+            setSelected={handlePackagePersistenceSelected}
+          />
+        </SplitItem>
+      )}
       <SplitItem>
         <SelectableDropdown
           id="package-status-dropdown"
@@ -492,7 +552,10 @@ export const PackagesTab = () => {
     </Split>
   );
 
-  const resetFilters = () => setPackageStatusSelected(PACKAGE_STATUS);
+  const resetFilters = () => {
+    setPackageStatusSelected(PACKAGE_STATUS);
+    setPackagePersistenceSelected(PACKAGE_PERSISTENCE);
+  };
   return (
     <div>
       <div id="packages-tab">
@@ -520,7 +583,7 @@ export const PackagesTab = () => {
           }
           }
           ouiaId="host-packages-table"
-          additionalListeners={[hostId, packageStatusSelected,
+          additionalListeners={[hostId, packagePersistenceSelected, packageStatusSelected,
             activeSortDirection, activeSortColumn, lastCompletedPackageUpgrade,
             lastCompletedPackageRemove, lastCompletedBulkPackageRemove,
             lastCompletedBulkPackageUpgrade, lastCompletedPackageInstall, lastCompletedRecalculate]}
@@ -596,7 +659,7 @@ export const PackagesTab = () => {
                       select={{
                         isDisabled: actionInProgress,
                         isSelected: isSelected(id),
-                        onSelect: (event, selected) => selectOne(selected, id, pkg),
+                        onSelect: (_event, selected) => selectOne(selected, id, pkg),
                         rowIndex,
                         variant: 'checkbox',
                       }}
@@ -645,12 +708,21 @@ export const PackagesTab = () => {
       </div>
       {hostId &&
         <PackageInstallModal
-          isOpen={isModalOpen}
-          closeModal={closeModal}
+          isOpen={isPackageInstallModalOpen}
+          closeModal={closePackageInstallModal}
           hostId={hostId}
           key={hostId}
           hostName={hostDetails.display_name}
           triggerPackageInstall={triggerPackageInstall}
+        />
+      }
+      {hostId &&
+        <ContainerfileInstallCommandModal
+          isOpen={isContainerfileModalOpen}
+          closeModal={closeContainerfileModal}
+          hostId={hostId}
+          searchParams={containerfileSearchParams}
+          selectedCount={containerfileSelectedCount}
         />
       }
     </div>
