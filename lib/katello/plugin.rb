@@ -651,12 +651,6 @@ Foreman::Plugin.register :katello do
         full_name: N_('Host Can Re-Register Only In Build'),
         description: N_("Allow hosts to re-register themselves only when they are in build mode")
 
-      setting 'host_tasks_workers_pool_size',
-        type: :integer,
-        default: 5,
-        full_name: N_('Host Tasks Workers Pool Size'),
-        description: N_("Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required.")
-
       setting 'applicability_batch_size',
         type: :integer,
         default: 50,
