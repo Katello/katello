@@ -6,6 +6,21 @@ module Katello
   class Engine < ::Rails::Engine
     isolate_namespace Katello
 
+    def self.register_scheduled_task(task_class, cronline)
+      ForemanTasks::RecurringLogic.transaction(isolation: :serializable) do
+        return if ForemanTasks::RecurringLogic.joins(:tasks)
+                  .merge(ForemanTasks::Task.where(label: task_class.name))
+                  .exists?
+
+        User.as_anonymous_admin do
+          recurring_logic = ForemanTasks::RecurringLogic.new_from_cronline(cronline)
+          recurring_logic.save!
+          recurring_logic.start(task_class)
+        end
+      end
+    rescue ActiveRecord::TransactionIsolationError # rubocop:disable Lint/SuppressedException
+    end
+
     initializer 'katello.middleware', :before => :build_middleware_stack do |app|
       require 'katello/prevent_json_parsing'
       app.middleware.insert_after(
@@ -75,6 +90,15 @@ module Katello
                         #{Katello::Engine.root}/app/lib/katello/actions)
       ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
       ForemanTasks.dynflow.eager_load_actions!
+    end
+
+    initializer 'katello.register_scheduled_tasks', :before => :finisher_hook do |_app|
+      if ActiveRecord::Base.connection.data_source_exists?(ForemanTasks::Task.table_name) && User.unscoped.find_by_login(User::ANONYMOUS_ADMIN).present?
+        ::ForemanTasks.dynflow.config.on_init(false) do |_world|
+          Katello::Engine.register_scheduled_task(Actions::Candlepin::Consumer::CleanBackendObjects, '0 0 1 * *')
+        end
+      end
+    rescue ActiveRecord::NoDatabaseError # rubocop:disable Lint/SuppressedException
     end
 
     # make sure the Katello plugin is initialized before `after_initialize`
