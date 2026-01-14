@@ -44,6 +44,8 @@ module Katello
     has_many :composites, :through => :content_view_version_composites, :source => :composite_version,
              :class_name => "Katello::ContentViewVersion", :inverse_of => :components
     has_many :published_in_composite_content_views, through: :composites, source: :content_view
+    has_many :content_view_auto_publish_requests, class_name: "Katello::ContentViewAutoPublishRequest", dependent: :destroy
+
     delegate :default, :default?, to: :content_view
     delegate :rolling, :rolling?, to: :content_view
 
@@ -359,20 +361,6 @@ module Katello
         end
       end
       save!
-    end
-
-    def auto_publish_options
-      {
-        description: _("Auto Publish - Triggered by '%s'") % self.name,
-        triggered_by: self.id,
-      }
-    end
-
-    def auto_publish_composites!
-      auto_publish_composites = content_view.auto_publish_component_composites
-      return unless auto_publish_composites.any?
-
-      ForemanTasks.async_task(Actions::BulkAction, Actions::Katello::ContentView::AutoPublish, auto_publish_composites, auto_publish_options)
     end
 
     def repository_type_counts_map

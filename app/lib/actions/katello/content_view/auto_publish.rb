@@ -1,43 +1,50 @@
 module Actions
   module Katello
     module ContentView
-      class AutoPublish < Actions::ActionWithSubPlans
-        def plan(content_view, options)
-          plan_self(content_view_id: content_view.id,
-            description: options[:description],
-            triggered_by: options[:triggered_by])
+      class AutoPublish < Actions::EntryAction
+        include Dynflow::Action::Polling
+
+        def plan(auto_publish_request)
+          action_subject(auto_publish_request)
+
+          plan_self(auto_publish_request_id: auto_publish_request.id)
         end
 
-        def total_count
-          1
-        end
-
-        def content_view_locks
+        def content_view_locks(content_view_id)
           ForemanTasks::Lock.where(
-            resource_id: input[:content_view_id],
+            resource_id: content_view_id,
             resource_type: ::Katello::ContentView.to_s)
         end
 
-        def create_sub_plans
-          if content_view_locks.any?
-            Rails.logger.info "Locks found, sleeping"
-            try_again_later
-          else
-            begin
-              trigger(Publish, ::Katello::ContentView.find(input[:content_view_id]))
-            rescue ForemanTasks::Lock::LockConflict
-              Rails.logger.info "Got a lock conflict"
-              try_again_later
-            end
-          end
+        def done?
+          external_task.present? # Was the async task started?
         end
 
-        private
+        def poll_external_task
+          initiate_external_action
+        end
 
-        def try_again_later
-          output.delete(:total_count) # call initiate instead of resume in WithSubPlans
-          plan_event(nil, polling_interval)
-          suspend
+        def invoke_external_task
+          request = ::Katello::ContentViewAutoPublishRequest.find(input[:auto_publish_request_id])
+
+          # Checking for locks avoids creating tasks failing with lock errors
+          if content_view_locks(request.content_view_id).any?
+            Rails.logger.info "Locks found, sleeping"
+          else
+            description = _("Auto Publish - Triggered by '%s'") % request.content_view_version.name
+            begin
+              return ForemanTasks.async_task(Publish, request.content_view, description, triggered_by_id: request.content_view_version_id).as_json
+            rescue ForemanTasks::Lock::LockConflict
+              Rails.logger.info "Got a lock conflict, sleeping"
+            end
+          end
+
+          nil
+        end
+
+        def finalize
+          request = ::Katello::ContentViewAutoPublishRequest.find(input[:auto_publish_request_id])
+          request.destroy!
         end
       end
     end

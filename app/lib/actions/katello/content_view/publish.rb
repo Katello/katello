@@ -141,7 +141,7 @@ module Actions
 
         def auto_publish_composites(_execution_plan)
           version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-          version.auto_publish_composites!
+          ::Katello::ContentViewManager.auto_publish_composites!(content_view_version: version)
         end
 
         def trigger_capsule_sync(_execution_plan)

@@ -16,6 +16,8 @@ module Katello
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
     has_many :environments, :class_name => "Katello::KTEnvironment", :through => :content_view_environments
 
+    has_one :auto_publish_request, class_name: "Katello::ContentViewAutoPublishRequest", dependent: :destroy
+
     has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
     alias_method :versions, :content_view_versions
     has_one :latest_version_object, -> { latest }, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
@@ -451,8 +453,13 @@ module Katello
       component_composites.where(latest: true).joins(:composite_content_view).where(self.class.table_name => { auto_publish: true })
     end
 
-    def auto_publish_component_composites
+    def auto_publish_composites
       Katello::ContentView.where(id: auto_publish_components.pluck(:composite_content_view_id))
+    end
+
+    def publishable_composites
+      # If a composite doesn't have a publish request then it can be published
+      auto_publish_composites.joins(:auto_publish_request)
     end
 
     def publish_repositories(override_components = nil)
