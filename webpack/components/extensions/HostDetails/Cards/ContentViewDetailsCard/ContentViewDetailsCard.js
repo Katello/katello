@@ -24,7 +24,7 @@ import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/T
 import PropTypes from 'prop-types';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
 import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
-import ChangeHostCVModal from './ChangeHostCVModal';
+import AssignHostCVModal from './AssignHostCVModal';
 import { truncate } from '../../../../../utils/helpers';
 import InactiveText from '../../../../../scenes/ContentViews/components/InactiveText';
 
@@ -101,7 +101,7 @@ ContentViewEnvironmentDisplay.propTypes = {
 
 export const CVEDetailsBareCard = ({
   contentViewEnvironments, hostPermissions, permissions, dropdownItems,
-  isDropdownOpen, toggleHamburger,
+  isDropdownOpen, toggleHamburger, allowMultipleContentViews,
 }) => {
   const userPermissions = { ...hostPermissions, ...permissions };
   const showKebab = hasRequiredPermissions(requiredPermissions, userPermissions);
@@ -121,13 +121,9 @@ export const CVEDetailsBareCard = ({
             >
               <FlexItem>
                 <CardTitle>
-                  <FormattedMessage
-                    id="cv-card-title"
-                    defaultMessage="{count, plural, =0 {Content view environments} one {Content view environment} other {Content view environments}}"
-                    values={{
-                      count: contentViewEnvironments.length,
-                    }}
-                  />
+                  {allowMultipleContentViews
+                    ? __('Content view environments')
+                    : __('Content view environment')}
                 </CardTitle>
               </FlexItem>
             </Flex>
@@ -187,6 +183,7 @@ CVEDetailsBareCard.propTypes = {
   dropdownItems: PropTypes.arrayOf(PropTypes.node),
   isDropdownOpen: PropTypes.bool,
   toggleHamburger: PropTypes.func,
+  allowMultipleContentViews: PropTypes.bool,
 };
 
 CVEDetailsBareCard.defaultProps = {
@@ -196,11 +193,12 @@ CVEDetailsBareCard.defaultProps = {
   dropdownItems: [],
   isDropdownOpen: false,
   toggleHamburger: () => {},
+  allowMultipleContentViews: true,
 };
 
 export const ContentViewEnvironmentDetails = ({
-  contentViewEnvironments, hostId, hostName, orgId, hostEnvId,
-  hostPermissions, permissions, contentSourceId,
+  contentViewEnvironments, hostId, hostName, orgId,
+  hostPermissions, permissions, contentSourceId, allowMultipleContentViews,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleHamburger = () => setIsDropdownOpen(prev => !prev);
@@ -217,15 +215,24 @@ export const ContentViewEnvironmentDetails = ({
 
   const dropdownItems = [
     <DropdownItem
-      aria-label="change-host-content-view"
-      ouiaId="change-host-content-view"
-      key="change-host-content-view"
+      aria-label="assign-content-view-environments"
+      ouiaId="assign-content-view-environments"
+      key="assign-content-view-environments"
       component="button"
       onClick={openModal}
     >
-      {__('Edit content view environments')}
+      {allowMultipleContentViews
+        ? __('Assign content view environments')
+        : __('Edit content view environment')}
     </DropdownItem>,
   ];
+
+  // Convert contentViewEnvironments to the format expected by AssignHostCVModal
+  const existingAssignments = contentViewEnvironments.map(env => ({
+    contentView: env.content_view,
+    environment: env.lifecycle_environment,
+    cveLabel: env.label, // Use the CVE label from the API
+  }));
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
@@ -236,18 +243,19 @@ export const ContentViewEnvironmentDetails = ({
         hostPermissions={hostPermissions}
         permissions={permissions}
         dropdownItems={showKebab ? dropdownItems : []}
+        allowMultipleContentViews={allowMultipleContentViews}
       />
       {hostId &&
-        <ChangeHostCVModal
+        <AssignHostCVModal
           isOpen={isModalOpen}
           closeModal={closeModal}
           hostId={hostId}
           hostName={hostName}
-          hostEnvId={hostEnvId}
           contentSourceId={contentSourceId}
           orgId={orgId}
-          multiEnv={contentViewEnvironments.length > 1}
-          key={`cv-change-modal-${hostId}`}
+          existingAssignments={existingAssignments}
+          allowMultipleContentViews={allowMultipleContentViews}
+          key={`cv-assign-modal-${hostId}`}
         />
       }
     </GridItem>
@@ -269,7 +277,6 @@ ContentViewEnvironmentDetails.propTypes = {
   hostId: PropTypes.number,
   hostName: PropTypes.string,
   orgId: PropTypes.number,
-  hostEnvId: PropTypes.number,
   hostPermissions: PropTypes.shape({
     edit_hosts: PropTypes.bool,
   }),
@@ -279,6 +286,7 @@ ContentViewEnvironmentDetails.propTypes = {
     promote_or_remove_content_views_to_environments: PropTypes.bool,
   }),
   contentSourceId: PropTypes.number,
+  allowMultipleContentViews: PropTypes.bool.isRequired,
 };
 
 ContentViewEnvironmentDetails.defaultProps = {
@@ -286,7 +294,6 @@ ContentViewEnvironmentDetails.defaultProps = {
   hostId: null,
   hostName: '',
   orgId: null,
-  hostEnvId: null,
   hostPermissions: {},
   permissions: {},
   contentSourceId: null,
@@ -301,7 +308,6 @@ const ContentViewDetailsCard = ({ hostDetails }) => {
       hostName={hostDetails.name}
       contentSourceId={hostDetails.content_facet_attributes.content_source?.id}
       orgId={hostDetails.organization_id}
-      hostEnvId={hostDetails.content_facet_attributes.lifecycle_environment_id}
       hostPermissions={hostDetails.permissions}
       {...propsToCamelCase(hostDetails.content_facet_attributes)}
     />);

@@ -5,11 +5,16 @@ import { foremanApi } from '../../../../../services/api';
 import { uploadProfile } from '../../Tabs/RemoteExecutionActions';
 import HOST_CV_AND_ENV_KEY from './HostContentViewConstants';
 
-const updateHostContentViewAndEnvironment = (params, hostId, handleSuccess, handleError) => put({
+export const assignHostCVEnvironments = (
+  params,
+  hostId,
+  handleSuccess,
+  handleError,
+) => put({
   type: API_OPERATIONS.PUT,
   key: HOST_CV_AND_ENV_KEY,
   url: foremanApi.getApiUrl(`/hosts/${hostId}`),
-  successToast: () => __('Host content view and environment updated'),
+  successToast: () => __('Host content view environment(s) assigned'),
   handleSuccess,
   handleError,
   errorToast,
@@ -21,6 +26,4 @@ export const runSubmanRepos =
     hostname,
     handleSuccess,
   });
-
-export default updateHostContentViewAndEnvironment;
 

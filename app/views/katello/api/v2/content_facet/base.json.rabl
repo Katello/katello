@@ -13,6 +13,7 @@ child :content_view_environments => :content_view_environments do
     {
       id: cve.content_view&.id,
       name: cve.content_view&.name,
+      label: cve.content_view&.label,
       composite: cve.content_view&.composite,
       rolling: cve.content_view&.rolling,
       content_view_version: cve.content_view_version&.version,
@@ -25,6 +26,7 @@ child :content_view_environments => :content_view_environments do
     {
       id: cve.lifecycle_environment&.id,
       name: cve.lifecycle_environment&.name,
+      label: cve.lifecycle_environment&.label,
       lifecycle_environment_library: cve.lifecycle_environment&.library?,
     }
   end
@@ -40,6 +42,10 @@ attributes :content_view_environment_labels
 
 node :multi_content_view_environment do |content_facet|
   content_facet.multi_content_view_environment?
+end
+
+node :allow_multiple_content_views do
+  Setting['allow_multiple_content_views']
 end
 
 # single cv/lce for backward compatibility

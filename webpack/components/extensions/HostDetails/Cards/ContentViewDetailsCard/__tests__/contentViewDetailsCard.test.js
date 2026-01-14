@@ -19,6 +19,7 @@ const baseHostDetails = {
     content_view_version_id: 1000,
     content_view_version: '1.0',
     content_view_version_latest: true,
+    allow_multiple_content_views: true,
     content_view_environments: [
       {
         content_view: {
