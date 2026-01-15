@@ -21,20 +21,23 @@ module Katello
       end
     end
 
+    def self.auto_publish!(content_view:, content_view_version:)
+      request = content_view.create_auto_publish_request!(
+        content_view_version: content_view_version
+      )
+
+      ForemanTasks.async_task(::Actions::Katello::ContentView::AutoPublish, request)
+    end
+
     def self.auto_publish_composites!(content_view_version:)
-      composites = content_view_version.content_view.auto_publish_composites
-      return unless composites.any?
-
-      composites.each do |composite|
-        request = composite.build_auto_publish_request
-        request.content_view_version = content_view_version
-
+      content_view_version.content_view.publishable_composites.each do |composite|
         begin
-          request.save!
-          ForemanTasks.async_task(::Actions::Katello::ContentView::AutoPublish, request)
-        rescue ActiveRecord::RecordNotUnique, ForemanTasks::Lock::LockConflict
+          auto_publish!(
+            content_view_version: content_view_version,
+            content_view: composite
+          )
+        rescue ActiveRecord::RecordNotUnique
           # Auto publish happened elsewhere - Don't block others from publishing
-          next
         end
       end
     end

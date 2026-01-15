@@ -122,6 +122,7 @@ module Katello
       where.not(generated_for: ignored_values)
     }
     scope :generated_for_library, -> { where(:generated_for => [:library_export, :library_import, :library_export_syncable]) }
+    scope :auto_publish_requested, -> { joins(:auto_publish_request) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
@@ -458,8 +459,7 @@ module Katello
     end
 
     def publishable_composites
-      # If a composite doesn't have a publish request then it can be published
-      auto_publish_composites.joins(:auto_publish_request)
+      auto_publish_composites.where.not(id: self.class.auto_publish_requested)
     end
 
     def publish_repositories(override_components = nil)
