@@ -49,7 +49,6 @@ import {
   DOCKER_TAGS_CONTENT,
   CONTAINER_MANIFEST_LIST_CONTENT,
   generatedContentKey,
-  STATUS_TRANSLATIONS_ENUM,
   bulkRemoveVersionKey,
   cvRPMPackagesCompareKey,
   cvPackageGroupsCompareKey,
@@ -527,7 +526,7 @@ export const getCVFilterRules = (filterId, params) => get({
 });
 
 export const getContentViewComponents = (cvId, params, statusSelected) => {
-  const apiParams = { ...params, status: STATUS_TRANSLATIONS_ENUM[statusSelected] };
+  const apiParams = { ...params, status: statusSelected };
   const apiUrl = `/content_views/${cvId}/content_view_components/show_all`;
   return get({
     key: cvDetailsComponentKey(cvId),

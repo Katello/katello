@@ -4,9 +4,9 @@ export const REPOSITORY_SETS_KEY = 'HOST_DETAIL_REPOSITORY_SETS';
 export const CONTENT_OVERRIDES_KEY = 'HOST_DETAIL_CONTENT_OVERRIDES';
 
 export const STATUSES = {
-  ENABLED: __('Enabled'),
-  DISABLED: __('Disabled'),
-  OVERRIDDEN: __('Overridden'),
+  ENABLED: 'Enabled',
+  DISABLED: 'Disabled',
+  OVERRIDDEN: 'Overridden',
 };
 
 export const STATUS_TO_PARAM = {
@@ -22,8 +22,8 @@ export const PARAM_TO_FRIENDLY_NAME = {
 };
 
 export const PROVIDER_TYPES = {
-  CUSTOM: __('Custom'),
-  REDHAT: __('Red Hat'),
+  CUSTOM: 'Custom',
+  REDHAT: 'Red Hat',
 };
 
 export const PROVIDER_TYPE_TO_PARAM = {
