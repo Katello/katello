@@ -76,16 +76,11 @@ export const cvDebPackagesCompareKey = (versionOne, versionTwo, viewBy) => `${DE
 export const cvDockerTagsCompareKey = (versionOne, versionTwo, viewBy) => `${DOCKER_TAGS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const cvContainerManifestListsCompareKey = (versionOne, versionTwo, viewBy) => `${CONTAINER_MANIFEST_LISTS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const filesCompareKey = (versionOne, versionTwo, viewBy) => `${FILES_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
-// Repo added to content view status display and key
-export const ADDED = __('Added');
-export const NOT_ADDED = __('Not added');
-export const ALL_STATUSES = __('All');
 
-export const STATUS_TRANSLATIONS_ENUM = {
-  [ADDED]: 'Added',
-  [NOT_ADDED]: 'Not added',
-  [ALL_STATUSES]: 'All',
-};
+// Repo added to content view status display and key
+export const ADDED = 'Added';
+export const NOT_ADDED = 'Not added';
+export const ALL_STATUSES = 'All';
 
 export const REPOSITORY_TYPES = 'REPOSITORY_TYPES';
 export const FILTER_TYPES = ['rpm', 'package_group', 'erratum_date', 'erratum_id', 'docker', 'modulemd'];
