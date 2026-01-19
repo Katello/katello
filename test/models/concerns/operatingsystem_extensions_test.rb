@@ -42,7 +42,7 @@ module Katello
       setup do
         template_name = format(::Operatingsystem::DEBIAN_DEFAULT_PROVISIONING_TEMPLATE, template_kind_name: 'PXELinux')
         @provisioning_template = FactoryBot.create(:provisioning_template, :template_kind => TemplateKind.find_by_name(:PXELinux), :name => template_name)
-        @ptable = FactoryBot.create(:ptable, :ubuntu, :name => ::Operatingsystem::DEBIAN_DEFAULT_PTABLE)
+        @ptable = FactoryBot.create(:ptable, :debian, :name => ::Operatingsystem::DEBIAN_DEFAULT_PTABLE)
       end
 
       def test_assign_template_from_predefined
