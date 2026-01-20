@@ -22,5 +22,13 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("Flatpak Remotes")
     end
+
+    def latest_dynflow_scan
+      @latest_dynflow_scan ||= ForemanTasks::Task::DynflowTask
+        .where(:label => ::Actions::Katello::Flatpak::ScanRemote.name)
+        .for_resource(self)
+        .order(:started_at => :desc)
+        .first
+    end
   end
 end
