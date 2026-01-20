@@ -19,6 +19,7 @@ module ::Actions::Katello::Flatpak
     end
 
     it 'plans_self' do
+      action.stubs(:action_subject)
       action.expects(:plan_self).with(input)
       plan_action action, remote
     end

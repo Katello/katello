@@ -27,7 +27,8 @@ test('Can open mirror repository modal', async () => {
   const frDetailsScope = nockInstance
     .get(frDetailsPath)
     .query(true)
-    .reply(200, frDetailData);
+    .reply(200, frDetailData)
+    .persist();
 
   const scopeRepos = nockInstance
     .get(repoApiUrl)
@@ -58,7 +59,7 @@ test('Can open mirror repository modal', async () => {
       repository_dependencies: [],
     });
 
-  const { getByText, getByRole } = renderWithRedux(
+  const { getByText, getByRole, unmount } = renderWithRedux(
     withFRRoute(<FlatpakRemoteDetails />),
     renderOptions,
   );
@@ -84,6 +85,9 @@ test('Can open mirror repository modal', async () => {
     })).toBeInTheDocument();
   });
 
+  unmount();
+  frDetailsScope.persist(false);
+
   assertNockRequest(frDetailsScope);
   assertNockRequest(scopeRepos);
   assertNockRequest(productAutocompleteScope);
@@ -98,7 +102,8 @@ test('Can successfully mirror a repository', async () => {
   const frDetailsScope = nockInstance
     .get(frDetailsPath)
     .query(true)
-    .reply(200, frDetailData);
+    .reply(200, frDetailData)
+    .persist();
 
   const scopeRepos = nockInstance
     .get(repoApiUrl)
@@ -136,7 +141,7 @@ test('Can successfully mirror a repository', async () => {
     })
     .reply(200, { task_id: 'mirror-task-123' });
 
-  const { getByText, getByRole } = renderWithRedux(
+  const { getByText, getByRole, unmount } = renderWithRedux(
     withFRRoute(<FlatpakRemoteDetails />),
     renderOptions,
   );
@@ -176,6 +181,9 @@ test('Can successfully mirror a repository', async () => {
   await patientlyWaitFor(() => {
     assertNockRequest(mirrorScope);
   });
+
+  unmount();
+  frDetailsScope.persist(false);
 
   assertNockRequest(frDetailsScope);
   assertNockRequest(scopeRepos);
