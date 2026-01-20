@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, screen } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import FlatpakRemoteDetails from '../FlatpakRemoteDetails';
@@ -19,6 +19,14 @@ const renderOptions = {
   },
 };
 
+const inProgressScanFrDetailData = {
+  ...frDetailData,
+  last_scan: {
+    ...frDetailData.last_scan,
+    progress: 0.2,
+  },
+};
+
 const frDetailsPath = api.getApiUrl('/flatpak_remotes/1');
 const repoApiUrl = api.getApiUrl('/flatpak_remotes/1/flatpak_remote_repositories');
 const autocompleteApiUrl = api.getApiUrl('/flatpak_remote_repositories/auto_complete_search');
@@ -28,12 +36,12 @@ const mockAutocomplete = () =>
     .get(autocompleteApiUrl)
     .query({ search: '' })
     .reply(200, []);
-
 test('Can call API and display details on load', async () => {
   const scopeDetails = nockInstance
     .get(frDetailsPath)
     .query(true)
-    .reply(200, frDetailData);
+    .reply(200, frDetailData)
+    .persist();
 
   const scopeRepos = nockInstance
     .get(repoApiUrl)
@@ -48,7 +56,7 @@ test('Can call API and display details on load', async () => {
 
   const scopeAutocomplete = mockAutocomplete();
 
-  const { getByText } = renderWithRedux(
+  const { getByText, unmount } = renderWithRedux(
     withFRRoute(<FlatpakRemoteDetails />),
     renderOptions,
   );
@@ -57,21 +65,78 @@ test('Can call API and display details on load', async () => {
     expect(getByText(frDetailData.url)).toBeInTheDocument();
   });
 
+  const scanButton = screen.getByLabelText('scan_flatpak_remote');
+  expect(scanButton).toHaveAttribute('aria-disabled', 'false');
+
+  await patientlyWaitFor(() => {
+    expect(getByText(`${frDetailData.last_scan_words} ago`)).toBeInTheDocument();
+  });
+
+  unmount();
+  scopeDetails.persist(false);
+
   assertNockRequest(scopeDetails);
   assertNockRequest(scopeRepos);
   assertNockRequest(scopeAutocomplete);
 });
 
-test('Displays empty state when repository list is empty', async () => {
-  nockInstance
+test('Can call API and display in progress scan state', async () => {
+  const scopeDetails = nockInstance
     .get(frDetailsPath)
     .query(true)
-    .reply(200, frDetailData);
+    .reply(200, inProgressScanFrDetailData)
+    .persist();
+
+  const scopeRepos = nockInstance
+    .get(repoApiUrl)
+    .query(true)
+    .times(2)
+    .reply(200, {
+      results: frDetailData.repositories,
+      subtotal: frDetailData.repositories.length,
+      page: 1,
+      per_page: 20,
+    });
+
+  const scopeAutocomplete = mockAutocomplete();
+
+  const { getByText, queryByText, unmount } = renderWithRedux(
+    withFRRoute(<FlatpakRemoteDetails />),
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    expect(getByText(frDetailData.url)).toBeInTheDocument();
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByText('In progress')).toBeInTheDocument();
+  });
+
+  expect(screen.getByRole('progressbar', { name: /spinner/i })).toBeInTheDocument();
+  expect(queryByText(`${frDetailData.last_scan_words} ago`)).not.toBeInTheDocument();
+
+  const scanButton = screen.getByLabelText('scan_flatpak_remote');
+  expect(scanButton).toHaveAttribute('aria-disabled', 'true');
+  expect(scanButton).toHaveClass('pf-m-in-progress');
+
+  unmount();
+  scopeDetails.persist(false);
+
+  assertNockRequest(scopeRepos);
+  assertNockRequest(scopeAutocomplete);
+});
+
+test('Displays empty state when repository list is empty', async () => {
+  const scopeDetails = nockInstance
+    .get(frDetailsPath)
+    .query(true)
+    .reply(200, frDetailData)
+    .persist();
 
   nockInstance
     .get(repoApiUrl)
     .query(true)
-    .times(2)
     .reply(200, {
       results: [],
       subtotal: 0,
@@ -81,10 +146,14 @@ test('Displays empty state when repository list is empty', async () => {
 
   mockAutocomplete();
 
-  const { findByText } = renderWithRedux(
+  const { findByText, unmount } = renderWithRedux(
     withFRRoute(<FlatpakRemoteDetails />),
     renderOptions,
   );
 
   expect(await findByText(/no results/i)).toBeInTheDocument();
+
+  unmount();
+  scopeDetails.persist(false);
 });
+

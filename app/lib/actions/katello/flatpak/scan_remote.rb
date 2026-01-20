@@ -5,6 +5,7 @@ module Actions
     module Flatpak
       class ScanRemote < Actions::EntryAction
         def plan(remote, _args = {})
+          action_subject(remote)
           plan_self({:remote_id => remote.id, :url => format_url(remote.url)})
         end
 
