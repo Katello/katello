@@ -16,6 +16,8 @@ module Katello
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
     has_many :environments, :class_name => "Katello::KTEnvironment", :through => :content_view_environments
 
+    has_one :auto_publish_request, class_name: "Katello::ContentViewAutoPublishRequest", dependent: :destroy
+
     has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
     alias_method :versions, :content_view_versions
     has_one :latest_version_object, -> { latest }, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
@@ -120,6 +122,8 @@ module Katello
       where.not(generated_for: ignored_values)
     }
     scope :generated_for_library, -> { where(:generated_for => [:library_export, :library_import, :library_export_syncable]) }
+    scope :auto_publish_requested, -> { joins(:auto_publish_request) }
+    scope :auto_publishable, -> { where.not(id: auto_publish_requested) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
@@ -449,6 +453,10 @@ module Katello
 
     def auto_publish_components
       component_composites.where(latest: true).joins(:composite_content_view).where(self.class.table_name => { auto_publish: true })
+    end
+
+    def auto_publish_composites
+      Katello::ContentView.where(id: auto_publish_components.pluck(:composite_content_view_id))
     end
 
     def publish_repositories(override_components = nil)

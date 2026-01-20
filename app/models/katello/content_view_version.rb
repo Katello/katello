@@ -44,6 +44,8 @@ module Katello
     has_many :composites, :through => :content_view_version_composites, :source => :composite_version,
              :class_name => "Katello::ContentViewVersion", :inverse_of => :components
     has_many :published_in_composite_content_views, through: :composites, source: :content_view
+    has_many :content_view_auto_publish_requests, class_name: "Katello::ContentViewAutoPublishRequest", dependent: :destroy
+
     delegate :default, :default?, to: :content_view
     delegate :rolling, :rolling?, to: :content_view
 
@@ -359,18 +361,6 @@ module Katello
         end
       end
       save!
-    end
-
-    def auto_publish_composites!
-      metadata = {
-        description: _("Auto Publish - Triggered by '%s'") % self.name,
-        triggered_by: self.id,
-      }
-      self.content_view.auto_publish_components.pluck(:composite_content_view_id).each do |composite_id|
-        ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id) do |attrs|
-          attrs[:metadata] = metadata
-        end
-      end
     end
 
     def repository_type_counts_map

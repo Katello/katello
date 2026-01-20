@@ -3,6 +3,8 @@ module Actions
     module ContentViewVersion
       class IncrementalUpdate < Actions::EntryAction
         include ::Katello::ContentViewHelper
+        include Helpers::ContentViewAutoPublisher
+
         attr_accessor :new_content_view_version, :new_content_view_version_id
 
         HUMANIZED_TYPES = {
@@ -35,6 +37,7 @@ module Actions
 
           if is_composite
             sequence do
+              # Should this Publish trigger auto-publish?
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
                           :major => old_version.major, :minor => new_minor,
                           :override_components => new_components, :skip_promotion => true)
@@ -274,8 +277,10 @@ module Actions
             end
           end
 
+          output[:auto_publish_content_view_id] = input[:content_view_id]
           if version.latest? && !version.content_view.composite?
-            version.auto_publish_composites!
+            output[:auto_publish_content_view_ids] = version.content_view.publishable_composites.pluck(:id)
+            output[:auto_publish_content_view_version_id] = version.id
           end
         end
 
