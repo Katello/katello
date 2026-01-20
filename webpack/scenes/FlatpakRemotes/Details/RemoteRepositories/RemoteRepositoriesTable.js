@@ -11,11 +11,11 @@ import { flatpakRemoteRepositoriesKey } from '../../FlatpakRemotesConstants';
 import MirrorRepositoryModal from '../Mirror/MirrorRepositoryModal';
 import './RemoteRepositoriesTable.css';
 
-const RemoteRepositoriesTable = ({ frId, canMirror }) => {
+const RemoteRepositoriesTable = ({ frId, canMirror, lastScanId }) => {
   const [selectedRepo, setSelectedRepo] = useState(null);
 
   const apiUrl = `/katello/api/v2/flatpak_remotes/${frId}/flatpak_remote_repositories`;
-  const apiOptions = { key: flatpakRemoteRepositoriesKey(frId) };
+  const apiOptions = { key: `${flatpakRemoteRepositoriesKey(frId)}_${lastScanId || ''}` };
 
   useTableIndexAPIResponse({
     apiUrl,
@@ -97,6 +97,11 @@ const RemoteRepositoriesTable = ({ frId, canMirror }) => {
 RemoteRepositoriesTable.propTypes = {
   frId: PropTypes.number.isRequired,
   canMirror: PropTypes.bool.isRequired,
+  lastScanId: PropTypes.string,
+};
+
+RemoteRepositoriesTable.defaultProps = {
+  lastScanId: null,
 };
 
 export default RemoteRepositoriesTable;

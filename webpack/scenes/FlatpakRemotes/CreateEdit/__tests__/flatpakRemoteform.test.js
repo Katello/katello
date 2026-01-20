@@ -63,6 +63,7 @@ test('Can save Flatpak remote from form', async (done) => {
 test('Can update Flatpak remote from form', async (done) => {
   const updateScope = nockInstance
     .put(updateFlatpakPath(mockRemoteData.id), {
+      include_permissions: true,
       name: 'Updated Remote',
       url: 'https://updated.com',
       username: 'updateduser',
@@ -91,6 +92,7 @@ test('Can update Flatpak remote from form', async (done) => {
 test('Can update Flatpak remote password from placeholder', async (done) => {
   const updateScope = nockInstance
     .put(updateFlatpakPath(mockRemoteData.id), {
+      include_permissions: true,
       name: mockRemoteData.name,
       url: mockRemoteData.url,
       username: mockRemoteData.username,

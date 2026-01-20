@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { DEFAULT_INTERVAL } from 'foremanReact/redux/middlewares/IntervalMiddleware/IntervalConstants';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -29,6 +30,7 @@ import getFlatpakRemoteDetails, {
 } from './FlatpakRemoteDetailActions';
 import ActionableDetail from '../../../components/ActionableDetail';
 import RemoteRepositoriesTable from './RemoteRepositories/RemoteRepositoriesTable';
+import LastScan from '../Details/LastScan';
 import EditFlatpakRemotesModal from '../CreateEdit/EditFlatpakRemotesModal';
 import DeleteFlatpakModal from '../Delete/DeleteFlatpakModal';
 
@@ -38,6 +40,7 @@ export default function FlatpakRemoteDetails() {
   const [dropDownOpen, setDropdownOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [scanTaskId, setScanTaskId] = useState(null);
   const dispatch = useDispatch();
 
   const [currentAttribute, setCurrentAttribute] = useState(null);
@@ -51,6 +54,36 @@ export default function FlatpakRemoteDetails() {
     selectFlatpakRemoteDetails(state, frId), shallowEqual) || {};
   const name = frDetails.name || '';
   const url = frDetails.url || '';
+  const lastScan = frDetails.last_scan;
+  const lastScanWords = frDetails.last_scan_words || '';
+  const isLoaded = Boolean(frDetails.id);
+
+  const lastScanIdRef = useRef(lastScan?.id);
+  useEffect(() => {
+    let intervalId;
+    if (isScanning) {
+      intervalId = setInterval(() => {
+        dispatch(getFlatpakRemoteDetails(frId));
+      }, DEFAULT_INTERVAL);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isScanning, dispatch, frId]);
+
+  useEffect(() => {
+    if (!lastScan) return;
+
+    const isNewScan = lastScan.id !== lastScanIdRef.current;
+
+    if (lastScan.progress < 1) {
+      setIsScanning(true);
+    } else if (isNewScan && lastScan.progress >= 1) {
+      lastScanIdRef.current = lastScan.id;
+      setIsScanning(false);
+    }
+  }, [lastScan]);
 
   const {
     can_edit: canEdit = false,
@@ -61,6 +94,15 @@ export default function FlatpakRemoteDetails() {
   const onEdit = (val, attribute) => {
     if (val === frDetails[attribute]) return;
     dispatch(updateFlatpakRemote(frId, { [attribute]: val }));
+  };
+
+  const handleScan = () => {
+    lastScanIdRef.current = lastScan?.id;
+    setIsScanning(true);
+    dispatch(scanFlatpakRemote(frId, (response) => {
+      const taskId = response?.data?.id;
+      if (taskId) setScanTaskId(taskId);
+    }, () => setIsScanning(false)));
   };
 
   const dropDownItems = [];
@@ -86,38 +128,53 @@ export default function FlatpakRemoteDetails() {
             <Title headingLevel="h1" size="2xl" ouiaId="flatpak-remote-title">{name}</Title>
           </FlexItem>
           <FlexItem align={{ default: 'alignRight' }}>
-            {canEdit &&
-            <Button
-              ouiaId="fr-details-scan-button"
-              style={{ marginLeft: 'auto' }}
-              onClick={() => {
-                setIsScanning(true);
-                dispatch(scanFlatpakRemote(
-                  frId,
-                  () => { setIsScanning(false); },
-                  () => setIsScanning(false),
-                ));
-              }
-              }
-              variant="primary"
-              aria-label="scan_flatpak_remote"
-              isLoading={isScanning}
-              isDisabled={isScanning}
-            >
-              {__('Scan')}
-            </Button>
-            }
-            {dropDownItems.length > 0 &&
-            <Dropdown
-              position={DropdownPosition.right}
-              ouiaId="fr-details-actions"
-              style={{ marginLeft: 'auto' }}
-              toggle={<KebabToggle onToggle={(_event, val) => setDropdownOpen(val)} id="toggle-dropdown" />}
-              isOpen={dropDownOpen}
-              isPlain
-              dropdownItems={dropDownItems}
-            />
-            }
+            <Flex alignItems={{ default: 'alignItemsCenter' }}>
+              {canEdit && (
+                <>
+                  {
+                    isLoaded && (
+                      <FlexItem>
+                        <LastScan
+                          lastScan={lastScan}
+                          lastScanWords={lastScanWords}
+                          isScanning={isScanning}
+                          scanTaskId={scanTaskId}
+                        />
+                      </FlexItem>
+                    )
+                  }
+                  <FlexItem>
+                    <Button
+                      ouiaId="fr-details-scan-button"
+                      onClick={handleScan}
+                      variant="primary"
+                      aria-label="scan_flatpak_remote"
+                      isLoading={isScanning}
+                      isDisabled={isScanning}
+                    >
+                      {__('Scan')}
+                    </Button>
+                  </FlexItem>
+                </>
+              )}
+              {dropDownItems.length > 0 && (
+                <FlexItem>
+                  <Dropdown
+                    position={DropdownPosition.right}
+                    ouiaId="fr-details-actions"
+                    toggle={
+                      <KebabToggle
+                        onToggle={(_event, val) => setDropdownOpen(val)}
+                        id="toggle-dropdown"
+                      />
+                    }
+                    isOpen={dropDownOpen}
+                    isPlain
+                    dropdownItems={dropDownItems}
+                  />
+                </FlexItem>
+              )}
+            </Flex>
           </FlexItem>
         </Flex>
       </GridItem>
@@ -150,18 +207,18 @@ export default function FlatpakRemoteDetails() {
       </GridItem>
 
       <GridItem span={12} id="remote-repositories-table">
-        <RemoteRepositoriesTable frId={frId} canMirror={canMirror} />
+        <RemoteRepositoriesTable lastScanId={lastScan?.id} frId={frId} canMirror={canMirror} />
       </GridItem>
-      { isEditing &&
+      {isEditing &&
         <EditFlatpakRemotesModal show={isEditing} remoteData={frDetails} setIsOpen={setIsEditing} />
       }
-      { isDeleteModalOpen &&
+      {isDeleteModalOpen &&
         <DeleteFlatpakModal
           isModalOpen={isDeleteModalOpen}
           handleModalToggle={() => setDeleteModalOpen(!isDeleteModalOpen)}
           remoteId={frId}
         />
-        }
-    </Grid>
+      }
+    </Grid >
   );
 }

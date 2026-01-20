@@ -39,7 +39,7 @@ export const updateFlatpakRemote = (frId, params, handleSuccess, handleError) =>
   url: api.getApiUrl(`/flatpak_remotes/${frId}`),
   handleSuccess,
   handleError,
-  params,
+  params: { include_permissions: true, ...params },
   successToast: () => __('Flatpak remote updated'),
   errorToast: error => getResponseErrorMsgs(error.response),
   updateData: (_prevState, respState) => respState,
