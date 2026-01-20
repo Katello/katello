@@ -2,31 +2,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewManagerTest < ActiveSupport::TestCase
-=begin
-    test 'auto_publish_composites!' do
-      cvv = build_stubbed(:katello_content_view_version)
-      composite = build_stubbed(:katello_content_view)
-
-      cvv.content_view.expects(:publishable_composites).returns([composite])
-      Katello::ContentViewManager.expects(:auto_publish!).once.with(
-        content_view_version: cvv,
-        content_view: composite
-      )
-
-      Katello::ContentViewManager.auto_publish_composites!(content_view_version: cvv)
-    end
-
-    test 'auto_publish_composites! request exists' do
-      cvv = build_stubbed(:katello_content_view_version)
-      composite = build_stubbed(:katello_content_view)
-
-      cvv.content_view.expects(:publishable_composites).returns([composite])
-      Katello::ContentViewManager.expects(:auto_publish!).raises(ActiveRecord::RecordNotUnique)
-
-      Katello::ContentViewManager.auto_publish_composites!(content_view_version: cvv)
-    end
-=end
-
     test 'request_auto_publish' do
       request = build_stubbed(:katello_content_view_auto_publish_request)
       cv = request.content_view

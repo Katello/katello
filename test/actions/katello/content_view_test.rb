@@ -244,16 +244,24 @@ module ::Actions::Katello::ContentView
       refute_action_planned action, ::Actions::Katello::Repository::MultiCloneToVersion
     end
 
-    it 'can auto publish composite content views' do
+    it 'outputs auto publish data during composite auto publish' do
       action.stubs(:task).returns(success_task)
 
-      plan_action action, katello_content_views(:no_environment_view)
+      plan_action action, katello_content_views(:composite_view)
+      run = run_action action
 
-      version = build_stubbed(:katello_content_view_version)
-      Katello::ContentViewVersion.expects(:find).with(action.input[:content_view_version_id]).returns(version)
-      Katello::ContentViewManager.expects(:auto_publish_composites!).with(content_view_version: version)
+      assert_equal run.input[:content_view_version_id], run.output[:auto_publish_content_view_version_id]
+      assert_empty run.output[:auto_publish_content_view_ids]
+    end
 
-      action.auto_publish_composites(nil)
+    it 'outputs auto publish data during component composite publish' do
+      action.stubs(:task).returns(success_task)
+
+      plan_action action, katello_content_views(:composite_view)
+      run = run_action action
+
+      assert_equal run.input[:content_view_version_id], run.output[:auto_publish_content_view_version_id]
+      refute_empty run.output[:auto_publish_content_view_ids]
     end
 
     context 'finalize phase' do

@@ -3,7 +3,7 @@ module Actions
     module ContentViewAutoPublisher
       def self.included(base)
         base.execution_plan_hooks.use :auto_publish_views, on: :success
-        base.execution_plan_hooks.use :auto_publish_view, on: :success
+        base.execution_plan_hooks.use :auto_publish_view, on: :stopped
       end
 
       def auto_publish_views(_execution_plan)
@@ -13,6 +13,8 @@ module Actions
         content_views = ::Katello::ContentView.auto_publishable.where(id: output[:auto_publish_content_view_ids])
         content_views.each do |cv|
           request = ::Katello::ContentViewManager.request_auto_publish(content_view: cv, content_view_version: version)
+          next unless request
+
           trigger_auto_publish(request)
         end
       end
@@ -27,7 +29,7 @@ module Actions
       def trigger_auto_publish(request)
         ::Katello::ContentViewManager.trigger_auto_publish!(request: request)
       rescue StandardError => e
-        Rails.logger.error "Unrecoverable error while auto-publishing"
+        Rails.logger.error "auto publish unrecoverable error #{e}"
         Rails.logger.error e.message
         Rails.logger.error e.backtrace.join("\n")
         # deliver notification
