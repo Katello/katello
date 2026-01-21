@@ -9,12 +9,14 @@ import {
   GridItem,
   Label,
   Tooltip,
+  Button,
 } from '@patternfly/react-core';
 import {
   Dropdown,
   DropdownItem,
   KebabToggle,
 } from '@patternfly/react-core/deprecated';
+import { PlusCircleIcon } from '@patternfly/react-icons';
 import { FormattedMessage } from 'react-intl';
 
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -26,7 +28,8 @@ import ContentViewIcon from '../../../../../scenes/ContentViews/components/Conte
 import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
 import AssignHostCVModal from './AssignHostCVModal';
 import { truncate } from '../../../../../utils/helpers';
-import InactiveText from '../../../../../scenes/ContentViews/components/InactiveText';
+import EmptyStateMessage from '../../../../../components/Table/EmptyStateMessage';
+import './ContentViewDetailsCard.scss';
 
 const requiredPermissions = [
   'view_lifecycle_environments', 'view_content_views',
@@ -101,10 +104,21 @@ ContentViewEnvironmentDisplay.propTypes = {
 
 export const CVEDetailsBareCard = ({
   contentViewEnvironments, hostPermissions, permissions, dropdownItems,
-  isDropdownOpen, toggleHamburger, allowMultipleContentViews,
+  isDropdownOpen, toggleHamburger, allowMultipleContentViews, openModal,
 }) => {
   const userPermissions = { ...hostPermissions, ...permissions };
   const showKebab = hasRequiredPermissions(requiredPermissions, userPermissions);
+
+  const primaryActionButton = openModal ? (
+    <Button
+      ouiaId="assign-content-view-environments-button"
+      onClick={openModal}
+      variant="secondary"
+      aria-label="assign_content_view_environments"
+    >
+      {__('Assign content view environments')}
+    </Button>
+  ) : null;
 
   return (
     <Card ouiaId="content-view-details-card">
@@ -142,19 +156,27 @@ export const CVEDetailsBareCard = ({
           )}
         </Flex>
       </CardHeader>
-      <CardBody>
-        <Flex direction={{ default: 'column' }}>
-          {contentViewEnvironments.length === 0 && (
-            <InactiveText text={__('N/A')} />
-          )}
-          {contentViewEnvironments.map(env => (
-            <ContentViewEnvironmentDisplay
-              key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
-              contentView={env.content_view}
-              lifecycleEnvironment={env.lifecycle_environment}
-            />
-          ))}
-        </Flex>
+      <CardBody className={contentViewEnvironments.length === 0 ? 'empty' : ''}>
+        {contentViewEnvironments.length === 0 ? (
+          <EmptyStateMessage
+            title={__('No content view environments yet')}
+            body={__('To get started, assign content view environments.')}
+            customIcon={PlusCircleIcon}
+            headingLevel="h4"
+            showPrimaryAction={!!primaryActionButton}
+            primaryActionButton={primaryActionButton}
+          />
+        ) : (
+          <Flex direction={{ default: 'column' }}>
+            {contentViewEnvironments.map(env => (
+              <ContentViewEnvironmentDisplay
+                key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
+                contentView={env.content_view}
+                lifecycleEnvironment={env.lifecycle_environment}
+              />
+            ))}
+          </Flex>
+        )}
       </CardBody>
     </Card>
   );
@@ -184,6 +206,7 @@ CVEDetailsBareCard.propTypes = {
   isDropdownOpen: PropTypes.bool,
   toggleHamburger: PropTypes.func,
   allowMultipleContentViews: PropTypes.bool,
+  openModal: PropTypes.func,
 };
 
 CVEDetailsBareCard.defaultProps = {
@@ -194,6 +217,7 @@ CVEDetailsBareCard.defaultProps = {
   isDropdownOpen: false,
   toggleHamburger: () => {},
   allowMultipleContentViews: true,
+  openModal: null,
 };
 
 export const ContentViewEnvironmentDetails = ({
@@ -244,6 +268,7 @@ export const ContentViewEnvironmentDetails = ({
         permissions={permissions}
         dropdownItems={showKebab ? dropdownItems : []}
         allowMultipleContentViews={allowMultipleContentViews}
+        openModal={showKebab ? openModal : null}
       />
       {hostId &&
         <AssignHostCVModal

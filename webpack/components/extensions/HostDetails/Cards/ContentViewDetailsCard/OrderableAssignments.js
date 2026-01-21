@@ -60,6 +60,7 @@ const ExistingAssignmentShape = PropTypes.shape({
   contentView: ContentViewShape,
   environment: EnvironmentShape,
   cveLabel: PropTypes.string,
+  label: PropTypes.string, // Optional pre-computed label for the assignment
 });
 
 const AssignmentSection = ({
@@ -304,6 +305,7 @@ export const OrderableAssignmentList = ({
         cvSelectOpen: false,
         selectedEnv: assignment.environment ? [assignment.environment] : [],
         selectedCV: assignment.contentView?.name || null,
+        label: assignment.label, // Preserve pre-computed label for existing assignments
       }));
       setAssignments(initialAssignments);
 

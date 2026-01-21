@@ -6,12 +6,6 @@
   </span>
 </div>
 
-<div bst-alert="warning" ng-if="activationKey.multi_content_view_environment">
-  <span translate>
-    This activation key has multiple content view environments, which cannot yet be edited in the web UI. To change this key's content view environments, update the activation key via Hammer.
-  </span>
-</div>
-
 <div data-extend-template="layouts/two-column-details.html">
   <div data-block="left-column">
     <h4 translate>Basic Information</h4>
@@ -111,49 +105,12 @@
           on-save="save(activationKey)">
       </dd>
     </dl>
-    <dl class="dl-horizontal dl-horizontal-left" ng-if="!activationKey.multi_content_view_environment">
-      <dt bst-feature-flag="lifecycle_environments">
-        <span translate>Environment</span>
-      </dt>
-      <dd bst-feature-flag="lifecycle_environments">
-        <div path-selector="environments"
-            ng-model="activationKey.environment"
-            mode="singleSelect"
-            selection-required="selectionRequired"
-            disabled="denied('edit_activation_keys', activationKey)"
-            disable-trigger="disableEnvironmentSelection">
-        </div>
-      </dd>
-
-      <dt bst-feature-flag="lifecycle_environments">
-        <span translate>Content View</span>
-      </dt>
-      <dd bst-feature-flag="lifecycle_environments">
-        <div bst-edit-select="activationKey.content_view.name"
-            readonly="denied('edit_activation_keys', activationKey) || activationKey.environment === undefined || activationKey.environment === null"
-            selector="activationKey.content_view.id"
-            options="contentViews()"
-            on-cancel="cancelContentViewUpdate()"
-            on-save="saveContentView(activationKey)"
-            deletable="activationKey.content_view"
-            on-delete="resetEnvironment(activationKey)"
-            edit-trigger="editContentView">
-        </div>
-
-        <div bst-alert="info" ng-show="editEnvironment">
-          <p translate>You must select a content view in order to save your environment.</p>
-        </div>
-        <div bst-alert="info" ng-show="editContentView && !editEnvironment">
-          <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
-        </div>
-      </dd>
-    </dl>
     <dl class="dl-horizontal dl-horizontal-left">
       <span id="ak-cve-details" data-ak-details="{{ activationKey }}" class="hidden"></span>
       <foreman-react-component
           name="CVEDetailsCard"
           data-props=""
-          ng-if="activationKey.multi_content_view_environment"
+          ng-if="activationKey"
       ></foreman-react-component>
     </dl>
   </div>
