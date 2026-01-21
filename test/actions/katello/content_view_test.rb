@@ -2,7 +2,6 @@ require 'katello_test_helper'
 module ::Actions::Katello::ContentView
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
-    include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
     let(:success_task) { ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good") }
@@ -244,24 +243,17 @@ module ::Actions::Katello::ContentView
       refute_action_planned action, ::Actions::Katello::Repository::MultiCloneToVersion
     end
 
-    it 'outputs auto publish data during composite auto publish' do
+    it 'outputs auto publish data' do
       action.stubs(:task).returns(success_task)
+      cv = katello_content_views(:composite_view)
+      composites = [{id: 1}, {id: 2}, {id: 3}]
+      Katello::ContentView.any_instance.expects(:auto_publish_composites).returns(composites)
 
-      plan_action action, katello_content_views(:composite_view)
+      plan_action action, cv
       run = run_action action
 
       assert_equal run.input[:content_view_version_id], run.output[:auto_publish_content_view_version_id]
-      assert_empty run.output[:auto_publish_content_view_ids]
-    end
-
-    it 'outputs auto publish data during component composite publish' do
-      action.stubs(:task).returns(success_task)
-
-      plan_action action, katello_content_views(:composite_view)
-      run = run_action action
-
-      assert_equal run.input[:content_view_version_id], run.output[:auto_publish_content_view_version_id]
-      refute_empty run.output[:auto_publish_content_view_ids]
+      assert_equal [1, 2, 3], run.output[:auto_publish_content_view_ids]
     end
 
     context 'finalize phase' do

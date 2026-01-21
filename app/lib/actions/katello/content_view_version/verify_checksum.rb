@@ -2,6 +2,8 @@ module Actions
   module Katello
     module ContentViewVersion
       class VerifyChecksum < Actions::EntryAction
+        include Helpers::ContentViewAutoPublisher
+
         def plan(content_view_version)
           action_subject(content_view_version.content_view)
           plan_self(:version_id => content_view_version.id)

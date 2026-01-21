@@ -4,6 +4,8 @@ module Actions
       class Promote < Actions::EntryAction
         extend ApipieDSL::Class
         include ::Actions::ObservableAction
+        include Helpers::ContentViewAutoPublisher
+
         execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 
         def plan(version, environments, is_force = false, description = nil, incremental_update = false)

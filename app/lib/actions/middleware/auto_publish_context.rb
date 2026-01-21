@@ -3,11 +3,14 @@ module Actions
     class AutoPublishContext < Dynflow::Middleware
       def plan(*args)
         pass(*args).tap do
-          case args.first
+          resource = args.first
+          case resource
           when ::Katello::ContentView
-            action.input[:auto_publish_content_view_id] = args.first.id
+            action.input[:auto_publish_content_view_id] = resource.id
           when ::Katello::ContentViewVersion
-            action.input[:auto_publish_content_view_id] = args.content_view_id
+            action.input[:auto_publish_content_view_id] = resource.content_view_id
+          else
+            fail "Can't determine auto publish content view from #{resource.class}"
           end
         end
       end

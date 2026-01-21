@@ -37,7 +37,6 @@ module Actions
 
           if is_composite
             sequence do
-              # Should this Publish trigger auto-publish?
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
                           :major => old_version.major, :minor => new_minor,
                           :override_components => new_components, :skip_promotion => true)
@@ -222,6 +221,12 @@ module Actions
         end
 
         def run
+          version = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id])
+          if version.latest? && !version.content_view.composite?
+            output[:auto_publish_content_view_ids] = version.content_view.auto_publish_composites.pluck(:id)
+            output[:auto_publish_content_view_version_id] = version.id
+          end
+
           content = { ::Katello::Erratum::CONTENT_TYPE => [],
                       ::Katello::Rpm::CONTENT_TYPE => [],
                       ::Katello::ModuleStream::CONTENT_TYPE => [],
@@ -229,7 +234,7 @@ module Actions
                     }
 
           base_repos = ::Katello::ContentViewVersion.find(input[:old_version]).repositories
-          new_repos = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id]).repositories
+          new_repos = version.repositories
 
           if input[:is_composite] || input[:copy_action_outputs].present? && input[:copy_action_outputs].last[:pulp_tasks].present?
             new_repos.each do |new_repo|
@@ -275,12 +280,6 @@ module Actions
                 copy(repo.library_instance.pulp_id,
                 repo.pulp_id)
             end
-          end
-
-          output[:auto_publish_content_view_id] = input[:content_view_id]
-          if version.latest? && !version.content_view.composite?
-            output[:auto_publish_content_view_ids] = version.content_view.publishable_composites.pluck(:id)
-            output[:auto_publish_content_view_version_id] = version.id
           end
         end
 

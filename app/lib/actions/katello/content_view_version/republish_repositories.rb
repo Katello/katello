@@ -2,6 +2,8 @@ module Actions
   module Katello
     module ContentViewVersion
       class RepublishRepositories < Actions::EntryAction
+        include Helpers::ContentViewAutoPublisher
+
         def plan(content_view_version, options = {force: false})
           force = options[:force]
           action_subject(content_view_version.content_view)
