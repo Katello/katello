@@ -123,7 +123,7 @@ module Actions
 
         def run
           cv = ::Katello::ContentView.find(input[:content_view_id])
-          output[:auto_publish_content_view_id] = input[:content_view_id]
+          #output[:auto_publish_content_view_id] = input[:content_view_id]
           output[:auto_publish_content_view_ids] = cv.auto_publish_composites.pluck(:id)
           output[:auto_publish_content_view_version_id] = input[:content_view_version_id]
 

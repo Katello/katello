@@ -4,6 +4,7 @@ module Actions
       def self.included(base)
         base.execution_plan_hooks.use :auto_publish_views, on: :success
         base.execution_plan_hooks.use :auto_publish_view, on: :stopped
+        base.middleware.use ::Actions::Middleware::AutoPublishContext
       end
 
       def auto_publish_views(_execution_plan)
@@ -20,7 +21,7 @@ module Actions
       end
 
       def auto_publish_view(_execution_plan)
-        request = ::Katello::ContentViewAutoPublishRequest.find_by(content_view_id: output[:auto_publish_content_view_id])
+        request = ::Katello::ContentViewAutoPublishRequest.find_by(content_view_id: input[:auto_publish_content_view_id])
         return unless request
 
         trigger_auto_publish(request)
