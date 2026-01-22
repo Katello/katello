@@ -30,10 +30,12 @@ module Actions
       def trigger_auto_publish(request)
         ::Katello::ContentViewManager.trigger_auto_publish!(request: request)
       rescue StandardError => e
-        Rails.logger.error "auto publish unrecoverable error #{e}"
-        Rails.logger.error e.message
-        Rails.logger.error e.backtrace.join("\n")
-        # deliver notification
+        begin
+          ::Katello::ContentViewManager.auto_publish_log(request, "unrecoverable error #{e}")
+          ::Katello::UINotifications::ContentView::AutoPublishFailure.deliver!(request.content_view)
+        rescue => second
+          ::Katello::ContentViewManager.auto_publish_log(request, "notification delivery failed #{second}")
+        end
       end
     end
   end

@@ -25,11 +25,15 @@ module Katello
       request = content_view.create_auto_publish_request!(
         content_view_version: content_view_version
       )
-      Rails.logger.info "auto publish request created id=#{request.id} content_view=#{content_view.id} content_view_version=#{content_view_version.id}"
+      auto_publish_log(request, "request created")
       request
     rescue ActiveRecord::RecordNotUnique
-      Rails.logger.info "auto publish request exists content_view=#{content_view.id} content_view_version=#{content_view_version.id}"
+      auto_publish_log(request, "request exists")
       nil
+    end
+
+    def self.auto_publish_log(request, message)
+      Rails.logger.info "[auto publish] #{message} #{request.as_json}"
     end
 
     def self.content_view_locks(content_view:)
@@ -42,17 +46,17 @@ module Katello
       destroy_request = true
 
       if content_view_locks(content_view: request.content_view).any?
-        Rails.logger.info "auto publish locks found id=#{request.id} content_view=#{request.content_view_id} content_view_version=#{request.content_view_version_id}"
+        auto_publish_log(request, "existing locks found")
         destroy_request = false
         return
       end
 
       description = _("Auto Publish - Triggered by '%s'") % request.content_view_version.name
-      ForemanTasks.async_task(Actions::Katello::ContentView::Publish, request.content_view, description, auto_published: true)
-      Rails.logger.info "auto publish triggered id=#{request.id} content_view=#{request.content_view_id} content_view_version=#{request.content_view_version_id}"
+      ForemanTasks.async_task(Actions::Katello::ContentView::Publish, request.content_view, description, auto_published: true, triggered_by_id: request.content_view_version_id)
+      auto_publish_log(request, "task triggered")
     rescue ForemanTasks::Lock::LockConflict => e
-      Rails.logger.info e
-      Rails.logger.info "auto publish lock conflict id=#{request.id} content_view=#{request.content_view_id} content_view_version=#{request.content_view_version_id}"
+      auto_publish_log(request, e)
+      auto_publish_log(request, "lock conflict")
 
       destroy_request = false
     ensure

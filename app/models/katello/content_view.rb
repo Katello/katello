@@ -122,8 +122,7 @@ module Katello
       where.not(generated_for: ignored_values)
     }
     scope :generated_for_library, -> { where(:generated_for => [:library_export, :library_import, :library_export_syncable]) }
-    scope :auto_publish_requested, -> { joins(:auto_publish_request) }
-    scope :auto_publishable, -> { where.not(id: auto_publish_requested) }
+    scope :auto_publishable, -> { where.missing(:auto_publish_request) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
@@ -456,7 +455,7 @@ module Katello
     end
 
     def auto_publish_composites
-      Katello::ContentView.where(id: auto_publish_components.pluck(:composite_content_view_id))
+      Katello::ContentView.joins(:content_view_components).merge(auto_publish_components)
     end
 
     def publish_repositories(override_components = nil)

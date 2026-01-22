@@ -61,6 +61,7 @@ module Actions
         ::Katello::ContentView.expects(:auto_publishable).returns(mock(where: [cv]))
         ::Katello::ContentViewManager.expects(:request_auto_publish).returns(request)
         ::Katello::ContentViewManager.expects(:trigger_auto_publish!).raises(StandardError)
+        ::Katello::UINotifications::ContentView::AutoPublishFailure.expects(:deliver!).with(cv)
 
         task = ForemanTasks.sync_task(AutoPublish, cv, cvv.id, [cv.id])
 

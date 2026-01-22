@@ -30,7 +30,7 @@ module Katello
       request = build_stubbed(:katello_content_view_auto_publish_request)
 
       request.expects(:destroy!)
-      ForemanTasks.expects(:async_task).with(::Actions::Katello::ContentView::Publish, request.content_view, anything, auto_published: true)
+      ForemanTasks.expects(:async_task).with(::Actions::Katello::ContentView::Publish, request.content_view, anything, auto_published: true, triggered_by_id: request.content_view_version_id)
 
       Katello::ContentViewManager.trigger_auto_publish!(request: request)
     end
