@@ -7,6 +7,10 @@ node :multi_content_view_environment do |ak|
   ak.multi_content_view_environment?
 end
 
+node :allow_multiple_content_views do
+  Setting['allow_multiple_content_views']
+end
+
 child :content_view_environments => :content_view_environments do
   node :content_view do |cve|
     {

@@ -31,7 +31,7 @@ const AddAnotherCVButton = ({ onClick, isDisabled }) => (
       style={{ paddingLeft: 0 }}
       isDisabled={isDisabled}
     >
-      {__('Assign another content view')}
+      {__('Assign another content view environment')}
     </Button>
   </>
 );
@@ -47,6 +47,7 @@ const AssignAKCVModal = ({
   orgId,
   akId,
   existingAssignments,
+  allowMultipleContentViews,
 }) => {
   const [assignments, setAssignments] = useState([]);
   const [initialAssignments, setInitialAssignments] = useState([]);
@@ -92,9 +93,11 @@ const AssignAKCVModal = ({
   };
 
   // Allow zero assignments for activation keys (unlike hosts)
+  // When allowMultipleContentViews is false, only allow saving with 0 or 1 assignment
   const canSave =
     assignments.every(a => a.selectedCV && a.selectedEnv.length > 0) &&
-    hasChanges();
+    hasChanges() &&
+    (allowMultipleContentViews || assignments.length <= 1);
 
   const refreshPage = async () => {
     handleModalClose();
@@ -225,7 +228,10 @@ const AssignAKCVModal = ({
     >
       <TextContent style={{ marginBottom: '1rem' }}>
         <Text component={TextVariants.p} ouiaId="modal-description">
-          {__('A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.')}
+          {allowMultipleContentViews
+            ? __('A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.')
+            : __('A content view environment is a combination of a particular lifecycle environment and content view.')
+          }
         </Text>
       </TextContent>
 
@@ -243,6 +249,8 @@ const AssignAKCVModal = ({
           isOpen={isOpen}
           assignmentStatus={akUpdateStatus}
           onAssignmentsChange={handleAssignmentsChange}
+          allowMultipleContentViews={allowMultipleContentViews}
+          allowZeroAssignments
           renderAddButton={(addFn, canAdd) => (
             <AddAnotherCVButton onClick={addFn} isDisabled={!canAdd} />
           )}
@@ -262,12 +270,14 @@ AssignAKCVModal.propTypes = {
     environment: PropTypes.shape({}),
     label: PropTypes.string, // Pre-computed label from backend
   })),
+  allowMultipleContentViews: PropTypes.bool,
 };
 
 AssignAKCVModal.defaultProps = {
   isOpen: false,
   closeModal: () => {},
   existingAssignments: [],
+  allowMultipleContentViews: false,
 };
 
 export default AssignAKCVModal;

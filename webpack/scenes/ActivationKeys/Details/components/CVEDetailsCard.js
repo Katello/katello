@@ -34,6 +34,8 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
 
   if (!akDetails || !akDetails.content_view_environments) return null;
 
+  const allowMultipleContentViews = akDetails.allow_multiple_content_views !== false;
+
   const toggleHamburger = () => setIsDropdownOpen(prev => !prev);
   const openModal = () => {
     setIsDropdownOpen(false);
@@ -92,6 +94,7 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
           orgId={akDetails.organization_id}
           akId={akDetails.id}
           existingAssignments={existingAssignments}
+          allowMultipleContentViews={allowMultipleContentViews}
           key={`ak-cv-modal-${akDetails.id}`}
         />
       )}

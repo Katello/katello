@@ -75,6 +75,7 @@ const AssignmentSection = ({
   assignmentStatus,
   isDragging,
   allowMultipleContentViews,
+  allowZeroAssignments,
 }) => {
   const contentViewsResponse = useSelector(state =>
     selectContentViews(state, `FOR_ENV_${assignment.id}`));
@@ -212,7 +213,7 @@ const AssignmentSection = ({
         </ExpandableSection>
       </div>
 
-      {allowMultipleContentViews && (
+      {(allowMultipleContentViews || assignments.length > 1 || allowZeroAssignments) && (
         <div className="assignment-controls">
           <Button
             variant="link"
@@ -241,11 +242,13 @@ AssignmentSection.propTypes = {
   assignmentStatus: PropTypes.string,
   isDragging: PropTypes.bool,
   allowMultipleContentViews: PropTypes.bool.isRequired,
+  allowZeroAssignments: PropTypes.bool,
 };
 
 AssignmentSection.defaultProps = {
   assignmentStatus: undefined,
   isDragging: false,
+  allowZeroAssignments: false,
 };
 
 // Create draggable version of AssignmentSection
@@ -267,6 +270,7 @@ export const OrderableAssignmentList = ({
   onAssignmentsChange,
   renderAddButton,
   allowMultipleContentViews,
+  allowZeroAssignments,
 }) => {
   const [assignments, setAssignments] = useState([]);
   const hasInitialized = useRef(false);
@@ -453,6 +457,7 @@ export const OrderableAssignmentList = ({
               handleToggleCVSelect(assignment.id, !assignment.cvSelectOpen)}
             assignmentStatus={assignmentStatus}
             allowMultipleContentViews={allowMultipleContentViews}
+            allowZeroAssignments={allowZeroAssignments}
           />
         ))}
       </DndProvider>
@@ -469,12 +474,14 @@ OrderableAssignmentList.propTypes = {
   onAssignmentsChange: PropTypes.func.isRequired,
   renderAddButton: PropTypes.func,
   allowMultipleContentViews: PropTypes.bool.isRequired,
+  allowZeroAssignments: PropTypes.bool,
 };
 
 OrderableAssignmentList.defaultProps = {
   existingAssignments: [],
   assignmentStatus: undefined,
   renderAddButton: null,
+  allowZeroAssignments: false,
 };
 
 export default DraggableAssignmentSection;
