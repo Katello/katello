@@ -23,6 +23,7 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
+import { useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
 import PropTypes from 'prop-types';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
 import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
@@ -328,6 +329,10 @@ ContentViewEnvironmentDetails.defaultProps = {
 
 
 const ContentViewDetailsCard = ({ hostDetails }) => {
+  const foremanContext = useForemanContext();
+  const allowMultipleContentViews =
+    foremanContext?.metadata?.katello?.allow_multiple_content_views ?? true;
+
   if (hostIsRegistered({ hostDetails })
     && hostDetails.content_facet_attributes && hostDetails.organization_id) {
     return (<ContentViewEnvironmentDetails
@@ -336,6 +341,7 @@ const ContentViewDetailsCard = ({ hostDetails }) => {
       contentSourceId={hostDetails.content_facet_attributes.content_source?.id}
       orgId={hostDetails.organization_id}
       hostPermissions={hostDetails.permissions}
+      allowMultipleContentViews={allowMultipleContentViews}
       {...propsToCamelCase(hostDetails.content_facet_attributes)}
     />);
   }
