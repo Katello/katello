@@ -1,0 +1,32 @@
+// Sticky toolbar and table header coordination
+// Target the toolbar by its ouiaId with more specific selector
+.pf-v5-c-toolbar.pf-m-sticky[data-ouia-component-id="sync-status-toolbar"] {
+  position: sticky;
+  top: 0;
+  // Toolbar needs higher z-index than table header (which uses 100) so dropdowns appear above it
+  // Using explicit value higher than table but lower than notification drawer (which uses 300)
+  z-index: 200;
+}
+
+// Target the table by its ouiaId and offset the sticky header
+.pf-v5-c-table[data-ouia-component-id="sync-status-table"] {
+  thead {
+    position: sticky;
+    top: 70px;
+    // Use Patternfly's standard z-index for sticky table headers
+    z-index: var(--pf-v5-c-table--m-sticky-header--cell--ZIndex);
+  }
+
+  // Fix for progress bar cell overflow in Firefox
+  // The 4th column (Progress / Result) contains Flex containers that can overflow in Firefox
+  tbody tr td:nth-child(4) {
+    vertical-align: middle;
+    overflow: hidden;
+
+    // Ensure flex container respects cell boundaries
+    .pf-v5-l-flex {
+      max-height: 100%;
+      align-items: center;
+    }
+  }
+}
