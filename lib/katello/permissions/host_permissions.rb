@@ -19,6 +19,7 @@ Foreman::AccessControl.permission(:edit_hosts).actions.concat [
   'katello/api/v2/hosts_bulk_actions/remove_content',
   'katello/api/v2/hosts_bulk_actions/content_overrides',
   'katello/api/v2/hosts_bulk_actions/environment_content_view',
+  'katello/api/v2/hosts_bulk_actions/assign_content_view_environments',
   'katello/api/v2/hosts_bulk_actions/release_version',
   'katello/api/v2/hosts_bulk_actions/traces',
   'katello/api/v2/hosts_bulk_actions/resolve_traces',
