@@ -15,6 +15,7 @@ import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { orderable } from 'foremanReact/components/common/forms/OrderableSelect/helpers';
 import { STATUS } from 'foremanReact/constants';
+import SkeletonLoader from 'foremanReact/components/common/SkeletonLoader';
 import EnvironmentPaths from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import { selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
 import { selectEnvironmentPaths } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
@@ -273,6 +274,7 @@ export const OrderableAssignmentList = ({
   allowZeroAssignments,
 }) => {
   const [assignments, setAssignments] = useState([]);
+  const [initializationStatus, setInitializationStatus] = useState(STATUS.PENDING);
   const hasInitialized = useRef(false);
   const nextIdRef = useRef(0);
   const dispatch = useDispatch();
@@ -283,6 +285,7 @@ export const OrderableAssignmentList = ({
   useEffect(() => {
     if (!isOpen) {
       setAssignments([]);
+      setInitializationStatus(STATUS.PENDING);
       hasInitialized.current = false;
       nextIdRef.current = 0;
       return;
@@ -324,6 +327,7 @@ export const OrderableAssignmentList = ({
           }, `FOR_ENV_${assignment.id}`));
         }
       });
+      setInitializationStatus(STATUS.RESOLVED);
     } else {
       // Find the Library environment to pre-select it
       const libraryEnv = environmentPaths
@@ -352,6 +356,7 @@ export const OrderableAssignmentList = ({
           order: 'default DESC',
         }, `FOR_ENV_${newAssignment.id}`));
       }
+      setInitializationStatus(STATUS.RESOLVED);
     }
   }, [isOpen, existingAssignments, environmentPaths, dispatch]);
 
@@ -438,7 +443,10 @@ export const OrderableAssignmentList = ({
   };
 
   return (
-    <>
+    <SkeletonLoader
+      status={initializationStatus}
+      skeletonProps={{ count: 3, height: 60 }}
+    >
       <DndProvider backend={HTML5Backend}>
         {assignments.map((assignment, index) => (
           <DraggableAssignmentSection
@@ -463,7 +471,7 @@ export const OrderableAssignmentList = ({
       </DndProvider>
 
       {renderAddButton && renderAddButton(addNewAssignment, canAddAnother)}
-    </>
+    </SkeletonLoader>
   );
 };
 
