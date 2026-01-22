@@ -28,12 +28,13 @@ module Katello
       auto_publish_log(request, "request created")
       request
     rescue ActiveRecord::RecordNotUnique
-      auto_publish_log(request, "request exists")
+      auto_publish_log(content_view.auto_publish_request, "request exists")
       nil
     end
 
-    def self.auto_publish_log(request, message)
-      Rails.logger.info "[auto publish] #{message} #{request.as_json}"
+    def self.auto_publish_log(request = nil, message)
+      logged_request = Katello::Logging.join_parts(request.try(:slice, :id, :content_view_id, :content_view_version_id, :created_at))
+      Rails.logger.info "[auto publish] #{message} #{logged_request}"
     end
 
     def self.content_view_locks(content_view:)
@@ -46,7 +47,7 @@ module Katello
       destroy_request = true
 
       if content_view_locks(content_view: request.content_view).any?
-        auto_publish_log(request, "existing locks found")
+        auto_publish_log(request, "locks found")
         destroy_request = false
         return
       end
