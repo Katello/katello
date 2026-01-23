@@ -5,9 +5,10 @@ import { CVEDetailsCreateCard } from '../CVEDetailsCreateCard';
 // Mock the ForemanContext
 jest.mock('foremanReact/Root/Context/ForemanContext', () => ({
   useForemanContext: jest.fn(),
+  useForemanPermissions: jest.fn(),
 }));
 
-const { useForemanContext } = require('foremanReact/Root/Context/ForemanContext');
+const { useForemanContext, useForemanPermissions } = require('foremanReact/Root/Context/ForemanContext');
 
 describe('CVEDetailsCreateCard', () => {
   beforeEach(() => {
@@ -27,6 +28,11 @@ describe('CVEDetailsCreateCard', () => {
           allow_multiple_content_views: true,
         },
       },
+    });
+
+    // Mock useForemanPermissions with default permissions
+    useForemanPermissions.mockReturnValue({
+      has: jest.fn(() => true), // Grant all permissions by default
     });
   });
 
@@ -93,8 +99,8 @@ describe('CVEDetailsCreateCard', () => {
     const { getByText } = renderWithRedux(<CVEDetailsCreateCard />);
 
     await patientlyWaitFor(() => {
-      // Should use plural title (default is true)
-      expect(getByText('Content view environments')).toBeInTheDocument();
+      // Card title is singular when there are 0 or 1 assignments
+      expect(getByText('Content view environment')).toBeInTheDocument();
     });
   });
 

@@ -524,18 +524,16 @@ describe('AssignAKCVModal', () => {
     // Mock PUT endpoint with callback to capture request body
     const putScope = nockInstance
       .put('/katello/api/v2/activation_keys/1')
-      .reply(200, function captureBody(uri, requestBody) {
+      .reply(200, (uri, requestBody) => {
         capturedRequest = requestBody;
         return { id: 1, name: 'Test AK' };
       });
 
     // Mock fetch for refresh
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ id: 1, name: 'Test AK' }),
-      }),
-    );
+    global.fetch = jest.fn(() => Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ id: 1, name: 'Test AK' }),
+    }));
 
     // Mock DOM and Angular for refresh
     const mockElement = { setAttribute: jest.fn() };
@@ -583,7 +581,7 @@ describe('AssignAKCVModal', () => {
     expect(capturedRequest).toHaveProperty('id', 1);
     expect(capturedRequest).toHaveProperty('content_view_environments');
     expect(Array.isArray(capturedRequest.content_view_environments)).toBe(true);
-    expect(capturedRequest.content_view_environments.length).toBe(1);
+    expect(capturedRequest.content_view_environments).toHaveLength(1);
     // Should contain the remaining assignment label
     expect(capturedRequest.content_view_environments).toContain('dev/composite_cv');
   });

@@ -284,7 +284,9 @@ describe('CreateAKCVModal', () => {
 
     // Remove all assignments
     const removeButtons = getAllByRole('button', { name: 'Remove' });
+    // eslint-disable-next-line no-restricted-syntax
     for (const button of removeButtons) {
+      // eslint-disable-next-line no-await-in-loop
       await act(async () => {
         userEvent.click(button);
       });
