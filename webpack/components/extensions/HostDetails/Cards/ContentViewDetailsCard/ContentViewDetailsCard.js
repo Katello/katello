@@ -104,7 +104,7 @@ ContentViewEnvironmentDisplay.propTypes = {
 
 export const CVEDetailsBareCard = ({
   contentViewEnvironments, hostPermissions, permissions, dropdownItems,
-  isDropdownOpen, toggleKebab, allowMultipleContentViews, openModal,
+  isDropdownOpen, toggleKebab, openModal,
 }) => {
   const userPermissions = { ...hostPermissions, ...permissions };
   const showKebab = hasRequiredPermissions(requiredPermissions, userPermissions);
@@ -205,7 +205,6 @@ CVEDetailsBareCard.propTypes = {
   dropdownItems: PropTypes.arrayOf(PropTypes.node),
   isDropdownOpen: PropTypes.bool,
   toggleKebab: PropTypes.func,
-  allowMultipleContentViews: PropTypes.bool,
   openModal: PropTypes.func,
 };
 
@@ -216,7 +215,6 @@ CVEDetailsBareCard.defaultProps = {
   dropdownItems: [],
   isDropdownOpen: false,
   toggleKebab: () => {},
-  allowMultipleContentViews: true,
   openModal: null,
 };
 

@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Modal,
   Button,
-  TextContent,
-  Text,
-  TextVariants,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
@@ -17,29 +14,14 @@ import api from '../../../../services/api';
 import assignAKCVEnvironments from './AKContentViewActions';
 import AK_CV_AND_ENV_KEY from './AKContentViewConstants';
 import { OrderableAssignmentList } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/OrderableAssignments';
+import useAssignmentManagement from '../hooks/useAssignmentManagement';
+import {
+  AddAnotherCVButton,
+  AssignmentModalDescription,
+  AssignmentsHeading,
+} from './AssignmentModalComponents';
 
 const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
-
-const AddAnotherCVButton = ({ onClick, isDisabled }) => (
-  <>
-    <hr style={{ margin: '1rem 0' }} />
-    <Button
-      variant="link"
-      icon={<span style={{ fontSize: '1.2em', marginRight: '0.5rem' }}>+</span>}
-      onClick={onClick}
-      ouiaId="assign-another-cv-button"
-      style={{ paddingLeft: 0 }}
-      isDisabled={isDisabled}
-    >
-      {__('Assign another content view environment')}
-    </Button>
-  </>
-);
-
-AddAnotherCVButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  isDisabled: PropTypes.bool.isRequired,
-};
 
 const AssignAKCVModal = ({
   isOpen,
@@ -49,8 +31,13 @@ const AssignAKCVModal = ({
   existingAssignments,
   allowMultipleContentViews,
 }) => {
-  const [assignments, setAssignments] = useState([]);
-  const [initialAssignments, setInitialAssignments] = useState([]);
+  const {
+    assignments,
+    handleAssignmentsChange,
+    resetState,
+    canSave,
+  } = useAssignmentManagement(allowMultipleContentViews);
+
   const dispatch = useDispatch();
 
   const akUpdateStatus = useSelector(state =>
@@ -60,44 +47,9 @@ const AssignAKCVModal = ({
   useAPI('get', api.getApiUrl(pathsUrl), ENV_PATH_OPTIONS);
 
   const handleModalClose = () => {
-    setAssignments([]);
-    setInitialAssignments([]);
+    resetState();
     closeModal();
   };
-
-  const handleAssignmentsChange = (newAssignments) => {
-    setAssignments(newAssignments);
-    // Store initial assignments on first change (when modal opens)
-    if (initialAssignments.length === 0 && newAssignments.length > 0) {
-      setInitialAssignments(newAssignments);
-    }
-  };
-
-  // Helper to normalize assignments for comparison
-  const normalizeAssignment = a => ({
-    cvName: a.selectedCV || a.contentView?.name,
-    envId: a.selectedEnv?.[0]?.id || a.environment?.id,
-  });
-
-  // Check if assignments have changed from initial state
-  const hasChanges = () => {
-    if (assignments.length !== initialAssignments.length) return true;
-
-    const currentNormalized = assignments.map(normalizeAssignment);
-    const initialNormalized = initialAssignments.map(normalizeAssignment);
-
-    return !currentNormalized.every((curr, idx) => {
-      const init = initialNormalized[idx];
-      return curr.cvName === init.cvName && curr.envId === init.envId;
-    });
-  };
-
-  // Allow zero assignments for activation keys (unlike hosts)
-  // When allowMultipleContentViews is false, only allow saving with 0 or 1 assignment
-  const canSave =
-    assignments.every(a => a.selectedCV && a.selectedEnv.length > 0) &&
-    hasChanges() &&
-    (allowMultipleContentViews || assignments.length <= 1);
 
   const refreshPage = async () => {
     handleModalClose();
@@ -149,34 +101,31 @@ const AssignAKCVModal = ({
     const cveLabels = [];
 
     assignments.forEach((a) => {
-      // For existing assignments that have a pre-computed label, use it directly
-      if (a.label) {
-        cveLabels.push(a.label);
-        return;
-      }
-
-      // For new assignments, build the label from the selected values
+      // Always reconstruct label from current values to avoid stale labels
       // selectedEnv is an array with one item
       const env = a.selectedEnv?.[0];
       const cv = a.contentView; // contentView is updated when CV is selected
 
-      if (env?.label && cv?.label) {
-        const envLabel = env.label;
-        const cvLabel = cv.label;
+      if (env && cv) {
+        // Get labels - support both camelCase and snake_case
+        const envLabel = env.label || env.lifecycle_environment_label;
+        const cvLabel = cv.label || cv.content_view_label;
 
-        // Content view environment label format matches backend logic:
-        // - For default content view in Library lifecycle environment:
-        //   just "Library" (default_environment?)
-        // - For default content view in non-Library lifecycle environment:
-        //   "Production/Default Organization View"
-        // - For non-default content view:
-        //   "lifecycle_environment_label/content_view_label"
-        const isLibraryEnv = env.lifecycle_environment_library || env.library;
-        const isDefaultCV = cv.content_view_default || cv.default;
-        const cveLabel =
-          isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
+        if (envLabel && cvLabel) {
+          // Content view environment label format matches backend logic:
+          // - For default content view in Library lifecycle environment:
+          //   just "Library" (default_environment?)
+          // - For default content view in non-Library lifecycle environment:
+          //   "Production/Default Organization View"
+          // - For non-default content view:
+          //   "lifecycle_environment_label/content_view_label"
+          const isLibraryEnv = env.lifecycle_environment_library || env.library;
+          const isDefaultCV = cv.content_view_default || cv.default;
+          const cveLabel =
+            isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
 
-        cveLabels.push(cveLabel);
+          cveLabels.push(cveLabel);
+        }
       }
     });
 
@@ -226,23 +175,10 @@ const AssignAKCVModal = ({
       id="assign-cv-modal"
       ouiaId="assign-cv-modal"
     >
-      <TextContent style={{ marginBottom: '1rem' }}>
-        <Text component={TextVariants.p} ouiaId="modal-description">
-          {allowMultipleContentViews
-            ? __('A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.')
-            : __('A content view environment is a combination of a particular lifecycle environment and content view.')
-          }
-        </Text>
-      </TextContent>
+      <AssignmentModalDescription allowMultipleContentViews={allowMultipleContentViews} />
 
       <div className="attached-content-views">
-        <Text
-          component={TextVariants.h3}
-          style={{ marginBottom: '0.5rem' }}
-          ouiaId="attached-content-views-heading"
-        >
-          {__('Associated content view environments')}
-        </Text>
+        <AssignmentsHeading />
 
         <OrderableAssignmentList
           existingAssignments={existingAssignments}

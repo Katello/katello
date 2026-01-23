@@ -431,6 +431,7 @@ export const OrderableAssignmentList = ({
       selectedCV: null,
       environment: selection[0] || null,
       contentView: null,
+      label: null, // Clear pre-computed label when environment changes
     });
   };
 
@@ -471,6 +472,7 @@ export const OrderableAssignmentList = ({
       selectedCV: selection,
       cvSelectOpen: false,
       contentView: contentViewWithVersion,
+      label: null, // Clear pre-computed label when CV changes
     });
   };
 
