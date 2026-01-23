@@ -14,7 +14,7 @@ import api from '../../../../services/api';
 import assignAKCVEnvironments from './AKContentViewActions';
 import AK_CV_AND_ENV_KEY from './AKContentViewConstants';
 import { OrderableAssignmentList } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/OrderableAssignments';
-import useAssignmentManagement from '../hooks/useAssignmentManagement';
+import useAssignmentManagement, { constructCVELabel } from '../hooks/useAssignmentManagement';
 import {
   AddAnotherCVButton,
   AssignmentModalDescription,
@@ -98,36 +98,9 @@ const AssignAKCVModal = ({
     // Build array of content view environment labels for all assignments
     // Backend processes either IDs OR labels, not both (elsif in backend code)
     // So we use labels for everything to support mixed existing+new assignments
-    const cveLabels = [];
-
-    assignments.forEach((a) => {
-      // Always reconstruct label from current values to avoid stale labels
-      // selectedEnv is an array with one item
-      const env = a.selectedEnv?.[0];
-      const cv = a.contentView; // contentView is updated when CV is selected
-
-      if (env && cv) {
-        // Get labels - support both camelCase and snake_case
-        const envLabel = env.label || env.lifecycle_environment_label;
-        const cvLabel = cv.label || cv.content_view_label;
-
-        if (envLabel && cvLabel) {
-          // Content view environment label format matches backend logic:
-          // - For default content view in Library lifecycle environment:
-          //   just "Library" (default_environment?)
-          // - For default content view in non-Library lifecycle environment:
-          //   "Production/Default Organization View"
-          // - For non-default content view:
-          //   "lifecycle_environment_label/content_view_label"
-          const isLibraryEnv = env.lifecycle_environment_library || env.library;
-          const isDefaultCV = cv.content_view_default || cv.default;
-          const cveLabel =
-            isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
-
-          cveLabels.push(cveLabel);
-        }
-      }
-    });
+    const cveLabels = assignments
+      .map(constructCVELabel)
+      .filter(Boolean); // Remove any null values (incomplete assignments)
 
     const requestBody = {
       id: akId,

@@ -1,6 +1,32 @@
 import { useState } from 'react';
 
 /**
+ * Constructs a content view environment label from an assignment
+ * Returns null if the assignment doesn't have both environment and content view
+ */
+export const constructCVELabel = (assignment) => {
+  const env = assignment.selectedEnv?.[0];
+  const cv = assignment.contentView;
+
+  if (!env || !cv) return null;
+
+  // Get labels - support both camelCase and snake_case
+  const envLabel = env.label || env.lifecycle_environment_label;
+  const cvLabel = cv.label || cv.content_view_label;
+
+  if (!envLabel || !cvLabel) return null;
+
+  // Content view environment label format matches backend logic:
+  // - Default CV in Library: "Library"
+  // - Custom CV in Library: "Library/my_cv"
+  // - Any CV in other envs: "Production/my_cv"
+  const isLibraryEnv = env.lifecycle_environment_library || env.library;
+  const isDefaultCV = cv.content_view_default || cv.default;
+
+  return isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
+};
+
+/**
  * Custom hook for managing assignment state and validation in both
  * AssignAKCVModal and CreateAKCVModal
  */
@@ -21,23 +47,17 @@ const useAssignmentManagement = (allowMultipleContentViews) => {
     setInitialAssignments([]);
   };
 
-  // Helper to normalize assignments for comparison
-  const normalizeAssignment = a => ({
-    cvName: a.selectedCV || a.contentView?.name,
-    envId: a.selectedEnv?.[0]?.id || a.environment?.id,
-  });
-
   // Check if assignments have changed from initial state
   const hasChanges = () => {
     if (assignments.length !== initialAssignments.length) return true;
 
-    const currentNormalized = assignments.map(normalizeAssignment);
-    const initialNormalized = initialAssignments.map(normalizeAssignment);
+    // Compare actual labels that will be sent to backend
+    const currentLabels = assignments.map(constructCVELabel).filter(Boolean).sort();
+    const initialLabels = initialAssignments.map(constructCVELabel).filter(Boolean).sort();
 
-    return !currentNormalized.every((curr, idx) => {
-      const init = initialNormalized[idx];
-      return curr.cvName === init.cvName && curr.envId === init.envId;
-    });
+    if (currentLabels.length !== initialLabels.length) return true;
+
+    return !currentLabels.every((label, idx) => label === initialLabels[idx]);
   };
 
   // Allow zero assignments for activation keys (unlike hosts)
