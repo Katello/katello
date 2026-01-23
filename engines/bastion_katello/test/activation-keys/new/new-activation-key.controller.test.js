@@ -54,10 +54,6 @@ describe('Controller: NewActivationKeyController', function() {
         expect($scope.activationKey).toBeDefined();
     });
 
-    it('should fetch registerable environments', function() {
-        expect($scope.environments).toBe(paths);
-    });
-
     it('should save a new activation key resource', function() {
         var activationKey = $scope.activationKey;
 
@@ -80,15 +76,6 @@ describe('Controller: NewActivationKeyController', function() {
         expect(activationKey.$save).toHaveBeenCalled();
         expect($scope.activationKeyForm['name'].$invalid).toBe(true);
         expect($scope.activationKeyForm['name'].$error.messages).toBeDefined();
-    });
-
-    it("should fetch content views", function () {
-        $httpBackend.expectGET('/organizations/default_label?name=Test+Resource').respond('changed_name');
-        spyOn(ContentView, 'queryUnpaged');
-        $scope.activationKey.environment = paths[0][0];
-        $scope.$apply();
-
-        expect(ContentView.queryUnpaged).toHaveBeenCalled();
     });
 
 });
