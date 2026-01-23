@@ -42,6 +42,7 @@ import BulkSystemPurposeModal from './components/extensions/Hosts/BulkActions/Bu
 import BulkManageTracesModal from './components/extensions/Hosts/BulkActions/BulkManageTracesModal/index.js';
 import ActivationKeysSearch from './components/ActivationKeysSearch';
 import { CVEDetailsCard } from './scenes/ActivationKeys/Details/components/CVEDetailsCard.js';
+import { CVEDetailsCreateCard } from './scenes/ActivationKeys/Details/components/CVEDetailsCreateCard.js';
 
 registerReducer('katello', rootReducer);
 
@@ -118,6 +119,10 @@ componentRegistry.registerMultiple([
   {
     name: 'CVEDetailsCard',
     type: CVEDetailsCard,
+  },
+  {
+    name: 'CVEDetailsCreateCard',
+    type: CVEDetailsCreateCard,
   },
 ]);
 

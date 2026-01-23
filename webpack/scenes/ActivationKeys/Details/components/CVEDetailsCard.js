@@ -36,7 +36,7 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
 
   const allowMultipleContentViews = akDetails.allow_multiple_content_views !== false;
 
-  const toggleHamburger = () => setIsDropdownOpen(prev => !prev);
+  const toggleKebab = () => setIsDropdownOpen(prev => !prev);
   const openModal = () => {
     setIsDropdownOpen(false);
     setIsModalOpen(true);
@@ -84,7 +84,7 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
         permissions={permissions}
         dropdownItems={dropdownItems}
         isDropdownOpen={isDropdownOpen}
-        toggleHamburger={toggleHamburger}
+        toggleKebab={toggleKebab}
         openModal={hasEditPermission ? openModal : null}
       />
       {hasEditPermission && akDetails.id && akDetails.organization_id && (

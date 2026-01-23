@@ -66,7 +66,7 @@ export const ContentViewEnvironmentDisplay = ({
         >
           <Label color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`} style={{ marginRight: '2px' }}>{lifecycleEnvironment.name}</Label>
         </Tooltip>
-        <ContentViewIcon composite={contentView.composite} rolling={contentViewDefault || contentView.rolling} style={{ marginRight: '2px' }} position="left" />
+        <ContentViewIcon composite={contentView.composite} rolling={contentViewDefault || contentView.rolling} style={{ marginLeft: '6px', marginRight: '1px' }} position="left" />
         {contentViewDefault ? <span>{contentView.name}</span> :
         <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>
           {truncate(contentView.name)}
@@ -104,7 +104,7 @@ ContentViewEnvironmentDisplay.propTypes = {
 
 export const CVEDetailsBareCard = ({
   contentViewEnvironments, hostPermissions, permissions, dropdownItems,
-  isDropdownOpen, toggleHamburger, allowMultipleContentViews, openModal,
+  isDropdownOpen, toggleKebab, allowMultipleContentViews, openModal,
 }) => {
   const userPermissions = { ...hostPermissions, ...permissions };
   const showKebab = hasRequiredPermissions(requiredPermissions, userPermissions);
@@ -135,7 +135,7 @@ export const CVEDetailsBareCard = ({
             >
               <FlexItem>
                 <CardTitle>
-                  {allowMultipleContentViews
+                  {contentViewEnvironments.length > 1
                     ? __('Content view environments')
                     : __('Content view environment')}
                 </CardTitle>
@@ -145,7 +145,7 @@ export const CVEDetailsBareCard = ({
           {showKebab && dropdownItems && (
             <FlexItem>
               <Dropdown
-                toggle={<KebabToggle aria-label="change_content_view_hamburger" onToggle={toggleHamburger} />}
+                toggle={<KebabToggle aria-label="change_content_view_kebab" onToggle={toggleKebab} />}
                 isOpen={isDropdownOpen}
                 isPlain
                 ouiaId="change-content-view-environments-card-kebab"
@@ -204,7 +204,7 @@ CVEDetailsBareCard.propTypes = {
   }),
   dropdownItems: PropTypes.arrayOf(PropTypes.node),
   isDropdownOpen: PropTypes.bool,
-  toggleHamburger: PropTypes.func,
+  toggleKebab: PropTypes.func,
   allowMultipleContentViews: PropTypes.bool,
   openModal: PropTypes.func,
 };
@@ -215,7 +215,7 @@ CVEDetailsBareCard.defaultProps = {
   permissions: {},
   dropdownItems: [],
   isDropdownOpen: false,
-  toggleHamburger: () => {},
+  toggleKebab: () => {},
   allowMultipleContentViews: true,
   openModal: null,
 };

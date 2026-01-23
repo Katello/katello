@@ -435,10 +435,42 @@ export const OrderableAssignmentList = ({
   };
 
   const handleCVSelect = (assignmentId, _event, selection, selectedCVObj) => {
+    let contentViewWithVersion = selectedCVObj;
+
+    if (selectedCVObj) {
+      // Get the selected environment for this assignment
+      const selectedAssignment = assignments.find(a => a.id === assignmentId);
+      const selectedEnv = selectedAssignment?.selectedEnv?.[0];
+
+      if (selectedEnv && selectedCVObj.versions) {
+        // Find the version that's in this specific environment
+        // Uses the same logic as ContentViewSelectOption's relevantVersionFromCv
+        const versionInEnv = selectedCVObj.versions.find(v =>
+          v.environment_ids?.includes(selectedEnv.id));
+
+        contentViewWithVersion = {
+          ...selectedCVObj,
+          content_view_version: versionInEnv?.version || selectedCVObj.latest_version,
+          content_view_version_id: versionInEnv?.id || selectedCVObj.latest_version_id,
+          content_view_version_latest: versionInEnv?.version === selectedCVObj.latest_version,
+          content_view_default: selectedCVObj.default,
+        };
+      } else {
+        // Fallback to latest_version if no environment selected or no versions array
+        contentViewWithVersion = {
+          ...selectedCVObj,
+          content_view_version: selectedCVObj.latest_version,
+          content_view_version_id: selectedCVObj.latest_version_id,
+          content_view_version_latest: true,
+          content_view_default: selectedCVObj.default,
+        };
+      }
+    }
+
     updateAssignment(assignmentId, {
       selectedCV: selection,
       cvSelectOpen: false,
-      contentView: selectedCVObj || null,
+      contentView: contentViewWithVersion,
     });
   };
 

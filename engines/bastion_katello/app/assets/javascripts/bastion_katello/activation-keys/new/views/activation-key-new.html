@@ -42,33 +42,17 @@
         </textarea>
       </div>
 
-      <span bst-feature-flag="lifecycle_environments">
-        <div class="form-group">
-          <label translate>Environment</label>
-          <div path-selector="environments"
-                ng-model="activationKey.environment"
-                selection-required="false"
-                mode="singleSelect">
-          </div>
-        </div>
-
-        <div bst-form-group label="{{ 'Content View' | translate }}">
-          <select ng-hide="contentViews.length === 0 || activationKey.environment === undefined "
-                  id="content_view_id"
-                  name="content_view_id"
-                  ng-required="activationKey.environment"
-                  ng-model="activationKey.content_view_id"
-                  ng-options="contentView.id as contentView.name for contentView in contentViews"
-                  autofocus>
-          </select>
-          <span class="help-block" ng-show="activationKey.environment !== undefined && contentViews.length === 0" translate>
-            The selected environment contains no Content Views, please select a different environment.
-          </span>
-          <span class="help-block" ng-show="activationKey.environment === undefined" translate>
-            Please select a lifecycle environment. Lifecycle environment and content view must be provided together.
-          </span>
-        </div>
-      </span>
+      <div class="form-group">
+        <span id="ak-create-cve-data"
+              data-org-id="{{ organization }}"
+              class="hidden">
+        </span>
+        <foreman-react-component
+          name="CVEDetailsCreateCard"
+          data-props=""
+          ng-if="organization">
+        </foreman-react-component>
+      </div>
 
       <div bst-form-buttons
            on-cancel="transitionTo('activation-keys')"

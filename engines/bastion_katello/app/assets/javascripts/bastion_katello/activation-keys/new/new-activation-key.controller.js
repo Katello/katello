@@ -39,23 +39,34 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
         $scope.panel = {loading: false};
         $scope.organization = CurrentOrganization;
 
-        $scope.contentViews = [];
-        $scope.editContentView = false;
-        $scope.environments = [];
+        // Function for React component to call when assignments change
+        $scope.updateContentViewEnvironments = function(assignments) {
+            $scope.contentViewEnvironmentLabels = assignments
+                .filter(function(a) {
+                    return a.selectedCV && a.selectedEnv && a.selectedEnv.length > 0;
+                })
+                .map(function(a) {
+                    var env = a.selectedEnv[0];
+                    var cv = a.contentView;
+                    var isLibraryEnv = env.lifecycle_environment_library || env.library;
+                    var isDefaultCV = cv.content_view_default || cv.default;
 
-        $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
-
-        $scope.$watch('activationKey.environment', function (environment) {
-            if (environment) {
-                $scope.editContentView = true;
-                ContentView.queryUnpaged({ 'environment_id': environment.id }, function (response) {
-                    $scope.contentViews = response.results;
+                    // Match backend label logic
+                    if (isDefaultCV && isLibraryEnv) {
+                        return env.label;
+                    }
+                    return env.label + '/' + cv.label;
                 });
-            }
-        });
+        };
 
         $scope.save = function (activationKey) {
             activationKey['organization_id'] = CurrentOrganization;
+
+            // Add content view environment labels if any were selected
+            if ($scope.contentViewEnvironmentLabels && $scope.contentViewEnvironmentLabels.length > 0) {
+                activationKey['content_view_environments'] = $scope.contentViewEnvironmentLabels;
+            }
+
             activationKey.$save(success, error);
         };
 

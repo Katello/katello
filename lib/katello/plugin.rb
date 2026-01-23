@@ -823,4 +823,10 @@ Foreman::Plugin.register :katello do
   precompile_assets(precompile)
 
   extend_observable_events(::Dynflow::Action.descendants.select { |klass| klass <= ::Actions::ObservableAction }.map(&:namespaced_event_names))
+
+  # Register metadata for ForemanContext (accessible in React via useForemanContext().metadata.katello)
+  ::Foreman::Plugin.app_metadata_registry.register(:katello,
+                                                    {
+                                                      allow_multiple_content_views: -> { Setting[:allow_multiple_content_views] },
+                                                    })
 end
