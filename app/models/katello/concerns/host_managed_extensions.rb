@@ -610,10 +610,6 @@ module Katello
         content_facet&.yum_or_yum_transient || "yum"
       end
 
-      def contains_package_with_reported_persistence?
-        host_installed_packages.where.not(persistence: nil).exists?
-      end
-
       protected
 
       def update_trace_status
