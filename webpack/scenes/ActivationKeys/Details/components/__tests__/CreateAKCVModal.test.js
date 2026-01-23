@@ -117,12 +117,33 @@ describe('CreateAKCVModal', () => {
     );
 
     await patientlyWaitFor(() => {
-      expect(getAllByRole('button', { name: 'Save' })[0]).toBeInTheDocument();
+      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(1);
     });
 
-    // Initially the save button should be disabled (no changes)
+    // Remove the assignment to trigger a change
+    const removeButton = getAllByRole('button', { name: 'Remove' })[0];
+    await act(async () => {
+      userEvent.click(removeButton);
+    });
+
+    // Save should now be enabled
+    await patientlyWaitFor(() => {
+      const saveButton = getAllByRole('button', { name: 'Save' })[0];
+      expect(saveButton).not.toHaveAttribute('aria-disabled', 'true');
+    });
+
+    // Click save
     const saveButton = getAllByRole('button', { name: 'Save' })[0];
-    expect(saveButton).toHaveAttribute('aria-disabled', 'true');
+    await act(async () => {
+      userEvent.click(saveButton);
+    });
+
+    // Verify callback was called with empty array (since we removed the only assignment)
+    expect(onAssignmentsChange).toHaveBeenCalledTimes(1);
+    expect(onAssignmentsChange).toHaveBeenCalledWith([]);
+
+    // Verify modal closed
+    expect(closeModal).toHaveBeenCalled();
   });
 
   test('Save button disabled when no changes made', async () => {
@@ -218,5 +239,74 @@ describe('CreateAKCVModal', () => {
       const saveButton = getAllByRole('button', { name: 'Save' })[0];
       expect(saveButton).not.toHaveAttribute('aria-disabled', 'true');
     });
+
+    // Click save
+    const saveButton = getAllByRole('button', { name: 'Save' })[0];
+    await act(async () => {
+      userEvent.click(saveButton);
+    });
+
+    // Verify callback receives empty array
+    expect(onAssignmentsChange).toHaveBeenCalledTimes(1);
+    expect(onAssignmentsChange).toHaveBeenCalledWith([]);
+
+    // Verify modal closed
+    expect(closeModal).toHaveBeenCalled();
+  });
+
+  test('Allows saving with zero assignments when single-assignment mode', async () => {
+    const onAssignmentsChange = jest.fn();
+    const closeModal = jest.fn();
+
+    const existingAssignments = [
+      {
+        contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
+        environment: { id: 1, name: 'Library', label: 'Library' },
+        label: 'Library/cv_1',
+      },
+    ];
+
+    const { getAllByRole } = renderWithRedux(
+      <CreateAKCVModal
+        isOpen
+        closeModal={closeModal}
+        orgId={1}
+        existingAssignments={existingAssignments}
+        onAssignmentsChange={onAssignmentsChange}
+        allowMultipleContentViews={false}
+      />,
+      renderOptions(),
+    );
+
+    await patientlyWaitFor(() => {
+      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(1);
+    });
+
+    // Remove all assignments
+    const removeButtons = getAllByRole('button', { name: 'Remove' });
+    for (const button of removeButtons) {
+      await act(async () => {
+        userEvent.click(button);
+      });
+    }
+
+    // Verify Save is enabled
+    await patientlyWaitFor(() => {
+      const saveButton = getAllByRole('button', { name: 'Save' })[0];
+      expect(saveButton).not.toHaveAttribute('aria-disabled', 'true');
+    });
+
+    // Click save and verify payload
+    const saveButton = getAllByRole('button', { name: 'Save' })[0];
+    await act(async () => {
+      userEvent.click(saveButton);
+    });
+
+    // Verify callback receives empty array
+    expect(onAssignmentsChange).toHaveBeenCalledTimes(1);
+    expect(onAssignmentsChange).toHaveBeenCalledWith([]);
+
+    // Verify modal closed
+    expect(closeModal).toHaveBeenCalled();
   });
 });

@@ -42,6 +42,10 @@ beforeEach(() => {
 });
 
 describe('AssignAKCVModal', () => {
+  let originalFetch;
+  let originalGetElementById;
+  let originalAngular;
+
   beforeEach(() => {
     // Mock the environment paths API call
     nockInstance
@@ -55,6 +59,22 @@ describe('AssignAKCVModal', () => {
       .query(getCVQuery(firstEnv.id))
       .reply(200, mockContentViews)
       .persist();
+
+    // Save originals
+    originalFetch = global.fetch;
+    originalGetElementById = document.getElementById;
+    originalAngular = global.window.angular;
+  });
+
+  afterEach(() => {
+    // Restore originals
+    if (originalFetch !== undefined) global.fetch = originalFetch;
+    if (originalGetElementById !== undefined) document.getElementById = originalGetElementById;
+    if (originalAngular !== undefined) {
+      global.window.angular = originalAngular;
+    } else {
+      delete global.window.angular;
+    }
   });
 
   test('Renders modal with correct title and description when allowMultipleContentViews is true', async () => {
@@ -478,5 +498,93 @@ describe('AssignAKCVModal', () => {
     });
 
     expect(closeModal).toHaveBeenCalled();
+  });
+
+  test('Saves with correct label payload structure', async () => {
+    const existingAssignments = [
+      {
+        contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
+        environment: { id: 1, name: 'Library', label: 'Library' },
+        label: 'Library/cv_1',
+      },
+      {
+        contentView: { id: 3, name: 'composite_cv', label: 'composite_cv' },
+        environment: { id: 2, name: 'dev', label: 'dev' },
+        label: 'dev/composite_cv',
+      },
+    ];
+
+    // Mock content views fetch for environment id 2 (dev)
+    nockInstance
+      .get(contentViewsUrl)
+      .query(getCVQuery(2))
+      .reply(200, mockContentViews);
+
+    let capturedRequest;
+    // Mock PUT endpoint with callback to capture request body
+    const putScope = nockInstance
+      .put('/katello/api/v2/activation_keys/1')
+      .reply(200, function captureBody(uri, requestBody) {
+        capturedRequest = requestBody;
+        return { id: 1, name: 'Test AK' };
+      });
+
+    // Mock fetch for refresh
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ id: 1, name: 'Test AK' }),
+      }),
+    );
+
+    // Mock DOM and Angular for refresh
+    const mockElement = { setAttribute: jest.fn() };
+    document.getElementById = jest.fn(() => mockElement);
+    global.window.angular = {
+      element: jest.fn(() => ({ scope: () => ({ $apply: jest.fn() }) })),
+    };
+
+    const { getAllByRole } = renderWithRedux(
+      <AssignAKCVModal
+        isOpen
+        closeModal={jest.fn()}
+        akId={1}
+        orgId={1}
+        existingAssignments={existingAssignments}
+        allowMultipleContentViews
+      />,
+      renderOptions(),
+    );
+
+    // Wait for initialization
+    await patientlyWaitFor(() => {
+      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(2);
+    });
+
+    // Remove one assignment
+    const removeButtons = getAllByRole('button', { name: 'Remove' });
+    await act(async () => {
+      userEvent.click(removeButtons[0]);
+    });
+
+    // Save should now be enabled - click it
+    await patientlyWaitFor(() => {
+      const saveButton = getAllByRole('button', { name: 'Save' })[0];
+      expect(saveButton).not.toHaveAttribute('aria-disabled', 'true');
+    });
+
+    const saveButton = getAllByRole('button', { name: 'Save' })[0];
+    await act(async () => {
+      userEvent.click(saveButton);
+    });
+
+    // Assert PUT was called with correct structure
+    await assertNockRequest(putScope);
+    expect(capturedRequest).toHaveProperty('id', 1);
+    expect(capturedRequest).toHaveProperty('content_view_environments');
+    expect(Array.isArray(capturedRequest.content_view_environments)).toBe(true);
+    expect(capturedRequest.content_view_environments.length).toBe(1);
+    // Should contain the remaining assignment label
+    expect(capturedRequest.content_view_environments).toContain('dev/composite_cv');
   });
 });
