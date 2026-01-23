@@ -159,8 +159,8 @@ export const CVEDetailsBareCard = ({
       <CardBody className={contentViewEnvironments.length === 0 ? 'empty' : ''}>
         {contentViewEnvironments.length === 0 ? (
           <EmptyStateMessage
-            title={__('No content view environments yet')}
-            body={__('To get started, assign content view environments.')}
+            title={primaryActionButton ? __('No content view environments yet') : __('No content view environments')}
+            body={primaryActionButton ? __('To get started, assign content view environments.') : undefined}
             customIcon={PlusCircleIcon}
             headingLevel="h4"
             showPrimaryAction={!!primaryActionButton}
