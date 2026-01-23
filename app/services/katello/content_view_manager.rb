@@ -26,13 +26,14 @@ module Katello
         content_view_version: content_view_version
       )
       auto_publish_log(request, "request created")
+
       request
     rescue ActiveRecord::RecordNotUnique
       auto_publish_log(content_view.auto_publish_request, "request exists")
-      nil
+      content_view.auto_publish_request
     end
 
-    def self.auto_publish_log(request = nil, message)
+    def self.auto_publish_log(request, message)
       logged_request = Katello::Logging.join_parts(request.try(:slice, :id, :content_view_id, :content_view_version_id, :created_at))
       Rails.logger.info "[auto publish] #{message} #{logged_request}"
     end
@@ -44,24 +45,28 @@ module Katello
     end
 
     def self.trigger_auto_publish!(request:)
-      destroy_request = true
+      request.with_lock do
+        destroy_request = true
 
-      if content_view_locks(content_view: request.content_view).any?
-        auto_publish_log(request, "locks found")
+        if content_view_locks(content_view: request.content_view).any?
+          auto_publish_log(request, "locks found")
+          destroy_request = false
+          return
+        end
+
+        description = _("Auto Publish - Triggered by '%s'") % request.content_view_version.name
+        ForemanTasks.async_task(Actions::Katello::ContentView::Publish, request.content_view, description, auto_published: true, triggered_by_id: request.content_view_version_id)
+        auto_publish_log(request, "task triggered")
+      rescue ForemanTasks::Lock::LockConflict => e
+        auto_publish_log(request, e)
+        auto_publish_log(request, "lock conflict")
+
         destroy_request = false
-        return
+      ensure
+        request.destroy! if destroy_request
       end
-
-      description = _("Auto Publish - Triggered by '%s'") % request.content_view_version.name
-      ForemanTasks.async_task(Actions::Katello::ContentView::Publish, request.content_view, description, auto_published: true, triggered_by_id: request.content_view_version_id)
-      auto_publish_log(request, "task triggered")
-    rescue ForemanTasks::Lock::LockConflict => e
-      auto_publish_log(request, e)
-      auto_publish_log(request, "lock conflict")
-
-      destroy_request = false
-    ensure
-      request.destroy! if destroy_request
+    rescue ActiveRecord::RecordNotFound
+      auto_publish_log(request, "request deleted; skipping trigger")
     end
   end
 end
