@@ -61,7 +61,6 @@ module Katello
       request = build_stubbed(:katello_content_view_auto_publish_request)
 
       request.expects(:reload).with(lock: true)
-      request.expects(:destroy!)
       ForemanTasks.expects(:async_task).raises(StandardError)
 
       assert_raises(StandardError) do

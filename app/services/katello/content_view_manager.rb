@@ -46,27 +46,21 @@ module Katello
 
     def self.trigger_auto_publish!(request:)
       request.with_lock do
-        destroy_request = true
-
         if content_view_locks(content_view: request.content_view).any?
           auto_publish_log(request, "locks found")
-          destroy_request = false
           return
         end
 
         description = _("Auto Publish - Triggered by '%s'") % request.content_view_version.name
         ForemanTasks.async_task(Actions::Katello::ContentView::Publish, request.content_view, description, auto_published: true, triggered_by_id: request.content_view_version_id)
         auto_publish_log(request, "task triggered")
+        request.destroy!
       rescue ForemanTasks::Lock::LockConflict => e
         auto_publish_log(request, e)
         auto_publish_log(request, "lock conflict")
-
-        destroy_request = false
-      ensure
-        request.destroy! if destroy_request
       end
     rescue ActiveRecord::RecordNotFound
-      auto_publish_log(request, "request deleted; skipping trigger")
+      auto_publish_log(request, "request gone")
     end
   end
 end
