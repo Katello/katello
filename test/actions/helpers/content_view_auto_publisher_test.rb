@@ -52,6 +52,33 @@ module Actions
         ForemanTasks.sync_task(AutoPublish, cv)
       end
 
+      it 'skips auto_publish_view for auto-published composite CVs' do
+        composite_cv = build_stubbed(:katello_content_view, composite: true)
+
+        ::Katello::ContentView.expects(:find_by).with(id: composite_cv.id).returns(composite_cv)
+        ::Katello::ContentViewAutoPublishRequest.expects(:find_by).never
+        ::Katello::ContentViewManager.expects(:trigger_auto_publish!).never
+
+        # Simulate an auto-published action by setting input[:auto_published]
+        action.input[:auto_published] = true
+        action.input[:auto_publish_content_view_id] = composite_cv.id
+        action.auto_publish_view(nil)
+      end
+
+      it 'does not skip auto_publish_view for manually published composite CVs' do
+        composite_cv = build_stubbed(:katello_content_view, composite: true)
+        request = build_stubbed(:katello_content_view_auto_publish_request, content_view: composite_cv)
+
+        ::Katello::ContentView.expects(:find_by).with(id: composite_cv.id).returns(composite_cv)
+        ::Katello::ContentViewAutoPublishRequest.expects(:find_by).with(content_view_id: composite_cv.id).returns(request)
+        ::Katello::ContentViewManager.expects(:trigger_auto_publish!).with(request: request)
+
+        # Manual publish - auto_published is not set
+        action.input[:auto_published] = nil
+        action.input[:auto_publish_content_view_id] = composite_cv.id
+        action.auto_publish_view(nil)
+      end
+
       it 'auto publishes cvs resiliently' do
         request = build_stubbed(:katello_content_view_auto_publish_request)
         cvv = request.content_view_version
