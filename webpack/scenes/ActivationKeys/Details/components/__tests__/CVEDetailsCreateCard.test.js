@@ -49,7 +49,7 @@ describe('CVEDetailsCreateCard', () => {
 
     await patientlyWaitFor(() => {
       expect(getByText('No content view environments yet')).toBeInTheDocument();
-      expect(getByText('To get started, assign content view environments.')).toBeInTheDocument();
+      expect(getByText('To give your hosts access to content, assign content view environments.')).toBeInTheDocument();
     });
   });
 
@@ -85,8 +85,8 @@ describe('CVEDetailsCreateCard', () => {
     const { getByText } = renderWithRedux(<CVEDetailsCreateCard />);
 
     await patientlyWaitFor(() => {
-      // The card should render with singular title when setting is false
-      expect(getByText('Content view environment')).toBeInTheDocument();
+      // With 0 assignments, shows plural "Content view environments"
+      expect(getByText('No content view environments yet')).toBeInTheDocument();
     });
   });
 
@@ -99,8 +99,8 @@ describe('CVEDetailsCreateCard', () => {
     const { getByText } = renderWithRedux(<CVEDetailsCreateCard />);
 
     await patientlyWaitFor(() => {
-      // Card title is singular when there are 0 or 1 assignments
-      expect(getByText('Content view environment')).toBeInTheDocument();
+      // With 0 assignments, shows plural "Content view environments"
+      expect(getByText('No content view environments yet')).toBeInTheDocument();
     });
   });
 

@@ -88,6 +88,7 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
         isDropdownOpen={isDropdownOpen}
         toggleKebab={toggleKebab}
         openModal={hasEditPermission ? openModal : null}
+        allowMultipleContentViews={allowMultipleContentViews}
       />
       {hasEditPermission && akDetails.id && akDetails.organization_id && (
         <AssignAKCVModal

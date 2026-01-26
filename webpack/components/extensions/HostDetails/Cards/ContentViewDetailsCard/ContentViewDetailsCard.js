@@ -29,7 +29,6 @@ import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpe
 import AssignHostCVModal from './AssignHostCVModal';
 import { truncate } from '../../../../../utils/helpers';
 import EmptyStateMessage from '../../../../../components/Table/EmptyStateMessage';
-import { TranslatedPlural } from '../../../../../components/Table/components/TranslatedPlural';
 import './ContentViewDetailsCard.scss';
 
 const requiredPermissions = [
@@ -105,7 +104,7 @@ ContentViewEnvironmentDisplay.propTypes = {
 
 export const CVEDetailsBareCard = ({
   contentViewEnvironments, hostPermissions, permissions, dropdownItems,
-  isDropdownOpen, toggleKebab, openModal,
+  isDropdownOpen, toggleKebab, openModal, allowMultipleContentViews,
 }) => {
   const userPermissions = { ...hostPermissions, ...permissions };
   const showKebab = hasRequiredPermissions(requiredPermissions, userPermissions);
@@ -117,7 +116,9 @@ export const CVEDetailsBareCard = ({
       variant="secondary"
       aria-label="assign_content_view_environments"
     >
-      {__('Assign content view environments')}
+      {allowMultipleContentViews
+        ? __('Assign content view environments')
+        : __('Assign content view environment')}
     </Button>
   ) : null;
 
@@ -136,11 +137,9 @@ export const CVEDetailsBareCard = ({
             >
               <FlexItem>
                 <CardTitle>
-                  <TranslatedPlural
-                    count={contentViewEnvironments.length}
-                    singular={__('Content view environment')}
-                    id="content-view-environments-card-title"
-                  />
+                  {contentViewEnvironments.length === 1
+                    ? __('Content view environment')
+                    : __('Content view environments')}
                 </CardTitle>
               </FlexItem>
             </Flex>
@@ -209,6 +208,7 @@ CVEDetailsBareCard.propTypes = {
   isDropdownOpen: PropTypes.bool,
   toggleKebab: PropTypes.func,
   openModal: PropTypes.func,
+  allowMultipleContentViews: PropTypes.bool,
 };
 
 CVEDetailsBareCard.defaultProps = {
@@ -219,6 +219,7 @@ CVEDetailsBareCard.defaultProps = {
   isDropdownOpen: false,
   toggleKebab: () => {},
   openModal: null,
+  allowMultipleContentViews: true,
 };
 
 export const ContentViewEnvironmentDetails = ({
@@ -248,7 +249,7 @@ export const ContentViewEnvironmentDetails = ({
     >
       {allowMultipleContentViews
         ? __('Assign content view environments')
-        : __('Edit content view environment')}
+        : __('Assign content view environment')}
     </DropdownItem>,
   ];
 
