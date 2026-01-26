@@ -21,6 +21,13 @@ module Actions
       end
 
       def auto_publish_view(_execution_plan)
+        # Skip for auto-published composite CVs to prevent race condition.
+        # When a chained composite publish finishes, its :stopped hook could find
+        # requests created by concurrent component CVs, causing duplicate publishes.
+        # Manual publishes and promotions should still check for pending requests.
+        content_view = ::Katello::ContentView.find_by(id: input[:auto_publish_content_view_id])
+        return if content_view&.composite? && input[:auto_published]
+
         request = ::Katello::ContentViewAutoPublishRequest.find_by(content_view_id: input[:auto_publish_content_view_id])
         return unless request
 
