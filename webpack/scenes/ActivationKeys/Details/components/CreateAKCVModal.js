@@ -34,7 +34,7 @@ const CreateAKCVModal = ({
   } = useAssignmentManagement(allowMultipleContentViews);
 
   const pathsUrl = `/organizations/${orgId}/environments/paths?permission_type=promotable`;
-  useAPI('get', api.getApiUrl(pathsUrl), ENV_PATH_OPTIONS);
+  useAPI(isOpen ? 'get' : null, api.getApiUrl(pathsUrl), ENV_PATH_OPTIONS);
 
   const handleModalClose = () => {
     resetState();

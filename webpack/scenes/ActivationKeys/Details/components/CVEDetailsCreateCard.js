@@ -88,7 +88,6 @@ export const CVEDetailsCreateCard = () => {
         isDropdownOpen={isDropdownOpen}
         toggleKebab={toggleKebab}
         openModal={canAssignCVEs ? openModal : null}
-        allowMultipleContentViews={allowMultipleContentViews}
       />
       {canAssignCVEs && (
         <CreateAKCVModal
