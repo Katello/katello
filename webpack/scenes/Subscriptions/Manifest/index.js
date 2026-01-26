@@ -1,7 +1,6 @@
 import { bindActionCreators } from 'redux';
 
 import { connect } from 'react-redux';
-import * as foremanModalActions from 'foremanReact/components/ForemanModal/ForemanModalActions';
 import * as manifestActions from './ManifestActions';
 import * as organizationActions from '../../Organizations/OrganizationActions';
 import * as contentCredentialActions from '../../ContentCredentials/ContentCredentialActions';
@@ -21,7 +20,6 @@ const mapStateToProps = state => ({
   organization: state.katello.organization,
   manifestHistory: state.katello.manifestHistory,
   isManifestImported: selectIsManifestImported(state),
-  deleteManifestModalExists: !!state.foremanModals.deleteManifestModal,
   manifestActionStarted: selectManifestActionStarted(state),
   updatingCdnConfiguration: selectUpdatingCdnConfiguration(state),
   contentCredentials: selectContentCredentials(state),
@@ -32,7 +30,6 @@ const actions = {
   ...manifestActions,
   ...organizationActions,
   ...tasksActions,
-  ...foremanModalActions,
   ...contentCredentialActions,
 };
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
