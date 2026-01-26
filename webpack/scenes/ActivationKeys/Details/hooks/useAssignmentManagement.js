@@ -51,9 +51,9 @@ const useAssignmentManagement = (allowMultipleContentViews) => {
   const hasChanges = () => {
     if (assignments.length !== initialAssignments.length) return true;
 
-    // Compare actual labels that will be sent to backend
-    const currentLabels = assignments.map(constructCVELabel).filter(Boolean).sort();
-    const initialLabels = initialAssignments.map(constructCVELabel).filter(Boolean).sort();
+    // Compare actual labels that will be sent to backend (order matters!)
+    const currentLabels = assignments.map(constructCVELabel).filter(Boolean);
+    const initialLabels = initialAssignments.map(constructCVELabel).filter(Boolean);
 
     if (currentLabels.length !== initialLabels.length) return true;
 
