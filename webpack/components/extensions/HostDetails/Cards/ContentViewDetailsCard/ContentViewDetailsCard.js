@@ -29,6 +29,7 @@ import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpe
 import AssignHostCVModal from './AssignHostCVModal';
 import { truncate } from '../../../../../utils/helpers';
 import EmptyStateMessage from '../../../../../components/Table/EmptyStateMessage';
+import { TranslatedPlural } from '../../../../../components/Table/components/TranslatedPlural';
 import './ContentViewDetailsCard.scss';
 
 const requiredPermissions = [
@@ -135,9 +136,11 @@ export const CVEDetailsBareCard = ({
             >
               <FlexItem>
                 <CardTitle>
-                  {contentViewEnvironments.length > 1
-                    ? __('Content view environments')
-                    : __('Content view environment')}
+                  <TranslatedPlural
+                    count={contentViewEnvironments.length}
+                    singular={__('Content view environment')}
+                    id="content-view-environments-card-title"
+                  />
                 </CardTitle>
               </FlexItem>
             </Flex>
@@ -160,7 +163,7 @@ export const CVEDetailsBareCard = ({
         {contentViewEnvironments.length === 0 ? (
           <EmptyStateMessage
             title={primaryActionButton ? __('No content view environments yet') : __('No content view environments')}
-            body={primaryActionButton ? __('To get started, assign content view environments.') : undefined}
+            body={primaryActionButton ? __('To give your hosts access to content, assign content view environments.') : undefined}
             customIcon={PlusCircleIcon}
             headingLevel="h4"
             showPrimaryAction={!!primaryActionButton}

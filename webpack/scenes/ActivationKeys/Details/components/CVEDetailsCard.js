@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { DropdownItem } from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useForemanPermissions } from 'foremanReact/Root/Context/ForemanContext';
+import { useForemanContext, useForemanPermissions } from 'foremanReact/Root/Context/ForemanContext';
 import { CVEDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import AssignAKCVModal from './AssignAKCVModal';
 
@@ -19,6 +19,10 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userPermissions = useForemanPermissions();
 
+  // Get setting from ForemanContext (registered in plugin.rb)
+  const { metadata = {} } = useForemanContext();
+  const allowMultipleContentViews = metadata?.katello?.allow_multiple_content_views ?? true;
+
   const observer = new MutationObserver((mutationsList) => {
     // eslint-disable-next-line no-restricted-syntax
     for (const mutation of mutationsList) {
@@ -33,8 +37,6 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
   if (akDetailsNode) observer.observe(akDetailsNode, { attributes: true });
 
   if (!akDetails || !akDetails.content_view_environments) return null;
-
-  const allowMultipleContentViews = akDetails.allow_multiple_content_views !== false;
 
   const toggleKebab = () => setIsDropdownOpen(prev => !prev);
   const openModal = () => {

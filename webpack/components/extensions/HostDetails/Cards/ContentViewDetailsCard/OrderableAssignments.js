@@ -20,7 +20,7 @@ import EnvironmentPaths from '../../../../../scenes/ContentViews/components/Envi
 import { selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
 import { selectEnvironmentPaths } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
 import ContentViewSelect from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
-import ContentViewSelectOption
+import ContentViewSelectOption, { relevantVersionObjFromCv }
   from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
 import { getCVPlaceholderText } from '../../../../../scenes/ContentViews/components/ContentViewSelect/helpers';
 import getContentViews from '../../../../../scenes/ContentViews/ContentViewsActions';
@@ -445,26 +445,17 @@ export const OrderableAssignmentList = ({
 
       if (selectedEnv && selectedCVObj.versions) {
         // Find the version that's in this specific environment
-        // Uses the same logic as ContentViewSelectOption's relevantVersionFromCv
-        const versionInEnv = selectedCVObj.versions.find(v =>
-          v.environment_ids?.includes(selectedEnv.id));
+        const versionInEnv = relevantVersionObjFromCv(selectedCVObj, selectedEnv);
 
-        contentViewWithVersion = {
-          ...selectedCVObj,
-          content_view_version: versionInEnv?.version || selectedCVObj.latest_version,
-          content_view_version_id: versionInEnv?.id || selectedCVObj.latest_version_id,
-          content_view_version_latest: versionInEnv?.version === selectedCVObj.latest_version,
-          content_view_default: selectedCVObj.default,
-        };
-      } else {
-        // Fallback to latest_version if no environment selected or no versions array
-        contentViewWithVersion = {
-          ...selectedCVObj,
-          content_view_version: selectedCVObj.latest_version,
-          content_view_version_id: selectedCVObj.latest_version_id,
-          content_view_version_latest: true,
-          content_view_default: selectedCVObj.default,
-        };
+        if (versionInEnv) {
+          contentViewWithVersion = {
+            ...selectedCVObj,
+            content_view_version: versionInEnv.version,
+            content_view_version_id: versionInEnv.id,
+            content_view_version_latest: versionInEnv.version === selectedCVObj.latest_version,
+            content_view_default: selectedCVObj.default,
+          };
+        }
       }
     }
 

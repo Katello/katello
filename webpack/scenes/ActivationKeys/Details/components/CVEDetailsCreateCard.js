@@ -14,9 +14,7 @@ export const CVEDetailsCreateCard = () => {
 
   // Get setting from ForemanContext (registered in plugin.rb)
   const { metadata = {} } = useForemanContext();
-  // Ensure we get a boolean value (lambda might return the function itself)
-  const metadataValue = metadata?.katello?.allow_multiple_content_views;
-  const allowMultipleContentViews = typeof metadataValue === 'function' ? metadataValue() : (metadataValue ?? true);
+  const allowMultipleContentViews = metadata?.katello?.allow_multiple_content_views ?? true;
 
   // Read orgId from DOM
   const orgId = dataNode ? parseInt(dataNode.dataset.orgId, 10) : null;
