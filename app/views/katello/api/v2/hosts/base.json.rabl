@@ -26,7 +26,4 @@ if @facet
       }
     end
   end
-  node :contains_package_with_reported_persistence do
-    @resource.contains_package_with_reported_persistence?
-  end
 end

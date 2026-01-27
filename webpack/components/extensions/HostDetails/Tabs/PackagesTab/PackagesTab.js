@@ -244,6 +244,8 @@ export const PackagesTab = () => {
   const { results, ...metadata } = response;
   const { error: errorSearchBody } = metadata;
   const status = useSelector(state => selectHostPackagesStatus(state));
+  const hasPersistenceData = results?.some(pkg => pkg.persistence != null);
+  const showPersistenceWarning = !hasPersistenceData && results?.length > 0;
   const {
     selectOne,
     isSelected,
@@ -559,7 +561,7 @@ export const PackagesTab = () => {
   return (
     <div>
       <div id="packages-tab">
-        {isBootCHost && <ImageModeHostAlert />}
+        {isBootCHost && <ImageModeHostAlert showPersistenceWarning={showPersistenceWarning} />}
         <TableWrapper
           {...{
             metadata,
