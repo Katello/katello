@@ -49,12 +49,12 @@ module Katello
         end
       end
 
-      def import_pool(index_hosts = true)
+      def import_pool
         if pool
           ::Katello::EventQueue.push_event(::Katello::Events::ImportPool::EVENT_TYPE, pool.id)
         else
           begin
-            ::Katello::Pool.import_pool(pool_id, index_hosts)
+            ::Katello::Pool.import_pool(pool_id)
           rescue ActiveRecord::RecordInvalid
             # if we hit this block it's likely that the pool's subscription, product are being created
             # as a result of manifest import/refresh or custom product creation

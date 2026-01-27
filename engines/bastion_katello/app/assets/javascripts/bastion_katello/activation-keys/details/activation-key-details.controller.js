@@ -11,18 +11,15 @@
  * @requires Organization
  * @requires Notification
  * @requires ApiErrorHandler
- * @requires simpleContentAccessEnabled
  *
  * @description
  *   Provides the functionality for the activation key details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization', 'Notification', 'ApiErrorHandler', 'simpleContentAccessEnabled',
-    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization, Notification, ApiErrorHandler, simpleContentAccessEnabled) {
+    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization', 'Notification', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization, Notification, ApiErrorHandler) {
         $scope.defaultRoles = ['Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'];
         $scope.defaultUsages = ['Production', 'Development/Test', 'Disaster Recovery'];
-
-        $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
 
         $scope.organization = Organization.get({id: CurrentOrganization}, function() {
         });
@@ -35,19 +32,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
         if ($scope.activationKey) {
             $scope.panel.loading = false;
         }
-
-        $scope.autoAttachOptions = function () {
-            return [
-                {
-                    id: true,
-                    name: translate("Yes")
-                },
-                {
-                    id: false,
-                    name: translate("No")
-                }
-            ];
-        };
 
         $scope.activationKey = ActivationKey.get({id: $scope.$stateParams.activationKeyId}, function (activationKey) {
             $scope.panel.loading = false;

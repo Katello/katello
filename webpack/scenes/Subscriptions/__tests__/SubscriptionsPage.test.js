@@ -6,7 +6,6 @@ import SubscriptionsPage from '../SubscriptionsPage';
 import { successState, settingsSuccessState, permissionDeniedState } from './subscriptions.fixtures';
 import { loadAvailableQuantities, updateQuantity } from '../SubscriptionActions';
 import { pingUpstreamSubscriptions } from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
-import { checkSimpleContentAccessEligible } from '../Manifest/ManifestActions';
 import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
 jest.mock('foremanReact/components/PermissionDenied', () => ({
@@ -60,7 +59,6 @@ describe('subscriptions page', () => {
     loadSubscriptions: mockLoadSubscriptions,
     loadAvailableQuantities,
     pingUpstreamSubscriptions,
-    checkSimpleContentAccessEligible,
     updateQuantity,
     handleStartTask,
     handleFinishedTask,
@@ -225,7 +223,7 @@ describe('subscriptions page', () => {
     pollTasks.mockClear(); // Clear calls from mount
 
     await act(async () => {
-      rerender(<SubscriptionsPage {...getDefaultProps()} simpleContentAccess />);
+      rerender(<SubscriptionsPage {...getDefaultProps()} />);
     });
 
     expect(pollTasks).not.toHaveBeenCalled();

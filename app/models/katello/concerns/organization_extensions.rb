@@ -90,10 +90,6 @@ module Katello
           self.providers.anonymous.first
         end
 
-        def simple_content_access_eligible?
-          self.content_access_mode_list.include?('org_environment')
-        end
-
         def manifest_imported?(cached: false)
           Rails.cache.fetch("#{self.label}_manifest_imported?", expires_in: 1.minute, force: !cached) do
             owner_details['upstreamConsumer'].present?
@@ -287,5 +283,5 @@ module Katello
 end
 
 class ::Organization::Jail < ::Safemode::Jail
-  allow :label, :simple_content_access?
+  allow :label
 end

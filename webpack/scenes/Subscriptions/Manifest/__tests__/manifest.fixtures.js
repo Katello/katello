@@ -207,39 +207,3 @@ export const deleteManifestFailureActions = [
   failureAction('DELETE_MANIFEST_FAILURE'),
   toastErrorAction(),
 ];
-
-export const enableSimpleContentAccessSuccessActions = [
-  {
-    type: 'ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST',
-  },
-  {
-    response: taskSuccessResponse,
-    type: 'ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS',
-  },
-];
-
-export const enableSimpleContentAccessFailureActions = [
-  {
-    type: 'ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST',
-  },
-  failureAction('ENABLE_SIMPLE_CONTENT_ACCESS_FAILURE'),
-  toastErrorAction(),
-];
-
-export const disableSimpleContentAccessSuccessActions = [
-  {
-    type: 'DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST',
-  },
-  {
-    response: taskSuccessResponse,
-    type: 'DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS',
-  },
-];
-
-export const disableSimpleContentAccessFailureActions = [
-  {
-    type: 'DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST',
-  },
-  failureAction('DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE'),
-  toastErrorAction(),
-];

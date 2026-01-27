@@ -18,6 +18,5 @@ ActiveSupport::Inflector.inflections do |inflect|
 
   inflect.singular 'bases', 'base'
 
-  inflect.acronym 'SCA' # Simple Content Access
   inflect.acronym 'CV' # Content view
 end

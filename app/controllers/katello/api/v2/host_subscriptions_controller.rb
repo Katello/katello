@@ -30,25 +30,6 @@ module Katello
       api_base_url "/api"
     end
 
-    def deprecate_entitlement_mode_endpoint
-      ::Foreman::Deprecation.api_deprecation_warning(N_("This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."))
-    end
-
-    api :GET, "/hosts/:host_id/subscriptions", N_("List a host's subscriptions"), deprecated: true
-    param :host_id, Integer, :desc => N_("Id of the host"), :required => true
-    def index
-      deprecate_entitlement_mode_endpoint
-      @collection = index_response
-      respond_for_index :collection => @collection
-    end
-
-    def index_response(reload_host: false)
-      # Host needs to be reloaded because of lazy accessor
-      @host.reload if reload_host
-      presenter = ::Katello::HostSubscriptionsPresenter.new(@host)
-      full_result_response(presenter.subscriptions)
-    end
-
     api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def destroy

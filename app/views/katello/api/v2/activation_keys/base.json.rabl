@@ -62,10 +62,6 @@ node :permissions do |activation_key|
   }
 end
 
-child :products => :products do |_product|
-  attributes :id, :name
-end
-
 if ::Foreman::Cast.to_bool(params.fetch(:show_hosts, false))
   child :hosts do
     attributes :id, :name
