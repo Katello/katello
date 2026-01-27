@@ -2,7 +2,6 @@ module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_activation_key, :only => [:index]
     before_action :find_organization, :only => [:create, :index, :auto_complete_search]
     before_action :find_authorized_katello_resource, :only => [:update, :destroy, :sync]
     before_action :find_organization_from_product, :only => [:update]
@@ -26,7 +25,6 @@ module Katello
 
     api :GET, "/products", N_("List products")
     api :GET, "/subscriptions/:subscription_id/products", N_("List of subscription products in a subscription")
-    api :GET, "/activation_keys/:activation_key_id/products", N_("List of subscription products in an activation key")
     api :GET, "/organizations/:organization_id/products", N_("List of products in an organization")
     api :GET, "/sync_plans/:sync_plan_id/products", N_("List of Products for sync plan")
     api :GET, "/organizations/:organization_id/sync_plans/:sync_plan_id/products", N_("List of Products for sync plan")
@@ -53,7 +51,6 @@ module Katello
       query = query.redhat if ::Foreman::Cast.to_bool params[:redhat_only]
       query = query.where(:name => params[:name]) if params[:name]
       query = query.enabled if ::Foreman::Cast.to_bool params[:enabled]
-      query = query.where(:id => @activation_key.products) if @activation_key
 
       if params[:subscription_id]
         pool = Pool.with_identifier(params[:subscription_id])
@@ -151,14 +148,6 @@ module Katello
     def find_product(options = {})
       @product = Product.includes(options[:includes] || []).readable.find_by(:id => params[:id])
       throw_resource_not_found(name: 'product', id: params[:id]) if @product.nil?
-    end
-
-    def find_activation_key
-      if params[:activation_key_id]
-        @activation_key = ActivationKey.readable.find_by(:id => params[:activation_key_id])
-        throw_resource_not_found(name: 'Activation Key', id: params[:activation_key_id]) if @activation_key.nil?
-        @organization = @activation_key.organization
-      end
     end
 
     def find_organization_from_product

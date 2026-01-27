@@ -8,8 +8,6 @@ module Katello
       include ::ScopedSearchExtensions
 
       included do
-        audited :associations => [:pools]
-
         accepts_nested_attributes_for :subscription_facet, :update_only => true, :reject_if => lambda { |attrs| attrs.values.compact.empty? }
 
         has_many :activation_keys, :through => :subscription_facet
@@ -32,8 +30,6 @@ module Katello
                       :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
         scoped_search :on => :hypervisor, :relation => :subscription_facet, :complete_value => true
         scoped_search :on => :name, :relation => :hypervisor_host, :complete_value => true, :rename => :hypervisor_host, :ext_method => :find_by_hypervisor_host
-        scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
-        scoped_search :on => :id, :relation => :pools, :rename => :subscription_id, :complete_value => true, :ext_method => :find_by_subscription_id, :only_explicit => true
         scoped_search :on => :purpose_role, :rename => :role, :relation => :subscription_facet, :complete_value => true
         scoped_search :on => :purpose_usage, :rename => :usage, :relation => :subscription_facet, :complete_value => true
         before_update :update_candlepin_associations, if: -> { subscription_facet.try(:backend_update_needed?) }
@@ -89,20 +85,6 @@ module Katello
           hosts = ::Host.where(conditions)
           hosts = ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.hypervisor_host_id" => hosts)
           return_hosts(hosts)
-        end
-
-        def find_by_subscription_name(_key, operator, value)
-          conditions = sanitize_sql_for_conditions(["#{Katello::Subscription.table_name}.name #{operator} ?", value_to_sql(operator, value)])
-          sub_facets = ::Katello::Host::SubscriptionFacet.joins(pools: :subscription).where(conditions)
-          host_ids = sub_facets.select(:host_id)
-          return_hosts_by_id(host_ids)
-        end
-
-        def find_by_subscription_id(_key, operator, value)
-          conditions = sanitize_sql_for_conditions(["#{Katello::Pool.table_name}.id #{operator} ?", value_to_sql(operator, value)])
-          sub_facets = ::Katello::Host::SubscriptionFacet.joins(:pools).where(conditions)
-          host_ids = sub_facets.select(:host_id)
-          return_hosts_by_id(host_ids)
         end
 
         def return_hosts_by_id(host_ids)

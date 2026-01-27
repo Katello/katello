@@ -73,10 +73,6 @@ module Katello
       assert_equal Pool.with_identifier("#{@pool_one.id}"), @pool_one
     end
 
-    def test_hosts
-      assert_equal @pool_one.hosts, [@host_one]
-    end
-
     def test_hypervisors
       assert_equal @pool_one.hypervisor, @host_one
     end
@@ -184,9 +180,6 @@ module Katello
 
       subscription = FactoryBot.create(:katello_subscription, organization: @organization, cp_id: 'SKU001')
 
-      Resources::Candlepin::ActivationKey.expects(:get).returns([])
-      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
-
       Pool.import_pool('abcd')
 
       pool = Pool.find_by_cp_id('abcd')
@@ -217,34 +210,6 @@ module Katello
       assert_raises(Katello::Errors::CandlepinPoolGone) do
         Pool.import_pool('abcd')
       end
-    end
-
-    def test_import_hosts
-      host = FactoryBot.create(:host, :with_subscription)
-      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([host.subscription_facet.uuid])
-
-      @pool_one.import_hosts
-
-      assert @pool_one.subscription_facets.where(id: host.subscription_facet.id).any?
-    end
-
-    def test_import_hosts_no_consumers
-      host = FactoryBot.create(:host, :with_subscription)
-      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
-
-      @pool_one.import_hosts
-
-      refute @pool_one.subscription_facets.where(id: host.subscription_facet.id).any?
-    end
-
-    def test_import_hosts_cleanup_facet_pools
-      host = FactoryBot.create(:host, :with_subscription)
-      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
-      facet_pool = Katello::SubscriptionFacetPool.create!(pool: @pool_one, subscription_facet: host.subscription_facet)
-
-      @pool_one.import_hosts
-
-      refute Katello::SubscriptionFacetPool.find_by_id(facet_pool.id)
     end
 
     def test_quantity_available_unlimited
@@ -325,24 +290,6 @@ module Katello
     def test_search_virt_who
       subscriptions = Pool.search_for("virt_who = true")
       assert_includes subscriptions, @pool_one
-    end
-
-    def test_for_activation_key
-      key = katello_activation_keys(:simple_key)
-      key.pools << @pool_one
-      assert_includes Pool.for_activation_key(key), @pool_one
-    end
-
-    def test_audit_hook_to_find_records_should_return_hosts
-      # Note - creating audit record manually
-      pool_host_ids = @pool_one.hosts.map(&:id)
-      @pool_one.import_audit_record([], pool_host_ids)
-      audit_record = Audited::Audit.find_by(:auditable_id => @pool_one.id, :auditable_type => 'Katello::Pool')
-
-      refute_nil audit_record
-      hosts_list = Katello::Pool.audit_hook_to_find_records('host_ids', audit_record.audited_changes['host_ids'][1], audit_record)
-
-      assert_equal pool_host_ids.length, hosts_list.keys.length
     end
 
     def test_product_host_count

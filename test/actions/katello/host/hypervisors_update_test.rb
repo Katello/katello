@@ -46,8 +46,6 @@ module Katello::Host
       @host.subscription_facet.destroy!
       @host.destroy!
 
-      ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
-
       ::Katello::Resources::Candlepin::Consumer.expects(:virtual_guests).never
 
       action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
@@ -78,7 +76,6 @@ module Katello::Host
 
       # Delete :guestIds to make katello to fetch the virtual guests from Candlepin
       @consumer.delete(:guestIds)
-      ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
       ::Katello::Resources::Candlepin::Consumer.expects(:virtual_guests).once.returns(guest_uuids)
 
       action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
@@ -119,7 +116,6 @@ module Katello::Host
       @host.subscription_facet.delete
       @host.save!
       action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
-      ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
       plan_action(action, :hypervisors => @hypervisor_results)
       action = run_action(action)
@@ -132,7 +128,6 @@ module Katello::Host
     end
 
     def test_existing_hypervisor_renamed
-      ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
       @hypervisor_results[0][:name] = 'hypervisor.renamed'
       action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 

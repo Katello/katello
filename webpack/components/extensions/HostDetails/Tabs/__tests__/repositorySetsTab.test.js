@@ -39,7 +39,6 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
       ORGANIZATION_1: {
         response: {
           id: 1,
-          simple_content_access: true,
         },
         status: 'RESOLVED',
       },

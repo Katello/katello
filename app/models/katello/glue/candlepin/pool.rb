@@ -21,8 +21,6 @@ module Katello
         lazy_accessor :available, :initializer => lambda { |_s| self.quantity_available }
 
         lazy_accessor :backend_data, :initializer => lambda { |_s| self.class.candlepin_data(self.cp_id) }
-
-        lazy_accessor :consumer_uuids, :initializer => lambda { |_s| Resources::Candlepin::Pool.consumer_uuids(self.cp_id) }
       end
     end
 
@@ -43,7 +41,7 @@ module Katello
         Katello::Resources::Candlepin::Pool.get_for_owner(organization, true)
       end
 
-      def import_pool(cp_pool_id, index_hosts = true)
+      def import_pool(cp_pool_id)
         Katello::Logging.time("import candlepin pool", data: { cp_id: cp_pool_id }) do
           json = candlepin_data(cp_pool_id)
 
@@ -52,7 +50,7 @@ module Katello
 
           pool = import_candlepin_record(record: json, organization: org)
           pool.backend_data = json
-          pool.import_data(index_hosts)
+          pool.import_data
         end
       end
 
@@ -95,7 +93,7 @@ module Katello
 
     module InstanceMethods
       def import_lazy_attributes
-        json = self.class.candlepin_data(self.cp_id, true)
+        json = self.class.candlepin_data(self.cp_id)
 
         return {} if json.blank?
 
@@ -130,7 +128,7 @@ module Katello
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
-      def import_data(index_hosts_and_activation_keys = false)
+      def import_data
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
 
@@ -166,9 +164,7 @@ module Katello
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
         self.update(pool_attributes.except!(*exceptions))
         self.save!
-        self.create_activation_key_associations if index_hosts_and_activation_keys
         self.create_product_associations
-        self.import_hosts if index_hosts_and_activation_keys
       end
       # rubocop:enable
 
@@ -184,51 +180,6 @@ module Katello
               ::Katello::PoolProduct.where(:pool_id => self.id, :product_id => product.first.id).first_or_create
             end
           end
-        end
-      end
-
-      def import_hosts
-        sub_facet_ids_from_cp, host_ids_from_cp = Katello::Host::SubscriptionFacet.where('uuid in (?)', consumer_uuids).pluck(:id, :host_id).transpose
-        sub_facet_ids_from_cp ||= []
-        host_ids_from_cp ||= []
-
-        sub_facet_ids_from_pool_table, host_ids_from_pool_table = self.subscription_facets.pluck(:id, :host_id).transpose
-        sub_facet_ids_from_pool_table ||= []
-        host_ids_from_pool_table ||= []
-
-        entries_to_add = sub_facet_ids_from_cp - sub_facet_ids_from_pool_table
-        facet_pool_data = entries_to_add.map { |sub_facet_id| { pool_id: self.id, subscription_facet_id: sub_facet_id } }
-        Katello::SubscriptionFacetPool.import(facet_pool_data) unless facet_pool_data.empty?
-
-        entries_to_remove = sub_facet_ids_from_pool_table - sub_facet_ids_from_cp
-        self.subscription_facet_pools.where(subscription_facet_id: entries_to_remove).delete_all
-        self.import_audit_record(host_ids_from_pool_table, host_ids_from_cp)
-      end
-
-      def import_managed_associations
-        Katello::Logging.time("Imported host associations") do
-          import_hosts
-        end
-
-        Katello::Logging.time("Imported activation key associations") do
-          create_activation_key_associations
-        end
-      end
-
-      def hosts
-        ::Host.where(:id => self.subscription_facets.pluck(:host_id))
-      end
-
-      def create_activation_key_associations
-        keys = Rails.cache.fetch("#{organization.label}/activation_keys_id_pool_id", expires_in: 2.minutes) do
-          Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id", organization.label)
-        end
-        activation_key_ids = keys.collect do |key|
-          key['id'] if key['pools'].present? && key['pools'].any? { |pool| pool['pool'].try(:[], 'id') == cp_id }
-        end
-        related_keys = ::Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
-        related_keys.each do |key|
-          Katello::PoolActivationKey.where(:activation_key_id => key.id, :pool_id => self.id).first_or_create
         end
       end
     end

@@ -112,24 +112,6 @@ module Katello
         true
       end
 
-      def del_owner_import
-        # This method will delete a manifest that has been imported.  Since it is not possible
-        # to delete the changes associated with a specific manifest, we only support deleting
-        # the import, if there has only been 1 manifest import completed.  It should be noted
-        # that this will destroy all subscriptions associated with the import.
-        imports = self.owner_imports
-        if imports.length == 1
-          Rails.logger.debug "Deleting import for provider: #{name}"
-          Resources::Candlepin::Owner.destroy_imports self.organization.label
-        else
-          Rails.logger.debug "Unable to delete import for provider: #{name}. Reason: a successful import was previously completed."
-        end
-      end
-
-      def owner_imports
-        Resources::Candlepin::Owner.imports self.organization.label
-      end
-
       def import_logger
         ::Foreman::Logging.logger('katello/manifest_import_logger')
       end
