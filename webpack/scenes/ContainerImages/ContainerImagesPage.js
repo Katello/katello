@@ -17,6 +17,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import FontAwesomeImageModeIcon from '../../components/extensions/Hosts/FontAwesomeImageModeIcon';
 import BootedContainerImagesPage from './Booted/BootedContainerImagesPage';
 import SyncedContainerImagesPage from './Synced/SyncedContainerImagesPage';
+import './ContainerImagesPage.scss';
 
 const ContainerImagesPage = () => {
   const [activeTabKey, setActiveTabKey] = useState(0);
@@ -29,7 +30,7 @@ const ContainerImagesPage = () => {
   };
 
   return (
-    <PageSection variant="light">
+    <PageSection variant="light" className="container-images-page">
       <Stack hasGutter>
         <StackItem>
           <Title headingLevel="h1" size="2xl" ouiaId="container-images-title">
