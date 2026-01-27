@@ -53,7 +53,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
             label: '{{ "Repository Sets" | translate }}',
             parent: 'activation-key.info'
         }
-    })
+    });
 
     $stateProvider.state('activation-key.host-collections', {
         abstract: true,
