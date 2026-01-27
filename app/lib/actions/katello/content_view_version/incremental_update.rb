@@ -3,6 +3,8 @@ module Actions
     module ContentViewVersion
       class IncrementalUpdate < Actions::EntryAction
         include ::Katello::ContentViewHelper
+        include Helpers::ContentViewAutoPublisher
+
         attr_accessor :new_content_view_version, :new_content_view_version_id
 
         HUMANIZED_TYPES = {
@@ -219,6 +221,12 @@ module Actions
         end
 
         def run
+          version = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id])
+          if version.latest? && !version.content_view.composite?
+            output[:auto_publish_content_view_ids] = version.content_view.auto_publish_composites.pluck(:id)
+            output[:auto_publish_content_view_version_id] = version.id
+          end
+
           content = { ::Katello::Erratum::CONTENT_TYPE => [],
                       ::Katello::Rpm::CONTENT_TYPE => [],
                       ::Katello::ModuleStream::CONTENT_TYPE => [],
@@ -226,7 +234,7 @@ module Actions
                     }
 
           base_repos = ::Katello::ContentViewVersion.find(input[:old_version]).repositories
-          new_repos = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id]).repositories
+          new_repos = version.repositories
 
           if input[:is_composite] || input[:copy_action_outputs].present? && input[:copy_action_outputs].last[:pulp_tasks].present?
             new_repos.each do |new_repo|
@@ -272,10 +280,6 @@ module Actions
                 copy(repo.library_instance.pulp_id,
                 repo.pulp_id)
             end
-          end
-
-          if version.latest? && !version.content_view.composite?
-            version.auto_publish_composites!
           end
         end
 

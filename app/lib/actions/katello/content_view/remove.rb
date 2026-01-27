@@ -2,6 +2,8 @@ module Actions
   module Katello
     module ContentView
       class Remove < Actions::EntryAction
+        include Helpers::ContentViewAutoPublisher
+
         # Remove content view versions and/or environments from a content view
 
         # Options: (note that all are optional)

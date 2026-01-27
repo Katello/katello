@@ -2,6 +2,8 @@ module Actions
   module Katello
     module ContentView
       class Update < Actions::EntryAction
+        include Helpers::ContentViewAutoPublisher
+
         def plan(content_view, content_view_params, environment_ids)
           action_subject content_view
           content_view_params = content_view_params.with_indifferent_access

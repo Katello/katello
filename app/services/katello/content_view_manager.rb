@@ -20,5 +20,47 @@ module Katello
         )
       end
     end
+
+    def self.request_auto_publish(content_view:, content_view_version:)
+      request = content_view.create_auto_publish_request!(
+        content_view_version: content_view_version
+      )
+      auto_publish_log(request, "request created")
+
+      request
+    rescue ActiveRecord::RecordNotUnique
+      auto_publish_log(content_view.auto_publish_request, "request exists")
+      content_view.auto_publish_request
+    end
+
+    def self.auto_publish_log(request, message)
+      logged_request = Katello::Logging.join_parts(request.try(:slice, :id, :content_view_id, :content_view_version_id, :created_at))
+      Rails.logger.info "[auto publish] #{message} #{logged_request}"
+    end
+
+    def self.content_view_locks(content_view:)
+      ForemanTasks::Lock.where(
+        resource_id: content_view.id,
+        resource_type: ::Katello::ContentView.to_s)
+    end
+
+    def self.trigger_auto_publish!(request:)
+      request.with_lock do
+        if content_view_locks(content_view: request.content_view).any?
+          auto_publish_log(request, "locks found")
+          return
+        end
+
+        description = _("Auto Publish - Triggered by '%s'") % request.content_view_version.name
+        ForemanTasks.async_task(Actions::Katello::ContentView::Publish, request.content_view, description, auto_published: true, triggered_by_id: request.content_view_version_id)
+        auto_publish_log(request, "task triggered")
+        request.destroy!
+      rescue ForemanTasks::Lock::LockConflict => e
+        auto_publish_log(request, e)
+        auto_publish_log(request, "lock conflict")
+      end
+    rescue ActiveRecord::RecordNotFound
+      auto_publish_log(request, "request gone")
+    end
   end
 end

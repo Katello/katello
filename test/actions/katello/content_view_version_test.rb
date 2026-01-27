@@ -28,6 +28,23 @@ module ::Actions::Katello::ContentViewVersion
       katello_repositories(:fedora_17_x86_64)
     end
 
+    it 'outputs auto publish data' do
+      cv = content_view_version.content_view
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      action.stubs(:task).returns(task)
+      action.expects(:action_subject).with(cv)
+      repository_mapping = {}
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
+      composites = [{id: 1}, {id: 2}, {id: 3}]
+      Katello::ContentView.any_instance.expects(:auto_publish_composites).returns(composites)
+
+      plan_action(action, content_view_version, [])
+      run = run_action(action)
+
+      assert_equal run.input[:new_content_view_version_id], run.output[:auto_publish_content_view_version_id]
+      assert_equal [1, 2, 3], run.output[:auto_publish_content_view_ids]
+    end
+
     it 'plans' do
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
       stub_remote_user

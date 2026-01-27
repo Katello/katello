@@ -11,9 +11,14 @@ module Katello
         raise e
       ensure
         data[:duration] = ((Time.now - start) * 1000).truncate(2)
-        data_string = data.map { |k, v| "#{k}=#{v}" }.join(' ')
+        data_string = join_parts(data)
         logger.send(level, "#{message} #{data_string}")
       end
+    end
+
+    def self.join_parts(hash)
+      hash ||= {}
+      hash.map { |k, v| "#{k}=#{v}" }.join(' ')
     end
 
     class Timer

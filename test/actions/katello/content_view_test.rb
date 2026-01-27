@@ -2,8 +2,6 @@ require 'katello_test_helper'
 module ::Actions::Katello::ContentView
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
-    include Support::Actions::Fixtures
-    include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
     let(:success_task) { ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good") }
@@ -171,7 +169,6 @@ module ::Actions::Katello::ContentView
       action.stubs(:separated_repo_mapping).returns(separated_repo_map)
       action.stubs(:plan_self)
       action.stubs(:find_environments).returns([])
-      action.stubs(:auto_publish_composite_ids).returns([])
       action.stubs(:repos_to_delete).returns([])
       ::Katello::ContentViewHistory.stubs(:create!).returns(mock('history', id: 99))
       content_view.stubs(:publish_repositories).yields([])
@@ -205,7 +202,6 @@ module ::Actions::Katello::ContentView
       action.stubs(:separated_repo_mapping).returns(separated_repo_map)
       action.stubs(:plan_self)
       action.stubs(:find_environments).returns([])
-      action.stubs(:auto_publish_composite_ids).returns([])
       action.stubs(:repos_to_delete).returns([])
       ::Katello::ContentViewHistory.stubs(:create!).returns(mock('history', id: 99))
       content_view.stubs(:publish_repositories).yields([])
@@ -238,7 +234,6 @@ module ::Actions::Katello::ContentView
       action.stubs(:separated_repo_mapping).returns(separated_repo_map)
       action.stubs(:plan_self)
       action.stubs(:find_environments).returns([])
-      action.stubs(:auto_publish_composite_ids).returns([])
       action.stubs(:repos_to_delete).returns([])
       ::Katello::ContentViewHistory.stubs(:create!).returns(mock('history', id: 99))
       content_view.stubs(:publish_repositories).yields([])
@@ -248,34 +243,17 @@ module ::Actions::Katello::ContentView
       refute_action_planned action, ::Actions::Katello::Repository::MultiCloneToVersion
     end
 
-    context 'run phase' do
-      it 'creates auto-publish events for non-composite views' do
-        composite_view = katello_content_views(:composite_view)
-        action.stubs(:task).returns(success_task)
+    it 'outputs auto publish data' do
+      action.stubs(:task).returns(success_task)
+      cv = katello_content_views(:composite_view)
+      composites = [{id: 1}, {id: 2}, {id: 3}]
+      Katello::ContentView.any_instance.expects(:auto_publish_composites).returns(composites)
 
-        FactoryBot.create(:katello_content_view_component,
-                          latest: true,
-                          composite_content_view: composite_view,
-                          content_view: content_view)
+      plan_action action, cv
+      run = run_action action
 
-        plan_action action, content_view
-        run_action action
-
-        event = Katello::Event.find_by(event_type: Katello::Events::AutoPublishCompositeView::EVENT_TYPE, object_id: composite_view.id)
-        version = content_view.versions.last
-
-        assert_equal event.metadata[:triggered_by], version.id
-        assert_equal event.metadata[:description], "Auto Publish - Triggered by '#{version.name}'"
-      end
-
-      it 'does nothing for non-composite view' do
-        action.stubs(:task).returns(success_task)
-
-        plan_action action, katello_content_views(:no_environment_view)
-        run_action action
-
-        assert_empty Katello::Event.all
-      end
+      assert_equal run.input[:content_view_version_id], run.output[:auto_publish_content_view_version_id]
+      assert_equal [1, 2, 3], run.output[:auto_publish_content_view_ids]
     end
 
     context 'finalize phase' do

@@ -5,6 +5,8 @@ module Actions
         extend ApipieDSL::Class
         include ::Katello::ContentViewHelper
         include ::Actions::ObservableAction
+        include Helpers::ContentViewAutoPublisher
+
         attr_accessor :version
 
         execution_plan_hooks.use :trigger_capsule_sync, :on => :success
@@ -43,7 +45,7 @@ module Actions
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
                                                           :task => self.task,
                                                           :notes => description,
-                                                          :triggered_by => options[:triggered_by]
+                                                          :triggered_by_id => options[:triggered_by_id]
                                                          )
           source_repositories = []
           content_view.publish_repositories(options[:override_components]) do |repositories|
@@ -99,7 +101,7 @@ module Actions
             plan_action(ContentView::ErrataMail, content_view, library) unless options[:skip_promotion]
             plan_action(ContentView::Promote, version, find_environments(options[:environment_ids]), options[:is_force_promote]) if options[:environment_ids]&.any?
             plan_self(history_id: history.id, content_view_id: content_view.id,
-                      auto_publish_composite_ids: auto_publish_composite_ids(content_view),
+                      auto_published: options[:auto_published],
                       content_view_version_name: version.name,
                       content_view_version_id: version.id,
                       environment_id: library.id, user_id: ::User.current.id, skip_promotion: options[:skip_promotion])
@@ -107,13 +109,22 @@ module Actions
         end
         # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
+        def auto_published?
+          input[:auto_published]
+        end
+
         def humanized_name
-          _("Publish")
+          if auto_published?
+            _("Auto Publish")
+          else
+            _("Publish")
+          end
         end
 
         def run
-          version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-          version.auto_publish_composites!
+          cv = ::Katello::ContentView.find(input[:content_view_id])
+          output[:auto_publish_content_view_ids] = cv.auto_publish_composites.pluck(:id)
+          output[:auto_publish_content_view_version_id] = input[:content_view_version_id]
 
           output[:content_view_id] = input[:content_view_id]
           output[:content_view_version_id] = input[:content_view_version_id]
@@ -211,10 +222,6 @@ module Actions
           content_view.repos(content_view.organization.library).find_all do |repo|
             !library_instances.include?(repo.library_instance_id)
           end
-        end
-
-        def auto_publish_composite_ids(content_view)
-          content_view.auto_publish_components.pluck(:composite_content_view_id)
         end
 
         def version_for_publish(content_view, options)
