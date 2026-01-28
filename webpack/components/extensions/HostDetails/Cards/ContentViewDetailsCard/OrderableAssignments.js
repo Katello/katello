@@ -15,11 +15,12 @@ import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { orderable } from 'foremanReact/components/common/forms/OrderableSelect/helpers';
 import { STATUS } from 'foremanReact/constants';
+import SkeletonLoader from 'foremanReact/components/common/SkeletonLoader';
 import EnvironmentPaths from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import { selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
 import { selectEnvironmentPaths } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
 import ContentViewSelect from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
-import ContentViewSelectOption
+import ContentViewSelectOption, { relevantVersionObjFromCv }
   from '../../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
 import { getCVPlaceholderText } from '../../../../../scenes/ContentViews/components/ContentViewSelect/helpers';
 import getContentViews from '../../../../../scenes/ContentViews/ContentViewsActions';
@@ -60,6 +61,7 @@ const ExistingAssignmentShape = PropTypes.shape({
   contentView: ContentViewShape,
   environment: EnvironmentShape,
   cveLabel: PropTypes.string,
+  label: PropTypes.string, // Optional pre-computed label for the assignment
 });
 
 const AssignmentSection = ({
@@ -74,6 +76,7 @@ const AssignmentSection = ({
   assignmentStatus,
   isDragging,
   allowMultipleContentViews,
+  allowZeroAssignments,
 }) => {
   const contentViewsResponse = useSelector(state =>
     selectContentViews(state, `FOR_ENV_${assignment.id}`));
@@ -211,7 +214,7 @@ const AssignmentSection = ({
         </ExpandableSection>
       </div>
 
-      {allowMultipleContentViews && (
+      {(allowMultipleContentViews || assignments.length > 1 || allowZeroAssignments) && (
         <div className="assignment-controls">
           <Button
             variant="link"
@@ -240,11 +243,13 @@ AssignmentSection.propTypes = {
   assignmentStatus: PropTypes.string,
   isDragging: PropTypes.bool,
   allowMultipleContentViews: PropTypes.bool.isRequired,
+  allowZeroAssignments: PropTypes.bool,
 };
 
 AssignmentSection.defaultProps = {
   assignmentStatus: undefined,
   isDragging: false,
+  allowZeroAssignments: false,
 };
 
 // Create draggable version of AssignmentSection
@@ -266,8 +271,10 @@ export const OrderableAssignmentList = ({
   onAssignmentsChange,
   renderAddButton,
   allowMultipleContentViews,
+  allowZeroAssignments,
 }) => {
   const [assignments, setAssignments] = useState([]);
+  const [initializationStatus, setInitializationStatus] = useState(STATUS.PENDING);
   const hasInitialized = useRef(false);
   const nextIdRef = useRef(0);
   const dispatch = useDispatch();
@@ -278,6 +285,7 @@ export const OrderableAssignmentList = ({
   useEffect(() => {
     if (!isOpen) {
       setAssignments([]);
+      setInitializationStatus(STATUS.PENDING);
       hasInitialized.current = false;
       nextIdRef.current = 0;
       return;
@@ -304,6 +312,7 @@ export const OrderableAssignmentList = ({
         cvSelectOpen: false,
         selectedEnv: assignment.environment ? [assignment.environment] : [],
         selectedCV: assignment.contentView?.name || null,
+        label: assignment.label, // Preserve pre-computed label for existing assignments
       }));
       setAssignments(initialAssignments);
 
@@ -318,6 +327,7 @@ export const OrderableAssignmentList = ({
           }, `FOR_ENV_${assignment.id}`));
         }
       });
+      setInitializationStatus(STATUS.RESOLVED);
     } else {
       // Find the Library environment to pre-select it
       const libraryEnv = environmentPaths
@@ -346,6 +356,7 @@ export const OrderableAssignmentList = ({
           order: 'default DESC',
         }, `FOR_ENV_${newAssignment.id}`));
       }
+      setInitializationStatus(STATUS.RESOLVED);
     }
   }, [isOpen, existingAssignments, environmentPaths, dispatch]);
 
@@ -420,19 +431,47 @@ export const OrderableAssignmentList = ({
       selectedCV: null,
       environment: selection[0] || null,
       contentView: null,
+      label: null, // Clear pre-computed label when environment changes
     });
   };
 
   const handleCVSelect = (assignmentId, _event, selection, selectedCVObj) => {
+    let contentViewWithVersion = selectedCVObj;
+
+    if (selectedCVObj) {
+      // Get the selected environment for this assignment
+      const selectedAssignment = assignments.find(a => a.id === assignmentId);
+      const selectedEnv = selectedAssignment?.selectedEnv?.[0];
+
+      if (selectedEnv && selectedCVObj.versions) {
+        // Find the version that's in this specific environment
+        const versionInEnv = relevantVersionObjFromCv(selectedCVObj, selectedEnv);
+
+        if (versionInEnv) {
+          contentViewWithVersion = {
+            ...selectedCVObj,
+            content_view_version: versionInEnv.version,
+            content_view_version_id: versionInEnv.id,
+            content_view_version_latest: versionInEnv.version === selectedCVObj.latest_version,
+            content_view_default: selectedCVObj.default,
+          };
+        }
+      }
+    }
+
     updateAssignment(assignmentId, {
       selectedCV: selection,
       cvSelectOpen: false,
-      contentView: selectedCVObj || null,
+      contentView: contentViewWithVersion,
+      label: null, // Clear pre-computed label when CV changes
     });
   };
 
   return (
-    <>
+    <SkeletonLoader
+      status={initializationStatus}
+      skeletonProps={{ count: 3, height: 60 }}
+    >
       <DndProvider backend={HTML5Backend}>
         {assignments.map((assignment, index) => (
           <DraggableAssignmentSection
@@ -451,12 +490,13 @@ export const OrderableAssignmentList = ({
               handleToggleCVSelect(assignment.id, !assignment.cvSelectOpen)}
             assignmentStatus={assignmentStatus}
             allowMultipleContentViews={allowMultipleContentViews}
+            allowZeroAssignments={allowZeroAssignments}
           />
         ))}
       </DndProvider>
 
       {renderAddButton && renderAddButton(addNewAssignment, canAddAnother)}
-    </>
+    </SkeletonLoader>
   );
 };
 
@@ -467,12 +507,14 @@ OrderableAssignmentList.propTypes = {
   onAssignmentsChange: PropTypes.func.isRequired,
   renderAddButton: PropTypes.func,
   allowMultipleContentViews: PropTypes.bool.isRequired,
+  allowZeroAssignments: PropTypes.bool,
 };
 
 OrderableAssignmentList.defaultProps = {
   existingAssignments: [],
   assignmentStatus: undefined,
   renderAddButton: null,
+  allowZeroAssignments: false,
 };
 
 export default DraggableAssignmentSection;

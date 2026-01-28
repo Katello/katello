@@ -26,7 +26,7 @@ const KatelloEmptyStateIcon = ({
 
 const EmptyStateMessage = ({
   title, body, error, search,
-  customIcon, happy, ...extraTableProps
+  customIcon, happy, headingLevel, ...extraTableProps
 }) => {
   let emptyStateTitle = title;
   let emptyStateBody = body;
@@ -83,7 +83,7 @@ const EmptyStateMessage = ({
           customIcon={PlusCircleIcon}
           happyIcon={happy}
         />
-        <EmptyStateHeader titleText={<>{emptyStateTitle}</>} headingLevel="h2" />
+        <EmptyStateHeader titleText={<>{emptyStateTitle}</>} headingLevel={headingLevel || 'h2'} />
         <EmptyStateBody>
           {emptyStateBody}
         </EmptyStateBody>
@@ -140,6 +140,7 @@ EmptyStateMessage.propTypes = {
   search: PropTypes.bool,
   customIcon: PropTypes.elementType,
   happy: PropTypes.bool,
+  headingLevel: PropTypes.string,
   searchIsActive: PropTypes.bool,
   activeFilters: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.string,
@@ -171,6 +172,7 @@ EmptyStateMessage.defaultProps = {
   search: false,
   customIcon: undefined,
   happy: false,
+  headingLevel: 'h2',
   searchIsActive: false,
   activeFilters: [],
   defaultFilters: [],
