@@ -74,30 +74,6 @@ blueprints = [
     level: 'error',
   },
   {
-    group: N_('Subscriptions'),
-    name: 'sca_enable_success',
-    message: N_('Simple Content Access has been enabled for \'%{subject}\'.'),
-    level: 'info',
-  },
-  {
-    group: N_('Subscriptions'),
-    name: 'sca_enable_error',
-    message: N_('Enabling Simple Content Access failed for \'%{subject}\'.'),
-    level: 'error',
-  },
-  {
-    group: N_('Subscriptions'),
-    name: 'sca_disable_success',
-    message: N_('Simple Content Access has been disabled for \'%{subject}\'.'),
-    level: 'info',
-  },
-  {
-    group: N_('Subscriptions'),
-    name: 'sca_disable_error',
-    message: N_('Disabling Simple Content Access failed for \'%{subject}\'.'),
-    level: 'error',
-  },
-  {
     group: N_('System Status'),
     name: 'system_status_error',
     message: N_('Some services are not properly started. See the About page for more information.'),

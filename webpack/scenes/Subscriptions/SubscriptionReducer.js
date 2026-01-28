@@ -34,14 +34,7 @@ import {
   UPLOAD_MANIFEST_SUCCESS,
   REFRESH_MANIFEST_SUCCESS,
   REFRESH_MANIFEST_FAILURE,
-  ENABLE_SIMPLE_CONTENT_ACCESS_FAILURE,
-  DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE,
   REFRESH_MANIFEST_REQUEST,
-  DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST,
-  ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST,
-  ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
-  DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
-  SIMPLE_CONTENT_ACCESS_ELIGIBLE_SUCCESS,
   UPLOAD_MANIFEST_FAILURE,
   UPLOAD_MANIFEST_REQUEST,
   DELETE_MANIFEST_FAILURE,
@@ -69,8 +62,6 @@ const initialState = Immutable({
 
 export default (state = initialState, action) => {
   switch (action.type) {
-  case SIMPLE_CONTENT_ACCESS_ELIGIBLE_SUCCESS:
-    return state.set('simpleContentAccessEligible', action.response.simple_content_access_eligible);
   case PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS:
     return state.set('hasUpstreamConnection', true);
   case PING_UPSTREAM_SUBSCRIPTIONS_FAILURE:
@@ -181,14 +172,10 @@ export default (state = initialState, action) => {
   case UPDATE_QUANTITY_SUCCESS:
   case UPLOAD_MANIFEST_SUCCESS:
   case REFRESH_MANIFEST_SUCCESS:
-  case ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS:
-  case DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS:
     return state
       .set('task', action.response)
       .set('manifestActionStarted', false);
 
-  case ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST:
-  case DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST:
   case REFRESH_MANIFEST_REQUEST:
   case UPLOAD_MANIFEST_REQUEST:
   case DELETE_MANIFEST_REQUEST:
@@ -197,8 +184,6 @@ export default (state = initialState, action) => {
     return state
       .set('manifestActionStarted', true);
 
-  case ENABLE_SIMPLE_CONTENT_ACCESS_FAILURE:
-  case DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE:
   case REFRESH_MANIFEST_FAILURE:
   case UPLOAD_MANIFEST_FAILURE:
   case DELETE_MANIFEST_FAILURE:

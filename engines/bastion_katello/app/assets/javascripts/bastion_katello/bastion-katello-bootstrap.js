@@ -30,7 +30,6 @@ var BASTION_MODULES = [
   'Bastion.organizations',
   'Bastion.products',
   'Bastion.repositories',
-  'Bastion.subscriptions',
   'Bastion.sync-plans',
   'Bastion.http-proxies',
   'Bastion.content-hosts',

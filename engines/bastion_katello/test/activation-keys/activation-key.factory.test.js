@@ -71,22 +71,6 @@ describe('Factory: ActivationKey', function() {
         });
     });
 
-    it('ActivationKey.removeSubscriptions PUT /api/v2/activation_keys/1/remove_subscriptions?organization_id=ACME', function() {
-        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/remove_subscriptions?organization_id=ACME').respond(activationKeys.results[0]);
-
-        ActivationKey.removeSubscriptions({id: 1}, function(response) {
-            expect(response).toBeDefined();
-        });
-    });
-
-    it('ActivationKey.addSubscriptions PUT /api/v2/activation_keys/1/add_subscriptions?organization_id=ACME', function() {
-        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/add_subscriptions?organization_id=ACME').respond(activationKeys.results[0]);
-
-        ActivationKey.addSubscriptions({id: 1}, function(response) {
-            expect(response).toBeDefined();
-        });
-    });
-
     it('ActivationKey.availableHostCollections GET /api/v2/activation_keys/1/host_collections/available?organization_id=ACME', function() {
         $httpBackend.expectGET('katello/api/v2/activation_keys/1/host_collections/available?organization_id=ACME').respond(activationKeys.results[0]);
 

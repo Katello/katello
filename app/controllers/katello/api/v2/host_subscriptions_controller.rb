@@ -30,25 +30,6 @@ module Katello
       api_base_url "/api"
     end
 
-    def deprecate_entitlement_mode_endpoint
-      ::Foreman::Deprecation.api_deprecation_warning(N_("This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."))
-    end
-
-    api :GET, "/hosts/:host_id/subscriptions", N_("List a host's subscriptions"), deprecated: true
-    param :host_id, Integer, :desc => N_("Id of the host"), :required => true
-    def index
-      deprecate_entitlement_mode_endpoint
-      @collection = index_response
-      respond_for_index :collection => @collection
-    end
-
-    def index_response(reload_host: false)
-      # Host needs to be reloaded because of lazy accessor
-      @host.reload if reload_host
-      presenter = ::Katello::HostSubscriptionsPresenter.new(@host)
-      full_result_response(presenter.subscriptions)
-    end
-
     api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def destroy
@@ -103,7 +84,6 @@ module Katello
 
     api :GET, "/hosts/:host_id/subscriptions/product_content", N_("Get content and overrides for the host")
     param :host_id, String, :desc => N_("Id of the host"), :required => true
-    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions")
     param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the host's content view version")
     param_group :search, Api::V2::ApiController
     def product_content
@@ -187,7 +167,6 @@ module Katello
                                     .where("#{Katello::ProductContent.table_name}.product_id": @host.organization.products.subscribable.enabled)
 
         env_content = ProductContentFinder.new(
-          :match_subscription => false,
           :match_environment => Foreman::Cast.to_bool(params.dig(:content_overrides_search, :limit_to_env)),
           :consumable => @host.subscription_facet
         ).product_content

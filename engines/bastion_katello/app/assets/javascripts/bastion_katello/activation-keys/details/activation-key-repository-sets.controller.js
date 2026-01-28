@@ -23,7 +23,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
 
         params = {
             'activation_key_id': $scope.$stateParams.activationKeyId,
-            'content_access_mode_all': true,
             'content_access_mode_env': true,
             'sort_order': 'ASC',
             'paged': true
@@ -69,7 +68,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
 
         $scope.toggleFilters = function () {
             $scope.nutupane.table.params['content_access_mode_env'] = $scope.contentAccessModes.contentAccessModeEnv;
-            $scope.nutupane.table.params['content_access_mode_all'] = true;
             $scope.nutupane.refresh();
         };
 
