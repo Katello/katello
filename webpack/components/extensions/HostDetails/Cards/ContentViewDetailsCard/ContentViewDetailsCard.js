@@ -118,7 +118,7 @@ export const CVEDetailsBareCard = ({
     >
       {allowMultipleContentViews
         ? __('Assign content view environments')
-        : __('Assign content view environment')}
+        : __('Edit content view environment')}
     </Button>
   ) : null;
 
@@ -249,7 +249,7 @@ export const ContentViewEnvironmentDetails = ({
     >
       {allowMultipleContentViews
         ? __('Assign content view environments')
-        : __('Assign content view environment')}
+        : __('Edit content view environment')}
     </DropdownItem>,
   ];
 
