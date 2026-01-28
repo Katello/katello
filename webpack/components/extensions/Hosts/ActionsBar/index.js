@@ -8,7 +8,7 @@ import { foremanUrl } from 'foremanReact/common/helpers';
 import { ForemanHostsIndexActionsBarContext } from 'foremanReact/components/HostsIndex';
 import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { addModal } from 'foremanReact/components/ForemanModal/ForemanModalActions';
-import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
+import { useForemanOrganization, useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
 import './ActionsBar.scss';
 
 const DisabledMenuItemDescription = ({ disabledReason }) => (
@@ -37,7 +37,7 @@ const HostActionsBar = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     [
-      'bulk-change-cv-modal',
+      'bulk-assign-cves-modal',
       'bulk-packages-wizard',
       'bulk-errata-wizard',
       'bulk-repo-sets-wizard',
@@ -48,7 +48,7 @@ const HostActionsBar = () => {
       dispatch(addModal({ id }));
     });
   }, [dispatch]);
-  const { setModalOpen: openBulkChangeCVModal } = useForemanModal({ id: 'bulk-change-cv-modal' });
+  const { setModalOpen: openBulkAssignCVEnvsModal } = useForemanModal({ id: 'bulk-assign-cves-modal' });
   const { setModalOpen: openBulkPackagesWizardModal } = useForemanModal({ id: 'bulk-packages-wizard' });
   const { setModalOpen: openBulkErrataWizardModal } = useForemanModal({ id: 'bulk-errata-wizard' });
   const { setModalOpen: openBulkRepositorySetsWizardModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
@@ -56,6 +56,9 @@ const HostActionsBar = () => {
   const { setModalOpen: openBulkManageTracesModal } = useForemanModal({ id: 'bulk-manage-traces-modal' });
 
   const orgId = useForemanOrganization()?.id;
+  const foremanContext = useForemanContext();
+  const allowMultipleContentViews =
+    foremanContext?.metadata?.katello?.allow_multiple_content_views ?? true;
 
   let href = '';
   if (selectAllMode) {
@@ -110,13 +113,13 @@ const HostActionsBar = () => {
                   {__('Content source')}
                 </MenuItem>
                 <MenuItem
-                  itemId="bulk-change-cv-dropdown-item"
-                  key="bulk-change-cv-dropdown-item"
-                  onClick={openBulkChangeCVModal}
+                  itemId="bulk-assign-cves-dropdown-item"
+                  key="bulk-assign-cves-dropdown-item"
+                  onClick={openBulkAssignCVEnvsModal}
                   isDisabled={selectedCount === 0 || !orgId}
-                  description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change content view environments, a specific organization must be selected from the organization context.')} />}
+                  description={!orgId && <DisabledMenuItemDescription disabledReason={__('To assign content view environment(s), a specific organization must be selected from the organization context.')} />}
                 >
-                  {__('Content view environments')}
+                  {allowMultipleContentViews ? __('Content view environments') : __('Content view environment')}
                 </MenuItem>
                 <MenuItem
                   itemId="bulk-system-purpose-dropdown-item"

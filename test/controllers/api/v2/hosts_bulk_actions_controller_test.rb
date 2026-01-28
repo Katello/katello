@@ -91,6 +91,209 @@ module Katello
       assert body.key?('id'), "Response should include task id for redirect to /foreman_tasks/tasks/:id"
     end
 
+    def test_assign_content_view_environments_single_content_view_environment
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: @library.id)
+
+      # Stub Candlepin calls that happen during content facet save
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+
+      put :assign_content_view_environments, params: {
+        :included => {:ids => @host_ids},
+        :organization_id => @org.id,
+        :content_view_environment_ids => [content_view_env.id],
+      }
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      assert_includes body['displayMessage'], 'Updated content view environments'
+      assert_includes body['displayMessage'], '2 hosts'
+
+      # Verify hosts were updated
+      @host1.reload
+      @host2.reload
+      assert_equal 1, @host1.content_facet.content_view_environments.size
+      assert_equal @view_2.id, @host1.content_facet.content_view_environments.first.content_view_id
+      assert_equal @library.id, @host1.content_facet.content_view_environments.first.environment_id
+      assert_equal 1, @host2.content_facet.content_view_environments.size
+      assert_equal @view_2.id, @host2.content_facet.content_view_environments.first.content_view_id
+      assert_equal @library.id, @host2.content_facet.content_view_environments.first.environment_id
+    end
+
+    def test_assign_content_view_environments_multiple_content_view_environments
+      dev_env = katello_environments(:dev)
+      content_view_env1 = Katello::ContentViewEnvironment.find_by(content_view_id: @view.id, environment_id: @library.id)
+      content_view_env2 = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: dev_env.id)
+
+      # Stub Candlepin calls that happen during content facet save
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+
+      put :assign_content_view_environments, params: {
+        :included => {:ids => @host_ids},
+        :organization_id => @org.id,
+        :content_view_environment_ids => [content_view_env1.id, content_view_env2.id],
+      }
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      assert_includes body['displayMessage'], 'Updated content view environments'
+      assert_includes body['displayMessage'], '2 hosts'
+
+      # Verify hosts were updated with multiple content view environments
+      @host1.reload
+      @host2.reload
+      assert_equal 2, @host1.content_facet.content_view_environments.size
+      assert_equal 2, @host2.content_facet.content_view_environments.size
+
+      # Verify the content view environments are correct (order matters!)
+      assert_equal @view.id, @host1.content_facet.content_view_environments.first.content_view_id
+      assert_equal @library.id, @host1.content_facet.content_view_environments.first.environment_id
+      assert_equal @view_2.id, @host1.content_facet.content_view_environments.second.content_view_id
+      assert_equal dev_env.id, @host1.content_facet.content_view_environments.second.environment_id
+    end
+
+    def test_assign_content_view_environments_singular_message
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: @library.id)
+
+      # Stub Candlepin calls that happen during content facet save
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+
+      put :assign_content_view_environments, params: {
+        :included => {:ids => [@host1.id]},
+        :organization_id => @org.id,
+        :content_view_environment_ids => [content_view_env.id],
+      }
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      # Verify singular form is used for 1 host
+      assert_includes body['displayMessage'], 'Updated content view environments'
+      assert_includes body['displayMessage'], '1 host'
+      refute_includes body['displayMessage'], '1 hosts'
+    end
+
+    def test_assign_content_view_environments_missing_params
+      put :assign_content_view_environments, params: {
+        :included => {:ids => @host_ids},
+        :organization_id => @org.id,
+      }
+
+      assert_response :unprocessable_entity
+      body = JSON.parse(response.body)
+      assert_includes body['displayMessage'], 'content_view_environments or content_view_environment_ids must be provided'
+    end
+
+    def test_assign_content_view_environments_invalid_content_view_environment
+      put :assign_content_view_environments, params: {
+        :included => {:ids => @host_ids},
+        :organization_id => @org.id,
+        :content_view_environment_ids => [99_999],
+      }
+
+      assert_response :unprocessable_entity
+      body = JSON.parse(response.body)
+      assert_includes body['displayMessage'], 'No content view environments found with ids'
+    end
+
+    def test_assign_content_view_environments_permissions
+      good_perms = [[@update_permission, :edit_lifecycle_environments, :edit_content_views]]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
+
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view.id, environment_id: @library.id)
+
+      assert_protected_action(:assign_content_view_environments, good_perms, bad_perms) do
+        put :assign_content_view_environments, params: {
+          :included => {:ids => @host_ids},
+          :organization_id => @org.id,
+          :content_view_environment_ids => [content_view_env.id],
+        }
+      end
+    end
+
+    def test_assign_content_view_environments_skips_unregistered_host
+      # Create a host without a content facet (simulating an unregistered host)
+      unregistered_host = FactoryBot.create(:host, :managed, organization: @org)
+      unregistered_host.content_facet&.destroy # Ensure no content facet
+
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: @library.id)
+
+      # Stub Candlepin calls that happen during content facet save
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+
+      # Mix registered and unregistered hosts
+      put :assign_content_view_environments, params: {
+        :included => {:ids => [@host1.id, unregistered_host.id]},
+        :organization_id => @org.id,
+        :content_view_environment_ids => [content_view_env.id],
+      }
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      # Should process 1 registered host and skip 1 unregistered
+      assert_includes body['displayMessage'], 'Updated content view environments for 1 host'
+      assert_includes body['warningMessage'], 'Skipped 1 unregistered host'
+
+      # Verify registered host was updated
+      @host1.reload
+      assert_equal 1, @host1.content_facet.content_view_environments.size
+      assert_equal @view_2.id, @host1.content_facet.content_view_environments.first.content_view_id
+    end
+
+    def test_assign_content_view_environments_skips_multiple_unregistered_hosts
+      # Create multiple unregistered hosts
+      unregistered_host1 = FactoryBot.create(:host, :managed, organization: @org)
+      unregistered_host1.content_facet&.destroy
+      unregistered_host2 = FactoryBot.create(:host, :managed, organization: @org)
+      unregistered_host2.content_facet&.destroy
+
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: @library.id)
+
+      # Stub Candlepin calls that happen during content facet save
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+
+      # Mix registered and unregistered hosts
+      put :assign_content_view_environments, params: {
+        :included => {:ids => [@host1.id, @host2.id, unregistered_host1.id, unregistered_host2.id]},
+        :organization_id => @org.id,
+        :content_view_environment_ids => [content_view_env.id],
+      }
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      # Should process 2 registered hosts and skip 2 unregistered
+      assert_includes body['displayMessage'], 'Updated content view environments for 2 hosts'
+      assert_includes body['warningMessage'], 'Skipped 2 unregistered hosts'
+
+      # Verify registered hosts were updated
+      @host1.reload
+      @host2.reload
+      assert_equal 1, @host1.content_facet.content_view_environments.size
+      assert_equal 1, @host2.content_facet.content_view_environments.size
+    end
+
+    def test_assign_content_view_environments_with_labels
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: @library.id)
+
+      # Stub Candlepin calls
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+
+      put :assign_content_view_environments, params: {
+        :included => {:ids => @host_ids},
+        :organization_id => @org.id,
+        :content_view_environments => [content_view_env.label],
+      }
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      assert_includes body['displayMessage'], 'Updated content view environments'
+
+      # Verify hosts were updated
+      @host1.reload
+      assert_equal 1, @host1.content_facet.content_view_environments.size
+      assert_equal @view_2.id, @host1.content_facet.content_view_environments.first.content_view_id
+      assert_equal @library.id, @host1.content_facet.content_view_environments.first.environment_id
+    end
+
     def test_system_purpose
       host_service_level = 'Standard'
       host_purpose_role = 'Red Hat Enterprise Linux Server'

@@ -66,6 +66,7 @@ Foreman::Application.routes.draw do
             match '/bulk/installable_errata' => 'hosts_bulk_actions#installable_errata', :via => :post
             match '/bulk/destroy' => 'hosts_bulk_actions#destroy_hosts', :via => :put
             match '/bulk/environment_content_view' => 'hosts_bulk_actions#environment_content_view', :via => :put
+            match '/bulk/assign_content_view_environments' => 'hosts_bulk_actions#assign_content_view_environments', :via => :put
             match '/bulk/release_version' => 'hosts_bulk_actions#release_version', :via => :put
             match '/bulk/traces' => 'hosts_bulk_actions#traces', :via => :post
             match '/bulk/traces/auto_complete_search' => 'host_tracer#bulk_auto_complete_search', :via => :get

@@ -4,12 +4,14 @@ module Katello
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include ::Api::V2::BulkHostsExtension
     include Katello::Concerns::Api::V2::ContentOverridesController
+    include Katello::Concerns::Api::V2::MultiCVParamsHandling
     include Katello::ContentSourceHelper
     include ::Foreman::Renderer::Scope::Macros::Base
 
     before_action :find_host_collections, only: [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_action :find_environment, only: [:environment_content_view]
     before_action :find_content_view, only: [:environment_content_view]
+    before_action :find_content_view_environments, only: [:assign_content_view_environments]
     before_action :find_editable_hosts, except: [:destroy_hosts, :change_content_source]
     before_action :find_deletable_hosts, only: [:destroy_hosts]
     before_action :find_readable_hosts, only: [:applicable_errata, :installable_errata, :available_incremental_updates]
@@ -135,6 +137,42 @@ module Katello
     def environment_content_view
       task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateContentView, @hosts, @view.id, @environment.id)
       respond_for_async :resource => task
+    end
+
+    api :PUT, "/hosts/bulk/assign_content_view_environments", N_("Assign content view environments to one or more hosts")
+    param_group :bulk_params
+    param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels to be associated with the hosts, " \
+                                                          "in the format of 'lifecycle_environment_label/content_view_label'. " \
+                                                          "Ignored if content_view_environment_ids is specified. " \
+                                                          "Requires allow_multiple_content_views setting to be on.")
+    param :content_view_environment_ids, Array, :desc => N_("Array of content view environment IDs to be associated with the hosts. " \
+                                                             "Requires allow_multiple_content_views setting to be on.")
+    def assign_content_view_environments
+      # Filter to only hosts with content facets (registered with subscription-manager)
+      registered_hosts = @hosts.select(&:content_facet)
+      unregistered_count = @hosts.count - registered_hosts.count
+
+      # The content_view_environments= setter handles reprioritization and Candlepin updates
+      registered_hosts.each do |host|
+        host.content_facet.content_view_environments = @content_view_environments
+        host.save!
+      end
+
+      # Build response message
+      success_message = n_("Updated content view environments for %{count} host",
+                           "Updated content view environments for %{count} hosts",
+                           registered_hosts.count) % { :count => registered_hosts.count }
+
+      response = { :displayMessage => success_message }
+
+      if unregistered_count > 0
+        skipped_message = n_("Skipped %{count} unregistered host",
+                             "Skipped %{count} unregistered hosts",
+                             unregistered_count) % { :count => unregistered_count }
+        response[:warningMessage] = skipped_message
+      end
+
+      render :json => response
     end
 
     api :PUT, "/hosts/bulk/release_version", N_("Assign the release version to one or more hosts")
@@ -298,6 +336,25 @@ module Katello
       @view = ContentView.editable.find(params[:content_view_id])
       throw_resource_not_found(name: 'content view', id: params[:content_view_id]) unless @view
       @view
+    end
+
+    def find_content_view_environments
+      organization = Organization.find_by(id: params[:organization_id])
+
+      # Ensure at least one parameter is provided
+      if params[:content_view_environments].blank? && params[:content_view_environment_ids].blank?
+        fail HttpErrors::UnprocessableEntity, _("Either content_view_environments or content_view_environment_ids must be provided")
+      end
+
+      @content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
+        labels: params[:content_view_environments],
+        ids: params[:content_view_environment_ids],
+        organization: organization
+      )
+      if @content_view_environments.blank?
+        handle_errors(labels: params[:content_view_environments],
+                      ids: params[:content_view_environment_ids])
+      end
     end
 
     def find_traces
