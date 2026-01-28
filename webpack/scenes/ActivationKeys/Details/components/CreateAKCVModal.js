@@ -82,7 +82,7 @@ const CreateAKCVModal = ({
       <AssignmentModalDescription allowMultipleContentViews={allowMultipleContentViews} />
 
       <div className="attached-content-views">
-        <AssignmentsHeading show={assignments.length > 0} />
+        <AssignmentsHeading show={existingAssignments.length > 0} />
 
         <OrderableAssignmentList
           existingAssignments={existingAssignments}
