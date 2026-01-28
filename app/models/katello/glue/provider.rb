@@ -150,7 +150,7 @@ module Katello
 
       def index_subscriptions
         Katello::Subscription.import_all(organization)
-        Katello::Pool.import_all(organization, false)
+        Katello::Pool.import_all(organization)
       end
 
       def rules_source
