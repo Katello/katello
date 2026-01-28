@@ -113,7 +113,6 @@ module Katello
       )
       Pool.expects(:in_organization).with(org).returns([@pool_one])
       @pool_one.expects(:import_data).once
-      @pool_one.expects(:import_managed_associations).once
       Pool.import_all(org)
     end
 
@@ -134,27 +133,10 @@ module Katello
       FactoryBot.create(:katello_subscription, cp_id: 'SKU001', organization: org)
       Katello::Resources::Candlepin::Pool.expects(:get_for_owner).returns([pool_data])
       Katello::Resources::Candlepin::Pool.expects(:find).returns(pool_data)
-      Katello::Pool.any_instance.expects(:import_managed_associations).returns
       Organization.any_instance.expects(:redhat_provider).returns(katello_providers(:redhat))
       Pool.import_all(org)
 
       refute_empty Katello::Pool.where(organization: org)
-    end
-
-    def test_import_all_no_managed_association
-      org = get_organization
-      Pool.expects(:candlepin_records_by_id).returns(
-        {
-          @pool_one.cp_id => {
-            'productId' => @pool_one.subscription.cp_id,
-            'id' => @pool_one.cp_id,
-          },
-        }
-      )
-      Pool.expects(:in_organization).with(org).returns([@pool_one])
-      @pool_one.expects(:import_data).once
-      @pool_one.expects(:import_managed_associations).never
-      Pool.import_all(org, false)
     end
 
     def test_import_all_destroy
