@@ -227,7 +227,7 @@ export const ContentViewEnvironmentDetails = ({
   hostPermissions, permissions, contentSourceId, allowMultipleContentViews,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const toggleHamburger = () => setIsDropdownOpen(prev => !prev);
+  const toggleKebab = () => setIsDropdownOpen(prev => !prev);
   const { content_view_assignment: initialCVModalOpen } = useUrlParams();
   const [isModalOpen, setIsModalOpen] = useState(!!initialCVModalOpen);
   const closeModal = () => setIsModalOpen(false);
@@ -264,7 +264,7 @@ export const ContentViewEnvironmentDetails = ({
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
       <CVEDetailsBareCard
         isDropdownOpen={isDropdownOpen}
-        toggleHamburger={toggleHamburger}
+        toggleKebab={toggleKebab}
         contentViewEnvironments={contentViewEnvironments}
         hostPermissions={hostPermissions}
         permissions={permissions}
