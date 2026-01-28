@@ -11,7 +11,6 @@ import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
 import ManageManifestModal from './Manifest/';
-import { MANAGE_MANIFEST_MODAL_ID } from './Manifest/ManifestConstants';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
 import { filterRHSubscriptions } from './SubscriptionHelpers';
@@ -49,7 +48,6 @@ const SubscriptionsPage = ({
   searchQuery,
   updateSearchQuery,
   activePermissions,
-  setModalOpen,
   uploadManifest,
   deleteManifest,
   refreshManifest,
@@ -58,6 +56,7 @@ const SubscriptionsPage = ({
   createColumns,
   updateColumns,
 }) => {
+  const [isManageManifestModalOpen, setIsManageManifestModalOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [availableQuantitiesLoaded, setAvailableQuantitiesLoaded] = useState(false);
   const prevPropsRef = useRef({});
@@ -177,8 +176,6 @@ const SubscriptionsPage = ({
   } = permissions;
   const disableManifestActions = !!task || !hasUpstreamConnection;
 
-  const openManageManifestModal = () => setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
-
   const tableColumns = Immutable.asMutable(subscriptions.tableColumns, { deep: true });
   const onSearch = (search) => {
     loadSubscriptions({ search });
@@ -232,7 +229,7 @@ const SubscriptionsPage = ({
       header: __('There are no Subscriptions to display'),
       description: __('Import a subscription manifest to give hosts access to Red Hat content.'),
       action: {
-        onClick: () => openManageManifestModal(),
+        onClick: () => setIsManageManifestModalOpen(true),
         title: __('Import a Manifest'),
       },
     };
@@ -284,7 +281,7 @@ const SubscriptionsPage = ({
             updateSearchQuery={updateSearchQuery}
             onDeleteButtonClick={openDeleteModal}
             onSearch={onSearch}
-            onManageManifestButtonClick={openManageManifestModal}
+            onManageManifestButtonClick={() => setIsManageManifestModalOpen(true)}
             onExportCsvButtonClick={() => { api.open('/subscriptions.csv', csvParams); }}
             tableColumns={tableColumns}
             toolTipOnChange={toolTipOnChange}
@@ -301,6 +298,8 @@ const SubscriptionsPage = ({
             upload={uploadManifest}
             delete={deleteManifest}
             refresh={refreshManifest}
+            isOpen={isManageManifestModalOpen}
+            closeModal={() => setIsManageManifestModalOpen(false)}
           />
 
           <div id="subscriptions-table" className="modal-container">
@@ -395,13 +394,12 @@ SubscriptionsPage.propTypes = {
   refreshManifest: PropTypes.func.isRequired,
   searchQuery: PropTypes.string,
   updateSearchQuery: PropTypes.func.isRequired,
-  setModalOpen: PropTypes.func.isRequired,
-  deleteModalOpened: PropTypes.bool,
-  openDeleteModal: PropTypes.func.isRequired,
-  closeDeleteModal: PropTypes.func.isRequired,
   deleteButtonDisabled: PropTypes.bool,
   disableDeleteButton: PropTypes.func.isRequired,
   enableDeleteButton: PropTypes.func.isRequired,
+  deleteModalOpened: PropTypes.bool,
+  openDeleteModal: PropTypes.func.isRequired,
+  closeDeleteModal: PropTypes.func.isRequired,
 };
 
 SubscriptionsPage.defaultProps = {

@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Grid, Col, Row, Tabs, Tab, FormControl, ControlLabel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Button, Spinner } from 'patternfly-react';
-import { Alert } from '@patternfly/react-core';
+import { Alert, Modal, ModalVariant } from '@patternfly/react-core';
 import { propsToCamelCase, getDocsURL } from 'foremanReact/common/helpers';
-import ForemanModal from 'foremanReact/components/ForemanModal';
 import Slot from 'foremanReact/components/common/Slot';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
@@ -22,6 +21,12 @@ import CdnConfigurationForm from './CdnConfigurationTab';
 import './ManageManifestModal.scss';
 
 class ManageManifestModal extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDeleteManifestModalOpen: false,
+    };
+  }
   componentDidMount() {
     this.props.loadManifestHistory();
     this.props.getContentCredentials({ content_type: CONTENT_CREDENTIAL_CERT_TYPE });
@@ -29,31 +34,14 @@ class ManageManifestModal extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.taskInProgress && this.props.taskInProgress) {
-      this.hideModal();
+      this.props.closeModal();
     }
 
     if (prevProps.taskInProgress && !this.props.taskInProgress) {
       this.props.loadOrganization({ force_manifest_expire_cache: true });
       this.props.loadManifestHistory();
     }
-
-    if (!prevProps.manifestActionStarted && this.props.manifestActionStarted) {
-      this.hideDeleteManifestModal();
-    }
   }
-
-  hideModal = () => {
-    this.props.setModalClosed({ id: MANAGE_MANIFEST_MODAL_ID });
-  };
-
-  showDeleteManifestModal = () =>
-    this.props.setModalOpen({ id: DELETE_MANIFEST_MODAL_ID });
-
-  hideDeleteManifestModal = () => {
-    if (this.props.deleteManifestModalExists) {
-      this.props.setModalClosed({ id: DELETE_MANIFEST_MODAL_ID });
-    }
-  };
 
   reloadOrganization = () => {
     this.props.loadOrganization();
@@ -142,7 +130,24 @@ class ManageManifestModal extends Component {
     const manifestExpiredMessage = manifestExpirationDate ? __('Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.') : __('Your manifest has expired. To continue using Red Hat content, import a new manifest.');
 
     return (
-      <ForemanModal id={MANAGE_MANIFEST_MODAL_ID} title={__('Manage Manifest')}>
+      <Modal
+        isOpen={this.props.isOpen}
+        onClose={this.props.closeModal}
+        id={MANAGE_MANIFEST_MODAL_ID}
+        ouiaId={MANAGE_MANIFEST_MODAL_ID}
+        key={MANAGE_MANIFEST_MODAL_ID}
+        title={__('Manage Manifest')}
+        variant={ModalVariant.small}
+        actions={[
+          <Button
+            bsStyle="primary"
+            key="close-modal"
+            onClick={this.props.closeModal}
+          >
+            {__('Close')}
+          </Button>,
+        ]}
+      >
         <Tabs id="manifest-history-tabs">
           {showManifestTab &&
             <Tab
@@ -237,6 +242,7 @@ class ManageManifestModal extends Component {
                             <TooltipButton
                               onClick={this.refreshManifest}
                               tooltipId="refresh-manifest-button-tooltip"
+                              key="refresh-manifest-button-tooltip"
                               tooltipText={disabledReason}
                               tooltipPlacement="top"
                               title={__('Refresh')}
@@ -249,26 +255,39 @@ class ManageManifestModal extends Component {
                               <TooltipButton
                                 disabled={!isManifestImported || actionInProgress}
                                 bsStyle="danger"
-                                onClick={this.showDeleteManifestModal}
+                                onClick={() => this.setState({ isDeleteManifestModalOpen: true })}
                                 title={__('Delete')}
                                 tooltipId="delete-manifest-button-tooltip"
+                                key="delete-manifest-button-tooltip"
                                 tooltipText={this.disabledTooltipText()}
                                 tooltipPlacement="top"
                               />
                             </React.Fragment>
                             }
                           </div>
-                          <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
-                            <DeleteManifestModalText simpleContentAccess={simpleContentAccess} />
-                            <ForemanModal.Footer>
-                              <Button bsStyle="default" onClick={this.hideDeleteManifestModal}>
+                          <Modal
+                            isOpen={this.state.isDeleteManifestModalOpen}
+                            onClose={() => this.setState({ isDeleteManifestModalOpen: false })}
+                            title={__('Confirm delete manifest')}
+                            id={DELETE_MANIFEST_MODAL_ID}
+                            ouiaId={DELETE_MANIFEST_MODAL_ID}
+                            key={DELETE_MANIFEST_MODAL_ID}
+                            variant={ModalVariant.small}
+                            actions={[
+                              <Button bsStyle="default" key="cancel-btn" onClick={() => this.setState({ isDeleteManifestModalOpen: false })}>
                                 {__('Cancel')}
-                              </Button>
-                              <Button bsStyle="danger" onClick={this.deleteManifest}>
+                              </Button>,
+                              <Button
+                                key="delete-btn"
+                                bsStyle="danger"
+                                onClick={this.deleteManifest}
+                              >
                                 {__('Delete')}
-                              </Button>
-                            </ForemanModal.Footer>
-                          </ForemanModal>
+                              </Button>,
+                            ]}
+                          >
+                            <DeleteManifestModalText simpleContentAccess={simpleContentAccess} />
+                          </Modal>
                         </Col>
                       </Row>
                     </Grid>
@@ -306,17 +325,14 @@ class ManageManifestModal extends Component {
             </Tab>
           }
         </Tabs>
-        <ForemanModal.Footer>
-          <Button bsStyle="primary" onClick={this.hideModal}>
-            {__('Close')}
-          </Button>
-        </ForemanModal.Footer>
-      </ForemanModal>
+      </Modal>
     );
   }
 }
 
 ManageManifestModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
   upload: PropTypes.func.isRequired,
   refresh: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
@@ -344,7 +360,6 @@ ManageManifestModal.propTypes = {
   canDeleteManifest: PropTypes.bool,
   simpleContentAccess: PropTypes.bool,
   isManifestImported: PropTypes.bool,
-  deleteManifestModalExists: PropTypes.bool,
   canEditOrganizations: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
   disabledReason: PropTypes.string,
@@ -356,8 +371,6 @@ ManageManifestModal.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     results: PropTypes.array,
   }).isRequired,
-  setModalClosed: PropTypes.func.isRequired,
-  setModalOpen: PropTypes.func.isRequired,
   manifestActionStarted: PropTypes.bool,
   contentCredentials: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
@@ -372,7 +385,6 @@ ManageManifestModal.defaultProps = {
   canDeleteManifest: false,
   simpleContentAccess: true,
   isManifestImported: false,
-  deleteManifestModalExists: false,
   canEditOrganizations: false,
   manifestActionStarted: false,
   contentCredentials: [],

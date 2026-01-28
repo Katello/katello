@@ -1,6 +1,5 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as foremanModalActions from 'foremanReact/components/ForemanModal/ForemanModalActions';
 import * as subscriptionActions from './SubscriptionActions';
 import * as taskActions from '../Tasks/TaskActions';
 import * as tableActions from '../Settings/Tables/TableActions';
@@ -9,12 +8,12 @@ import * as manifestActions from './Manifest/ManifestActions';
 import {
   selectSubscriptionsState,
   selectSearchQuery,
-  selectDeleteModalOpened,
   selectDeleteButtonDisabled,
   selectSubscriptionsTask,
   selectActivePermissions,
   selectIsTaskPending,
   selectHasUpstreamConnection,
+  selectDeleteModalOpened,
 } from './SubscriptionsSelectors';
 import selectTableSettings from '../../scenes/Settings/SettingsSelectors';
 import { selectIsPollingTask } from '../Tasks/TaskSelectors';
@@ -52,7 +51,6 @@ const actions = {
   ...taskActions,
   ...tableActions,
   ...manifestActions,
-  ...foremanModalActions,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
