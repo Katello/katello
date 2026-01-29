@@ -559,11 +559,6 @@ module Katello
         token: personal_token.token,
         expires_in: expiration_seconds,
         issued_at: create_time.rfc3339,
-
-        # We're keeping the 'expires_at' field for now to maintain compatibility with existing
-        # smart-proxies during 4.11 upgrades. This is not a part of OAuth2 spec.
-        # TODO - Remove 'expires_at' in Katello 4.13 or later.
-        expires_at: expiry_time.rfc3339,
       }
     end
 
