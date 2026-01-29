@@ -6,6 +6,20 @@ module Katello
   describe Api::Registry::RegistryProxiesController do
     include Support::ForemanTasks::Task
 
+    def mock_token_query(active_token, revoked_token)
+      active_token_query = mock('active_token_query')
+      active_token_query.stubs(:first).returns(active_token)
+      revoked_token_query = mock('revoked_token_query')
+      revoked_token_query.stubs(:first).returns(revoked_token)
+
+      PersonalAccessToken.expects(:where)
+                         .with(user_id: User.current.id, name: 'registry', revoked: false)
+                         .returns(active_token_query)
+      PersonalAccessToken.expects(:where)
+                         .with(user_id: User.current.id, name: 'registry', revoked: true)
+                         .returns(revoked_token_query)
+    end
+
     def setup_models
       @docker_repo = katello_repositories(:busybox)
       @organization = @docker_repo.product.organization
@@ -89,13 +103,13 @@ module Katello
                      response.headers['Www-Authenticate']
       end
 
-      it "ping - bearer expired" do
+      it "ping - bearer expired and/or revoked" do
         User.current = nil
         session[:user] = nil
         @request.env['HTTP_AUTHORIZATION'] = "Bearer 12345"
 
         token = mock('token')
-        token.stubs('expired?').returns(true)
+        token.stubs('active?').returns(false)
         PersonalAccessToken.expects(:find_by_token).with("12345").returns(token)
 
         get :ping
@@ -114,7 +128,7 @@ module Katello
         @request.env['HTTP_AUTHORIZATION'] = "Bearer 12345"
 
         token = mock('token')
-        token.stubs('expired?').returns(false)
+        token.stubs('active?').returns(true)
         token.stubs(:user_id).returns(user.id)
         PersonalAccessToken.expects(:find_by_token).with("12345").returns(token)
 
@@ -132,9 +146,8 @@ module Katello
       end
 
       it "token - no 'registry' token yet" do
-        PersonalAccessToken.expects(:where)
-                           .with(user_id: User.current.id, name: 'registry')
-                           .returns([])
+        mock_token_query(nil, nil)
+
         issue_time = Time.now
         expiry_time = 30.minutes.from_now
         tolerance = 3.seconds
@@ -173,9 +186,13 @@ module Katello
         token.stubs(:created_at).returns(issue_time.rfc3339)
         token.stubs('save!').returns(true)
         token.expects('expires_at=').returns(true)
+
+        active_token_query = mock('active_token_query')
+        active_token_query.stubs(:first).returns(token)
+
         PersonalAccessToken.expects(:where)
-                           .with(user_id: User.current.id, name: 'registry')
-                           .returns([token])
+                           .with(user_id: User.current.id, name: 'registry', revoked: false)
+                           .returns(active_token_query)
         PersonalAccessToken.expects(:new).never
 
         get :token, params: { account: User.name }
@@ -253,6 +270,54 @@ module Katello
         reset_api_credentials
 
         get :token, params: { scope: "repository:#{@docker_repo.container_repository_name}:push" }
+        assert_response 401
+      end
+
+      it "token - new login with revoked token deletes revoked token and creates new token" do
+        revoked_token = mock('revoked_token')
+        revoked_token.expects(:destroy!)
+
+        mock_token_query(nil, revoked_token)
+
+        issue_time = Time.now
+        expiry_time = 30.minutes.from_now
+
+        new_token = mock('new_token')
+        new_token.stubs(:token).returns("new_token_value")
+        new_token.stubs(:generate_token).returns("new_token_value")
+        new_token.stubs(:expires_at).returns(expiry_time.rfc3339)
+        new_token.stubs(:created_at).returns(issue_time.rfc3339)
+        new_token.stubs('save!').returns(true)
+        PersonalAccessToken.expects(:new).returns(new_token)
+
+        @request.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64.strict_encode64("#{User.current.login}:secret")
+
+        get :token, params: { account: User.current.login }
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal "new_token_value", body['token']
+      end
+
+      it "token - revoked token with Bearer auth returns unauthorized" do
+        # having bearer authentication (as opposed to basic uname + password) implies a non-login operation
+        mock_token_query(nil, mock('revoked_token'))
+
+        @request.env['HTTP_AUTHORIZATION'] = 'Bearer some_revoked_token'
+
+        get :token, params: { account: User.current.login }
+        assert_response 401
+      end
+
+      it "token - revoked token with scope returns unauthorized" do
+        # having a scope implies a non-login operation
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        mock_token_query(nil, mock('revoked_token'))
+
+        @request.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64.strict_encode64("#{User.current.login}:secret")
+
+        get :token, params: { account: User.current.login, scope: "repository:#{@docker_repo.container_repository_name}:pull" }
         assert_response 401
       end
     end
@@ -1454,7 +1519,7 @@ module Katello
       it "authenticates with Bearer token" do
         user = User.current
         token = mock('token')
-        token.stubs('expired?').returns(false)
+        token.stubs('active?').returns(true)
         token.stubs(:user_id).returns(user.id)
 
         PersonalAccessToken.expects(:find_by_token).with("valid_token").returns(token)

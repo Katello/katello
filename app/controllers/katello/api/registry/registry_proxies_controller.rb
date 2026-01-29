@@ -69,7 +69,7 @@ module Katello
         token_type, token = token.split
         if token_type == 'Bearer' && token
           personal_token = PersonalAccessToken.find_by_token(token)
-          if personal_token && !personal_token.expired?
+          if personal_token&.active?
             User.current = User.unscoped.find(personal_token.user_id)
             return true if User.current
           end
@@ -536,8 +536,10 @@ module Katello
         personal_token = OpenStruct.new(token: 'unauthenticated', issued_at: Time.now, expires_at: 3.minutes.from_now)
       else
         PersonalAccessToken.transaction do
-          personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').first
+          personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry', revoked: false).first
           if personal_token.nil?
+            return unless handle_revoked_token_auth
+
             personal_token = PersonalAccessToken.new(user: User.current, name: 'registry', expires_at: Setting['registry_token_expiration_minutes'].minutes.from_now)
             personal_token.generate_token
             personal_token.save!
@@ -546,7 +548,9 @@ module Katello
             personal_token.save!
           end
         rescue ActiveRecord::RecordInvalid
-          personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').reload.first
+          # This rescue block exists to handle the race condition for multiple token requests at once. We reload the token first, THEN respond unauthorized if needed.
+          personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry', revoked: false).reload.first
+          return unauthorized if personal_token.nil?
         end
       end
 
@@ -560,6 +564,21 @@ module Katello
         expires_in: expiration_seconds,
         issued_at: create_time.rfc3339,
       }
+    end
+
+    def handle_revoked_token_auth
+      # If the token was revoked, block all actions as unauthorized except for login.
+      # Login uses basic auth (username/password), while all registry operations use bearer tokens.
+      revoked_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry', revoked: true).first
+      return true if revoked_token.blank?
+
+      if params['scope'].blank? && request.headers['Authorization']&.match?(/\ABasic /i)
+        revoked_token.destroy!
+        true
+      else
+        unauthorized
+        false
+      end
     end
 
     def pull_manifest
