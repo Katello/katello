@@ -44,6 +44,7 @@ import ActivationKeysSearch from './components/ActivationKeysSearch';
 import { CVEDetailsCard } from './scenes/ActivationKeys/Details/components/CVEDetailsCard.js';
 import { CVEDetailsCreateCard } from './scenes/ActivationKeys/Details/components/CVEDetailsCreateCard.js';
 
+
 registerReducer('katello', rootReducer);
 
 addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <RegistrationCommands key="katello-reg" />, 100);
