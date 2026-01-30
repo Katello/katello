@@ -951,7 +951,8 @@ module ::Actions::Katello::ContentView
       plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}], [],
                   {:errata_ids => ["FOO"]}, true, [], "BadDescription")
       assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],
-                                :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
+                                :resolve_dependencies => true, :content => {:errata_ids => ["FOO"]}, :description => "BadDescription",
+                                :propagated_composite_cv_ids => [])
     end
 
     it 'plans with composite' do
@@ -966,7 +967,8 @@ module ::Actions::Katello::ContentView
       plan_action(action, [{:content_view_version => component, :environments => []}], [{:content_view_version => composite_version, :environments => [library]}],
                   {:errata_ids => ["FOO"]}, true, [], "BadDescription")
       assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, component, [],
-                                :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
+                                :resolve_dependencies => true, :content => {:errata_ids => ["FOO"]}, :description => "BadDescription",
+                                :propagated_composite_cv_ids => [composite_version.content_view_id])
       assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, composite_version, [library],
                                 :new_components => [new_version],
                                 :description => "BadDescription")
