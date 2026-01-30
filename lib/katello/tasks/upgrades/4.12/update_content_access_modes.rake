@@ -23,6 +23,8 @@ namespace :katello do
           if commit && needs_migration
             ::Katello::Resources::Candlepin::Owner.update(org.label)
           end
+        rescue RestClient::NotFound
+          print "Organization #{org.name} was missing from Candlepin and will be skipped"
         end
         print "----------------------------------------\n"
         if commit
