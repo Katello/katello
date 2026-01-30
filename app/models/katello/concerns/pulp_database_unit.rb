@@ -44,6 +44,10 @@ module Katello
       def backend_identifier_field
       end
 
+      def prn_identifier_field
+        self::PRN_IDENTIFIER_FIELD if self.const_defined?(:PRN_IDENTIFIER_FIELD)
+      end
+
       def content_unit_class
         "::Katello::Pulp::#{self.name.demodulize}".constantize
       end
@@ -89,7 +93,7 @@ module Katello
       end
 
       def db_columns_copy
-        [unit_id_field, backend_identifier_field, :repository_id].compact
+        [unit_id_field, backend_identifier_field, :repository_id, prn_identifier_field&.to_sym].compact
       end
 
       def db_values_copy(source_repo, dest_repo)
@@ -102,8 +106,9 @@ module Katello
         end
         unit_backend_identifier_field = backend_identifier_field
         unit_identifier_filed = unit_id_field
+        unit_prn_field = prn_identifier_field
         new_units.each do |unit|
-          db_values << [unit[unit_identifier_filed], unit[unit_backend_identifier_field], dest_repo.id].compact
+          db_values << [unit[unit_identifier_filed], unit[unit_backend_identifier_field], dest_repo.id, unit[unit_prn_field]].compact
         end
         db_values
       end
