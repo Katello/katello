@@ -11,7 +11,6 @@ import {
 } from '@patternfly/react-core';
 
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
 import { useTableIndexAPIResponse } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
@@ -23,6 +22,7 @@ import { BulkPackagesUpgradeTable, BulkPackagesInstallTable, BulkPackagesRemoveT
 import { BulkPackagesReviewFooter } from './04_ReviewFooter';
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import PACKAGE_CONTENT_TYPE_NAMES from '../BulkActionsConstants';
+import { useBulkModalOpen } from '../bulkModalState';
 
 export const UPGRADE_ALL = 'upgradeAll';
 export const UPGRADE = 'upgrade';
@@ -73,7 +73,7 @@ export const getPackagesUrl = (selectedAction, contentTypeName) => {
 };
 
 const BulkPackagesWizard = () => {
-  const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-packages-wizard' });
+  const { isOpen: modalOpen, close: closeModal } = useBulkModalOpen('bulk-packages-wizard');
 
   const [selectedAction, setSelectedAction] = useState(UPGRADE_ALL);
 

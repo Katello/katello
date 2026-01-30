@@ -1,10 +1,10 @@
 import React from 'react';
 import { Modal, ModalVariant } from '@patternfly/react-core';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import BulkErrataWizard from './BulkErrataWizard';
+import { useBulkModalOpen } from '../bulkModalState';
 
 const BulkErrataWizardModal = () => {
-  const { modalOpen: isOpen } = useForemanModal({ id: 'bulk-errata-wizard' });
+  const { isOpen, close: closeModal } = useBulkModalOpen('bulk-errata-wizard');
 
   return (
     <Modal
@@ -16,7 +16,7 @@ const BulkErrataWizardModal = () => {
       hasNoBodyWrapper
       variant={ModalVariant.medium}
     >
-      <BulkErrataWizard />
+      <BulkErrataWizard isOpen={isOpen} closeModal={closeModal} />
     </Modal>
   );
 };

@@ -1,15 +1,14 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 import { Menu, MenuItem, MenuContent, MenuList } from '@patternfly/react-core';
 import { BanIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import { ForemanHostsIndexActionsBarContext } from 'foremanReact/components/HostsIndex';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
-import { addModal } from 'foremanReact/components/ForemanModal/ForemanModalActions';
 import { useForemanOrganization, useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
 import './ActionsBar.scss';
+import { openBulkModal } from '../BulkActions/bulkModalState';
+
 
 const DisabledMenuItemDescription = ({ disabledReason }) => (
   <span className="disabled-menu-item-span">
@@ -34,27 +33,6 @@ const HostActionsBar = () => {
     setMenuOpen,
   } = useContext(ForemanHostsIndexActionsBarContext);
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-    [
-      'bulk-assign-cves-modal',
-      'bulk-packages-wizard',
-      'bulk-errata-wizard',
-      'bulk-repo-sets-wizard',
-      'bulk-change-host-collections-modal',
-      'bulk-system-purpose-modal',
-      'bulk-manage-traces-modal',
-    ].forEach((id) => {
-      dispatch(addModal({ id }));
-    });
-  }, [dispatch]);
-  const { setModalOpen: openBulkAssignCVEnvsModal } = useForemanModal({ id: 'bulk-assign-cves-modal' });
-  const { setModalOpen: openBulkPackagesWizardModal } = useForemanModal({ id: 'bulk-packages-wizard' });
-  const { setModalOpen: openBulkErrataWizardModal } = useForemanModal({ id: 'bulk-errata-wizard' });
-  const { setModalOpen: openBulkRepositorySetsWizardModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
-  const { setModalOpen: openBulkSystemPurposeModal } = useForemanModal({ id: 'bulk-system-purpose-modal' });
-  const { setModalOpen: openBulkManageTracesModal } = useForemanModal({ id: 'bulk-manage-traces-modal' });
-
   const orgId = useForemanOrganization()?.id;
   const foremanContext = useForemanContext();
   const allowMultipleContentViews =
@@ -67,6 +45,11 @@ const HostActionsBar = () => {
   } else if (selectedCount > 0) {
     href = foremanUrl(`/change_host_content_source?search=${fetchBulkParams()}`);
   }
+
+  const handleOpenBulkModal = (modalId) => {
+    setMenuOpen(false);
+    setTimeout(() => openBulkModal(modalId, true), 0);
+  };
 
   return (
     <>
@@ -81,7 +64,7 @@ const HostActionsBar = () => {
                 <MenuItem
                   itemId="bulk-packages-wizard-dropdown-item"
                   key="bulk-packages-wizard-dropdown-item"
-                  onClick={openBulkPackagesWizardModal}
+                  onClick={() => handleOpenBulkModal('bulk-packages-wizard')}
                   isDisabled={selectedCount === 0 || !orgId}
                   description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host packages, a specific organization must be selected from the organization context.')} />}
                 >
@@ -90,7 +73,7 @@ const HostActionsBar = () => {
                 <MenuItem
                   itemId="bulk-errata-wizard-dropdown-item"
                   key="bulk-errata-wizard-dropdown-item"
-                  onClick={openBulkErrataWizardModal}
+                  onClick={() => handleOpenBulkModal('bulk-errata-wizard')}
                   isDisabled={selectedCount === 0}
                 >
                   {__('Errata')}
@@ -98,7 +81,7 @@ const HostActionsBar = () => {
                 <MenuItem
                   itemId="bulk-repo-sets-wizard-dropdown-item"
                   key="bulk-repo-sets-wizard-dropdown-item"
-                  onClick={openBulkRepositorySetsWizardModal}
+                  onClick={() => handleOpenBulkModal('bulk-repo-sets-wizard')}
                   isDisabled={selectedCount === 0 || !orgId}
                   description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host content overrides, a specific organization must be selected from the organization context.')} />}
                 >
@@ -115,7 +98,7 @@ const HostActionsBar = () => {
                 <MenuItem
                   itemId="bulk-assign-cves-dropdown-item"
                   key="bulk-assign-cves-dropdown-item"
-                  onClick={openBulkAssignCVEnvsModal}
+                  onClick={() => handleOpenBulkModal('bulk-assign-cves-modal')}
                   isDisabled={selectedCount === 0 || !orgId}
                   description={!orgId && <DisabledMenuItemDescription disabledReason={__('To assign content view environment(s), a specific organization must be selected from the organization context.')} />}
                 >
@@ -124,7 +107,7 @@ const HostActionsBar = () => {
                 <MenuItem
                   itemId="bulk-system-purpose-dropdown-item"
                   key="bulk-system-purpose-dropdown-item"
-                  onClick={openBulkSystemPurposeModal}
+                  onClick={() => handleOpenBulkModal('bulk-system-purpose-modal')}
                   isDisabled={selectedCount === 0 || !orgId}
                   description={!orgId && <DisabledMenuItemDescription disabledReason={__('To change system purpose, a specific organization must be selected from the organization context.')} />}
                 >
@@ -140,7 +123,7 @@ const HostActionsBar = () => {
       <MenuItem
         itemId="bulk-manage-traces-menu-item"
         key="bulk-manage-traces-menu-item"
-        onClick={openBulkManageTracesModal}
+        onClick={() => handleOpenBulkModal('bulk-manage-traces-modal')}
         isDisabled={selectedCount === 0 || !orgId}
         description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage traces, a specific organization must be selected from the organization context.')} />}
       >

@@ -5,8 +5,8 @@ import { BanIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import BulkChangeHostCollectionsModal from './BulkChangeHostCollectionsModal';
+import { openBulkModal, useBulkModalOpen } from '../bulkModalState';
 
 const DisabledMenuItemDescription = ({ disabledReason }) => (
   <span className="disabled-menu-item-span">
@@ -26,13 +26,13 @@ DisabledMenuItemDescription.propTypes = {
 // This component renders only the MenuItem trigger (for the slot in the menu)
 export const BulkChangeHostCollectionsMenuItem = ({ selectedCount }) => {
   const orgId = useForemanOrganization()?.id;
-  const { setModalOpen } = useForemanModal({ id: 'bulk-change-host-collections-modal' });
+  const openModal = () => openBulkModal('bulk-change-host-collections-modal', true);
 
   return (
     <MenuItem
       itemId="change-host-collections-dropdown-item"
       key="change-host-collections-dropdown-item"
-      onClick={setModalOpen}
+      onClick={openModal}
       isDisabled={selectedCount === 0 || !orgId}
       description={!orgId && <DisabledMenuItemDescription disabledReason={__('To manage host collections, a specific organization must be selected from the organization context.')} />}
     >
@@ -53,7 +53,7 @@ BulkChangeHostCollectionsMenuItem.defaultProps = {
 const BulkChangeHostCollectionsModalScene = () => {
   const orgId = useForemanOrganization()?.id;
   const { selectedCount, fetchBulkParams } = useContext(ForemanActionsBarContext);
-  const { modalOpen, setModalClosed } = useForemanModal({ id: 'bulk-change-host-collections-modal' });
+  const { isOpen, close: closeModal } = useBulkModalOpen('bulk-change-host-collections-modal');
 
   if (!orgId) return null;
 
@@ -62,8 +62,8 @@ const BulkChangeHostCollectionsModalScene = () => {
       key="bulk-change-host-collections-modal"
       fetchBulkParams={fetchBulkParams}
       selectedCount={selectedCount}
-      isOpen={modalOpen}
-      closeModal={setModalClosed}
+      isOpen={isOpen}
+      closeModal={closeModal}
     />
   );
 };

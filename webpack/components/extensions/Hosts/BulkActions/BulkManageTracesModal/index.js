@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
+import { useBulkModalOpen } from '../bulkModalState';
 import BulkManageTracesModal from './BulkManageTracesModal';
 
 const BulkManageTracesModalScene = () => {
   const orgId = useForemanOrganization()?.id;
   const contextValue = useContext(ForemanActionsBarContext);
   const { selectedCount, fetchBulkParams } = contextValue || {};
-  const { modalOpen, setModalClosed } = useForemanModal({ id: 'bulk-manage-traces-modal' });
+  const { isOpen, close: closeModal } = useBulkModalOpen('bulk-manage-traces-modal');
 
   if (!orgId) return null;
 
@@ -22,8 +22,8 @@ const BulkManageTracesModalScene = () => {
       key="bulk-manage-traces-modal"
       selectedCount={selectedCount || 0}
       fetchBulkParams={fetchBulkParams}
-      isOpen={modalOpen}
-      closeModal={setModalClosed}
+      isOpen={isOpen}
+      closeModal={closeModal}
       orgId={orgId}
     />
   );

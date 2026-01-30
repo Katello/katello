@@ -1,10 +1,10 @@
 import React from 'react';
 import { Modal, ModalVariant } from '@patternfly/react-core';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import BulkRepositorySetsWizard from './BulkRepositorySetsWizard';
+import { useBulkModalOpen } from '../bulkModalState';
 
 const BulkRepositorySetsWizardModal = () => {
-  const { modalOpen: isOpen } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
+  const { isOpen } = useBulkModalOpen('bulk-repo-sets-wizard');
 
   return (
     <Modal
