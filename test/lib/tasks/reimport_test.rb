@@ -25,10 +25,6 @@ module Katello
       importable_models = [Katello::Subscription, Katello::Pool, Katello::Content]
       importable_models.each { |model| model.expects(:import_all) }
 
-      key = katello_activation_keys(:simple_key)
-      key.expects(:import_pools)
-      Katello::ActivationKey.stubs(:all).returns([key])
-
       Rake.application.invoke_task('katello:reimport')
     end
   end

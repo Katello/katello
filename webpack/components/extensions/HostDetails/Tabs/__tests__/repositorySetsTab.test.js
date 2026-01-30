@@ -39,7 +39,6 @@ const renderOptions = (facetAttributes = contentFacetAttributes) => ({
       ORGANIZATION_1: {
         response: {
           id: 1,
-          simple_content_access: true,
         },
         status: 'RESOLVED',
       },
@@ -53,7 +52,6 @@ const contentOverride = foremanApi.getApiUrl('/hosts/1/subscriptions/content_ove
 
 const limitToEnvQuery = {
   content_access_mode_env: true,
-  content_access_mode_all: true,
   host_id: 1,
   per_page: 20,
   page: 1,

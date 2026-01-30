@@ -76,7 +76,6 @@ class ManageManifestModal extends Component {
       disabledReason,
       canImportManifest,
       canDeleteManifest,
-      simpleContentAccess,
       isManifestImported,
       canEditOrganizations,
       taskInProgress,
@@ -286,7 +285,7 @@ class ManageManifestModal extends Component {
                               </Button>,
                             ]}
                           >
-                            <DeleteManifestModalText simpleContentAccess={simpleContentAccess} />
+                            <DeleteManifestModalText />
                           </Modal>
                         </Col>
                       </Row>
@@ -358,7 +357,6 @@ ManageManifestModal.propTypes = {
   }).isRequired,
   canImportManifest: PropTypes.bool,
   canDeleteManifest: PropTypes.bool,
-  simpleContentAccess: PropTypes.bool,
   isManifestImported: PropTypes.bool,
   canEditOrganizations: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
@@ -383,7 +381,6 @@ ManageManifestModal.defaultProps = {
   disabledReason: '',
   canImportManifest: false,
   canDeleteManifest: false,
-  simpleContentAccess: true,
   isManifestImported: false,
   canEditOrganizations: false,
   manifestActionStarted: false,

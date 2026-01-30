@@ -129,8 +129,6 @@ module Katello
         after_validation :queue_refresh_content_host_status
         register_rebuild(:queue_refresh_content_host_status, N_("Refresh_Content_Host_Status"))
 
-        scope :with_pools_expiring_in_days, ->(days) { joins(:pools).merge(Katello::Pool.expiring_in_days(days)).distinct }
-
         scope :image_mode, -> do
           joins(:content_facet).where.not("#{::Katello::Host::ContentFacet.table_name}.bootc_booted_image" => nil)
         end
@@ -151,8 +149,6 @@ module Katello
         scoped_search :relation => :lifecycle_environments, :on => :id, :complete_value => true, :rename => :lifecycle_environment_id, :only_explicit => true
         scoped_search :relation => :content_views, :on => :id, :complete_value => true, :rename => :content_view_id, :only_explicit => true
 
-        scoped_search relation: :pools, on: :pools_expiring_in_days, ext_method: :find_with_expiring_pools, only_explicit: true
-
         smart_proxy_reference :content_facet => [:content_source_id]
 
         def add_back_cve_errors
@@ -165,21 +161,11 @@ module Katello
           @pending_cve_attrs = {}
         end
 
-        def self.find_with_expiring_pools(_key, _operator, days_from_now)
-          host_ids = with_pools_expiring_in_days(days_from_now).ids
-          if host_ids.any?
-            { :conditions => "hosts.id IN (#{host_ids.join(', ')})" }
-          else
-            { :conditions => "1=0" }
-          end
-        end
-
         apipie :class do
           property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host'
           property :subscription_manager_configuration_url, String, desc: 'Returns URL for subscription manager configuration'
           property :rhsm_organization_label, String, desc: 'Returns label of the Red Hat Subscription Manager organization'
           property :host_collections, array_of: 'HostCollection', desc: 'Returns list of the host collections the host belongs to'
-          property :pools, array_of: 'Pool', desc: 'Returns subscription pool objects associated with the host'
           property :hypervisor_host, 'Host', desc: 'Returns hypervisor host object of this host'
           property :lifecycle_environments, 'KTEnvironment', desc: 'Returns lifecycle environments associated with the host'
           property :content_views, 'ContentView', desc: 'Returns content views associated with the host'
@@ -600,12 +586,6 @@ module Katello
         ids
       end
 
-      def filtered_entitlement_quantity_consumed(pool)
-        entitlements = subscription_facet.candlepin_consumer.filter_entitlements(pool.cp_id)
-        return nil if entitlements.empty?
-        entitlements.sum { |e| e[:quantity] }
-      end
-
       def yum_or_yum_transient
         content_facet&.yum_or_yum_transient || "yum"
       end
@@ -626,9 +606,8 @@ end
 
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
-        :host_collections, :pools, :hypervisor_host, :installed_debs,
-        :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
-        :filtered_entitlement_quantity_consumed, :bound_repositories,
+        :host_collections, :hypervisor_host, :installed_debs,
+        :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template, :bound_repositories,
         :single_content_view, :single_lifecycle_environment, :content_view_environment_labels, :multi_content_view_environment?,
         :release_version, :purpose_role, :purpose_usage, :image_mode_host?, :yum_or_yum_transient
 end

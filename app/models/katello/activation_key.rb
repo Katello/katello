@@ -20,12 +20,9 @@ module Katello
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
     has_many :host_collections, :through => :key_host_collections
 
-    has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_key
-    has_many :pools, :through => :pool_activation_keys, :class_name => "Katello::Pool"
-    has_many :subscriptions, :through => :pools
-
     has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy
     has_many :subscription_facets, :through => :subscription_facet_activation_keys
+    has_many :hosts, through: :subscription_facets
 
     before_destroy :validate_destroyable!
 
@@ -79,9 +76,6 @@ module Katello
     scoped_search :relation => :lifecycle_environments, :on => :name, :complete_value => true, :rename => :environment, :only_explicit => true
 
     scoped_search :on => :description, :complete_value => true
-    scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
-    scoped_search :on => :id, :relation => :subscriptions, :rename => :subscription_id, :complete_value => true,
-                  :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER, :ext_method => :find_by_subscription_id
     scoped_search :on => :purpose_usage, :rename => :usage, :complete_value => true
     scoped_search :on => :purpose_role, :rename => :role, :complete_value => true
 
@@ -168,10 +162,6 @@ module Katello
       subscription_facet_activation_keys.count
     end
 
-    def hosts
-      subscription_facets.map(&:host)
-    end
-
     def related_resources
       self.organization
     end
@@ -188,35 +178,8 @@ module Katello
       content_view_environments.map(&:label).join(',')
     end
 
-    def available_subscriptions
-      all_pools = self.get_pools.map { |pool| pool["id"] }
-      added_pools = self.pools.pluck(:cp_id)
-      available_pools = all_pools - added_pools
-      Pool.where(:cp_id => available_pools,
-                 :subscription_id => Subscription.subscribable)
-    end
-
-    def products
-      Katello::Product.distinct.joins(:pools => :activation_keys).where("#{Katello::ActivationKey.table_name}.id" => self.id).enabled.sort
-    end
-
     def valid_content_override_label?(content_label)
       self.available_content.map(&:content).any? { |content| content.label == content_label }
-    end
-
-    def calculate_consumption(product, pools, _allocate)
-      pools = pools.sort_by { |pool| [pool.start_date, pool.cp_id] }
-      consumption = {}
-
-      if product.provider.redhat_provider?
-        pools.each do |pool|
-          consumption[pool] ||= 0
-          consumption[pool] += 1
-        end
-      else
-        consumption[pools.first] = 1
-      end
-      return consumption
     end
 
     def copy(new_name)
@@ -228,33 +191,8 @@ module Katello
       new_key
     end
 
-    def subscribe_to_pool(pool_id, quantity = 1)
-      self.subscribe(pool_id, quantity)
-    rescue RestClient::ResourceNotFound, RestClient::BadRequest => e
-      raise JSON.parse(e.response)['displayMessage']
-    end
-
-    def unsubscribe_from_pool(pool_id)
-      self.unsubscribe(pool_id)
-    rescue RestClient::ResourceNotFound, RestClient::BadRequest => e
-      raise JSON.parse(e.response)['displayMessage']
-    end
-
     def self.humanize_class_name(_name = nil)
       _("Activation Keys")
-    end
-
-    def self.find_by_subscription_name(_key, operator, value)
-      conditions = sanitize_sql_for_conditions(["#{Katello::Subscription.table_name}.name #{operator} ?", value_to_sql(operator, value)])
-      activation_keys = ::Katello::ActivationKey.joins(pools: :subscription).where(conditions)
-      return_activation_keys_by_id(activation_keys.pluck(:id))
-    end
-
-    def self.find_by_subscription_id(_key, operator, value)
-      # What we refer to as "subscriptions" is really Pools, so we search based on Pool id.
-      conditions = sanitize_sql_for_conditions(["#{Katello::Pool.table_name}.id #{operator} ?", value_to_sql(operator, value)])
-      activation_keys = ::Katello::ActivationKey.joins(:pools).where(conditions)
-      return_activation_keys_by_id(activation_keys.pluck(:id))
     end
 
     def self.return_activation_keys_by_id(activation_key_ids)

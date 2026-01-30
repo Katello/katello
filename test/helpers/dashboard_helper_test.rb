@@ -13,7 +13,6 @@ class DashboardHelperTest < ActiveSupport::TestCase
                                :content_view => katello_content_views(:library_dev_view),
                                :lifecycle_environment => katello_environments(:library), :id => 101)
     @host.organization = taxonomies(:organization1)
-    @host.organization.stubs(:simple_content_access?).returns(false)
     @host.save!
     Organization.current = @host.organization
   end

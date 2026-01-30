@@ -23,24 +23,6 @@ module Katello
         @consumer = Katello::Candlepin::Consumer.new('foo', 'org_label')
       end
 
-      def test_filter_entitlements_simple
-        assert_equal ENTITLEMENTS, @consumer.filter_entitlements
-        assert_equal [ENTITLEMENT_A], @consumer.filter_entitlements(1, [1])
-        assert_empty @consumer.filter_entitlements(1, [7])
-        assert_equal [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C], @consumer.filter_entitlements(1, [])
-        assert_equal [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C], @consumer.filter_entitlements(1, nil)
-        assert_equal [ENTITLEMENT_A, ENTITLEMENT_B], @consumer.filter_entitlements(1, [1, 1])
-        assert_equal [ENTITLEMENT_A, ENTITLEMENT_C], @consumer.filter_entitlements(1, [1, 3])
-        assert_equal [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C], @consumer.filter_entitlements(1)
-      end
-
-      def test_compliance_reasons
-        reasons = [{"key" => "NOTCOVERED", "message" => "Not supported by a valid subscription.", "attributes" => {"product_id" => "69", "name" => "Red Hat Server"}}]
-        Resources::Candlepin::Consumer.stubs(:compliance).returns('reasons' => reasons)
-
-        assert_equal ["Red Hat Server: Not supported by a valid subscription."], @consumer.compliance_reasons
-      end
-
       def test_distribution_to_puppet_os
         assert_equal 'RedHat', Candlepin::Consumer.distribution_to_puppet_os('Red Hat Enterprise Linux Server')
         assert_equal 'RedHat', Candlepin::Consumer.distribution_to_puppet_os('Red Hat Enterprise Linux Desktop')

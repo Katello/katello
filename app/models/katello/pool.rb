@@ -6,17 +6,10 @@ module Katello
     has_many :pool_products, :class_name => "Katello::PoolProduct", :dependent => :destroy, :inverse_of => :pool
     has_many :products, :through => :pool_products, :class_name => "Katello::Product"
 
-    has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :pool
-    has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
-
-    has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :delete_all
-    has_many :subscription_facets, :through => :subscription_facet_pools
-
     belongs_to :organization, :class_name => 'Organization', :inverse_of => :pools
     belongs_to :hypervisor, :class_name => 'Host::Managed', :inverse_of => :hypervisor_pools
 
     scope :in_organization, ->(org_id) { where(:organization_id => org_id) }
-    scope :for_activation_key, ->(ak) { joins(:activation_keys).where("#{Katello::ActivationKey.table_name}.id" => ak.id) }
     scope :expiring_in_days, ->(days) do
       return self if days.blank?
       where(["end_date < ?", days.to_i.days.from_now.end_of_day])

@@ -73,10 +73,6 @@ module Katello
       assert_equal Pool.with_identifier("#{@pool_one.id}"), @pool_one
     end
 
-    def test_hosts
-      assert_equal @pool_one.hosts, [@host_one]
-    end
-
     def test_hypervisors
       assert_equal @pool_one.hypervisor, @host_one
     end
@@ -117,7 +113,6 @@ module Katello
       )
       Pool.expects(:in_organization).with(org).returns([@pool_one])
       @pool_one.expects(:import_data).once
-      @pool_one.expects(:import_managed_associations).once
       Pool.import_all(org)
     end
 
@@ -138,27 +133,10 @@ module Katello
       FactoryBot.create(:katello_subscription, cp_id: 'SKU001', organization: org)
       Katello::Resources::Candlepin::Pool.expects(:get_for_owner).returns([pool_data])
       Katello::Resources::Candlepin::Pool.expects(:find).returns(pool_data)
-      Katello::Pool.any_instance.expects(:import_managed_associations).returns
       Organization.any_instance.expects(:redhat_provider).returns(katello_providers(:redhat))
       Pool.import_all(org)
 
       refute_empty Katello::Pool.where(organization: org)
-    end
-
-    def test_import_all_no_managed_association
-      org = get_organization
-      Pool.expects(:candlepin_records_by_id).returns(
-        {
-          @pool_one.cp_id => {
-            'productId' => @pool_one.subscription.cp_id,
-            'id' => @pool_one.cp_id,
-          },
-        }
-      )
-      Pool.expects(:in_organization).with(org).returns([@pool_one])
-      @pool_one.expects(:import_data).once
-      @pool_one.expects(:import_managed_associations).never
-      Pool.import_all(org, false)
     end
 
     def test_import_all_destroy
@@ -183,9 +161,6 @@ module Katello
       )
 
       subscription = FactoryBot.create(:katello_subscription, organization: @organization, cp_id: 'SKU001')
-
-      Resources::Candlepin::ActivationKey.expects(:get).returns([])
-      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
 
       Pool.import_pool('abcd')
 
@@ -217,34 +192,6 @@ module Katello
       assert_raises(Katello::Errors::CandlepinPoolGone) do
         Pool.import_pool('abcd')
       end
-    end
-
-    def test_import_hosts
-      host = FactoryBot.create(:host, :with_subscription)
-      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([host.subscription_facet.uuid])
-
-      @pool_one.import_hosts
-
-      assert @pool_one.subscription_facets.where(id: host.subscription_facet.id).any?
-    end
-
-    def test_import_hosts_no_consumers
-      host = FactoryBot.create(:host, :with_subscription)
-      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
-
-      @pool_one.import_hosts
-
-      refute @pool_one.subscription_facets.where(id: host.subscription_facet.id).any?
-    end
-
-    def test_import_hosts_cleanup_facet_pools
-      host = FactoryBot.create(:host, :with_subscription)
-      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
-      facet_pool = Katello::SubscriptionFacetPool.create!(pool: @pool_one, subscription_facet: host.subscription_facet)
-
-      @pool_one.import_hosts
-
-      refute Katello::SubscriptionFacetPool.find_by_id(facet_pool.id)
     end
 
     def test_quantity_available_unlimited
@@ -325,24 +272,6 @@ module Katello
     def test_search_virt_who
       subscriptions = Pool.search_for("virt_who = true")
       assert_includes subscriptions, @pool_one
-    end
-
-    def test_for_activation_key
-      key = katello_activation_keys(:simple_key)
-      key.pools << @pool_one
-      assert_includes Pool.for_activation_key(key), @pool_one
-    end
-
-    def test_audit_hook_to_find_records_should_return_hosts
-      # Note - creating audit record manually
-      pool_host_ids = @pool_one.hosts.map(&:id)
-      @pool_one.import_audit_record([], pool_host_ids)
-      audit_record = Audited::Audit.find_by(:auditable_id => @pool_one.id, :auditable_type => 'Katello::Pool')
-
-      refute_nil audit_record
-      hosts_list = Katello::Pool.audit_hook_to_find_records('host_ids', audit_record.audited_changes['host_ids'][1], audit_record)
-
-      assert_equal pool_host_ids.length, hosts_list.keys.length
     end
 
     def test_product_host_count
