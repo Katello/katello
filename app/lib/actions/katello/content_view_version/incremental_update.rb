@@ -26,6 +26,7 @@ module Actions
           description = options.fetch(:description, '')
           content = options.fetch(:content, {})
           new_components = options.fetch(:new_components, [])
+          propagated_composite_cv_ids = options.fetch(:propagated_composite_cv_ids, [])
 
           is_composite = old_version.content_view.composite?
           all_components = is_composite ? calculate_components(old_version, new_components) : []
@@ -46,7 +47,8 @@ module Actions
                         :new_content_view_version_id => publish_action.content_view_version_id,
                         :environment_ids => environments.map(&:id), :user_id => ::User.current.id,
                         :history_id => publish_action.history_id,
-                        :old_version => old_version.id)
+                        :old_version => old_version.id,
+                        :propagated_composite_cv_ids => propagated_composite_cv_ids)
 
               if old_version.environments.present?
                 plan_action(::Actions::Katello::ContentView::Promote, publish_action.version,
@@ -120,7 +122,8 @@ module Actions
                         :new_content_view_version_id => self.new_content_view_version.id,
                         :environment_ids => environments.map(&:id), :user_id => ::User.current.id,
                         :history_id => history.id, :copy_action_outputs => copy_action_outputs,
-                        :old_version => old_version.id)
+                        :old_version => old_version.id,
+                        :propagated_composite_cv_ids => propagated_composite_cv_ids)
               promote(new_content_view_version, environments)
             end
           end
@@ -223,8 +226,13 @@ module Actions
         def run
           version = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id])
           if version.latest? && !version.content_view.composite?
-            output[:auto_publish_content_view_ids] = version.content_view.auto_publish_composites.pluck(:id)
-            output[:auto_publish_content_view_version_id] = version.id
+            # Exclude composites that are already being updated via propagate to prevent duplicate publishes
+            propagated_composite_cv_ids = input[:propagated_composite_cv_ids] || []
+            auto_publish_ids = version.content_view.auto_publish_composites.pluck(:id) - propagated_composite_cv_ids
+            unless auto_publish_ids.empty?
+              output[:auto_publish_content_view_ids] = auto_publish_ids
+              output[:auto_publish_content_view_version_id] = version.id
+            end
           end
 
           content = { ::Katello::Erratum::CONTENT_TYPE => [],

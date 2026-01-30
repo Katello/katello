@@ -16,6 +16,8 @@ module Actions
         def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description)
           old_new_version_map = {}
           output_for_version_ids = []
+          # Extract composite CV IDs that will be updated via propagate to prevent duplicate auto-publish
+          propagated_composite_cv_ids = composite_version_environments.map { |cve| cve[:content_view_version].content_view_id }.compact.uniq
 
           sequence do
             concurrence do
@@ -33,8 +35,9 @@ module Actions
                         {:name => version.content_view.name, :version => version.version}
                     end
 
-                    action = plan_action(ContentViewVersion::IncrementalUpdate, version,
-                                         version_environment[:environments], :resolve_dependencies => dep_solve, :content => content, :description => description)
+                    action = plan_action(ContentViewVersion::IncrementalUpdate, version, version_environment[:environments],
+                                        :resolve_dependencies => dep_solve, :content => content, :description => description,
+                                        :propagated_composite_cv_ids => propagated_composite_cv_ids)
                     old_new_version_map[version] = action.new_content_view_version
                     output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
                   end
