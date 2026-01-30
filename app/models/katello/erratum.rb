@@ -16,6 +16,7 @@ module Katello
 
     CONTENT_TYPE = "erratum".freeze
     BACKEND_IDENTIFIER_FIELD = "erratum_pulp3_href".freeze
+    PRN_IDENTIFIER_FIELD = "erratum_prn".freeze
 
     has_many :content_facet_errata, :class_name => "Katello::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
     has_many :content_facets, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
