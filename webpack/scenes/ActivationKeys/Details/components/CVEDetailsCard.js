@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { DropdownItem } from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { isEqual } from 'lodash';
 import { useForemanContext, useForemanPermissions } from 'foremanReact/Root/Context/ForemanContext';
 import { CVEDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import AssignAKCVModal from './AssignAKCVModal';
@@ -22,13 +23,25 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
   // Get setting from ForemanContext (registered in plugin.rb)
   const { metadata = {} } = useForemanContext();
   const allowMultipleContentViews = metadata?.katello?.allow_multiple_content_views ?? true;
+  const observedAkDetailsAttributes = new Set([
+    'id',
+    'organization_id',
+    'content_view_environments',
+  ]);
 
   const observer = new MutationObserver((mutationsList) => {
     // eslint-disable-next-line no-restricted-syntax
     for (const mutation of mutationsList) {
       if (mutation.type === 'attributes' && mutation.attributeName.startsWith('data-')) {
         akDetailsNode.current = document.getElementById('ak-cve-details');
-        setAkDetails(getAKDetailsFromDOM(akDetailsNode));
+        const newDetails = getAKDetailsFromDOM(akDetailsNode);
+        // eslint-disable-next-line no-restricted-syntax
+        for (const key of Object.keys(newDetails)) {
+          if (!isEqual(akDetails[key], newDetails[key]) && observedAkDetailsAttributes.has(key)) {
+            setAkDetails(newDetails);
+            return;
+          }
+        }
       }
     }
   });
