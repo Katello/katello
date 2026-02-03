@@ -529,17 +529,39 @@ describe('AssignAKCVModal', () => {
         return { id: 1, name: 'Test AK' };
       });
 
-    // Mock fetch for refresh
-    global.fetch = jest.fn(() => Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve({ id: 1, name: 'Test AK' }),
-    }));
-
     // Mock DOM and Angular for refresh
     const mockElement = { setAttribute: jest.fn() };
     document.getElementById = jest.fn(() => mockElement);
+
+    // Mock ActivationKey resource instance with $promise
+    const mockActivationKeyResource = {
+      $promise: Promise.resolve({ id: 1, name: 'Test AK' }),
+    };
+
+    // Mock Angular's ActivationKey service
+    const mockActivationKeyService = {
+      get: jest.fn(() => mockActivationKeyResource),
+    };
+
+    const mockScope = {
+      $apply: jest.fn((fn) => {
+        fn(); // Execute the function passed to $apply
+      }),
+      activationKey: null,
+    };
+
+    const mockInjector = {
+      get: jest.fn((serviceName) => {
+        if (serviceName === 'ActivationKey') return mockActivationKeyService;
+        return null;
+      }),
+    };
+
     global.window.angular = {
-      element: jest.fn(() => ({ scope: () => ({ $apply: jest.fn() }) })),
+      element: jest.fn(() => ({
+        injector: () => mockInjector,
+        scope: () => mockScope,
+      })),
     };
 
     const { getAllByRole } = renderWithRedux(

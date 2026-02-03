@@ -54,40 +54,55 @@ const AssignAKCVModal = ({
   const refreshPage = async () => {
     handleModalClose();
 
-    // Fetch updated activation key data
     try {
-      const response = await fetch(api.getApiUrl(`/activation_keys/${akId}`), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
+      // Access Angular's injector to get the ActivationKey service
+      const angularElement = window.angular?.element(document.getElementById('ak-cve-details'));
+      if (!angularElement) {
+        // Fallback to page reload if Angular not available
+        window.location.reload();
+        return;
+      }
+
+      const injector = angularElement.injector();
+      if (!injector) {
+        window.location.reload();
+        return;
+      }
+
+      const ActivationKey = injector.get('ActivationKey');
+      const scope = angularElement.scope();
+
+      if (!scope) {
+        window.location.reload();
+        return;
+      }
+
+      // Re-fetch the activation key using Angular's ActivationKey service
+      // This ensures we get a proper BastionResource instance with $update(), $delete() methods
+      let updatedAk;
+      scope.$apply(() => {
+        updatedAk = ActivationKey.get({ id: akId });
       });
 
-      if (response.ok) {
-        const updatedAkData = await response.json();
+      // Wait for the promise to resolve, then update both Angular scope and DOM
+      try {
+        const response = await updatedAk.$promise;
+        scope.$apply(() => {
+          scope.activationKey = updatedAk; // Assign the resource instance (not the response)
+        });
 
         // Update the DOM element that the React component watches
         const akDetailsNode = document.getElementById('ak-cve-details');
         if (akDetailsNode) {
-          akDetailsNode.setAttribute('data-ak-details', JSON.stringify(updatedAkData));
+          akDetailsNode.setAttribute('data-ak-details', JSON.stringify(response));
         }
-
-        // Update Angular scope if available
-        const angularElement = window.angular?.element(document.getElementById('ak-cve-details'));
-        if (angularElement) {
-          const scope = angularElement.scope();
-          if (scope) {
-            scope.$apply(() => {
-              scope.activationKey = updatedAkData;
-            });
-          }
-        }
-      } else {
-        // Fallback to page reload if fetch fails
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to refresh activation key:', error);
         window.location.reload();
       }
     } catch (error) {
-      // Fallback to page reload if fetch fails
+      // Fallback to page reload if anything fails
       // eslint-disable-next-line no-console
       console.error('Failed to refresh activation key data:', error);
       window.location.reload();
