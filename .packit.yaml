@@ -28,7 +28,8 @@ actions:
     - bash -c 'sed -i "/global release/a%global nightly ${PACKIT_RPMSPEC_RELEASE:1}" rubygem-katello.spec'
 
 jobs:
-  - job: copr_build
+  - &copr
+    job: copr_build
     trigger: pull_request
     targets:
       rhel-9:
@@ -38,6 +39,12 @@ jobs:
           - https://yum.theforeman.org/plugins/nightly/el9/x86_64/
           - https://yum.theforeman.org/katello/nightly/katello/el9/x86_64/
     module_hotfixes: true
+
+  - <<: *copr
+    trigger: commit
+    branch: master
+    owner: '@theforeman'
+    project: develop
 
 srpm_build_deps:
   - wget
