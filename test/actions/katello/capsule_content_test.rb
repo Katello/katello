@@ -22,7 +22,6 @@ module ::Actions::Katello::CapsuleContent
 
     before do
       set_user
-      SmartProxy.any_instance.stubs(:ping_pulp).returns({})
       SmartProxy.any_instance.stubs(:ping_pulp3).returns({})
       SmartProxy.any_instance.stubs(:pulp3_configuration).returns(nil)
       SmartProxy.any_instance.stubs(:verify_ueber_certs).returns(nil)
