@@ -138,6 +138,25 @@ module Katello
         enhancement_rule.reload
       end
     end
+
+    def test_copy_repository_associations_with_prn
+      repo_one = @repo
+      repo_two = katello_repositories(:rhel_6_x86_64_dev)
+
+      repo_one.errata = [@security]
+
+      repo_erratum = Katello::RepositoryErratum.find_by(repository_id: repo_one.id, erratum_id: @security.id)
+      repo_erratum.update!(erratum_prn: "prn:rpm.updaterecord:test-uuid-12345")
+
+      repo_two.errata = [@bugfix]
+
+      Katello::Erratum.copy_repository_associations(repo_one, repo_two)
+
+      assert_equal [@security], repo_two.reload.errata
+
+      copied_repo_erratum = Katello::RepositoryErratum.find_by(repository_id: repo_two.id, erratum_id: @security.id)
+      assert_equal "prn:rpm.updaterecord:test-uuid-12345", copied_repo_erratum.erratum_prn
+    end
   end
 
   class ErratumAvailableTest < ErratumTestBase
