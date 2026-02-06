@@ -1,11 +1,11 @@
 import React, { useState, createContext, useContext } from 'react';
+import PropTypes from 'prop-types';
 import {
   Wizard,
   WizardHeader,
   WizardStep,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
 import { useTableIndexAPIResponse } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
@@ -53,8 +53,7 @@ export const useErrataHostsBulkSelect = ({ initialSelectedHosts, modalIsOpen }) 
 
 export const ERRATA_URL = `${katelloApi.getApiUrl('/errata')}?per_page=7&include_permissions=true&errata_restrict_installable=true`;
 
-const BulkErrataWizard = () => {
-  const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-errata-wizard' });
+const BulkErrataWizard = ({ isOpen: modalOpen, closeModal }) => {
   const { selectedCount: initialSelectedHostCount, fetchBulkParams }
     = useContext(ForemanActionsBarContext);
 
@@ -159,3 +158,8 @@ const BulkErrataWizard = () => {
 };
 
 export default BulkErrataWizard;
+
+BulkErrataWizard.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+};

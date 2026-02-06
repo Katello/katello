@@ -9,7 +9,6 @@ import {
 } from '@patternfly/react-core';
 
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
@@ -21,6 +20,7 @@ import HostReview from '../HostReview';
 import katelloApi from '../../../../../services/api';
 import { useHostsBulkSelect } from '../BulkPackagesWizard/BulkPackagesWizard';
 import { BulkRepositorySetsReviewFooter } from './03_ReviewFooter';
+import { useBulkModalOpen } from '../bulkModalState';
 
 const DEFAULT_PER_PAGE = 5;
 export const BulkRepositorySetsWizardContext = createContext({});
@@ -28,7 +28,7 @@ export const repoSetsUrlForOrg = orgId =>
   katelloApi.getApiUrl(`/repository_sets?per_page=${DEFAULT_PER_PAGE}&include_permissions=true&enabled=true&with_custom=true&organization_id=${orgId}`);
 
 const BulkRepositorySetsWizard = () => {
-  const { modalOpen, setModalClosed: closeModal } = useForemanModal({ id: 'bulk-repo-sets-wizard' });
+  const { isOpen: modalOpen, close: closeModal } = useBulkModalOpen('bulk-repo-sets-wizard');
   const orgId = useForemanOrganization()?.id;
   const [pendingOverrides, setPendingOverrides] = useState({}); // { repo_label: 1 }
   const [shouldValidateStep2, setShouldValidateStep2] = useState(false);
