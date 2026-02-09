@@ -5,6 +5,8 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
+      Setting[:ssl_certificate] = '/home/vagrant/foreman-certs/client_cert.pem'
+      Setting[:ssl_priv_key] = '/home/vagrant/foreman-certs/client_key.pem'
       @primary = SmartProxy.pulp_primary
       @yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @yum_acs.subpaths = ['rpm-with-sha-512/', 'rpm-with-modules/']
