@@ -105,11 +105,17 @@ module Katello
     # hook so that the resumed Dynflow tasks can rely on everything ready.
     initializer 'katello.register_plugin', :before => :finisher_hook, :after => 'foreman_remote_execution.register_plugin' do |app|
       app.reloader.to_prepare do
+        require 'foreman/cron'
+
         ::Foreman::AccessControl::Permission.prepend ::Katello::Concerns::PermissionExtensions
         require 'katello/plugin'
 
         # extend builtin permissions from core with new actions
         require 'katello/permissions'
+
+        # Register recurring tasks with Foreman::Cron framework
+        Foreman::Cron.register(:weekly, 'katello:delete_orphaned_content')
+        Foreman::Cron.register(:weekly, 'katello:refresh_alternate_content_sources')
       end
     end
 
