@@ -81,7 +81,7 @@ module Katello
       end
 
       def task_group_href
-        task_data[:task_group] || task_data[:created_resources].find { |href| href.starts_with?("/pulp/api/v3/task-groups/") }
+        task_data[:task_group] || task_data[:created_resources]&.find { |href| href.starts_with?("/pulp/api/v3/task-groups/") }
       end
 
       def done?
