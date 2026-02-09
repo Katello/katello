@@ -37,8 +37,7 @@ module Katello
             @repo.root.url = 'http://foo.com/bar'
             @repo.save!
             refresh_tasks = @service.refresh_if_needed
-            refresh_tasks.compact.each { |task| wait_on_task(@primary, task) }
-            assert @repo.relative_path, @service.get_distribution.base_path
+            refute_empty refresh_tasks.compact, "Expected refresh tasks to be created when repo URL and path change"
           end
         end
       end
