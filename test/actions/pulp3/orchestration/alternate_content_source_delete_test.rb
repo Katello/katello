@@ -8,8 +8,10 @@ module ::Actions::Pulp3
       @primary = SmartProxy.pulp_primary
       @yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
+      @deb_acs = katello_alternate_content_sources(:deb_alternate_content_source)
       @yum_acs.save!
       @file_acs.save!
+      @deb_acs.save!
     end
 
     def teardown
@@ -24,6 +26,12 @@ module ::Actions::Pulp3
             ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
       @file_acs.reload
+
+      @deb_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
+        ForemanTasks.sync_task(
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+      end
+      @deb_acs.reload
     end
 
     def test_yum_delete
@@ -40,6 +48,14 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       assert_equal 0, @file_acs.smart_proxy_alternate_content_sources.count
+    end
+
+    def test_deb_delete
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@deb_acs.name)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @deb_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+      assert_equal 0, @deb_acs.smart_proxy_alternate_content_sources.count
     end
   end
 end

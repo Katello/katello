@@ -20,8 +20,19 @@ module ::Actions::Pulp3
       @file_acs.ssl_client_key_id = nil
       @file_acs.upstream_username = nil
       @file_acs.upstream_password = nil
+      @deb_acs = katello_alternate_content_sources(:deb_alternate_content_source)
+      @deb_acs.subpaths = []
+      @deb_acs.deb_releases = 'ragnarok'
+      @deb_acs.deb_components = ''
+      @deb_acs.deb_architectures = ''
+      @deb_acs.ssl_ca_cert_id = nil
+      @deb_acs.ssl_client_cert_id = nil
+      @deb_acs.ssl_client_key_id = nil
+      @deb_acs.upstream_username = nil
+      @deb_acs.upstream_password = nil
       @yum_acs.save!
       @file_acs.save!
+      @deb_acs.save!
       @yum_simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       @file_simplified_acs = katello_alternate_content_sources(:file_simplified_alternate_content_source)
       ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
@@ -34,6 +45,11 @@ module ::Actions::Pulp3
       end
 
       @file_acs.smart_proxy_alternate_content_sources.where.not(remote_href: nil).sort_by(&:remote_href).each do |smart_proxy_acs|
+        ForemanTasks.sync_task(
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+      end
+
+      @deb_acs.smart_proxy_alternate_content_sources.where.not(remote_href: nil).sort_by(&:remote_href).each do |smart_proxy_acs|
         ForemanTasks.sync_task(
             ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
@@ -90,6 +106,23 @@ module ::Actions::Pulp3
       smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @file_acs.id, smart_proxy_id: @primary.id)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
+    end
+
+    def test_deb_refresh
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@deb_acs.name)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @deb_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
+    end
+
+    def test_deb_refresh_updates_remote
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@deb_acs.name)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @deb_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      @deb_acs.update!(verify_ssl: false)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
+      new_verify_ssl = smart_proxy_acs.backend_service.api.remotes_list(name: @deb_acs.name).first.tls_validation
+      assert_equal new_verify_ssl, @deb_acs.verify_ssl
     end
   end
 end

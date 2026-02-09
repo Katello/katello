@@ -8,8 +8,10 @@ module ::Actions::Pulp3
       @primary = SmartProxy.pulp_primary
       @yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
+      @deb_acs = katello_alternate_content_sources(:deb_alternate_content_source)
       @yum_acs.save!
       @file_acs.save!
+      @deb_acs.save!
     end
 
     def teardown
@@ -24,6 +26,12 @@ module ::Actions::Pulp3
             ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
       @file_acs.reload
+
+      @deb_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
+        ForemanTasks.sync_task(
+            ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+      end
+      @deb_acs.reload
     end
 
     def test_yum_create
@@ -50,6 +58,15 @@ module ::Actions::Pulp3
       assert_match(/^prn:file\.fileremote:[0-9a-f\-]+$/, @file_acs.smart_proxy_alternate_content_sources.first.remote_prn)
       assert_not_nil @file_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_prn
       assert_match(/^prn:file\.filealternatecontentsource:[0-9a-f\-]+$/, @file_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_prn)
+    end
+
+    def test_deb_create
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@deb_acs.name)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @deb_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      assert_equal 1, @deb_acs.smart_proxy_alternate_content_sources.count
+      assert @deb_acs.smart_proxy_alternate_content_sources.first.remote_href.start_with?('/pulp/api/v3/remotes/deb/apt/')
+      assert @deb_acs.smart_proxy_alternate_content_sources.first.alternate_content_source_href.start_with?('/pulp/api/v3/acs/deb/deb/')
     end
 
     def test_yum_create_complex

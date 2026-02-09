@@ -1,6 +1,7 @@
 debian_pulp_ragnarok:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_pulp_ragnarok_root) %>
   pulp_id:              debian_pulp_ragnarok
+  content_id:           114
   relative_path:        'ACME_Corporation/library/debian_pulp_ragnarok_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>

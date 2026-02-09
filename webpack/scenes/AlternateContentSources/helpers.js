@@ -24,3 +24,15 @@ export const areSubPathsValid = (subpathsString) => {
     return false;
   }
 };
+
+export const toList = s => (s || '').trim().split(/[,\s]+/).filter(Boolean);
+
+export const spaceSepOrUndef = (s) => {
+  const arr = toList(s);
+  return arr.length ? arr.join(' ') : undefined;
+};
+
+export const spaceSepOrEmpty = (s) => {
+  const arr = toList(s);
+  return arr.length ? arr.join(' ') : '';
+};

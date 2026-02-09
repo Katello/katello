@@ -11,7 +11,8 @@ const ACSReview = () => {
     name, description, acsType, contentType,
     smartProxies, useHttpProxies, url, subpaths, verifySSL,
     authentication, sslCertName, sslKeyName, username,
-    password, caCertName, productNames,
+    password, caCertName, productNames, debReleases,
+    debComponents, debArchitectures,
   } = useContext(ACSCreateContext);
 
   return (
@@ -60,10 +61,29 @@ const ACSReview = () => {
               <TextListItem component={TextListItemVariants.dd}>
                 {url}
               </TextListItem>
-              <TextListItem component={TextListItemVariants.dt}>{__('Subpaths')}</TextListItem>
-              <TextListItem component={TextListItemVariants.dd}>
-                {subpaths}
-              </TextListItem>
+              {(contentType !== 'deb') ? (
+                <>
+                  <TextListItem component={TextListItemVariants.dt}>{__('Subpaths')}</TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {subpaths}
+                  </TextListItem>
+                </>
+              ) : (
+                <>
+                  <TextListItem component={TextListItemVariants.dt}>{__('Distributions')}</TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {debReleases}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dt}>{__('Components')}</TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {debComponents}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dt}>{__('Architectures')}</TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {debArchitectures}
+                  </TextListItem>
+                </>
+              )}
               <TextListItem component={TextListItemVariants.dt}>{__('Verify SSL')}</TextListItem>
               <TextListItem component={TextListItemVariants.dd}>
                 {verifySSL ? __('Yes') : __('No')}
