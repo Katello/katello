@@ -3,7 +3,7 @@ require 'katello/repository_types'
 # rubocop:disable Metrics/BlockLength
 
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 3.13'
+  requires_foreman '>= 3.18.0'
   register_gettext
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
