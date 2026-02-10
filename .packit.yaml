@@ -17,7 +17,7 @@ upstream_tag_template: "{version}"
 
 actions:
   post-upstream-clone:
-    - "wget https://raw.githubusercontent.com/theforeman/foreman-packaging/rpm/develop/packages/katello/rubygem-katello/rubygem-katello.spec -O rubygem-katello.spec"
+    - "wget https://raw.githubusercontent.com/theforeman/foreman-packaging/rpm/3.18/packages/katello/rubygem-katello/rubygem-katello.spec -O rubygem-katello.spec"
   get-current-version:
     - ruby -rrubygems -e 'puts Gem::Specification::load(Dir.glob("*.gemspec").first).version'
   create-archive:
@@ -35,16 +35,10 @@ jobs:
       rhel-9:
         additional_modules: "foreman-devel:el9"
         additional_repos:
-          - https://yum.theforeman.org/releases/nightly/el9/x86_64/
-          - https://yum.theforeman.org/plugins/nightly/el9/x86_64/
-          - https://yum.theforeman.org/katello/nightly/katello/el9/x86_64/
+          - https://yum.theforeman.org/releases/3.18/el9/x86_64/
+          - https://yum.theforeman.org/plugins/3.18/el9/x86_64/
+          - https://yum.theforeman.org/katello/4.20/katello/el9/x86_64/
     module_hotfixes: true
-
-  - <<: *copr
-    trigger: commit
-    branch: master
-    owner: '@theforeman'
-    project: develop
 
 srpm_build_deps:
   - wget
