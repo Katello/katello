@@ -96,13 +96,9 @@ module Katello
         .for_action(::Actions::Katello::ContentView::Publish)
         .where(state: 'scheduled')
         .any? do |task|
-          begin
-            delayed_plan = ForemanTasks.dynflow.world.persistence.load_delayed_plan(task.external_id)
-            args = delayed_plan.args
-            args.first.is_a?(::Katello::ContentView) && args.first.id == composite_cv.id
-          rescue StandardError
-            false
-          end
+          delayed_plan = ForemanTasks.dynflow.world.persistence.load_delayed_plan(task.external_id)
+          args = delayed_plan.args
+          args.first.is_a?(::Katello::ContentView) && args.first.id == composite_cv.id
         end
     end
 
@@ -110,14 +106,14 @@ module Katello
       component_cv_ids = composite_cv.components.pluck(:content_view_id)
       return [] if component_cv_ids.empty?
 
-      ForemanTasks::Task::DynflowTask
+      tasks = ForemanTasks::Task::DynflowTask
         .for_action(::Actions::Katello::ContentView::Publish)
         .where(state: ['planning', 'planned', 'running'])
         .select do |task|
           task_input = task.input
           task_input && component_cv_ids.include?(task_input.dig('content_view', 'id'))
         end
-        .map(&:external_id)
+      tasks.map(&:external_id)
     end
   end
 end
