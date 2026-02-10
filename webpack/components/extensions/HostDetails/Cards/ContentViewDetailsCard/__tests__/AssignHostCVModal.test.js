@@ -1099,6 +1099,101 @@ describe('AssignHostCVModal', () => {
       });
     });
 
+    test('Changing CV in existing assignment builds new label instead of reusing old cveLabel', async () => {
+      const existingAssignments = [
+        {
+          contentView: {
+            id: 2,
+            name: 'cv_1',
+            label: 'cv_1',
+            content_view_default: false,
+            default: false,
+          },
+          environment: {
+            id: 1,
+            name: 'Library',
+            label: 'Library',
+            library: true,
+          },
+          cveLabel: 'Library/cv_1', // User currently has cv_1
+        },
+      ];
+
+      const { getByRole } = renderWithRedux(
+        <AssignHostCVModal
+          isOpen
+          closeModal={jest.fn()}
+          hostId={123}
+          hostName="test-host"
+          orgId={1}
+          existingAssignments={existingAssignments}
+          allowMultipleContentViews={false}
+        />,
+        renderOptions(),
+      );
+
+      // Wait for assignment to load
+      await patientlyWaitFor(() => {
+        expect(getByRole('button', { name: 'Save' })).toBeInTheDocument();
+      });
+
+      // Wait a moment for the assignment section to initialize
+      await patientlyWaitFor(() => {
+        // The environment name should be visible as a link in the toggle content
+        expect(getByRole('link', { name: 'Library' })).toBeInTheDocument();
+      });
+
+      // Now wait for the CV select to be available (should be auto-expanded for single assignment)
+      await patientlyWaitFor(() => {
+        expect(getByRole('button', { name: 'Options menu' })).toBeInTheDocument();
+      });
+
+      const cvSelectButton = getByRole('button', { name: 'Options menu' });
+      await act(async () => {
+        userEvent.click(cvSelectButton);
+      });
+
+      // Select a DIFFERENT CV (cv_2 instead of cv_1) in the same environment (Library)
+      await patientlyWaitFor(() => {
+        expect(getByRole('option', { name: /composite_cv/ })).toBeInTheDocument();
+      });
+
+      const cvOption = getByRole('option', { name: /composite_cv/ });
+      await act(async () => {
+        userEvent.click(cvOption);
+      });
+
+      // Wait for Save button to be enabled (change detected)
+      await patientlyWaitFor(() => {
+        const saveButton = getByRole('button', { name: 'Save' });
+        expect(saveButton).not.toHaveAttribute('aria-disabled', 'true');
+      });
+
+      // Click Save
+      const saveButton = getByRole('button', { name: 'Save' });
+      await act(async () => {
+        userEvent.click(saveButton);
+      });
+
+      // Verify API was called with NEW label (Library/composite_cv),
+      // NOT the old cveLabel (Library/cv_1)
+      await patientlyWaitFor(() => {
+        expect(mockAssignHostCVEnvironments).toHaveBeenCalledWith(
+          expect.objectContaining({
+            id: 123,
+            host: {
+              content_facet_attributes: {
+                content_view_environments: ['Library/composite_cv'],
+              },
+            },
+          }),
+          123,
+          expect.any(Function),
+          expect.any(Function),
+        );
+      });
+    });
+
     test('Save in single CVE mode sends single label', async () => {
       const { getAllByRole, getByRole } = renderWithRedux(
         <AssignHostCVModal
