@@ -61,7 +61,6 @@ const ExistingAssignmentShape = PropTypes.shape({
   contentView: ContentViewShape,
   environment: EnvironmentShape,
   cveLabel: PropTypes.string,
-  label: PropTypes.string, // Optional pre-computed label for the assignment
 });
 
 const AssignmentSection = ({
@@ -312,7 +311,6 @@ export const OrderableAssignmentList = ({
         cvSelectOpen: false,
         selectedEnv: assignment.environment ? [assignment.environment] : [],
         selectedCV: assignment.contentView?.name || null,
-        label: assignment.label, // Preserve pre-computed label for existing assignments
       }));
       setAssignments(initialAssignments);
 
@@ -431,7 +429,7 @@ export const OrderableAssignmentList = ({
       selectedCV: null,
       environment: selection[0] || null,
       contentView: null,
-      label: null, // Clear pre-computed label when environment changes
+      cveLabel: null, // Clear CV environment label when environment changes
     });
   };
 
@@ -463,7 +461,7 @@ export const OrderableAssignmentList = ({
       selectedCV: selection,
       cvSelectOpen: false,
       contentView: contentViewWithVersion,
-      label: null, // Clear pre-computed label when CV changes
+      cveLabel: null, // Clear CV environment label when CV changes
     });
   };
 
