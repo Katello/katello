@@ -34,11 +34,26 @@ module Katello
         :display_size => display_output,
         :size => display_output,
         :is_running => @task.pending && @task.state != 'paused',
-        :error_details => @task.errors,
+        :error_details => error_details_messages,
       }
     end
 
     private
+
+    def error_details_messages
+      return nil unless @task && (@task.result == 'error' || @task.result == 'warning')
+
+      errors = @task.humanized[:errors]
+      return nil if errors.blank?
+
+      messages = if errors.is_a?(String)
+                   errors.split("\n").reject(&:blank?)
+                 else
+                   [errors.to_s]
+                 end
+
+      messages.empty? ? nil : { messages: messages }
+    end
 
     def empty_task(repo)
       state = 'never_synced'

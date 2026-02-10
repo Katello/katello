@@ -579,3 +579,4 @@ spec/              # RSpec tests
 ```
 
 This codebase follows Foreman plugin conventions and integrates deeply with Foreman's architecture, extending its capabilities with content and subscription management features.
+- Use RABL for API views, not 'render :json'.

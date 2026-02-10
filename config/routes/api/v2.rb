@@ -516,6 +516,13 @@ Katello::Engine.routes.draw do
           get :auto_complete_search, :on => :collection
           put :sync
         end
+
+        api_resources :sync_status, :only => [:index, :destroy] do
+          collection do
+            get :poll
+            post :sync
+          end
+        end
       end # module v2
     end # '/api' namespace
   end # '/katello' namespace

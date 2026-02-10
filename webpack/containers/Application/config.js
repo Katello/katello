@@ -19,12 +19,17 @@ import ContainerImages from '../../scenes/ContainerImages';
 import ManifestDetails from '../../scenes/ContainerImages/Synced/Details';
 import FlatpakRemotes from '../../scenes/FlatpakRemotes';
 import FlatpakRemoteDetails from '../../scenes/FlatpakRemotes/Details';
+import SyncStatus from '../../scenes/SyncStatus';
 
 // eslint-disable-next-line import/prefer-default-export
 export const links = [
   {
     path: 'redhat_repositories',
     component: WithOrganization(withHeader(Repos, { title: __('RH Repos') })),
+  },
+  {
+    path: 'sync_management',
+    component: WithOrganization(withHeader(SyncStatus, { title: __('Sync Status') })),
   },
   {
     path: 'subscriptions',

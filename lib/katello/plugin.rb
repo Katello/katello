@@ -64,7 +64,8 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :sync_status,
          :caption => N_('Sync Status'),
-         :url_hash => {:controller => 'katello/sync_management',
+         :url => '/sync_management',
+         :url_hash => {:controller => 'katello/api/v2/sync_status',
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
