@@ -22,6 +22,11 @@ module Katello
     end
 
     def self.request_auto_publish(content_view:, content_view_version:)
+      if scheduled_composite_publish?(content_view)
+        auto_publish_log(nil, "composite publish already scheduled for ID #{content_view.id}, skipping")
+        return
+      end
+
       request = content_view.create_auto_publish_request!(
         content_view_version: content_view_version
       )
@@ -47,14 +52,6 @@ module Katello
     def self.trigger_auto_publish!(request:)
       request.with_lock do
         composite_cv = request.content_view
-
-        # Check if composite publish is already scheduled (chained to component CVs)
-        # If so, skip - the scheduled publish will use latest component versions
-        if scheduled_composite_publish?(composite_cv)
-          auto_publish_log(request, "composite publish already scheduled, skipping")
-          request.destroy!
-          return
-        end
 
         if content_view_locks(content_view: composite_cv).any?
           auto_publish_log(request, "locks found")
