@@ -5,8 +5,6 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      Setting[:ssl_certificate] = '/home/vagrant/foreman-certs/client_cert.pem'
-      Setting[:ssl_priv_key] = '/home/vagrant/foreman-certs/client_key.pem'
       @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64)
       tmp_file = File.join(Katello::Engine.root, 'test/fixtures/files/test-srpm01-1.0-1.src.rpm')
