@@ -15,10 +15,6 @@ module Katello
     end
 
     def ensure_creatable(repo, smart_proxy)
-      # Configure SSL certificates for Pulp API client
-      Setting[:ssl_certificate] = '/home/vagrant/foreman-certs/client_cert.pem'
-      Setting[:ssl_priv_key] = '/home/vagrant/foreman-certs/client_key.pem'
-
       cert_path = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt"
       cert = File.read(cert_path)
       Cert::Certs.stubs(:candlepin_client_ca_cert).returns(cert)
