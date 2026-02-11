@@ -64,11 +64,8 @@ module Actions
                 uuid: nil,
               }
 
-              # DO NOT perform destructive actions on dry run
-              if ENV['COMMIT'] == 'true'
-                unregister_options = host_unregister_options(host)
-                ::Katello::RegistrationManager.unregister_host(host, unregister_options)
-              end
+              unregister_options = host_unregister_options(host)
+              ::Katello::RegistrationManager.unregister_host(host, unregister_options)
             rescue RestClient::ResourceNotFound
               # Ignore if already gone
             rescue => e
@@ -95,11 +92,8 @@ module Actions
                 uuid: host.subscription_facet&.uuid,
               }
 
-              # DO NOT perform destructive actions on dry run
-              if ENV['COMMIT'] == 'true'
-                unregister_options = host_unregister_options(host)
-                ::Katello::RegistrationManager.unregister_host(host, unregister_options)
-              end
+              unregister_options = host_unregister_options(host)
+              ::Katello::RegistrationManager.unregister_host(host, unregister_options)
             rescue RestClient::ResourceNotFound
               # Ignore if already gone
             rescue => e
@@ -122,10 +116,7 @@ module Actions
                 uuid: consumer_uuid,
               }
 
-              # DO NOT perform destructive actions on dry run
-              if ENV['COMMIT'] == 'true'
-                ::Katello::Resources::Candlepin::Consumer.destroy(consumer_uuid)
-              end
+              ::Katello::Resources::Candlepin::Consumer.destroy(consumer_uuid)
             rescue RestClient::ResourceNotFound
               # Ignore if already gone
             rescue => e
