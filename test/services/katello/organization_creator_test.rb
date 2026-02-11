@@ -43,7 +43,7 @@ module Katello
 
       Katello::Ping.expects(:ping!).returns(true)
       org.expects(:candlepin_owner_exists?).returns(false)
-      Katello::Resources::Candlepin::Owner.expects(:create).with(org.name, org.name, content_access_mode: 'org_environment').returns(true)
+      Katello::Resources::Candlepin::Owner.expects(:create).with(org.name, org.name).returns(true)
       Katello::Resources::Candlepin::Owner.expects(:get_ueber_cert).returns(true)
       Katello::ContentViewEnvironment.any_instance.expects(:exists_in_candlepin?).returns(false)
       Katello::Resources::Candlepin::Environment.expects(:create).returns(true)
