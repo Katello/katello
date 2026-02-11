@@ -11,8 +11,6 @@ module Katello
           let(:core) { Katello::Pulp3::Api::Core.new(@primary) }
 
           def setup
-            Setting[:ssl_certificate] = '/home/vagrant/foreman-certs/client_cert.pem'
-            Setting[:ssl_priv_key] = '/home/vagrant/foreman-certs/client_key.pem'
             @primary = SmartProxy.pulp_primary
           end
 
