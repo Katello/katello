@@ -13,6 +13,12 @@ module Katello
       Rake::Task.define_task('dynflow:client')
       Katello::Ping.expects(:ping).returns(:status => 'ok')
       @host = hosts(:one)
+      @original_stdout = $stdout
+      $stdout = StringIO.new
+    end
+
+    def teardown
+      $stdout = @original_stdout
     end
 
     def clear_hosts(except_id = -1)
@@ -23,8 +29,6 @@ module Katello
 
     def test_missing_nil_uuid
       clear_hosts(@host.id)
-      ENV['COMMIT'] = 'true'
-
       @host.subscription_facet.update!(:uuid => nil)
       mock_cp
       # this host will end up on the nil facets list and the no subscription
@@ -36,8 +40,6 @@ module Katello
 
     def test_managed_host
       clear_hosts(@host.id)
-      ENV['COMMIT'] = 'true'
-
       @host.update_column(:managed, true)
       @host.subscription_facet.update!(:uuid => nil)
       mock_cp
@@ -47,10 +49,21 @@ module Katello
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 
+    def test_non_managed_host_deletion
+      clear_hosts(@host.id)
+      @host.update_column(:managed, false)
+      @host.subscription_facet.update!(:uuid => nil)
+      mock_cp
+
+      Katello::Resources::Candlepin::Consumer.stubs(:destroy)
+
+      Rake.application.invoke_task('katello:clean_backend_objects')
+
+      assert_nil ::Host::Managed.find_by(id: @host.id), "Host was not deleted"
+    end
+
     def test_compute_resource_host
       clear_hosts(@host.id)
-      ENV['COMMIT'] = 'true'
-
       @host.update_column(:compute_resource_id, compute_resources(:mycompute).id)
       @host.subscription_facet.update!(:uuid => nil)
       mock_cp
@@ -60,10 +73,8 @@ module Katello
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 
-    def test_missing_cp_consumer_commit
+    def test_missing_cp_consumer
       clear_hosts(@host.id)
-      ENV['COMMIT'] = 'true'
-
       mock_cp
       Katello::RegistrationManager.expects(:unregister_host).with(@host, {})
 
@@ -72,40 +83,14 @@ module Katello
 
     def test_deletes_nothing_if_ids_present
       clear_hosts(@host.id)
-      ENV['COMMIT'] = 'true'
-
       mock_cp([@host.subscription_facet.uuid])
       Katello::RegistrationManager.expects(:unregister).never
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 
-    def test_no_commit_only_preview
+    def test_orphaned
       clear_hosts(@host.id)
-      ENV['COMMIT'] = nil
-
-      mock_cp
-      Katello::RegistrationManager.expects(:unregister).never
-
-      Rake.application.invoke_task('katello:clean_backend_objects')
-    end
-
-    def test_orphaned_no_commit
-      clear_hosts
-      ENV['COMMIT'] = nil
       mock_cp_uuid = 'cp-cool-id'
-      mock_cp([mock_cp_uuid])
-
-      Katello::Resources::Candlepin::Consumer.expects(:destroy).never
-
-      Rake.application.invoke_task('katello:clean_backend_objects')
-    end
-
-    def test_orphaned_with_commit
-      clear_hosts(@host.id)
-      ENV['COMMIT'] = 'true'
-
-      mock_cp_uuid = 'cp-cool-id'
-
       mock_cp([mock_cp_uuid, @host.subscription_facet.uuid])
 
       Katello::Resources::Candlepin::Consumer.expects(:destroy).with(mock_cp_uuid)
@@ -115,6 +100,25 @@ module Katello
 
     def mock_cp(value = [])
       Katello::Resources::Candlepin::Consumer.expects(:all_uuids).returns(value)
+    end
+
+    def test_logger_errors
+      clear_hosts(@host.id)
+      error = { type: "MockError", message: "something went wrong" }
+      task_output = {
+        results: {
+          hosts_with_nil_facets: [],
+          hosts_with_no_subscriptions: [],
+          orphaned_consumers: [],
+          errors: [error],
+        },
+      }
+      mock_task = mock('task', output: task_output)
+      ForemanTasks.expects(:sync_task).returns(mock_task)
+
+      Rails.logger.expects(:error).with("MockError: something went wrong")
+
+      Rake.application.invoke_task('katello:clean_backend_objects')
     end
   end
 end

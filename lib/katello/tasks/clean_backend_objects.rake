@@ -3,22 +3,21 @@ namespace :katello do
   task :clean_backend_objects => ["dynflow:client", "environment", "check_ping"] do
     User.current = User.anonymous_admin
 
-    print "Cleaning backend objects\n"
+    puts "Cleaning backend objects"
 
     task = ForemanTasks.sync_task(::Actions::Candlepin::Consumer::CleanBackendObjects)
 
     results = task.output[:results]
 
-    print "\nResults:\n"
-    print "Hosts with nil facets: #{results[:hosts_with_nil_facets].length}\n"
-    print "Hosts with no subscriptions: #{results[:hosts_with_no_subscriptions].length}\n"
-    print "Orphaned consumers: #{results[:orphaned_consumers].length}\n"
-    print "Errors: #{results[:errors].length}\n"
+    puts "Results:"
+    puts "Hosts with nil facets: #{results[:hosts_with_nil_facets].length}"
+    puts "Hosts with no subscriptions: #{results[:hosts_with_no_subscriptions].length}"
+    puts "Orphaned consumers: #{results[:orphaned_consumers].length}"
+    puts "Errors: #{results[:errors].length}"
 
     if results[:errors].any?
-      print "\nErrors encountered:\n"
       results[:errors].each do |error|
-        print "  #{error[:type]}: #{error[:message]}\n"
+        Rails.logger.error("#{error[:type]}: #{error[:message]}")
       end
     end
   end
