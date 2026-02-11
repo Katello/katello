@@ -12,12 +12,12 @@ module Katello
 
           # Set the contentPrefix at creation time so that the client will get
           # content only for the org it has been subscribed to
-          def create(key, description, content_access_mode: 'org_environment')
+          def create(key, description)
             attrs = {
               :key => key,
               :displayName => description,
               :contentPrefix => "/#{key}/$env",
-              :contentAccessMode => content_access_mode,
+              :contentAccessMode => 'org_environment',
               :contentAccessModeList => 'org_environment',
             }
             owner_json = self.post(path, attrs.to_json, self.default_headers).body
@@ -39,10 +39,13 @@ module Katello
             JSON.parse(owner_json).with_indifferent_access
           end
 
-          def update(key, attrs)
+          def update(key, attrs = {})
             owner = find(key)
             owner.merge!(attrs)
-            owner.merge!(:contentAccessModeList => 'org_environment')
+            owner.merge!(
+              :contentAccessMode => 'org_environment',
+              :contentAccessModeList => 'org_environment'
+            )
             self.put(path(key), JSON.generate(owner), self.default_headers).body
           end
 
