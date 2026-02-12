@@ -14,13 +14,17 @@ namespace :katello do
         print "#{msg_word} content access modes\n"
         migrated_orgs_count = 0
         Organization.all.each do |org|
-          next if org.simple_content_access?
+          current_mode = org.owner_details['contentAccessMode']
+          current_mode_list = org.owner_details['contentAccessModeList']
+          needs_migration = ![current_mode, current_mode_list].all?('org_environment')
+          migrated_orgs_count += 1 if needs_migration
 
-          print "#{msg_word} content access mode for #{org.name}\n"
-          migrated_orgs_count += 1
-          if commit
-            ::Katello::Resources::Candlepin::Owner.update(org.label, contentAccessMode: 'org_environment')
+          print "#{msg_word} content access mode for #{org.name} current mode=#{current_mode} current mode list=#{current_mode_list}\n"
+          if commit && needs_migration
+            ::Katello::Resources::Candlepin::Owner.update(org.label)
           end
+        rescue RestClient::NotFound
+          print "Organization #{org.name} was missing from Candlepin and will be skipped"
         end
         print "----------------------------------------\n"
         if commit
