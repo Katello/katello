@@ -29,7 +29,6 @@ module Katello
 
     def initialize(organization)
       @organization = organization
-      @content_access_mode = 'org_environment'
     end
 
     def seed!
@@ -68,7 +67,7 @@ module Katello
     def create_backend_objects!
       Katello::Ping.ping!(services: [:candlepin])
       if needs_candlepin_organization?
-        ::Katello::Resources::Candlepin::Owner.create(@organization.label, @organization.name, content_access_mode: @content_access_mode)
+        ::Katello::Resources::Candlepin::Owner.create(@organization.label, @organization.name)
       end
 
       ::Katello::ContentViewManager.create_candlepin_environment(
