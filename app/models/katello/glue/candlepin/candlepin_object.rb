@@ -45,7 +45,7 @@ module Katello
         where("#{self.table_name}.id = (?) or #{self.table_name}.cp_id = (?)", id_integers, ids)
       end
 
-      def import_all(organization = nil, import_managed_associations = true)
+      def import_all(organization = nil)
         organizations = organization ? [organization] : Organization.all
 
         organizations.each do |org|
@@ -59,7 +59,6 @@ module Katello
             Katello::Logging.time("Imported #{self}", data: { cp_id: item.cp_id, destroyed: !exists_in_candlepin }) do
               if exists_in_candlepin
                 item.import_data
-                item.import_managed_associations if import_managed_associations && item.respond_to?(:import_managed_associations)
               else
                 item.destroy
               end

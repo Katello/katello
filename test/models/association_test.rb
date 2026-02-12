@@ -53,7 +53,6 @@ module Katello
         "Katello::KeyHostCollection",
         "Katello::ModuleStreamErratumPackage",
         "Katello::ModuleStreamRpm",
-        "Katello::PoolActivationKey",
         "Katello::Pulp3::ContentGuard",
         "Katello::Pulp3::DistributionReference",
         "Katello::Pulp3::RepositoryReference",

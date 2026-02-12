@@ -217,7 +217,6 @@ module Katello
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-candlepin').returns({})
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
-        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
@@ -237,8 +236,6 @@ module Katello
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
-
-        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [cvpe], [@activation_key])
 
@@ -277,8 +274,6 @@ module Katello
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns(:uuid => 'fake-uuid-from-katello')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
-
-        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
       end
@@ -415,7 +410,6 @@ module Katello
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
-        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         # Perform re-registration (this should call unregister_host internally with preserve_for_provisioning: true)
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
@@ -470,7 +464,6 @@ module Katello
 
         ::Host.expects(:find).returns(new_host)
         new_host.expects(:destroy)
-        new_host.organization.stubs(:simple_content_access?).returns(false)
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @library.organization).raises("uhoh!")
 
         assert_raises(Exception) do
@@ -490,8 +483,6 @@ module Katello
         ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host).never
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).raises("uhoh!")
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-
-        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         assert_raises(Exception) do
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])

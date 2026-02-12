@@ -1,13 +1,12 @@
 module Katello
   class ProductContentFinder
-    attr_accessor :match_environment, :match_subscription, :consumable
+    attr_accessor :match_environment, :consumable
 
     # consumable must implement:
     #  content_view_environments
     #  organization
     #  products
     def initialize(params = {})
-      self.match_subscription = false
       self.match_environment = false
 
       params.each_pair { |k, v| instance_variable_set("@#{k}", v) unless v.nil? }
@@ -18,7 +17,7 @@ module Katello
         versions = consumable.content_view_environments.select(:content_view_version_id).map(&:content_view_version_id)
       end
 
-      considered_products = match_subscription ? consumable.products : consumable.organization.products.enabled.uniq
+      considered_products = consumable.organization.products.enabled.uniq
 
       roots = Katello::RootRepository.where(:product_id => considered_products).subscribable
       roots = roots.in_content_view_version(versions).distinct if versions.present?

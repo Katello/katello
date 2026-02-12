@@ -86,15 +86,6 @@ module Katello
       end
     end
 
-    def test_index_with_activation_key_id
-      activation_key = katello_activation_keys(:dev_key)
-      get :index, params: { activation_key_id: activation_key.id }
-      pool = JSON.parse(@response.body)['results'].find { |p| p['cp_id'] == 'abc123' }
-      assert_equal(4, pool['quantity_attached'])
-      assert_response :success
-      assert_template 'api/v2/subscriptions/index'
-    end
-
     def test_show_with_org_id
       subscription = @organization.pools.first
       get :show, params: { :id => subscription.id, :organization_id => @organization.id }

@@ -33,40 +33,6 @@ module Katello
             self.delete(path(id), self.default_headers).code.to_i
           end
 
-          def pools(owner_key)
-            Candlepin::Owner.pools(owner_key)
-          end
-
-          def key_pools(id)
-            kp_json = Candlepin::CandlepinResource.get(join_path(path(id), "pools"), self.default_headers).body
-            key_pools = JSON.parse(kp_json)
-            ::Katello::Util::Data.array_with_indifferent_access key_pools
-          end
-
-          def add_product(id, product_id)
-            cppath = join_path(path(id), "product/#{product_id}")
-            product = self.post(cppath, {}, self.default_headers)
-            JSON.parse(product).with_indifferent_access
-          end
-
-          def remove_product(id, product_id)
-            product = self.delete(join_path(path(id), "product/#{product_id}"), self.default_headers)
-            JSON.parse(product).with_indifferent_access
-          end
-
-          def add_pools(id, pool_id, quantity)
-            cppath = join_path(path(id), "pools/#{pool_id}")
-            quantity = Integer(quantity) rescue nil
-            cppath += "?quantity=#{quantity}" if quantity && quantity > 0
-            pool = self.post(cppath, {}, self.default_headers)
-            JSON.parse(pool).with_indifferent_access
-          end
-
-          def remove_pools(id, pool_id)
-            pool = self.delete(join_path(path(id), "pools/#{pool_id}"), self.default_headers)
-            JSON.parse(pool).with_indifferent_access
-          end
-
           def content_overrides(id)
             result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))

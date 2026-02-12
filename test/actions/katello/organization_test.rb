@@ -131,7 +131,6 @@ module ::Actions::Katello::Organization
       rhel7 = katello_repositories(:rhel_7_x86_64)
       acme_org.stubs(:owner_details).returns({})
       acme_org.products.stubs(:redhat).returns([rhel7.product])
-      Organization.any_instance.stubs(:simple_content_access?).returns(true)
       action.stubs(:rand).returns('1234')
 
       stub_action_locking!(action)
@@ -227,7 +226,6 @@ module ::Actions::Katello::Organization
       acme_org = get_organization(:empty_organization)
       rhel7 = katello_repositories(:rhel_7_x86_64)
       acme_org.products.stubs(:redhat).returns([rhel7.product])
-      Organization.any_instance.stubs(:simple_content_access?).returns(true)
       stub_action_locking!(action)
       plan_action(action, acme_org, '/tmp/1234.zip', false)
       assert_difference 'Audit.count', 1 do
@@ -307,7 +305,6 @@ module ::Actions::Katello::Organization
       acme_org = get_organization(:empty_organization)
       rhel7 = katello_repositories(:rhel_7_x86_64)
       acme_org.products.stubs(:redhat).returns([rhel7.product])
-      Organization.any_instance.stubs(:simple_content_access?).returns(true)
 
       stub_action_locking!(action)
       plan_action(action, acme_org)

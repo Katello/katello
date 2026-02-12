@@ -38,18 +38,6 @@ module Katello
       refute product_content.any? { |pc| pc.content.cp_content_id == @repo4.content_id }
     end
 
-    def test_match_subs
-      @key.expects(:products).returns([@product1, @product3])
-
-      pcf = Katello::ProductContentFinder.new(:consumable => @key, :match_subscription => true)
-      product_content = pcf.product_content
-
-      assert product_content.any? { |pc| pc.content.cp_content_id == @repo1.content_id }
-      refute product_content.any? { |pc| pc.content.cp_content_id == @repo2.content_id }
-      assert product_content.any? { |pc| pc.content.cp_content_id == @repo3.content_id }
-      refute product_content.any? { |pc| pc.content.cp_content_id == @repo4.content_id }
-    end
-
     def test_match_environments
       cves = ::Katello::ContentViewEnvironment.where(environment_id: @repo2_cv.environment,
                                                       content_view_id: @repo2_cv.content_view)

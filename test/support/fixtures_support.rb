@@ -52,7 +52,6 @@ module Katello
       :katello_docker_tags => Katello::DockerTag,
       :katello_repository_docker_tags => Katello::RepositoryDockerTag,
       :katello_repository_docker_manifests => Katello::RepositoryDockerManifest,
-      :katello_subscription_facet_pools => Katello::SubscriptionFacetPool,
       :katello_module_streams => Katello::ModuleStream,
       :katello_module_profiles => Katello::ModuleProfile,
       :katello_module_stream_artifacts => Katello::ModuleStreamArtifact,

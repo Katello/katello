@@ -29,7 +29,6 @@ module Katello
     param :with_custom, :bool, :required => false, :desc => N_("If true, return custom repository sets along with redhat repos. Will be ignored if repository_type is supplied.")
     param :activation_key_id, :number, :desc => N_("activation key identifier"), :required => false
     param :host_id, :number, :desc => N_("Id of the host"), :required => false
-    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions."), deprecated: true, default: true
     param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the host's or activation key's content view version and lifecycle environment.")
     param :status, [:enabled, :disabled, :overridden],
                                   :desc => N_("Limit content to enabled / disabled / overridden"),
@@ -153,11 +152,9 @@ module Katello
     def index_relation_with_consumable_overrides(relation)
       return relation if @consumable.blank?
 
-      content_access_mode_all = ::Foreman::Cast.to_bool(params[:content_access_mode_all])
       content_access_mode_env = ::Foreman::Cast.to_bool(params[:content_access_mode_env])
 
       content_finder = ProductContentFinder.new(
-          :match_subscription => !content_access_mode_all,
           :match_environment => content_access_mode_env,
           :consumable => @consumable)
       unfiltered = relation.merge(content_finder.product_content)
@@ -225,7 +222,6 @@ module Katello
 
     def setup_params
       return unless params[:id]
-      params[:content_access_mode_all] = true
       if params[:entity] == :activation_key
         params[:activation_key_id] ||= params[:id]
       else

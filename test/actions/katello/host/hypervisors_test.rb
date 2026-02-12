@@ -66,7 +66,6 @@ module Katello::Host
       data = data.with_indifferent_access
       create_org(org_label)
       org = Organization.find_by(label: org_label)
-      ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
       host_names_expected = ["virt-who-2e78f643-1d2f-45d1-b191-d931147cbde1-#{org.id}", "virt-who-261c4dca-702f-42b3-b8ef-2a72b77f7ec2-#{org.id}"]
 
       assert_equal 0, org.hosts.count
@@ -87,7 +86,6 @@ module Katello::Host
       data = data.with_indifferent_access
       create_org(org_label)
       org = Organization.find_by(label: org_label)
-      ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
       host_names_expected = ["virt-who-more-useful-identifier-#{org.id}", "virt-who-261c4dca-702f-42b3-b8ef-2a72b77f7ec2-#{org.id}"]
       reporter_id = 100
       task = Katello::Resources::Candlepin::Consumer.async_hypervisors(owner: org_label, reporter_id: reporter_id, raw_json: data.to_json)

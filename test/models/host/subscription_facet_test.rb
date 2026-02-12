@@ -252,14 +252,6 @@ module Katello
       assert_includes ::Host.search_for("activation_key = \"#{activation_key.name}\""), host
     end
 
-    def test_search_by_subscription_name
-      assert_includes ::Host.search_for("subscription_name = \"#{basic_subscription.name}\""), host_one
-    end
-
-    def test_search_by_subscription_id
-      assert_includes ::Host.search_for("subscription_id = \"#{basic_subscription.pools.first.id}\""), host_one
-    end
-
     def test_propose_name_from_facts
       facts = {'network.hostname' => 'foo'}
       assert_equal 'foo', Host::SubscriptionFacet.propose_name_from_facts(facts)

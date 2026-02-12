@@ -203,7 +203,6 @@ describe('Controller: ActivationKeyRepositorySetsControllerWithSCA', function ()
     beforeEach(inject(function (_$controller_, $rootScope, $q) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
-        $rootScope.simpleContentAccessEnabled = true;
         translate = function (message) {
             return message;
         };

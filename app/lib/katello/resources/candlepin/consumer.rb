@@ -93,43 +93,9 @@ module Katello
             self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body
           end
 
-          def available_pools(owner_label, uuid, listall: false)
-            url = Resources::Candlepin::Pool.path(nil, owner_label) + "?consumer=#{uuid}&listall=#{listall}&add_future=true"
-            response = Candlepin::CandlepinResource.get(url, self.default_headers).body
-            JSON.parse(response)
-          end
-
           def regenerate_identity_certificates(uuid)
             response = self.post(path(uuid), {}, self.default_headers).body
             JSON.parse(response).with_indifferent_access
-          end
-
-          def export(uuid)
-            # Export is a zip file
-            headers = self.default_headers
-            headers['accept'] = 'application/zip'
-            Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), headers)
-          end
-
-          def entitlements(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-          end
-
-          def refresh_entitlements(uuid)
-            self.post(join_path(path(uuid), 'entitlements'), "", self.default_headers).body
-          end
-
-          def consume_entitlement(uuid, pool, quantity = nil)
-            uri = join_path(path(uuid), 'entitlements') + "?pool=#{pool}"
-            uri += "&quantity=#{quantity}" if quantity && quantity > 0
-            response = self.post(uri, "", self.default_headers).body
-            response.blank? ? [] : JSON.parse(response)
-          end
-
-          def remove_entitlement(uuid, ent_id)
-            uri = join_path(path(uuid), 'entitlements') + "/#{ent_id}"
-            self.delete(uri, self.default_headers).code.to_i
           end
 
           def virtual_guests(uuid)

@@ -11,14 +11,13 @@
  * @requires HostCollection
  * @requires Notification
  * @requires ApiErrorHandler
- * @requires simpleContentAccessEnabled
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'ContentHostsModalHelper', 'HostCollection', 'Notification', 'ApiErrorHandler', 'simpleContentAccessEnabled',
-    function ($scope, $state, $q, translate, Host, ContentHostsModalHelper, HostCollection, Notification, ApiErrorHandler, simpleContentAccessEnabled) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'ContentHostsModalHelper', 'HostCollection', 'Notification', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, Host, ContentHostsModalHelper, HostCollection, Notification, ApiErrorHandler) {
         $scope.panel = {
             error: false,
             loading: true
@@ -27,8 +26,6 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
         if ($scope.hostCollection) {
             $scope.panel.loading = false;
         }
-
-        $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
 
         $scope.hostCollection = HostCollection.get({id: $scope.$stateParams.hostCollectionId}, function (hostCollection) {
             $scope.$broadcast('hostCollection.loaded', hostCollection);
@@ -70,11 +67,6 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
 
         $scope.openEnvironmentModal = function () {
             ContentHostsModalHelper.openEnvironmentModal();
-        };
-
-
-        $scope.openSubscriptionsModal = function () {
-            ContentHostsModalHelper.openSubscriptionsModal();
         };
 
         $scope.openSystemPurposeModal = function () {

@@ -30,11 +30,6 @@ module Katello
             fail ArgumentError, "pool id has to be specified" unless id
             self.delete(path(id), self.default_headers).code.to_i
           end
-
-          def consumer_uuids(pool_id)
-            entitlement_json = self.get("#{path(pool_id)}/entitlements/consumer_uuids", self.default_headers).body
-            JSON.parse(entitlement_json)
-          end
         end
       end
     end

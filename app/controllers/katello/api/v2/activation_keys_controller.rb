@@ -7,7 +7,7 @@ module Katello
     before_action :find_optional_organization, :only => [:index, :create, :show]
     before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :available_releases,
                                                                :available_host_collections, :add_host_collections, :remove_host_collections,
-                                                               :content_override, :subscriptions]
+                                                               :content_override]
     before_action :find_content_view_environments, :only => [:create, :update]
     before_action :validate_release_version, :only => [:create, :update]
 
@@ -124,9 +124,6 @@ module Katello
                   :service_level   => @activation_key.service_level,
                   :release_version => @activation_key.release_version
                )
-      @activation_key.pools.each do |pool|
-        @new_activation_key.subscribe(pool[:id])
-      end
       @new_activation_key.set_content_overrides(@activation_key.content_overrides) unless @activation_key.content_overrides.blank?
       respond_for_create(:resource => @new_activation_key)
     end
@@ -209,7 +206,6 @@ module Katello
 
     api :GET, "/activation_keys/:id/product_content", N_("Show content available for an activation key")
     param :id, String, :desc => N_("ID of the activation key"), :required => true
-    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions"), deprecated: true, default: true
     param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the activation key's content view version")
     param_group :search, Api::V2::ApiController
     def product_content

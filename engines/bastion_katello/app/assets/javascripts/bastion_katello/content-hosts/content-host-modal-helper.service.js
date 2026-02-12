@@ -79,17 +79,6 @@ angular.module('Bastion.content-hosts').service('ContentHostsModalHelper', ['$ui
             });
         };
 
-        this.openSubscriptionsModal = function() {
-            $uibModal.open({
-                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html',
-                controller: 'ContentHostsBulkSubscriptionsModalController',
-                size: 'lg',
-                resolve: {
-                    hostIds: this.resolveFunc()
-                }
-            });
-        };
-
         this.openSystemPurposeModal = function() {
             $uibModal.open({
                 templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html',

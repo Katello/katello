@@ -9,7 +9,6 @@ module Katello
 
       @dev_view = katello_content_views(:library_dev_view)
       @lib_view = katello_content_views(:library_view)
-      @pool_one = katello_pools(:pool_one)
       @purpose_key = katello_activation_keys(:purpose_attributes_key)
     end
 
@@ -85,10 +84,6 @@ module Katello
       refute new_key.valid?
     end
 
-    test "key can return pools" do
-      assert @dev_key.pools.count > 0
-    end
-
     test "audit creation on activation key" do
       org = Organization.find(taxonomies(:organization2).id)
       new_key = ActivationKey.new(:name => "ActKeyAudit", :organization => org)
@@ -137,22 +132,6 @@ module Katello
       assert_includes activation_keys, @dev_staging_view_key
     end
 
-    def test_search_subscription_id
-      activation_keys = ActivationKey.search_for("subscription_id = \"#{@pool_one.id}\"")
-      assert_includes activation_keys, @dev_key
-    end
-
-    def test_search_subscription_id_handles_non_integer
-      assert_raises ScopedSearch::QueryNotSupported do
-        ActivationKey.search_for("subscription_id = \"notaninteger\"")
-      end
-    end
-
-    def test_search_subscription_name
-      activation_keys = ActivationKey.search_for("subscription_name = \"#{@pool_one.subscription.name}\"")
-      assert_includes activation_keys, @dev_key
-    end
-
     def test_valid_content_override_label?
       @dev_key.stubs(:available_content).returns([OpenStruct.new(:content => OpenStruct.new(:label => 'some-label'))])
       assert @dev_key.valid_content_override_label?('some-label')
@@ -170,35 +149,6 @@ module Katello
       @dev_key.max_hosts = 10
       @dev_key.stubs(:subscription_facets).returns(['host one', 'host two'])
       assert @dev_key.valid?
-    end
-
-    def test_hosts_mapping
-      total_hosts = hosts
-      assert_equal 6, total_hosts.count
-    end
-
-    def test_products
-      pool_one = katello_pools(:pool_one)
-      cp_pools = [{'id' => pool_one.cp_id}]
-
-      @dev_key.stubs(:get_key_pools).returns(cp_pools)
-
-      assert_equal pool_one.products.sort, @dev_key.products.sort
-    end
-
-    def test_available_subscriptions
-      pool_one = katello_pools(:pool_one)
-      pool_two = katello_pools(:pool_two)
-      fedora = katello_products(:fedora)
-      pool_two.products.delete(fedora) # pool two no longer contains sub content
-      cp_pools = [{'id' => 'abc123'}, {'id' => 'xyz123'}]
-
-      @dev_key.stubs(:get_pools).returns(cp_pools)
-      @dev_key.pools = []
-
-      assert_includes @dev_key.available_subscriptions, pool_one
-      assert_includes @dev_key.available_subscriptions, pool_two
-      assert_equal @dev_key.available_subscriptions.length, 2
     end
 
     def test_search_role
