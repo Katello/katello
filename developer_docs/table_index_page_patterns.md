@@ -1,15 +1,14 @@
-# Foreman React Patterns Guide
-
+# Foreman React Patterns
 This document outlines the key patterns used in Foreman React components, particularly for table-based interfaces and API integration.
 
-## TableIndexPage Component
+For additional context, see [Quick Reference](./quick_reference.md) for command quick references and a directory of detailed guides.
 
+## TableIndexPage Component
 TableIndexPage is Foreman's standardized component for creating table-based list pages with built-in search, pagination, sorting, and bulk actions.
 
 ### Two Usage Patterns
 
 #### Pattern 1: Declarative/Simple (Recommended for most cases)
-
 **When to use**: Standard CRUD operations, simple table rendering
 **Example**: ModelsPage, SyncManagementPage
 
@@ -64,7 +63,6 @@ const MyPage = () => {
 - Clean and simple for standard use cases
 
 #### Pattern 2: Composable/Custom (For complex requirements)
-
 **When to use**: Complex row rendering, custom selection logic, special interactions
 **Example**: HostsIndex
 
@@ -110,7 +108,6 @@ const MyPage = () => {
 - More complex but more flexible
 
 ### Column Definition Object
-
 ```javascript
 const columns = {
   column_key: {
@@ -122,7 +119,6 @@ const columns = {
 ```
 
 ### Common Props
-
 ```javascript
 <TableIndexPage
   // Required
@@ -150,11 +146,9 @@ const columns = {
 ```
 
 ## useAPI Hook
-
 Foreman's standardized hook for API requests with built-in state management.
 
 ### Basic Usage
-
 ```javascript
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
 
@@ -185,7 +179,6 @@ const MyComponent = () => {
 ### Advanced Patterns
 
 #### Conditional API Calls
-
 ```javascript
 // Only make API call when condition is met
 const response = useAPI(
@@ -196,7 +189,6 @@ const response = useAPI(
 ```
 
 #### Dynamic URL Parameters
-
 ```javascript
 const response = useAPI(
   'get',
@@ -206,7 +198,6 @@ const response = useAPI(
 ```
 
 #### Polling Pattern
-
 ```javascript
 const [pollingIds, setPollingIds] = useState(new Set());
 
@@ -235,7 +226,6 @@ useEffect(() => {
 ```
 
 ### API Action Helpers
-
 For actions that don't need state management (fire-and-forget):
 
 ```javascript
@@ -268,7 +258,6 @@ const handleDelete = async (itemId) => {
 ## Table-Specific Hooks
 
 ### useTableIndexAPIResponse
-
 Specialized hook for TableIndexPage data fetching:
 
 ```javascript
@@ -283,7 +272,6 @@ const response = useTableIndexAPIResponse({
 ```
 
 ### useBulkSelect
-
 Handles bulk selection state and operations:
 
 ```javascript
@@ -306,7 +294,6 @@ const {
 ```
 
 ## Migration from Redux to useAPI
-
 When migrating existing Redux-based table components:
 
 ### Before (Redux)
@@ -345,7 +332,6 @@ const MyComponent = () => {
 ```
 
 ## Best Practices
-
 1. **Use Declarative TableIndexPage** for standard CRUD operations
 2. **Use unique API keys** to avoid state conflicts
 3. **Implement polling carefully** with proper cleanup
@@ -354,7 +340,6 @@ const MyComponent = () => {
 6. **Follow naming conventions** for controllers and API endpoints
 
 ## Common Gotchas
-
 1. **API Key Conflicts**: Always use unique keys for different API calls
 2. **Conditional API Calls**: Pass `null` as method to prevent unwanted calls
 3. **Memory Leaks**: Clean up intervals and timeouts in useEffect
@@ -362,7 +347,6 @@ const MyComponent = () => {
 5. **Column Wrappers**: Remember that wrapper functions receive the full row data object
 
 ## Example: Complete Table Page
-
 ```javascript
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
