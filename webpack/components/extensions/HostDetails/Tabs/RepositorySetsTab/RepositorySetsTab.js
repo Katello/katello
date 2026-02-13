@@ -268,7 +268,6 @@ const RepositorySetsTab = () => {
       }
       return getHostRepositorySets({
         content_access_mode_env: toggleGroupState === LIMIT_TO_ENVIRONMENT,
-        content_access_mode_all: true,
         host_id: hostId,
         ...apiSortParams,
         ...modifiedParams,

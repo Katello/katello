@@ -66,12 +66,6 @@ Katello::Engine.routes.draw do
             match '/host_collections' => 'activation_keys#remove_host_collections', :via => :put
             match '/host_collections/available' => 'activation_keys#available_host_collections', :via => :get
           end
-          api_resources :products, :only => [:index]
-          api_resources :subscriptions, :only => [:index] do
-            collection do
-              match '/available' => 'subscriptions#available', :via => :get
-            end
-          end
         end
 
         api_resources :content_credentials, :only => [:index, :show, :create, :update, :destroy] do
@@ -277,7 +271,6 @@ Katello::Engine.routes.draw do
           api_resources :alternate_content_sources, :only => [:index]
           api_resources :subscriptions, :only => [:index] do
             collection do
-              match '/available' => 'subscriptions#available', :via => :get
               get :auto_complete_search
               get :manifest_history
             end
@@ -415,24 +408,11 @@ Katello::Engine.routes.draw do
             end
           end
 
-          api_resources :simple_content_access, only: [] do
-            collection do
-              put :enable
-              put :disable
-              get :eligible
-              get :status
-            end
-          end
-
           api_resources :upstream_subscriptions, only: [:index, :create] do
             collection do
               delete :destroy
               put :update
               get :ping
-              match '/simple_content_access/enable', :to => 'upstream_subscriptions#enable_simple_content_access', :via => :put
-              match '/simple_content_access/disable', :to => 'upstream_subscriptions#disable_simple_content_access', :via => :put
-              match '/simple_content_access/eligible', :to => 'upstream_subscriptions#simple_content_access_eligible', :via => :get
-              match '/simple_content_access/status', :to => 'upstream_subscriptions#simple_content_access_status', :via => :get
             end
           end
         end

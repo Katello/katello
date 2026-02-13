@@ -53,30 +53,6 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
             label: '{{ "Repository Sets" | translate }}',
             parent: 'activation-key.info'
         }
-    })
-    .state('activation-key.subscriptions', {
-        abstract: true,
-        templateUrl: 'activation-keys/details/views/activation-key-subscriptions.html'
-    })
-    .state('activation-key.subscriptions.list', {
-        url: '/subscriptions',
-        permission: 'view_activation_keys',
-        controller: 'ActivationKeySubscriptionsController',
-        templateUrl: 'activation-keys/details/views/activation-key-subscriptions-list.html',
-        ncyBreadcrumb: {
-            label: '{{ "List Subscriptions" | translate }}',
-            parent: 'activation-key.info'
-        }
-    })
-    .state('activation-key.subscriptions.add', {
-        url: '/add-subscriptions',
-        permission: 'edit_activation_keys',
-        controller: 'ActivationKeyAddSubscriptionsController',
-        templateUrl: 'activation-keys/details/views/activation-key-add-subscriptions.html',
-        ncyBreadcrumb: {
-            label: '{{ "Add Subscriptions" | translate }}',
-            parent: 'activation-key.info'
-        }
     });
 
     $stateProvider.state('activation-key.host-collections', {

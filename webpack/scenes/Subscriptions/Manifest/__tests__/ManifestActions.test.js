@@ -12,18 +12,12 @@ import {
   refreshManifestFailureActions,
   deleteManifestSuccessActions,
   deleteManifestFailureActions,
-  enableSimpleContentAccessSuccessActions,
-  enableSimpleContentAccessFailureActions,
-  disableSimpleContentAccessSuccessActions,
-  disableSimpleContentAccessFailureActions,
 } from './manifest.fixtures';
 import {
   loadManifestHistory,
   uploadManifest,
   refreshManifest,
   deleteManifest,
-  enableSimpleContentAccess,
-  disableSimpleContentAccess,
 } from '../ManifestActions';
 import { mock as mockApi, mockErrorRequest } from '../../../../mockRequest';
 
@@ -132,49 +126,5 @@ describe('manifest actions', () => {
       await store.dispatch(deleteManifest());
       expect(store.getActions()).toEqual(deleteManifestSuccessActions);
     });
-  });
-});
-
-describe('creates ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST', () => {
-  const url = '/katello/api/v2/organizations/1/simple_content_access/enable';
-
-  it('and then fails with 422', async () => {
-    mockErrorRequest({
-      url,
-      status: 422,
-      method: 'PUT',
-    });
-
-    await store.dispatch(enableSimpleContentAccess());
-    expect(store.getActions()).toEqual(enableSimpleContentAccessFailureActions);
-  });
-
-  it('and ends with success', async () => {
-    mockApi.onPut(url).reply(200, taskSuccessResponse);
-
-    await store.dispatch(enableSimpleContentAccess());
-    expect(store.getActions()).toEqual(enableSimpleContentAccessSuccessActions);
-  });
-});
-
-describe('creates DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST', () => {
-  const url = '/katello/api/v2/organizations/1/simple_content_access/disable';
-
-  it('and then fails with 422', async () => {
-    mockErrorRequest({
-      url,
-      status: 422,
-      method: 'PUT',
-    });
-
-    await store.dispatch(disableSimpleContentAccess());
-    expect(store.getActions()).toEqual(disableSimpleContentAccessFailureActions);
-  });
-
-  it('and ends with success', async () => {
-    mockApi.onPut(url).reply(200, taskSuccessResponse);
-
-    await store.dispatch(disableSimpleContentAccess());
-    expect(store.getActions()).toEqual(disableSimpleContentAccessSuccessActions);
   });
 });

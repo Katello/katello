@@ -43,30 +43,6 @@ module Katello
 
     allow_transactions_for_any_importer
 
-    def test_index
-      get :index, params: { :host_id => @host.id }
-
-      assert_response :success
-      assert_template 'api/v2/host_subscriptions/index'
-    end
-
-    def test_index_bad_system
-      @host = FactoryBot.create(:host)
-
-      get :index, params: { :host_id => @host.id }
-
-      assert_response 400
-    end
-
-    def test_index_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, params: { :host_id => @host.id }
-      end
-    end
-
     def test_create
       facts = { 'network.hostname' => @host.name}
       installed_products = [{

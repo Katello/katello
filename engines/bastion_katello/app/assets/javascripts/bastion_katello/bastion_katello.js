@@ -10,9 +10,6 @@
 //= require "bastion_katello/http-proxies/http-proxies.module.js"
 //= require_tree "./http-proxies"
 
-//= require "bastion_katello/subscriptions/subscriptions.module.js"
-//= require_tree "./subscriptions"
-
 //= require "bastion_katello/content-views/versions/content-view-versions.module.js"
 //= require_tree "./content-views/versions"
 

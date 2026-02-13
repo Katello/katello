@@ -18,7 +18,6 @@ angular.module('Bastion.organizations').service('FencedPages', ['$state',
             'lifecycle-environments',
             'packages',
             'products',
-            'subscriptions',
             'sync-plans',
             'files',
             'debs'

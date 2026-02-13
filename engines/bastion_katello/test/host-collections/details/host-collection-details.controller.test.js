@@ -72,7 +72,6 @@ describe('Controller: HostCollectionDetailsController', function() {
             openPackagesModal :function () {},
             openErrataModal : function () {},
             openEnvironmentModal : function () {},
-            openSubscriptionsModal : function (){}
         };
 
         $controller('HostCollectionDetailsController', {
@@ -84,7 +83,6 @@ describe('Controller: HostCollectionDetailsController', function() {
             HostCollection: HostCollection,
             ContentHostsModalHelper: ContentHostsModalHelper,
             ApiErrorHandler: ApiErrorHandler,
-            simpleContentAccessEnabled: false
         });
     }));
 

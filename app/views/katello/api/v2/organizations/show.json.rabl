@@ -15,10 +15,6 @@ node :manifest_expired do |org|
   org.manifest_expired?
 end
 
-node :simple_content_access do |org|
-  org.simple_content_access?
-end
-
 node :owner_details do |org|
   partial('katello/api/v2/organizations/owner_details', object: OpenStruct.new(org.owner_details))
 end

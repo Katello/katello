@@ -26,11 +26,6 @@ namespace :katello do
       model.import_all
     end
 
-    print "Importing Activation Key Subscriptions\n"
-    Katello::ActivationKey.all.each do |ack_key|
-      ack_key.import_pools
-    end
-
     print "Importing Linked Repositories\n"
     Katello::Repository.linked_repositories.each(&:index_content)
   end

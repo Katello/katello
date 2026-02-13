@@ -64,12 +64,6 @@ module Katello
       end
     end
 
-    def test_pools_expiring_in_days
-      host_with_pool = FactoryBot.create(:host, :with_subscription)
-      host_with_pool.subscription_facet.pools << FactoryBot.build(:katello_pool, :expiring_in_12_days, cp_id: 1, organization: host_with_pool.organization)
-      assert_includes ::Host.search_for('pools_expiring_in_days = 30'), host_with_pool
-    end
-
     def test_bootc_allow_blank
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
       @foreman_host.content_facet.update(bootc_booted_image: 'quay.io/salami/soup')

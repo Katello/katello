@@ -41,15 +41,6 @@ module Katello
         host.subscriptions.redhat.pluck(:name)
       end
 
-      apipie :method, 'Returns the count of Red Hat subscriptions consumed for the host' do
-        required :host, 'Host::Managed', desc: 'Host object to get subscriptions for'
-        returns Integer, desc: "Count of consumed Red Hat subscriptions"
-      end
-      def host_redhat_subscriptions_consumed(host)
-        presenter = ::Katello::HostSubscriptionsPresenter.new(host)
-        presenter.subscriptions.select(&:redhat?).sum(&:quantity_consumed)
-      end
-
       apipie :method, 'Returns content facet for the host' do
         desc "Content facet is an object containing the host's content-related metadata and associations"
         required :host, 'Host::Managed', desc: 'Host object to get content facet for'

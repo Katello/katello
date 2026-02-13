@@ -13,7 +13,6 @@ module Katello
       ::Katello::Pool.any_instance.stubs(:import_data).returns(true)
       ::Katello::Candlepin::MessageHandler.any_instance.stubs(:get_pool_by_reference_id).returns(pool_two)
       ::Katello::Candlepin::MessageHandler.any_instance.stubs(:subscription_facet).returns(subscription_facet)
-      subscription_facet.host.organization.stubs(:simple_content_access?).returns(false)
     end
 
     def message(subject, content = {})

@@ -147,9 +147,8 @@ module Katello
       setup_activation_keys
       ProductContentFinder.any_instance.expects(:product_content).once.returns(ProductContent.none)
 
-      mode_all = true
       mode_env = false
-      get(:index, params: { :activation_key_id => @activation_key.id, :content_access_mode_all => mode_all, :content_access_mode_env => mode_env })
+      get(:index, params: { :activation_key_id => @activation_key.id, :content_access_mode_env => mode_env })
       assert_response :success
       assert_template 'katello/api/v2/repository_sets/index'
     end
@@ -175,9 +174,8 @@ module Katello
       setup_hosts
       ProductContentFinder.any_instance.expects(:product_content).once.returns(ProductContent.none)
 
-      mode_all = true
       mode_env = false
-      get(:index, params: { :host_id => @host.id, :content_access_mode_all => mode_all, :content_access_mode_env => mode_env })
+      get(:index, params: { :host_id => @host.id, :content_access_mode_env => mode_env })
       assert_response :success
       assert_template 'katello/api/v2/repository_sets/index'
     end

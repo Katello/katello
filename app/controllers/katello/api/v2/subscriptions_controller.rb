@@ -2,13 +2,10 @@ module Katello
   class Api::V2::SubscriptionsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_activation_key
-    before_action :find_host, :only => [:index, :auto_complete_search]
-    before_action :find_optional_organization, :only => [:index, :available, :show]
+    before_action :find_optional_organization, :only => [:index, :show]
     before_action :find_organization, :only => [:upload, :delete_manifest,
                                                 :refresh_manifest, :manifest_history]
     before_action :check_upstream_connection, only: [:refresh_manifest]
-    before_action :find_provider
 
     skip_before_action :check_media_type, :only => [:upload]
 
@@ -18,19 +15,12 @@ module Katello
     end
 
     api :GET, "/organizations/:organization_id/subscriptions", N_("List organization subscriptions")
-    api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
     api :GET, "/subscriptions", N_("List subscriptions")
     param_group :search, Api::V2::ApiController
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
-    param :host_id, String, :desc => N_("id of a host"), :required => false
-    param :activation_key_id, String, :desc => N_("Activation key ID"), :required => false
     param :name, String, :desc => N_("name of the subscription"), :required => false
-    param :available_for, String, :desc => N_("Object to show subscriptions available for, either 'host' or 'activation_key'"), :required => false
-    param :match_host, :bool, :desc => N_("Ignore subscriptions that are unavailable to the specified host")
-    param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products of the specified host")
-    param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
     def index
-      unless @organization || @activation_key
+      unless @organization
         fail HttpErrors::NotFound, _("Organization Information not provided.")
       end
 
@@ -54,12 +44,6 @@ module Katello
 
         format.any do
           collection = scoped_search(*base_args, options)
-          if params[:activation_key_id]
-            key_pools = @activation_key.get_key_pools
-            collection[:results] = collection[:results].map do |pool|
-              ActivationKeySubscriptionsPresenter.new(pool, key_pools)
-            end
-          end
           collection[:results] = collection[:results].map do |pool|
             ProductHostCountPresenter.new(pool)
           end
@@ -69,13 +53,10 @@ module Katello
     end
 
     def index_relation
-      return for_host if params[:host_id]
-      return available_for_activation_key if params[:available_for] == "activation_key"
       collection = Pool.readable
       collection = collection.where("#{Katello::Subscription.table_name}.name" => params[:name]) if params[:name]
       collection = collection.where(:unmapped_guest => false)
       collection = collection.where(organization: Organization.find(params[:organization_id])) if params[:organization_id]
-      collection = collection.for_activation_key(@activation_key) if params[:activation_key_id]
       collection
     end
 
@@ -136,30 +117,6 @@ module Katello
       respond_with_template_collection(params[:action], "subscriptions", collection: @manifest_history)
     end
 
-    def for_host
-      match_attached = params[:available_for] != "host"
-      params[:match_host] = ::Foreman::Cast.to_bool(params[:match_host]) if params[:match_host]
-      params[:match_installed] = ::Foreman::Cast.to_bool(params[:match_installed]) if params[:match_installed]
-      params[:no_overlap] = ::Foreman::Cast.to_bool(params[:no_overlap]) if params[:no_overlap]
-
-      @host.subscription_facet.candlepin_consumer.filtered_pools(match_attached, params[:match_host], params[:match_installed], params[:no_overlap])
-    end
-
-    protected
-
-    def find_host
-      find_host_with_subscriptions(params[:host_id], :view_hosts) if params[:host_id]
-    end
-
-    def find_activation_key
-      @activation_key = ActivationKey.find_by!(:id => params[:activation_key_id]) if params[:activation_key_id]
-    end
-
-    def find_provider
-      @organization = @activation_key.organization if @activation_key
-      @organization = @subscription.organization if @subscription
-    end
-
     private
 
     def resource_class
@@ -168,18 +125,6 @@ module Katello
 
     def default_sort
       %w(id desc)
-    end
-
-    def index_activation_key
-      @activation_key.subscriptions
-    end
-
-    def index_organization
-      @organization.subscriptions
-    end
-
-    def available_for_activation_key
-      @activation_key.available_subscriptions
     end
   end
 end
