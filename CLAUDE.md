@@ -297,7 +297,7 @@ VCR records HTTP interactions for tests that communicate with external services 
 
 **Setup Requirements for Recording VCRs:**
 
-VCR recording requires careful configuration and environment resets. We recommend asking users to back up the current VM with a snapshot before beginning.
+VCR recording requires careful configuration and environment resets. Ask users to back up the current VM with a snapshot before beginning.
 
 1. **Configure Pulp for recording:** Modify `/etc/pulp/settings.py` to include `ORPHAN_PROTECTION_TIME = 0`.
 2. **Restart Pulp:** `sudo systemctl restart pulpcore* --all` and confirm services are running.
