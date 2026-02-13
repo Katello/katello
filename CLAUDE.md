@@ -24,33 +24,49 @@ bundle exec [command]
 
 ### Essential Commands by Task
 
-**Testing:**
-```bash
-# ONLY acceptable rake test commands:
-cd $GITDIR/foreman
-bundle exec rake test:katello                    # All Katello tests
-mode=all bundle exec rake test:katello:test:pulpcore  # Rerecord Pulp VCRs
-
-# For individual tests, ALWAYS use ktest:
-ktest /path/to/test_file.rb                     # Specific file
-ktest /path/to/test_file.rb -n test_method_name # Specific method
-ktest                                           # All Katello tests
-```
-
 **Development Server:**
 ```bash
 cd $GITDIR/foreman
 bundle exec foreman start                       # Start development server
 bundle exec rake console                        # Rails console
 ```
+Note: Typically, developers manually start/stop the Foreman server.
 
 **Database:**
 ```bash
 cd $GITDIR/foreman
 bundle exec rake db:migrate                     # Run migrations
-bundle exec rake katello:reset                  # Reset (destroys data!)
-bundle exec rake db:test:prepare                # Prepare test database
+bundle exec rake katello:reset                  # Reset Foreman/Katello (destroys data!)
+RAILS_ENV=test bundle exec rake db:drop         # Reset test database (step 1/4)
+RAILS_ENV=test bundle exec rake db:create       # Reset test database (step 2/4)
+RAILS_ENV=test bundle exec rake db:migrate      # Reset test database (step 3/4)
+RAILS_ENV=test bundle exec rake db:seed         # Reset test database (step 4/4)
 ```
+
+**Testing:**
+```bash
+# ONLY acceptable rake test commands:
+cd $GITDIR/foreman
+bundle exec rake test:katello                    # All Katello tests
+
+# For individual tests, ALWAYS use ktest:
+cd $GITDIR/katello
+ktest /path/to/test_file.rb                     # Specific file
+ktest /path/to/test_file.rb -n test_method_name # Specific method
+ktest                                           # All Katello tests
+
+# JavaScript testing:
+cd $GITDIR/katello
+npm test                                        # All JS tests
+npx jest webpack/path/to/file.test.js           # Individual test file
+npm run test:watch                              # Watch mode
+
+# VCR recording
+cd $GITDIR/foreman
+mode=all bundle exec rake test:katello:test:pulpcore # Full VCR record
+mode=all ktest ~/katello/path/to/test_file.rb   # Single file VCR record
+```
+Note: VCR recording requires extensive setup. See "VCR Testing" section for complete requirements and best practices.
 
 **Code Quality:**
 ```bash
@@ -62,14 +78,6 @@ cd $GITDIR/katello
 npm run lint                                    # JavaScript linting
 npm run format                                  # Format JavaScript
 npm run build                                   # Build and lint JS
-```
-
-**JavaScript Testing:**
-```bash
-cd $GITDIR/katello
-npm test                                        # All JS tests
-npx jest webpack/path/to/file.test.js           # Individual test file
-npm run test:watch                              # Watch mode
 ```
 
 ### File Locations by Task
@@ -123,20 +131,13 @@ npm run test:watch                              # Watch mode
 
 ## Troubleshooting
 
-### Wrong Directory Errors
-**Symptoms**: "No Rakefile found", gem version conflicts
-**Solution**: Always run commands from Foreman directory:
-```bash
-cd $GITDIR/foreman  # or cd /home/vagrant/foreman
-bundle exec [command]
-```
-
 ### Bundle/Gem Issues
 **Symptoms**: "Could not find gem", version conflicts
 **Solution**:
 ```bash
 cd $GITDIR/foreman
 bundle install
+bundle update # If needed
 bundle exec [command]
 ```
 
@@ -145,8 +146,11 @@ bundle exec [command]
 **Solution**:
 ```bash
 cd $GITDIR/foreman
-bundle exec rake db:test:prepare
 bundle exec rake katello:reset  # If needed (destroys data)
+RAILS_ENV=test bundle exec rake db:drop
+RAILS_ENV=test bundle exec rake db:create
+RAILS_ENV=test bundle exec rake db:migrate
+RAILS_ENV=test bundle exec rake db:seed
 ```
 
 ### Asset/JavaScript Issues
@@ -265,6 +269,8 @@ This matches what `TableIndexPage` expects from the API.
 
 ## Testing & Code Quality
 
+See Quick Reference section above for command reference.
+
 ### Test Organization
 - **Unit tests**: `test/models/`, `test/lib/`
 - **Controller tests**: `test/controllers/`
@@ -279,54 +285,51 @@ Don't write unnecessary comments in tests. When writing a new test, look at surr
 - test length, where possible
 - length and quantity of comments (don't be too wordy)
 
-### Test Commands Reference
-
-**CRITICAL: Never use `bundle exec rake test TEST=...` for individual tests. Always use `ktest`.**
-
-```bash
-# ONLY acceptable rake test commands:
-cd $GITDIR/foreman
-bundle exec rake test:katello                      # All Katello tests
-mode=all bundle exec rake test:katello:test:pulpcore  # Rerecord Pulp VCRs
-
-# For ALL individual/specific tests, use ktest:
-ktest                                          # All Katello tests
-ktest /path/to/test.rb                        # Specific file
-ktest /path/to/test.rb -n test_method_name    # Specific method
-
-# Test by pattern (use ktest with grep-like patterns)
-ktest | grep content_view                      # Pattern matching
-```
-
 ### VCR (Video Cassette Recorder) Testing
 
-VCR records HTTP interactions for tests that communicate with external services (Pulp, Candlepin).
-
-**VCR Cassette Management:**
-```bash
-# Rerecord Pulp VCR cassettes (when Pulp API changes)
-cd $GITDIR/foreman
-mode=all bundle exec rake test:katello:test:pulpcore
-
-# Rerecord a specific VCR test
-mode=all ktest ~/katello/test/actions/pulp3/orchestration/multi_copy_all_units_test.rb -n test_yum_copy_all_no_filter_rules
-```
+VCR records HTTP interactions for tests that communicate with external services (Pulp, Candlepin). Most testing will not require recording VCR cassettes.
 
 **VCR Best Practices:**
 - VCR cassettes are stored in `test/fixtures/vcr_cassettes/`
 - Never commit cassettes with sensitive data (tokens, passwords)
-- Use `mode=all` to rerecord all cassettes for external service tests
+- Use `mode=all` to rerecord all cassettes (see commands in Quick Reference)
 - Live scenarios automatically delete and recreate VCR cassettes
 
-### JavaScript Testing
-```bash
-cd $GITDIR/katello
-npm test                                    # All tests (single run)
-npm run test:watch                          # Watch mode
-npm run test:current                        # Current changes only
-npx jest webpack/path/to/test_file.test.js  # Run individual test file
-npm run storybook                           # Component development (port 6007)
-```
+**Setup Requirements for Recording VCRs:**
+
+VCR recording requires careful configuration and environment resets. Ask users to back up the current VM with a snapshot before beginning.
+
+1. **Configure Pulp for recording:** Modify `/etc/pulp/settings.py` to include `ORPHAN_PROTECTION_TIME = 0`.
+2. **Restart Pulp:** `sudo systemctl restart pulpcore* --all` and confirm services are running.
+3. **Configure SSL certificates:** Edit `~/foreman/config/settings.yaml.test` to include:
+   ```yaml
+   :ssl_ca_file: /home/vagrant/foreman-certs/proxy_ca.pem
+   :ssl_certificate: /home/vagrant/foreman-certs/client_cert.pem
+   :ssl_priv_key: /home/vagrant/foreman-certs/client_key.pem
+   ```
+4. **Update test fixtures:** Edit `~/foreman/test/fixtures/settings.yml` to include:
+   ```yaml
+   attribute101:
+       name: ssl_ca_file
+       value: "/home/vagrant/foreman-certs/proxy_ca.pem"
+   attribute102:
+       name: ssl_certificate
+       value: "/home/vagrant/foreman-certs/client_cert.pem"
+   attribute103:
+       name: ssl_priv_key
+       value: "/home/vagrant/foreman-certs/client_key.pem"
+   ```
+5. **Reset development database, Candlepin:** `cd ~/foreman && bundle exec rake katello:reset`
+6. **Reset test database:** Run the four-step process from Quick Reference section above.
+7. **Clean up Pulp orphans:** In rails console (`bundle exec rake console`):
+   ```ruby
+   api = Katello::Pulp3::Api::Core.new(SmartProxy.pulp_primary)
+   result = api.orphans_api.cleanup(PulpcoreClient::OrphansCleanup.new(orphan_protection_time: 0))
+   task = result.task
+   # Wait for completion, check: task.state, task.error
+   ```
+8. **Record VCRs:** Use commands from Quick Reference section above.
+9. **Important:** Any re-records after running ktest require steps 5-8 to be repeated, as VCR recording pollutes dev, test, and Pulp databases.
 
 ### Code Quality Standards
 - **Ruby**: Uses `theforeman-rubocop` with lenient configuration
@@ -388,7 +391,7 @@ return (
 
 **References:**
 - [Table Index Page](./TABLE_INDEX_PAGE_PATTERNS.md)
-- Simple [ModelsPage] (https://github.com/theforeman/foreman/blob/develop/webpack/assets/javascripts/react_app/routes/Models/ModelsPage/index.js)
+- Simple [ModelsPage](https://github.com/theforeman/foreman/blob/develop/webpack/assets/javascripts/react_app/routes/Models/ModelsPage/index.js)
 - Complex: [HostsIndex](https://github.com/theforeman/foreman/blob/develop/webpack/assets/javascripts/react_app/components/HostsIndex/index.js)
 - Katello: `./webpack/scenes/ContentViews/Table/ContentViewsTable.js`
 
