@@ -1,9 +1,11 @@
 module Actions
   module Katello
     module ContentView
-      class Create < Actions::Base
+      class Create < Actions::EntryAction
         def plan(content_view, environment_ids = [])
           content_view.save!
+          action_subject(content_view)
+
           if content_view.rolling?
             new_version = content_view.create_new_version
             if environment_ids&.any?
