@@ -30,7 +30,7 @@ cd $GITDIR/foreman
 bundle exec foreman start                       # Start development server
 bundle exec rake console                        # Rails console
 ```
-Note: Typically, developers manually start/stop the foreman server.
+Note: Typically, developers manually start/stop the Foreman server.
 
 **Database:**
 ```bash
