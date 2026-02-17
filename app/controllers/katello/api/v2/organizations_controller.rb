@@ -8,10 +8,12 @@ module Katello
                                      cdn_configuration redhat_provider update releases).freeze
     before_action :local_find_taxonomy, :only => LOCAL_FIND_TAXONOMY_ACTIONS
 
-    hide_taxonomy_options
+    prepend_before_action :drop_taxonomy_id_from_params
     resource_description do
       api_version 'v2'
       api_base_url "/katello/api"
+      param :location_id, Integer, :show => false
+      param :organization_id, Integer, :show => false
     end
 
     def self.before_find_taxonomy_actions
