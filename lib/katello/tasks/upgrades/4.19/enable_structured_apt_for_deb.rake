@@ -14,7 +14,7 @@ namespace :katello do
           puts "Enabling structured APT for all deb type repos not already migrated."
         else
           puts "Since there are no deb type repos, enabling structured APT does not require migration. Skipping."
-          exit
+          next
         end
 
         found_repos_to_migrate = false
