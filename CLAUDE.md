@@ -353,6 +353,27 @@ const filtered = array.filter(cb => cb.disabled);        // Not a promise!
 const firstCheckbox = checkboxes.find(cb => !cb.disabled);
 ```
 
+### Test Writing Best Practices
+
+**Avoid Non-Determinism:**
+- **Never use `SecureRandom.uuid`** or other random values in tests
+- Use fixed strings like `'test-task-id-123'` instead
+- This ensures tests are reproducible and debuggable
+
+**Example - Bad:**
+```ruby
+task = ForemanTasks::Task.create!(
+  external_id: SecureRandom.uuid  # DON'T DO THIS
+)
+```
+
+**Example - Good:**
+```ruby
+task = ForemanTasks::Task.create!(
+  external_id: 'test-scheduled-publish-123'  # Deterministic
+)
+```
+
 ### TDD Workflow
 1. Write failing test
 2. Run test to confirm failure
