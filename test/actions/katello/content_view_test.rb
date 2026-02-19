@@ -14,42 +14,49 @@ module ::Actions::Katello::ContentView
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::Create }
     let(:library) { katello_environments(:library) }
-    view_params = {name: "foo", label: "foo", organization: Organization.first}
+
     it 'plans' do
-      content_view = Katello::ContentView.create!(**view_params, rolling: false)
+      content_view = build_stubbed(:katello_content_view, rolling: false)
       content_view.expects(:save!)
+      action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view)
 
       refute_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
       refute_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
     end
+
     it 'plans rolling without environment' do
-      content_view = Katello::ContentView.create!(**view_params, rolling: true, repository_ids: [])
+      content_view = build_stubbed(:katello_content_view, rolling: true)
       content_view.expects(:save!)
       content_view.expects(:create_new_version)
+      action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view)
 
       refute_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
       refute_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
     end
+
     it 'plans rolling' do
-      content_view = Katello::ContentView.create!(**view_params, rolling: true, repository_ids: [])
+      content_view = build_stubbed(:katello_content_view, rolling: true)
       content_view.expects(:save!)
       content_view.expects(:create_new_version)
+      action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view, [library.id])
 
       assert_action_planned action, ::Actions::Katello::ContentView::AddToEnvironment
       refute_action_planned action, ::Actions::Katello::ContentView::AddRollingRepoClone
     end
+
     it 'plans rolling with repo' do
       repository = katello_repositories(:fedora_17_x86_64)
-      content_view = Katello::ContentView.create!(**view_params, rolling: true, repository_ids: [repository.id])
+      content_view = build_stubbed(:katello_content_view, rolling: true, repository_ids: [repository.id])
       content_view.expects(:save!)
       content_view.expects(:create_new_version)
       content_view.expects(:reload)
+      action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view, [library.id])
 
@@ -581,19 +588,6 @@ module ::Actions::Katello::ContentView
       version = content_view.create_new_version
       create_and_plan_action(action_class, version, environment)
       assert_equal '2.0', content_view_environment.content_view_version.version
-    end
-  end
-
-  class CreateTest < TestBase
-    let(:action_class) { ::Actions::Katello::ContentView::Create }
-
-    let(:content_view) do
-      katello_content_views(:acme_default)
-    end
-
-    it 'plans' do
-      content_view.expects(:save!)
-      plan_action(action, content_view)
     end
   end
 
