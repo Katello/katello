@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { Alert, Grid, GridItem, PageSection, Title, Text, TextContent } from '@patternfly/react-core';
 
+import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import { STATUS } from 'foremanReact/constants';
@@ -178,6 +179,35 @@ const ChangeContentSourcePage = () => {
               hostsWithoutContent={hostsWithoutContent}
             />
 
+            <GridItem span={7}>
+              <Alert
+                ouiaId="change-content-source-warning"
+                variant="warning"
+                isInline
+                className="margin-top-20"
+                title={
+                  <span style={{ fontWeight: 'normal' }}>
+                    <FormattedMessage
+                      defaultMessage="Your selection of lifecycle environment and content view will {replace} all existing content view environments on {hosts}."
+                      values={{
+                        replace: <strong>{__('replace')}</strong>,
+                        hosts: (
+                          <strong>
+                            <FormattedMessage
+                              defaultMessage="{count, plural, one {# selected host} other {# selected hosts}}"
+                              values={{ count: contentHosts.length + hostsWithoutContent.length }}
+                              id="change-content-source-host-count-i18n"
+                            />
+                          </strong>
+                        ),
+                      }}
+                      id="change-content-source-warning-i18n"
+                    />
+                  </span>
+                }
+              />
+            </GridItem>
+
             <ContentSourceForm
               handleSubmit={handleSubmit}
               handleEnvironment={handleEnvironment}
@@ -206,3 +236,4 @@ const ChangeContentSourcePage = () => {
 };
 
 export default ChangeContentSourcePage;
+
