@@ -96,6 +96,7 @@ module Katello
       if ActiveRecord::Base.connection.data_source_exists?(ForemanTasks::Task.table_name) && User.unscoped.find_by_login(User::ANONYMOUS_ADMIN).present?
         ::ForemanTasks.dynflow.config.on_init(false) do |_world|
           Katello::Engine.register_scheduled_task(Actions::Candlepin::Consumer::CleanBackendObjects, '0 0 1 * *')
+          Katello::Engine.register_scheduled_task(Actions::Katello::Pool::DestroyExpired, '0 0 * * *')
         end
       end
     rescue ActiveRecord::NoDatabaseError # rubocop:disable Lint/SuppressedException
@@ -249,7 +250,6 @@ module Katello
       Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
       Katello::EventQueue.register_event(Katello::Events::DeleteLatestContentViewVersion::EVENT_TYPE, Katello::Events::DeleteLatestContentViewVersion)
       Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
-      Katello::EventQueue.register_event(Katello::Events::DeletePool::EVENT_TYPE, Katello::Events::DeletePool)
     end
 
     rake_tasks do
