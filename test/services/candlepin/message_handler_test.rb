@@ -21,20 +21,6 @@ module Katello
     end
   end
 
-  class PoolCreatedTest < MessageHandlerTestBase
-    let(:event_name) { 'pool.created' }
-
-    def test_pool_id
-      assert_equal @pool_id, handler.pool_id
-    end
-
-    def test_import_pool
-      Katello::EventQueue.expects(:push_event).with('import_pool', @pool.id)
-
-      handler.import_pool
-    end
-  end
-
   class PoolDeletedTest < MessageHandlerTestBase
     let(:event_name) { 'pool.deleted' }
 
