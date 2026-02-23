@@ -126,23 +126,7 @@ module Katello
       end
 
       def delete_orphan_repositories
-        tasks = []
-        orphan_repositories.each do |api, hrefs|
-          tasks << hrefs.collect do |href|
-            api.repositories_api.delete(href)
-          end
-        end
-        tasks.flatten
-      end
-
-      def orphan_repositories
-        repo_map = {}
-        pulp3_enabled_repo_types(false).each do |repo_type|
-          api = repo_type.pulp3_service_class.api(smart_proxy)
-          repo_hrefs = api.list_all.map(&:pulp_href)
-          repo_map[api] = repo_hrefs - ::Katello::Pulp3::RepositoryReference.where(repository_href: repo_hrefs).pluck(:repository_href)
-        end
-        repo_map
+        fail NotImplementedError
       end
     end
   end
