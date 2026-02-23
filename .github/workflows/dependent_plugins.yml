@@ -1,0 +1,21 @@
+name: (non-blocking) Dependent Plugins
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'master'
+      - 'KATELLO-*'
+
+concurrency:
+  group: ${{ github.ref_name }}-dependent-plugins
+  cancel-in-progress: true
+
+jobs:
+  foreman_rh_cloud:
+    name: foreman_rh_cloud
+    uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v0
+    with:
+      plugin: foreman_rh_cloud
+      plugin_repository: theforeman/foreman_rh_cloud
+      foreman_version: develop
