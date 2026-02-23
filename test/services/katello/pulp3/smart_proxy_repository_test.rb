@@ -29,6 +29,32 @@ module Katello
 
         assert_equal ['rhel-7-gone'], smart_proxy_mirror_repo.delete_orphan_remotes
       end
+
+      def test_delete_orphan_repositories
+        proxy = smart_proxies(:four)
+        fedora = katello_repositories(:fedora_17_x86_64)
+        rhel6 = katello_repositories(:rhel_6_x86_64)
+        rhel7 = katello_repositories(:rhel_7_x86_64)
+        rhel7_href = '/rhel/7/href'
+        smart_proxy_mirror_repo = ::Katello::Pulp3::SmartProxyMirrorRepository.new(proxy)
+        api = mock
+        repos_api = mock
+
+        pulp_repositories = [
+          PulpRpmClient::RpmRpmRepositoryResponse.new(name: rhel7.pulp_id, pulp_href: rhel7_href),
+          PulpRpmClient::RpmRpmRepositoryResponse.new(name: rhel6.pulp_id, pulp_href: 'rhel6'),
+          PulpRpmClient::RpmRpmRepositoryResponse.new(name: fedora.pulp_id, pulp_href: 'fedora'),
+        ]
+
+        smart_proxy_mirror_repo.expects(:pulp3_enabled_repo_types).once.returns([::Katello::RepositoryTypeManager.find(:yum)])
+        ::Katello::SmartProxyHelper.any_instance.expects(:combined_repos_available_to_capsule).once.returns([fedora, rhel6])
+        ::Katello::RepositoryType.any_instance.expects(:pulp3_api).once.returns(api)
+        api.expects(:repositories_api).once.returns(repos_api)
+        api.expects(:list_all).once.returns(pulp_repositories)
+        repos_api.expects(:delete).once.with(rhel7_href).returns('rhel-7-gone')
+
+        assert_equal ['rhel-7-gone'], smart_proxy_mirror_repo.delete_orphan_repositories
+      end
     end
 
     class SmartProxyMirrorRepositoryOrphanRepositoryVersionsTest < ActiveSupport::TestCase
