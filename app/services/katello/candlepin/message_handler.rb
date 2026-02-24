@@ -62,12 +62,6 @@ module Katello
           end
         end
       end
-
-      def delete_pool
-        if Katello::Pool.where(:cp_id => pool_id).destroy_all.any?
-          Rails.logger.info "Deleted Katello::Pool with cp_id=#{pool_id}"
-        end
-      end
     end
   end
 end

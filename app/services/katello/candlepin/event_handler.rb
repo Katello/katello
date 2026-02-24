@@ -17,8 +17,6 @@ module Katello
           case message_handler.subject
           when /pool\.created/
             message_handler.import_pool
-          when /pool\.deleted/
-            message_handler.delete_pool
           end
         end
       end
