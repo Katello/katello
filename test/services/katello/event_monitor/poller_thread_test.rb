@@ -12,14 +12,13 @@ module Katello
       end
 
       def test_run_event
-        event = Katello::Event.new(object_id: 100, event_type: 'import_pool')
-        Katello::EventMonitor::PollerThread.any_instance.expects(:poll_for_events)
-        Katello::Events::ImportPool.any_instance.expects(:run)
-        Katello::EventMonitor::PollerThread.run
+        event_record = stub(event_type: 'fake', object_id: 100, created_at: 1.hour.ago)
+        event_instance = mock(run: true)
 
-        Katello::EventMonitor::PollerThread.instance.run_event(event)
+        Katello::EventQueue.expects(:create_instance).with(event_record).returns(event_instance)
 
-        Katello::EventMonitor::PollerThread.close
+        poller = Katello::EventMonitor::PollerThread.new
+        poller.run_event(event_record)
       end
 
       def test_status
