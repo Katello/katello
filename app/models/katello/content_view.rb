@@ -662,6 +662,7 @@ module Katello
         check_composite_action_allowed!(organization.library)
         check_docker_repository_names!([organization.library])
         check_orphaned_content_facets!(environments: self.environments)
+        check_scheduled_publish!
       end
 
       true
@@ -674,6 +675,14 @@ module Katello
         errored_tasks = blocking_tasks.uniq.map { |task| "- #{Setting['foreman_url']}/foreman_tasks/tasks/#{task&.id}" }.join("\n")
         fail _("Pending tasks detected in repositories of this content view. Please wait for the tasks: " +
                  errored_tasks + " before publishing.")
+      end
+    end
+
+    def check_scheduled_publish!
+      return unless composite?
+
+      if ::Katello::ContentViewManager.scheduled_composite_publish?(self)
+        fail ::Katello::Errors::ConflictException, _("A publish is already scheduled for this content view. Please wait for the scheduled publish to complete.")
       end
     end
 

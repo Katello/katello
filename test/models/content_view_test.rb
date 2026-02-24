@@ -853,5 +853,25 @@ module Katello
       ignore_generated_include_library = Katello::ContentView.ignore_generated(include_library_generated: true).count
       assert_equal (ignore_generated - ignore_generated_include_library), 2
     end
+
+    def test_check_scheduled_publish_raises_when_scheduled_publish_exists
+      composite_cv = katello_content_views(:composite_view)
+
+      # Create a scheduled publish task for the composite CV
+      task = FactoryBot.create(:dynflow_task, :scheduled,
+                                label: 'Actions::Katello::ContentView::Publish',
+                                external_id: 'test-scheduled-publish-check-123')
+
+      # Mock the delayed plan to return our composite CV as first arg
+      delayed_plan = mock('delayed_plan')
+      delayed_plan.stubs(:args).returns([composite_cv])
+      ForemanTasks.dynflow.world.persistence.stubs(:load_delayed_plan).with(task.external_id).returns(delayed_plan)
+
+      error = assert_raises(Katello::Errors::ConflictException) do
+        composite_cv.check_scheduled_publish!
+      end
+
+      assert_match(/publish is already scheduled/, error.message)
+    end
   end
 end

@@ -7,7 +7,7 @@ FactoryBot.define do
     result { 'success' }
     sequence(:started_at) { |n| "2016-#{(n / 30) + 1}-#{(n % 30) + 1} 11:15:00" }
     after(:build) do |task|
-      task.ended_at = task.started_at.change(:sec => 32)
+      task.ended_at = task.started_at.change(:sec => 32) if task.started_at
     end
 
     trait :running do
@@ -19,6 +19,13 @@ FactoryBot.define do
     trait :failed do
       state { 'paused' }
       result { 'error' }
+      ended_at { nil }
+    end
+
+    trait :scheduled do
+      state { 'scheduled' }
+      result { 'pending' }
+      started_at { nil }
       ended_at { nil }
     end
   end
