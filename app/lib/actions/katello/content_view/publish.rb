@@ -110,7 +110,7 @@ module Actions
         # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
         def auto_published?
-          input[:auto_published]
+          input&.[](:auto_published)
         end
 
         def humanized_name
