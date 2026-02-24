@@ -31,13 +31,9 @@ module Katello
       cvv = katello_content_view_versions(:composite_view_version_1)
 
       # Create a scheduled publish task for the composite CV
-      task = ForemanTasks::Task.create!(
-        type: 'ForemanTasks::Task::DynflowTask',
-        label: 'Actions::Katello::ContentView::Publish',
-        state: 'scheduled',
-        result: 'pending',
-        external_id: 'test-scheduled-publish-123'
-      )
+      task = FactoryBot.create(:dynflow_task, :scheduled,
+                                label: 'Actions::Katello::ContentView::Publish',
+                                external_id: 'test-scheduled-publish-123')
 
       # Mock the delayed plan to return our composite CV as first arg
       delayed_plan = mock('delayed_plan')
@@ -55,7 +51,7 @@ module Katello
 
       request.expects(:with_lock).yields
       request.expects(:destroy!)
-      Katello::ContentViewManager.expects(:running_component_publish_task_ids).returns([])
+      Katello::ContentViewManager.expects(:running_component_publish_tasks).returns([])
       ForemanTasks.expects(:async_task).with(
         ::Actions::Katello::ContentView::Publish,
         request.content_view,
@@ -69,15 +65,13 @@ module Katello
 
     test 'trigger_auto_publish with chaining' do
       request = build_stubbed(:katello_content_view_auto_publish_request)
-      sibling_task_ids = ['task-1', 'task-2']
-      mock_world = mock('world')
+      sibling_tasks = [mock('task1'), mock('task2')]
 
       request.expects(:with_lock).yields
       request.expects(:destroy!)
-      Katello::ContentViewManager.expects(:running_component_publish_task_ids).returns(sibling_task_ids)
-      ForemanTasks.dynflow.expects(:world).returns(mock_world)
-      mock_world.expects(:chain).with(
-        sibling_task_ids,
+      Katello::ContentViewManager.expects(:running_component_publish_tasks).returns(sibling_tasks)
+      ForemanTasks.expects(:chain).with(
+        sibling_tasks,
         Actions::Katello::ContentView::Publish,
         request.content_view,
         anything,
@@ -104,7 +98,7 @@ module Katello
 
       request.expects(:with_lock).yields
       request.expects(:destroy!).never
-      Katello::ContentViewManager.expects(:running_component_publish_task_ids).returns([])
+      Katello::ContentViewManager.expects(:running_component_publish_tasks).returns([])
       ForemanTasks.expects(:async_task).raises(ForemanTasks::Lock::LockConflict.new(mock, []))
 
       Katello::ContentViewManager.trigger_auto_publish!(request: request)
@@ -114,7 +108,7 @@ module Katello
       request = build_stubbed(:katello_content_view_auto_publish_request)
 
       request.expects(:with_lock).yields
-      Katello::ContentViewManager.expects(:running_component_publish_task_ids).returns([])
+      Katello::ContentViewManager.expects(:running_component_publish_tasks).returns([])
       ForemanTasks.expects(:async_task).raises(StandardError)
 
       assert_raises(StandardError) do
