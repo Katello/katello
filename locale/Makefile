@@ -66,7 +66,7 @@ tx-update: tx-pull
 	@echo
 
 mo-files: $(MOFILES)
-	git add $(POFILES) $(POTFILE) $(JSFILES) ../locale/*/LC_MESSAGES
+	git add $(POFILES) $(POTFILE) $(JSFILES)
 	git commit -m "i18n - pulling from tx"
 	@echo
 	@echo Changes commited!
