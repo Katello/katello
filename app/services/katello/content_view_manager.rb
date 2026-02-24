@@ -61,19 +61,19 @@ module Katello
         description = _("Auto Publish - Triggered by '%s'") % request.content_view_version.name
 
         # Find running component CV publish tasks for chaining
-        sibling_task_ids = running_component_publish_task_ids(composite_cv)
+        sibling_tasks = running_component_publish_tasks(composite_cv)
 
-        if sibling_task_ids.any?
+        if sibling_tasks.any?
           # Chain composite publish to wait for running component CVs
-          ForemanTasks.dynflow.world.chain(
-            sibling_task_ids,
+          ForemanTasks.chain(
+            sibling_tasks,
             Actions::Katello::ContentView::Publish,
             composite_cv,
             description,
             auto_published: true,
             triggered_by_id: request.content_view_version_id
           )
-          auto_publish_log(request, "task chained to #{sibling_task_ids.size} component tasks")
+          auto_publish_log(request, "task chained to #{sibling_tasks.size} component tasks")
         else
           # No component CVs running, publish immediately
           ForemanTasks.async_task(Actions::Katello::ContentView::Publish, composite_cv, description, auto_published: true, triggered_by_id: request.content_view_version_id)
@@ -99,18 +99,17 @@ module Katello
         end
     end
 
-    def self.running_component_publish_task_ids(composite_cv)
+    def self.running_component_publish_tasks(composite_cv)
       component_cv_ids = composite_cv.components.pluck(:content_view_id)
       return [] if component_cv_ids.empty?
 
-      tasks = ForemanTasks::Task::DynflowTask
+      ForemanTasks::Task::DynflowTask
         .for_action(::Actions::Katello::ContentView::Publish)
         .where(state: ['planning', 'planned', 'running'])
         .select do |task|
           task_input = task.input
           task_input && component_cv_ids.include?(task_input.dig('content_view', 'id'))
         end
-      tasks.map(&:external_id)
     end
   end
 end
