@@ -5,17 +5,17 @@
 #
 # Translators:
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2022
-# 진선재, 2024
 # Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
 # Bryan Kearney <bryan.kearney@gmail.com>, 2025
 # Ondřej Gajdušek, 2025
+# 진선재, 2025
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 4.19.0.pre.master\n"
+"Project-Id-Version: katello 4.20.0.rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
-"Last-Translator: Ondřej Gajdušek, 2025\n"
+"Last-Translator: 진선재, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/foreman/teams/114/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,6 +99,12 @@ msgstr " 또는 왼쪽의 아무 단계나 선택"
 msgid " to manage and promote content views, or select a different environment."
 msgstr " 콘텐츠 뷰를 관리하고 홍보하거나 다른 환경을 선택합니다."
 
+msgid " to manage and promote content views, or select a different lifecycle environment."
+msgstr ""
+
+msgid " to same product"
+msgstr ""
+
 msgid "${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}"
 msgstr "${deleteFlow ? 'Deleting' : 'Removing'} 버전 ${versionNameToRemove}"
 
@@ -119,6 +125,9 @@ msgstr "${selectedContentType}"
 
 msgid "${selectedContentType} will appear here when created."
 msgstr "${selectedContentType} 생성되면 여기에 나타납니다."
+
+msgid "${totalCount} labels and annotations"
+msgstr ""
 
 msgid "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?"
 msgstr "%s %s에는 삭제 후 다시 연결해야 하는 호스트 %s 및 호스트 그룹 %s가 있습니다. %s를 삭제하시겠습니까?"
@@ -424,6 +433,24 @@ msgstr "ostree 동기화 중에 포함할 쉼표로 구분된 참조 목록입�
 msgid "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
 msgstr "ostree 동기화 중에 제외할 쉼표로 구분된 태그 목록입니다. 와일드카드 *, ?는 인식됩니다. 'exclude_refs'는 'include_refs' 다음에 평가됩니다."
 
+msgid "A content view environment is a combination of a particular lifecycle environment and content view."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide access to different sets of content. Your selection here will {replace} all existing content view environments on {hosts}."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}."
+msgstr ""
+
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
 msgstr "다수의 에라타가 이 컨텐츠 뷰에 적용되지 않아 처음 100 항목만 표시합니다. "
 
@@ -511,6 +538,9 @@ msgstr "활성화 키 '%s'는 여러 환경에 연결되어 있으며 여러 환
 msgid "Activation key ID"
 msgstr "활성키 ID"
 
+msgid "Activation key content view environments updated"
+msgstr ""
+
 msgid "Activation key deleted"
 msgstr "활성키가 삭제되었습니다 "
 
@@ -580,6 +610,9 @@ msgstr "콘텐츠 추가"
 msgid "Add content view"
 msgstr "콘텐츠 뷰 추가"
 
+msgid "Add content view environment"
+msgstr ""
+
 msgid "Add content views"
 msgstr "콘텐츠 뷰 추가"
 
@@ -634,14 +667,23 @@ msgstr "Red Hat Subscription Management에서 매니페스트에 의해 사용�
 msgid "Add subscriptions using the Add Subscriptions button."
 msgstr "서브스크립션 추가 버튼을 사용하여 서브스크립션을 추가합니다."
 
+msgid "Add the command below to your Containerfile to incorporate the selected transient packages. When building your bootable container image, this will ensure these packages are installed permanently (as persistent packages)."
+msgstr ""
+
 msgid "Add to a host collection"
 msgstr "호스트 컬렉션 복사"
+
+msgid "Add to host collections"
+msgstr ""
 
 msgid "Added"
 msgstr "추가됨"
 
 msgid "Added %s"
 msgstr "%s 추가됨"
+
+msgid "Added %{count} host(s) to host collection %{host_collection}."
+msgstr ""
 
 msgid "Added Content:"
 msgstr "추가된 컨텐츠: "
@@ -667,9 +709,6 @@ msgstr "Foreman을 구성한 후에는 {hosts}에 있는 구성도 업데이트�
 msgid "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently."
 msgstr "증분 업데이트를 생성한 후 지정한 호스트에 변경 내용을 적용합니다. 현재 에라타만 지원됩니다."
 
-msgid "All"
-msgstr "모두"
-
 msgid "All Media"
 msgstr "모든 미디어"
 
@@ -679,11 +718,17 @@ msgstr "전체 리포지터리 "
 msgid "All available architectures for this repo are enabled."
 msgstr "이 리포지토리에 사용 가능한 모든 아키텍처가 활성화되어 있습니다."
 
+msgid "All content views in this lifecycle environment are already assigned"
+msgstr ""
+
 msgid "All errata applied"
 msgstr "적용된 모든 에라타"
 
 msgid "All errata up-to-date"
 msgstr "모든 에라타는 최신 상태입니다."
+
+msgid "All selected hosts were already members of host collection %{host_collection}."
+msgstr ""
 
 msgid "All subpaths must have a slash at the end and none at the front"
 msgstr "모든 하위 경로에는 끝에 슬래시가 있어야 하며 앞에는 슬래시가 없어야 합니다."
@@ -751,9 +796,6 @@ msgstr "항상 최신 버전을 사용하세요(현재%{version} )"
 msgid "Always update to latest version"
 msgstr "항상 최신 버전으로 업데이트하세요"
 
-msgid "Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required."
-msgstr "호스트 관련 작업 실행을 처리하기 위한 풀의 작업자 수입니다. 0으로 설정하면 기본 대기열이 대신 사용됩니다. dynflowd/foreman-tasks 서비스를 다시 시작해야 합니다."
-
 msgid "An alternate content source can be added by using the \\\"Add source\\\" button below."
 msgstr "아래의 \"소스 추가\" 버튼을 사용하여 대체 콘텐츠 소스를 추가할 수 있습니다."
 
@@ -773,6 +815,9 @@ msgid ""
 msgstr ""
 "업로드 중 오류가 발생했습니다. \n"
 "%{error_message}"
+
+msgid "An error occurred while updating host collections"
+msgstr ""
 
 msgid "An option to specify how many ostree commits to traverse."
 msgstr "이동할 ostree 커밋 수를 지정하는 옵션입니다."
@@ -888,6 +933,9 @@ msgstr "추가할 구성 요소 배열"
 msgid "Array of content view component IDs to remove. Identifier of the component association"
 msgstr "제거할 콘텐츠 뷰 구성 요소 ID 배열. 구성 요소 연결 식별자"
 
+msgid "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on."
 msgstr "활성화 키와 연결된 콘텐츠 뷰 환경 ID의 배열입니다. content_view_id 및 lifecycle_environment_id가 지정된 경우 무시됩니다.Requires allow_multiple_content_views 설정이 활성화되어 있어야 합니다."
 
@@ -896,6 +944,9 @@ msgstr "활성화 키와 연결할 콘텐츠 뷰 환경 ID의 배열입니다. c
 
 msgid "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr "호스트와 연관될 콘텐츠 뷰 환경 ID 배열. content_view_id와 lifecycle_environment_id가 지정된 경우 무시됩니다. allow_multiple_content_views 설정이 켜져 있어야 합니다."
+
+msgid "Array of dependency repository IDs to mirror along with the main repository"
+msgstr ""
 
 msgid "Array of host ids"
 msgstr "호스트 ID의 배열"
@@ -915,6 +966,18 @@ msgstr "콘텐츠를 생성하려면 아티팩트 ID와 상대 경로가 필요�
 msgid "Artifacts"
 msgstr "아티팩트"
 
+msgid "Assign another content view environment"
+msgstr ""
+
+msgid "Assign content view environment"
+msgstr ""
+
+msgid "Assign content view environments"
+msgstr ""
+
+msgid "Assign content view environments to one or more hosts"
+msgstr ""
+
 msgid "Assign system purpose attributes on one or more hosts"
 msgstr "하나 이상의 호스트에 시스템 목적 속성을 할당합니다."
 
@@ -933,6 +996,9 @@ msgstr "여러 콘텐츠 뷰 환경에 호스트를 할당하지 않습니다. �
 
 msgid "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
 msgstr "여러 콘텐츠 뷰 환경에 활성화 키를 할당할 수 없습니다. 활성화하려면 allow_multiple_content_views 구성을 설정합니다."
+
+msgid "Associated content view environments"
+msgstr ""
 
 msgid "Associated location IDs"
 msgstr "연관된 위치 ID"
@@ -958,6 +1024,9 @@ msgstr "하나 이상의 에라타 유형 옵션을 선택해야 합니다."
 msgid "At least one of the selected items requires the host to reboot"
 msgstr "선택한 항목 중 하나 이상을 사용하려면 호스트를 재부팅해야 합니다."
 
+msgid "At least one of the selected items requires the hosts to reboot"
+msgstr ""
+
 msgid "At least one organization must exist."
 msgstr "최소 하나의 조직이 존재해야 합니다. "
 
@@ -973,11 +1042,17 @@ msgstr "인증 유형"
 msgid "Author"
 msgstr "저자 "
 
+msgid "Auto Publish"
+msgstr ""
+
 msgid "Auto Publish - Triggered by '%s'"
 msgstr "자동 게시 - '%s'에 의해 트리거됨"
 
 msgid "Auto publish"
 msgstr "자동 게시"
+
+msgid "Autocomplete for traces in bulk context"
+msgstr ""
 
 msgid "Autopublish"
 msgstr "자동 게시"
@@ -1060,6 +1135,9 @@ msgstr "이 검색을 북마크 "
 msgid "Bookmarks marked as public are available to all users"
 msgstr "공개로 표시된 북마크는 모든 사용자가 사용할 수 있습니다."
 
+msgid "Bootable"
+msgstr ""
+
 msgid "Bootc rollback via Bootc interface"
 msgstr "Bootc 인터페이스를 통한 Bootc 롤백"
 
@@ -1074,12 +1152,6 @@ msgstr "Bootc 인터페이스를 통한 Bootc 업그레이드"
 
 msgid "Booted"
 msgstr ""
-
-msgid "Booted Container Images"
-msgstr "부팅된 컨테이너 이미지"
-
-msgid "Booted container images"
-msgstr "부팅된 컨테이너 이미지"
 
 msgid "Both"
 msgstr "둘 다"
@@ -1384,8 +1456,14 @@ msgstr "콘텐츠 소스 변경"
 msgid "Change content view environments"
 msgstr "콘텐츠 뷰 환경 변경"
 
+msgid "Change host collections"
+msgstr ""
+
 msgid "Change host content source"
 msgstr "호스트 콘텐츠 소스 변경"
+
+msgid "Change system purpose"
+msgstr ""
 
 msgid "Change the status of at least one repository."
 msgstr "최소한 하나의 리포지터리 상태를 변경합니다."
@@ -1426,6 +1504,9 @@ msgstr "게시된 리포지토리 콘텐츠에 사용되는 체크섬. 지원되
 msgid "Choose content credentials if required for this RHUI source."
 msgstr "필요한 경우 이 RHUI 소스에 대한 콘텐츠 자격 증명을 선택하세요."
 
+msgid "Clean Backend Objects"
+msgstr ""
+
 msgid "Clear any previous registration and run subscription-manager with --force."
 msgstr "이전 등록을 모두 지우고 --force로 subscription-manager를 실행합니다."
 
@@ -1443,6 +1524,9 @@ msgstr "추가할 수 있는 리포지토리를 보려면 클릭하세요."
 
 msgid "Click {update} below to save changes."
 msgstr "변경 사항을 저장하려면 아래 {update}를 클릭하세요."
+
+msgid "Clipboard API not available. Please copy manually."
+msgstr ""
 
 msgid "Clone"
 msgstr "복제(Clone)"
@@ -1462,6 +1546,9 @@ msgstr "'lifecycle_environment_label/content_view_label' 형식으로 활성화 
 msgid "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr "'lifecycle_environment_label/content_view_label' 형식으로 호스트와 연결될 콘텐츠 뷰 환경 레이블의 쉼표로 구분된 목록입니다. content_view_environment_id가 지정되었거나 content_view_id 및 lifecycle_environment_id가 지정된 경우 무시됩니다. allow_multiple_content_views 설정이 활성화되어 있어야 합니다."
 
+msgid "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
 msgstr "하위 경로의 쉼표로 구분된 목록입니다. 모든 하위 경로는 끝에 슬래시가 있어야 하며 앞에는 없어야 합니다."
 
@@ -1470,6 +1557,9 @@ msgstr "컨테이너 이미지 리포지토리를 동기화할 때 제외할 태
 
 msgid "Comma-separated list of tags to sync for a container image repository"
 msgstr "컨테이너 이미지 리포지토리에 동기화할 태그의 쉼표로 구분된 목록"
+
+msgid "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s"
+msgstr ""
 
 msgid "Compare"
 msgstr "비교"
@@ -1555,6 +1645,9 @@ msgstr "컨테이너 매니페스트"
 msgid "Container tags"
 msgstr "컨테이너 태그"
 
+msgid "Containerfile Install Command"
+msgstr ""
+
 msgid "Contains content views. You must choose the version to use for each content view."
 msgstr "콘텐츠 뷰가 포함되어 있습니다. 각 콘텐츠 뷰에 사용할 버전을 선택해야 합니다."
 
@@ -1611,6 +1704,9 @@ msgstr "콘텐츠 뷰 %{view}: 버전: %{versions}"
 
 msgid "Content View Details"
 msgstr "콘텐츠 뷰 세부 정보"
+
+msgid "Content View Environments"
+msgstr ""
 
 msgid "Content View Filter id"
 msgstr "컨텐츠 보기 개요"
@@ -1801,6 +1897,9 @@ msgstr "콘텐츠 뷰 버전이 비어 있거나 콘텐츠 수가 최신 상태�
 msgid "Content views"
 msgstr "콘텐츠 뷰"
 
+msgid "Content views, lifecycle environments, pullable paths"
+msgstr ""
+
 msgid "Content will be synced from the alternate content source first, then the original source if the ACS is not reachable."
 msgstr "콘텐츠는 먼저 대체 콘텐츠 소스에서 동기화되고, ACS에 접근할 수 없는 경우에는 원래 소스에서 동기화됩니다."
 
@@ -1819,6 +1918,9 @@ msgstr "계약 "
 msgid "Contract Number"
 msgstr "계약 번호 "
 
+msgid "Copied"
+msgstr ""
+
 msgid "Copied to clipboard"
 msgstr "클립보드에 복사됨"
 
@@ -1830,6 +1932,12 @@ msgstr "활성키 복사 "
 
 msgid "Copy content view"
 msgstr "콘텐츠 뷰 복사"
+
+msgid "Copy pullable paths"
+msgstr ""
+
+msgid "Copy this to pull the specific image version from your published content view, ensuring consistency across your deployments."
+msgstr ""
 
 msgid "Copy to clipboard"
 msgstr "클립보드에 복사"
@@ -1869,6 +1977,9 @@ msgstr "pulp 기능이 있는 스마트 프록시를 찾을 수 없습니다."
 
 msgid "Could not find all specified errata ids: %s"
 msgstr "다음에 지정된 모든 에라타 ID를 찾을 수 없습니다: %s"
+
+msgid "Could not find dependency repositories with IDs: %{ids}. Proceeding with found repositories."
+msgstr ""
 
 msgid "Could not find environments for promotion"
 msgstr "프로모션을 위한 환경을 찾을 수 없습니다."
@@ -1987,8 +2098,8 @@ msgstr "컨테이너 푸시 리포지토리 루트 생성"
 msgid "Create Export History"
 msgstr "내보내기 기록 생성"
 
-msgid "Create Flatpak Remote"
-msgstr "Flatpak 원격 생성"
+msgid "Create Flatpak remote"
+msgstr ""
 
 msgid "Create Import History"
 msgstr "가져오기 기록 생성"
@@ -2059,6 +2170,9 @@ msgstr "새로운 활성화 키 생성"
 msgid "Create organization"
 msgstr "조직 생성 "
 
+msgid "Creation"
+msgstr ""
+
 msgid "Credentials"
 msgstr "자격 증명"
 
@@ -2091,6 +2205,9 @@ msgstr "사용자 정의 Cron 표현식은 사용자 정의 Cron의 간격 값�
 
 msgid "Custom repositories cannot be disabled."
 msgstr "사용자 정의 리포지터리를 비활성화할 수 없습니다. "
+
+msgid "Customize and restart"
+msgstr ""
 
 msgid "Customize with Rex"
 msgstr "Rex로 사용자 정의"
@@ -2154,9 +2271,6 @@ msgstr "콘텐츠 동기화를 위한 기본 HTTP 프록시"
 
 msgid "Default Location where new subscribed hosts will put upon registration"
 msgstr "새로 가입한 호스트가 등록 시 배치할 기본 위치"
-
-msgid "Default PXEGrub template for new Operating Systems created from synced content"
-msgstr "동기화된 콘텐츠에서 생성된 새 운영 체제에 대한 기본 PXEGrub 템플릿"
 
 msgid "Default PXEGrub2 template for new Operating Systems created from synced content"
 msgstr "동기화된 콘텐츠에서 생성된 새 운영 체제에 대한 기본 PXEGrub2 템플릿"
@@ -2226,9 +2340,6 @@ msgstr "동기화된 콘텐츠에서 생성된 새 원자 운영 체제에 대�
 
 msgid "Default synced OS Atomic template"
 msgstr "기본 동기화 OS Atomic 템플릿"
-
-msgid "Default synced OS PXEGrub template"
-msgstr "기본 동기화 OS PXEGrub 템플릿"
 
 msgid "Default synced OS PXEGrub2 template"
 msgstr "기본 동기화 OS PXEGrub2 템플릿"
@@ -2355,6 +2466,9 @@ msgstr "버전 {versionList} 삭제 중"
 
 msgid "Deleting versions: {versionList}"
 msgstr "버전 삭제 중: {versionList}"
+
+msgid "Dependency found"
+msgstr ""
 
 msgid "Depth"
 msgstr "깊이"
@@ -2524,8 +2638,8 @@ msgstr "편집 "
 msgid "Edit DEB rule"
 msgstr ""
 
-msgid "Edit Flatpak Remote"
-msgstr "Flatpak 원격 편집"
+msgid "Edit Flatpak remote"
+msgstr ""
 
 msgid "Edit RPM rule"
 msgstr "RPM 규칙 편집"
@@ -2536,11 +2650,8 @@ msgstr "URL 및 하위 경로 편집"
 msgid "Edit activation key"
 msgstr "활성화 키 편집"
 
-msgid "Edit content view assignment"
-msgstr "콘텐츠 뷰 할당 편집"
-
-msgid "Edit content view environments"
-msgstr "콘텐츠 뷰 환경 편집"
+msgid "Edit content view environment"
+msgstr ""
 
 msgid "Edit credentials"
 msgstr "자격 증명 편집"
@@ -2569,6 +2680,9 @@ msgstr "인타이틀먼트 편집 중"
 msgid "Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified"
 msgstr "'content_view_id' 및 'environment_id' 매개 변수를 모두 지정하거나 또는 모두 지정하지 않거나 합니다"
 
+msgid "Either content_view_environments or content_view_environment_ids must be provided"
+msgstr ""
+
 msgid "Either environments or versions must be specified."
 msgstr "환경 또는 버전 중 하나를 지정해야 합니다. "
 
@@ -2583,6 +2697,9 @@ msgstr "최신 플래그로 콘텐츠 뷰를 설정하거나 콘텐츠 뷰 버�
 
 msgid "Either set the latest content view or the content view version. Cannot set both"
 msgstr "최신 콘텐츠 뷰 또는 콘텐츠 뷰 버전을 설정하세요. 둘 다 설정할 수 없습니다."
+
+msgid "Either trace_search or trace_ids must be provided"
+msgstr ""
 
 msgid "Empty content view versions"
 msgstr "빈 콘텐츠 뷰 버전"
@@ -2604,9 +2721,6 @@ msgstr "세트에서 리포지터리 활성화 "
 
 msgid "Enable repository sets"
 msgstr "리포지터리 세트 활성화"
-
-msgid "Enable structured APT for deb content"
-msgstr "deb 콘텐츠를 위해 구조화된 APT 활성화"
 
 msgid "Enable/Disable auto publish of composite view"
 msgstr "합성 뷰의 자동 게시 활성화/비활성화"
@@ -2634,6 +2748,9 @@ msgstr "종료"
 
 msgid "Enhancement"
 msgstr "기능 강화"
+
+msgid "Ensure the runtime dependency for this Flatpak app is also mirrored in this organization to avoid installation errors on host(s)."
+msgstr ""
 
 msgid "Enter a name"
 msgstr "이름을 입력하세요"
@@ -2848,6 +2965,9 @@ msgstr "정보가 성공적으로 업데이트되었습니다. "
 msgid "Failed"
 msgstr "실패 "
 
+msgid "Failed to copy to clipboard. Please copy manually."
+msgstr ""
+
 msgid "Failed to delete %{host}: %{errors}"
 msgstr "%{host} 삭제에 실패했습니다: %{errors}"
 
@@ -2856,6 +2976,12 @@ msgstr "콘텐츠 뷰 '%{subject}'의 최신 콘텐츠 뷰 버전을 삭제하�
 
 msgid "Failed to find %{content} with id '%{id}'."
 msgstr "id '%{id}'인 %{content} 검색에 실패했습니다. "
+
+msgid "Failed to generate Containerfile install command"
+msgstr ""
+
+msgid "Failed to initiate trace resolution job."
+msgstr ""
 
 msgid "Fails if any of the repositories belonging to this organization are unexportable. False by default."
 msgstr "이 조직에 속한 리포지토리 중 하나라도 내보낼 수 없는 경우 실패합니다. 기본적으로 False입니다."
@@ -2986,6 +3112,9 @@ msgstr "완료"
 msgid "Finished"
 msgstr "마쳤음"
 
+msgid "Flatpak"
+msgstr ""
+
 msgid "Flatpak Remote ${name} created"
 msgstr "Flatpak 원격 ${name} 생성됨"
 
@@ -3071,6 +3200,11 @@ msgstr "필요에 따라 원하는 리포지토리에 대한 RHUI 인증서를 �
 
 msgid "Generate and Download"
 msgstr "생성 및 다운로드 "
+
+msgid "Generate containerfile install command (%s package selected)"
+msgid_plural "Generate containerfile install command (%s packages selected)"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Generate errata status from directly-installable content"
 msgstr "직접 설치 가능한 콘텐츠에서 에라타 상태 생성"
@@ -3222,9 +3356,6 @@ msgstr "호스트 프로필 가정"
 msgid "Host Profile Can Change In Build"
 msgstr "호스트 프로필은 빌드에서 변경될 수 있음"
 
-msgid "Host Tasks Workers Pool Size"
-msgstr "호스트 작업 작업자 풀 크기"
-
 msgid "Host collection"
 msgstr "호스트 컬렉션"
 
@@ -3240,20 +3371,17 @@ msgstr "호스트 컬렉션"
 msgid "Host collections updated"
 msgstr "호스트 컬렉션이 업데이트됨"
 
-msgid "Host content and subscription details"
-msgstr "호스트 컨텐츠 및 서브스크립션 정보 "
-
 msgid "Host content source will remain the same. Click Save below to update the host's content view environment."
 msgstr "호스트 콘텐츠 소스는 동일하게 유지됩니다. 아래의 저장을 클릭하여 호스트의 콘텐츠 뷰 환경을 업데이트합니다."
 
-msgid "Host content view and environment updated"
-msgstr "호스트 콘텐츠 뷰 및 환경이 업데이트되었습니다."
+msgid "Host content view environment(s) assigned"
+msgstr ""
 
 msgid "Host content view environment(s) updated"
 msgstr "호스트 콘텐츠 뷰 환경이 업데이트됨"
 
-msgid "Host content view environments updating."
-msgstr "호스트 콘텐츠 뷰 환경 업데이트"
+msgid "Host content view environments updated."
+msgstr ""
 
 msgid "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration."
 msgstr "호스트가 %s와 BIOS UUID를 공유하기 때문에 %s에 대한 호스트 생성을 건너뛰었습니다. 이 하이퍼바이저를 보고하려면 해당 dmi.system.uid 팩트를 재정의하거나 Candlepin 구성에서 'candlepin.use_system_uuuid_for_matching'을 'true'로 설정합니다."
@@ -3284,6 +3412,12 @@ msgstr "호스트 식별자"
 
 msgid "Host lifecycle support expiration notification"
 msgstr "호스트 라이프사이클 지원 만료 알림"
+
+msgid "Host release version updating."
+msgstr ""
+
+msgid "Host system purpose updating."
+msgstr ""
 
 msgid "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance"
 msgstr "서브스크립션 UUID에서 호스트를 찾을 수 없습니다: '%s', 호스트가 이미 등록되어 있지만 이 인스턴스에는 등록되어 있지 않은 경우 발생할 수 있습니다."
@@ -3506,9 +3640,6 @@ msgstr "호스트가 중복된 DMI UUID로 인해 등록에 실패하면 여기�
 msgid "If product certificates should be used to authenticate to a custom CDN."
 msgstr "사용자 지정 CDN에 대한 인증에 제품 인증서를 사용해야 하는지 여부입니다."
 
-msgid "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'."
-msgstr "설정된 경우 Katello에서 새로 생성된 APT 리포지터리는 동기화되는 원격 리포지토리와 동일한 리포지토리 구조를 사용합니다. 'foreman-rake katello:migrate_content_for_deb'를 실행하여 기존 APT 리포지터리를 해당 설정과 일치하도록 마이그레이션할 수 있습니다."
-
 msgid "If the smart proxies' assigned HTTP proxies should be used"
 msgstr "스마트 프록시에 할당된 HTTP 프록시를 사용해야 하는 경우"
 
@@ -3692,6 +3823,12 @@ msgstr "필터 포함"
 msgid "Include manifests"
 msgstr "매니페스트 포함"
 
+msgid "Include packages with unknown persistence"
+msgstr ""
+
+msgid "Include packages with unknown persistence in addition to transient packages"
+msgstr ""
+
 msgid "Included"
 msgstr "포함됨"
 
@@ -3742,6 +3879,11 @@ msgstr "범위 검색 쿼리를 사용하여 에라타 설치"
 
 msgid "Install errata via Katello interface"
 msgstr "Katello 인터페이스를 통해 에라타 설치"
+
+msgid "Install package"
+msgid_plural "Install packages"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Install package group via Katello interface"
 msgstr "Katello 인터페이스를 통해 패키지 그룹 설치"
@@ -3808,6 +3950,9 @@ msgstr "패키지 설치 중..."
 
 msgid "Instance-based"
 msgstr "인스턴스 기반 "
+
+msgid "Insufficient space for selected hosts"
+msgstr ""
 
 msgid "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported."
 msgstr "지정한 객체를 해석하여 지정한 객체에 연결할 수 있는 호스트 컬렉션만 반환합니다. 값 '호스트'가 지원됩니다."
@@ -3944,6 +4089,9 @@ msgstr "작업 '${description}' 완료됨"
 msgid "Job '${description}' has started."
 msgstr "작업 ${description}이/가 시작되었습니다."
 
+msgid "Job '${firstJob.description}' has started."
+msgstr ""
+
 msgid "Katello Bootc interface"
 msgstr "katello Bootc 인터페이스"
 
@@ -4043,6 +4191,12 @@ msgstr "콘텐츠 뷰의 레이블"
 msgid "Label of the flatpak remote"
 msgstr "flatpak 원격의 레이블"
 
+msgid "Labels and annotations"
+msgstr ""
+
+msgid "Labels | Annotations"
+msgstr ""
+
 msgid "Last check-in:"
 msgstr "마지막 체크인:"
 
@@ -4060,6 +4214,9 @@ msgstr "마지막 새로 고침"
 
 msgid "Last refresh :"
 msgstr "마지막 새로 고침 :"
+
+msgid "Last scan:"
+msgstr ""
 
 msgid "Last seen"
 msgstr "마지막으로 본 시간"
@@ -4084,9 +4241,6 @@ msgstr "서브스크립션 매니페스트 추가에 대해 자세히 알아보�
 
 msgid "Legacy UI"
 msgstr "레거시 UI"
-
-msgid "Legacy content host UI"
-msgstr "레거시 콘텐츠 호스트 UI"
 
 msgid "Less than"
 msgstr "미만"
@@ -4144,6 +4298,9 @@ msgstr "라이프사이클 환경: {lce}"
 
 msgid "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy."
 msgstr "기본 스마트 프록시에서는 라이프사이클 환경을 수정할 수 없습니다. 모든 라이프사이클 환경의 콘텐츠는 이 스마트 프록시에 존재합니다."
+
+msgid "Limit"
+msgstr ""
 
 msgid "Limit actions to content in the host's environment."
 msgstr "호스트 환경 내의 콘텐츠에 대한 작업을 제한합니다."
@@ -4457,6 +4614,9 @@ msgstr "호스트 컬렉션 사본 작성 "
 msgid "Make sure all the component content views are published before publishing/promoting the composite content view. This restriction is optional and can be modified in the Administrator -> Settings -> Content page using the restrict_composite_view flag."
 msgstr "복합 콘텐츠 뷰를 게시/홍보하기 전에 모든 구성 요소 콘텐츠 뷰가 게시되었는지 확인하세요. 이 제한은 선택 사항이며 restrict_composite_view 플래그를 사용하여 관리자 -> 설정 -> 콘텐츠 페이지에서 수정할 수 있습니다."
 
+msgid "Make sure the runtimes required by the Flatpak apps in this content view are available to the host(s)."
+msgstr ""
+
 msgid "Manage Manifest"
 msgstr "매니페스트 관리 "
 
@@ -4472,14 +4632,23 @@ msgstr "패키지 관리"
 msgid "Manage repository sets"
 msgstr "리포지터리 세트 관리"
 
+msgid "Manage traces"
+msgstr ""
+
 msgid "Manifest"
 msgstr "매니페스트"
+
+msgid "Manifest Details"
+msgstr ""
 
 msgid "Manifest History"
 msgstr "매니페스트 기록 "
 
 msgid "Manifest deleted"
 msgstr "매니페스트 삭제됨"
+
+msgid "Manifest digest"
+msgstr ""
 
 msgid "Manifest does not have a valid subscription"
 msgstr "매니페스트에 유효한 서브스크립션이 없습니다."
@@ -4588,6 +4757,15 @@ msgstr "리포지터리 미러링"
 msgid "Mirror a flatpak remote repository"
 msgstr "flatpak 원격 리포지토리 미러링"
 
+msgid "Mirror runtime repository "
+msgstr ""
+
+msgid "Mirroring flatpak repository has started"
+msgstr ""
+
+msgid "Mirroring flatpak repository with dependencies has started"
+msgstr ""
+
 msgid "Mirroring will import the remote flatpak repository"
 msgstr "미러링은 원격 flatpak 리포지터리를 프로덕션 환경으로 가져옵니다."
 
@@ -4602,6 +4780,9 @@ msgstr "모델 "
 
 msgid "Moderate"
 msgstr "중간 수준"
+
+msgid "Modified"
+msgstr ""
 
 msgid "Modify via remote execution"
 msgstr "원격 실행을 통해 수정"
@@ -4847,6 +5028,9 @@ msgstr "다음 id로 콘텐츠 뷰 환경을 찾을 수 없습니다. %{ids}"
 msgid "No content view environments found with names: %{names}"
 msgstr "다음 이름으로 콘텐츠 뷰 환경을 찾을 수 없습니다. %{names}"
 
+msgid "No content view environments yet"
+msgstr ""
+
 msgid "No content view history events found."
 msgstr "컨텐츠 뷰 기록 이벤트를 찾을 수 없습니다. "
 
@@ -4855,6 +5039,9 @@ msgstr "사용 가능한 콘텐츠 뷰가 없음"
 
 msgid "No content views available for the selected environment"
 msgstr "선택한 환경에 사용할 수 있는 콘텐츠 뷰가 없습니다."
+
+msgid "No content views available for the selected lifecycle environment"
+msgstr ""
 
 msgid "No content views to add yet"
 msgstr "아직 추가할 콘텐츠 뷰가 없습니다."
@@ -4933,6 +5120,9 @@ msgstr "%s에서 설치된 패키지 및/또는 활성화된 리포지토리가 
 
 msgid "No items have been specified."
 msgstr "지정된 항목이 없습니다."
+
+msgid "No labels or annotations"
+msgstr ""
 
 msgid "No manifest file uploaded"
 msgstr "업로드된 매니페스트 파일이 없음 "
@@ -5099,6 +5289,9 @@ msgstr "검색 기준에 맞는 서브스크립션이 없습니다."
 msgid "No syncable repositories found for selected products and options."
 msgstr "선택한 제품 및 옵션에 대해 동기화 가능한 리포지터리를 찾을 수 없습니다."
 
+msgid "No transient packages found in selection"
+msgstr ""
+
 msgid "No upgradable packages found for search term '%s'."
 msgstr "검색어 '%s'에 대한 업그레이드 가능한 패키지를 찾을 수 없습니다."
 
@@ -5249,6 +5442,9 @@ msgstr "조직 %s이 삭제되어 있습니다. "
 msgid "Organization ID"
 msgstr "조직 ID"
 
+msgid "Organization ID for scoping"
+msgstr ""
+
 msgid "Organization ID or title"
 msgstr "조직 ID 또는 직함"
 
@@ -5272,6 +5468,9 @@ msgstr "조직 레이블 "
 
 msgid "Organization label '%s' is ambiguous. Try using an id-based container name."
 msgstr "조직 레이블 '%s '는 모호합니다. id 기반 컨테이너 이름을 사용해 보세요."
+
+msgid "Organization must be specified when providing product by name."
+msgstr ""
 
 msgid "Organization not found"
 msgstr "조직을 찾을 수 없습니다"
@@ -5438,9 +5637,6 @@ msgstr "패키지 업데이트 시간 초과 "
 msgid "Package Update scheduled by %s"
 msgstr "%s에 의해 스케줄된 패키지 업데이트 "
 
-msgid "Package actions will be transient"
-msgstr "패키지 작업은 일시적입니다."
-
 msgid "Package group update canceled"
 msgstr "패키지 그룹 업데이트 취소"
 
@@ -5467,6 +5663,12 @@ msgstr "패키지 설치: \"%{package}\""
 
 msgid "Package mode"
 msgstr "패키지 모드"
+
+msgid "Package persistence data will be reported by a future version of subscription-manager."
+msgstr ""
+
+msgid "Package persistence information"
+msgstr ""
 
 msgid "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist."
 msgstr "Python 콘텐츠에 대해 동기화할 패키지 유형(쉼표로 구분)입니다. 모든 패키지 유형을 가져오려면 비워두세요. 패키지 유형은 다음과 같습니다: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist"
@@ -5546,6 +5748,15 @@ msgstr "라이브러리의 리포지터리에 대한 증분 내보내기를 수�
 msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "권한이 거부되었습니다. 사용자 '%{user}'은(는) 조직 '%{org}'에 액세스할 수 있는 권한이 없습니다. "
 
+msgid "Persistence"
+msgstr ""
+
+msgid "Persistence must be one of: %s"
+msgstr ""
+
+msgid "Persistent"
+msgstr ""
+
 msgid "Physical"
 msgstr "물리적 "
 
@@ -5572,6 +5783,9 @@ msgstr "숫자는 10자리로 제한해주세요."
 
 msgid "Please select a content source before assigning a kickstart repository"
 msgstr "Kickstart 리포지터리를 할당하기 전에 콘텐츠 소스를 선택하십시오."
+
+msgid "Please select a different lifecycle environment or remove an existing assignment."
+msgstr ""
 
 msgid "Please select a lifecycle environment and a content view to move these activation keys."
 msgstr "이러한 활성화 키를 이동하려면 라이프 사이클 환경과 콘텐츠 뷰를 선택하세요."
@@ -5673,6 +5887,9 @@ msgstr "제품 레이블"
 
 msgid "Product label '%s' is ambiguous. Try using an id-based container name."
 msgstr "제품 라벨 '%s '는 모호합니다. id 기반 컨테이너 이름을 사용해 보세요."
+
+msgid "Product must be specified."
+msgstr ""
 
 msgid "Product name"
 msgstr "제품 이름 "
@@ -5787,6 +6004,9 @@ msgstr "${truncate(name)} 게시 중"
 
 msgid "Publishing content view"
 msgstr "콘텐츠 뷰 게시"
+
+msgid "Pullable path"
+msgstr ""
 
 msgid "Pulp"
 msgstr "Pulp"
@@ -5929,6 +6149,9 @@ msgstr "영향을 받은 호스트를 다시 할당합니다."
 msgid "Reboot host"
 msgstr "호스트 재부팅"
 
+msgid "Reboot hosts"
+msgstr ""
+
 msgid "Reboot required"
 msgstr "재부팅이 필요합니다"
 
@@ -5979,6 +6202,9 @@ msgstr "Red Hat 제품을 조작할 수 없습니다. "
 
 msgid "Red Hat provider can not be deleted"
 msgstr "Red Hat 공급자는 삭제할 수 없음 "
+
+msgid "Red Hat remote"
+msgstr ""
 
 msgid "Red Hat repositories cannot be manipulated."
 msgstr "Red Hat 리포지터리를 조작할 수 없습니다. "
@@ -6139,6 +6365,9 @@ msgstr "환경에서 제거"
 msgid "Remove from environments"
 msgstr "환경에서 제거"
 
+msgid "Remove from host collections"
+msgstr ""
+
 msgid "Remove host from collections"
 msgstr "컬렉션에서 호스트 제거"
 
@@ -6180,6 +6409,9 @@ msgstr "컨텐츠 뷰에서 버전 및 환경 삭제 후 시스템 및 키 다�
 
 msgid "Remove versions from environments"
 msgstr "환경에서 버전 제거"
+
+msgid "Removed %{count} host(s) from host collection %{host_collection}."
+msgstr ""
 
 msgid "Removed component from content view"
 msgstr "콘텐츠 보기에서 구성 요소를 제거했습니다."
@@ -6376,6 +6608,9 @@ msgstr "Katello 인터페이스를 통한 서비스 재시작"
 msgid "Restart app"
 msgstr "앱 다시 시작"
 
+msgid "Restart applications"
+msgstr ""
+
 msgid "Restart via customized remote execution"
 msgstr "사용자 지정 원격 실행을 통해 다시 시작"
 
@@ -6388,11 +6623,17 @@ msgstr "합성 콘텐츠 뷰 프로모션 제한"
 msgid "Result"
 msgstr "결과 "
 
+msgid "Retain build profile upon unregistration"
+msgstr ""
+
 msgid "Retrieve a single errata for a host"
 msgstr "호스트에 대한 단일 에라타를 가져옵니다."
 
 msgid "Return Red Hat (non-custom) products only"
 msgstr "Red Hat (사용자 지정이 아닌) 제품만 반환"
+
+msgid "Return a containerfile command to install transient packages"
+msgstr ""
 
 msgid "Return a list of installed debs distinct by name"
 msgstr ""
@@ -6437,6 +6678,9 @@ msgid "Return only errata of a particular severity (None, Low, Moderate, Importa
 msgstr "특정 심각도(없음, 낮음, 보통, 중요, 치명적)의 오류만 반환합니다."
 
 msgid "Return only errata of a particular type (security, bugfix, enhancement, other)"
+msgstr ""
+
+msgid "Return only packages of a particular persistence (transient, persistent, or nil)"
 msgstr ""
 
 msgid "Return only packages of a particular status (upgradable or up-to-date)"
@@ -6613,6 +6857,9 @@ msgstr "호스트 컬렉션 검색"
 msgid "Search pattern (defaults to '*')"
 msgstr "검색 패턴 (기본값은 '*')"
 
+msgid "Search query for traces"
+msgstr ""
+
 msgid "Search string"
 msgstr "검색 문자열"
 
@@ -6636,6 +6883,9 @@ msgstr "적용 가능한 보안 에라타"
 
 msgid "Security errata installable"
 msgstr "보안 에라타 설치 가능"
+
+msgid "See child manifests"
+msgstr ""
 
 msgid "Select"
 msgstr "선택 "
@@ -6672,6 +6922,9 @@ msgstr "먼저 콘텐츠 소스를 선택하세요"
 
 msgid "Select a content view"
 msgstr "콘텐츠 뷰 선택"
+
+msgid "Select a lifecycle environment"
+msgstr ""
 
 msgid "Select a lifecycle environment and a content view to move these hosts."
 msgstr "이러한 호스트를 이동하려면 라이프사이클 환경과 콘텐츠 뷰를 선택하세요."
@@ -6721,6 +6974,9 @@ msgstr "최소한 하나의 에라타를 선택하세요"
 msgid "Select at least one package."
 msgstr "최소한 하나의 패키지를 선택하세요."
 
+msgid "Select at least one trace."
+msgstr ""
+
 msgid "Select attributes for ${akDetails.name}"
 msgstr "${akDetails.name}에 대한 속성 선택"
 
@@ -6733,9 +6989,6 @@ msgstr "사용할 콘텐츠 뷰의 사용 가능한 버전을 선택하세요"
 msgid "Select content view"
 msgstr "콘텐츠 뷰 선택"
 
-msgid "Select environment"
-msgstr "환경 선택 "
-
 msgid "Select errata"
 msgstr "에라타 선택"
 
@@ -6747,6 +7000,9 @@ msgstr "{hostName} 호스트와 연결할 호스트 컬렉션을 선택하세요
 
 msgid "Select host collection(s) to remove from host {hostName}."
 msgstr "{hostName} 호스트에서 제거할 호스트 컬렉션을 선택하세요."
+
+msgid "Select host collections to change their associations with {selectedHosts}. Changing host collection will affect all your selected hosts. Some hosts may already be in your chosen collections."
+msgstr ""
 
 msgid "Select hosts to assign to %s"
 msgstr "%s에 할당할 호스트 선택 "
@@ -6829,6 +7085,9 @@ msgstr "서비스 레벨 (SLA)"
 msgid "Service level"
 msgstr ""
 
+msgid "Service level (SLA)"
+msgstr ""
+
 msgid "Service level of host"
 msgstr "호스트의 서비스 수준"
 
@@ -6867,6 +7126,9 @@ msgstr "중요도"
 
 msgid "Severity must be one of: %s"
 msgstr "심각도는 다음 중 하나여야 합니다. %s"
+
+msgid "Show ${remainingCount} more"
+msgstr ""
 
 msgid "Show %s"
 msgstr "%s 표시"
@@ -6988,8 +7250,19 @@ msgstr "업로드할 파일의 크기"
 msgid "Skip metadata check on each repository on the smart proxy"
 msgstr "스마트 프록시의 각 저장소에 대한 메타데이터 확인 건너뛰기"
 
+msgid "Skipped %{count} unregistered host"
+msgid_plural "Skipped %{count} unregistered hosts"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Skipped pulp_auth check after failed pulp check"
 msgstr "실패한 pulp 검사 후 pulp_auth 검사를 건너뛰었습니다."
+
+msgid "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting."
+msgstr ""
+
+msgid "Smart Proxy '%{proxy}': RHSM URL must use HTTPS protocol. The URL is derived from the 'foreman_url' setting. Current value: '%{url}'. Please update the 'foreman_url' setting to use HTTPS."
+msgstr ""
 
 msgid "Smart proxies"
 msgstr "스마트 프록시"
@@ -7030,14 +7303,14 @@ msgstr "종속성 해결"
 msgid "Some environments are disabled because they are not associated with all of the affected hosts' content sources."
 msgstr "일부 환경은 영향을 받는 모든 호스트의 콘텐츠 소스와 연결되어 있지 않기 때문에 비활성화됩니다."
 
-msgid "Some environments are disabled because they are not associated with the host's content source."
-msgstr "일부 환경은 호스트의 콘텐츠 소스와 연결되지 않았기 때문에 비활성화됩니다."
-
 msgid "Some environments are disabled because they are not associated with the selected content source."
 msgstr "일부 환경은 선택한 콘텐츠 소스와 연관되지 않아 비활성화되어 있습니다."
 
 msgid "Some hosts are not registered as content hosts and will be ignored."
 msgstr "일부 호스트는 콘텐츠 호스트로 등록되지 않아 무시됩니다."
+
+msgid "Some lifecycle environments are disabled because they are not associated with the host's content source."
+msgstr ""
 
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
 msgstr "일부 입력 내용에 오류가 있습니다. 이를 업데이트하고 변경 사항을 다시 저장하세요."
@@ -7351,9 +7624,6 @@ msgstr "성공 "
 msgid "Successfully added %s Host(s)."
 msgstr "%s개의 호스트를 추가했습니다."
 
-msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
-msgstr "호스트 컬렉션 %{host_collection}에 %{count} 컨텐츠 호스트를 성공적으로 추가했습니다. "
-
 msgid "Successfully changed sync plan for %s product(s)"
 msgstr "%s 제품의 동기화 계획을 성공적으로 변경했습니다 "
 
@@ -7365,9 +7635,6 @@ msgstr "성공적으로 새로 고침되었습니다."
 
 msgid "Successfully removed %s Host(s)."
 msgstr "%s개의 호스트를 삭제했습니다."
-
-msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
-msgstr "호스트 컬렉션 %{host_collection}에서 %{count} 컨텐츠 호스트를 성공적으로 삭제했습니다. "
 
 msgid "Successfully synced capsule."
 msgstr "캡슐을 성공적으로 동기화했습니다."
@@ -7468,9 +7735,6 @@ msgstr "동기화됨 "
 msgid "Synced Content"
 msgstr "동기화된 콘텐츠"
 
-msgid "Synced container images content"
-msgstr ""
-
 msgid "Synchronize"
 msgstr "동기화 "
 
@@ -7512,6 +7776,9 @@ msgstr "시스템 목적 속성이 업데이트됨"
 
 msgid "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console."
 msgstr "시스템 목적은 네트워크에서 시스템의 용도를 설정할 수 있으며 Red Hat Hybrid Cloud Console의 서브스크립션 서비스에서 보고 정확도를 향상시킬 수 있습니다."
+
+msgid "Tag"
+msgstr ""
 
 msgid "Tag name"
 msgstr "태그 이름"
@@ -7719,6 +7986,9 @@ msgstr "요청하신 리소스는 지정된 조직에 속하지 않습니다."
 msgid "The requested traces were not found for this host"
 msgstr "요청된 추적은 이 호스트에 대해 발견되지 않았습니다."
 
+msgid "The selected hosts do not show any applications needing restart."
+msgstr ""
+
 msgid "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture"
 msgstr "선택된 킥스타트 리포지터리는 할당된 콘텐츠 보기, 라이프사이클 환경, 콘텐츠 소스, 운영 체제 및 아키텍처의 일부가 아닙니다."
 
@@ -7827,6 +8097,9 @@ msgstr "이 작업은 긴박한 상황이나 디버깅 목적으로만 수행해
 msgid "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" before deleting."
 msgstr "이 활성화 키는 하나 이상의 호스트/호스트 그룹에 연결되어 있습니다. 삭제하기 전에 params.kt_activation_keys ~ \"%{name}\"을 사용하여 호스트/호스트 그룹을 검색하고 연결 해제합니다."
 
+msgid "This application requires a host reboot"
+msgstr ""
+
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
 msgstr "이 인증서를 통해 사용자는 브라우저에서 모든 환경에 있는 리포지터리를 볼 수 있습니다."
 
@@ -7865,9 +8138,6 @@ msgstr "이 호스트에는 패키지가 없습니다."
 
 msgid "This host has errata that are applicable, but not installable. Adjust your filters and try again."
 msgstr "이 호스트에는 적용 가능하지만 설치할 수 없는 에라타가 있습니다. 필터를 조정하고 다시 시도하세요."
-
-msgid "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments."
-msgstr "이 호스트는 여러 콘텐츠 뷰 환경과 연결되어 있습니다. 여기에 라이프사이클 환경과 콘텐츠 뷰를 할당하면 호스트가 다른 환경에서 제거됩니다."
 
 msgid "This is disabled because a manifest task is in progress"
 msgstr "매니페스트 작업이 진행 중이므로 이 기능이 비활성화되었습니다."
@@ -7923,9 +8193,6 @@ msgstr "이 버전은 다음에서 삭제됩니다: "
 msgid "This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied."
 msgstr "이렇게 하면 세부 정보, 리포지토리 및 필터를 포하하여 {cv}의 복사본이 생성됩니다. 기록, 작업 및 버전과 같은 생성된 데이터는 복사되지 않습니다."
 
-msgid "This will update the content view environments for {hosts}."
-msgstr "이렇게 하면 {hosts}의 콘텐츠 뷰 환경이 업데이트됩니다."
-
 msgid "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned."
 msgstr "리포지터리에 포함되지 않고 액세스되지 않은 콘텐츠가 버려진 것으로 간주되기까지의 시간(분)입니다."
 
@@ -7944,8 +8211,11 @@ msgstr "타임스탬프"
 msgid "Title"
 msgstr "제목"
 
-msgid "To change content view environments, a specific organization must be selected from the organization context."
-msgstr "콘텐츠 보기 환경을 변경하려면 조직 컨텍스트에서 특정 조직을 선택해야 합니다."
+msgid "To assign content view environment(s), a specific organization must be selected from the organization context."
+msgstr ""
+
+msgid "To change system purpose, a specific organization must be selected from the organization context."
+msgstr ""
 
 msgid "To continue with Red Hat Flatpak remote, you need to generate your username and password in"
 msgstr ""
@@ -7956,8 +8226,8 @@ msgstr "동기화된 콘텐츠 옵션을 사용하려면 이 호스트가 선택
 msgid "To enable them, add the environment to the content source, or select a different content source."
 msgstr "이를 활성화하려면 콘텐츠 소스에 환경을 추가하거나 다른 콘텐츠 소스를 선택하세요."
 
-msgid "To enable them, add the environment to the host's content source, or "
-msgstr "이를 활성화하려면 호스트의 콘텐츠 소스에 환경을 추가하거나 "
+msgid "To enable them, add the lifecycle environment to the host's content source, or "
+msgstr ""
 
 msgid "To finish the process of changing the content source, run the following script manually on {hosts}."
 msgstr "콘텐츠 소스 변경 프로세스를 완료하려면 {hosts}에서 다음 스크립트를 수동으로 실행하세요."
@@ -7968,8 +8238,14 @@ msgstr "시작하려면 이 필터에 필터 규칙을 추가하세요."
 msgid "To get started, add this host to a host collection."
 msgstr "시작하려면 이 호스트를 호스트 컬렉션에 추가하세요."
 
+msgid "To give your hosts access to content, assign content view environments."
+msgstr ""
+
 msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
 msgstr "콘텐츠 뷰에서 특정 콘텐츠를 포함하거나 제외하려면 필터를 만듭니다. 필터가 없으면 콘텐츠 뷰에는 추가된 리포지토리의 모든 것이 포함됩니다."
+
+msgid "To manage host collections, a specific organization must be selected from the organization context."
+msgstr ""
 
 msgid "To manage host content overrides, a specific organization must be selected from the organization context."
 msgstr "호스트 콘텐츠 재정의를 관리하려면 조직 컨텍스트에서 특정 조직을 선택해야 합니다."
@@ -7980,11 +8256,17 @@ msgstr "호스트 패키지를 관리하려면 조직 컨텍스트에서 특정 
 msgid "To manage packages, select an action."
 msgstr "패키지를 관리하려면 작업을 선택하세요."
 
+msgid "To manage traces, a specific organization must be selected from the organization context."
+msgstr ""
+
 msgid "Token/password for the flatpak remote"
 msgstr "flatpak 원격의 토큰/암호"
 
 msgid "Total steps: "
 msgstr "총 단계: "
+
+msgid "Trace resolution job has been initiated."
+msgstr ""
 
 msgid "Tracer"
 msgstr "트레이서"
@@ -8024,6 +8306,9 @@ msgstr "적절한 권한이 있는 사용자에게 추적 정보가 여기에 �
 
 msgid "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy."
 msgstr "이 스마트 프록시와 관련된 모든 대체 콘텐츠 소스에 대한 트래픽은 선택된 HTTP 프록시를 통해 전달됩니다."
+
+msgid "Transient"
+msgstr ""
 
 msgid "Try changing your search criteria."
 msgstr "검색 기준을 변경해 보세요."
@@ -8349,6 +8634,11 @@ msgstr "업데이트 일시 "
 msgid "Updated component details"
 msgstr "업데이트된 구성 요소 세부 정보"
 
+msgid "Updated content view environments for %{count} host"
+msgid_plural "Updated content view environments for %{count} hosts"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Updated from"
 msgstr "업데이트 출처"
 
@@ -8533,7 +8823,7 @@ msgid "Value must either be a boolean or 'default' for 'enabled'"
 msgstr "값은 '활성화됨'의 경우 부울이거나 '기본값'이어야 합니다."
 
 msgid "Verify Content Checksum"
-msgstr ""
+msgstr "컨텐츠 Checksum 확인"
 
 msgid "Verify SSL"
 msgstr "SSL 확인 "
@@ -8631,8 +8921,20 @@ msgstr "자세한 내용 보기"
 msgid "View documentation"
 msgstr "문서 보기"
 
+msgid "View here"
+msgstr ""
+
+msgid "View labels and annotations"
+msgstr ""
+
+msgid "View labels and annotations for image "
+msgstr ""
+
 msgid "View matching content"
 msgstr "일치하는 콘텐츠 보기"
+
+msgid "View pullable paths"
+msgstr ""
 
 msgid "View sync status"
 msgstr "동기화 상태 보기"
@@ -8669,6 +8971,9 @@ msgstr "\"출시/배포\"가 설정되면 \"업스트림 URL\"도 설정해야 �
 
 msgid "When \"Upstream URL\" is set, \"Releases/Distributions\" must also be set!"
 msgstr "\"업스트림 URL\"이 설정되면 \"릴리스/배포\"도 설정해야 합니다!"
+
+msgid "When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration."
+msgstr ""
 
 msgid "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"
 msgstr "subscription-manager를 통해 호스트를 등록할 때 지정된 팩트(‘fact.fact’ 형식)을 강제로 사용합니다."
@@ -8867,6 +9172,9 @@ msgstr "오류가 없는 모든 모듈 스트림을 포함/제외 목록에 추�
 
 msgid "add all packages without errata to the included/excluded list. (package filter only)"
 msgstr "모든 패키지를 에라타 없이 포함/제외된 목록에 추가합니다(패키지 필터만 해당)."
+
+msgid "ago"
+msgstr ""
 
 msgid "all environments"
 msgstr "모든 환경"
@@ -9420,6 +9728,11 @@ msgstr "조직 ID"
 msgid "organization identifier"
 msgstr "조직 ID"
 
+msgid "package"
+msgid_plural "packages"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "package group: uuid"
 msgstr "패키지 그룹: uuid"
 
@@ -9482,6 +9795,9 @@ msgstr "패키지 삭제 중..."
 
 msgid "removing packages..."
 msgstr "패키지 삭제 중..."
+
+msgid "replace"
+msgstr ""
 
 msgid "repo label"
 msgstr "repo 레이블"
