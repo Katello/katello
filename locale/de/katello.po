@@ -19,18 +19,19 @@
 # Wiederoder <stefanwiederoder@googlemail.com>, 2022
 # Lukas Kallies <github.com@luke-web.de>, 2022
 # Lukáš Zapletal, 2022
-# pdolinic, 2024
 # Bryan Kearney <bryan.kearney@gmail.com>, 2024
 # Markus Bucher <bucher@atix.de>, 2025
-# Crited <Alexander.Stoll@netways.de>, 2025
+# Alexander Stoll <Alexander.Stoll@netways.de>, 2025
 # Ettore Atalan <atalanttore@googlemail.com>, 2025
+# pdolinic, 2025
+# Donien, 2026
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 4.19.0.pre.master\n"
+"Project-Id-Version: katello 4.20.0.rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
-"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2025\n"
+"Last-Translator: Donien, 2026\n"
 "Language-Team: German (https://app.transifex.com/foreman/teams/114/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,6 +115,12 @@ msgstr ""
 msgid " to manage and promote content views, or select a different environment."
 msgstr ""
 
+msgid " to manage and promote content views, or select a different lifecycle environment."
+msgstr ""
+
+msgid " to same product"
+msgstr ""
+
 msgid "${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}"
 msgstr ""
 
@@ -133,6 +140,9 @@ msgid "${selectedContentType}"
 msgstr ""
 
 msgid "${selectedContentType} will appear here when created."
+msgstr ""
+
+msgid "${totalCount} labels and annotations"
 msgstr ""
 
 msgid "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?"
@@ -177,7 +187,7 @@ msgid "%s is unreachable. %s"
 msgstr "%s ist unerreichbar. %s"
 
 msgid "%s was not found!"
-msgstr ""
+msgstr "%s konnte nicht gefunden werden!"
 
 msgid "%{errata} (%{total} other errata)"
 msgstr "%{errata} (%{total} weitere Errata)"
@@ -440,6 +450,24 @@ msgstr ""
 msgid "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
 msgstr ""
 
+msgid "A content view environment is a combination of a particular lifecycle environment and content view."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide access to different sets of content. Your selection here will {replace} all existing content view environments on {hosts}."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}."
+msgstr ""
+
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
 msgstr "In dieser Inhaltsansicht ist eine große Anzahl von Errata nicht angewendet; nur die ersten 100 werden angezeigt."
 
@@ -522,10 +550,13 @@ msgid "Activation key %s has more than one lifecycle environment. Use #lifecycle
 msgstr ""
 
 msgid "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled."
-msgstr ""
+msgstr "Aktivierungsschlüssel '%s' ist mit mehreren Umgebungen verknüpft und das Registrieren in mehreren Umgebungen ist nicht aktiviert."
 
 msgid "Activation key ID"
 msgstr "Aktivierungsschlüssel-ID"
+
+msgid "Activation key content view environments updated"
+msgstr ""
 
 msgid "Activation key deleted"
 msgstr "Aktivierungsschlüssel gelöscht"
@@ -596,6 +627,9 @@ msgstr ""
 msgid "Add content view"
 msgstr ""
 
+msgid "Add content view environment"
+msgstr ""
+
 msgid "Add content views"
 msgstr ""
 
@@ -650,13 +684,22 @@ msgstr "Abonnements hinzufügen, die von einem Manifest von Red Hat Subscription
 msgid "Add subscriptions using the Add Subscriptions button."
 msgstr ""
 
+msgid "Add the command below to your Containerfile to incorporate the selected transient packages. When building your bootable container image, this will ensure these packages are installed permanently (as persistent packages)."
+msgstr ""
+
 msgid "Add to a host collection"
+msgstr ""
+
+msgid "Add to host collections"
 msgstr ""
 
 msgid "Added"
 msgstr "Hinzugefügt"
 
 msgid "Added %s"
+msgstr ""
+
+msgid "Added %{count} host(s) to host collection %{host_collection}."
 msgstr ""
 
 msgid "Added Content:"
@@ -683,9 +726,6 @@ msgstr ""
 msgid "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently."
 msgstr "Wenden Sie nach dem Generieren des inkrementellen Updates die Änderungen auf die angegebenen Hosts an. Derzeit werden nur Errata unterstützt."
 
-msgid "All"
-msgstr "Alle"
-
 msgid "All Media"
 msgstr "Alle Medien"
 
@@ -695,10 +735,16 @@ msgstr "Alle Repositorys"
 msgid "All available architectures for this repo are enabled."
 msgstr "Alle verfügbaren Architekturen für dieses Repository sind aktiviert."
 
+msgid "All content views in this lifecycle environment are already assigned"
+msgstr ""
+
 msgid "All errata applied"
 msgstr "Alle Errata angewendet"
 
 msgid "All errata up-to-date"
+msgstr ""
+
+msgid "All selected hosts were already members of host collection %{host_collection}."
 msgstr ""
 
 msgid "All subpaths must have a slash at the end and none at the front"
@@ -747,7 +793,7 @@ msgid "Alternate content source ${name} created"
 msgstr ""
 
 msgid "Alternate content source ID"
-msgstr ""
+msgstr "Kennung der alternativen Inhaltsquelle"
 
 msgid "Alternate content source deleted"
 msgstr ""
@@ -767,9 +813,6 @@ msgstr "Immer das Neueste verwenden (derzeit %{version})"
 msgid "Always update to latest version"
 msgstr "Immer auf die neueste Version aktualisieren"
 
-msgid "Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required."
-msgstr "Anzahl der Worker im Pool, die die Ausführung hostbezogener Aufgaben ausführen. Wenn auf 0 gesetzt, wird stattdessen die Standardwarteschlange verwendet. Neustart des Dienstes dynflowd/foreman-tasks ist erforderlich."
-
 msgid "An alternate content source can be added by using the \\\"Add source\\\" button below."
 msgstr ""
 
@@ -786,6 +829,9 @@ msgstr ""
 msgid ""
 "An error occurred during upload \n"
 "%{error_message}"
+msgstr ""
+
+msgid "An error occurred while updating host collections"
 msgstr ""
 
 msgid "An option to specify how many ostree commits to traverse."
@@ -902,6 +948,9 @@ msgstr "Array der Komponenten zum hinzufügen"
 msgid "Array of content view component IDs to remove. Identifier of the component association"
 msgstr "Array der Kontent-View Komponenten ID zum entfernen. Identifizierer der Komponenten-Assoziation "
 
+msgid "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
@@ -909,6 +958,9 @@ msgid "Array of content view environment ids to be associated with the activatio
 msgstr ""
 
 msgid "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
+msgid "Array of dependency repository IDs to mirror along with the main repository"
 msgstr ""
 
 msgid "Array of host ids"
@@ -929,6 +981,18 @@ msgstr "Artefakt-ID und relativer Pfad werden zum Erstellen von Inhalten benöti
 msgid "Artifacts"
 msgstr "Artefakte"
 
+msgid "Assign another content view environment"
+msgstr ""
+
+msgid "Assign content view environment"
+msgstr ""
+
+msgid "Assign content view environments"
+msgstr ""
+
+msgid "Assign content view environments to one or more hosts"
+msgstr ""
+
 msgid "Assign system purpose attributes on one or more hosts"
 msgstr "Zuweisen von Systemzweckattributen auf einem oder mehreren Hosts"
 
@@ -947,6 +1011,9 @@ msgid "Assigning a host to multiple content view environments is not enabled. To
 msgstr ""
 
 msgid "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
+msgstr ""
+
+msgid "Associated content view environments"
 msgstr ""
 
 msgid "Associated location IDs"
@@ -973,6 +1040,9 @@ msgstr ""
 msgid "At least one of the selected items requires the host to reboot"
 msgstr ""
 
+msgid "At least one of the selected items requires the hosts to reboot"
+msgstr ""
+
 msgid "At least one organization must exist."
 msgstr "Mindestens eine Organisation muss existieren."
 
@@ -988,10 +1058,16 @@ msgstr ""
 msgid "Author"
 msgstr "Autor"
 
+msgid "Auto Publish"
+msgstr ""
+
 msgid "Auto Publish - Triggered by '%s'"
 msgstr "Automatische Veröffentlichung - Ausgelöst durch '%s'"
 
 msgid "Auto publish"
+msgstr ""
+
+msgid "Autocomplete for traces in bulk context"
 msgstr ""
 
 msgid "Autopublish"
@@ -1075,6 +1151,9 @@ msgstr "Diese Suche als Lesezeichen abspeichern"
 msgid "Bookmarks marked as public are available to all users"
 msgstr ""
 
+msgid "Bootable"
+msgstr ""
+
 msgid "Bootc rollback via Bootc interface"
 msgstr ""
 
@@ -1088,12 +1167,6 @@ msgid "Bootc upgrade via Bootc interface"
 msgstr ""
 
 msgid "Booted"
-msgstr ""
-
-msgid "Booted Container Images"
-msgstr ""
-
-msgid "Booted container images"
 msgstr ""
 
 msgid "Both"
@@ -1399,7 +1472,13 @@ msgstr ""
 msgid "Change content view environments"
 msgstr ""
 
+msgid "Change host collections"
+msgstr ""
+
 msgid "Change host content source"
+msgstr ""
+
+msgid "Change system purpose"
 msgstr ""
 
 msgid "Change the status of at least one repository."
@@ -1415,7 +1494,7 @@ msgid "Check audited changes and proceed only if content or filters have changed
 msgstr ""
 
 msgid "Check for missing or corrupted artifacts, and attempt to redownload them."
-msgstr ""
+msgstr "Überprüfe auf fehlende oder beschädigte Artefakte, und versuche, diese neu herunterzuladen."
 
 msgid "Check if a connection can be made to Red Hat Subscription Management."
 msgstr "Prüfen Sie, ob eine Verbindung zu Red Hat Subscription Management hergestellt werden kann."
@@ -1441,6 +1520,9 @@ msgstr ""
 msgid "Choose content credentials if required for this RHUI source."
 msgstr ""
 
+msgid "Clean Backend Objects"
+msgstr ""
+
 msgid "Clear any previous registration and run subscription-manager with --force."
 msgstr "Löschen Sie alle vorherigen Registrierungen und führen Sie den Subscription-Manager mit --force aus."
 
@@ -1457,6 +1539,9 @@ msgid "Click to see repositories available to add."
 msgstr ""
 
 msgid "Click {update} below to save changes."
+msgstr ""
+
+msgid "Clipboard API not available. Please copy manually."
 msgstr ""
 
 msgid "Clone"
@@ -1477,6 +1562,9 @@ msgstr ""
 msgid "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
 
+msgid "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
 msgstr ""
 
@@ -1484,6 +1572,9 @@ msgid "Comma-separated list of tags to exclude when syncing a container image re
 msgstr ""
 
 msgid "Comma-separated list of tags to sync for a container image repository"
+msgstr ""
+
+msgid "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s"
 msgstr ""
 
 msgid "Compare"
@@ -1570,6 +1661,9 @@ msgstr ""
 msgid "Container tags"
 msgstr ""
 
+msgid "Containerfile Install Command"
+msgstr ""
+
 msgid "Contains content views. You must choose the version to use for each content view."
 msgstr ""
 
@@ -1626,6 +1720,9 @@ msgstr "Inhaltsansicht %{view}: Versionen: %{versions}"
 
 msgid "Content View Details"
 msgstr "Inhaltsdetails anzeigen"
+
+msgid "Content View Environments"
+msgstr ""
 
 msgid "Content View Filter id"
 msgstr "Inhaltsansichtsfilter-ID"
@@ -1816,6 +1913,9 @@ msgstr ""
 msgid "Content views"
 msgstr ""
 
+msgid "Content views, lifecycle environments, pullable paths"
+msgstr ""
+
 msgid "Content will be synced from the alternate content source first, then the original source if the ACS is not reachable."
 msgstr ""
 
@@ -1834,6 +1934,9 @@ msgstr "Vertrag"
 msgid "Contract Number"
 msgstr "Vertragsnummer"
 
+msgid "Copied"
+msgstr ""
+
 msgid "Copied to clipboard"
 msgstr "In die Zwischenablage kopiert"
 
@@ -1844,6 +1947,12 @@ msgid "Copy an activation key"
 msgstr "Aktivierungsschlüssel kopieren"
 
 msgid "Copy content view"
+msgstr ""
+
+msgid "Copy pullable paths"
+msgstr ""
+
+msgid "Copy this to pull the specific image version from your published content view, ensuring consistency across your deployments."
 msgstr ""
 
 msgid "Copy to clipboard"
@@ -1884,6 +1993,9 @@ msgstr "Es konnte kein Smart Proxy mit Pulp-Funktion gefunden werden."
 
 msgid "Could not find all specified errata ids: %s"
 msgstr "Nicht alle angegebenen Errata-IDs konnten gefunden werden: %s"
+
+msgid "Could not find dependency repositories with IDs: %{ids}. Proceeding with found repositories."
+msgstr ""
 
 msgid "Could not find environments for promotion"
 msgstr "Keine Umgebungen für Förderung gefunden"
@@ -1970,16 +2082,16 @@ msgid "Couldn't find product with id '%s'"
 msgstr "Produkt mit ID \"%s\" konnte nicht gefunden werden."
 
 msgid "Couldn't find products with id '%s'"
-msgstr ""
+msgstr "Produkte mit Kennung '%s' konnten nicht gefunden werden"
 
 msgid "Couldn't find repository '%s'"
 msgstr "Repository \"%s\" konnte nicht gefunden werden."
 
 msgid "Couldn't find smart proxies with id '%s'"
-msgstr ""
+msgstr "Smart-Proxies mit Kennung '%s' konnten nicht gefunden werden"
 
 msgid "Couldn't find smart proxies with name '%s'"
-msgstr ""
+msgstr "Smart-Proxies mit Name '%s' konnten nicht gefunden werden"
 
 msgid "Couldn't find specified content view and lifecycle environment."
 msgstr ""
@@ -2002,7 +2114,7 @@ msgstr ""
 msgid "Create Export History"
 msgstr "Exportverlauf erstellen"
 
-msgid "Create Flatpak Remote"
+msgid "Create Flatpak remote"
 msgstr ""
 
 msgid "Create Import History"
@@ -2074,6 +2186,9 @@ msgstr ""
 msgid "Create organization"
 msgstr "Organisation erstellen"
 
+msgid "Creation"
+msgstr ""
+
 msgid "Credentials"
 msgstr "Anmeldedaten"
 
@@ -2106,6 +2221,9 @@ msgstr "Der benutzerdefinierte Cron-Ausdruck muss nur für den Intervallwert des
 
 msgid "Custom repositories cannot be disabled."
 msgstr "Benutzerdefinierte Repositorys können nicht deaktiviert werden."
+
+msgid "Customize and restart"
+msgstr ""
 
 msgid "Customize with Rex"
 msgstr ""
@@ -2169,9 +2287,6 @@ msgstr ""
 
 msgid "Default Location where new subscribed hosts will put upon registration"
 msgstr "Standardstandort, an dem neue abonnierte Hosts bei der Registrierung abgelegt werden"
-
-msgid "Default PXEGrub template for new Operating Systems created from synced content"
-msgstr "Standard-PXEGrub-Vorlage für neue Betriebssysteme, die aus synchronisierten Inhalten erstellt wurden"
 
 msgid "Default PXEGrub2 template for new Operating Systems created from synced content"
 msgstr "Standard-PXEGrub2-Vorlage für neue Betriebssysteme, die aus synchronisierten Inhalten erstellt wurden"
@@ -2241,9 +2356,6 @@ msgstr "Standardbereitstellungsvorlage für neue Atomic-Betriebssysteme, die aus
 
 msgid "Default synced OS Atomic template"
 msgstr "Standardmäßig synchronisierte OS Atomic-Vorlage"
-
-msgid "Default synced OS PXEGrub template"
-msgstr "Standard synchronisierte OS PXEGrub-Vorlage"
 
 msgid "Default synced OS PXEGrub2 template"
 msgstr "Standard synchronisierte OS PXEGrub2-Vorlage"
@@ -2371,6 +2483,9 @@ msgstr ""
 msgid "Deleting versions: {versionList}"
 msgstr ""
 
+msgid "Dependency found"
+msgstr ""
+
 msgid "Depth"
 msgstr ""
 
@@ -2432,7 +2547,7 @@ msgid "Destroy an activation key"
 msgstr "Aktivierungsschlüssel löschen"
 
 msgid "Destroy an alternate content source."
-msgstr ""
+msgstr "Eine alternative Inhaltsquelle löschen."
 
 msgid "Destroy an environment"
 msgstr "Umgebung löschen"
@@ -2516,7 +2631,7 @@ msgid "Due to a change in your organizations, this container name has become amb
 msgstr ""
 
 msgid "Due to a change in your products, this container name has become ambiguous (product name '%{prod_label}'). If you wish to continue using this container name, destroy the product in conflict with '%{prod_name}' (id %{prod_id}). If you wish to keep both products, destroy '%{org_label}/%{prod_dot_label}/%{root_repo_label}' and retry your push using the id format."
-msgstr ""
+msgstr "Aufgrund einer Änderung in Ihren Produkten ist dieser Containername uneindeutig geworden (Produktname '%{prod_label}'). Wenn Sie diesen Containernamen weiterhin verwenden möchten, löschen Sie das Produkt, das mit '%{prod_name}' (Kennung %{prod_id}) in Konflikt steht. Wenn Sie beide Produkte behalten möchten, löschen Sie '%{org_label}/%{prod_dot_label}/%{root_repo_label}' und wiederholen Sie Ihren Push mit dem Kennungs-Format."
 
 msgid "Duplicate artifact detected"
 msgstr ""
@@ -2539,7 +2654,7 @@ msgstr "Bearbeiten"
 msgid "Edit DEB rule"
 msgstr ""
 
-msgid "Edit Flatpak Remote"
+msgid "Edit Flatpak remote"
 msgstr ""
 
 msgid "Edit RPM rule"
@@ -2551,10 +2666,7 @@ msgstr ""
 msgid "Edit activation key"
 msgstr ""
 
-msgid "Edit content view assignment"
-msgstr ""
-
-msgid "Edit content view environments"
+msgid "Edit content view environment"
 msgstr ""
 
 msgid "Edit credentials"
@@ -2584,6 +2696,9 @@ msgstr "Entitlements bearbeiten"
 msgid "Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified"
 msgstr "Entweder müssen beide Parameter \"content_view_id\" und \"environment_id\" angegeben werden oder keiner der beiden"
 
+msgid "Either content_view_environments or content_view_environment_ids must be provided"
+msgstr ""
+
 msgid "Either environments or versions must be specified."
 msgstr "Entweder Umgebungen oder Versionen müssen angegeben werden."
 
@@ -2598,6 +2713,9 @@ msgstr "Legen Sie entweder die Inhaltsansicht mit dem neuesten Flag fest oder le
 
 msgid "Either set the latest content view or the content view version. Cannot set both"
 msgstr "Legen Sie entweder die neueste Inhaltsansicht oder die Inhaltsansichtsversion fest. Kann nicht beides einstellen"
+
+msgid "Either trace_search or trace_ids must be provided"
+msgstr ""
 
 msgid "Empty content view versions"
 msgstr ""
@@ -2618,9 +2736,6 @@ msgid "Enable a repository from the set"
 msgstr "Ein Repository aus der Gruppe aktivieren"
 
 msgid "Enable repository sets"
-msgstr ""
-
-msgid "Enable structured APT for deb content"
 msgstr ""
 
 msgid "Enable/Disable auto publish of composite view"
@@ -2650,6 +2765,9 @@ msgstr "Endet"
 msgid "Enhancement"
 msgstr "Erweiterung"
 
+msgid "Ensure the runtime dependency for this Flatpak app is also mirrored in this organization to avoid installation errors on host(s)."
+msgstr ""
+
 msgid "Enter a name"
 msgstr ""
 
@@ -2675,7 +2793,7 @@ msgid "Environment ID"
 msgstr ""
 
 msgid "Environment ID and content view ID must be provided together"
-msgstr ""
+msgstr "Kennung der Umgebung und der Inhaltsansicht müssen gemeinsam angegeben werden"
 
 msgid "Environment IDs"
 msgstr "Umgebungs-IDs"
@@ -2863,6 +2981,9 @@ msgstr "Fakten erfolgreich aktualisiert."
 msgid "Failed"
 msgstr "Fehlgeschlagen"
 
+msgid "Failed to copy to clipboard. Please copy manually."
+msgstr ""
+
 msgid "Failed to delete %{host}: %{errors}"
 msgstr "Fehler beim Löschen von %{host}: %{errors}"
 
@@ -2871,6 +2992,12 @@ msgstr ""
 
 msgid "Failed to find %{content} with id '%{id}'."
 msgstr "%{content} mit ID \"%{id}\" konnte nicht gefunden werden."
+
+msgid "Failed to generate Containerfile install command"
+msgstr ""
+
+msgid "Failed to initiate trace resolution job."
+msgstr ""
 
 msgid "Fails if any of the repositories belonging to this organization are unexportable. False by default."
 msgstr "Schlägt fehl falls irgendwelche Repositories dieser Organization nicht exportierbar sind. Der Default ist auf False eingestellt."
@@ -3001,6 +3128,9 @@ msgstr ""
 msgid "Finished"
 msgstr "Fertig"
 
+msgid "Flatpak"
+msgstr ""
+
 msgid "Flatpak Remote ${name} created"
 msgstr ""
 
@@ -3088,6 +3218,11 @@ msgstr ""
 
 msgid "Generate and Download"
 msgstr "Generieren und herunterladen"
+
+msgid "Generate containerfile install command (%s package selected)"
+msgid_plural "Generate containerfile install command (%s packages selected)"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Generate errata status from directly-installable content"
 msgstr ""
@@ -3239,9 +3374,6 @@ msgstr "Hostprofil annehmen"
 msgid "Host Profile Can Change In Build"
 msgstr "Hostprofil kann sich im Build ändern"
 
-msgid "Host Tasks Workers Pool Size"
-msgstr "Größe des Workers-Pools für Host-Aufgaben"
-
 msgid "Host collection"
 msgstr ""
 
@@ -3257,19 +3389,16 @@ msgstr ""
 msgid "Host collections updated"
 msgstr ""
 
-msgid "Host content and subscription details"
-msgstr "Hostinhalt und Subskriptionsdetails"
-
 msgid "Host content source will remain the same. Click Save below to update the host's content view environment."
 msgstr ""
 
-msgid "Host content view and environment updated"
+msgid "Host content view environment(s) assigned"
 msgstr ""
 
 msgid "Host content view environment(s) updated"
 msgstr ""
 
-msgid "Host content view environments updating."
+msgid "Host content view environments updated."
 msgstr ""
 
 msgid "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration."
@@ -3300,6 +3429,12 @@ msgid "Host identifier"
 msgstr ""
 
 msgid "Host lifecycle support expiration notification"
+msgstr ""
+
+msgid "Host release version updating."
+msgstr ""
+
+msgid "Host system purpose updating."
 msgstr ""
 
 msgid "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance"
@@ -3399,7 +3534,7 @@ msgid "ID of the sync plan"
 msgstr "ID des Synchronisationsplans"
 
 msgid "IDs of products to copy repository information from into a Simplified Alternate Content Source. Products must include at least one repository of the chosen content type."
-msgstr ""
+msgstr "Kennungen von Produkten, deren Repository-Informationen in eine vereinfachte, alternative Inhaltsquelle kopiert werden sollen. Produkte müssen mindestens ein Repository des gewählten Inhaltstyps beinhalten."
 
 msgid "Id of a deb package to find repositories that contain the deb"
 msgstr "ID eines Deb-Pakets, um Repositorys zu finden, die das Deb enthalten"
@@ -3426,7 +3561,7 @@ msgid "Id of the content view to limit the content counting on"
 msgstr ""
 
 msgid "Id of the content view to limit the synchronization on"
-msgstr ""
+msgstr "Kennung der Inhaltsansicht, für die die Synchronisation limitiert werden soll"
 
 msgid "Id of the content view to limit verifying checksum on"
 msgstr ""
@@ -3459,7 +3594,7 @@ msgid "Id of the repository to limit the content counting on"
 msgstr ""
 
 msgid "Id of the repository to limit the synchronization on"
-msgstr ""
+msgstr "Kennung des Repositorys, für das die Synchronisation limitiert werden soll"
 
 msgid "Id of the repository to limit verifying checksum on"
 msgstr ""
@@ -3515,7 +3650,7 @@ msgid "Ids of smart proxies to associate"
 msgstr ""
 
 msgid "If SSL should be verified for the upstream URL"
-msgstr ""
+msgstr "Ob SSL für die upstream URL verifziert werden soll"
 
 msgid "If hosts fail to register because of duplicate DMI UUIDs, add their comma-separated values here. Subsequent registrations will generate a unique DMI UUID for the affected hosts."
 msgstr ""
@@ -3523,11 +3658,8 @@ msgstr ""
 msgid "If product certificates should be used to authenticate to a custom CDN."
 msgstr ""
 
-msgid "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'."
-msgstr ""
-
 msgid "If the smart proxies' assigned HTTP proxies should be used"
-msgstr ""
+msgstr "Ob die den Smart-Proxys zugewiesenen HTTP-Proxys genutzt werden sollen"
 
 msgid "If this is enabled, a composite content view may not be published or promoted unless the component content view versions that it includes exist in the target environment."
 msgstr ""
@@ -3709,6 +3841,12 @@ msgstr ""
 msgid "Include manifests"
 msgstr ""
 
+msgid "Include packages with unknown persistence"
+msgstr ""
+
+msgid "Include packages with unknown persistence in addition to transient packages"
+msgstr ""
+
 msgid "Included"
 msgstr "Inbegriffen"
 
@@ -3759,6 +3897,11 @@ msgstr ""
 
 msgid "Install errata via Katello interface"
 msgstr "Errata über die Katello-Schnittstelle installieren"
+
+msgid "Install package"
+msgid_plural "Install packages"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Install package group via Katello interface"
 msgstr "Paketgruppe über Katello-Schnittstelle installieren"
@@ -3826,6 +3969,9 @@ msgstr "Paket wird installiert …"
 msgid "Instance-based"
 msgstr "Instanzbasiert"
 
+msgid "Insufficient space for selected hosts"
+msgstr ""
+
 msgid "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported."
 msgstr "Interpretation eines angegebenen Objekts, damit nur Hostsammlungen ausgegeben werden, die dem angegebenen Objekt zugewiesen werden können. Der Wert 'host' wird unterstützt."
 
@@ -3869,22 +4015,22 @@ msgid "Invalid filter rule specified, 'version' cannot be specified in the same 
 msgstr "Ungültige Regel angegeben, \"version\" kann nicht in demselben Tupel angegeben werden wie \"min_version\" oder \"max_version\""
 
 msgid "Invalid format. Container name cannot be blank."
-msgstr ""
+msgstr "Ungültiges Format. Containername darf nicht leer sein."
 
 msgid "Invalid format. Container pushes should follow 'organization_label/product_label/name' OR 'id/organization_id/product_id/name' schema."
 msgstr ""
 
 msgid "Invalid format. Organization id must be an integer without leading zeros."
-msgstr ""
+msgstr "Ungültiges Format: Kennung der Organisation muss eine ganze Zahl ohne führende Nullen sein."
 
 msgid "Invalid format. Organization label cannot be blank."
-msgstr ""
+msgstr "Ungültiges Format. Organisationslabel darf nicht leer sein."
 
 msgid "Invalid format. Product id must be an integer without leading zeros."
-msgstr ""
+msgstr "Ungültiges Format. Kennung des Produkts muss eine ganze Zahl ohne führende Nullen sein."
 
 msgid "Invalid format. Product label cannot be blank."
-msgstr ""
+msgstr "Ungültiges Format. Produktlabel darf nicht leer sein."
 
 msgid "Invalid mirroring policy for repository type %{type}, only %{policies} are valid."
 msgstr ""
@@ -3959,6 +4105,9 @@ msgid "Job '${description}' completed"
 msgstr ""
 
 msgid "Job '${description}' has started."
+msgstr ""
+
+msgid "Job '${firstJob.description}' has started."
 msgstr ""
 
 msgid "Katello Bootc interface"
@@ -4060,6 +4209,12 @@ msgstr ""
 msgid "Label of the flatpak remote"
 msgstr ""
 
+msgid "Labels and annotations"
+msgstr ""
+
+msgid "Labels | Annotations"
+msgstr ""
+
 msgid "Last check-in:"
 msgstr ""
 
@@ -4076,6 +4231,9 @@ msgid "Last refresh"
 msgstr ""
 
 msgid "Last refresh :"
+msgstr ""
+
+msgid "Last scan:"
 msgstr ""
 
 msgid "Last seen"
@@ -4100,9 +4258,6 @@ msgid "Learn more about adding subscription manifests in "
 msgstr ""
 
 msgid "Legacy UI"
-msgstr ""
-
-msgid "Legacy content host UI"
 msgstr ""
 
 msgid "Less than"
@@ -4162,6 +4317,9 @@ msgstr ""
 msgid "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy."
 msgstr "Lebenszyklusumgebungen können auf dem standardmäßigen Smart Proxy nicht geändert werden. Der Inhalt aller Lifecycle-Umgebungen ist auf diesem Smart Proxy vorhanden."
 
+msgid "Limit"
+msgstr ""
+
 msgid "Limit actions to content in the host's environment."
 msgstr ""
 
@@ -4217,7 +4375,7 @@ msgid "List all packages unique by name"
 msgstr ""
 
 msgid "List alternate content sources."
-msgstr ""
+msgstr "Alternative Inhaltsquellen auflisten."
 
 msgid "List an activation key's subscriptions"
 msgstr "Subskriptionen eines Aktivierungsschlüssels auflisten"
@@ -4474,11 +4632,14 @@ msgstr "Kopie einer Hostsammlung erstellen"
 msgid "Make sure all the component content views are published before publishing/promoting the composite content view. This restriction is optional and can be modified in the Administrator -> Settings -> Content page using the restrict_composite_view flag."
 msgstr "Stellen Sie sicher, dass alle Komponenteninhaltsansichten veröffentlicht wurden, bevor Sie die zusammengesetzte Inhaltsansicht veröffentlichen/heraufstufen. Diese Einschränkung ist optional und kann auf der Seite Administrator -> Einstellungen -> Inhalt mit dem Flag \"restrict_composite_view\" geändert werden."
 
+msgid "Make sure the runtimes required by the Flatpak apps in this content view are available to the host(s)."
+msgstr ""
+
 msgid "Manage Manifest"
 msgstr "Manifest verwalten"
 
 msgid "Manage content"
-msgstr ""
+msgstr "Inhalte verwalten"
 
 msgid "Manage errata"
 msgstr ""
@@ -4489,14 +4650,23 @@ msgstr ""
 msgid "Manage repository sets"
 msgstr ""
 
+msgid "Manage traces"
+msgstr ""
+
 msgid "Manifest"
 msgstr "Manifest"
+
+msgid "Manifest Details"
+msgstr ""
 
 msgid "Manifest History"
 msgstr "Manifestchronik"
 
 msgid "Manifest deleted"
 msgstr "Manifest gelöscht"
+
+msgid "Manifest digest"
+msgstr ""
 
 msgid "Manifest does not have a valid subscription"
 msgstr ""
@@ -4605,6 +4775,15 @@ msgstr ""
 msgid "Mirror a flatpak remote repository"
 msgstr ""
 
+msgid "Mirror runtime repository "
+msgstr ""
+
+msgid "Mirroring flatpak repository has started"
+msgstr ""
+
+msgid "Mirroring flatpak repository with dependencies has started"
+msgstr ""
+
 msgid "Mirroring will import the remote flatpak repository"
 msgstr ""
 
@@ -4619,6 +4798,9 @@ msgstr "Modell"
 
 msgid "Moderate"
 msgstr "Moderat (Mittel)"
+
+msgid "Modified"
+msgstr ""
 
 msgid "Modify via remote execution"
 msgstr ""
@@ -4864,6 +5046,9 @@ msgstr ""
 msgid "No content view environments found with names: %{names}"
 msgstr ""
 
+msgid "No content view environments yet"
+msgstr ""
+
 msgid "No content view history events found."
 msgstr "Keine vergangenen Ereignisse der Inhaltsansicht gefunden."
 
@@ -4871,6 +5056,9 @@ msgid "No content views available"
 msgstr ""
 
 msgid "No content views available for the selected environment"
+msgstr ""
+
+msgid "No content views available for the selected lifecycle environment"
 msgstr ""
 
 msgid "No content views to add yet"
@@ -4949,6 +5137,9 @@ msgid "No installed packages and/or enabled repositories have been reported by %
 msgstr "Keine installierten Pakete und/oder aktivierten Repositorys wurden von %s gemeldet."
 
 msgid "No items have been specified."
+msgstr ""
+
+msgid "No labels or annotations"
 msgstr ""
 
 msgid "No manifest file uploaded"
@@ -5116,6 +5307,9 @@ msgstr "Keine Abonnements entsprechen Ihren Suchkriterien."
 msgid "No syncable repositories found for selected products and options."
 msgstr "Für ausgewählte Produkte und Optionen wurden keine synchronisierbaren Repositorys gefunden."
 
+msgid "No transient packages found in selection"
+msgstr ""
+
 msgid "No upgradable packages found for search term '%s'."
 msgstr ""
 
@@ -5266,6 +5460,9 @@ msgstr "Organisation %s wurde gelöscht."
 msgid "Organization ID"
 msgstr "Organisations-ID"
 
+msgid "Organization ID for scoping"
+msgstr ""
+
 msgid "Organization ID or title"
 msgstr ""
 
@@ -5279,7 +5476,7 @@ msgid "Organization id"
 msgstr "Organisations-ID"
 
 msgid "Organization id not found: '%s'"
-msgstr ""
+msgstr "Kennung der Organisation nicht gefunden: '%s'"
 
 msgid "Organization identifier"
 msgstr "Organisations-ID"
@@ -5288,13 +5485,16 @@ msgid "Organization label"
 msgstr "Organsiationskennung"
 
 msgid "Organization label '%s' is ambiguous. Try using an id-based container name."
+msgstr "Organisationslabel '%s' ist uneindeutig. Versuchen Sie einen Kennungs-basierten Container-Namen."
+
+msgid "Organization must be specified when providing product by name."
 msgstr ""
 
 msgid "Organization not found"
 msgstr "Organisation nicht gefunden"
 
 msgid "Organization not found: '%s'"
-msgstr ""
+msgstr "Organisation nicht gefunden: '%s'"
 
 msgid "Organization required"
 msgstr "Organisation erforderlich"
@@ -5455,9 +5655,6 @@ msgstr "Zeitüberschreitung bei Paketaktualisierung"
 msgid "Package Update scheduled by %s"
 msgstr "Paketaktualisierung eingeplant durch %s"
 
-msgid "Package actions will be transient"
-msgstr ""
-
 msgid "Package group update canceled"
 msgstr "Paketgruppenaktualisierung abgebrochen"
 
@@ -5483,6 +5680,12 @@ msgid "Package installation: \"%{package}\" "
 msgstr "Paketinstallation: \"%{package}\" "
 
 msgid "Package mode"
+msgstr ""
+
+msgid "Package persistence data will be reported by a future version of subscription-manager."
+msgstr ""
+
+msgid "Package persistence information"
 msgstr ""
 
 msgid "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist."
@@ -5563,6 +5766,15 @@ msgstr "Performt einen inktrementellen Export der Repositories der Library"
 msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "Zugriff verweigert. Benutzer \"%{user}\" hat keine Berechtigung zum Zugriff auf Organisation \"%{org}\"."
 
+msgid "Persistence"
+msgstr ""
+
+msgid "Persistence must be one of: %s"
+msgstr ""
+
+msgid "Persistent"
+msgstr ""
+
 msgid "Physical"
 msgstr "Physisch"
 
@@ -5589,6 +5801,9 @@ msgstr "Bitte Anzahl auf 10 Stellen begrenzen"
 
 msgid "Please select a content source before assigning a kickstart repository"
 msgstr "Bitte wählen Sie eine Inhaltsquelle aus, bevor Sie ein Kickstart-Repository zuweisen"
+
+msgid "Please select a different lifecycle environment or remove an existing assignment."
+msgstr ""
 
 msgid "Please select a lifecycle environment and a content view to move these activation keys."
 msgstr ""
@@ -5685,12 +5900,15 @@ msgstr ""
 "Dies ist nicht die gleiche Produkt-ID wie die Produkt-API, die zurückgegeben wird"
 
 msgid "Product id not found: '%s'"
-msgstr ""
+msgstr "Kennung des Produkts nicht gefunden: '%s'"
 
 msgid "Product label"
 msgstr ""
 
 msgid "Product label '%s' is ambiguous. Try using an id-based container name."
+msgstr "Produktlabel '%s' ist uneindeutig. Versuchen sie einen Kennungs-basierten Containernamen."
+
+msgid "Product must be specified."
 msgstr ""
 
 msgid "Product name"
@@ -5700,7 +5918,7 @@ msgid "Product name as listed from a host's installed products"
 msgstr "Produktname wie aus den installierten Produkten eines Hosts aufgelistet"
 
 msgid "Product not found: '%s'"
-msgstr ""
+msgstr "Produkt nicht gefunden: '%s'"
 
 msgid "Product the repository belongs to"
 msgstr "Produkt, zu dem das Repository gehört"
@@ -5806,6 +6024,9 @@ msgstr ""
 
 msgid "Publishing content view"
 msgstr "Inhaltsansicht veröffentlichen"
+
+msgid "Pullable path"
+msgstr ""
 
 msgid "Pulp"
 msgstr "Pulp"
@@ -5948,6 +6169,9 @@ msgstr ""
 msgid "Reboot host"
 msgstr ""
 
+msgid "Reboot hosts"
+msgstr ""
+
 msgid "Reboot required"
 msgstr "Neustart erforderlich"
 
@@ -5999,6 +6223,9 @@ msgstr "Red Hat Produkte können nicht verändert werden."
 msgid "Red Hat provider can not be deleted"
 msgstr "Red Hat Anbieter kann nicht gelöscht werden"
 
+msgid "Red Hat remote"
+msgstr ""
+
 msgid "Red Hat repositories cannot be manipulated."
 msgstr "Red Hat Repositorys können nicht verändert werden."
 
@@ -6024,7 +6251,7 @@ msgid "Refresh alternate content sources"
 msgstr ""
 
 msgid "Refresh an alternate content source. Refreshing, like repository syncing, is required before using an alternate content source."
-msgstr ""
+msgstr "Eine alternative Inhaltsquelle aktualisieren. Vor der Verwendung einer alternativen Inhaltsquelle ist eine Aktualisierung, analog zur Repository-Synchronisation,  erforderlich."
 
 msgid "Refresh applicability"
 msgstr ""
@@ -6066,7 +6293,7 @@ msgid "Registered to"
 msgstr ""
 
 msgid "Registering to multiple environments is not enabled."
-msgstr ""
+msgstr "Das Registrieren in mehrere Umgebungen ist nicht aktiviert."
 
 msgid "Registration details"
 msgstr ""
@@ -6158,6 +6385,9 @@ msgstr ""
 msgid "Remove from environments"
 msgstr ""
 
+msgid "Remove from host collections"
+msgstr ""
+
 msgid "Remove host from collections"
 msgstr ""
 
@@ -6198,6 +6428,9 @@ msgid "Remove versions and/or environments from a content view and reassign syst
 msgstr "Versionen und/oder Umgebungen aus einer Inhaltsansicht entfernen und Systeme und Schlüssel neu zuweisen"
 
 msgid "Remove versions from environments"
+msgstr ""
+
+msgid "Removed %{count} host(s) from host collection %{host_collection}."
 msgstr ""
 
 msgid "Removed component from content view"
@@ -6288,7 +6521,7 @@ msgid "Repository name"
 msgstr ""
 
 msgid "Repository name '%{container_name}' already exists in this product using a different naming scheme. Please retry your request with the %{root_repo_container_push_name} format or destroy and recreate the repository using your preferred schema."
-msgstr ""
+msgstr "Repository-Name '%{container_name}' existiert in diesem Produkt bereits mit einem anderen Namensschema. Bitte wiederholen Sie Ihre Anfrage mit dem %{root_repo_container_push_name}-Format oder löschen Sie das Repository und erstellen Sie es mit Ihrem bevorzugten Schema neu."
 
 msgid "Repository not found"
 msgstr "Repository nicht gefunden"
@@ -6345,7 +6578,7 @@ msgid "Republish repository metadata"
 msgstr ""
 
 msgid "Requested access to '%s' is denied"
-msgstr ""
+msgstr "Angefragter Zugriff auf '%s' wurde verweigert"
 
 msgid "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys."
 msgstr ""
@@ -6395,6 +6628,9 @@ msgstr "Dienste über die Katello-Schnittstelle neu starten"
 msgid "Restart app"
 msgstr ""
 
+msgid "Restart applications"
+msgstr ""
+
 msgid "Restart via customized remote execution"
 msgstr ""
 
@@ -6407,11 +6643,17 @@ msgstr ""
 msgid "Result"
 msgstr "Ergebnis"
 
+msgid "Retain build profile upon unregistration"
+msgstr ""
+
 msgid "Retrieve a single errata for a host"
 msgstr "Einzelnes Erratum für einen Host abrufen"
 
 msgid "Return Red Hat (non-custom) products only"
 msgstr "Return Red Hat (non-custom) products only"
+
+msgid "Return a containerfile command to install transient packages"
+msgstr ""
 
 msgid "Return a list of installed debs distinct by name"
 msgstr ""
@@ -6456,6 +6698,9 @@ msgid "Return only errata of a particular severity (None, Low, Moderate, Importa
 msgstr ""
 
 msgid "Return only errata of a particular type (security, bugfix, enhancement, other)"
+msgstr ""
+
+msgid "Return only packages of a particular persistence (transient, persistent, or nil)"
 msgstr ""
 
 msgid "Return only packages of a particular status (upgradable or up-to-date)"
@@ -6632,6 +6877,9 @@ msgstr ""
 msgid "Search pattern (defaults to '*')"
 msgstr "Suchmuster (standardmäßig '*')"
 
+msgid "Search query for traces"
+msgstr ""
+
 msgid "Search string"
 msgstr "Suchbegriff"
 
@@ -6655,6 +6903,9 @@ msgstr "Anwendbare Sicherheits-Errata"
 
 msgid "Security errata installable"
 msgstr "Sicherheitserrata installierbar"
+
+msgid "See child manifests"
+msgstr ""
 
 msgid "Select"
 msgstr "Auswählen"
@@ -6690,6 +6941,9 @@ msgid "Select a content source first"
 msgstr ""
 
 msgid "Select a content view"
+msgstr ""
+
+msgid "Select a lifecycle environment"
 msgstr ""
 
 msgid "Select a lifecycle environment and a content view to move these hosts."
@@ -6740,6 +6994,9 @@ msgstr ""
 msgid "Select at least one package."
 msgstr ""
 
+msgid "Select at least one trace."
+msgstr ""
+
 msgid "Select attributes for ${akDetails.name}"
 msgstr ""
 
@@ -6752,9 +7009,6 @@ msgstr ""
 msgid "Select content view"
 msgstr ""
 
-msgid "Select environment"
-msgstr "Umgebung auswählen"
-
 msgid "Select errata"
 msgstr ""
 
@@ -6765,6 +7019,9 @@ msgid "Select host collection(s) to associate with host {hostName}."
 msgstr ""
 
 msgid "Select host collection(s) to remove from host {hostName}."
+msgstr ""
+
+msgid "Select host collections to change their associations with {selectedHosts}. Changing host collection will affect all your selected hosts. Some hosts may already be in your chosen collections."
 msgstr ""
 
 msgid "Select hosts to assign to %s"
@@ -6848,6 +7105,9 @@ msgstr "Service Level (SLA)"
 msgid "Service level"
 msgstr ""
 
+msgid "Service level (SLA)"
+msgstr ""
+
 msgid "Service level of host"
 msgstr "Servicelevel des Hosts"
 
@@ -6885,6 +7145,9 @@ msgid "Severity"
 msgstr "Schweregrad"
 
 msgid "Severity must be one of: %s"
+msgstr ""
+
+msgid "Show ${remainingCount} more"
 msgstr ""
 
 msgid "Show %s"
@@ -6942,7 +7205,7 @@ msgid "Show an activation key"
 msgstr "Aktivierungsschlüssel anzeigen"
 
 msgid "Show an alternate content source."
-msgstr ""
+msgstr "Eine alternative Inhaltsquelle anzeigen."
 
 msgid "Show an environment"
 msgstr "Umgebung anzeigen"
@@ -6960,7 +7223,7 @@ msgid "Show full description"
 msgstr ""
 
 msgid "Show hosts associated to an activation key"
-msgstr ""
+msgstr "Mit Aktivierungsschlüssel verknüpfte Hosts anzeigen"
 
 msgid "Show organization"
 msgstr "Organisation anzeigen"
@@ -7007,8 +7270,19 @@ msgstr "Größe der Datei zum hochladen"
 msgid "Skip metadata check on each repository on the smart proxy"
 msgstr "Überspringe den Metadaten-Check auf jedem Repository des Smart-Proxies"
 
+msgid "Skipped %{count} unregistered host"
+msgid_plural "Skipped %{count} unregistered hosts"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Skipped pulp_auth check after failed pulp check"
 msgstr "pulp_auth Check wurde übersprungen, nachdem Pulp-Check fehlschlug"
+
+msgid "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting."
+msgstr ""
+
+msgid "Smart Proxy '%{proxy}': RHSM URL must use HTTPS protocol. The URL is derived from the 'foreman_url' setting. Current value: '%{url}'. Please update the 'foreman_url' setting to use HTTPS."
+msgstr ""
 
 msgid "Smart proxies"
 msgstr "Smart-Proxys"
@@ -7049,13 +7323,13 @@ msgstr "Abhängigkeiten lösen"
 msgid "Some environments are disabled because they are not associated with all of the affected hosts' content sources."
 msgstr ""
 
-msgid "Some environments are disabled because they are not associated with the host's content source."
-msgstr ""
-
 msgid "Some environments are disabled because they are not associated with the selected content source."
 msgstr ""
 
 msgid "Some hosts are not registered as content hosts and will be ignored."
+msgstr ""
+
+msgid "Some lifecycle environments are disabled because they are not associated with the host's content source."
 msgstr ""
 
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
@@ -7370,9 +7644,6 @@ msgstr "Erfolgreich"
 msgid "Successfully added %s Host(s)."
 msgstr "%s Host(s) erfolgreich hinzugefügt."
 
-msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
-msgstr "%{count} Inhaltshosts erfolgreich zur Hostsammlung %{host_collection} hinzugefügt."
-
 msgid "Successfully changed sync plan for %s product(s)"
 msgstr "Synchronisationsplan erfolgreich geändert für %s Produkte"
 
@@ -7384,9 +7655,6 @@ msgstr ""
 
 msgid "Successfully removed %s Host(s)."
 msgstr "%s Host(s) erfolgreich entfernt."
-
-msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
-msgstr "%{count} Inhaltshosts erfolgreich von Hostsammlung %{host_collection} entfernt."
 
 msgid "Successfully synced capsule."
 msgstr ""
@@ -7487,9 +7755,6 @@ msgstr ""
 msgid "Synced Content"
 msgstr "Synchronisierte Inhalte"
 
-msgid "Synced container images content"
-msgstr ""
-
 msgid "Synchronize"
 msgstr "Synchronisieren"
 
@@ -7532,6 +7797,9 @@ msgstr ""
 msgid "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console."
 msgstr ""
 
+msgid "Tag"
+msgstr ""
+
 msgid "Tag name"
 msgstr ""
 
@@ -7572,7 +7840,7 @@ msgid "The '%s' environment cannot contain a changeset!"
 msgstr "Die \"%s\" Umgebung kann keinen Änderungssatz enthalten!"
 
 msgid "The Alternate Content Source type"
-msgstr ""
+msgstr "Der Typ der alternativen Inhaltsquelle"
 
 msgid "The Foreman Client repository is available in the host's content view environment(s). "
 msgstr ""
@@ -7599,7 +7867,7 @@ msgid "The amount of latest versions of a package to keep on sync, includes pre-
 msgstr ""
 
 msgid "The content type for the Alternate Content Source"
-msgstr ""
+msgstr "Der Inhaltstyp der alternativen Inhaltsquelle"
 
 msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
 msgstr "Die derzeitige Organisation kann nicht gelöscht werden. Bitte wechseln Sie vor dem Löschen zu einer anderen Organisation."
@@ -7738,6 +8006,9 @@ msgstr "Die angeforderte Ressource gehört nicht zur angegebenen Organisation"
 msgid "The requested traces were not found for this host"
 msgstr "Die angeforderten Traces wurden für diesen Host nicht gefunden"
 
+msgid "The selected hosts do not show any applications needing restart."
+msgstr ""
+
 msgid "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture"
 msgstr ""
 
@@ -7846,6 +8117,9 @@ msgstr ""
 msgid "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" before deleting."
 msgstr ""
 
+msgid "This application requires a host reboot"
+msgstr ""
+
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
 msgstr "Dieses Zertifikat ermöglicht es dem Benutzer, die Repositorys in jeder Umgebung mit einem Browser anzuzeigen."
 
@@ -7883,9 +8157,6 @@ msgid "This host does not have any packages."
 msgstr ""
 
 msgid "This host has errata that are applicable, but not installable. Adjust your filters and try again."
-msgstr ""
-
-msgid "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments."
 msgstr ""
 
 msgid "This is disabled because a manifest task is in progress"
@@ -7942,9 +8213,6 @@ msgstr "Diese Version wird entfernt von:"
 msgid "This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied."
 msgstr ""
 
-msgid "This will update the content view environments for {hosts}."
-msgstr ""
-
 msgid "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned."
 msgstr ""
 
@@ -7963,7 +8231,10 @@ msgstr "Zeitstempel"
 msgid "Title"
 msgstr "Titel"
 
-msgid "To change content view environments, a specific organization must be selected from the organization context."
+msgid "To assign content view environment(s), a specific organization must be selected from the organization context."
+msgstr ""
+
+msgid "To change system purpose, a specific organization must be selected from the organization context."
 msgstr ""
 
 msgid "To continue with Red Hat Flatpak remote, you need to generate your username and password in"
@@ -7975,7 +8246,7 @@ msgstr ""
 msgid "To enable them, add the environment to the content source, or select a different content source."
 msgstr ""
 
-msgid "To enable them, add the environment to the host's content source, or "
+msgid "To enable them, add the lifecycle environment to the host's content source, or "
 msgstr ""
 
 msgid "To finish the process of changing the content source, run the following script manually on {hosts}."
@@ -7987,7 +8258,13 @@ msgstr ""
 msgid "To get started, add this host to a host collection."
 msgstr ""
 
+msgid "To give your hosts access to content, assign content view environments."
+msgstr ""
+
 msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
+msgstr ""
+
+msgid "To manage host collections, a specific organization must be selected from the organization context."
 msgstr ""
 
 msgid "To manage host content overrides, a specific organization must be selected from the organization context."
@@ -7999,11 +8276,17 @@ msgstr ""
 msgid "To manage packages, select an action."
 msgstr ""
 
+msgid "To manage traces, a specific organization must be selected from the organization context."
+msgstr ""
+
 msgid "Token/password for the flatpak remote"
 msgstr ""
 
 msgid "Total steps: "
 msgstr "Gesamtschritte:"
+
+msgid "Trace resolution job has been initiated."
+msgstr ""
 
 msgid "Tracer"
 msgstr ""
@@ -8042,6 +8325,9 @@ msgid "Traces will be shown here to a user with the appropriate permissions."
 msgstr ""
 
 msgid "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy."
+msgstr ""
+
+msgid "Transient"
 msgstr ""
 
 msgid "Try changing your search criteria."
@@ -8297,7 +8583,7 @@ msgid "Update an activation key"
 msgstr "Aktivierungsschlüssel aktualisieren"
 
 msgid "Update an alternate content source."
-msgstr ""
+msgstr "Eine alternative Inhaltsquelle aktualisieren."
 
 msgid "Update an environment"
 msgstr "Umgebung aktualisieren"
@@ -8368,6 +8654,11 @@ msgstr "Aktualisiert"
 msgid "Updated component details"
 msgstr "Aktualisierte Komponentendetails"
 
+msgid "Updated content view environments for %{count} host"
+msgid_plural "Updated content view environments for %{count} hosts"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Updated from"
 msgstr ""
 
@@ -8405,7 +8696,7 @@ msgid "Upgradable to"
 msgstr ""
 
 msgid "Upgrade"
-msgstr ""
+msgstr "Aktualisierung"
 
 msgid "Upgrade all packages"
 msgstr ""
@@ -8552,7 +8843,7 @@ msgid "Value must either be a boolean or 'default' for 'enabled'"
 msgstr "Der Wert muss entweder ein boolescher Wert oder 'Standard' für 'aktiviert' sein."
 
 msgid "Verify Content Checksum"
-msgstr ""
+msgstr "Überprüfen Sie die Inhaltsprüfsumme"
 
 msgid "Verify SSL"
 msgstr "SSL überprüfen"
@@ -8650,7 +8941,19 @@ msgstr ""
 msgid "View documentation"
 msgstr ""
 
+msgid "View here"
+msgstr ""
+
+msgid "View labels and annotations"
+msgstr ""
+
+msgid "View labels and annotations for image "
+msgstr ""
+
 msgid "View matching content"
+msgstr ""
+
+msgid "View pullable paths"
 msgstr ""
 
 msgid "View sync status"
@@ -8687,6 +8990,9 @@ msgid "When \"Releases/Distributions\" is set, \"Upstream URL\" must also be set
 msgstr ""
 
 msgid "When \"Upstream URL\" is set, \"Releases/Distributions\" must also be set!"
+msgstr ""
+
+msgid "When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration."
 msgstr ""
 
 msgid "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"
@@ -8886,6 +9192,9 @@ msgstr "Füge alle Modul Streams hne Erratezu den inkludierten / Exkludierten Li
 
 msgid "add all packages without errata to the included/excluded list. (package filter only)"
 msgstr "Alle Pakete ohne Errata zur Einschluss-/Ausschlussliste hinzufügen (nur Paketfilter)"
+
+msgid "ago"
+msgstr ""
 
 msgid "all environments"
 msgstr ""
@@ -9439,6 +9748,11 @@ msgstr "Organisations-ID"
 msgid "organization identifier"
 msgstr "Organisations-ID"
 
+msgid "package"
+msgid_plural "packages"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "package group: uuid"
 msgstr "Packet Gruppe: UUID"
 
@@ -9501,6 +9815,9 @@ msgstr "Paket wird entfernt …"
 
 msgid "removing packages..."
 msgstr "Pakete werden entfernt …"
+
+msgid "replace"
+msgstr ""
 
 msgid "repo label"
 msgstr "Repo-Label"

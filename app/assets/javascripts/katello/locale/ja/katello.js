@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.19.0.pre.master",
+        "Project-Id-Version": "katello 4.20.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ondřej Gajdušek, 2025",
+        "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025",
         "Language-Team": "Japanese (https://app.transifex.com/foreman/teams/114/ja/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -89,6 +89,12 @@
       " to manage and promote content views, or select a different environment.": [
         " コンテンツビューを管理およびプロモートするか、別の環境を選択します。"
       ],
+      " to manage and promote content views, or select a different lifecycle environment.": [
+        ""
+      ],
+      " to same product": [
+        ""
+      ],
       "${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}": [
         "${deleteFlow ? 'Deleting' : 'Removing'} バージョン ${versionNameToRemove}"
       ],
@@ -109,6 +115,9 @@
       ],
       "${selectedContentType} will appear here when created.": [
         "${selectedContentType} が作成されると、ここに表示されます。"
+      ],
+      "${totalCount} labels and annotations": [
+        ""
       ],
       "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?": [
         "%s%s には、削除後にもう一度関連付けする必要があるホスト %s 台とホストグループ %s 個があります。%s を削除しますか？"
@@ -413,6 +422,24 @@
       "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
         "ostree 同期中に除外するタグのコンマ区切りリスト。ワイルドカード *, ? が認識されます。'exclude_refs' は 'include_refs' の後に評価されます。"
       ],
+      "A content view environment is a combination of a particular lifecycle environment and content view.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide access to different sets of content. Your selection here will {replace} all existing content view environments on {hosts}.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}.": [
+        ""
+      ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
         "多数のエラータがこのコンテンツビューに適用されていません。そのため、最初の 100 件のみが表示されています。"
       ],
@@ -500,6 +527,9 @@
       "Activation key ID": [
         "アクティベーションキー ID"
       ],
+      "Activation key content view environments updated": [
+        ""
+      ],
       "Activation key deleted": [
         "アクティベーションキーが削除されました"
       ],
@@ -569,6 +599,9 @@
       "Add content view": [
         "コンテンツビューの追加"
       ],
+      "Add content view environment": [
+        ""
+      ],
       "Add content views": [
         "コンテンツビューの追加"
       ],
@@ -623,14 +656,23 @@
       "Add subscriptions using the Add Subscriptions button.": [
         "サブスクリプションの追加ボタンを使用してサブスクリプションを追加します。"
       ],
+      "Add the command below to your Containerfile to incorporate the selected transient packages. When building your bootable container image, this will ensure these packages are installed permanently (as persistent packages).": [
+        ""
+      ],
       "Add to a host collection": [
         "ホストコレクションへの追加"
+      ],
+      "Add to host collections": [
+        ""
       ],
       "Added": [
         "追加されました"
       ],
       "Added %s": [
         "%s を追加しました"
+      ],
+      "Added %{count} host(s) to host collection %{host_collection}.": [
+        ""
       ],
       "Added Content:": [
         "追加されたコンテンツ:"
@@ -656,9 +698,6 @@
       "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently.": [
         "指定のホストへの変更は、増分更新の生成後に適用します。現在、エラータのみがサポートされています。"
       ],
-      "All": [
-        "すべて"
-      ],
       "All Media": [
         "すべてのメディア"
       ],
@@ -668,11 +707,17 @@
       "All available architectures for this repo are enabled.": [
         "このリポジトリーで利用可能なすべてのアーキテクチャーが有効です。"
       ],
+      "All content views in this lifecycle environment are already assigned": [
+        ""
+      ],
       "All errata applied": [
         "適用されたすべてのエラータ"
       ],
       "All errata up-to-date": [
         "すべてのエラータは最新の状態です"
+      ],
+      "All selected hosts were already members of host collection %{host_collection}.": [
+        ""
       ],
       "All subpaths must have a slash at the end and none at the front": [
         "すべてのサブパスには、必ず末尾にスラッシュが必要で、先頭には不要です"
@@ -740,9 +785,6 @@
       "Always update to latest version": [
         "常に最新バージョンに更新"
       ],
-      "Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required.": [
-        "ホスト関連のタスクの実行を処理するプール内のワーカー数。0 に設定されている場合には、デフォルトのキューが代わりに使用されます。dynflowd/foreman-tasks サービスは再起動する必要があります。"
-      ],
       "An alternate content source can be added by using the \\\\\\\"Add source\\\\\\\" button below.": [
         "代替コンテンツソースを追加するには、下の「ソースの追加」ボタンを使用します。"
       ],
@@ -754,6 +796,9 @@
       ],
       "An error occurred during upload \\n%{error_message}": [
         "アップロード中にエラーが発生しました \\n%{error_message}"
+      ],
+      "An error occurred while updating host collections": [
+        ""
       ],
       "An option to specify how many ostree commits to traverse.": [
         "走査する ostree コミットの数を指定するオプション。"
@@ -869,6 +914,9 @@
       "Array of content view component IDs to remove. Identifier of the component association": [
         "削除するコンテンツビューコンポーネント ID の配列。コンポーネントの関連付けの ID"
       ],
+      "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on.": [
         "ホストに関連付けるコンテンツビュー環境 ID の配列。content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
       ],
@@ -877,6 +925,9 @@
       ],
       "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         "ホストに関連付けるコンテンツビュー環境 ID の配列。content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+      ],
+      "Array of dependency repository IDs to mirror along with the main repository": [
+        ""
       ],
       "Array of host ids": [
         "ホスト ID の配列"
@@ -896,6 +947,18 @@
       "Artifacts": [
         "アーティファクト"
       ],
+      "Assign another content view environment": [
+        ""
+      ],
+      "Assign content view environment": [
+        ""
+      ],
+      "Assign content view environments": [
+        ""
+      ],
+      "Assign content view environments to one or more hosts": [
+        ""
+      ],
       "Assign system purpose attributes on one or more hosts": [
         "1 台以上のホストにシステム目的の属性を割り当てる"
       ],
@@ -913,6 +976,9 @@
       ],
       "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         "複数のコンテンツビュー環境にアクティベーションキーを割り当てる機能は有効ではありません。有効にするには、allow_multiple_content_views 設定を指定します。"
+      ],
+      "Associated content view environments": [
+        ""
       ],
       "Associated location IDs": [
         "関連するロケーション ID"
@@ -938,6 +1004,9 @@
       "At least one of the selected items requires the host to reboot": [
         "選択した項目の少なくとも 1 つでホストの再起動が必要です"
       ],
+      "At least one of the selected items requires the hosts to reboot": [
+        ""
+      ],
       "At least one organization must exist.": [
         "1 つ以上の組織が存在している必要があります。"
       ],
@@ -953,11 +1022,17 @@
       "Author": [
         "作成者"
       ],
+      "Auto Publish": [
+        ""
+      ],
       "Auto Publish - Triggered by '%s'": [
         "自動公開 - '%s' によるトリガー"
       ],
       "Auto publish": [
         "自動公開"
+      ],
+      "Autocomplete for traces in bulk context": [
+        ""
       ],
       "Autopublish": [
         "自動公開"
@@ -1040,6 +1115,9 @@
       "Bookmarks marked as public are available to all users": [
         "パブリックと識別されたブックマークは、すべてのユーザーが利用できます"
       ],
+      "Bootable": [
+        ""
+      ],
       "Bootc rollback via Bootc interface": [
         "Bootc インターフェイスを使用した Bootc ロールバック"
       ],
@@ -1054,12 +1132,6 @@
       ],
       "Booted": [
         ""
-      ],
-      "Booted Container Images": [
-        "起動済みのコンテナーイメージ"
-      ],
-      "Booted container images": [
-        "起動済みのコンテナーイメージ"
       ],
       "Both": [
         "両方"
@@ -1364,8 +1436,14 @@
       "Change content view environments": [
         "コンテンツビュー環境の変更"
       ],
+      "Change host collections": [
+        ""
+      ],
       "Change host content source": [
         "ホストコンテンツソースの変更"
+      ],
+      "Change system purpose": [
+        ""
       ],
       "Change the status of at least one repository.": [
         "少なくとも 1 つのリポジトリーのステータスを変更してください。"
@@ -1406,6 +1484,9 @@
       "Choose content credentials if required for this RHUI source.": [
         "この RHUI ソースに必要な場合は、コンテンツの認証情報を選択します。"
       ],
+      "Clean Backend Objects": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "以前の登録をすべてクリアし、--force を指定して subscription-manager を実行します。"
       ],
@@ -1423,6 +1504,9 @@
       ],
       "Click {update} below to save changes.": [
         "{update} をクリックして変更を保存します。"
+      ],
+      "Clipboard API not available. Please copy manually.": [
+        ""
       ],
       "Clone": [
         "クローン"
@@ -1442,6 +1526,9 @@
       "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         "ホストに関連付けるコンテンツビュー環境ラベルのコンマ区切りリスト。形式は 'lifecycle_environment_label/content_view_label' です。content_view_environment_ids が指定されている場合、または content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
       ],
+      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
         "コンマ区切りのサブパスの一覧。すべてのサブパスには、必ず末尾にスラッシュが必要で、先頭には不要です"
       ],
@@ -1450,6 +1537,9 @@
       ],
       "Comma-separated list of tags to sync for a container image repository": [
         "コンテナーイメージリポジトリーに同期するコンマ区切りのタグ一覧"
+      ],
+      "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
+        ""
       ],
       "Compare": [
         "比較"
@@ -1535,6 +1625,9 @@
       "Container tags": [
         "コンテナータグ"
       ],
+      "Containerfile Install Command": [
+        ""
+      ],
       "Contains content views. You must choose the version to use for each content view.": [
         "コンテンツビューが含まれます。各コンテンツビューで使用するバージョンを選択する必要があります。"
       ],
@@ -1591,6 +1684,9 @@
       ],
       "Content View Details": [
         "コンテンツビューの詳細"
+      ],
+      "Content View Environments": [
+        ""
       ],
       "Content View Filter id": [
         "コンテンツビューフィルター ID"
@@ -1781,6 +1877,9 @@
       "Content views": [
         "コンテンツビュー"
       ],
+      "Content views, lifecycle environments, pullable paths": [
+        ""
+      ],
       "Content will be synced from the alternate content source first, then the original source if the ACS is not reachable.": [
         "コンテンツは最初に別のコンテンツソースから同期され、ACS に到達できない場合には元のソースが同期されます。"
       ],
@@ -1799,6 +1898,9 @@
       "Contract Number": [
         "コントラクト番号"
       ],
+      "Copied": [
+        ""
+      ],
       "Copied to clipboard": [
         "クリップボードにコピーしました"
       ],
@@ -1810,6 +1912,12 @@
       ],
       "Copy content view": [
         "コンテンツビューのコピー"
+      ],
+      "Copy pullable paths": [
+        ""
+      ],
+      "Copy this to pull the specific image version from your published content view, ensuring consistency across your deployments.": [
+        ""
       ],
       "Copy to clipboard": [
         "クリップボードにコピー"
@@ -1849,6 +1957,9 @@
       ],
       "Could not find all specified errata ids: %s": [
         "指定した全エラータ ID を見つけることができませんでした: %s"
+      ],
+      "Could not find dependency repositories with IDs: %{ids}. Proceeding with found repositories.": [
+        ""
       ],
       "Could not find environments for promotion": [
         "プロモート環境が見つかりませんでした"
@@ -1967,8 +2078,8 @@
       "Create Export History": [
         "エクスポート履歴の作成"
       ],
-      "Create Flatpak Remote": [
-        "Flatpak リモートの作成"
+      "Create Flatpak remote": [
+        ""
       ],
       "Create Import History": [
         "インポート履歴の作成"
@@ -2039,6 +2150,9 @@
       "Create organization": [
         "組織の作成"
       ],
+      "Creation": [
+        ""
+      ],
       "Credentials": [
         "認証情報"
       ],
@@ -2071,6 +2185,9 @@
       ],
       "Custom repositories cannot be disabled.": [
         "カスタムリポジトリーを無効にできません。"
+      ],
+      "Customize and restart": [
+        ""
       ],
       "Customize with Rex": [
         "Rex でカスタマイズ"
@@ -2134,9 +2251,6 @@
       ],
       "Default Location where new subscribed hosts will put upon registration": [
         "新規のサブスクライブ済みホストが登録時に配置されるデフォルトのロケーション"
-      ],
-      "Default PXEGrub template for new Operating Systems created from synced content": [
-        "同期コンテンツから作成された新規オペレーティングシステムのデフォルトの PXEGrub テンプレート"
       ],
       "Default PXEGrub2 template for new Operating Systems created from synced content": [
         "同期コンテンツから作成された新規オペレーティングシステムのデフォルトの PXEGrub2 テンプレート"
@@ -2206,9 +2320,6 @@
       ],
       "Default synced OS Atomic template": [
         "デフォルトの同期 OS Atomic テンプレート"
-      ],
-      "Default synced OS PXEGrub template": [
-        "デフォルトの同期 OS PXEGrub テンプレート"
       ],
       "Default synced OS PXEGrub2 template": [
         "デフォルトの同期 OS PXEGrub2 テンプレート"
@@ -2335,6 +2446,9 @@
       ],
       "Deleting versions: {versionList}": [
         "バージョンを削除しています: {versionList}"
+      ],
+      "Dependency found": [
+        ""
       ],
       "Depth": [
         "階層の深さ"
@@ -2504,8 +2618,8 @@
       "Edit DEB rule": [
         ""
       ],
-      "Edit Flatpak Remote": [
-        "Flatpak リモートの編集"
+      "Edit Flatpak remote": [
+        ""
       ],
       "Edit RPM rule": [
         "RPM ルールの編集"
@@ -2516,11 +2630,8 @@
       "Edit activation key": [
         "アクティベーションキーの編集"
       ],
-      "Edit content view assignment": [
-        "コンテンツビューの割り当てを編集"
-      ],
-      "Edit content view environments": [
-        "コンテンツビュー環境の編集"
+      "Edit content view environment": [
+        ""
       ],
       "Edit credentials": [
         "資格情報の編集"
@@ -2549,6 +2660,9 @@
       "Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified": [
         "「content_view_id」および「environment_id」パラメーターの両方を指定するか、どちらも指定しないかのいずれかにします。"
       ],
+      "Either content_view_environments or content_view_environment_ids must be provided": [
+        ""
+      ],
       "Either environments or versions must be specified.": [
         "環境またはバージョンのいずれかを指定する必要があります"
       ],
@@ -2563,6 +2677,9 @@
       ],
       "Either set the latest content view or the content view version. Cannot set both": [
         "最新のコンテンツビューまたはコンテンツビューバージョンを設定します。両方設定することはできません。"
+      ],
+      "Either trace_search or trace_ids must be provided": [
+        ""
       ],
       "Empty content view versions": [
         "空のコンテンツビューのバージョン"
@@ -2584,9 +2701,6 @@
       ],
       "Enable repository sets": [
         "リポジトリーセットの有効化"
-      ],
-      "Enable structured APT for deb content": [
-        "deb コンテンツに対して構造化 APT を有効にする"
       ],
       "Enable/Disable auto publish of composite view": [
         "複合ビューの自動公開を有効/無効にします"
@@ -2614,6 +2728,9 @@
       ],
       "Enhancement": [
         "機能強化"
+      ],
+      "Ensure the runtime dependency for this Flatpak app is also mirrored in this organization to avoid installation errors on host(s).": [
+        ""
       ],
       "Enter a name": [
         "名前の入力"
@@ -2828,6 +2945,9 @@
       "Failed": [
         "失敗"
       ],
+      "Failed to copy to clipboard. Please copy manually.": [
+        ""
+      ],
       "Failed to delete %{host}: %{errors}": [
         "%{host} の削除に失敗しました: %{errors}"
       ],
@@ -2836,6 +2956,12 @@
       ],
       "Failed to find %{content} with id '%{id}'.": [
         "ID が「%{id}」の %{content} が見つかりませんでした"
+      ],
+      "Failed to generate Containerfile install command": [
+        ""
+      ],
+      "Failed to initiate trace resolution job.": [
+        ""
       ],
       "Fails if any of the repositories belonging to this organization are unexportable. False by default.": [
         "この組織に属するリポジトリーのいずれかがエクスポートできない場合は失敗します。デフォルトは False です。"
@@ -2966,6 +3092,9 @@
       "Finished": [
         "終了"
       ],
+      "Flatpak": [
+        ""
+      ],
       "Flatpak Remote ${name} created": [
         "Flatpak リモート ${name} が作成されました"
       ],
@@ -3049,6 +3178,10 @@
       ],
       "Generate and Download": [
         "生成してダウンロード"
+      ],
+      "Generate containerfile install command (%s package selected)": [
+        "",
+        ""
       ],
       "Generate errata status from directly-installable content": [
         "直接インストール可能なコンテンツからエラータステータスを生成する"
@@ -3200,9 +3333,6 @@
       "Host Profile Can Change In Build": [
         "ホストプロファイルはビルドでの変更が可能"
       ],
-      "Host Tasks Workers Pool Size": [
-        "ホストタスクワーカーのプールサイズ"
-      ],
       "Host collection": [
         "ホストコレクション"
       ],
@@ -3218,20 +3348,17 @@
       "Host collections updated": [
         "ホストコレクションが更新されました"
       ],
-      "Host content and subscription details": [
-        "ホストコレクションおよびサブスクリプションの詳細"
-      ],
       "Host content source will remain the same. Click Save below to update the host's content view environment.": [
         "ホストコンテンツソースは同じままです。ホストのコンテンツビュー環境を更新するには、下の保存をクリックしてください。"
       ],
-      "Host content view and environment updated": [
-        "ホストコンテンツビューと環境が更新されました"
+      "Host content view environment(s) assigned": [
+        ""
       ],
       "Host content view environment(s) updated": [
         "ホストコンテンツビュー環境が更新されました"
       ],
-      "Host content view environments updating.": [
-        "ホストコンテンツビュー環境を更新しています。"
+      "Host content view environments updated.": [
+        ""
       ],
       "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration.": [
         "%s と BIOS UUID を共有するため、%s のホスト作成は省略されました。このハイパーバイザーをレポートするには、dmi.system.uuid ファクトを上書きするか、Candlepin 設定の 'candlepin.use_system_uuid_for_matching' を「true」に設定してください。"
@@ -3262,6 +3389,12 @@
       ],
       "Host lifecycle support expiration notification": [
         "ホストのライフサイクルサポート期限切れの通知"
+      ],
+      "Host release version updating.": [
+        ""
+      ],
+      "Host system purpose updating.": [
+        ""
       ],
       "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance": [
         "サブスクリプション UUID: '%s' でホストが見つかりませんでした。これは、ホストがすでに登録されているけれども、このインスタンスには登録されていない場合に発生する可能性があります。"
@@ -3482,9 +3615,6 @@
       "If product certificates should be used to authenticate to a custom CDN.": [
         "カスタム CDN に対する認証に製品証明書を使用する必要があるかどうか。"
       ],
-      "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
-        "これが設定されている場合、Katello で新しく作成された APT リポジトリーは、同期元のリモートリポジトリーと同じリポジトリー構造を使用します。'foreman-rake katello:migrate_structure_content_for_deb' を実行して、既存の APT リポジトリーを設定に合わせて移行できます。"
-      ],
       "If the smart proxies' assigned HTTP proxies should be used": [
         "Smart Proxy に割り当てられた HTTP プロキシーを使用する場合"
       ],
@@ -3668,6 +3798,12 @@
       "Include manifests": [
         "マニフェストを含める"
       ],
+      "Include packages with unknown persistence": [
+        ""
+      ],
+      "Include packages with unknown persistence in addition to transient packages": [
+        ""
+      ],
       "Included": [
         "包含済み"
       ],
@@ -3718,6 +3854,10 @@
       ],
       "Install errata via Katello interface": [
         "Katello インターフェイスでのエラータのインストール"
+      ],
+      "Install package": [
+        "",
+        ""
       ],
       "Install package group via Katello interface": [
         "Katello インターフェイスでのパッケージグループのインストール"
@@ -3784,6 +3924,9 @@
       ],
       "Instance-based": [
         "インスタンスベース"
+      ],
+      "Insufficient space for selected hosts": [
+        ""
       ],
       "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.": [
         "指定済みオブジェクトに関連付けることができるホストコレクションのみを返す指定済みオブジェクトを解釈します。値 'host' がサポートされます。"
@@ -3920,6 +4063,9 @@
       "Job '${description}' has started.": [
         "ジョブ '${description}' が開始されました。"
       ],
+      "Job '${firstJob.description}' has started.": [
+        ""
+      ],
       "Katello Bootc interface": [
         "Katello Bootc インターフェイス"
       ],
@@ -4019,6 +4165,12 @@
       "Label of the flatpak remote": [
         "flatpak リモートのラベル"
       ],
+      "Labels and annotations": [
+        ""
+      ],
+      "Labels | Annotations": [
+        ""
+      ],
       "Last check-in:": [
         "最終チェックイン"
       ],
@@ -4036,6 +4188,9 @@
       ],
       "Last refresh :": [
         "最終更新 :"
+      ],
+      "Last scan:": [
+        ""
       ],
       "Last seen": [
         "最後に表示"
@@ -4060,9 +4215,6 @@
       ],
       "Legacy UI": [
         "レガシー UI"
-      ],
-      "Legacy content host UI": [
-        "レガシーコンテンツホストの UI"
       ],
       "Less than": [
         "<"
@@ -4120,6 +4272,9 @@
       ],
       "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
         "ライフサイクル環境をデフォルトの Smart Proxy で変更できません。すべてのライフサイクル環境のコンテンツはこの Smart Proxy 上に存在します。"
+      ],
+      "Limit": [
+        ""
       ],
       "Limit actions to content in the host's environment.": [
         "アクションをホストの環境内のコンテンツに制限します。"
@@ -4433,6 +4588,9 @@
       "Make sure all the component content views are published before publishing/promoting the composite content view. This restriction is optional and can be modified in the Administrator -> Settings -> Content page using the restrict_composite_view flag.": [
         "複合コンテンツビューの公開/プロモート前に、コンポーネントのコンテンツビューがすべて公開されていることを確認します。この制限は任意で、管理 -> 設定 -> コンテンツページで、restrict_composite_view フラグを使用して変更できます。"
       ],
+      "Make sure the runtimes required by the Flatpak apps in this content view are available to the host(s).": [
+        ""
+      ],
       "Manage Manifest": [
         "マニフェストの管理"
       ],
@@ -4448,14 +4606,23 @@
       "Manage repository sets": [
         "リポジトリーセットの管理"
       ],
+      "Manage traces": [
+        ""
+      ],
       "Manifest": [
         "Manifest (マニフェスト)"
+      ],
+      "Manifest Details": [
+        ""
       ],
       "Manifest History": [
         "マニフェストの履歴"
       ],
       "Manifest deleted": [
         "マニフェストを削除しました"
+      ],
+      "Manifest digest": [
+        ""
       ],
       "Manifest does not have a valid subscription": [
         "マニフェストに有効なサブスクリプションがありません"
@@ -4562,6 +4729,15 @@
       "Mirror a flatpak remote repository": [
         "flatpak リモートリポジトリーをミラーリングする"
       ],
+      "Mirror runtime repository ": [
+        ""
+      ],
+      "Mirroring flatpak repository has started": [
+        ""
+      ],
+      "Mirroring flatpak repository with dependencies has started": [
+        ""
+      ],
       "Mirroring will import the remote flatpak repository": [
         "ミラーリングによりリモートの flatpak リポジトリー"
       ],
@@ -4576,6 +4752,9 @@
       ],
       "Moderate": [
         "中"
+      ],
+      "Modified": [
+        ""
       ],
       "Modify via remote execution": [
         "リモート実行による変更"
@@ -4811,6 +4990,9 @@
       "No content view environments found with names: %{names}": [
         "名前が %{names} のコンテンツビュー環境が見つかりません。"
       ],
+      "No content view environments yet": [
+        ""
+      ],
       "No content view history events found.": [
         "コンテンビューの履歴イベントが見つかりません。"
       ],
@@ -4819,6 +5001,9 @@
       ],
       "No content views available for the selected environment": [
         "選択した環境に利用可能なコンテンツビューはありません"
+      ],
+      "No content views available for the selected lifecycle environment": [
+        ""
       ],
       "No content views to add yet": [
         "追加するコンテンツビューはまだありません"
@@ -4897,6 +5082,9 @@
       ],
       "No items have been specified.": [
         "項目が指定されていません。"
+      ],
+      "No labels or annotations": [
+        ""
       ],
       "No manifest file uploaded": [
         "マニフェストファイルがアップロードされていません"
@@ -5063,6 +5251,9 @@
       "No syncable repositories found for selected products and options.": [
         "選択した製品およびオプションに同期可能なリポジトリーが見つかりません。"
       ],
+      "No transient packages found in selection": [
+        ""
+      ],
       "No upgradable packages found for search term '%s'.": [
         "検索用語 '%s' に該当するアップグレード可能なパッケージが見つかりません。"
       ],
@@ -5213,6 +5404,9 @@
       "Organization ID": [
         "組織 ID"
       ],
+      "Organization ID for scoping": [
+        ""
+      ],
       "Organization ID or title": [
         "組織 ID またはタイトル"
       ],
@@ -5236,6 +5430,9 @@
       ],
       "Organization label '%s' is ambiguous. Try using an id-based container name.": [
         "組織ラベル '%s' はあいまいです。ID ベースのコンテナー名の使用を試してください。"
+      ],
+      "Organization must be specified when providing product by name.": [
+        ""
       ],
       "Organization not found": [
         "組織が見つかりません"
@@ -5402,9 +5599,6 @@
       "Package Update scheduled by %s": [
         "%s によりパッケージの更新がスケジュールされました"
       ],
-      "Package actions will be transient": [
-        "パッケージアクションは一時的なものです"
-      ],
       "Package group update canceled": [
         "パッケージグループの更新が取り消されました"
       ],
@@ -5431,6 +5625,12 @@
       ],
       "Package mode": [
         "パッケージモード"
+      ],
+      "Package persistence data will be reported by a future version of subscription-manager.": [
+        ""
+      ],
+      "Package persistence information": [
+        ""
       ],
       "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist.": [
         "Python コンテンツの同期に使用するパッケージタイプ (コンマ区切り)。すべてのパッケージタイプを指定するには、空白のままにします。パッケージタイプは、bdist_dmg、bdist_dumb、bdist_egg, bdist_msi、bdist_rpm、bdist_wheel、bdist_wininst、sdist です。"
@@ -5510,6 +5710,15 @@
       "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.": [
         "アクセスが拒否されました。ユーザー '%{user}' には組織 '%{org}' にアクセスする権限がありません。"
       ],
+      "Persistence": [
+        ""
+      ],
+      "Persistence must be one of: %s": [
+        ""
+      ],
+      "Persistent": [
+        ""
+      ],
       "Physical": [
         "物理"
       ],
@@ -5536,6 +5745,9 @@
       ],
       "Please select a content source before assigning a kickstart repository": [
         "Kickstart リポジトリーを割り当てる前にコンテンツソースを選択してください"
+      ],
+      "Please select a different lifecycle environment or remove an existing assignment.": [
+        ""
       ],
       "Please select a lifecycle environment and a content view to move these activation keys.": [
         "これらのアクティベーションキーを移動するには、ライフサイクル環境とコンテンツビューを選択してください。"
@@ -5635,6 +5847,9 @@
       ],
       "Product label '%s' is ambiguous. Try using an id-based container name.": [
         "製品ラベル '%s' はあいまいです。ID ベースのコンテナー名の使用を試してください。"
+      ],
+      "Product must be specified.": [
+        ""
       ],
       "Product name": [
         "製品名"
@@ -5749,6 +5964,9 @@
       ],
       "Publishing content view": [
         "コンテンツビューの公開"
+      ],
+      "Pullable path": [
+        ""
       ],
       "Pulp": [
         "Pulp"
@@ -5891,6 +6109,9 @@
       "Reboot host": [
         "ホストの再起動"
       ],
+      "Reboot hosts": [
+        ""
+      ],
       "Reboot required": [
         "再起動が必要です"
       ],
@@ -5941,6 +6162,9 @@
       ],
       "Red Hat provider can not be deleted": [
         "Red Hat プロバイダーは削除できません"
+      ],
+      "Red Hat remote": [
+        ""
       ],
       "Red Hat repositories cannot be manipulated.": [
         "Red Hat リポジトリーを操作することはできません。"
@@ -6101,6 +6325,9 @@
       "Remove from environments": [
         "環境からの削除"
       ],
+      "Remove from host collections": [
+        ""
+      ],
       "Remove host from collections": [
         "コレクションからホストを削除"
       ],
@@ -6142,6 +6369,9 @@
       ],
       "Remove versions from environments": [
         "環境からのバージョンの削除"
+      ],
+      "Removed %{count} host(s) from host collection %{host_collection}.": [
+        ""
       ],
       "Removed component from content view": [
         "コンテンツビューからコンポーネントを削除しました"
@@ -6338,6 +6568,9 @@
       "Restart app": [
         "アプリケーションの再起動"
       ],
+      "Restart applications": [
+        ""
+      ],
       "Restart via customized remote execution": [
         "カスタマイズされたリモート実行による再起動"
       ],
@@ -6350,11 +6583,17 @@
       "Result": [
         "結果"
       ],
+      "Retain build profile upon unregistration": [
+        ""
+      ],
       "Retrieve a single errata for a host": [
         "ホストに関するエラータを 1 つ取得する"
       ],
       "Return Red Hat (non-custom) products only": [
         "Red Hat (カスタム以外) 製品のみを返します"
+      ],
+      "Return a containerfile command to install transient packages": [
+        ""
       ],
       "Return a list of installed debs distinct by name": [
         ""
@@ -6399,6 +6638,9 @@
         "特定の重大度 (影響なし、低、中程度、重要、重大) のエラータのみを返します"
       ],
       "Return only errata of a particular type (security, bugfix, enhancement, other)": [
+        ""
+      ],
+      "Return only packages of a particular persistence (transient, persistent, or nil)": [
         ""
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
@@ -6575,6 +6817,9 @@
       "Search pattern (defaults to '*')": [
         "検索パターン (デフォルトは '*')"
       ],
+      "Search query for traces": [
+        ""
+      ],
       "Search string": [
         "検索文字列"
       ],
@@ -6598,6 +6843,9 @@
       ],
       "Security errata installable": [
         "インストール可能なセキュリティーエラータ"
+      ],
+      "See child manifests": [
+        ""
       ],
       "Select": [
         "選択"
@@ -6634,6 +6882,9 @@
       ],
       "Select a content view": [
         "コンテンツビューの選択"
+      ],
+      "Select a lifecycle environment": [
+        ""
       ],
       "Select a lifecycle environment and a content view to move these hosts.": [
         "これらのホストを移動するには、ライフサイクル環境とコンテンツビューを選択してください。"
@@ -6683,6 +6934,9 @@
       "Select at least one package.": [
         "少なくとも 1 つのパッケージを選択してください。"
       ],
+      "Select at least one trace.": [
+        ""
+      ],
       "Select attributes for ${akDetails.name}": [
         "${akDetails.name} の属性の選択"
       ],
@@ -6695,9 +6949,6 @@
       "Select content view": [
         "コンテンツビューの選択"
       ],
-      "Select environment": [
-        "環境の選択"
-      ],
       "Select errata": [
         "エラータの選択"
       ],
@@ -6709,6 +6960,9 @@
       ],
       "Select host collection(s) to remove from host {hostName}.": [
         "ホスト {hostName} から削除するホストコレクションを選択します。"
+      ],
+      "Select host collections to change their associations with {selectedHosts}. Changing host collection will affect all your selected hosts. Some hosts may already be in your chosen collections.": [
+        ""
       ],
       "Select hosts to assign to %s": [
         "ホストを選択して %s に割り当てます"
@@ -6789,6 +7043,9 @@
         "サービスレベル (SLA)"
       ],
       "Service level": [
+        "サービスレベル"
+      ],
+      "Service level (SLA)": [
         ""
       ],
       "Service level of host": [
@@ -6829,6 +7086,9 @@
       ],
       "Severity must be one of: %s": [
         "重大度は %s のいずれかに指定する必要があります"
+      ],
+      "Show ${remainingCount} more": [
+        ""
       ],
       "Show %s": [
         "%s の表示"
@@ -6950,8 +7210,18 @@
       "Skip metadata check on each repository on the smart proxy": [
         "Smart Proxy の各リポジトリーでのメタデータチェックをスキップします"
       ],
+      "Skipped %{count} unregistered host": [
+        "",
+        ""
+      ],
       "Skipped pulp_auth check after failed pulp check": [
         "pulp チェックの失敗後に pulp_auth チェックが省略されました"
+      ],
+      "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
+        ""
+      ],
+      "Smart Proxy '%{proxy}': RHSM URL must use HTTPS protocol. The URL is derived from the 'foreman_url' setting. Current value: '%{url}'. Please update the 'foreman_url' setting to use HTTPS.": [
+        ""
       ],
       "Smart proxies": [
         "Smart Proxy"
@@ -6992,14 +7262,14 @@
       "Some environments are disabled because they are not associated with all of the affected hosts' content sources.": [
         "一部の環境は、影響を受けるホストのコンテンツソースすべてに関連付けられていないため、無効になります。"
       ],
-      "Some environments are disabled because they are not associated with the host's content source.": [
-        "一部の環境は、ホストのコンテンツソースに関連付けられていないため無効になります。"
-      ],
       "Some environments are disabled because they are not associated with the selected content source.": [
         "一部の環境は、選択されたコンテンツソースに関連付けられていないため無効になります。"
       ],
       "Some hosts are not registered as content hosts and will be ignored.": [
         "ホストによってはコンテンツホストとして登録されていないため、無視されます。"
+      ],
+      "Some lifecycle environments are disabled because they are not associated with the host's content source.": [
+        ""
       ],
       "Some of your inputs contain errors. Please update them and save your changes again.": [
         "入力の一部にエラーが含まれています。入力内容を更新して、変更を保存し直してください。"
@@ -7313,9 +7583,6 @@
       "Successfully added %s Host(s).": [
         "%s 台のホストが正常に追加されました。"
       ],
-      "Successfully added %{count} content host(s) to host collection %{host_collection}.": [
-        "コンテンツホスト %{count} 台がホストコレクション %{host_collection} に正常に追加されました。"
-      ],
       "Successfully changed sync plan for %s product(s)": [
         "%s 製品の同期プランが正常に変更されました"
       ],
@@ -7327,9 +7594,6 @@
       ],
       "Successfully removed %s Host(s).": [
         "%s 台のホストが正常に削除されました。"
-      ],
-      "Successfully removed %{count} content host(s) from host collection %{host_collection}.": [
-        "ホストコレクション %{host_collection} から %{count} 台のコンテンツホストが正常に削除されました。"
       ],
       "Successfully synced capsule.": [
         "Capsule が正常に同期されました。"
@@ -7430,9 +7694,6 @@
       "Synced Content": [
         "同期されたコンテンツ"
       ],
-      "Synced container images content": [
-        ""
-      ],
       "Synchronize": [
         "同期"
       ],
@@ -7474,6 +7735,9 @@
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
         "システム目的では、ネットワーク上でシステムの使用目的を設定して、Red Hat Hybrid Cloud Console のサブスクリプションサービスでレポートの精度を向上させることができます。"
+      ],
+      "Tag": [
+        ""
       ],
       "Tag name": [
         "タグ名"
@@ -7673,6 +7937,9 @@
       "The requested traces were not found for this host": [
         "このホストには、要求されたトレースが見つかりませんでした"
       ],
+      "The selected hosts do not show any applications needing restart.": [
+        ""
+      ],
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
         "選択したキックスタートリポジトリーは、割り当てられたコンテンツビュー、ライフサイクル環境、コンテンツソース、オペレーティングシステム、アーキテクチャーに含まれていません。"
       ],
@@ -7781,6 +8048,9 @@
       "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \\\"%{name}\\\" before deleting.": [
         "このアクティべーションキーは 1 つ以上のホスト/ホストグループに関連付けられます。削除前に params.kt_activation_keys ~ \\\"%{name}\\\" を使用してホスト/ホストグループを検索し、関連付け解除します。"
       ],
+      "This application requires a host reboot": [
+        ""
+      ],
       "This certificate allows a user to view the repositories in any environment from a browser.": [
         "この証明書により、ユーザーはすべての環境のリポジトリーをブラウザーから閲覧できます。"
       ],
@@ -7819,9 +8089,6 @@
       ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
         "このホストには適用可能なエラータがありますが、インストールできません。フィルターを調節してもう一度お試しください。"
-      ],
-      "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
-        "このホストは複数のコンテンツビュー環境に関連付けられています。ここでライフサイクル環境とコンテンツビューを割り当てると、このホストは他の環境から削除されます。"
       ],
       "This is disabled because a manifest task is in progress": [
         "マニフェストのタスクが実行中であるため、これは無効になっています"
@@ -7877,9 +8144,6 @@
       "This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied.": [
         "これにより、詳細、リポジトリー、およびフィルターを含め {cv} のコピーが作成されます。履歴、タスク、およびバージョン等の生成されたデータはコピーされません。"
       ],
-      "This will update the content view environments for {hosts}.": [
-        "これにより、{hosts} のコンテンツビュー環境が更新されます。"
-      ],
       "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned.": [
         "リポジトリー内に含まれず、アクセスされていないコンテンツを孤立したコンテンツとみなすまでの時間 (分)。"
       ],
@@ -7898,8 +8162,11 @@
       "Title": [
         "タイトル"
       ],
-      "To change content view environments, a specific organization must be selected from the organization context.": [
-        "コンテンツビュー環境を変更するには、組織コンテキストから特定の組織を選択する必要があります。"
+      "To assign content view environment(s), a specific organization must be selected from the organization context.": [
+        ""
+      ],
+      "To change system purpose, a specific organization must be selected from the organization context.": [
+        ""
       ],
       "To continue with Red Hat Flatpak remote, you need to generate your username and password in": [
         ""
@@ -7910,8 +8177,8 @@
       "To enable them, add the environment to the content source, or select a different content source.": [
         "環境を有効にするには、環境を別のコンテンツソースに追加するか、別のコンテンツソースを選択します。"
       ],
-      "To enable them, add the environment to the host's content source, or ": [
-        "環境を有効にするには、その環境をホストのコンテンツソースに追加するか、"
+      "To enable them, add the lifecycle environment to the host's content source, or ": [
+        ""
       ],
       "To finish the process of changing the content source, run the following script manually on {hosts}.": [
         "コンテンツソースの変更プロセスを完了するには、次のスクリプトを {hosts} で手動で実行します。"
@@ -7922,8 +8189,14 @@
       "To get started, add this host to a host collection.": [
         "まず、このホストをホストコレクションに追加します。"
       ],
+      "To give your hosts access to content, assign content view environments.": [
+        ""
+      ],
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
         "コンテンツビューから特定のコンテンツを追加または除外するには、フィルターを作成します。フィルターを使用しない場合は、コンテンツビューには追加したリポジトリーにあるものがすべて含まれます。"
+      ],
+      "To manage host collections, a specific organization must be selected from the organization context.": [
+        ""
       ],
       "To manage host content overrides, a specific organization must be selected from the organization context.": [
         "ホストのコンテンツオーバーライドを管理するには、組織コンテキストから特定の組織を選択する必要があります。"
@@ -7934,11 +8207,17 @@
       "To manage packages, select an action.": [
         "パッケージを管理するには、アクションを選択してください。"
       ],
+      "To manage traces, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "Token/password for the flatpak remote": [
         "flatpak リモートのトークン/パスワード"
       ],
       "Total steps: ": [
         "ステップ合計数: "
+      ],
+      "Trace resolution job has been initiated.": [
+        ""
       ],
       "Tracer": [
         "トレーサー"
@@ -7978,6 +8257,9 @@
       ],
       "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy.": [
         "このSmart Proxy に関連付けられた代替コンテンツソースのトラフィックは、選択した HTTP プロキシーを通過します。"
+      ],
+      "Transient": [
+        ""
       ],
       "Try changing your search criteria.": [
         "検索条件を変更してみてください。"
@@ -8303,6 +8585,10 @@
       "Updated component details": [
         "更新されたコンポーネントの詳細"
       ],
+      "Updated content view environments for %{count} host": [
+        "",
+        ""
+      ],
       "Updated from": [
         "更新元"
       ],
@@ -8487,7 +8773,7 @@
         "値は、ブール値またはデフォルト (「有効」) のいずれかである必要があります"
       ],
       "Verify Content Checksum": [
-        ""
+        "コンテンツチェックサムの確認"
       ],
       "Verify SSL": [
         "SSL の確認"
@@ -8585,8 +8871,20 @@
       "View documentation": [
         "ドキュメントの表示"
       ],
+      "View here": [
+        ""
+      ],
+      "View labels and annotations": [
+        ""
+      ],
+      "View labels and annotations for image ": [
+        ""
+      ],
       "View matching content": [
         "マッチするコンテンツの表示"
+      ],
+      "View pullable paths": [
+        ""
       ],
       "View sync status": [
         "同期ステータスの表示"
@@ -8623,6 +8921,9 @@
       ],
       "When \\\"Upstream URL\\\" is set, \\\"Releases/Distributions\\\" must also be set!": [
         "「アップストリームの URL」を設定した場合は、「リリース/ディストリビューション」も設定する必要があります!"
+      ],
+      "When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration.": [
+        ""
       ],
       "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')": [
         "subscription-manager でホストを登録すると、指定のファクトを強制的に使用します ('fact.fact' の形式)"
@@ -8821,6 +9122,9 @@
       ],
       "add all packages without errata to the included/excluded list. (package filter only)": [
         "エラータなしのすべてのパッケージを組み込み/除外一覧に追加。(パッケージフィルターのみ)"
+      ],
+      "ago": [
+        ""
       ],
       "all environments": [
         "すべての環境"
@@ -9374,6 +9678,10 @@
       "organization identifier": [
         "組織 ID"
       ],
+      "package": [
+        "",
+        ""
+      ],
       "package group: uuid": [
         "パッケージグループ: uuid"
       ],
@@ -9436,6 +9744,9 @@
       ],
       "removing packages...": [
         "パッケージを削除しています..."
+      ],
+      "replace": [
+        ""
       ],
       "repo label": [
         "リポジトリーラベル"
