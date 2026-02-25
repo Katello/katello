@@ -6,7 +6,6 @@ Katello::Engine.routes.draw do
   scope :module => :api do
     scope :module => :registry, :constraints => { :tag => /[0-9a-zA-Z\-_.:]*/, :digest => /[0-9a-zA-Z:]*/ } do
       match '/v2/token' => 'registry_proxies#token', :via => :get
-      match '/v2/token' => 'registry_proxies#token', :via => :post
       match '/v2/*repository/manifests/:tag' => 'registry_proxies#pull_manifest', :via => :get
       match '/v2/*repository/manifests/:tag' => 'registry_proxies#push_manifest', :via => :put
       match '/v2/*repository/blobs/:digest' => 'registry_proxies#pull_blob', :via => :get
