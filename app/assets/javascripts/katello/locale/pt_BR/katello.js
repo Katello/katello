@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.19.0.pre.master",
+        "Project-Id-Version": "katello 4.20.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2025",
@@ -89,6 +89,12 @@
       " to manage and promote content views, or select a different environment.": [
         ""
       ],
+      " to manage and promote content views, or select a different lifecycle environment.": [
+        ""
+      ],
+      " to same product": [
+        ""
+      ],
       "${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}": [
         ""
       ],
@@ -108,6 +114,9 @@
         ""
       ],
       "${selectedContentType} will appear here when created.": [
+        ""
+      ],
+      "${totalCount} labels and annotations": [
         ""
       ],
       "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?": [
@@ -415,6 +424,24 @@
       "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
         ""
       ],
+      "A content view environment is a combination of a particular lifecycle environment and content view.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide access to different sets of content. Your selection here will {replace} all existing content view environments on {hosts}.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.": [
+        ""
+      ],
+      "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}.": [
+        ""
+      ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
         "Diversas erratas não são aplicadas nesta visualização de conteúdo, portanto somente as primeiras 100 aparecem."
       ],
@@ -502,6 +529,9 @@
       "Activation key ID": [
         "Ativação do ID da chave"
       ],
+      "Activation key content view environments updated": [
+        ""
+      ],
       "Activation key deleted": [
         "Chave de ativação removida"
       ],
@@ -571,6 +601,9 @@
       "Add content view": [
         ""
       ],
+      "Add content view environment": [
+        ""
+      ],
       "Add content views": [
         ""
       ],
@@ -625,13 +658,22 @@
       "Add subscriptions using the Add Subscriptions button.": [
         ""
       ],
+      "Add the command below to your Containerfile to incorporate the selected transient packages. When building your bootable container image, this will ensure these packages are installed permanently (as persistent packages).": [
+        ""
+      ],
       "Add to a host collection": [
+        ""
+      ],
+      "Add to host collections": [
         ""
       ],
       "Added": [
         ""
       ],
       "Added %s": [
+        ""
+      ],
+      "Added %{count} host(s) to host collection %{host_collection}.": [
         ""
       ],
       "Added Content:": [
@@ -658,9 +700,6 @@
       "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently.": [
         "Depois de gerar a atualização incremental, aplique as alterações aos hosts especificados. Somente Errata é compatível atualmente."
       ],
-      "All": [
-        "Todos(as)"
-      ],
       "All Media": [
         "Todas as mídias"
       ],
@@ -670,10 +709,16 @@
       "All available architectures for this repo are enabled.": [
         "Todas as arquiteturas disponíveis para este repositório estão habilitadas."
       ],
+      "All content views in this lifecycle environment are already assigned": [
+        ""
+      ],
       "All errata applied": [
         "Todas erratas aplicadas "
       ],
       "All errata up-to-date": [
+        ""
+      ],
+      "All selected hosts were already members of host collection %{host_collection}.": [
         ""
       ],
       "All subpaths must have a slash at the end and none at the front": [
@@ -742,9 +787,6 @@
       "Always update to latest version": [
         ""
       ],
-      "Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required.": [
-        "Quantidade de trabalhadores no pool para lidar com a execução de tarefas relacionadas a hosts. Quando definido como 0, a fila padrão será usada em vez disso. É necessário reiniciar o serviço dynflowd/foreman-tasks."
-      ],
       "An alternate content source can be added by using the \\\\\\\"Add source\\\\\\\" button below.": [
         ""
       ],
@@ -755,6 +797,9 @@
         "Ocorreu um erro durante a sincronização \\n%{error_message}"
       ],
       "An error occurred during upload \\n%{error_message}": [
+        ""
+      ],
+      "An error occurred while updating host collections": [
         ""
       ],
       "An option to specify how many ostree commits to traverse.": [
@@ -871,6 +916,9 @@
       "Array of content view component IDs to remove. Identifier of the component association": [
         "Matriz de IDs de componentes de visualização de conteúdo para remover. Identificador da associação do componente"
       ],
+      "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -878,6 +926,9 @@
         ""
       ],
       "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
+      "Array of dependency repository IDs to mirror along with the main repository": [
         ""
       ],
       "Array of host ids": [
@@ -898,6 +949,18 @@
       "Artifacts": [
         "Artefatos"
       ],
+      "Assign another content view environment": [
+        ""
+      ],
+      "Assign content view environment": [
+        ""
+      ],
+      "Assign content view environments": [
+        ""
+      ],
+      "Assign content view environments to one or more hosts": [
+        ""
+      ],
       "Assign system purpose attributes on one or more hosts": [
         ""
       ],
@@ -916,6 +979,9 @@
         ""
       ],
       "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
+        ""
+      ],
+      "Associated content view environments": [
         ""
       ],
       "Associated location IDs": [
@@ -942,6 +1008,9 @@
       "At least one of the selected items requires the host to reboot": [
         ""
       ],
+      "At least one of the selected items requires the hosts to reboot": [
+        ""
+      ],
       "At least one organization must exist.": [
         "Deve existir ao menos uma organização"
       ],
@@ -957,10 +1026,16 @@
       "Author": [
         "Autor"
       ],
+      "Auto Publish": [
+        ""
+      ],
       "Auto Publish - Triggered by '%s'": [
         "Publicação automática - Acionado por '%s'"
       ],
       "Auto publish": [
+        ""
+      ],
+      "Autocomplete for traces in bulk context": [
         ""
       ],
       "Autopublish": [
@@ -1044,6 +1119,9 @@
       "Bookmarks marked as public are available to all users": [
         ""
       ],
+      "Bootable": [
+        ""
+      ],
       "Bootc rollback via Bootc interface": [
         ""
       ],
@@ -1057,12 +1135,6 @@
         ""
       ],
       "Booted": [
-        ""
-      ],
-      "Booted Container Images": [
-        ""
-      ],
-      "Booted container images": [
         ""
       ],
       "Both": [
@@ -1368,7 +1440,13 @@
       "Change content view environments": [
         ""
       ],
+      "Change host collections": [
+        ""
+      ],
       "Change host content source": [
+        ""
+      ],
+      "Change system purpose": [
         ""
       ],
       "Change the status of at least one repository.": [
@@ -1410,6 +1488,9 @@
       "Choose content credentials if required for this RHUI source.": [
         ""
       ],
+      "Clean Backend Objects": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -1426,6 +1507,9 @@
         ""
       ],
       "Click {update} below to save changes.": [
+        ""
+      ],
+      "Clipboard API not available. Please copy manually.": [
         ""
       ],
       "Clone": [
@@ -1446,6 +1530,9 @@
       "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
+      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+        ""
+      ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
         ""
       ],
@@ -1453,6 +1540,9 @@
         ""
       ],
       "Comma-separated list of tags to sync for a container image repository": [
+        ""
+      ],
+      "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
         ""
       ],
       "Compare": [
@@ -1539,6 +1629,9 @@
       "Container tags": [
         ""
       ],
+      "Containerfile Install Command": [
+        ""
+      ],
       "Contains content views. You must choose the version to use for each content view.": [
         ""
       ],
@@ -1595,6 +1688,9 @@
       ],
       "Content View Details": [
         "Detalhes de visualização de conteúdo"
+      ],
+      "Content View Environments": [
+        ""
       ],
       "Content View Filter id": [
         "ID do Filtro de Visualização de Conteúdo "
@@ -1785,6 +1881,9 @@
       "Content views": [
         ""
       ],
+      "Content views, lifecycle environments, pullable paths": [
+        ""
+      ],
       "Content will be synced from the alternate content source first, then the original source if the ACS is not reachable.": [
         ""
       ],
@@ -1803,6 +1902,9 @@
       "Contract Number": [
         "Número de contrato"
       ],
+      "Copied": [
+        ""
+      ],
       "Copied to clipboard": [
         ""
       ],
@@ -1813,6 +1915,12 @@
         "Copiar uma chave de ativação"
       ],
       "Copy content view": [
+        ""
+      ],
+      "Copy pullable paths": [
+        ""
+      ],
+      "Copy this to pull the specific image version from your published content view, ensuring consistency across your deployments.": [
         ""
       ],
       "Copy to clipboard": [
@@ -1853,6 +1961,9 @@
       ],
       "Could not find all specified errata ids: %s": [
         "Não foi possível encontrar todos os IDs de errata especificados: %s"
+      ],
+      "Could not find dependency repositories with IDs: %{ids}. Proceeding with found repositories.": [
+        ""
       ],
       "Could not find environments for promotion": [
         "Não foi possível encontrar ambientes para promoção"
@@ -1971,7 +2082,7 @@
       "Create Export History": [
         "Criar histórico de exportação"
       ],
-      "Create Flatpak Remote": [
+      "Create Flatpak remote": [
         ""
       ],
       "Create Import History": [
@@ -2043,6 +2154,9 @@
       "Create organization": [
         "Criar organização"
       ],
+      "Creation": [
+        ""
+      ],
       "Credentials": [
         "Credenciais"
       ],
@@ -2075,6 +2189,9 @@
       ],
       "Custom repositories cannot be disabled.": [
         "Repositórios padronizados não podem ser desabilitados"
+      ],
+      "Customize and restart": [
+        ""
       ],
       "Customize with Rex": [
         ""
@@ -2138,9 +2255,6 @@
       ],
       "Default Location where new subscribed hosts will put upon registration": [
         "Local padrão onde os novos hosts subscritos serão colocados após o registro"
-      ],
-      "Default PXEGrub template for new Operating Systems created from synced content": [
-        "Template PXEGrub padrão para novos sistemas operacionais criados a partir de conteúdo sincronizado"
       ],
       "Default PXEGrub2 template for new Operating Systems created from synced content": [
         "Template PXEGrub2 padrão para novos sistemas operacionais criados a partir de conteúdo sincronizado"
@@ -2210,9 +2324,6 @@
       ],
       "Default synced OS Atomic template": [
         "Template de SO Atomic sincronizado padrão"
-      ],
-      "Default synced OS PXEGrub template": [
-        "Template de SO PXEGrub sincronizado padrão"
       ],
       "Default synced OS PXEGrub2 template": [
         "Template de SO PXEGrub2 sincronizado padrão"
@@ -2338,6 +2449,9 @@
         ""
       ],
       "Deleting versions: {versionList}": [
+        ""
+      ],
+      "Dependency found": [
         ""
       ],
       "Depth": [
@@ -2508,7 +2622,7 @@
       "Edit DEB rule": [
         ""
       ],
-      "Edit Flatpak Remote": [
+      "Edit Flatpak remote": [
         ""
       ],
       "Edit RPM rule": [
@@ -2520,10 +2634,7 @@
       "Edit activation key": [
         ""
       ],
-      "Edit content view assignment": [
-        ""
-      ],
-      "Edit content view environments": [
+      "Edit content view environment": [
         ""
       ],
       "Edit credentials": [
@@ -2553,6 +2664,9 @@
       "Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified": [
         "Os dois parâmetros 'content_view_id' e 'environment_id' devem ser especificados ou nenhum "
       ],
+      "Either content_view_environments or content_view_environment_ids must be provided": [
+        ""
+      ],
       "Either environments or versions must be specified.": [
         "Tanto os ambientes como as versãos  precisam ser especificados"
       ],
@@ -2567,6 +2681,9 @@
       ],
       "Either set the latest content view or the content view version. Cannot set both": [
         "Definir a última visualização de conteúdo ou a versão da visualização de conteúdo. Não é possível definir ambas as opções"
+      ],
+      "Either trace_search or trace_ids must be provided": [
+        ""
       ],
       "Empty content view versions": [
         ""
@@ -2587,9 +2704,6 @@
         "Ativar um repositório do conjunto "
       ],
       "Enable repository sets": [
-        ""
-      ],
-      "Enable structured APT for deb content": [
         ""
       ],
       "Enable/Disable auto publish of composite view": [
@@ -2618,6 +2732,9 @@
       ],
       "Enhancement": [
         "Melhoria"
+      ],
+      "Ensure the runtime dependency for this Flatpak app is also mirrored in this organization to avoid installation errors on host(s).": [
+        ""
       ],
       "Enter a name": [
         ""
@@ -2832,6 +2949,9 @@
       "Failed": [
         "Falhou"
       ],
+      "Failed to copy to clipboard. Please copy manually.": [
+        ""
+      ],
       "Failed to delete %{host}: %{errors}": [
         "Falha em excluir %{host}: %{errors}"
       ],
@@ -2840,6 +2960,12 @@
       ],
       "Failed to find %{content} with id '%{id}'.": [
         "Falha em encontrar %{content} com id '%{id}'."
+      ],
+      "Failed to generate Containerfile install command": [
+        ""
+      ],
+      "Failed to initiate trace resolution job.": [
+        ""
       ],
       "Fails if any of the repositories belonging to this organization are unexportable. False by default.": [
         ""
@@ -2970,6 +3096,9 @@
       "Finished": [
         "Concluído"
       ],
+      "Flatpak": [
+        ""
+      ],
       "Flatpak Remote ${name} created": [
         ""
       ],
@@ -3053,6 +3182,10 @@
       ],
       "Generate and Download": [
         "Gerar e Baixar"
+      ],
+      "Generate containerfile install command (%s package selected)": [
+        "",
+        ""
       ],
       "Generate errata status from directly-installable content": [
         ""
@@ -3204,9 +3337,6 @@
       "Host Profile Can Change In Build": [
         ""
       ],
-      "Host Tasks Workers Pool Size": [
-        "Tamanho do pool de trabalhadores de tarefas de host"
-      ],
       "Host collection": [
         ""
       ],
@@ -3222,19 +3352,16 @@
       "Host collections updated": [
         ""
       ],
-      "Host content and subscription details": [
-        "Host de conteúdo e  detalhes da subscrição"
-      ],
       "Host content source will remain the same. Click Save below to update the host's content view environment.": [
         ""
       ],
-      "Host content view and environment updated": [
+      "Host content view environment(s) assigned": [
         ""
       ],
       "Host content view environment(s) updated": [
         ""
       ],
-      "Host content view environments updating.": [
+      "Host content view environments updated.": [
         ""
       ],
       "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration.": [
@@ -3265,6 +3392,12 @@
         ""
       ],
       "Host lifecycle support expiration notification": [
+        ""
+      ],
+      "Host release version updating.": [
+        ""
+      ],
+      "Host system purpose updating.": [
         ""
       ],
       "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance": [
@@ -3486,9 +3619,6 @@
       "If product certificates should be used to authenticate to a custom CDN.": [
         ""
       ],
-      "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'.": [
-        ""
-      ],
       "If the smart proxies' assigned HTTP proxies should be used": [
         ""
       ],
@@ -3672,6 +3802,12 @@
       "Include manifests": [
         ""
       ],
+      "Include packages with unknown persistence": [
+        ""
+      ],
+      "Include packages with unknown persistence in addition to transient packages": [
+        ""
+      ],
       "Included": [
         ""
       ],
@@ -3722,6 +3858,10 @@
       ],
       "Install errata via Katello interface": [
         "Instalar erratas via interface do Katello"
+      ],
+      "Install package": [
+        "",
+        ""
       ],
       "Install package group via Katello interface": [
         "Instalar grupo de pacotes via interface do Katello"
@@ -3788,6 +3928,9 @@
       ],
       "Instance-based": [
         "Baseado em instância"
+      ],
+      "Insufficient space for selected hosts": [
+        ""
       ],
       "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.": [
         "Interpretar objetos especificados para retornar somente as Coleções de Hosts que podem ser associadas com os objetos especificados. Somente 'host' possui suporte. "
@@ -3924,6 +4067,9 @@
       "Job '${description}' has started.": [
         ""
       ],
+      "Job '${firstJob.description}' has started.": [
+        ""
+      ],
       "Katello Bootc interface": [
         ""
       ],
@@ -4023,6 +4169,12 @@
       "Label of the flatpak remote": [
         ""
       ],
+      "Labels and annotations": [
+        ""
+      ],
+      "Labels | Annotations": [
+        ""
+      ],
       "Last check-in:": [
         ""
       ],
@@ -4039,6 +4191,9 @@
         ""
       ],
       "Last refresh :": [
+        ""
+      ],
+      "Last scan:": [
         ""
       ],
       "Last seen": [
@@ -4063,9 +4218,6 @@
         ""
       ],
       "Legacy UI": [
-        ""
-      ],
-      "Legacy content host UI": [
         ""
       ],
       "Less than": [
@@ -4124,6 +4276,9 @@
       ],
       "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
         "Os ambientes de ciclo de vida não podem ser modificados no proxy inteligente padrão. O conteúdo de todos os ambientes de ciclo de vida existirá neste proxy inteligente."
+      ],
+      "Limit": [
+        ""
       ],
       "Limit actions to content in the host's environment.": [
         ""
@@ -4437,6 +4592,9 @@
       "Make sure all the component content views are published before publishing/promoting the composite content view. This restriction is optional and can be modified in the Administrator -> Settings -> Content page using the restrict_composite_view flag.": [
         "Certifique-se de que todas as visualizações de conteúdo de componentes sejam publicadas antes de publicar/promover a coleção de visualização de conteúdo composto. Esta restrição é opcional e pode ser modificada na página Administrador -> Configurações -> Conteúdo, usando o sinalizador restrict_composite_view."
       ],
+      "Make sure the runtimes required by the Flatpak apps in this content view are available to the host(s).": [
+        ""
+      ],
       "Manage Manifest": [
         "Gerenciar manifesto"
       ],
@@ -4452,14 +4610,23 @@
       "Manage repository sets": [
         ""
       ],
+      "Manage traces": [
+        ""
+      ],
       "Manifest": [
         "Manifesto"
+      ],
+      "Manifest Details": [
+        ""
       ],
       "Manifest History": [
         "Histórico do manifesto"
       ],
       "Manifest deleted": [
         "Manifesto excluído"
+      ],
+      "Manifest digest": [
+        ""
       ],
       "Manifest does not have a valid subscription": [
         ""
@@ -4566,6 +4733,15 @@
       "Mirror a flatpak remote repository": [
         ""
       ],
+      "Mirror runtime repository ": [
+        ""
+      ],
+      "Mirroring flatpak repository has started": [
+        ""
+      ],
+      "Mirroring flatpak repository with dependencies has started": [
+        ""
+      ],
       "Mirroring will import the remote flatpak repository": [
         ""
       ],
@@ -4580,6 +4756,9 @@
       ],
       "Moderate": [
         "Moderado"
+      ],
+      "Modified": [
+        ""
       ],
       "Modify via remote execution": [
         ""
@@ -4815,6 +4994,9 @@
       "No content view environments found with names: %{names}": [
         ""
       ],
+      "No content view environments yet": [
+        ""
+      ],
       "No content view history events found.": [
         "Nenhum evento de histórico de visualização de conteúdo foi encontrado."
       ],
@@ -4822,6 +5004,9 @@
         ""
       ],
       "No content views available for the selected environment": [
+        ""
+      ],
+      "No content views available for the selected lifecycle environment": [
         ""
       ],
       "No content views to add yet": [
@@ -4900,6 +5085,9 @@
         ""
       ],
       "No items have been specified.": [
+        ""
+      ],
+      "No labels or annotations": [
         ""
       ],
       "No manifest file uploaded": [
@@ -5067,6 +5255,9 @@
       "No syncable repositories found for selected products and options.": [
         "Nenhum repositório sincronizável encontrado para as opções e os produtos selecionados."
       ],
+      "No transient packages found in selection": [
+        ""
+      ],
       "No upgradable packages found for search term '%s'.": [
         ""
       ],
@@ -5217,6 +5408,9 @@
       "Organization ID": [
         "ID de organização"
       ],
+      "Organization ID for scoping": [
+        ""
+      ],
       "Organization ID or title": [
         ""
       ],
@@ -5239,6 +5433,9 @@
         "Etiqueta de Organização"
       ],
       "Organization label '%s' is ambiguous. Try using an id-based container name.": [
+        ""
+      ],
+      "Organization must be specified when providing product by name.": [
         ""
       ],
       "Organization not found": [
@@ -5406,9 +5603,6 @@
       "Package Update scheduled by %s": [
         "Atualização de Pacote agendada pelo %s"
       ],
-      "Package actions will be transient": [
-        ""
-      ],
       "Package group update canceled": [
         "Atualização de grupo de pacotes cancelada"
       ],
@@ -5434,6 +5628,12 @@
         "Instalação da embalagem: \\\"%{package}\\\" "
       ],
       "Package mode": [
+        ""
+      ],
+      "Package persistence data will be reported by a future version of subscription-manager.": [
+        ""
+      ],
+      "Package persistence information": [
         ""
       ],
       "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist.": [
@@ -5514,6 +5714,15 @@
       "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.": [
         "Permissão negada. Usuário '%{user}' não tem permissões para acessar a organização '%{org}'."
       ],
+      "Persistence": [
+        ""
+      ],
+      "Persistence must be one of: %s": [
+        ""
+      ],
+      "Persistent": [
+        ""
+      ],
       "Physical": [
         "Físico"
       ],
@@ -5540,6 +5749,9 @@
       ],
       "Please select a content source before assigning a kickstart repository": [
         "Selecione uma fonte de conteúdo antes de atribuir um repositório kickstart"
+      ],
+      "Please select a different lifecycle environment or remove an existing assignment.": [
+        ""
       ],
       "Please select a lifecycle environment and a content view to move these activation keys.": [
         ""
@@ -5638,6 +5850,9 @@
         ""
       ],
       "Product label '%s' is ambiguous. Try using an id-based container name.": [
+        ""
+      ],
+      "Product must be specified.": [
         ""
       ],
       "Product name": [
@@ -5752,6 +5967,9 @@
         ""
       ],
       "Publishing content view": [
+        ""
+      ],
+      "Pullable path": [
         ""
       ],
       "Pulp": [
@@ -5895,6 +6113,9 @@
       "Reboot host": [
         ""
       ],
+      "Reboot hosts": [
+        ""
+      ],
       "Reboot required": [
         "Reinicialização necessária"
       ],
@@ -5945,6 +6166,9 @@
       ],
       "Red Hat provider can not be deleted": [
         "O provedor da Red Hat não pode ser removido"
+      ],
+      "Red Hat remote": [
+        ""
       ],
       "Red Hat repositories cannot be manipulated.": [
         "Os repositórios da Red Hat não pode ser manipulados."
@@ -6105,6 +6329,9 @@
       "Remove from environments": [
         ""
       ],
+      "Remove from host collections": [
+        ""
+      ],
       "Remove host from collections": [
         ""
       ],
@@ -6145,6 +6372,9 @@
         "Remover as versões e/ou ambientes a partir de uma visualização de conteúdo e reajustar os sistemas e as chaves"
       ],
       "Remove versions from environments": [
+        ""
+      ],
+      "Removed %{count} host(s) from host collection %{host_collection}.": [
         ""
       ],
       "Removed component from content view": [
@@ -6342,6 +6572,9 @@
       "Restart app": [
         ""
       ],
+      "Restart applications": [
+        ""
+      ],
       "Restart via customized remote execution": [
         ""
       ],
@@ -6354,11 +6587,17 @@
       "Result": [
         "Resultado"
       ],
+      "Retain build profile upon unregistration": [
+        ""
+      ],
       "Retrieve a single errata for a host": [
         "Recuperar uma única errata para um host"
       ],
       "Return Red Hat (non-custom) products only": [
         "Retornar apenas produtos Red Hat (não personalizados)"
+      ],
+      "Return a containerfile command to install transient packages": [
+        ""
       ],
       "Return a list of installed debs distinct by name": [
         ""
@@ -6403,6 +6642,9 @@
         ""
       ],
       "Return only errata of a particular type (security, bugfix, enhancement, other)": [
+        ""
+      ],
+      "Return only packages of a particular persistence (transient, persistent, or nil)": [
         ""
       ],
       "Return only packages of a particular status (upgradable or up-to-date)": [
@@ -6579,6 +6821,9 @@
       "Search pattern (defaults to '*')": [
         "Padrão de pesquisa (o padrão é '*')"
       ],
+      "Search query for traces": [
+        ""
+      ],
       "Search string": [
         "Pesquisar cadeia de caracteres"
       ],
@@ -6602,6 +6847,9 @@
       ],
       "Security errata installable": [
         "Errata sobre segurança instalável"
+      ],
+      "See child manifests": [
+        ""
       ],
       "Select": [
         "Selecionar"
@@ -6637,6 +6885,9 @@
         ""
       ],
       "Select a content view": [
+        ""
+      ],
+      "Select a lifecycle environment": [
         ""
       ],
       "Select a lifecycle environment and a content view to move these hosts.": [
@@ -6687,6 +6938,9 @@
       "Select at least one package.": [
         ""
       ],
+      "Select at least one trace.": [
+        ""
+      ],
       "Select attributes for ${akDetails.name}": [
         ""
       ],
@@ -6699,9 +6953,6 @@
       "Select content view": [
         ""
       ],
-      "Select environment": [
-        "Selecionar ambiente"
-      ],
       "Select errata": [
         ""
       ],
@@ -6712,6 +6963,9 @@
         ""
       ],
       "Select host collection(s) to remove from host {hostName}.": [
+        ""
+      ],
+      "Select host collections to change their associations with {selectedHosts}. Changing host collection will affect all your selected hosts. Some hosts may already be in your chosen collections.": [
         ""
       ],
       "Select hosts to assign to %s": [
@@ -6795,6 +7049,9 @@
       "Service level": [
         ""
       ],
+      "Service level (SLA)": [
+        ""
+      ],
       "Service level of host": [
         ""
       ],
@@ -6832,6 +7089,9 @@
         "Severidade"
       ],
       "Severity must be one of: %s": [
+        ""
+      ],
+      "Show ${remainingCount} more": [
         ""
       ],
       "Show %s": [
@@ -6954,8 +7214,18 @@
       "Skip metadata check on each repository on the smart proxy": [
         "Ignorar a verificação de metadados em cada repositório no proxy inteligente"
       ],
+      "Skipped %{count} unregistered host": [
+        "",
+        ""
+      ],
       "Skipped pulp_auth check after failed pulp check": [
         "Ignorou a verificação pulp_auth após a falha de verificação do pulp "
+      ],
+      "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
+        ""
+      ],
+      "Smart Proxy '%{proxy}': RHSM URL must use HTTPS protocol. The URL is derived from the 'foreman_url' setting. Current value: '%{url}'. Please update the 'foreman_url' setting to use HTTPS.": [
+        ""
       ],
       "Smart proxies": [
         "Proxies Inteligentes"
@@ -6996,13 +7266,13 @@
       "Some environments are disabled because they are not associated with all of the affected hosts' content sources.": [
         ""
       ],
-      "Some environments are disabled because they are not associated with the host's content source.": [
-        ""
-      ],
       "Some environments are disabled because they are not associated with the selected content source.": [
         ""
       ],
       "Some hosts are not registered as content hosts and will be ignored.": [
+        ""
+      ],
+      "Some lifecycle environments are disabled because they are not associated with the host's content source.": [
         ""
       ],
       "Some of your inputs contain errors. Please update them and save your changes again.": [
@@ -7317,9 +7587,6 @@
       "Successfully added %s Host(s).": [
         "Adicionado com sucesso %s Host(s)."
       ],
-      "Successfully added %{count} content host(s) to host collection %{host_collection}.": [
-        "Acrescentei com sucesso %{count} anfitrião(es) de conteúdo para a coleção de anfitriões %{host_collection}."
-      ],
       "Successfully changed sync plan for %s product(s)": [
         "Plano de sinc modificado com sucesso para produto(s) %s"
       ],
@@ -7331,9 +7598,6 @@
       ],
       "Successfully removed %s Host(s).": [
         "Removido com sucesso %s Host(s)."
-      ],
-      "Successfully removed %{count} content host(s) from host collection %{host_collection}.": [
-        "Removido com sucesso %{count} anfitrião(es) de conteúdo da coleção anfitriã %{host_collection}."
       ],
       "Successfully synced capsule.": [
         ""
@@ -7434,9 +7698,6 @@
       "Synced Content": [
         "Conteúdo sincronizado"
       ],
-      "Synced container images content": [
-        ""
-      ],
       "Synchronize": [
         "Sincronizar"
       ],
@@ -7477,6 +7738,9 @@
         ""
       ],
       "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console.": [
+        ""
+      ],
+      "Tag": [
         ""
       ],
       "Tag name": [
@@ -7677,6 +7941,9 @@
       "The requested traces were not found for this host": [
         ""
       ],
+      "The selected hosts do not show any applications needing restart.": [
+        ""
+      ],
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
         ""
       ],
@@ -7785,6 +8052,9 @@
       "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \\\"%{name}\\\" before deleting.": [
         ""
       ],
+      "This application requires a host reboot": [
+        ""
+      ],
       "This certificate allows a user to view the repositories in any environment from a browser.": [
         "Este certificado de depuração permite que o usuário visualize os repositórios em qualquer ambiente do navegador."
       ],
@@ -7822,9 +8092,6 @@
         ""
       ],
       "This host has errata that are applicable, but not installable. Adjust your filters and try again.": [
-        ""
-      ],
-      "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments.": [
         ""
       ],
       "This is disabled because a manifest task is in progress": [
@@ -7881,9 +8148,6 @@
       "This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied.": [
         ""
       ],
-      "This will update the content view environments for {hosts}.": [
-        ""
-      ],
       "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned.": [
         ""
       ],
@@ -7902,7 +8166,10 @@
       "Title": [
         "Título"
       ],
-      "To change content view environments, a specific organization must be selected from the organization context.": [
+      "To assign content view environment(s), a specific organization must be selected from the organization context.": [
+        ""
+      ],
+      "To change system purpose, a specific organization must be selected from the organization context.": [
         ""
       ],
       "To continue with Red Hat Flatpak remote, you need to generate your username and password in": [
@@ -7914,7 +8181,7 @@
       "To enable them, add the environment to the content source, or select a different content source.": [
         ""
       ],
-      "To enable them, add the environment to the host's content source, or ": [
+      "To enable them, add the lifecycle environment to the host's content source, or ": [
         ""
       ],
       "To finish the process of changing the content source, run the following script manually on {hosts}.": [
@@ -7926,7 +8193,13 @@
       "To get started, add this host to a host collection.": [
         ""
       ],
+      "To give your hosts access to content, assign content view environments.": [
+        ""
+      ],
       "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories.": [
+        ""
+      ],
+      "To manage host collections, a specific organization must be selected from the organization context.": [
         ""
       ],
       "To manage host content overrides, a specific organization must be selected from the organization context.": [
@@ -7938,11 +8211,17 @@
       "To manage packages, select an action.": [
         ""
       ],
+      "To manage traces, a specific organization must be selected from the organization context.": [
+        ""
+      ],
       "Token/password for the flatpak remote": [
         ""
       ],
       "Total steps: ": [
         "Total de etapas: "
+      ],
+      "Trace resolution job has been initiated.": [
+        ""
       ],
       "Tracer": [
         ""
@@ -7981,6 +8260,9 @@
         ""
       ],
       "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy.": [
+        ""
+      ],
+      "Transient": [
         ""
       ],
       "Try changing your search criteria.": [
@@ -8307,6 +8589,10 @@
       "Updated component details": [
         ""
       ],
+      "Updated content view environments for %{count} host": [
+        "",
+        ""
+      ],
       "Updated from": [
         ""
       ],
@@ -8589,7 +8875,19 @@
       "View documentation": [
         ""
       ],
+      "View here": [
+        ""
+      ],
+      "View labels and annotations": [
+        ""
+      ],
+      "View labels and annotations for image ": [
+        ""
+      ],
       "View matching content": [
+        ""
+      ],
+      "View pullable paths": [
         ""
       ],
       "View sync status": [
@@ -8626,6 +8924,9 @@
         ""
       ],
       "When \\\"Upstream URL\\\" is set, \\\"Releases/Distributions\\\" must also be set!": [
+        ""
+      ],
+      "When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration.": [
         ""
       ],
       "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')": [
@@ -8825,6 +9126,9 @@
       ],
       "add all packages without errata to the included/excluded list. (package filter only)": [
         "adicionar todos os pacotes sem erratas à lista de incluídos/ excluídos (somente filtro de pacote)"
+      ],
+      "ago": [
+        ""
       ],
       "all environments": [
         ""
@@ -9378,6 +9682,10 @@
       "organization identifier": [
         "identificador da organização"
       ],
+      "package": [
+        "",
+        ""
+      ],
       "package group: uuid": [
         "grupo de pacotes: uuid"
       ],
@@ -9440,6 +9748,9 @@
       ],
       "removing packages...": [
         "removendo pacotes..."
+      ],
+      "replace": [
+        ""
       ],
       "repo label": [
         "rótulo de repositório"

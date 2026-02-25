@@ -6,16 +6,17 @@
 # Translators:
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2020
 # Amit Upadhye <aupadhye@redhat.com>, 2023
-# Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
 # Bryan Kearney <bryan.kearney@gmail.com>, 2025
 # Ondřej Gajdušek, 2025
+# Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 4.19.0.pre.master\n"
+"Project-Id-Version: katello 4.20.0.rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
-"Last-Translator: Ondřej Gajdušek, 2025\n"
+"Last-Translator: Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarde"
+"n.nl>, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/foreman/teams/114/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,6 +100,12 @@ msgstr " または、左側の任意のステップ。"
 msgid " to manage and promote content views, or select a different environment."
 msgstr " コンテンツビューを管理およびプロモートするか、別の環境を選択します。"
 
+msgid " to manage and promote content views, or select a different lifecycle environment."
+msgstr ""
+
+msgid " to same product"
+msgstr ""
+
 msgid "${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}"
 msgstr "${deleteFlow ? 'Deleting' : 'Removing'} バージョン ${versionNameToRemove}"
 
@@ -119,6 +126,9 @@ msgstr "${selectedContentType}"
 
 msgid "${selectedContentType} will appear here when created."
 msgstr "${selectedContentType} が作成されると、ここに表示されます。"
+
+msgid "${totalCount} labels and annotations"
+msgstr ""
 
 msgid "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?"
 msgstr "%s%s には、削除後にもう一度関連付けする必要があるホスト %s 台とホストグループ %s 個があります。%s を削除しますか？"
@@ -424,6 +434,24 @@ msgstr "ostree 同期中に追加する参照のコンマ区切りリスト。�
 msgid "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
 msgstr "ostree 同期中に除外するタグのコンマ区切りリスト。ワイルドカード *, ? が認識されます。'exclude_refs' は 'include_refs' の後に評価されます。"
 
+msgid "A content view environment is a combination of a particular lifecycle environment and content view."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide access to different sets of content. Your selection here will {replace} all existing content view environments on {hosts}."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content."
+msgstr ""
+
+msgid "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}."
+msgstr ""
+
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
 msgstr "多数のエラータがこのコンテンツビューに適用されていません。そのため、最初の 100 件のみが表示されています。"
 
@@ -511,6 +539,9 @@ msgstr "アクティベーションキー '%s ' は複数の環境に関連付�
 msgid "Activation key ID"
 msgstr "アクティベーションキー ID"
 
+msgid "Activation key content view environments updated"
+msgstr ""
+
 msgid "Activation key deleted"
 msgstr "アクティベーションキーが削除されました"
 
@@ -580,6 +611,9 @@ msgstr "コンテンツの追加"
 msgid "Add content view"
 msgstr "コンテンツビューの追加"
 
+msgid "Add content view environment"
+msgstr ""
+
 msgid "Add content views"
 msgstr "コンテンツビューの追加"
 
@@ -634,14 +668,23 @@ msgstr "Red Hat Subscription Management からマニフェストが使用する�
 msgid "Add subscriptions using the Add Subscriptions button."
 msgstr "サブスクリプションの追加ボタンを使用してサブスクリプションを追加します。"
 
+msgid "Add the command below to your Containerfile to incorporate the selected transient packages. When building your bootable container image, this will ensure these packages are installed permanently (as persistent packages)."
+msgstr ""
+
 msgid "Add to a host collection"
 msgstr "ホストコレクションへの追加"
+
+msgid "Add to host collections"
+msgstr ""
 
 msgid "Added"
 msgstr "追加されました"
 
 msgid "Added %s"
 msgstr "%s を追加しました"
+
+msgid "Added %{count} host(s) to host collection %{host_collection}."
+msgstr ""
 
 msgid "Added Content:"
 msgstr "追加されたコンテンツ:"
@@ -667,9 +710,6 @@ msgstr "Foreman を設定した後、{hosts} でも設定を更新する必要�
 msgid "After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently."
 msgstr "指定のホストへの変更は、増分更新の生成後に適用します。現在、エラータのみがサポートされています。"
 
-msgid "All"
-msgstr "すべて"
-
 msgid "All Media"
 msgstr "すべてのメディア"
 
@@ -679,11 +719,17 @@ msgstr "全リポジトリー"
 msgid "All available architectures for this repo are enabled."
 msgstr "このリポジトリーで利用可能なすべてのアーキテクチャーが有効です。"
 
+msgid "All content views in this lifecycle environment are already assigned"
+msgstr ""
+
 msgid "All errata applied"
 msgstr "適用されたすべてのエラータ"
 
 msgid "All errata up-to-date"
 msgstr "すべてのエラータは最新の状態です"
+
+msgid "All selected hosts were already members of host collection %{host_collection}."
+msgstr ""
 
 msgid "All subpaths must have a slash at the end and none at the front"
 msgstr "すべてのサブパスには、必ず末尾にスラッシュが必要で、先頭には不要です"
@@ -751,9 +797,6 @@ msgstr "常に最新のバージョンを使用する (現在は %{version})"
 msgid "Always update to latest version"
 msgstr "常に最新バージョンに更新"
 
-msgid "Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required."
-msgstr "ホスト関連のタスクの実行を処理するプール内のワーカー数。0 に設定されている場合には、デフォルトのキューが代わりに使用されます。dynflowd/foreman-tasks サービスは再起動する必要があります。"
-
 msgid "An alternate content source can be added by using the \\\"Add source\\\" button below."
 msgstr "代替コンテンツソースを追加するには、下の「ソースの追加」ボタンを使用します。"
 
@@ -773,6 +816,9 @@ msgid ""
 msgstr ""
 "アップロード中にエラーが発生しました \n"
 "%{error_message}"
+
+msgid "An error occurred while updating host collections"
+msgstr ""
 
 msgid "An option to specify how many ostree commits to traverse."
 msgstr "走査する ostree コミットの数を指定するオプション。"
@@ -888,6 +934,9 @@ msgstr "追加するコンポーネントの配列"
 msgid "Array of content view component IDs to remove. Identifier of the component association"
 msgstr "削除するコンテンツビューコンポーネント ID の配列。コンポーネントの関連付けの ID"
 
+msgid "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on."
 msgstr "ホストに関連付けるコンテンツビュー環境 ID の配列。content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
 
@@ -896,6 +945,9 @@ msgstr "アクティベーションキーに関連付けるコンテンツビュ
 
 msgid "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr "ホストに関連付けるコンテンツビュー環境 ID の配列。content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+
+msgid "Array of dependency repository IDs to mirror along with the main repository"
+msgstr ""
 
 msgid "Array of host ids"
 msgstr "ホスト ID の配列"
@@ -915,6 +967,18 @@ msgstr "コンテンツの作成には、アーティファクト ID と相対�
 msgid "Artifacts"
 msgstr "アーティファクト"
 
+msgid "Assign another content view environment"
+msgstr ""
+
+msgid "Assign content view environment"
+msgstr ""
+
+msgid "Assign content view environments"
+msgstr ""
+
+msgid "Assign content view environments to one or more hosts"
+msgstr ""
+
 msgid "Assign system purpose attributes on one or more hosts"
 msgstr "1 台以上のホストにシステム目的の属性を割り当てる"
 
@@ -933,6 +997,9 @@ msgstr "複数のコンテンツビュー環境にホストを割り当てる機
 
 msgid "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
 msgstr "複数のコンテンツビュー環境にアクティベーションキーを割り当てる機能は有効ではありません。有効にするには、allow_multiple_content_views 設定を指定します。"
+
+msgid "Associated content view environments"
+msgstr ""
 
 msgid "Associated location IDs"
 msgstr "関連するロケーション ID"
@@ -958,6 +1025,9 @@ msgstr "少なくとも 1 つのエラータタイプオプションを選択す
 msgid "At least one of the selected items requires the host to reboot"
 msgstr "選択した項目の少なくとも 1 つでホストの再起動が必要です"
 
+msgid "At least one of the selected items requires the hosts to reboot"
+msgstr ""
+
 msgid "At least one organization must exist."
 msgstr "1 つ以上の組織が存在している必要があります。"
 
@@ -973,11 +1043,17 @@ msgstr "認証タイプ"
 msgid "Author"
 msgstr "作成者"
 
+msgid "Auto Publish"
+msgstr ""
+
 msgid "Auto Publish - Triggered by '%s'"
 msgstr "自動公開 - '%s' によるトリガー"
 
 msgid "Auto publish"
 msgstr "自動公開"
+
+msgid "Autocomplete for traces in bulk context"
+msgstr ""
 
 msgid "Autopublish"
 msgstr "自動公開"
@@ -1060,6 +1136,9 @@ msgstr "この検索をブックマーク"
 msgid "Bookmarks marked as public are available to all users"
 msgstr "パブリックと識別されたブックマークは、すべてのユーザーが利用できます"
 
+msgid "Bootable"
+msgstr ""
+
 msgid "Bootc rollback via Bootc interface"
 msgstr "Bootc インターフェイスを使用した Bootc ロールバック"
 
@@ -1074,12 +1153,6 @@ msgstr "Bootc インターフェイスを使用した Bootc アップグレー�
 
 msgid "Booted"
 msgstr ""
-
-msgid "Booted Container Images"
-msgstr "起動済みのコンテナーイメージ"
-
-msgid "Booted container images"
-msgstr "起動済みのコンテナーイメージ"
 
 msgid "Both"
 msgstr "両方"
@@ -1384,8 +1457,14 @@ msgstr "コンテンツソースの変更"
 msgid "Change content view environments"
 msgstr "コンテンツビュー環境の変更"
 
+msgid "Change host collections"
+msgstr ""
+
 msgid "Change host content source"
 msgstr "ホストコンテンツソースの変更"
+
+msgid "Change system purpose"
+msgstr ""
 
 msgid "Change the status of at least one repository."
 msgstr "少なくとも 1 つのリポジトリーのステータスを変更してください。"
@@ -1426,6 +1505,9 @@ msgstr "公開されたリポジトリーコンテンツに使用されるチェ
 msgid "Choose content credentials if required for this RHUI source."
 msgstr "この RHUI ソースに必要な場合は、コンテンツの認証情報を選択します。"
 
+msgid "Clean Backend Objects"
+msgstr ""
+
 msgid "Clear any previous registration and run subscription-manager with --force."
 msgstr "以前の登録をすべてクリアし、--force を指定して subscription-manager を実行します。"
 
@@ -1443,6 +1525,9 @@ msgstr "クリックして追加できるリポジトリーを表示します。
 
 msgid "Click {update} below to save changes."
 msgstr "{update} をクリックして変更を保存します。"
+
+msgid "Clipboard API not available. Please copy manually."
+msgstr ""
 
 msgid "Clone"
 msgstr "クローン"
@@ -1462,6 +1547,9 @@ msgstr "アクティベーションキーに関連付けるコンテンツビュ
 msgid "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr "ホストに関連付けるコンテンツビュー環境ラベルのコンマ区切りリスト。形式は 'lifecycle_environment_label/content_view_label' です。content_view_environment_ids が指定されている場合、または content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
 
+msgid "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
+msgstr ""
+
 msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
 msgstr "コンマ区切りのサブパスの一覧。すべてのサブパスには、必ず末尾にスラッシュが必要で、先頭には不要です"
 
@@ -1470,6 +1558,9 @@ msgstr "コンテナーイメージリポジトリーの同期時に除外する
 
 msgid "Comma-separated list of tags to sync for a container image repository"
 msgstr "コンテナーイメージリポジトリーに同期するコンマ区切りのタグ一覧"
+
+msgid "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s"
+msgstr ""
 
 msgid "Compare"
 msgstr "比較"
@@ -1555,6 +1646,9 @@ msgstr "コンテナーマニフェスト"
 msgid "Container tags"
 msgstr "コンテナータグ"
 
+msgid "Containerfile Install Command"
+msgstr ""
+
 msgid "Contains content views. You must choose the version to use for each content view."
 msgstr "コンテンツビューが含まれます。各コンテンツビューで使用するバージョンを選択する必要があります。"
 
@@ -1611,6 +1705,9 @@ msgstr "コンテンツビュー %{view}: バージョン: %{versions}"
 
 msgid "Content View Details"
 msgstr "コンテンツビューの詳細"
+
+msgid "Content View Environments"
+msgstr ""
 
 msgid "Content View Filter id"
 msgstr "コンテンツビューフィルター ID"
@@ -1801,6 +1898,9 @@ msgstr "コンテンツビューのバージョンが空であるか、コンテ
 msgid "Content views"
 msgstr "コンテンツビュー"
 
+msgid "Content views, lifecycle environments, pullable paths"
+msgstr ""
+
 msgid "Content will be synced from the alternate content source first, then the original source if the ACS is not reachable."
 msgstr "コンテンツは最初に別のコンテンツソースから同期され、ACS に到達できない場合には元のソースが同期されます。"
 
@@ -1819,6 +1919,9 @@ msgstr "コントラクト"
 msgid "Contract Number"
 msgstr "コントラクト番号"
 
+msgid "Copied"
+msgstr ""
+
 msgid "Copied to clipboard"
 msgstr "クリップボードにコピーしました"
 
@@ -1830,6 +1933,12 @@ msgstr "アクティベーションキーをコピーします"
 
 msgid "Copy content view"
 msgstr "コンテンツビューのコピー"
+
+msgid "Copy pullable paths"
+msgstr ""
+
+msgid "Copy this to pull the specific image version from your published content view, ensuring consistency across your deployments."
+msgstr ""
 
 msgid "Copy to clipboard"
 msgstr "クリップボードにコピー"
@@ -1869,6 +1978,9 @@ msgstr "Pulp 機能が搭載された Smart Proxy が見つかりませんでし
 
 msgid "Could not find all specified errata ids: %s"
 msgstr "指定した全エラータ ID を見つけることができませんでした: %s"
+
+msgid "Could not find dependency repositories with IDs: %{ids}. Proceeding with found repositories."
+msgstr ""
 
 msgid "Could not find environments for promotion"
 msgstr "プロモート環境が見つかりませんでした"
@@ -1987,8 +2099,8 @@ msgstr "コンテナープッシュリポジトリールートの作成"
 msgid "Create Export History"
 msgstr "エクスポート履歴の作成"
 
-msgid "Create Flatpak Remote"
-msgstr "Flatpak リモートの作成"
+msgid "Create Flatpak remote"
+msgstr ""
 
 msgid "Create Import History"
 msgstr "インポート履歴の作成"
@@ -2059,6 +2171,9 @@ msgstr "新規アクティベーションキーの作成"
 msgid "Create organization"
 msgstr "組織の作成"
 
+msgid "Creation"
+msgstr ""
+
 msgid "Credentials"
 msgstr "認証情報"
 
@@ -2091,6 +2206,9 @@ msgstr "カスタムの cron 式は、カスタム cronの間隔値に対して�
 
 msgid "Custom repositories cannot be disabled."
 msgstr "カスタムリポジトリーを無効にできません。"
+
+msgid "Customize and restart"
+msgstr ""
 
 msgid "Customize with Rex"
 msgstr "Rex でカスタマイズ"
@@ -2154,9 +2272,6 @@ msgstr "コンテンツ同期用のデフォルト HTTP プロキシー"
 
 msgid "Default Location where new subscribed hosts will put upon registration"
 msgstr "新規のサブスクライブ済みホストが登録時に配置されるデフォルトのロケーション"
-
-msgid "Default PXEGrub template for new Operating Systems created from synced content"
-msgstr "同期コンテンツから作成された新規オペレーティングシステムのデフォルトの PXEGrub テンプレート"
 
 msgid "Default PXEGrub2 template for new Operating Systems created from synced content"
 msgstr "同期コンテンツから作成された新規オペレーティングシステムのデフォルトの PXEGrub2 テンプレート"
@@ -2226,9 +2341,6 @@ msgstr "同期コンテンツから作成された新規 Atomic オペレーテ�
 
 msgid "Default synced OS Atomic template"
 msgstr "デフォルトの同期 OS Atomic テンプレート"
-
-msgid "Default synced OS PXEGrub template"
-msgstr "デフォルトの同期 OS PXEGrub テンプレート"
 
 msgid "Default synced OS PXEGrub2 template"
 msgstr "デフォルトの同期 OS PXEGrub2 テンプレート"
@@ -2355,6 +2467,9 @@ msgstr "バージョン {versionList} を削除しています"
 
 msgid "Deleting versions: {versionList}"
 msgstr "バージョンを削除しています: {versionList}"
+
+msgid "Dependency found"
+msgstr ""
 
 msgid "Depth"
 msgstr "階層の深さ"
@@ -2524,8 +2639,8 @@ msgstr "編集"
 msgid "Edit DEB rule"
 msgstr ""
 
-msgid "Edit Flatpak Remote"
-msgstr "Flatpak リモートの編集"
+msgid "Edit Flatpak remote"
+msgstr ""
 
 msgid "Edit RPM rule"
 msgstr "RPM ルールの編集"
@@ -2536,11 +2651,8 @@ msgstr "URL およびサブパスの編集"
 msgid "Edit activation key"
 msgstr "アクティベーションキーの編集"
 
-msgid "Edit content view assignment"
-msgstr "コンテンツビューの割り当てを編集"
-
-msgid "Edit content view environments"
-msgstr "コンテンツビュー環境の編集"
+msgid "Edit content view environment"
+msgstr ""
 
 msgid "Edit credentials"
 msgstr "資格情報の編集"
@@ -2569,6 +2681,9 @@ msgstr "エンタイトルメントの編集"
 msgid "Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified"
 msgstr "「content_view_id」および「environment_id」パラメーターの両方を指定するか、どちらも指定しないかのいずれかにします。"
 
+msgid "Either content_view_environments or content_view_environment_ids must be provided"
+msgstr ""
+
 msgid "Either environments or versions must be specified."
 msgstr "環境またはバージョンのいずれかを指定する必要があります"
 
@@ -2583,6 +2698,9 @@ msgstr "コンテンツビューに最新のフラグを設定するか、コン
 
 msgid "Either set the latest content view or the content view version. Cannot set both"
 msgstr "最新のコンテンツビューまたはコンテンツビューバージョンを設定します。両方設定することはできません。"
+
+msgid "Either trace_search or trace_ids must be provided"
+msgstr ""
 
 msgid "Empty content view versions"
 msgstr "空のコンテンツビューのバージョン"
@@ -2604,9 +2722,6 @@ msgstr "セットのリポジトリーを有効化します"
 
 msgid "Enable repository sets"
 msgstr "リポジトリーセットの有効化"
-
-msgid "Enable structured APT for deb content"
-msgstr "deb コンテンツに対して構造化 APT を有効にする"
 
 msgid "Enable/Disable auto publish of composite view"
 msgstr "複合ビューの自動公開を有効/無効にします"
@@ -2634,6 +2749,9 @@ msgstr "終了"
 
 msgid "Enhancement"
 msgstr "機能強化"
+
+msgid "Ensure the runtime dependency for this Flatpak app is also mirrored in this organization to avoid installation errors on host(s)."
+msgstr ""
 
 msgid "Enter a name"
 msgstr "名前の入力"
@@ -2848,6 +2966,9 @@ msgstr "ファクトが正常に更新されました。"
 msgid "Failed"
 msgstr "失敗"
 
+msgid "Failed to copy to clipboard. Please copy manually."
+msgstr ""
+
 msgid "Failed to delete %{host}: %{errors}"
 msgstr "%{host} の削除に失敗しました: %{errors}"
 
@@ -2856,6 +2977,12 @@ msgstr "コンテンツビュー '%{subject}' で最新のコンテンツビュ�
 
 msgid "Failed to find %{content} with id '%{id}'."
 msgstr "ID が「%{id}」の %{content} が見つかりませんでした"
+
+msgid "Failed to generate Containerfile install command"
+msgstr ""
+
+msgid "Failed to initiate trace resolution job."
+msgstr ""
 
 msgid "Fails if any of the repositories belonging to this organization are unexportable. False by default."
 msgstr "この組織に属するリポジトリーのいずれかがエクスポートできない場合は失敗します。デフォルトは False です。"
@@ -2986,6 +3113,9 @@ msgstr "終了"
 msgid "Finished"
 msgstr "終了"
 
+msgid "Flatpak"
+msgstr ""
+
 msgid "Flatpak Remote ${name} created"
 msgstr "Flatpak リモート ${name} が作成されました"
 
@@ -3073,6 +3203,11 @@ msgstr "必要に応じて、必要なリポジトリーの RHUI 証明書を生
 
 msgid "Generate and Download"
 msgstr "生成してダウンロード"
+
+msgid "Generate containerfile install command (%s package selected)"
+msgid_plural "Generate containerfile install command (%s packages selected)"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Generate errata status from directly-installable content"
 msgstr "直接インストール可能なコンテンツからエラータステータスを生成する"
@@ -3224,9 +3359,6 @@ msgstr "ホストプロファイルの想定"
 msgid "Host Profile Can Change In Build"
 msgstr "ホストプロファイルはビルドでの変更が可能"
 
-msgid "Host Tasks Workers Pool Size"
-msgstr "ホストタスクワーカーのプールサイズ"
-
 msgid "Host collection"
 msgstr "ホストコレクション"
 
@@ -3242,20 +3374,17 @@ msgstr "ホストコレクション"
 msgid "Host collections updated"
 msgstr "ホストコレクションが更新されました"
 
-msgid "Host content and subscription details"
-msgstr "ホストコレクションおよびサブスクリプションの詳細"
-
 msgid "Host content source will remain the same. Click Save below to update the host's content view environment."
 msgstr "ホストコンテンツソースは同じままです。ホストのコンテンツビュー環境を更新するには、下の保存をクリックしてください。"
 
-msgid "Host content view and environment updated"
-msgstr "ホストコンテンツビューと環境が更新されました"
+msgid "Host content view environment(s) assigned"
+msgstr ""
 
 msgid "Host content view environment(s) updated"
 msgstr "ホストコンテンツビュー環境が更新されました"
 
-msgid "Host content view environments updating."
-msgstr "ホストコンテンツビュー環境を更新しています。"
+msgid "Host content view environments updated."
+msgstr ""
 
 msgid "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration."
 msgstr "%s と BIOS UUID を共有するため、%s のホスト作成は省略されました。このハイパーバイザーをレポートするには、dmi.system.uuid ファクトを上書きするか、Candlepin 設定の 'candlepin.use_system_uuid_for_matching' を「true」に設定してください。"
@@ -3286,6 +3415,12 @@ msgstr "ホスト識別子"
 
 msgid "Host lifecycle support expiration notification"
 msgstr "ホストのライフサイクルサポート期限切れの通知"
+
+msgid "Host release version updating."
+msgstr ""
+
+msgid "Host system purpose updating."
+msgstr ""
 
 msgid "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance"
 msgstr "サブスクリプション UUID: '%s' でホストが見つかりませんでした。これは、ホストがすでに登録されているけれども、このインスタンスには登録されていない場合に発生する可能性があります。"
@@ -3510,9 +3645,6 @@ msgstr "DMI UUID が重複しているためにホストの登録に失敗した
 msgid "If product certificates should be used to authenticate to a custom CDN."
 msgstr "カスタム CDN に対する認証に製品証明書を使用する必要があるかどうか。"
 
-msgid "If set, newly created APT repos in Katello will use the same repo structure as the remote repos they are synchronized from. You may migrate existing APT repos to match the setting, by running 'foreman-rake katello:migrate_structure_content_for_deb'."
-msgstr "これが設定されている場合、Katello で新しく作成された APT リポジトリーは、同期元のリモートリポジトリーと同じリポジトリー構造を使用します。'foreman-rake katello:migrate_structure_content_for_deb' を実行して、既存の APT リポジトリーを設定に合わせて移行できます。"
-
 msgid "If the smart proxies' assigned HTTP proxies should be used"
 msgstr "Smart Proxy に割り当てられた HTTP プロキシーを使用する場合"
 
@@ -3696,6 +3828,12 @@ msgstr "追加フィルター"
 msgid "Include manifests"
 msgstr "マニフェストを含める"
 
+msgid "Include packages with unknown persistence"
+msgstr ""
+
+msgid "Include packages with unknown persistence in addition to transient packages"
+msgstr ""
+
 msgid "Included"
 msgstr "包含済み"
 
@@ -3746,6 +3884,11 @@ msgstr "スコープ限定検索クエリーでのエラータのインストー
 
 msgid "Install errata via Katello interface"
 msgstr "Katello インターフェイスでのエラータのインストール"
+
+msgid "Install package"
+msgid_plural "Install packages"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Install package group via Katello interface"
 msgstr "Katello インターフェイスでのパッケージグループのインストール"
@@ -3812,6 +3955,9 @@ msgstr "パッケージのインストール中..."
 
 msgid "Instance-based"
 msgstr "インスタンスベース"
+
+msgid "Insufficient space for selected hosts"
+msgstr ""
 
 msgid "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported."
 msgstr "指定済みオブジェクトに関連付けることができるホストコレクションのみを返す指定済みオブジェクトを解釈します。値 'host' がサポートされます。"
@@ -3948,6 +4094,9 @@ msgstr "ジョブ '${description}' が完了しました"
 msgid "Job '${description}' has started."
 msgstr "ジョブ '${description}' が開始されました。"
 
+msgid "Job '${firstJob.description}' has started."
+msgstr ""
+
 msgid "Katello Bootc interface"
 msgstr "Katello Bootc インターフェイス"
 
@@ -4047,6 +4196,12 @@ msgstr "コンテンツビューのラベル"
 msgid "Label of the flatpak remote"
 msgstr "flatpak リモートのラベル"
 
+msgid "Labels and annotations"
+msgstr ""
+
+msgid "Labels | Annotations"
+msgstr ""
+
 msgid "Last check-in:"
 msgstr "最終チェックイン"
 
@@ -4064,6 +4219,9 @@ msgstr "最終更新"
 
 msgid "Last refresh :"
 msgstr "最終更新 :"
+
+msgid "Last scan:"
+msgstr ""
 
 msgid "Last seen"
 msgstr "最後に表示"
@@ -4088,9 +4246,6 @@ msgstr "サブスクリプションマニフェストの追加に関する詳細
 
 msgid "Legacy UI"
 msgstr "レガシー UI"
-
-msgid "Legacy content host UI"
-msgstr "レガシーコンテンツホストの UI"
 
 msgid "Less than"
 msgstr "<"
@@ -4148,6 +4303,9 @@ msgstr "ライフサイクル環境: {lce}"
 
 msgid "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy."
 msgstr "ライフサイクル環境をデフォルトの Smart Proxy で変更できません。すべてのライフサイクル環境のコンテンツはこの Smart Proxy 上に存在します。"
+
+msgid "Limit"
+msgstr ""
 
 msgid "Limit actions to content in the host's environment."
 msgstr "アクションをホストの環境内のコンテンツに制限します。"
@@ -4461,6 +4619,9 @@ msgstr "ホストコレクションのコピー作成"
 msgid "Make sure all the component content views are published before publishing/promoting the composite content view. This restriction is optional and can be modified in the Administrator -> Settings -> Content page using the restrict_composite_view flag."
 msgstr "複合コンテンツビューの公開/プロモート前に、コンポーネントのコンテンツビューがすべて公開されていることを確認します。この制限は任意で、管理 -> 設定 -> コンテンツページで、restrict_composite_view フラグを使用して変更できます。"
 
+msgid "Make sure the runtimes required by the Flatpak apps in this content view are available to the host(s)."
+msgstr ""
+
 msgid "Manage Manifest"
 msgstr "マニフェストの管理"
 
@@ -4476,14 +4637,23 @@ msgstr "パッケージの管理"
 msgid "Manage repository sets"
 msgstr "リポジトリーセットの管理"
 
+msgid "Manage traces"
+msgstr ""
+
 msgid "Manifest"
 msgstr "Manifest (マニフェスト)"
+
+msgid "Manifest Details"
+msgstr ""
 
 msgid "Manifest History"
 msgstr "マニフェストの履歴"
 
 msgid "Manifest deleted"
 msgstr "マニフェストを削除しました"
+
+msgid "Manifest digest"
+msgstr ""
 
 msgid "Manifest does not have a valid subscription"
 msgstr "マニフェストに有効なサブスクリプションがありません"
@@ -4594,6 +4764,15 @@ msgstr "ミラーリポジトリー"
 msgid "Mirror a flatpak remote repository"
 msgstr "flatpak リモートリポジトリーをミラーリングする"
 
+msgid "Mirror runtime repository "
+msgstr ""
+
+msgid "Mirroring flatpak repository has started"
+msgstr ""
+
+msgid "Mirroring flatpak repository with dependencies has started"
+msgstr ""
+
 msgid "Mirroring will import the remote flatpak repository"
 msgstr "ミラーリングによりリモートの flatpak リポジトリー"
 
@@ -4608,6 +4787,9 @@ msgstr "モデル"
 
 msgid "Moderate"
 msgstr "中"
+
+msgid "Modified"
+msgstr ""
 
 msgid "Modify via remote execution"
 msgstr "リモート実行による変更"
@@ -4855,6 +5037,9 @@ msgstr "ID が %{ids} のコンテンツビュー環境が見つかりません�
 msgid "No content view environments found with names: %{names}"
 msgstr "名前が %{names} のコンテンツビュー環境が見つかりません。"
 
+msgid "No content view environments yet"
+msgstr ""
+
 msgid "No content view history events found."
 msgstr "コンテンビューの履歴イベントが見つかりません。"
 
@@ -4863,6 +5048,9 @@ msgstr "利用できるコンテンツビューがありません"
 
 msgid "No content views available for the selected environment"
 msgstr "選択した環境に利用可能なコンテンツビューはありません"
+
+msgid "No content views available for the selected lifecycle environment"
+msgstr ""
 
 msgid "No content views to add yet"
 msgstr "追加するコンテンツビューはまだありません"
@@ -4941,6 +5129,9 @@ msgstr "%s でレポートされたインストール済みパッケージや有
 
 msgid "No items have been specified."
 msgstr "項目が指定されていません。"
+
+msgid "No labels or annotations"
+msgstr ""
 
 msgid "No manifest file uploaded"
 msgstr "マニフェストファイルがアップロードされていません"
@@ -5107,6 +5298,9 @@ msgstr "検索条件に一致するサブスクリプションはありません
 msgid "No syncable repositories found for selected products and options."
 msgstr "選択した製品およびオプションに同期可能なリポジトリーが見つかりません。"
 
+msgid "No transient packages found in selection"
+msgstr ""
+
 msgid "No upgradable packages found for search term '%s'."
 msgstr "検索用語 '%s' に該当するアップグレード可能なパッケージが見つかりません。"
 
@@ -5257,6 +5451,9 @@ msgstr "組織 %s を削除しています。"
 msgid "Organization ID"
 msgstr "組織 ID"
 
+msgid "Organization ID for scoping"
+msgstr ""
+
 msgid "Organization ID or title"
 msgstr "組織 ID またはタイトル"
 
@@ -5280,6 +5477,9 @@ msgstr "組織ラベル"
 
 msgid "Organization label '%s' is ambiguous. Try using an id-based container name."
 msgstr "組織ラベル '%s' はあいまいです。ID ベースのコンテナー名の使用を試してください。"
+
+msgid "Organization must be specified when providing product by name."
+msgstr ""
 
 msgid "Organization not found"
 msgstr "組織が見つかりません"
@@ -5446,9 +5646,6 @@ msgstr "パッケージの更新がタイムアウトになりました"
 msgid "Package Update scheduled by %s"
 msgstr "%s によりパッケージの更新がスケジュールされました"
 
-msgid "Package actions will be transient"
-msgstr "パッケージアクションは一時的なものです"
-
 msgid "Package group update canceled"
 msgstr "パッケージグループの更新が取り消されました"
 
@@ -5475,6 +5672,12 @@ msgstr "パッケージのインストール: \"%{package}\" "
 
 msgid "Package mode"
 msgstr "パッケージモード"
+
+msgid "Package persistence data will be reported by a future version of subscription-manager."
+msgstr ""
+
+msgid "Package persistence information"
+msgstr ""
 
 msgid "Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg,bdist_dumb,bdist_egg,bdist_msi,bdist_rpm,bdist_wheel,bdist_wininst,sdist."
 msgstr "Python コンテンツの同期に使用するパッケージタイプ (コンマ区切り)。すべてのパッケージタイプを指定するには、空白のままにします。パッケージタイプは、bdist_dmg、bdist_dumb、bdist_egg, bdist_msi、bdist_rpm、bdist_wheel、bdist_wininst、sdist です。"
@@ -5554,6 +5757,15 @@ msgstr "ライブラリー内のリポジトリーの増分エクスポートを
 msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "アクセスが拒否されました。ユーザー '%{user}' には組織 '%{org}' にアクセスする権限がありません。"
 
+msgid "Persistence"
+msgstr ""
+
+msgid "Persistence must be one of: %s"
+msgstr ""
+
+msgid "Persistent"
+msgstr ""
+
 msgid "Physical"
 msgstr "物理"
 
@@ -5580,6 +5792,9 @@ msgstr "数字を 10 桁に制限してください"
 
 msgid "Please select a content source before assigning a kickstart repository"
 msgstr "Kickstart リポジトリーを割り当てる前にコンテンツソースを選択してください"
+
+msgid "Please select a different lifecycle environment or remove an existing assignment."
+msgstr ""
 
 msgid "Please select a lifecycle environment and a content view to move these activation keys."
 msgstr "これらのアクティベーションキーを移動するには、ライフサイクル環境とコンテンツビューを選択してください。"
@@ -5683,6 +5898,9 @@ msgstr "製品ラベル"
 
 msgid "Product label '%s' is ambiguous. Try using an id-based container name."
 msgstr "製品ラベル '%s' はあいまいです。ID ベースのコンテナー名の使用を試してください。"
+
+msgid "Product must be specified."
+msgstr ""
 
 msgid "Product name"
 msgstr "製品名"
@@ -5797,6 +6015,9 @@ msgstr "${truncate(name)} を公開中"
 
 msgid "Publishing content view"
 msgstr "コンテンツビューの公開"
+
+msgid "Pullable path"
+msgstr ""
 
 msgid "Pulp"
 msgstr "Pulp"
@@ -5939,6 +6160,9 @@ msgstr "影響を受けるホストの再割り当て"
 msgid "Reboot host"
 msgstr "ホストの再起動"
 
+msgid "Reboot hosts"
+msgstr ""
+
 msgid "Reboot required"
 msgstr "再起動が必要です"
 
@@ -5989,6 +6213,9 @@ msgstr "Red Hat 製品を操作することはできません。"
 
 msgid "Red Hat provider can not be deleted"
 msgstr "Red Hat プロバイダーは削除できません"
+
+msgid "Red Hat remote"
+msgstr ""
 
 msgid "Red Hat repositories cannot be manipulated."
 msgstr "Red Hat リポジトリーを操作することはできません。"
@@ -6149,6 +6376,9 @@ msgstr "環境からの削除"
 msgid "Remove from environments"
 msgstr "環境からの削除"
 
+msgid "Remove from host collections"
+msgstr ""
+
 msgid "Remove host from collections"
 msgstr "コレクションからホストを削除"
 
@@ -6190,6 +6420,9 @@ msgstr "コンテンツビューからバージョンおよび/または環境�
 
 msgid "Remove versions from environments"
 msgstr "環境からのバージョンの削除"
+
+msgid "Removed %{count} host(s) from host collection %{host_collection}."
+msgstr ""
 
 msgid "Removed component from content view"
 msgstr "コンテンツビューからコンポーネントを削除しました"
@@ -6386,6 +6619,9 @@ msgstr "Katello インターフェイスでのサービスの再起動"
 msgid "Restart app"
 msgstr "アプリケーションの再起動"
 
+msgid "Restart applications"
+msgstr ""
+
 msgid "Restart via customized remote execution"
 msgstr "カスタマイズされたリモート実行による再起動"
 
@@ -6398,11 +6634,17 @@ msgstr "複合コンテンツビューのプロモートの制限"
 msgid "Result"
 msgstr "結果"
 
+msgid "Retain build profile upon unregistration"
+msgstr ""
+
 msgid "Retrieve a single errata for a host"
 msgstr "ホストに関するエラータを 1 つ取得する"
 
 msgid "Return Red Hat (non-custom) products only"
 msgstr "Red Hat (カスタム以外) 製品のみを返します"
+
+msgid "Return a containerfile command to install transient packages"
+msgstr ""
 
 msgid "Return a list of installed debs distinct by name"
 msgstr ""
@@ -6447,6 +6689,9 @@ msgid "Return only errata of a particular severity (None, Low, Moderate, Importa
 msgstr "特定の重大度 (影響なし、低、中程度、重要、重大) のエラータのみを返します"
 
 msgid "Return only errata of a particular type (security, bugfix, enhancement, other)"
+msgstr ""
+
+msgid "Return only packages of a particular persistence (transient, persistent, or nil)"
 msgstr ""
 
 msgid "Return only packages of a particular status (upgradable or up-to-date)"
@@ -6623,6 +6868,9 @@ msgstr "ホストコレクションの検索"
 msgid "Search pattern (defaults to '*')"
 msgstr "検索パターン (デフォルトは '*')"
 
+msgid "Search query for traces"
+msgstr ""
+
 msgid "Search string"
 msgstr "検索文字列"
 
@@ -6646,6 +6894,9 @@ msgstr "適用可能なセキュリティーエラータ"
 
 msgid "Security errata installable"
 msgstr "インストール可能なセキュリティーエラータ"
+
+msgid "See child manifests"
+msgstr ""
 
 msgid "Select"
 msgstr "選択"
@@ -6682,6 +6933,9 @@ msgstr "先にコンテンツソースを選択してください"
 
 msgid "Select a content view"
 msgstr "コンテンツビューの選択"
+
+msgid "Select a lifecycle environment"
+msgstr ""
 
 msgid "Select a lifecycle environment and a content view to move these hosts."
 msgstr "これらのホストを移動するには、ライフサイクル環境とコンテンツビューを選択してください。"
@@ -6731,6 +6985,9 @@ msgstr "少なくとも 1 つのエラータを選択してください。"
 msgid "Select at least one package."
 msgstr "少なくとも 1 つのパッケージを選択してください。"
 
+msgid "Select at least one trace."
+msgstr ""
+
 msgid "Select attributes for ${akDetails.name}"
 msgstr "${akDetails.name} の属性の選択"
 
@@ -6743,9 +7000,6 @@ msgstr "使用するコンテンツビューの利用可能なバージョンの
 msgid "Select content view"
 msgstr "コンテンツビューの選択"
 
-msgid "Select environment"
-msgstr "環境の選択"
-
 msgid "Select errata"
 msgstr "エラータの選択"
 
@@ -6757,6 +7011,9 @@ msgstr "ホスト {hostName} に関連付けるホストコレクションを選
 
 msgid "Select host collection(s) to remove from host {hostName}."
 msgstr "ホスト {hostName} から削除するホストコレクションを選択します。"
+
+msgid "Select host collections to change their associations with {selectedHosts}. Changing host collection will affect all your selected hosts. Some hosts may already be in your chosen collections."
+msgstr ""
 
 msgid "Select hosts to assign to %s"
 msgstr "ホストを選択して %s に割り当てます"
@@ -6837,6 +7094,9 @@ msgid "Service Level (SLA)"
 msgstr "サービスレベル (SLA)"
 
 msgid "Service level"
+msgstr "サービスレベル"
+
+msgid "Service level (SLA)"
 msgstr ""
 
 msgid "Service level of host"
@@ -6877,6 +7137,9 @@ msgstr "重要度"
 
 msgid "Severity must be one of: %s"
 msgstr "重大度は %s のいずれかに指定する必要があります"
+
+msgid "Show ${remainingCount} more"
+msgstr ""
 
 msgid "Show %s"
 msgstr "%s の表示"
@@ -6998,8 +7261,19 @@ msgstr "アップロードするファイルのサイズ"
 msgid "Skip metadata check on each repository on the smart proxy"
 msgstr "Smart Proxy の各リポジトリーでのメタデータチェックをスキップします"
 
+msgid "Skipped %{count} unregistered host"
+msgid_plural "Skipped %{count} unregistered hosts"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Skipped pulp_auth check after failed pulp check"
 msgstr "pulp チェックの失敗後に pulp_auth チェックが省略されました"
+
+msgid "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting."
+msgstr ""
+
+msgid "Smart Proxy '%{proxy}': RHSM URL must use HTTPS protocol. The URL is derived from the 'foreman_url' setting. Current value: '%{url}'. Please update the 'foreman_url' setting to use HTTPS."
+msgstr ""
 
 msgid "Smart proxies"
 msgstr "Smart Proxy"
@@ -7040,14 +7314,14 @@ msgstr "依存関係の解決"
 msgid "Some environments are disabled because they are not associated with all of the affected hosts' content sources."
 msgstr "一部の環境は、影響を受けるホストのコンテンツソースすべてに関連付けられていないため、無効になります。"
 
-msgid "Some environments are disabled because they are not associated with the host's content source."
-msgstr "一部の環境は、ホストのコンテンツソースに関連付けられていないため無効になります。"
-
 msgid "Some environments are disabled because they are not associated with the selected content source."
 msgstr "一部の環境は、選択されたコンテンツソースに関連付けられていないため無効になります。"
 
 msgid "Some hosts are not registered as content hosts and will be ignored."
 msgstr "ホストによってはコンテンツホストとして登録されていないため、無視されます。"
+
+msgid "Some lifecycle environments are disabled because they are not associated with the host's content source."
+msgstr ""
 
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
 msgstr "入力の一部にエラーが含まれています。入力内容を更新して、変更を保存し直してください。"
@@ -7361,9 +7635,6 @@ msgstr "成功"
 msgid "Successfully added %s Host(s)."
 msgstr "%s 台のホストが正常に追加されました。"
 
-msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
-msgstr "コンテンツホスト %{count} 台がホストコレクション %{host_collection} に正常に追加されました。"
-
 msgid "Successfully changed sync plan for %s product(s)"
 msgstr "%s 製品の同期プランが正常に変更されました"
 
@@ -7375,9 +7646,6 @@ msgstr "正常に更新されました。"
 
 msgid "Successfully removed %s Host(s)."
 msgstr "%s 台のホストが正常に削除されました。"
-
-msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
-msgstr "ホストコレクション %{host_collection} から %{count} 台のコンテンツホストが正常に削除されました。"
 
 msgid "Successfully synced capsule."
 msgstr "Capsule が正常に同期されました。"
@@ -7478,9 +7746,6 @@ msgstr "同期されています "
 msgid "Synced Content"
 msgstr "同期されたコンテンツ"
 
-msgid "Synced container images content"
-msgstr ""
-
 msgid "Synchronize"
 msgstr "同期"
 
@@ -7522,6 +7787,9 @@ msgstr "システム目的の属性の更新"
 
 msgid "System purpose enables you to set the system's intended use on your network and improves reporting accuracy in the Subscriptions service of the Red Hat Hybrid Cloud Console."
 msgstr "システム目的では、ネットワーク上でシステムの使用目的を設定して、Red Hat Hybrid Cloud Console のサブスクリプションサービスでレポートの精度を向上させることができます。"
+
+msgid "Tag"
+msgstr ""
 
 msgid "Tag name"
 msgstr "タグ名"
@@ -7729,6 +7997,9 @@ msgstr "要求されたリソースは、指定の組織に所属していませ
 msgid "The requested traces were not found for this host"
 msgstr "このホストには、要求されたトレースが見つかりませんでした"
 
+msgid "The selected hosts do not show any applications needing restart."
+msgstr ""
+
 msgid "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture"
 msgstr "選択したキックスタートリポジトリーは、割り当てられたコンテンツビュー、ライフサイクル環境、コンテンツソース、オペレーティングシステム、アーキテクチャーに含まれていません。"
 
@@ -7837,6 +8108,9 @@ msgstr "この操作は、特殊な状況またはデバッグの目的でのみ
 msgid "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" before deleting."
 msgstr "このアクティべーションキーは 1 つ以上のホスト/ホストグループに関連付けられます。削除前に params.kt_activation_keys ~ \"%{name}\" を使用してホスト/ホストグループを検索し、関連付け解除します。"
 
+msgid "This application requires a host reboot"
+msgstr ""
+
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
 msgstr "この証明書により、ユーザーはすべての環境のリポジトリーをブラウザーから閲覧できます。"
 
@@ -7875,9 +8149,6 @@ msgstr "このホストにはパッケージがありません。"
 
 msgid "This host has errata that are applicable, but not installable. Adjust your filters and try again."
 msgstr "このホストには適用可能なエラータがありますが、インストールできません。フィルターを調節してもう一度お試しください。"
-
-msgid "This host is associated with multiple content view environments. If you assign a lifecycle environment and content view here, the host will be removed from the other environments."
-msgstr "このホストは複数のコンテンツビュー環境に関連付けられています。ここでライフサイクル環境とコンテンツビューを割り当てると、このホストは他の環境から削除されます。"
 
 msgid "This is disabled because a manifest task is in progress"
 msgstr "マニフェストのタスクが実行中であるため、これは無効になっています"
@@ -7933,9 +8204,6 @@ msgstr "このバージョンは以下から削除されます:"
 msgid "This will create a copy of {cv}, including details, repositories, and filters. Generated data such as history, tasks and versions will not be copied."
 msgstr "これにより、詳細、リポジトリー、およびフィルターを含め {cv} のコピーが作成されます。履歴、タスク、およびバージョン等の生成されたデータはコピーされません。"
 
-msgid "This will update the content view environments for {hosts}."
-msgstr "これにより、{hosts} のコンテンツビュー環境が更新されます。"
-
 msgid "Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned."
 msgstr "リポジトリー内に含まれず、アクセスされていないコンテンツを孤立したコンテンツとみなすまでの時間 (分)。"
 
@@ -7954,8 +8222,11 @@ msgstr "タイムスタンプ"
 msgid "Title"
 msgstr "タイトル"
 
-msgid "To change content view environments, a specific organization must be selected from the organization context."
-msgstr "コンテンツビュー環境を変更するには、組織コンテキストから特定の組織を選択する必要があります。"
+msgid "To assign content view environment(s), a specific organization must be selected from the organization context."
+msgstr ""
+
+msgid "To change system purpose, a specific organization must be selected from the organization context."
+msgstr ""
 
 msgid "To continue with Red Hat Flatpak remote, you need to generate your username and password in"
 msgstr ""
@@ -7966,8 +8237,8 @@ msgstr "同期コンテンツオプションを有効にするには、このホ
 msgid "To enable them, add the environment to the content source, or select a different content source."
 msgstr "環境を有効にするには、環境を別のコンテンツソースに追加するか、別のコンテンツソースを選択します。"
 
-msgid "To enable them, add the environment to the host's content source, or "
-msgstr "環境を有効にするには、その環境をホストのコンテンツソースに追加するか、"
+msgid "To enable them, add the lifecycle environment to the host's content source, or "
+msgstr ""
 
 msgid "To finish the process of changing the content source, run the following script manually on {hosts}."
 msgstr "コンテンツソースの変更プロセスを完了するには、次のスクリプトを {hosts} で手動で実行します。"
@@ -7978,8 +8249,14 @@ msgstr "まず、フィルタールールをこのフィルターに追加しま
 msgid "To get started, add this host to a host collection."
 msgstr "まず、このホストをホストコレクションに追加します。"
 
+msgid "To give your hosts access to content, assign content view environments."
+msgstr ""
+
 msgid "To include or exclude specific content from the content view, create a filter. Without filters, the content view includes everything from the added repositories."
 msgstr "コンテンツビューから特定のコンテンツを追加または除外するには、フィルターを作成します。フィルターを使用しない場合は、コンテンツビューには追加したリポジトリーにあるものがすべて含まれます。"
+
+msgid "To manage host collections, a specific organization must be selected from the organization context."
+msgstr ""
 
 msgid "To manage host content overrides, a specific organization must be selected from the organization context."
 msgstr "ホストのコンテンツオーバーライドを管理するには、組織コンテキストから特定の組織を選択する必要があります。"
@@ -7990,11 +8267,17 @@ msgstr "ホストパッケージを管理するには、組織コンテキスト
 msgid "To manage packages, select an action."
 msgstr "パッケージを管理するには、アクションを選択してください。"
 
+msgid "To manage traces, a specific organization must be selected from the organization context."
+msgstr ""
+
 msgid "Token/password for the flatpak remote"
 msgstr "flatpak リモートのトークン/パスワード"
 
 msgid "Total steps: "
 msgstr "ステップ合計数: "
+
+msgid "Trace resolution job has been initiated."
+msgstr ""
 
 msgid "Tracer"
 msgstr "トレーサー"
@@ -8034,6 +8317,9 @@ msgstr "トレースは、適切なパーミッションを持つユーザーに
 
 msgid "Traffic for all alternate content sources associated with this smart proxy will go through the chosen HTTP proxy."
 msgstr "このSmart Proxy に関連付けられた代替コンテンツソースのトラフィックは、選択した HTTP プロキシーを通過します。"
+
+msgid "Transient"
+msgstr ""
 
 msgid "Try changing your search criteria."
 msgstr "検索条件を変更してみてください。"
@@ -8359,6 +8645,11 @@ msgstr "更新済み"
 msgid "Updated component details"
 msgstr "更新されたコンポーネントの詳細"
 
+msgid "Updated content view environments for %{count} host"
+msgid_plural "Updated content view environments for %{count} hosts"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Updated from"
 msgstr "更新元"
 
@@ -8543,7 +8834,7 @@ msgid "Value must either be a boolean or 'default' for 'enabled'"
 msgstr "値は、ブール値またはデフォルト (「有効」) のいずれかである必要があります"
 
 msgid "Verify Content Checksum"
-msgstr ""
+msgstr "コンテンツチェックサムの確認"
 
 msgid "Verify SSL"
 msgstr "SSL の確認"
@@ -8641,8 +8932,20 @@ msgstr "詳細の表示"
 msgid "View documentation"
 msgstr "ドキュメントの表示"
 
+msgid "View here"
+msgstr ""
+
+msgid "View labels and annotations"
+msgstr ""
+
+msgid "View labels and annotations for image "
+msgstr ""
+
 msgid "View matching content"
 msgstr "マッチするコンテンツの表示"
+
+msgid "View pullable paths"
+msgstr ""
 
 msgid "View sync status"
 msgstr "同期ステータスの表示"
@@ -8679,6 +8982,9 @@ msgstr "「リリース/ディストリビューション」を設定した場�
 
 msgid "When \"Upstream URL\" is set, \"Releases/Distributions\" must also be set!"
 msgstr "「アップストリームの URL」を設定した場合は、「リリース/ディストリビューション」も設定する必要があります!"
+
+msgid "When enabled, provisioning information like content view environments, kickstart repository, and content source will be retained when a host is unregistered. When disabled, this information will be cleared during unregistration."
+msgstr ""
 
 msgid "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"
 msgstr "subscription-manager でホストを登録すると、指定のファクトを強制的に使用します ('fact.fact' の形式)"
@@ -8877,6 +9183,9 @@ msgstr "エラータなしのすべてのモジュールストリームを組み
 
 msgid "add all packages without errata to the included/excluded list. (package filter only)"
 msgstr "エラータなしのすべてのパッケージを組み込み/除外一覧に追加。(パッケージフィルターのみ)"
+
+msgid "ago"
+msgstr ""
 
 msgid "all environments"
 msgstr "すべての環境"
@@ -9430,6 +9739,11 @@ msgstr "組織 ID"
 msgid "organization identifier"
 msgstr "組織 ID"
 
+msgid "package"
+msgid_plural "packages"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "package group: uuid"
 msgstr "パッケージグループ: uuid"
 
@@ -9492,6 +9806,9 @@ msgstr "パッケージを削除しています..."
 
 msgid "removing packages..."
 msgstr "パッケージを削除しています..."
+
+msgid "replace"
+msgstr ""
 
 msgid "repo label"
 msgstr "リポジトリーラベル"
