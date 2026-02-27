@@ -13,7 +13,10 @@ module Katello
         katello_pulp_ids = smart_proxy_helper.combined_repos_available_to_capsule.map(&:pulp_id)
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_api(smart_proxy)
-          repo_map[api] = api.list_all.reject { |capsule_repo| katello_pulp_ids.include? capsule_repo.name }
+          repos = api.list_all
+          repo_map[api] = repos
+            .reject { |capsule_repo| self.class.orphan_cleanup_protected_name?(capsule_repo.name) }
+            .reject { |capsule_repo| katello_pulp_ids.include? capsule_repo.name }
         end
 
         repo_map
@@ -26,12 +29,13 @@ module Katello
           api = repo_type.pulp3_api(smart_proxy)
           version_hrefs = api.repository_versions
           orphan_version_hrefs = api.list_all.collect do |pulp_repo|
+            next if self.class.orphan_cleanup_protected_name?(pulp_repo.name)
             mirror_repo_versions = api.versions_list_for_repository(pulp_repo.pulp_href, ordering: ['-pulp_created'])
             version_hrefs = mirror_repo_versions.select { |repo_version| repo_version.number != 0 }.collect { |version| version.pulp_href }
 
             version_hrefs - [pulp_repo.latest_version_href]
           end
-          repo_version_map[api] = orphan_version_hrefs.flatten
+          repo_version_map[api] = orphan_version_hrefs.flatten.compact
         end
 
         repo_version_map
@@ -124,6 +128,8 @@ module Katello
       end
 
       def self.orphan_distribution?(distribution)
+        return false if SmartProxyRepository.orphan_cleanup_protected_name?(distribution.try(:name)) ||
+                        SmartProxyRepository.orphan_cleanup_protected_base_path?(distribution.try(:base_path))
         distribution.try(:publication).nil? &&
             distribution.try(:repository).nil? &&
             distribution.try(:repository_version).nil? ||
@@ -162,6 +168,7 @@ module Katello
           remotes = api.remotes_list_all(smart_proxy)
 
           remotes.each do |remote|
+            next if self.class.orphan_cleanup_protected_name?(remote.name)
             if !repo_names.include?(remote.name) && !acs_remotes.include?(remote.pulp_href)
               tasks << api.delete_remote(remote.pulp_href)
             end

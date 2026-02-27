@@ -96,7 +96,10 @@ module Katello
           katello_dist_hrefs = ::Katello::RootRepository.where(content_type: repo_type.id)
                                 .joins(:repositories => :distribution_references)
                                 .pluck(:href)
-          pulp_dist_hrefs = api.distributions_list_all.map(&:pulp_href)
+          pulp_distributions = api.distributions_list_all
+          pulp_dist_hrefs = pulp_distributions
+            .reject { |distribution| self.class.orphan_cleanup_protected_distribution?(distribution) }
+            .map(&:pulp_href)
           distribution_map[api] = pulp_dist_hrefs - katello_dist_hrefs
         end
 
@@ -118,7 +121,13 @@ module Katello
         repo_version_map = {}
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_api(smart_proxy)
-          version_hrefs = api.repository_versions.select { |repo_version| repo_version.number != 0 }.map(&:pulp_href)
+          repos = api.list_all
+          protected_repo_hrefs = self.class.orphan_cleanup_protected_repo_hrefs(repos)
+          versions = api.repository_versions
+          version_hrefs = versions
+            .reject { |repo_version| protected_repo_hrefs.include?(repository_href_for_version(repo_version)) }
+            .select { |repo_version| repo_version.number != 0 }
+            .map(&:pulp_href)
           repo_version_map[api] = version_hrefs - ::Katello::Repository.where(version_href: version_hrefs).pluck(:version_href)
         end
 
@@ -127,6 +136,41 @@ module Katello
 
       def delete_orphan_repositories
         fail NotImplementedError
+      end
+
+      def self.orphan_cleanup_protected_prefix
+        Setting[:orphan_cleanup_protected_prefix].to_s
+      end
+
+      def self.orphan_cleanup_protected_name?(name)
+        prefix = orphan_cleanup_protected_prefix
+        return false if prefix.empty? || name.blank?
+        name.start_with?(prefix)
+      end
+
+      def self.orphan_cleanup_protected_base_path?(path)
+        prefix = orphan_cleanup_protected_prefix
+        return false if prefix.empty? || path.blank?
+        path.start_with?(prefix)
+      end
+
+      def self.orphan_cleanup_protected_distribution?(distribution)
+        orphan_cleanup_protected_name?(distribution.try(:name)) ||
+          orphan_cleanup_protected_base_path?(distribution.try(:base_path))
+      end
+
+      def self.orphan_cleanup_protected_repo_hrefs(repos)
+        prefix = orphan_cleanup_protected_prefix
+        return [] if prefix.empty?
+        repos.select { |repo| orphan_cleanup_protected_name?(repo.name) }.map(&:pulp_href)
+      end
+
+      private
+
+      def repository_href_for_version(repo_version)
+        return repo_version.repository if repo_version.respond_to?(:repository)
+        return repo_version.repository_href if repo_version.respond_to?(:repository_href)
+        nil
       end
     end
   end

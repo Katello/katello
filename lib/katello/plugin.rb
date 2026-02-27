@@ -663,6 +663,12 @@ Foreman::Plugin.register :katello do
         full_name: N_('Orphaned Content Protection Time'),
         description: N_('Time in minutes before content that is not contained within a repository and has not been accessed is considered orphaned.')
 
+      setting 'orphan_cleanup_protected_prefix',
+        type: :string,
+        default: 'orphan-protected__',
+        full_name: N_('Orphan Cleanup Protected Prefix'),
+        description: N_('Prefix for external Pulp content (repos, distributions, remotes) that should be excluded from orphan cleanup.')
+
       setting 'completed_pulp_task_protection_days',
         type: :integer,
         default: 30,
