@@ -22,6 +22,7 @@ describe('Controller: ErrataController', function() {
                 showColumns: function() {}
             };
             this.get = function() {};
+            this.enableSelectAllResults = function () {};
             this.setParams = function (params) {};
             this.getParams = function (params) { return {}; };
             this.refresh = function () {};
