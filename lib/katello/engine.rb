@@ -64,13 +64,6 @@ module Katello
           :ca_cert_file => nil,
           :bulk_load_size => 1000,
         },
-        :candlepin_events => {
-          :broker_host => 'localhost',
-          :broker_port => 61_613,
-          :queue_name => 'katello.candlepin',
-          :subscription_name => 'candlepin_events',
-          :client_id => 'katello_candlepin_event_monitor',
-        },
       }
 
       SETTINGS[:katello] = default_settings.deep_merge(SETTINGS[:katello] || {})
@@ -155,22 +148,6 @@ module Katello
     end
 
     config.to_prepare do
-      Katello::CandlepinEventListener.client_factory = proc do
-        settings = ActiveRecord::Base.connection_pool.with_connection do
-          SETTINGS[:katello][:candlepin_events].merge(
-            ssl_key_file: Setting[:ssl_priv_key],
-            ssl_cert_file: Setting[:ssl_certificate],
-            ssl_ca_file: Setting[:ssl_ca_file]
-          )
-        end
-
-        Katello::Messaging::Connection.create(
-          connection_class: Katello::Messaging::StompConnection,
-          settings: settings
-        )
-      end
-
-      Katello::EventDaemon::Runner.register_service(:candlepin_events, Katello::CandlepinEventListener)
       Katello::EventDaemon::Runner.register_service(:katello_events, Katello::EventMonitor::PollerThread)
 
       # Lib Extensions

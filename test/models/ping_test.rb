@@ -89,39 +89,6 @@ module Katello
       assert_equal({status: 'FAIL', message: 'Candlepin is not running properly'}, Katello::Ping.ping_candlepin_without_auth({}))
     end
 
-    def test_ping_candlepin_events
-      Katello::EventDaemon::Runner
-        .expects(:service_status).with(:candlepin_events)
-        .returns(processed_count: 0, failed_count: 0, running: true)
-
-      result = Katello::Ping.ping_candlepin_events({})
-
-      assert_equal 'ok', result[:status]
-      assert_equal '0 Processed, 0 Failed', result[:message]
-    end
-
-    def test_ping_candlepin_events_starting
-      Katello::EventDaemon::Runner
-        .expects(:service_status).with(:candlepin_events)
-        .returns(running: 'starting')
-
-      result = Katello::Ping.ping_candlepin_events({})
-
-      assert_equal 'ok', result[:status]
-      assert_equal '0 Processed, 0 Failed', result[:message]
-    end
-
-    def test_ping_candlepin_not_running
-      Katello::EventDaemon::Runner
-        .expects(:service_status).with(:candlepin_events)
-        .returns(processed_count: 10, failed_count: 5, running: false)
-
-      result = Katello::Ping.ping_candlepin_events({})
-
-      assert_equal 'FAIL', result[:status]
-      assert_equal 'Not running', result[:message]
-    end
-
     def test_ping_katello_events
       Katello::EventDaemon::Runner
         .expects(:service_status).with(:katello_events)
