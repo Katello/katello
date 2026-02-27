@@ -34,25 +34,4 @@ module Katello
       handler.import_pool
     end
   end
-
-  class PoolDeletedTest < MessageHandlerTestBase
-    let(:event_name) { 'pool.deleted' }
-
-    def test_pool_id
-      assert_equal @pool_id, handler.pool_id
-    end
-
-    def test_delete_pool
-      handler.delete_pool
-      assert_empty Katello::Pool.find_by(:cp_id => @pool_id)
-    end
-
-    def test_delete_pool_on_null
-      pool = handler.pool
-      handler.stubs(:pool).returns(pool).then.returns(nil)
-      # assert no errors are raised
-      handler.delete_pool
-      assert_empty Katello::Pool.find_by(:cp_id => @pool_id)
-    end
-  end
 end

@@ -16,6 +16,7 @@ module Katello
     end
     scope :upstream, -> { where.not(upstream_pool_id: nil) }
     scope :redhat, -> { joins(:products).merge(Katello::Product.redhat).distinct }
+    scope :expired, -> { where(end_date: Date.new...DateTime.now) }
 
     include Glue::Candlepin::CandlepinObject
     include Glue::Candlepin::Pool
