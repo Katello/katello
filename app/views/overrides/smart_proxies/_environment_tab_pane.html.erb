@@ -1,9 +1,5 @@
 <% if !@smart_proxy.new_record? && @smart_proxy.pulp_mirror? -%>
   <div class="tab-pane" id="kt_environments">
-    <%= multiple_selects f, :lifecycle_environments, Katello::KTEnvironment.completer_scope(:organization_id => ::Organization.current.try(:id)), @smart_proxy.lifecycle_environment_ids, {:label => _('Lifecycle Environments')}, @smart_proxy.default_capsule? ? {:disabled => :disabled } : {}  %>
-
-    <% if @smart_proxy.default_capsule? %>
-      <%= _("Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.") % @smart_proxy.name  %>
-    <% end %>
+    <%= multiple_selects f, :lifecycle_environments, Katello::KTEnvironment.completer_scope(:organization_id => ::Organization.current.try(:id)), @smart_proxy.lifecycle_environment_ids, {:label => _('Lifecycle Environments')} %>
   </div>
 <% end -%>
