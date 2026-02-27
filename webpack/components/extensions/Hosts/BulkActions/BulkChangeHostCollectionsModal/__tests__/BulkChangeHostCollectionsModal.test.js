@@ -251,22 +251,25 @@ test('switches between Add and Remove radio buttons', async () => {
     .reply(200, mockHostCollections)
     .persist();
 
-  const { getByLabelText } = renderWithRedux(
+  const { getByLabelText, getByText } = renderWithRedux(
     <BulkChangeHostCollectionsModal {...defaultProps} />,
     renderOptions(),
   );
 
+  // Wait for host collections to load so Remove radio is enabled
   await patientlyWaitFor(() => {
+    expect(getByText('Test Host Collection 1')).toBeInTheDocument();
     const addRadio = getByLabelText('Add to host collections');
     const removeRadio = getByLabelText('Remove from host collections');
 
     expect(addRadio).toBeChecked();
     expect(removeRadio).not.toBeChecked();
+    expect(removeRadio).not.toBeDisabled();
   });
 
   await act(async () => {
     const removeRadio = getByLabelText('Remove from host collections');
-    userEvent.click(removeRadio);
+    await userEvent.click(removeRadio);
   });
 
   await patientlyWaitFor(() => {
@@ -637,4 +640,109 @@ test('makes correct API call with multiple host collections', async () => {
   assertNockRequest(hostCollectionsScope, false);
   assertNockRequest(autocompleteScope, false);
   assertNockRequest(hostsRefreshScope, false);
+});
+
+const emptyHostCollections = {
+  total: 0,
+  subtotal: 0,
+  page: 1,
+  per_page: 5,
+  results: [],
+};
+
+test('shows empty state with create button and disables Remove radio when no host collections exist', async () => {
+  const autocompleteScope = nockInstance
+    .get(autocompleteUrl)
+    .query(true)
+    .reply(200, [])
+    .persist();
+
+  const hostCollectionsScope = nockInstance
+    .get(hostCollectionsApiUrl)
+    .query(true)
+    .reply(200, emptyHostCollections)
+    .persist();
+
+  const { getByText, getByLabelText, queryByText } = renderWithRedux(
+    <BulkChangeHostCollectionsModal {...defaultProps} />,
+    renderOptions(),
+  );
+
+  await patientlyWaitFor(() => {
+    expect(getByText('No host collections yet')).toBeInTheDocument();
+    expect(getByText('To get started, create a host collection.')).toBeInTheDocument();
+    expect(getByText('Create host collection')).toBeInTheDocument();
+    expect(queryByText('No Results')).not.toBeInTheDocument();
+
+    const removeRadio = getByLabelText('Remove from host collections');
+    expect(removeRadio).toBeDisabled();
+  });
+
+  assertNockRequest(hostCollectionsScope, false);
+  assertNockRequest(autocompleteScope, false);
+});
+
+test('Remove radio is enabled when host collections exist', async () => {
+  const autocompleteScope = nockInstance
+    .get(autocompleteUrl)
+    .query(true)
+    .reply(200, [])
+    .persist();
+
+  const hostCollectionsScope = nockInstance
+    .get(hostCollectionsApiUrl)
+    .query(true)
+    .reply(200, mockHostCollections)
+    .persist();
+
+  const { getByLabelText, getByText } = renderWithRedux(
+    <BulkChangeHostCollectionsModal {...defaultProps} />,
+    renderOptions(),
+  );
+
+  await patientlyWaitFor(() => {
+    expect(getByText('Test Host Collection 1')).toBeInTheDocument();
+    const removeRadio = getByLabelText('Remove from host collections');
+    expect(removeRadio).not.toBeDisabled();
+  });
+
+  assertNockRequest(hostCollectionsScope, false);
+  assertNockRequest(autocompleteScope, false);
+});
+
+test('shows default No Results when search returns empty', async () => {
+  const emptySearchResponse = {
+    total: 0,
+    subtotal: 0,
+    page: 1,
+    per_page: 5,
+    search: 'name ~ nonexistent',
+    results: [],
+  };
+
+  const autocompleteScope = nockInstance
+    .get(autocompleteUrl)
+    .query(true)
+    .reply(200, [])
+    .persist();
+
+  const hostCollectionsScope = nockInstance
+    .get(hostCollectionsApiUrl)
+    .query(true)
+    .reply(200, emptySearchResponse)
+    .persist();
+
+  const { getByText, queryByText } = renderWithRedux(
+    <BulkChangeHostCollectionsModal {...defaultProps} />,
+    renderOptions(),
+  );
+
+  await patientlyWaitFor(() => {
+    expect(getByText('No Results')).toBeInTheDocument();
+    expect(queryByText('No host collections yet')).not.toBeInTheDocument();
+    expect(queryByText('Create host collection')).not.toBeInTheDocument();
+  });
+
+  assertNockRequest(hostCollectionsScope, false);
+  assertNockRequest(autocompleteScope, false);
 });
