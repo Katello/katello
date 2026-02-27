@@ -9,8 +9,16 @@ import {
   TextContent,
   Text,
   ToolbarItem,
+  Bullseye,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
-import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { Tr, Td } from '@patternfly/react-table';
+import { ExclamationTriangleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { addToast } from 'foremanReact/components/ToastsList';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
@@ -181,6 +189,37 @@ const BulkChangeHostCollectionsModal = ({
   };
 
   const isLoadingHostCollections = hostCollectionsLoadingStatus === STATUS.PENDING;
+
+  const hasSearchQuery = !!hostCollectionsMetadata?.search;
+
+  const hasNoResults = !hostCollectionsResults || hostCollectionsResults.length === 0;
+  const customEmptyState =
+    !isLoadingHostCollections && !hasSearchQuery && hasNoResults ? (
+      <Tr ouiaId="table-empty">
+        <Td colSpan={100}>
+          <Bullseye>
+            <EmptyState variant={EmptyStateVariant.sm}>
+              <EmptyStateIcon icon={PlusCircleIcon} />
+              <EmptyStateHeader titleText={<>{__('No host collections yet')}</>} headingLevel="h2" />
+              <EmptyStateBody>
+                {__('To get started, create a host collection.')}
+              </EmptyStateBody>
+              <EmptyStateFooter>
+                <Button
+                  ouiaId="create-host-collection-button"
+                  variant="primary"
+                  component="a"
+                  href="/host_collections/new"
+                >
+                  {__('Create host collection')}
+                </Button>
+              </EmptyStateFooter>
+            </EmptyState>
+          </Bullseye>
+        </Td>
+      </Tr>
+    ) : null;
+
   const isSaveDisabled = HCIds.length === 0 || isLoadingHostCollections;
 
   // Selection toolbar
@@ -324,6 +363,7 @@ const BulkChangeHostCollectionsModal = ({
           id="radio-remove-action"
           ouiaId="radio-remove-action"
           style={{ marginLeft: '50px' }}
+          isDisabled={!hostCollectionsResults?.length}
         />
       </div>
       <div>
@@ -364,6 +404,7 @@ const BulkChangeHostCollectionsModal = ({
             page={page}
             perPage={perPage}
             itemCount={subtotal}
+            customEmptyState={customEmptyState}
           />
         </TableIndexPage>
       </div>
