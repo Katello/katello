@@ -24,10 +24,23 @@ module Katello
           api.content_release_components_api.create(opts)
         end
 
+        def remove_empty_metadata
+          # What we initialize in initialize_empty, we must also remove once it is no longer needed!
+          opts = {:component => "empty", :distribution => "katello", :repository_version => repo.version_href}
+          component = api.content_release_components_api.list(opts).results[0]
+          if component
+            api.repositories_api.modify(repository_reference.repository_href, remove_content_units: [component.pulp_href])
+          end
+        end
+
         def pulp_components
           return [] if repo.version_href.blank?
           return ["all"] if version_missing_structure_content?
-          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| x.plain_component }.uniq.sort
+          components = pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| x.plain_component }.uniq.sort
+          if components.empty?
+            fail ::Katello::Errors::MissingDebEntityError.new('component', repo.name, repo.version_href)
+          end
+          components
         end
 
         def sanitize_pulp_distribution(distribution)
@@ -40,7 +53,11 @@ module Katello
         def pulp_distributions
           return [] if repo.version_href.blank?
           return ["default"] if version_missing_structure_content?
-          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| sanitize_pulp_distribution(x.distribution) }.uniq.sort
+          distributions = pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| sanitize_pulp_distribution(x.distribution) }.uniq.sort
+          if distributions.empty?
+            fail ::Katello::Errors::MissingDebEntityError.new('distribution', repo.name, repo.version_href)
+          end
+          distributions
         end
 
         def remote_options
