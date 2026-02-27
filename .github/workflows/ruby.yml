@@ -18,6 +18,7 @@ jobs:
     uses: theforeman/actions/.github/workflows/rubocop.yml@v0
     with:
       command: bundle exec rubocop --parallel --format github
+      ruby-version: '3.0'
 
   test:
     name: Ruby
@@ -26,6 +27,7 @@ jobs:
     with:
       plugin: katello
       foreman_version: develop # set to the Foreman release branch after branching :)
+      ruby-version: '3.0'
 
   angular:
     name: Angular ${{ matrix.engine }} - NodeJS ${{ matrix.node }}

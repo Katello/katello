@@ -853,5 +853,17 @@ module Katello
       ignore_generated_include_library = Katello::ContentView.ignore_generated(include_library_generated: true).count
       assert_equal (ignore_generated - ignore_generated_include_library), 2
     end
+
+    def test_check_scheduled_publish_raises_when_scheduled_publish_exists
+      composite_cv = katello_content_views(:composite_view)
+
+      Katello::ContentViewManager.stubs(:scheduled_composite_publish?).with(composite_cv).returns(true)
+
+      error = assert_raises(Katello::Errors::ConflictException) do
+        composite_cv.check_scheduled_publish!
+      end
+
+      assert_match(/publish is already scheduled/, error.message)
+    end
   end
 end
