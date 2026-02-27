@@ -30,20 +30,32 @@ module Katello
       composite_cv = katello_content_views(:composite_view)
       cvv = katello_content_view_versions(:composite_view_version_1)
 
-      # Create a scheduled publish task for the composite CV
-      task = FactoryBot.create(:dynflow_task, :scheduled,
-                                label: 'Actions::Katello::ContentView::Publish',
-                                external_id: 'test-scheduled-publish-123')
-
-      # Mock the delayed plan to return our composite CV as first arg
-      delayed_plan = mock('delayed_plan')
-      delayed_plan.stubs(:args).returns([composite_cv])
-      ForemanTasks.dynflow.world.persistence.stubs(:load_delayed_plan).with(task.external_id).returns(delayed_plan)
+      Katello::ContentViewManager.stubs(:scheduled_composite_publish?).with(composite_cv).returns(true)
 
       result = Katello::ContentViewManager.request_auto_publish(content_view: composite_cv, content_view_version: cvv)
 
       assert_nil result
       assert_nil composite_cv.auto_publish_request
+    end
+
+    test 'scheduled_composite_publish? returns true when scheduled' do
+      composite_cv = katello_content_views(:composite_view)
+
+      task = FactoryBot.create(:dynflow_task, :scheduled,
+                                label: 'Actions::Katello::ContentView::Publish',
+                                external_id: 'test-scheduled-publish-123')
+
+      delayed_plan = mock('delayed_plan')
+      delayed_plan.stubs(:args).returns([composite_cv])
+      ForemanTasks.dynflow.world.persistence.stubs(:load_delayed_plan).with(task.external_id).returns(delayed_plan)
+
+      assert Katello::ContentViewManager.scheduled_composite_publish?(composite_cv)
+    end
+
+    test 'scheduled_composite_publish? returns false when not scheduled' do
+      composite_cv = katello_content_views(:composite_view)
+
+      refute Katello::ContentViewManager.scheduled_composite_publish?(composite_cv)
     end
 
     test 'trigger_auto_publish!' do
