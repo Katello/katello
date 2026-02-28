@@ -49,20 +49,6 @@ module Katello
         end
       end
 
-      def import_pool
-        if pool
-          ::Katello::EventQueue.push_event(::Katello::Events::ImportPool::EVENT_TYPE, pool.id)
-        else
-          begin
-            ::Katello::Pool.import_pool(pool_id)
-          rescue ActiveRecord::RecordInvalid
-            # if we hit this block it's likely that the pool's subscription, product are being created
-            # as a result of manifest import/refresh or custom product creation
-            Rails.logger.warn("Unable to import pool. It will likely be created by another process.")
-          end
-        end
-      end
-
       def delete_pool
         if Katello::Pool.where(:cp_id => pool_id).destroy_all.any?
           Rails.logger.info "Deleted Katello::Pool with cp_id=#{pool_id}"

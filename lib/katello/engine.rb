@@ -246,7 +246,6 @@ module Katello
 
       load 'katello/scheduled_jobs.rb'
 
-      Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
       Katello::EventQueue.register_event(Katello::Events::DeleteLatestContentViewVersion::EVENT_TYPE, Katello::Events::DeleteLatestContentViewVersion)
       Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
       Katello::EventQueue.register_event(Katello::Events::DeletePool::EVENT_TYPE, Katello::Events::DeletePool)

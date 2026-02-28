@@ -15,8 +15,6 @@ module Katello
           @message_handler = ::Katello::Candlepin::MessageHandler.new(message)
           data[:entity_id] = @message_handler.entity_id
           case message_handler.subject
-          when /pool\.created/
-            message_handler.import_pool
           when /pool\.deleted/
             message_handler.delete_pool
           end
