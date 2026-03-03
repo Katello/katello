@@ -212,8 +212,8 @@ module Katello
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
 
       # Add a second content view environment to make this a multi-environment host
-      library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
-      dev_env = KTEnvironment.find(katello_environments(:dev).id)
+      library_dev_view = katello_content_views(:library_dev_view)
+      dev_env = katello_environments(:dev)
       second_cve = ContentViewEnvironment.find_by(content_view: library_dev_view, environment: dev_env)
       original_cves = host.content_facet.content_view_environments.to_a
       host.content_facet.content_view_environments = original_cves + [second_cve]
