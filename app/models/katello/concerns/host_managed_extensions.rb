@@ -19,8 +19,7 @@ module Katello
             @pending_cve_attrs = { content_view_id: cv_id, lifecycle_environment_id: lce_id }
             if cv_id && lce_id
               if content_facet&.multi_content_view_environment?
-                err_msg = _("content_view_id and lifecycle_environment_id cannot be used to reassign a multi-environment host. Use content_view_environment_ids instead")
-                Rails.logger.warn err_msg
+                Rails.logger.warn "content_view_id and lifecycle_environment_id cannot be used to reassign multi-environment host '#{name}'. Use content_view_environment_ids instead"
                 @pending_cve_attrs = {}
                 return
               end
