@@ -865,5 +865,26 @@ module Katello
 
       assert_match(/publish is already scheduled/, error.message)
     end
+
+    def test_check_component_publishes_raises_when_component_publishes_running
+      composite_cv = katello_content_views(:composite_view)
+      running_task = mock('task')
+
+      Katello::ContentViewManager.stubs(:running_component_publish_tasks).with(composite_cv).returns([running_task])
+
+      error = assert_raises(Katello::Errors::ConflictException) do
+        composite_cv.check_component_publishes!
+      end
+
+      assert_match(/component content views are being published/, error.message)
+    end
+
+    def test_check_component_publishes_passes_when_no_component_publishes
+      composite_cv = katello_content_views(:composite_view)
+
+      Katello::ContentViewManager.stubs(:running_component_publish_tasks).with(composite_cv).returns([])
+
+      composite_cv.check_component_publishes!
+    end
   end
 end

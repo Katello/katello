@@ -663,6 +663,7 @@ module Katello
         check_docker_repository_names!([organization.library])
         check_orphaned_content_facets!(environments: self.environments)
         check_scheduled_publish!
+        check_component_publishes!
       end
 
       true
@@ -683,6 +684,14 @@ module Katello
 
       if ::Katello::ContentViewManager.scheduled_composite_publish?(self)
         fail ::Katello::Errors::ConflictException, _("A publish is already scheduled for this content view. Please wait for the scheduled publish to complete.")
+      end
+    end
+
+    def check_component_publishes!
+      return unless composite?
+
+      if ::Katello::ContentViewManager.running_component_publish_tasks(self).any?
+        fail ::Katello::Errors::ConflictException, _("Cannot publish composite content view while its content views are being published. Please wait for component publishes to complete.")
       end
     end
 
