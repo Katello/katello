@@ -876,7 +876,7 @@ module Katello
         composite_cv.check_component_publishes!
       end
 
-      assert_match(/component content views are being published/, error.message)
+      assert_match(/its content views are being published/, error.message)
     end
 
     def test_check_component_publishes_passes_when_no_component_publishes
