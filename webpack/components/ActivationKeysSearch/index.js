@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Form,
@@ -65,7 +65,7 @@ const ActivationKeysSearch = () => {
       }));
     }
   }, [dispatch, selectedEnvId, selectedContentViewId, setActivationKeys]);
-  const paramContainer = useMemo(() => {
+  const getParamContainer = useCallback(() => {
     let ret;
     const inputs = document.querySelectorAll("div#parameters .fields input[type='text']");
     inputs.forEach((input) => {
@@ -74,7 +74,7 @@ const ActivationKeysSearch = () => {
       }
     });
     return ret;
-  }, []);
+  }, [KT_AK_LABEL]);
 
   useEffect(() => {
     $('#hostgroup_lifecycle_environment_id').on('change', () => setSelectedEnvId(getSelectedEnvId)); // cant use eventlistener on select2
@@ -85,15 +85,17 @@ const ActivationKeysSearch = () => {
     }
 
     const ktHideParams = () => {
-      if (paramContainer) {
-        paramContainer.style.display = 'none';
+      const container = getParamContainer();
+      if (container) {
+        container.style.display = 'none';
       }
     };
 
     const ktAkGetKeysFromParam = () => {
       let keys = [];
-      if (paramContainer) {
-        const textarea = paramContainer.querySelector('textarea');
+      const container = getParamContainer();
+      if (container) {
+        const textarea = container.querySelector('textarea');
         if (textarea) {
           keys = textarea.value.split(',').map(key => key.trim());
         }
@@ -102,11 +104,11 @@ const ActivationKeysSearch = () => {
     };
     ktHideParams();
     setSelectedKeys(ktAkGetKeysFromParam());
-  }, [ktLoadActivationKeys, paramContainer, selectedContentViewId, selectedEnvId]);
+  }, [getParamContainer, ktLoadActivationKeys, selectedContentViewId, selectedEnvId]);
 
   useEffect(() => {
     function ktSetParam() {
-      let paramContainerCopy = paramContainer;
+      let paramContainerCopy = getParamContainer();
       if (selectedKeys.length > 0) {
         const value = selectedKeys.map(key => key.trim()).join(',');
         if (!paramContainerCopy) {
@@ -123,14 +125,16 @@ const ActivationKeysSearch = () => {
           paramContainerCopy.querySelector("input[name*='name']").value = KT_AK_LABEL;
         }
         paramContainerCopy.querySelector('textarea').value = value;
-        paramContainerCopy.querySelector("input[type='hidden']").value = 0;
+        const destroyInput = paramContainerCopy.querySelector("input[name*='[_destroy]']");
+        if (destroyInput) destroyInput.value = 0;
       } else if (paramContainerCopy) {
         // we remove the param by setting destroy to 1
-        paramContainerCopy.querySelector("input[type='hidden']").value = 1;
+        const destroyInput = paramContainerCopy.querySelector("input[name*='[_destroy]']");
+        if (destroyInput) destroyInput.value = 1;
       }
     }
     ktSetParam();
-  }, [paramContainer, selectedKeys]);
+  }, [getParamContainer, selectedKeys]);
 
   if (!(selectedEnvId && selectedContentViewId)) {
     return (
