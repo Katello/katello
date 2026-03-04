@@ -535,7 +535,6 @@ const successToast = (response) => {
 - **Pulp 3**: Content repository management (packages, containers, etc.)
 - **Candlepin**: Subscription and entitlement management
 - **Foreman Tasks**: Asynchronous job processing via Dynflow
-- **Message Queue**: STOMP-based event system for Candlepin events
 
 ### Key Domain Models
 - **Organization**: Multi-tenancy container
