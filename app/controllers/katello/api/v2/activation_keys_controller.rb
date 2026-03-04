@@ -23,9 +23,9 @@ module Katello
       param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
       param :purpose_role, String, :desc => N_("Sets the system purpose usage")
 
-      param :environment, Hash, :desc => N_("Hash containing the Id of the single lifecycle environment to be associated with the activation key."), deprecated: true
-      param :content_view_id, Integer, :desc => N_("Id of the single content view to be associated with the activation key."), :allow_nil => true
-      param :environment_id, Integer, :desc => N_("Id of the single lifecycle environment to be associated with the activation key."), :allow_nil => true
+      param :environment, Hash, :deprecated => true, :desc => N_("Hash containing the Id of the single lifecycle environment to be associated with the activation key.")
+      param :content_view_id, Integer, :deprecated => true, :desc => N_("Id of the single content view to be associated with the activation key."), :allow_nil => true
+      param :environment_id, Integer, :deprecated => true, :desc => N_("Id of the single lifecycle environment to be associated with the activation key."), :allow_nil => true
       param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels to be associated with the activation key,"\
                                               " in the format of 'lifecycle_environment_label/content_view_label'."\
                                               " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\

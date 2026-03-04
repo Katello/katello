@@ -1,8 +1,8 @@
 module Katello
   class Api::V2::HostContentsController < Katello::Api::V2::ApiController
     def_param_group :content_facet_attributes do
-      param :content_view_id, Integer, :desc => N_("Id of the single content view to be associated with the host.")
-      param :lifecycle_environment_id, Integer, :desc => N_("Id of the single lifecycle environment to be associated with the host.")
+      param :content_view_id, Integer, :deprecated => true, :desc => N_("Id of the single content view to be associated with the host. Ignored for multi-environment hosts.")
+      param :lifecycle_environment_id, Integer, :deprecated => true, :desc => N_("Id of the single lifecycle environment to be associated with the host. Ignored for multi-environment hosts.")
       param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels to be associated with the host,"\
                                               " in the format of 'lifecycle_environment_label/content_view_label'."\
                                               " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\
