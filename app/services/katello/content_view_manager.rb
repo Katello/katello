@@ -22,6 +22,11 @@ module Katello
     end
 
     def self.request_auto_publish(content_view:, content_view_version:)
+      if scheduled_composite_publish?(content_view)
+        auto_publish_log(nil, "composite publish already scheduled for ID #{content_view.id}, skipping")
+        return
+      end
+
       request = content_view.create_auto_publish_request!(
         content_view_version: content_view_version
       )
@@ -46,14 +51,34 @@ module Katello
 
     def self.trigger_auto_publish!(request:)
       request.with_lock do
-        if content_view_locks(content_view: request.content_view).any?
+        composite_cv = request.content_view
+
+        if content_view_locks(content_view: composite_cv).any?
           auto_publish_log(request, "locks found")
           return
         end
 
         description = _("Auto Publish - Triggered by '%s'") % request.content_view_version.name
-        ForemanTasks.async_task(Actions::Katello::ContentView::Publish, request.content_view, description, auto_published: true, triggered_by_id: request.content_view_version_id)
-        auto_publish_log(request, "task triggered")
+
+        # Find running component CV publish tasks for chaining
+        sibling_tasks = running_component_publish_tasks(composite_cv)
+
+        if sibling_tasks.any?
+          # Chain composite publish to wait for running component CVs
+          ForemanTasks.chain(
+            sibling_tasks,
+            Actions::Katello::ContentView::Publish,
+            composite_cv,
+            description,
+            auto_published: true,
+            triggered_by_id: request.content_view_version_id
+          )
+          auto_publish_log(request, "task chained to #{sibling_tasks.size} component tasks")
+        else
+          # No component CVs running, publish immediately
+          ForemanTasks.async_task(Actions::Katello::ContentView::Publish, composite_cv, description, auto_published: true, triggered_by_id: request.content_view_version_id)
+          auto_publish_log(request, "task triggered")
+        end
         request.destroy!
       rescue ForemanTasks::Lock::LockConflict => e
         auto_publish_log(request, e)
@@ -61,6 +86,30 @@ module Katello
       end
     rescue ActiveRecord::RecordNotFound
       auto_publish_log(request, "request gone")
+    end
+
+    def self.scheduled_composite_publish?(composite_cv)
+      ForemanTasks::Task::DynflowTask
+        .for_action(::Actions::Katello::ContentView::Publish)
+        .where(state: 'scheduled')
+        .any? do |task|
+          delayed_plan = ForemanTasks.dynflow.world.persistence.load_delayed_plan(task.external_id)
+          args = delayed_plan.args
+          args.first.is_a?(::Katello::ContentView) && args.first.id == composite_cv.id
+        end
+    end
+
+    def self.running_component_publish_tasks(composite_cv)
+      component_cv_ids = composite_cv.components.pluck(:content_view_id)
+      return [] if component_cv_ids.empty?
+
+      ForemanTasks::Task::DynflowTask
+        .for_action(::Actions::Katello::ContentView::Publish)
+        .where(state: ['planning', 'planned', 'running'])
+        .select do |task|
+          task_input = task.input
+          task_input && component_cv_ids.include?(task_input.dig('content_view', 'id'))
+        end
     end
   end
 end

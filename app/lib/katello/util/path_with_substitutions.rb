@@ -5,7 +5,7 @@ module Katello
 
       attr_reader :base_path, :path, :substitutions
 
-      SUBSTITUTABLE_REGEX = /^(.*?)\$([^\/]*)/.freeze
+      SUBSTITUTABLE_REGEX = /^(.*?)\$([^\/]*)/
 
       #path /content/rhel/server/$arch/$releasever/os
       #substitutions  {$arch => 'x86_64'}
