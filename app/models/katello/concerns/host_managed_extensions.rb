@@ -18,6 +18,11 @@ module Katello
             # them below in add_back_cve_errors.
             @pending_cve_attrs = { content_view_id: cv_id, lifecycle_environment_id: lce_id }
             if cv_id && lce_id
+              if content_facet&.multi_content_view_environment?
+                Rails.logger.warn "content_view_id and lifecycle_environment_id cannot be used to reassign multi-environment host '#{name}'. Use content_view_environment_ids instead"
+                @pending_cve_attrs = {}
+                return
+              end
               cve = content_facet&.assign_single_environment(content_view_id: cv_id, lifecycle_environment_id: lce_id)
               Rails.logger.warn "Couldn't assign content view environment; host has no content facet" if cve.blank?
               @pending_cve_attrs = {}
