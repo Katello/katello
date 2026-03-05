@@ -38,12 +38,18 @@ module Katello
 
     private
 
+    SORTABLE_COLUMNS = %w[bootc_booted_image bootc_booted_digest host_count].freeze
+
     def sanitize_sort_order(sort_order)
       if sort_order.present? && ['asc', 'desc'].include?(sort_order.downcase)
         sort_order.downcase
       else
         'asc'
       end
+    end
+
+    def sanitize_sort_column(sort_column)
+      SORTABLE_COLUMNS.include?(sort_column) ? sort_column : 'bootc_booted_image'
     end
 
     def index_relation
