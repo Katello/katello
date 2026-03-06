@@ -8,14 +8,12 @@ const groupedSubscriptions = Immutable({
         id: 1,
         name: 'Alpha',
         quantity: 10,
-        consumed: 0,
         product_id: 'RH00001',
       },
       {
         id: 2,
         name: 'Alpha',
         quantity: 15,
-        consumed: 5,
         product_id: 'RH00001',
       },
     ],
@@ -27,7 +25,6 @@ const groupedSubscriptions = Immutable({
         id: 3,
         name: 'Charlie',
         quantity: 10,
-        consumed: 0,
         product_id: 'RH00002',
       },
     ],
@@ -39,7 +36,6 @@ const groupedSubscriptions = Immutable({
         id: 4,
         name: 'Bravo',
         quantity: 100,
-        consumed: 0,
         product_id: 'RH00003',
       },
     ],
@@ -51,7 +47,6 @@ const groupedSubscriptions = Immutable({
         id: 5,
         name: 'Delta',
         quantity: 15,
-        consumed: 5,
         product_id: 'RH00004',
       },
     ],
@@ -60,7 +55,6 @@ const groupedSubscriptions = Immutable({
 
 export const genericRow = Immutable({
   collapsible: true,
-  consumed: 'NA',
   contract_number: 'NA',
   end_date: 'NA',
   hypervisor: undefined,
@@ -73,7 +67,6 @@ export const genericRow = Immutable({
 });
 
 export const subOneRowOne = Immutable({
-  consumed: 0,
   id: 1,
   maxQuantity: 60,
   name: 'Alpha',
@@ -84,7 +77,6 @@ export const subOneRowOne = Immutable({
 });
 
 export const subOneRowTwo = Immutable({
-  consumed: 5,
   id: 2,
   maxQuantity: 65,
   name: 'Alpha',
@@ -95,7 +87,6 @@ export const subOneRowTwo = Immutable({
 });
 
 export const subTwo = Immutable({
-  consumed: 0,
   id: 3,
   maxQuantity: -1,
   name: 'Charlie',
@@ -106,7 +97,6 @@ export const subTwo = Immutable({
 });
 
 export const subThree = Immutable({
-  consumed: 0,
   id: 4,
   maxQuantity: 200,
   name: 'Bravo',
@@ -117,7 +107,6 @@ export const subThree = Immutable({
 });
 
 export const subFour = Immutable({
-  consumed: 5,
   id: 5,
   maxQuantity: 65,
   name: 'Delta',

@@ -17,30 +17,6 @@ module Katello
         Katello::Erratum.in_repositories(Katello::Repository.readable).with_identifiers(id).map(&:attributes).first.slice!('created_at', 'updated_at')
       end
 
-      apipie :method, 'Returns subscriptions for the host' do
-        required :host, 'Host::Managed', desc: 'Host object to get subscriptions for'
-        returns array_of: 'Subscription', desc: 'Array with subscription object'
-      end
-      def host_subscriptions(host)
-        host.subscriptions
-      end
-
-      apipie :method, 'Returns subscription names for the host' do
-        required :host, 'Host::Managed', desc: 'Host object to get subscriptions for'
-        returns array_of: String, desc: "Array with names of host's subscriptions"
-      end
-      def host_subscriptions_names(host)
-        host.subscriptions.map(&:name)
-      end
-
-      apipie :method, 'Returns Red Hat subscription names for the host' do
-        required :host, 'Host::Managed', desc: 'Host object to get subscriptions for'
-        returns array_of: String, desc: "Array with names of host's subscriptions"
-      end
-      def host_redhat_subscription_names(host)
-        host.subscriptions.redhat.pluck(:name)
-      end
-
       apipie :method, 'Returns content facet for the host' do
         desc "Content facet is an object containing the host's content-related metadata and associations"
         required :host, 'Host::Managed', desc: 'Host object to get content facet for'

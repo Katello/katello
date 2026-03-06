@@ -11,8 +11,6 @@ module Katello
         accepts_nested_attributes_for :subscription_facet, :update_only => true, :reject_if => lambda { |attrs| attrs.values.compact.empty? }
 
         has_many :activation_keys, :through => :subscription_facet
-        has_many :pools, :through => :subscription_facet
-        has_many :subscriptions, :through => :pools
         has_one :rhel_lifecycle_status_object, :class_name => 'Katello::RhelLifecycleStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :hypervisor_host, :through => :subscription_facet
 

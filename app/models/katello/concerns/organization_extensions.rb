@@ -82,10 +82,6 @@ module Katello
           pools.upstream.pick(:account_number)
         end
 
-        def active_pools_count
-          self.pools.where.not(:unmapped_guest => true).count
-        end
-
         def anonymous_provider
           self.providers.anonymous.first
         end

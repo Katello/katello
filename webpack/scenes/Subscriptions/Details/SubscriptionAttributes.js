@@ -4,7 +4,6 @@ export default {
   name: __('Name'),
   description: __('Description'),
   virt_who: __('Requires Virt-Who'),
-  consumed: __('Consumed'),
   start_date: __('Starts'),
   end_date: __('Ends'),
   product_id: __('Product ID'),

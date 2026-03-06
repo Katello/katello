@@ -45,7 +45,6 @@ const buildTableCollapseRow = (subscriptionGroup) => {
     contract_number: 'NA',
     start_date: 'NA',
     end_date: 'NA',
-    consumed: 'NA',
     product_id: first.product_id,
     name: first.name,
     virt_only: first.virt_only,
@@ -108,15 +107,15 @@ export const buildPools = updatedQuantity =>
   }));
 
 export const getEntitlementsDisplayValue = ({
-  rawValue, available, collapsible, upstreamPoolId,
+  quantity, collapsible,
 }) => {
   if (collapsible) {
     return __('NA');
   }
-  if ((available && available < 0) || !upstreamPoolId) {
-    return (
-      available < 0 ? __('Unlimited') : available
-    );
+
+  if (quantity && quantity < 0) {
+    return __('Unlimited');
   }
-  return rawValue;
+
+  return quantity;
 };

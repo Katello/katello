@@ -10,15 +10,6 @@ module Katello
       @org = get_organization(:empty_organization)
     end
 
-    def test_active_pools_count
-      pools_count = @org.active_pools_count
-      assert_equal pools_count, 3
-
-      @org.pools.first.update_attribute(:unmapped_guest, true)
-      pools_count = @org.active_pools_count
-      assert_equal pools_count, 2
-    end
-
     def test_audit_manifest_action
       current_time = Time.now
       travel_to current_time do
