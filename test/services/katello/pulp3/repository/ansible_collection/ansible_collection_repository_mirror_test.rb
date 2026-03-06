@@ -39,12 +39,13 @@ module Katello
         def test_refresh_distributions_create_dist
           @repo_service.stubs(:lookup_distributions).returns([])
           @repo_service.stubs(:relative_path).returns("mock relative_path")
+          @repo_service.stubs(:distribution_name).with("mock relative_path").returns("mock distribution name")
           @repo_mirror.stubs(:version_href).returns("repo_href")
           distribution_data = "mock distribution_data"
           PulpAnsibleClient::AnsibleAnsibleDistribution.expects(:new).with(
           {
             :base_path => "mock relative_path",
-            :name => "Default_Organization-Cabinet-pulp3_Ansible_collection_1",
+            :name => "mock distribution name",
             :content_guard => nil,
             :repository_version => "repo_href",
           }).returns(distribution_data)

@@ -110,7 +110,7 @@ module Actions
                       type:            repo.root.content_type,
                       arches:          repo.root.format_arches,
                       label:           repo.root.custom_content_label,
-                      content_url:     repo.root.custom_content_path,
+                      content_url:     repo.custom_candlepin_content_path,
                       gpg_key_url:     repo.yum_gpg_key_url,
                       metadata_expire: repo.root.metadata_expire)
         end

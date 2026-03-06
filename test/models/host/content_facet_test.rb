@@ -437,6 +437,7 @@ module Katello
   class BoundReposTest < ContentFacetBase
     let(:deb_repo) { katello_repositories(:debian_9_amd64) }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
+    let(:short_repo) { katello_repositories(:debian_10_amd64) }
     let(:view_repo) { katello_repositories(:fedora_17_x86_64_library_view_1) }
 
     def test_save_bound_repos_by_path_empty
@@ -492,6 +493,41 @@ module Katello
       Rails.logger.expects(:warn).with(expected_warning)
 
       content_facet.update_repositories_by_paths([bogus_path])
+    end
+
+    def test_save_bound_repos_by_short_paths
+      original = Setting[:katello_pulp_short_paths]
+      Setting[:katello_pulp_short_paths] = true
+
+      content_facet.assign_single_environment(
+        content_view: short_repo.content_view,
+        lifecycle_environment: short_repo.environment
+      )
+      assert_empty content_facet.bound_repositories
+
+      content_facet.update_repositories_by_paths([
+                                                   "/pulp/content/#{short_repo.short_relative_path}",
+                                                   "/pulp/content/#{deb_repo.short_relative_path}",
+                                                 ])
+
+      assert_equal_arrays content_facet.bound_repositories, [deb_repo, short_repo]
+    ensure
+      Setting[:katello_pulp_short_paths] = original
+    end
+
+    def test_short_path_warning
+      original = Setting[:katello_pulp_short_paths]
+      Setting[:katello_pulp_short_paths] = true
+
+      content_facet.bound_repositories = [repo]
+      bogus_path = '/pulp/content/Default_Organization/Library/short/doesnotexist'
+      bogus_relative_path = bogus_path.gsub('/pulp/content/', '')
+      expected_warning = "System #{host.name} (#{host.id}) requested binding to unknown short repo #{bogus_relative_path}"
+      Rails.logger.expects(:warn).with(expected_warning)
+
+      content_facet.update_repositories_by_paths([bogus_path])
+    ensure
+      Setting[:katello_pulp_short_paths] = original
     end
   end
 

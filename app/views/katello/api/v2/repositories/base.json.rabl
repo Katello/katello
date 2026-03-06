@@ -4,7 +4,7 @@ extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'
 
 attributes :pulp_id => :backend_identifier
-attributes :relative_path, :container_repository_name, :full_path, :library_instance_id
+attributes :relative_path, :container_repository_name, :full_path, :short_full_path, :library_instance_id
 attributes :full_gpg_key_path
 attributes :version_href, :remote_href, :publication_href
 attributes :content_counts

@@ -15,7 +15,7 @@ module Actions
                                            type:          root.content_type,
                                            arches:        root.format_arches,
                                            label:         root.custom_content_label,
-                                           content_url:   root.custom_content_path,
+                                           content_url:   repository.custom_candlepin_content_path,
                                            os_versions:   root.os_versions&.join(','))
               content_id = content_create.output[:response][:id]
               plan_action(Candlepin::Product::ContentAdd, owner: root.product.organization.label,
@@ -36,7 +36,7 @@ module Actions
                           type:          root.content_type,
                           arches:        root.format_arches,
                           label:         root.custom_content_label,
-                          content_url:   root.custom_content_path,
+                          content_url:   repository.custom_candlepin_content_path,
                           gpg_key_url:   root.library_instance.yum_gpg_key_url)
             end
           end
@@ -44,9 +44,9 @@ module Actions
 
         def finalize
           root = ::Katello::RootRepository.find(input[:root_repository_id])
-          content_url = root.custom_content_path
+          repository = ::Katello::Repository.find(input[:repository_id])
+          content_url = repository.custom_candlepin_content_path
           if root.deb?
-            repository = ::Katello::Repository.find(input[:repository_id])
             content_url += repository.deb_content_url_options
             repository.update(:content_id => input[:content_id])
           else

@@ -31,6 +31,36 @@ module Katello
             assert @service.distribution_needs_update?
           end
 
+          def test_distribution_paths_with_short_paths_disabled
+            original = Setting[:katello_pulp_short_paths]
+            Setting[:katello_pulp_short_paths] = false
+
+            assert_equal [@service.relative_path], @service.distribution_paths
+          ensure
+            Setting[:katello_pulp_short_paths] = original
+          end
+
+          def test_distribution_paths_with_short_paths_enabled
+            original = Setting[:katello_pulp_short_paths]
+            Setting[:katello_pulp_short_paths] = true
+
+            assert_equal [@service.relative_path, @repo.short_relative_path], @service.distribution_paths
+          ensure
+            Setting[:katello_pulp_short_paths] = original
+          end
+
+          def test_refresh_distributions_with_short_paths_enabled
+            original = Setting[:katello_pulp_short_paths]
+            Setting[:katello_pulp_short_paths] = true
+
+            @service.expects(:refresh_distribution_for_path).with(@service.relative_path)
+            @service.expects(:refresh_distribution_for_path).with(@repo.short_relative_path)
+
+            @service.refresh_distributions
+          ensure
+            Setting[:katello_pulp_short_paths] = original
+          end
+
           def test_updates
             @service.refresh_if_needed
             @repo.relative_path = "/some/other/path/that/is/different"

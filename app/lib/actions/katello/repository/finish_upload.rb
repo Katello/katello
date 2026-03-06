@@ -23,7 +23,7 @@ module Actions
                         type:            repository.root.content_type,
                         arches:          repository.root.format_arches,
                         label:           repository.root.custom_content_label,
-                        content_url:     repository.root.custom_content_path,
+                        content_url:     repository.custom_candlepin_content_path,
                         gpg_key_url:     repository.yum_gpg_key_url,
                         metadata_expire: repository.root.metadata_expire)
           end
