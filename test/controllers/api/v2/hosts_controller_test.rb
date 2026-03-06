@@ -250,7 +250,6 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   def test_update_subscription_facet
     Katello::Host::SubscriptionFacet.any_instance.stubs(:backend_update_needed?).returns(false)
 
-    Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
     Katello::Candlepin::Consumer.any_instance.stubs(:virtual_host).returns(nil)
     Katello::Candlepin::Consumer.any_instance.stubs(:virtual_guests).returns([])
     Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])

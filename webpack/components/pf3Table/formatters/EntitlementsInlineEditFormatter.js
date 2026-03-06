@@ -5,11 +5,11 @@ import { Table, FormControl, FormGroup, HelpBlock, Spinner } from 'patternfly-re
 import { validateQuantity } from '../../../scenes/Subscriptions/SubscriptionValidations';
 import { getEntitlementsDisplayValue } from '../../../scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableHelpers';
 
-const renderValue = (rawValue, additionalData, onActivate) => {
-  const { available, upstream_pool_id: upstreamPoolId, collapsible } = additionalData.rowData;
+const renderValue = (quantity, additionalData, onActivate) => {
+  const { collapsible } = additionalData.rowData;
 
   const value = getEntitlementsDisplayValue({
-    rawValue, available, collapsible, upstreamPoolId,
+    quantity, collapsible,
   });
   const editable = (typeof value === 'number');
 

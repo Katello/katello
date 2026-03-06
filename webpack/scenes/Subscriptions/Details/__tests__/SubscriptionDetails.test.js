@@ -2,7 +2,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import SubscriptionDetails from '../SubscriptionDetails';
-import SubscriptionDetailAssociations from '../SubscriptionDetailAssociations';
 import SubscriptionDetailInfo from '../SubscriptionDetailInfo';
 import SubscriptionDetailProducts from '../SubscriptionDetailProducts';
 import SubscriptionDetailProductContent from '../SubscriptionDetailProductContent';
@@ -23,7 +22,6 @@ describe('subscriptions details page', () => {
       history={{ push: noop }}
       match={match}
     />);
-    expect(wrapper.find(SubscriptionDetailAssociations)).toHaveLength(1);
     expect(wrapper.find(SubscriptionDetailInfo)).toHaveLength(1);
     expect(wrapper.find(SubscriptionDetailProducts)).toHaveLength(1);
     expect(wrapper.find(SubscriptionDetailProductContent)).toHaveLength(1);

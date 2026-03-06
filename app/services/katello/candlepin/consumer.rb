@@ -41,13 +41,6 @@ module Katello
         end
       end
 
-      def self.friendly_compliance_reasons(candlepin_reasons)
-        candlepin_reasons.map do |reason|
-          product_name = reason['productName'] || reason['attributes']['name']
-          "#{product_name}: #{reason['message']}"
-        end
-      end
-
       def self.distribution_to_puppet_os(name)
         return ::Operatingsystem::REDHAT_ATOMIC_HOST_OS if name == ::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME
 

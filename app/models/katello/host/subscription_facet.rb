@@ -15,8 +15,6 @@ module Katello
       has_many :subscription_facet_installed_products, :class_name => "Katello::SubscriptionFacetInstalledProduct", :dependent => :destroy, :inverse_of => :subscription_facet
       has_many :installed_products, :through => :subscription_facet_installed_products, :class_name => "Katello::InstalledProduct"
 
-      has_many :compliance_reasons, :class_name => "Katello::ComplianceReason", :dependent => :destroy, :inverse_of => :subscription_facet
-
       validates :host, :presence => true, :allow_blank => false
 
       DEFAULT_TYPE = 'system'.freeze
@@ -66,16 +64,6 @@ module Katello
         self.installed_products = consumer_installed_product_list.map do |consumer_installed_product|
           InstalledProduct.find_or_create_from_consumer(consumer_installed_product)
         end
-      end
-
-      def update_compliance_reasons(reasons)
-        reasons = Katello::Candlepin::Consumer.friendly_compliance_reasons(reasons)
-
-        existing = self.compliance_reasons.pluck(:reason)
-        to_delete = existing - reasons
-        to_create = reasons - existing
-        self.compliance_reasons.where(:reason => to_delete).destroy_all if to_delete.any?
-        to_create.each { |reason| self.compliance_reasons.create(:reason => reason) }
       end
 
       def virtual_guests

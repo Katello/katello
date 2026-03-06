@@ -12,21 +12,13 @@ describe('Subscription helper', () => {
     const subscriptions = [
       {
         key: 'sub-1',
-        available: 3,
       },
       {
         key: 'sub-2',
-        available: 4,
-        upstream_pool_id: ' ',
-      },
-      {
-        key: 'sub-3',
-        available: -5,
         upstream_pool_id: ' ',
       },
       {
         key: 'sub-4',
-        available: -1,
       },
     ];
 
@@ -39,22 +31,14 @@ describe('Subscription helper', () => {
     const subscriptions = [
       {
         key: 'sub-1',
-        available: 0,
         upstream_pool_id: ' ',
       },
       {
         key: 'sub-2',
-        available: 4,
-        upstream_pool_id: ' ',
-      },
-      {
-        key: 'sub-3',
-        available: -5,
         upstream_pool_id: ' ',
       },
       {
         key: 'sub-4',
-        available: 100,
         upstream_pool_id: ' ',
       },
     ];

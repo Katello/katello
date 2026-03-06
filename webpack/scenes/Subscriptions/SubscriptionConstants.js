@@ -90,11 +90,6 @@ export const SUBSCRIPTION_TABLE_COLUMNS = [
     value: false,
   },
   {
-    key: 'consumed',
-    label: __('Consumed'),
-    value: false,
-  },
-  {
     key: 'quantity',
     label: __('Entitlements'),
     value: false,
@@ -113,7 +108,6 @@ export const SUBSCRIPTION_TABLE_DEFAULT_COLUMNS = [
   'start_date',
   'end_date',
   'virt_who',
-  'consumed',
   'quantity',
   'type',
   'product_host_count',
