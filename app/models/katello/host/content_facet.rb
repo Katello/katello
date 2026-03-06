@@ -337,9 +337,10 @@ module Katello
         facet = host.content_facet || host.build_content_facet
         attrs_to_add = {}
         BOOTC_FIELD_FACT_NAMES.each do |fact_name|
+          next unless parser.facts.key?(fact_name)
           fact_value = parser.facts[fact_name]
           field_name = fact_name.tr(".", "_")
-          attrs_to_add[field_name] = fact_value # overwrite with nil if fact is not present
+          attrs_to_add[field_name] = fact_value
         end
         if attrs_to_add['bootc_booted_digest'].present?
           manifest_entity = find_manifest_entity(digest: attrs_to_add['bootc_booted_digest'])
