@@ -550,4 +550,65 @@ module Katello
       assert_includes ::Host::Managed.search_for("repository_content_label = \"#{label}\""), host_one
     end
   end
+
+  class PopulateBootcFieldsFromFactsTest < ContentFacetBase
+    def setup
+      @host = FactoryBot.create(:host, :with_content, :with_subscription)
+      @content_facet = @host.content_facet
+    end
+
+    def test_preserve_bootc_fields_when_facts_absent
+      # First, populate bootc fields
+      @content_facet.update!(
+        bootc_booted_image: 'registry.example.com/bootc:original',
+        bootc_booted_digest: 'sha256:0138b67750edb6ceaad90692b9ad2d25d44d814a0b6a6068d8017751a83764a0',
+        bootc_staged_image: 'registry.example.com/bootc:staged',
+        bootc_staged_digest: 'sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+      )
+
+      # Upload facts without bootc data (simulating Ansible fact upload)
+      facts = {
+        'operatingsystem' => 'RedHat',
+        'operatingsystemrelease' => '9.0',
+      }
+
+      parser = stub(facts: facts)
+      Katello::Host::ContentFacet.populate_fields_from_facts(@host, parser, nil, nil)
+
+      # Bootc fields should be preserved (not nullified)
+      @content_facet.reload
+      assert_equal 'registry.example.com/bootc:original', @content_facet.bootc_booted_image
+      assert_equal 'sha256:0138b67750edb6ceaad90692b9ad2d25d44d814a0b6a6068d8017751a83764a0', @content_facet.bootc_booted_digest
+      assert_equal 'registry.example.com/bootc:staged', @content_facet.bootc_staged_image
+      assert_equal 'sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef', @content_facet.bootc_staged_digest
+    end
+
+    def test_update_bootc_fields_when_facts_present
+      # First, populate bootc fields with original values
+      @content_facet.update!(
+        bootc_booted_image: 'registry.example.com/bootc:original',
+        bootc_booted_digest: 'sha256:0138b67750edb6ceaad90692b9ad2d25d44d814a0b6a6068d8017751a83764a0',
+        bootc_staged_image: 'registry.example.com/bootc:staged',
+        bootc_staged_digest: 'sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+      )
+
+      # Upload facts with updated bootc data (simulating subscription-manager fact upload)
+      facts = {
+        'bootc.booted.image' => 'registry.example.com/bootc:updated',
+        'bootc.booted.digest' => 'sha256:5542248a4ac3025fa425b8edf9898b939be78aed61d6eadabcdef12345678901',
+        'bootc.staged.image' => 'registry.example.com/bootc:new-staged',
+        'bootc.staged.digest' => 'sha256:fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321',
+      }
+
+      parser = stub(facts: facts)
+      Katello::Host::ContentFacet.populate_fields_from_facts(@host, parser, nil, nil)
+
+      # Bootc fields should be updated with new values
+      @content_facet.reload
+      assert_equal 'registry.example.com/bootc:updated', @content_facet.bootc_booted_image
+      assert_equal 'sha256:5542248a4ac3025fa425b8edf9898b939be78aed61d6eadabcdef12345678901', @content_facet.bootc_booted_digest
+      assert_equal 'registry.example.com/bootc:new-staged', @content_facet.bootc_staged_image
+      assert_equal 'sha256:fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321', @content_facet.bootc_staged_digest
+    end
+  end
 end
