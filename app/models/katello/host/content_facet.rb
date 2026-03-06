@@ -339,7 +339,7 @@ module Katello
         BOOTC_FIELD_FACT_NAMES.each do |fact_name|
           fact_value = parser.facts[fact_name]
           field_name = fact_name.tr(".", "_")
-          attrs_to_add[field_name] = fact_value # overwrite with nil if fact is not present
+          attrs_to_add[field_name] = fact_value if fact_value.present?
         end
         if attrs_to_add['bootc_booted_digest'].present?
           manifest_entity = find_manifest_entity(digest: attrs_to_add['bootc_booted_digest'])
