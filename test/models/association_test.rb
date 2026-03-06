@@ -32,7 +32,6 @@ module Katello
       [
         "Katello::AlternateContentSourceProduct",
         "Katello::CapsuleLifecycleEnvironment",
-        "Katello::ComplianceReason",
         "Katello::ContentFacetApplicableDeb",
         "Katello::ContentFacetApplicableRpm",
         "Katello::ContentFacetRepository",

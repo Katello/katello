@@ -7,18 +7,9 @@ module Katello
 
       base.class_eval do
         lazy_accessor :pool_facts, :initializer => lambda { |_s| self.import_lazy_attributes }
-        lazy_accessor :subscription_facts, :initializer => lambda { |_s| self.subscription ? self.subscription.attributes : {} }
 
-        lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description, :product_family,
-          :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id, :roles, :usage,
+        lazy_accessor :arch, :description, :support_type, :upstream_entitlement_id, :roles, :usage,
           :initializer => :pool_facts
-
-        lazy_accessor :name, :support_level, :org, :sockets, :cores, :instance_multiplier,
-          :initializer => :subscription_facts
-
-        lazy_accessor :active, :initializer => lambda { |_s| self.pool_facts["activeSubscription"] }
-
-        lazy_accessor :available, :initializer => lambda { |_s| self.quantity_available }
 
         lazy_accessor :backend_data, :initializer => lambda { |_s| self.class.candlepin_data(self.cp_id) }
       end
@@ -112,13 +103,6 @@ module Katello
 
         subscription.backend_data["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
         json
-      end
-
-      def provider?(organization)
-        providers = self.subscription.products.collect do |provider|
-          Katello::Provider.where(:id => provider.provider_id, :organization_id => organization.id).first
-        end
-        providers.any?
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity

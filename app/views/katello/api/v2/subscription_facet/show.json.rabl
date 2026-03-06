@@ -1,10 +1,6 @@
 child :subscription_facet => :subscription_facet_attributes do |_facet|
   extends 'katello/api/v2/subscription_facet/base'
 
-  node :compliance_reasons do |sub_facet|
-    sub_facet.compliance_reasons.pluck(:reason)
-  end
-
   child :hypervisor_host => :virtual_host do
     attributes :id, :name
     node :display_name do |host|

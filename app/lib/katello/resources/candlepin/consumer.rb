@@ -116,28 +116,6 @@ module Katello
             return nil
           end
 
-          def compliance(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'compliance'), self.default_headers(uuid)).body
-            if response.present?
-              json = JSON.parse(response).with_indifferent_access
-              if json['reasons']
-                json['reasons'].sort! { |x, y| x['attributes']['name'] <=> y['attributes']['name'] }
-              else
-                json['reasons'] = []
-              end
-              json
-            else
-              return nil
-            end
-          end
-
-          def purpose_compliance(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'purpose_compliance'), self.default_headers(uuid)).body
-            if response.present?
-              JSON.parse(response).with_indifferent_access
-            end
-          end
-
           def content_overrides(id)
             result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))

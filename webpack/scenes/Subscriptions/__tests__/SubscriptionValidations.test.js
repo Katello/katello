@@ -59,10 +59,9 @@ describe('recordsValid', () => {
   /* eslint-disable object-curly-newline */
   it('accepts valid array', () => {
     const rows = [
-      { quantity: 10, available: 10, upstreamAvailable: 100, upstream_pool_id: ' ' },
-      { quantity: 10, available: 10, upstreamAvailable: -1 },
-      { quantity: -1, available: -1 },
-      { quantity: 10, available: 10, upstream_pool_id: ' ' },
+      { quantity: 10, upstream_pool_id: ' ' },
+      { quantity: 10 },
+      { quantity: -1 },
     ];
     expect(recordsValid(rows)).toBe(true);
   });
@@ -71,8 +70,8 @@ describe('recordsValid', () => {
   it('detects invalid record', () => {
     /* eslint-disable object-curly-newline */
     const rows = [
-      { quantity: 10, available: 10, upstreamAvailable: 100, maxQuantity: 100, upstream_pool_id: ' ' },
-      { quantity: 10, available: 10, upstreamAvailable: 0, maxQuantity: 5, upstream_pool_id: ' ' },
+      { quantity: 10, maxQuantity: 100, upstream_pool_id: ' ' },
+      { quantity: 10, maxQuantity: 5, upstream_pool_id: ' ' },
     ];
     /* eslint-enable object-curly-newline */
     expect(recordsValid(rows)).toBe(false);

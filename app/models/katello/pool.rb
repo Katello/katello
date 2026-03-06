@@ -27,7 +27,6 @@ module Katello
     scoped_search :on => :end_date, :complete_value => true, :rename => :expires, :only_explicit => true
     scoped_search :on => :ram, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
     scoped_search :on => :multi_entitlement, :complete_value => true
-    scoped_search :on => :consumed, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
     scoped_search :on => :account_number, :complete_value => true, :rename => :account, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :contract_number, :complete_value => true, :rename => :contract, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :virt_who, :complete_value => true, :only_explicit => true
@@ -48,6 +47,10 @@ module Katello
 
     validate :subscription_matches_organization
 
+    delegate :instance_multiplier, :support_level, :name, :sockets, :cores, to: :subscription
+    delegate :cp_id, to: :subscription, prefix: true
+    alias_method :product_id, :subscription_cp_id
+
     def product_host_count
       Katello::Host::ContentFacet.joins(bound_repositories: { product: :pools }).where(pools: { id: id }).distinct.count
     end
@@ -59,14 +62,8 @@ module Katello
       end
     end
 
-    DAYS_RECENTLY_EXPIRED = 30
-
     def redhat?
       self.class.redhat.where(:id => self.id).exists?
-    end
-
-    def active?
-      active
     end
 
     # used for notification bell
@@ -78,16 +75,6 @@ module Katello
     # used for entitlements report template
     def days_until_expiration
       (end_date.to_date - Date.today).to_i
-    end
-
-    def recently_expired?
-      Date.today >= end_date.to_date && (Date.today - end_date.to_date) <= DAYS_RECENTLY_EXPIRED
-    end
-
-    def quantity_available
-      return -1 if self.quantity == -1
-      return 0 unless self.quantity && self.consumed
-      self.quantity - self.consumed
     end
 
     def type
@@ -131,9 +118,7 @@ module Katello
       refs 'Pool'
       sections only: %w[all additional]
       prop_group :katello_idname_props, Katello::Model, meta: { friendly_name: 'pool' }
-      property :available, Integer, desc: 'Returns number of available subscriptions'
       property :quantity, Integer, desc: 'Returns number of all subscriptions'
-      property :consumed, Integer, desc: 'Returns number of consumed subscriptions'
       property :product_id, String, desc: 'Returns ID of the product'
       property :account_number, Integer, desc: 'Returns subscription account number'
       property :contract_number, Integer, desc: 'Returns subscription contract number'
@@ -144,7 +129,7 @@ module Katello
       property :days_until_expiration, Integer, desc: 'Returns number of days until expiration'
     end
     class Jail < ::Safemode::Jail
-      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed, :days_until_expiration, :product_host_count
+      allow :id, :name, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :days_until_expiration, :product_host_count
     end
   end
 end
