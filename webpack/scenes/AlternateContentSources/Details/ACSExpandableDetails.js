@@ -72,6 +72,9 @@ const ACSExpandableDetails = ({ expandedId }) => {
     alternate_content_source_type: acsType,
     content_type: contentType,
     subpaths,
+    deb_releases: debReleases,
+    deb_components: debComponents,
+    deb_architectures: debArchitectures,
     description,
     base_url: url,
     smart_proxies: smartProxies,
@@ -88,6 +91,7 @@ const ACSExpandableDetails = ({ expandedId }) => {
     return <EmptyStateMessage error={error} />;
   }
   const canEdit = hasPermission(permissions, 'edit_alternate_content_sources');
+  const debMode = contentType === 'deb';
   return (
     <>
       <Stack>
@@ -317,7 +321,9 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   contentId="showUrlPaths-content"
                   toggleId="showUrlPaths-toggle"
                 >
-                  <Text ouiaId="expandable-url-paths-text">{__('URL and subpaths')}</Text>
+                  <Text ouiaId="expandable-url-paths-text">
+                    {debMode ? __('URL and Debian fields') : __('URL and subpaths')}
+                  </Text>
                 </ExpandableSectionToggle>
               </SplitItem>
               {canEdit &&
@@ -353,15 +359,49 @@ const ACSExpandableDetails = ({ expandedId }) => {
                   >
                     {url}
                   </TextListItem>
-                  <TextListItem component={TextListItemVariants.dt}>
-                    {__('Subpaths')}
-                  </TextListItem>
-                  <TextListItem
-                    aria-label="subpaths_text_value"
-                    component={TextListItemVariants.dd}
-                  >
-                    {subpaths.join()}
-                  </TextListItem>
+                  {!debMode ? (
+                    <>
+                      <TextListItem component={TextListItemVariants.dt}>
+                        {__('Subpaths')}
+                      </TextListItem>
+                      <TextListItem
+                        aria-label="subpaths_text_value"
+                        component={TextListItemVariants.dd}
+                      >
+                        {subpaths.join()}
+                      </TextListItem>
+                    </>
+                  ) : (
+                    <>
+                      <TextListItem component={TextListItemVariants.dt}>
+                        {__('Releases/Distributions')}
+                      </TextListItem>
+                      <TextListItem
+                        aria-label="deb_releases_text_value"
+                        component={TextListItemVariants.dd}
+                      >
+                        {debReleases || <InactiveText text="N/A" />}
+                      </TextListItem>
+                      <TextListItem component={TextListItemVariants.dt}>
+                        {__('Components')}
+                      </TextListItem>
+                      <TextListItem
+                        aria-label="deb_components_text_value"
+                        component={TextListItemVariants.dd}
+                      >
+                        {debComponents || <InactiveText text="N/A" />}
+                      </TextListItem>
+                      <TextListItem component={TextListItemVariants.dt}>
+                        {__('Architectures')}
+                      </TextListItem>
+                      <TextListItem
+                        aria-label="deb_architectures_text_value"
+                        component={TextListItemVariants.dd}
+                      >
+                        {debArchitectures || <InactiveText text="N/A" />}
+                      </TextListItem>
+                    </>
+                  )}
                 </TextList>
               </TextContent>
             </ExpandableSection>

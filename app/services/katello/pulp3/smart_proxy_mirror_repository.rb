@@ -150,6 +150,13 @@ module Katello
             tasks << yum_acs_api.delete(orphan_yum_acs_href)
           end
         end
+        if RepositoryTypeManager.enabled_repository_types['deb']
+          deb_acs_api = ::Katello::Pulp3::Repository.api(smart_proxy, 'deb').alternate_content_source_api
+          orphan_deb_acs_hrefs = deb_acs_api.list.results.map(&:pulp_href) - known_acs_hrefs
+          orphan_deb_acs_hrefs.each do |orphan_deb_acs_href|
+            tasks << deb_acs_api.delete(orphan_deb_acs_href)
+          end
+        end
       end
 
       def delete_orphan_remotes
