@@ -34,7 +34,7 @@ module Actions
                           type:            new_repository.root.content_type,
                           arches:          new_repository.root.format_arches,
                           label:           new_repository.root.custom_content_label,
-                          content_url:     new_repository.root.custom_content_path,
+                          content_url:     new_repository.custom_candlepin_content_path,
                           gpg_key_url:     new_repository.yum_gpg_key_url,
                           metadata_expire: new_repository.root.metadata_expire)
             end

@@ -523,6 +523,12 @@ Foreman::Plugin.register :katello do
         description: N_("Default download policy for custom repositories (either 'immediate' or 'on_demand')"),
         collection: download_policies
 
+      setting 'katello_pulp_short_paths',
+        type: :boolean,
+        default: false,
+        full_name: N_('Enable short Pulp paths for custom repositories'),
+        description: N_("When enabled, Katello creates an additional short alias URL for custom repositories.")
+
       setting 'default_redhat_download_policy',
         type: :string,
         default: "on_demand",

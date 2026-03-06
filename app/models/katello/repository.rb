@@ -1,6 +1,7 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class Repository < Katello::Model
+    require 'digest'
     audited
 
     #pulp uses pulp id to sync with 'yum_distributor' on the end
@@ -31,6 +32,9 @@ module Katello
     GENERIC_TYPE = 'generic'.freeze
 
     EXPORTABLE_TYPES = [YUM_TYPE, FILE_TYPE, ANSIBLE_COLLECTION_TYPE, DOCKER_TYPE, DEB_TYPE].freeze
+
+    SHORT_PATH_PREFIX = 'short'.freeze
+    SHORT_PATH_HASH_LENGTH = 24
 
     ALLOWED_UPDATE_FIELDS = ['version_href', 'last_indexed'].freeze
 
@@ -487,6 +491,55 @@ module Katello
         "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api/"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
+      end
+    end
+
+    def short_paths_enabled?
+      custom? && Setting[:katello_pulp_short_paths]
+    end
+
+    def short_token_source
+      return container_repository_name.to_s if docker?
+
+      relative_path.to_s
+    end
+
+    def short_token
+      base = short_token_source.sub(%r|^/|, '')
+      Digest::SHA256.hexdigest("#{content_type}:#{base}")[0, SHORT_PATH_HASH_LENGTH]
+    end
+
+    def short_content_path
+      return nil unless short_paths_enabled?
+
+      "/#{SHORT_PATH_PREFIX}/#{short_token}"
+    end
+
+    def short_relative_path
+      return nil unless short_paths_enabled?
+      return "#{SHORT_PATH_PREFIX}/#{short_token}" if docker?
+      return nil unless environment
+
+      self.class.repo_path_from_content_path(environment, short_content_path)
+    end
+
+    def custom_candlepin_content_path
+      short_content_path || root.custom_content_path
+    end
+
+    def short_full_path(smart_proxy = nil, force_http = false)
+      short_path = short_relative_path
+      return nil if short_path.blank?
+      return nil unless distribution_references.where(path: short_path).exists?
+
+      pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : ::SmartProxy.pulp_primary.url)
+      scheme = force_http ? 'http' : 'https'
+      if docker?
+        "#{pulp_uri.host.downcase}/#{short_path}"
+      elsif ansible_collection?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{short_path}/api/"
+      else
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{short_path}/"
       end
     end
 

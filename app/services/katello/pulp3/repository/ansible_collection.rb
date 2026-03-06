@@ -21,7 +21,7 @@ module Katello
           {
             base_path: path,
             repository_version: repo.version_href,
-            name: "#{generate_backend_object_name}",
+            name: distribution_name(path),
           }
         end
 

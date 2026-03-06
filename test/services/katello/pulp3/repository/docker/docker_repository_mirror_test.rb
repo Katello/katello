@@ -42,12 +42,13 @@ module Katello
         def test_refresh_distributions_create_dist
           @repo_service.stubs(:lookup_distributions).returns([])
           @repo_service.stubs(:relative_path).returns("mock relative_path")
+          @repo_service.stubs(:distribution_name).with("mock relative_path").returns("mock distribution name")
           @repo_mirror.stubs(:version_href).returns("repo_href")
           distribution_data = "mock distribution_data"
           PulpContainerClient::ContainerContainerDistribution.expects(:new).with(
           {
             :base_path => "mock relative_path",
-            :name => "Default_Organization-Cabinet-pulp3_Docker_1",
+            :name => "mock distribution name",
             :repository_version => "repo_href",
           }).returns(distribution_data)
           PulpContainerClient::DistributionsContainerApi.any_instance.expects(:create).with(distribution_data)
