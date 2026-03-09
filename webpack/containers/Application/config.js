@@ -20,6 +20,7 @@ import ManifestDetails from '../../scenes/ContainerImages/Synced/Details';
 import FlatpakRemotes from '../../scenes/FlatpakRemotes';
 import FlatpakRemoteDetails from '../../scenes/FlatpakRemotes/Details';
 import SyncStatus from '../../scenes/SyncStatus';
+import ContentCredentials from '../../scenes/ContentCredentials';
 
 // eslint-disable-next-line import/prefer-default-export
 export const links = [
@@ -110,5 +111,9 @@ export const links = [
     path: 'flatpak_remotes/:id([0-9]+)',
     component: WithOrganization(withHeader(FlatpakRemoteDetails, { title: __('Flatpak Remote Details') })),
     exact: false,
+  },
+  {
+    path: 'labs/content_credentials',
+    component: WithOrganization(withHeader(ContentCredentials, { title: __('Content Credentials') })),
   },
 ];
