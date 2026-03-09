@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useForemanOrganization, useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
-import { useBulkModalOpen } from '../bulkModalState';
+import { useBulkModalOpen } from 'foremanReact/common/BulkModalStateHelper';
 import BulkAssignCVEnvsModal from './BulkAssignCVEnvsModal';
 
 const BulkAssignCVEnvsModalScene = () => {

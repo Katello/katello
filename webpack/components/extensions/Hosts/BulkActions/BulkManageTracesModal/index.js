@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
-import { useBulkModalOpen } from '../bulkModalState';
+import { useBulkModalOpen } from 'foremanReact/common/BulkModalStateHelper';
 import BulkManageTracesModal from './BulkManageTracesModal';
 
 const BulkManageTracesModalScene = () => {

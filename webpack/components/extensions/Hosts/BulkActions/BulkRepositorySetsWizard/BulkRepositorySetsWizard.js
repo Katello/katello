@@ -13,6 +13,7 @@ import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/
 import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
 import { useTableIndexAPIResponse, useSetParamsAndApiAndSearch } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
+import { useBulkModalOpen } from 'foremanReact/common/BulkModalStateHelper';
 
 import { BulkRepositorySetsTable } from './01_BulkRepositorySetsTable';
 import { BulkRepositorySetsReview } from './03_Review';
@@ -20,7 +21,6 @@ import HostReview from '../HostReview';
 import katelloApi from '../../../../../services/api';
 import { useHostsBulkSelect } from '../BulkPackagesWizard/BulkPackagesWizard';
 import { BulkRepositorySetsReviewFooter } from './03_ReviewFooter';
-import { useBulkModalOpen } from '../bulkModalState';
 
 const DEFAULT_PER_PAGE = 5;
 export const BulkRepositorySetsWizardContext = createContext({});

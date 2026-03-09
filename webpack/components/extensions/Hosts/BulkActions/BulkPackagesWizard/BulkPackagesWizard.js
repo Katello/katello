@@ -16,13 +16,13 @@ import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/Ac
 import { useTableIndexAPIResponse } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
 import { STATUS } from 'foremanReact/constants';
 import { HOSTS_API_PATH } from 'foremanReact/routes/Hosts/constants';
+import { useBulkModalOpen } from 'foremanReact/common/BulkModalStateHelper';
 import HostReview from '../HostReview';
 import { BulkPackagesReview, dropdownOptions } from './04_Review';
 import { BulkPackagesUpgradeTable, BulkPackagesInstallTable, BulkPackagesRemoveTable } from './02_BulkPackagesTable';
 import { BulkPackagesReviewFooter } from './04_ReviewFooter';
 import katelloApi, { foremanApi } from '../../../../../services/api';
 import PACKAGE_CONTENT_TYPE_NAMES from '../BulkActionsConstants';
-import { useBulkModalOpen } from '../bulkModalState';
 
 export const UPGRADE_ALL = 'upgradeAll';
 export const UPGRADE = 'upgrade';

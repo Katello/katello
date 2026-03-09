@@ -4,10 +4,10 @@ import { Menu, MenuItem, MenuContent, MenuList } from '@patternfly/react-core';
 import { BanIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
+import { openBulkModal } from 'foremanReact/common/BulkModalStateHelper';
 import { ForemanHostsIndexActionsBarContext } from 'foremanReact/components/HostsIndex';
 import { useForemanOrganization, useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
 import './ActionsBar.scss';
-import { openBulkModal } from '../BulkActions/bulkModalState';
 
 
 const DisabledMenuItemDescription = ({ disabledReason }) => (
