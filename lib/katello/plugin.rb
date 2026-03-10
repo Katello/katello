@@ -211,6 +211,16 @@ Foreman::Plugin.register :katello do
        :after => :newhost,
        :turbolinks => false
 
+  menu :labs_menu,
+       :content_credentials,
+       :caption => N_('Content Credentials'),
+       :url => '/labs/content_credentials',
+       :url_hash => {:controller => 'katello/api/v2/content_credentials_controller',
+                     :action => 'index'},
+       :engine => Katello::Engine,
+       :parent => :lab_features_menu,
+       :turbolinks => false
+
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 
