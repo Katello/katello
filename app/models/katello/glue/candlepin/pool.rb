@@ -8,7 +8,8 @@ module Katello
       base.class_eval do
         lazy_accessor :pool_facts, :initializer => lambda { |_s| self.import_lazy_attributes }
 
-        lazy_accessor :arch, :description, :support_type, :upstream_entitlement_id, :roles, :usage,
+        lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description, :product_family,
+          :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id, :roles, :usage,
           :initializer => :pool_facts
 
         lazy_accessor :backend_data, :initializer => lambda { |_s| self.class.candlepin_data(self.cp_id) }
