@@ -47,15 +47,15 @@ describe("Factory: ContentCredential", function() {
         ssl_key_products: [],
         ssl_key_root_repos: [],
         permissions: {
-          view_content_credenials: true,
-          edit_content_credenials: true,
-          destroy_content_credenials: true
+          view_content_credentials: true,
+          edit_content_credentials: true,
+          destroy_content_credentials: true
         }
       };
 
       contentCredentials = {
         records: [
-          contentCredential          
+          contentCredential
         ],
         total: 3,
         subtotal: 1
