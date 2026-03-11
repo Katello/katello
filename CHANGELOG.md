@@ -1,6 +1,12 @@
-# 4.20.0 (2026-02-25)
+# 4.20.0 (2026-03-11)
 
 ## Features
+
+### Content Credentials
+ * Content Credentials - set up initial infrastructure in React ([#39139](https://projects.theforeman.org/issues/39139))
+
+### Orchestration
+ * Integrate Katello recurring tasks with Foreman::Cron#11633 ([#39114](https://projects.theforeman.org/issues/39114), [0d39e3c3](https://github.com/Katello/katello.git/commit/0d39e3c35fd5e6bb8bfdfd68d2781b3daf6ca772))
 
 ### Container
  * Maria's UX Container Images page changes ([#39031](https://projects.theforeman.org/issues/39031), [b90c7451](https://github.com/Katello/katello.git/commit/b90c745150e1d45291c205474fe9f9d845885336))
@@ -32,14 +38,28 @@
 ### katello-tracer
  * Add bulk Traces to HostsIndex ([#38876](https://projects.theforeman.org/issues/38876), [942b2ccf](https://github.com/Katello/katello.git/commit/942b2ccff2af9cbf43a14e43afda8f8789cee5b0))
 
+### Host Collections
+ * Need to add flow for bulk-assigning Host Collections when there are no HCs in the system ([#38843](https://projects.theforeman.org/issues/38843), [e464a980](https://github.com/Katello/katello.git/commit/e464a980e88b470415f7a5d4edc1fef7ec712c40))
+
 ### Other
  * Add warning for Change Content Source ([#39072](https://projects.theforeman.org/issues/39072), [3fa63e88](https://github.com/Katello/katello.git/commit/3fa63e889f71f39f324e9b896b73298325cb8aa3))
  * Enable multiCV by default ([#38919](https://projects.theforeman.org/issues/38919), [264dfd8d](https://github.com/Katello/katello.git/commit/264dfd8d6469dd4ecfd38bf324cd13fa702974a7))
 
 ## Bug Fixes
 
+### Hosts
+ * MultiCV will get reset after editing a host ([#39122](https://projects.theforeman.org/issues/39122), [8950fd32](https://github.com/Katello/katello.git/commit/8950fd32bd95e2077bd2da2ea1c6bcca8edc8ec6))
+ * Katello:clean_backend_object takes a long time to complete ([#38997](https://projects.theforeman.org/issues/38997), [c148bee9](https://github.com/Katello/katello.git/commit/c148bee9dd206b81969a7b87e7590e775649f628), [0ffbbefc](https://github.com/Katello/katello.git/commit/0ffbbefc0c32c236719209001321faef80271287))
+ * remove PXEGrub setting from Content settings ([#38988](https://projects.theforeman.org/issues/38988), [2cc25f31](https://github.com/Katello/katello.git/commit/2cc25f31aac4bcee381fbbfcb81f50e9eea655c2))
+ * Host Collections are nested under Hosts/Templates instead of just Hosts ([#38977](https://projects.theforeman.org/issues/38977), [2d8304f0](https://github.com/Katello/katello.git/commit/2d8304f054c8d0f81f1e5a46f0d70f662625ba49))
+ * Allow scoped search on 'persistence' field at `/api/v2/hosts/:id/packages` ([#38924](https://projects.theforeman.org/issues/38924), [68796b0a](https://github.com/Katello/katello.git/commit/68796b0a2b9bc6d8bde291e32b931497c2c47dec), [adbb150a](https://github.com/Katello/katello.git/commit/adbb150a287fb2bbf3e79d1a96990a74f180216c))
+ * Registration fails if @rhsm_url is http, not https ([#38917](https://projects.theforeman.org/issues/38917), [dc514187](https://github.com/Katello/katello.git/commit/dc51418785bdd813e334c374e97e1fdff7406d45))
+
+### Foreman Proxy Content
+ * orphan cleanup triggers CapsuleContent::UpdateContentCounts regardless of automatic_content_count_updates setting ([#39112](https://projects.theforeman.org/issues/39112), [e8e0ee61](https://github.com/Katello/katello.git/commit/e8e0ee611cd634ca06e1dbc63f0362d6e56ae77a))
+
 ### Repositories
- * PG::SequenceGeneratorLimitExceeded: ERROR: nextval: reached maximum value of sequence "katello_rpms_id_seq" during repo sync ([#39102](https://projects.theforeman.org/issues/39102))
+ * PG::SequenceGeneratorLimitExceeded: ERROR: nextval: reached maximum value of sequence "katello_rpms_id_seq" during repo sync ([#39102](https://projects.theforeman.org/issues/39102), [99727a8c](https://github.com/Katello/katello.git/commit/99727a8c302933ad9057b589c4f81ec6a53c5083))
  * Bump pulp-deb bindings to 3.8 ([#39032](https://projects.theforeman.org/issues/39032), [aa83705c](https://github.com/Katello/katello.git/commit/aa83705ccdd360a241700194b88384187179f6b0), [d70b5edd](https://github.com/Katello/katello.git/commit/d70b5edd7ef4339cb483ab9fbdb95152ad3bfb05))
  * There is no progress displayed while the Flatpak scan task is running ([#39030](https://projects.theforeman.org/issues/39030), [ddd671ae](https://github.com/Katello/katello.git/commit/ddd671aec9efb1cd5fbbf5e701c0c401c2b90c25))
  * Update the Recommended Repositories page to change the Red Hat Satellite Capsule, Maintenance and Utils repositories from version 6.18 to 6.19 for RHEL 9 ([#39011](https://projects.theforeman.org/issues/39011), [70b545f3](https://github.com/Katello/katello.git/commit/70b545f309d2da77443c667029febe7b34b095be))
@@ -59,7 +79,6 @@
 
 ### Content Views
  * CV create lacks useful information in task list view ([#39082](https://projects.theforeman.org/issues/39082), [79fa7bd1](https://github.com/Katello/katello.git/commit/79fa7bd10b08160d279714e7a3714098a3968e70))
- * Cannot delete composite content view version due to host assignment ([#39055](https://projects.theforeman.org/issues/39055))
  * repository_errata for CV repositories missing PRNs at run time ([#39041](https://projects.theforeman.org/issues/39041), [6a46b2f1](https://github.com/Katello/katello.git/commit/6a46b2f1dccf58327b3863446919b79a95fffc84))
  * Use execution plan callbacks to orchestrate CV auto publish ([#39034](https://projects.theforeman.org/issues/39034), [c12a3b5d](https://github.com/Katello/katello.git/commit/c12a3b5d8f4f663fbf0b5d5bb8a7e6e8f2be6ba9))
  * Composite content views can update twice due to a single incremental update of a child content view ([#38460](https://projects.theforeman.org/issues/38460), [4723d11a](https://github.com/Katello/katello.git/commit/4723d11af7b48754af9bb6286527979bdb645e4d))
@@ -76,13 +95,6 @@
 ### Tests
  * Update Debian ptable factory ([#39008](https://projects.theforeman.org/issues/39008), [2920ffe1](https://github.com/Katello/katello.git/commit/2920ffe13f8c02b95f4b07b246564e2f7a992381))
 
-### Hosts
- * Katello:clean_backend_object takes a long time to complete ([#38997](https://projects.theforeman.org/issues/38997), [c148bee9](https://github.com/Katello/katello.git/commit/c148bee9dd206b81969a7b87e7590e775649f628), [0ffbbefc](https://github.com/Katello/katello.git/commit/0ffbbefc0c32c236719209001321faef80271287))
- * remove PXEGrub setting from Content settings ([#38988](https://projects.theforeman.org/issues/38988), [2cc25f31](https://github.com/Katello/katello.git/commit/2cc25f31aac4bcee381fbbfcb81f50e9eea655c2))
- * Host Collections are nested under Hosts/Templates instead of just Hosts ([#38977](https://projects.theforeman.org/issues/38977), [2d8304f0](https://github.com/Katello/katello.git/commit/2d8304f054c8d0f81f1e5a46f0d70f662625ba49))
- * Allow scoped search on 'persistence' field at `/api/v2/hosts/:id/packages` ([#38924](https://projects.theforeman.org/issues/38924), [68796b0a](https://github.com/Katello/katello.git/commit/68796b0a2b9bc6d8bde291e32b931497c2c47dec), [adbb150a](https://github.com/Katello/katello.git/commit/adbb150a287fb2bbf3e79d1a96990a74f180216c))
- * Registration fails if @rhsm_url is http, not https ([#38917](https://projects.theforeman.org/issues/38917), [dc514187](https://github.com/Katello/katello.git/commit/dc51418785bdd813e334c374e97e1fdff7406d45))
-
 ### Localization
  * i18n constants used as object keys for certain SelectableDropdown filters ([#38995](https://projects.theforeman.org/issues/38995), [fc2fa21e](https://github.com/Katello/katello.git/commit/fc2fa21e2a320d2114c4abd7220bcc8ab7ce7143))
 
@@ -92,11 +104,12 @@
 ### Subscriptions
  * suse product selection error in foreman 3.15 katello 4.17 ([#38719](https://projects.theforeman.org/issues/38719))
 
+### API
+ * katello gives wrong HTTP response code on oauth2 request against registry token endpoint ([#38424](https://projects.theforeman.org/issues/38424), [00f550f8](https://github.com/Katello/katello.git/commit/00f550f81697fa39d9cfed60844263c36fb1fb66))
+ * Remove deprecated field from docker repo authentication tokens ([#36888](https://projects.theforeman.org/issues/36888), [2b89a205](https://github.com/Katello/katello.git/commit/2b89a2055bff94a22784c5d6e8fd145ee9f1a050))
+
 ### Web UI
  * Breadcrumb switcher for Module stream details shows multiple entries ([#36929](https://projects.theforeman.org/issues/36929), [9b5e8afd](https://github.com/Katello/katello.git/commit/9b5e8afd733f9d88371855f4bb5628f6c6ed42f6))
-
-### API
- * Remove deprecated field from docker repo authentication tokens ([#36888](https://projects.theforeman.org/issues/36888), [2b89a205](https://github.com/Katello/katello.git/commit/2b89a2055bff94a22784c5d6e8fd145ee9f1a050))
 
 ### Other
  * Structured APT migration rake task not marked as applied if there are no deb repos during upgrade ([#39091](https://projects.theforeman.org/issues/39091), [14735e43](https://github.com/Katello/katello.git/commit/14735e4390199cd7f99841a93a2f96d89dbeeb45))
