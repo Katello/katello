@@ -114,8 +114,8 @@ end
 
 node :permissions do |content_credential|
   {
-    :view_content_credenials => content_credential.readable?,
-    :edit_content_credenials => content_credential.editable?,
-    :destroy_content_credenials => content_credential.deletable?,
+    :view_content_credentials => content_credential.readable?,
+    :edit_content_credentials => content_credential.editable?,
+    :destroy_content_credentials => content_credential.deletable?,
   }
 end

@@ -10,7 +10,7 @@ module Katello
     api :GET, "/hosts/bootc_images", N_("List booted bootc container images for hosts")
     param_group :search, Api::V2::ApiController
     def bootc_images
-      params[:sort_by] ||= 'bootc_booted_image'
+      params[:sort_by] = sanitize_sort_column(params[:sort_by])
       params[:sort_order] ||= 'asc'
       if params[:order]
         params[:order] = "#{params[:order].split(' ')[0]} #{sanitize_sort_order(params[:order].split(' ')[1])}"
@@ -38,12 +38,18 @@ module Katello
 
     private
 
+    SORTABLE_COLUMNS = %w[bootc_booted_image bootc_booted_digest host_count].freeze
+
     def sanitize_sort_order(sort_order)
       if sort_order.present? && ['asc', 'desc'].include?(sort_order.downcase)
         sort_order.downcase
       else
         'asc'
       end
+    end
+
+    def sanitize_sort_column(sort_column)
+      SORTABLE_COLUMNS.include?(sort_column) ? sort_column : 'bootc_booted_image'
     end
 
     def index_relation

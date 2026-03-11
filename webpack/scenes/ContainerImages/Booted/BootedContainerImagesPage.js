@@ -104,7 +104,7 @@ const BootedContainerImagesPage = () => {
     <TableIndexPage
       apiUrl={BOOTED_CONTAINER_IMAGES_API_PATH}
       apiOptions={apiOptions}
-      createable={false}
+      creatable={false}
       isDeleteable={false}
       controller="/katello/api/v2/host_bootc_images"
     >

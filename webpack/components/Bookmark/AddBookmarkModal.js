@@ -51,7 +51,7 @@ const AddBookmarkModal = ({ selectedItem, onClose, controller }) => {
         </FormGroup>
         <FormGroup label={__('Search Query')} isRequired fieldId="query">
           <TextInput
-            ouiaId="query-inout"
+            ouiaId="query-input"
             isRequired
             type="text"
             id="query"
