@@ -96,9 +96,17 @@ module Actions
       def transform_task_response(response)
         response = [] if response.nil?
         response = [response] unless response.is_a?(Array)
-        response.map do |task|
-          task.as_json
+        tasks = response.map do |task|
+          # Pulp 3.105 returns AsyncOperationResponse objects with a @task attribute
+          # instead of task objects with pulp_href. Handle both formats.
+          if task.respond_to?(:task) && !task.respond_to?(:pulp_href)
+            task_href = task.task
+            task_href ? {"task" => task_href}.with_indifferent_access : nil
+          else # Handle legacy format (TODO: remove once Pulp 3.105 hits N-2, Katello 4.23)
+            task.as_json
+          end
         end
+        tasks.compact
       end
 
       def check_for_errors

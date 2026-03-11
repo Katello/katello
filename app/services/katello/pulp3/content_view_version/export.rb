@@ -117,9 +117,19 @@ module Katello
         def destroy_exporter(exporter_data)
           exporter_href = exporter_data[:pulp_href]
           export_data = fetch_export(exporter_href)
-          api.exporter_api.partial_update(exporter_href, :last_export => nil)
-          api.export_api.delete(export_data.pulp_href) unless export_data.blank?
-          api.exporter_api.delete(exporter_href)
+
+          tasks = []
+          # Collect partial_update task if present (PULP-734: may return nil when no changes)
+          response = api.exporter_api.partial_update(exporter_href, :last_export => nil)
+          tasks << response if response.respond_to?(:task) && response.task.present?
+
+          # Collect export delete task
+          tasks << api.export_api.delete(export_data.pulp_href) unless export_data.blank?
+
+          # Collect exporter delete task
+          tasks << api.exporter_api.delete(exporter_href)
+
+          tasks.compact
         end
 
         def validate!(fail_on_missing_content: true, validate_incremental: true, chunk_size: nil)

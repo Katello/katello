@@ -111,7 +111,9 @@ module Katello
         href = repo.remote_href
 
         if url_type == remote_type
-          api.get_remotes_api(href: href).partial_update(href, remote_options)
+          response = api.get_remotes_api(href: href).partial_update(href, remote_options)
+          # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
+          response if response.respond_to?(:task) && response.task.present?
         else # We need to recreate a remote of the correct type!
           create_remote
           delete_remote(href: href)
@@ -212,7 +214,9 @@ module Katello
       end
 
       def update
-        api.repositories_api.update(repository_reference.try(:repository_href), create_options)
+        response = api.repositories_api.update(repository_reference.try(:repository_href), create_options)
+        # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
+        response if response.respond_to?(:task) && response.task.present?
       end
 
       def list(options)
@@ -324,7 +328,9 @@ module Katello
           end
           content_guard_prn = options.delete(:content_guard_prn) # Extract PRN and remove from options
           distribution_reference.update(:content_guard_href => options[:content_guard], :content_guard_prn => content_guard_prn)
-          api.distributions_api.partial_update(distribution_reference.href, options)
+          response = api.distributions_api.partial_update(distribution_reference.href, options)
+          # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
+          response if response.respond_to?(:task) && response.task.present?
         end
       end
 

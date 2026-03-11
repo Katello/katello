@@ -19,7 +19,8 @@ module ::Actions::Pulp3
 
     def test_refresh_if_needed
       action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, @repo, @smart_proxy)
-      refute_empty action.output[:pulp_tasks]
+      # In Pulp 3.105+, if there are no changes needed, no tasks are created and an empty array is returned (200 OK instead of 202 Accepted)
+      assert_empty action.output[:pulp_tasks]
     end
   end
 end

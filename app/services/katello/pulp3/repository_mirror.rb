@@ -27,7 +27,9 @@ module Katello
         if href
           # Do not consider remotes_uln_api, since the Katello server is not a ULN server. Even if the sync
           # to Katello used ULN, the sync from Katello server to smart proxy will use a normal RPM remote!
-          [api.remotes_api.partial_update(href, remote_options)]
+          response = api.remotes_api.partial_update(href, remote_options)
+          # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
+          (response.respond_to?(:task) && response.task.present?) ? [response] : []
         else
           create_remote
           []
@@ -55,7 +57,9 @@ module Katello
       end
 
       def update
-        api.repositories_api.update(repository_href, name: backend_object_name)
+        response = api.repositories_api.update(repository_href, name: backend_object_name)
+        # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
+        (response.respond_to?(:task) && response.task.present?) ? [response] : []
       end
 
       def delete(href = repository_href)
@@ -196,7 +200,9 @@ module Katello
           (distro = repo_service.lookup_distributions(name: "#{backend_object_name}").first)
           # update dist
           dist_options = dist_options.except(:name)
-          api.distributions_api.partial_update(distro.pulp_href, dist_options)
+          response = api.distributions_api.partial_update(distro.pulp_href, dist_options)
+          # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
+          (response.respond_to?(:task) && response.task.present?) ? [response] : []
         else
           # create dist
           distribution_data = api.distribution_class.new(dist_options)
