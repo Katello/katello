@@ -96,6 +96,11 @@ module Katello
       assert_equal @pool_one.quantity_available, 9
     end
 
+    def test_candlepin_data_rescue_gone
+      Katello::Resources::Candlepin::Pool.expects(:find).raises(Katello::Errors::CandlepinPoolGone)
+      assert_empty Pool.candlepin_data('abcd')
+    end
+
     def test_import_all_default
       org = get_organization
       Pool.expects(:candlepin_records_by_id).returns(
