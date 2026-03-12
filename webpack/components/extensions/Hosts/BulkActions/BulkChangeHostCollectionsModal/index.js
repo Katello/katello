@@ -5,8 +5,8 @@ import { BanIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
+import { openBulkModal, useBulkModalOpen } from 'foremanReact/common/BulkModalStateHelper';
 import BulkChangeHostCollectionsModal from './BulkChangeHostCollectionsModal';
-import { openBulkModal, useBulkModalOpen } from '../bulkModalState';
 
 const DisabledMenuItemDescription = ({ disabledReason }) => (
   <span className="disabled-menu-item-span">
