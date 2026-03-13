@@ -100,7 +100,7 @@
              <td class="small" bst-table-cell>{{ erratum.issued }}</td>
              <td class="small" bst-table-cell class="number-cell">
               <span ng-switch="newHostDetailsUI">
-                <a ng-switch-when="true" target="_blank" href="{{ '/hosts?search=installable_errata%3D' + erratum.errata_id }}">
+                <a ng-switch-when="true" target="_blank" href="{{ hostsUrl(erratum.errata_id) }}">
                   {{ erratum.affected_hosts_count }}
                   <span class="fa fa-external-link"></span>
                 </a>
