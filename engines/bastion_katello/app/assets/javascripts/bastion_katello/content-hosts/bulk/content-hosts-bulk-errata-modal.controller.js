@@ -17,13 +17,14 @@
  * @requires BastionConfig
  * @requires hostIds
  * @requires newHostDetailsUI
+ * @requires newHostsPage
  *
  * @description
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalController',
-    ['$scope', '$http', '$location', '$window', '$timeout', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'Notification', 'BastionConfig', 'hostIds', 'newHostDetailsUI',
-    function ($scope, $http, $location, $window, $timeout, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, Notification, BastionConfig, hostIds, newHostDetailsUI) {
+    ['$scope', '$http', '$location', '$window', '$timeout', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'Notification', 'BastionConfig', 'hostIds', 'newHostDetailsUI', 'newHostsPage',
+    function ($scope, $http, $location, $window, $timeout, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, Notification, BastionConfig, hostIds, newHostDetailsUI, newHostsPage) {
         function fetchErratum(errataId) {
             $scope.erratum = Erratum.get({id: errataId, 'organization_id': CurrentOrganization});
         }
@@ -43,6 +44,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.allHostsSelected = hostIds.allResultsSelected;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
         $scope.newHostDetailsUI = newHostDetailsUI;
+        $scope.newHostsPage = (newHostsPage === 'true');
+
+        $scope.hostsUrl = function(errataId) {
+            var basePath = $scope.newHostsPage ? '/new/hosts' : '/hosts';
+            return basePath + '?search=installable_errata%3D' + errataId;
+        };
 
         $scope.errataActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
