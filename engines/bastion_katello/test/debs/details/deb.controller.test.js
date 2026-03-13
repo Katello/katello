@@ -24,7 +24,8 @@ describe('Controller: DebController', function() {
             Deb: Deb,
             Host: Host,
             CurrentOrganization: currentOrganization,
-            newHostDetailsUI: 'newHostDetailsUI'
+            newHostDetailsUI: 'newHostDetailsUI',
+            newHostsPage: 'true'
         });
     }));
 
@@ -36,6 +37,22 @@ describe('Controller: DebController', function() {
         $scope.deb = fakeDeb;
         expect($scope.createSearchString('installed_deb')).toBe(encodeURIComponent("installed_deb=\"foo:greatestArch=1.0~deb9u1\""))
         expect($scope.createSearchString('applicable_deb')).toBe(encodeURIComponent("applicable_deb=\"foo:greatestArch=1.0~deb9u1\""))
+    })
+
+    it("generates new host URL with /new/hosts when newHostsPage is true", function() {
+        $scope.deb = fakeDeb;
+        $scope.newHostsPage = true;
+        var url = $scope.newHostUrl('installed_deb');
+        var expectedSearch = $scope.createSearchString('installed_deb');
+        expect(url).toBe('/new/hosts?search=' + expectedSearch);
+    })
+
+    it("generates new host URL with /hosts when newHostsPage is false", function() {
+        $scope.deb = fakeDeb;
+        $scope.newHostsPage = false;
+        var url = $scope.newHostUrl('installed_deb');
+        var expectedSearch = $scope.createSearchString('installed_deb');
+        expect(url).toBe('/hosts?search=' + expectedSearch);
     })
 
     it("fetches hosts counts", function() {

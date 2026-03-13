@@ -24,7 +24,8 @@ describe('Controller: PackageController', function() {
             Package: Package,
             Host: Host,
             CurrentOrganization: currentOrganization,
-            newHostDetailsUI: 'newHostDetailsUI'
+            newHostDetailsUI: 'newHostDetailsUI',
+            newHostsPage: 'true'
         });
     }));
 
@@ -36,6 +37,22 @@ describe('Controller: PackageController', function() {
         $scope.package = fakePackage;
         expect($scope.createSearchString('installed_package')).toBe("installed_package=foo-1.0-2.greatestArch")
         expect($scope.createSearchString('applicable_package')).toBe("applicable_package=foo-1.0-2.greatestArch")
+    })
+
+    it("generates new host URL with /new/hosts when newHostsPage is true", function() {
+        $scope.package = fakePackage;
+        $scope.newHostsPage = true;
+        var url = $scope.newHostUrl('installed_package');
+        var expectedSearch = encodeURIComponent($scope.createSearchString('installed_package'));
+        expect(url).toBe('/new/hosts?search=' + expectedSearch);
+    })
+
+    it("generates new host URL with /hosts when newHostsPage is false", function() {
+        $scope.package = fakePackage;
+        $scope.newHostsPage = false;
+        var url = $scope.newHostUrl('installed_package');
+        var expectedSearch = encodeURIComponent($scope.createSearchString('installed_package'));
+        expect(url).toBe('/hosts?search=' + expectedSearch);
     })
 
     it("fetches hosts counts", function() {
