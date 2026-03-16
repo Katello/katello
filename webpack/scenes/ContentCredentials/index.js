@@ -1,4 +1,4 @@
-import React from 'react';
+import { withRouter } from 'react-router-dom';
+import ContentCredentialsPage from './ContentCredentialsPage';
 
-const ContentCredentials = () => <h1>Content Credentials</h1>;
-export default ContentCredentials;
+export default withRouter(ContentCredentialsPage);
