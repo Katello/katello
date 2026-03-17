@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.20.0.rc1",
+        "Project-Id-Version": "katello 4.21.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2025",
+        "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2026",
         "Language-Team": "Georgian (https://app.transifex.com/foreman/teams/114/ka/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -468,6 +468,9 @@
       "A post-promotion summary of hosts with installable errata": [
         ""
       ],
+      "A publish is already scheduled for this content view. Please wait for the scheduled publish to complete.": [
+        ""
+      ],
       "A remote execution job is in progress": [
         "დაშორებულად გაშვებული დავალება ჯერ კიდევ მიმდინარეობს"
       ],
@@ -504,6 +507,9 @@
       "Action unauthorized to be performed in this organization.": [
         "ამ ორგანიზაციაში ქმედების განხორციელების ავტორიზაცია არ გაგაჩნიათ."
       ],
+      "Actions": [
+        ""
+      ],
       "Activation Key information": [
         ""
       ],
@@ -524,9 +530,6 @@
       ],
       "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
         ""
-      ],
-      "Activation key ID": [
-        "აქტივაციის გასაღების ID"
       ],
       "Activation key content view environments updated": [
         ""
@@ -1025,7 +1028,7 @@
         "ავტორი"
       ],
       "Auto Publish": [
-        ""
+        "ავტომატური გამოქვეყნება"
       ],
       "Auto Publish - Triggered by '%s'": [
         "ავტომატური გამოცემა - ტრიგერი: \\\"%s\\\""
@@ -1118,7 +1121,7 @@
         ""
       ],
       "Bootable": [
-        ""
+        "ჩატვირთვადი"
       ],
       "Bootc rollback via Bootc interface": [
         ""
@@ -1219,8 +1222,14 @@
       "Cancel repository discovery": [
         "რეპოზიტორიის აღმოჩენის გაუქმება"
       ],
+      "Cancel repository synchronization": [
+        ""
+      ],
       "Cancel running smart proxy synchronization": [
         "ჭკვიანი პროქსის გაშვებული სინქრონიზაციის გაუქმება"
+      ],
+      "Cancel sync": [
+        ""
       ],
       "Canceled": [
         "გაუქმებულია"
@@ -1375,6 +1384,9 @@
       "Cannot publish a link repository if multiple component clones are specified": [
         ""
       ],
+      "Cannot publish composite content view while its content views are being published. Please wait for component publishes to complete.": [
+        ""
+      ],
       "Cannot publish default content view": [
         "შემცველობის ნაგულისხმევი ხედის გამოქვეყნების შეცდომა"
       ],
@@ -1518,6 +1530,9 @@
       ],
       "Collapse All": [
         "ყველას ჩაკეცვა"
+      ],
+      "Collapse all": [
+        ""
       ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
@@ -2395,12 +2410,6 @@
       "Delete activation key?": [
         "წავშალო აქტივაციის გასაღები?"
       ],
-      "Delete all subscriptions attached to activation keys.": [
-        "აქტივაციის გასაღებებზე მიბმული ყველა გამოწერის წაშლა."
-      ],
-      "Delete all subscriptions that are attached to running hosts.": [
-        "გაშვებულ ჰოსტებზე მიმაგრებული ყველა გამოწერის წაშლა."
-      ],
       "Delete an organization": [
         "ორგანიზაციის წაშლა"
       ],
@@ -2551,9 +2560,6 @@
       "Disable": [
         "გამორთვა"
       ],
-      "Disable Red Hat Insights.": [
-        "Red Hat Insights-ის გამორთვა."
-      ],
       "Disable a repository from the set": [
         "სეტიდან რეპოზიტორიის გამორთვა"
       ],
@@ -2562,9 +2568,6 @@
       ],
       "Disabled": [
         "გამორთულია"
-      ],
-      "Disabling Simple Content Access failed for '%{subject}'.": [
-        "'%{subject}'-სთვის მარტივი შემცველობის წვდომის გამორთვის შეცდომა."
       ],
       "Discover Repositories": [
         "რეპოზიტორიების აღმოჩენა"
@@ -2712,9 +2715,6 @@
       ],
       "Enabled Repositories": [
         "ჩართული რეპოზიტორიები"
-      ],
-      "Enabling Simple Content Access failed for '%{subject}'.": [
-        "'%{subject}'-სთვის მარტივი შემცველობის წვდომის ჩართვის შეცდომა."
       ],
       "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
         ""
@@ -2965,6 +2965,9 @@
       "Failed to initiate trace resolution job.": [
         ""
       ],
+      "Failed to start repository synchronization": [
+        ""
+      ],
       "Fails if any of the repositories belonging to this organization are unexportable. False by default.": [
         ""
       ],
@@ -3206,12 +3209,6 @@
       "Generated content views cannot be directly published. They can updated only via export.": [
         "გენერირებული შემცველობის ნახვები არ შეიძლება პირდაპირ გამოქვეყნდეს. მათი განახლება შესაძლებელია მხოლოდ გატანის საშუალებით."
       ],
-      "Get all content available, not just that provided by subscriptions": [
-        "სრული და არა მხოლოდ გამოწერების მიერ მოწოდებული შემცველობის მიღება"
-      ],
-      "Get all content available, not just that provided by subscriptions.": [
-        "სრული და არა მხოლოდ გამოწერების მიერ მოწოდებული შემცველობის მიღება."
-      ],
       "Get content and overrides for the host": [
         "ჰოსტის შემცველობის გადაფარვების მიღება"
       ],
@@ -3226,6 +3223,9 @@
       ],
       "Get status of synchronisation for given repository": [
         "მითითებული რეპოზიტორიის სინქრონიზაციის სტატუსის მიღება"
+      ],
+      "Get sync status for all repositories in an organization": [
+        ""
       ],
       "Given a set of hosts and errata, lists the content view versions and environments that need updating.": [
         ""
@@ -3452,6 +3452,9 @@
       "ID of an environment to show repositories in": [
         "იმ რეპოზიტორიების ჩვენება, რომლის გარემოს ID"
       ],
+      "ID of an organization": [
+        ""
+      ],
       "ID of an organization to show repositories in": [
         "იმ რეპოზიტორიების ჩვენება, რომლის ორგანიზაციის ID"
       ],
@@ -3563,13 +3566,13 @@
       "Id of the single content view to be associated with the activation key.": [
         ""
       ],
-      "Id of the single content view to be associated with the host.": [
+      "Id of the single content view to be associated with the host. Ignored for multi-environment hosts.": [
         ""
       ],
       "Id of the single lifecycle environment to be associated with the activation key.": [
         ""
       ],
-      "Id of the single lifecycle environment to be associated with the host.": [
+      "Id of the single lifecycle environment to be associated with the host. Ignored for multi-environment hosts.": [
         ""
       ],
       "Id of the smart proxy": [
@@ -3672,9 +3675,6 @@
         "გამოწერის მმართველის შეცდომების იგნორი"
       ],
       "Ignore subscription-manager errors for `subscription-manager register` command": [
-        ""
-      ],
-      "Ignore subscriptions that are unavailable to the specified host": [
         ""
       ],
       "Ignored hosts": [
@@ -4276,7 +4276,7 @@
         ""
       ],
       "Limit": [
-        ""
+        "ზღვარი"
       ],
       "Limit actions to content in the host's environment.": [
         ""
@@ -4317,9 +4317,6 @@
       "List Content Credentials": [
         "შემცველობის ავტორიზაციის დეტალების სია"
       ],
-      "List a host's subscriptions": [
-        "ჰოსტის გამოწერების სია"
-      ],
       "List activation keys": [
         "აქტივაცის გასაღებების სია"
       ],
@@ -4334,9 +4331,6 @@
       ],
       "List alternate content sources.": [
         "ალტერნატიული შემცველობის წყაროების სია."
-      ],
-      "List an activation key's subscriptions": [
-        "აქტივაციის გასაღების გამოწერების სია"
       ],
       "List available releases in the organization": [
         "ორგანიზაციაში ხელმისაწვდომი რელიზების სია"
@@ -4506,6 +4500,12 @@
       "List of repositories in an organization": [
         "ორგანიზაციის რეპოზიტორიების სია"
       ],
+      "List of repository IDs to poll": [
+        ""
+      ],
+      "List of repository IDs to sync": [
+        ""
+      ],
       "List of repository ids": [
         "რეპოზიტორიების ID-ების სია"
       ],
@@ -4514,9 +4514,6 @@
       ],
       "List of subscription products in a subscription": [
         "გამოწერის პროდუქტების სია გამოწერაში"
-      ],
-      "List of subscription products in an activation key": [
-        "გამოწერის პროდუქტების სია აქტივაციის გასაღებში"
       ],
       "List of versions to exclude and not run an action on": [
         "ქმედების თავიდან ასაცილებელი და არ გადასატარებელი ვერსიების სია"
@@ -4889,6 +4886,9 @@
       ],
       "Never Synced": [
         "სინქრონიზაცია არ მომხდარა"
+      ],
+      "Never synced": [
+        ""
       ],
       "New Errata": [
         "ახალი შემორჩენილი პაჩი"
@@ -5304,9 +5304,6 @@
       "Note: Deleting a subscription manifest is STRONGLY discouraged.": [
         "გაფრთხილება: გამოწერის მანიფესტის წაშლას *არც ერთ* შემთხვევაში არ გირჩევთ."
       ],
-      "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:": [
-        "გაფრთხილება: გამოწერის მანიფესტის წაშლას *არც ერთ* შემთხვევაში არ გირჩევთ. მანიფესტის წაშლა გამოიწვევს:"
-      ],
       "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available.": [
         ""
       ],
@@ -5348,9 +5345,6 @@
       ],
       "OSTree refs": [
         "OSTree მიბმები"
-      ],
-      "Object to show subscriptions available for, either 'host' or 'activation_key'": [
-        ""
       ],
       "On Demand": [
         "საჭიროებისამებრ"
@@ -5778,6 +5772,9 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         "შემცველობის სარკისებური ასლის პოლიტიკა.  უნდა იყოს ერთ-ერთი %s-დან."
       ],
+      "Poll sync status for specified repositories": [
+        ""
+      ],
       "Prefer registered through Smart Proxy for remote execution": [
         ""
       ],
@@ -5871,6 +5868,9 @@
       "Product with ID %s not found in Candlepin. Skipping content import for it.": [
         ""
       ],
+      "Product | Repository": [
+        ""
+      ],
       "Product: '%{product}', Repository: '%{repository}'": [
         "პროდუქტი: '%{product}', რეპოზიტორია: '%{repository}'"
       ],
@@ -5885,6 +5885,9 @@
       ],
       "Profiles": [
         "პროფილები"
+      ],
+      "Progress / Result": [
+        ""
       ],
       "Promote": [
         "დაწინაურება"
@@ -6468,6 +6471,9 @@
       "Repository not found": [
         "რეპოზიტორია არ არსებობს"
       ],
+      "Repository not found or not syncable": [
+        ""
+      ],
       "Repository path": [
         "რეპოზიტორიის ბილიკი"
       ],
@@ -6507,6 +6513,9 @@
       "Repository sync failure": [
         "რეპოზიტორიის სინქრონიზაცია ჩავარდა"
       ],
+      "Repository synchronization started": [
+        ""
+      ],
       "Repository type": [
         "რეპოზიტორიის ტიპი"
       ],
@@ -6520,9 +6529,6 @@
         "რეპოზიტორიის მეტამონაცემების თავიდან გამოქვეყნება"
       ],
       "Requested access to '%s' is denied": [
-        ""
-      ],
-      "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -6668,12 +6674,6 @@
       ],
       "Return same, different or all results": [
         "იგივე, განსხვავებული ან ყველა შედეგის დაბრუნება"
-      ],
-      "Return subscriptions that match installed products of the specified host": [
-        ""
-      ],
-      "Return subscriptions which do not overlap with a currently-attached subscription": [
-        ""
       ],
       "Return the content of a Content Credential, used directly by yum": [
         ""
@@ -6972,6 +6972,9 @@
       "Select lifecycle environment": [
         "აირჩიეთ ცხოვრების ციკლის გარემო"
       ],
+      "Select node": [
+        ""
+      ],
       "Select none": [
         "მონიშვნის მოხსნა"
       ],
@@ -6998,6 +7001,9 @@
       ],
       "Select products to associate to this source.": [
         "აირჩიეთ ამ წყაროსთან ასოცირებული პროდუქტები."
+      ],
+      "Select repository": [
+        ""
       ],
       "Select repository sets": [
         ""
@@ -7182,6 +7188,9 @@
       "Show repositories enabled on the host that are known to Katello": [
         "Katello-სთვის ცნობილ ჰოსტზე ჩართული რეპოზიტორიების ჩვენება"
       ],
+      "Show syncing only": [
+        ""
+      ],
       "Show the available repository types": [
         "რეპოზიტორიის ხელმისაწვდომი ტიპების ჩვენება"
       ],
@@ -7193,15 +7202,6 @@
       ],
       "Shows version information": [
         "ვერსიის ინფორმაციის ჩვენება"
-      ],
-      "Simple Content Access has been disabled for '%{subject}'.": [
-        "'%{subject}'-სთვის მარტივი შემცველობის წვდომა გათიშულია."
-      ],
-      "Simple Content Access has been enabled for '%{subject}'.": [
-        "'%{subject}'-სთვის მარტივი შემცველობის წვდომა ჩაირთო."
-      ],
-      "Simple Content Access is the only supported content access mode": [
-        ""
       ],
       "Simplified": [
         "გამარტივებული"
@@ -7477,6 +7477,9 @@
       "Start date": [
         "საწყისი თარიღი"
       ],
+      "Started at": [
+        ""
+      ],
       "Starts": [
         "საწყისი"
       ],
@@ -7542,9 +7545,6 @@
       ],
       "Subscription expiration notification": [
         "გამოწერის ვადის ამოწურვის შეტყობინება"
-      ],
-      "Subscription id is nil.": [
-        "გამოწერის ID ნულოვანია."
       ],
       "Subscription identifier": [
         "გამოწერის იდენტიფიკატორი"
@@ -7669,11 +7669,17 @@
       "Sync all repositories for a product": [
         "პროდუქტის ყველა რეპოზიტორიის სინქრონიზაცია"
       ],
+      "Sync canceled": [
+        ""
+      ],
       "Sync complete.": [
         "სინქრონიზაცია დასრულდა."
       ],
       "Sync errata": [
         "მორჩენილი პაჩის სინქრონიზაცია"
+      ],
+      "Sync incomplete": [
+        ""
       ],
       "Sync one or more products": [
         "ერთი ან მეტი პროდუქტი იდენტიფიკაცია"
@@ -7702,6 +7708,9 @@
       "Synchronize Now": [
         "ახლავე სინქრონიზაცია"
       ],
+      "Synchronize repositories": [
+        ""
+      ],
       "Synchronize repository": [
         "რეპოზიტორიის სინქრონიზაცია"
       ],
@@ -7717,8 +7726,14 @@
       "Synchronize: Validate Content": [
         "სინქრონიზაცია: შემცველობის დამოწმება"
       ],
+      "Syncing": [
+        ""
+      ],
       "Syncing Complete.": [
         "სინქრონიზაცია დასრულდა."
+      ],
+      "Syncing complete": [
+        ""
       ],
       "Synopsis": [
         "დასკვნა"
@@ -7739,7 +7754,7 @@
         ""
       ],
       "Tag": [
-        ""
+        "ჭდე"
       ],
       "Tag name": [
         "ჭდის სახელი"
@@ -8044,9 +8059,6 @@
       "This action should only be taken for debugging purposes.": [
         "ეს ქმედება, მხოლოდ, გამართვის მიზნით უნდა გამოიყენოთ."
       ],
-      "This action should only be taken in extreme circumstances or for debugging purposes.": [
-        "ეს ქმედება, მხოლოდ, გამართვის მიზნით, განსაკუთრებულ შემთხვევებში უნდა გამოიყენოთ."
-      ],
       "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \\\"%{name}\\\" before deleting.": [
         ""
       ],
@@ -8070,9 +8082,6 @@
       ],
       "This content view will be deleted. Changes will be effective after clicking Delete.": [
         "ეს შემცველობის ხედი წაიშლება. ცვლილებები ძალაში წაშლის ღილაკზე დაწკაპუნების შემდეგ შევა."
-      ],
-      "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode.": [
-        ""
       ],
       "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
         ""
@@ -8190,6 +8199,9 @@
       ],
       "To get started, add this host to a host collection.": [
         "დასაწყებად ეს ჰოსტი ჰოსტების კოლექციაში ჩაამატეთ."
+      ],
+      "To get started, create a host collection.": [
+        ""
       ],
       "To give your hosts access to content, assign content view environments.": [
         ""
@@ -8909,9 +8921,6 @@
       "Virtual host": [
         "ვირტუალური ჰოსტი"
       ],
-      "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
-      ],
       "Waiting to start.": [
         "გაშვების მოლოდინი."
       ],
@@ -9466,9 +9475,6 @@
       ],
       "how often synchronization should run": [
         "სინქრონიზაციის გაშვების სიხშირე"
-      ],
-      "id of a host": [
-        "ჰოსტის ID"
       ],
       "id of host": [
         "ჰოსტის ID"

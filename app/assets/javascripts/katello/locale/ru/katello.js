@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.20.0.rc1",
+        "Project-Id-Version": "katello 4.21.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2025",
+        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
         "Language-Team": "Russian (https://app.transifex.com/foreman/teams/114/ru/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -468,6 +468,9 @@
       "A post-promotion summary of hosts with installable errata": [
         "Сводный отчет после переноса представлений со списком узлов, для которых доступны исправления"
       ],
+      "A publish is already scheduled for this content view. Please wait for the scheduled publish to complete.": [
+        ""
+      ],
       "A remote execution job is in progress": [
         ""
       ],
@@ -504,6 +507,9 @@
       "Action unauthorized to be performed in this organization.": [
         ""
       ],
+      "Actions": [
+        ""
+      ],
       "Activation Key information": [
         ""
       ],
@@ -524,9 +530,6 @@
       ],
       "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
         ""
-      ],
-      "Activation key ID": [
-        "Идентификатор ключа активации"
       ],
       "Activation key content view environments updated": [
         ""
@@ -1219,7 +1222,13 @@
       "Cancel repository discovery": [
         "Отменить поиск репозиториев"
       ],
+      "Cancel repository synchronization": [
+        ""
+      ],
       "Cancel running smart proxy synchronization": [
+        ""
+      ],
+      "Cancel sync": [
         ""
       ],
       "Canceled": [
@@ -1375,6 +1384,9 @@
       "Cannot publish a link repository if multiple component clones are specified": [
         ""
       ],
+      "Cannot publish composite content view while its content views are being published. Please wait for component publishes to complete.": [
+        ""
+      ],
       "Cannot publish default content view": [
         "Исходное представление не может быть опубликовано"
       ],
@@ -1518,6 +1530,9 @@
       ],
       "Collapse All": [
         "Свернуть все"
+      ],
+      "Collapse all": [
+        ""
       ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
@@ -2395,12 +2410,6 @@
       "Delete activation key?": [
         ""
       ],
-      "Delete all subscriptions attached to activation keys.": [
-        ""
-      ],
-      "Delete all subscriptions that are attached to running hosts.": [
-        ""
-      ],
       "Delete an organization": [
         "Удалить организацию"
       ],
@@ -2551,9 +2560,6 @@
       "Disable": [
         "Отключить"
       ],
-      "Disable Red Hat Insights.": [
-        ""
-      ],
       "Disable a repository from the set": [
         ""
       ],
@@ -2562,9 +2568,6 @@
       ],
       "Disabled": [
         "Отключено"
-      ],
-      "Disabling Simple Content Access failed for '%{subject}'.": [
-        ""
       ],
       "Discover Repositories": [
         "Поиск репозиториев"
@@ -2712,9 +2715,6 @@
       ],
       "Enabled Repositories": [
         "Активные репозитории"
-      ],
-      "Enabling Simple Content Access failed for '%{subject}'.": [
-        ""
       ],
       "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
         ""
@@ -2965,6 +2965,9 @@
       "Failed to initiate trace resolution job.": [
         ""
       ],
+      "Failed to start repository synchronization": [
+        ""
+      ],
       "Fails if any of the repositories belonging to this organization are unexportable. False by default.": [
         ""
       ],
@@ -3206,12 +3209,6 @@
       "Generated content views cannot be directly published. They can updated only via export.": [
         ""
       ],
-      "Get all content available, not just that provided by subscriptions": [
-        ""
-      ],
-      "Get all content available, not just that provided by subscriptions.": [
-        ""
-      ],
       "Get content and overrides for the host": [
         "Возвращает список переопределений для заданного узла"
       ],
@@ -3226,6 +3223,9 @@
       ],
       "Get status of synchronisation for given repository": [
         "Получить статус синхронизации для выбранного репозитория"
+      ],
+      "Get sync status for all repositories in an organization": [
+        ""
       ],
       "Given a set of hosts and errata, lists the content view versions and environments that need updating.": [
         "В качестве исходных данных принимает список узлов и исправлений и возвращает список версий представлений и окружения, которые могут быть обновлены."
@@ -3452,6 +3452,9 @@
       "ID of an environment to show repositories in": [
         "Идентификатор окружения для получения списка репозиториев"
       ],
+      "ID of an organization": [
+        ""
+      ],
       "ID of an organization to show repositories in": [
         "Идентификатор организации для получения списка репозиториев"
       ],
@@ -3563,13 +3566,13 @@
       "Id of the single content view to be associated with the activation key.": [
         ""
       ],
-      "Id of the single content view to be associated with the host.": [
+      "Id of the single content view to be associated with the host. Ignored for multi-environment hosts.": [
         ""
       ],
       "Id of the single lifecycle environment to be associated with the activation key.": [
         ""
       ],
-      "Id of the single lifecycle environment to be associated with the host.": [
+      "Id of the single lifecycle environment to be associated with the host. Ignored for multi-environment hosts.": [
         ""
       ],
       "Id of the smart proxy": [
@@ -3673,9 +3676,6 @@
       ],
       "Ignore subscription-manager errors for `subscription-manager register` command": [
         ""
-      ],
-      "Ignore subscriptions that are unavailable to the specified host": [
-        "Показать доступные подписки для указанного узла"
       ],
       "Ignored hosts": [
         ""
@@ -4276,7 +4276,7 @@
         ""
       ],
       "Limit": [
-        ""
+        "Ограничение"
       ],
       "Limit actions to content in the host's environment.": [
         ""
@@ -4317,9 +4317,6 @@
       "List Content Credentials": [
         ""
       ],
-      "List a host's subscriptions": [
-        "Возвращает список подписок для заданного узла"
-      ],
       "List activation keys": [
         "Показать ключи активации"
       ],
@@ -4334,9 +4331,6 @@
       ],
       "List alternate content sources.": [
         ""
-      ],
-      "List an activation key's subscriptions": [
-        "Показать подписки ключа активации"
       ],
       "List available releases in the organization": [
         ""
@@ -4506,6 +4500,12 @@
       "List of repositories in an organization": [
         ""
       ],
+      "List of repository IDs to poll": [
+        ""
+      ],
+      "List of repository IDs to sync": [
+        ""
+      ],
       "List of repository ids": [
         "Список идентификаторов репозиториев"
       ],
@@ -4514,9 +4514,6 @@
       ],
       "List of subscription products in a subscription": [
         "Список продуктов для указанной подписки"
-      ],
-      "List of subscription products in an activation key": [
-        "Список продуктов подписки для ключа активации"
       ],
       "List of versions to exclude and not run an action on": [
         ""
@@ -4889,6 +4886,9 @@
       ],
       "Never Synced": [
         "Никогда"
+      ],
+      "Never synced": [
+        ""
       ],
       "New Errata": [
         "Новые исправления"
@@ -5304,9 +5304,6 @@
       "Note: Deleting a subscription manifest is STRONGLY discouraged.": [
         ""
       ],
-      "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:": [
-        ""
-      ],
       "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available.": [
         ""
       ],
@@ -5348,9 +5345,6 @@
       ],
       "OSTree refs": [
         ""
-      ],
-      "Object to show subscriptions available for, either 'host' or 'activation_key'": [
-        "Ограничивает результаты только теми подписками, которые доступны для указанного здесь объекта. Допустимые значения: «host», «activation_key»."
       ],
       "On Demand": [
         "По требованию"
@@ -5778,6 +5772,9 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         ""
       ],
+      "Poll sync status for specified repositories": [
+        ""
+      ],
       "Prefer registered through Smart Proxy for remote execution": [
         ""
       ],
@@ -5871,6 +5868,9 @@
       "Product with ID %s not found in Candlepin. Skipping content import for it.": [
         ""
       ],
+      "Product | Repository": [
+        ""
+      ],
       "Product: '%{product}', Repository: '%{repository}'": [
         ""
       ],
@@ -5884,6 +5884,9 @@
         ""
       ],
       "Profiles": [
+        ""
+      ],
+      "Progress / Result": [
         ""
       ],
       "Promote": [
@@ -6468,6 +6471,9 @@
       "Repository not found": [
         "Репозиторий не найден"
       ],
+      "Repository not found or not syncable": [
+        ""
+      ],
       "Repository path": [
         ""
       ],
@@ -6507,6 +6513,9 @@
       "Repository sync failure": [
         ""
       ],
+      "Repository synchronization started": [
+        ""
+      ],
       "Repository type": [
         ""
       ],
@@ -6520,9 +6529,6 @@
         ""
       ],
       "Requested access to '%s' is denied": [
-        ""
-      ],
-      "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -6668,12 +6674,6 @@
       ],
       "Return same, different or all results": [
         ""
-      ],
-      "Return subscriptions that match installed products of the specified host": [
-        "Вернуть список подписок для продуктов, установленных на указанном узле"
-      ],
-      "Return subscriptions which do not overlap with a currently-attached subscription": [
-        "Вернуть только те подписки, которые не пересекаются с уже оформленной подпиской"
       ],
       "Return the content of a Content Credential, used directly by yum": [
         ""
@@ -6972,6 +6972,9 @@
       "Select lifecycle environment": [
         ""
       ],
+      "Select node": [
+        ""
+      ],
       "Select none": [
         ""
       ],
@@ -6997,6 +7000,9 @@
         ""
       ],
       "Select products to associate to this source.": [
+        ""
+      ],
+      "Select repository": [
         ""
       ],
       "Select repository sets": [
@@ -7182,6 +7188,9 @@
       "Show repositories enabled on the host that are known to Katello": [
         ""
       ],
+      "Show syncing only": [
+        ""
+      ],
       "Show the available repository types": [
         "Показать доступные типы репозиториев"
       ],
@@ -7193,15 +7202,6 @@
       ],
       "Shows version information": [
         "Показывает версию"
-      ],
-      "Simple Content Access has been disabled for '%{subject}'.": [
-        ""
-      ],
-      "Simple Content Access has been enabled for '%{subject}'.": [
-        ""
-      ],
-      "Simple Content Access is the only supported content access mode": [
-        ""
       ],
       "Simplified": [
         ""
@@ -7477,6 +7477,9 @@
       "Start date": [
         ""
       ],
+      "Started at": [
+        ""
+      ],
       "Starts": [
         "Начало"
       ],
@@ -7542,9 +7545,6 @@
       ],
       "Subscription expiration notification": [
         ""
-      ],
-      "Subscription id is nil.": [
-        "Идентификатор подписки не определен."
       ],
       "Subscription identifier": [
         "Идентификатор подписки"
@@ -7669,10 +7669,16 @@
       "Sync all repositories for a product": [
         "Синхронизировать все репозитории для указанного продукта"
       ],
+      "Sync canceled": [
+        ""
+      ],
       "Sync complete.": [
         "Успешно."
       ],
       "Sync errata": [
+        ""
+      ],
+      "Sync incomplete": [
         ""
       ],
       "Sync one or more products": [
@@ -7702,6 +7708,9 @@
       "Synchronize Now": [
         "Синхронизировать"
       ],
+      "Synchronize repositories": [
+        ""
+      ],
       "Synchronize repository": [
         "Синхронизировать репозиторий"
       ],
@@ -7717,8 +7726,14 @@
       "Synchronize: Validate Content": [
         ""
       ],
+      "Syncing": [
+        ""
+      ],
       "Syncing Complete.": [
         "Синхронизация завершена."
+      ],
+      "Syncing complete": [
+        ""
       ],
       "Synopsis": [
         ""
@@ -8044,9 +8059,6 @@
       "This action should only be taken for debugging purposes.": [
         ""
       ],
-      "This action should only be taken in extreme circumstances or for debugging purposes.": [
-        ""
-      ],
       "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \\\"%{name}\\\" before deleting.": [
         ""
       ],
@@ -8069,9 +8081,6 @@
         ""
       ],
       "This content view will be deleted. Changes will be effective after clicking Delete.": [
-        ""
-      ],
-      "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode.": [
         ""
       ],
       "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
@@ -8189,6 +8198,9 @@
         ""
       ],
       "To get started, add this host to a host collection.": [
+        ""
+      ],
+      "To get started, create a host collection.": [
         ""
       ],
       "To give your hosts access to content, assign content view environments.": [
@@ -8909,9 +8921,6 @@
       "Virtual host": [
         ""
       ],
-      "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
-      ],
       "Waiting to start.": [
         ""
       ],
@@ -9466,9 +9475,6 @@
       ],
       "how often synchronization should run": [
         "частота синхронизации"
-      ],
-      "id of a host": [
-        "Идентификатор узла"
       ],
       "id of host": [
         ""
