@@ -96,7 +96,9 @@ module Katello
           katello_dist_hrefs = ::Katello::RootRepository.where(content_type: repo_type.id)
                                 .joins(:repositories => :distribution_references)
                                 .pluck(:href)
-          pulp_dist_hrefs = api.distributions_list_all.map(&:pulp_href)
+          pulp_distributions = api.distributions_list_all
+          _, eligible_distributions = partition_protected_orphan_cleanup(pulp_distributions, 'distributions')
+          pulp_dist_hrefs = eligible_distributions.map(&:pulp_href)
           distribution_map[api] = pulp_dist_hrefs - katello_dist_hrefs
         end
 
@@ -118,7 +120,12 @@ module Katello
         repo_version_map = {}
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_api(smart_proxy)
-          version_hrefs = api.repository_versions.select { |repo_version| repo_version.number != 0 }.map(&:pulp_href)
+          versions = api.repository_versions.select { |repo_version| repo_version.number != 0 }
+          repos = api.list_all(fields: ['pulp_href', 'pulp_labels'])
+          protected_repos, = partition_protected_orphan_cleanup(repos, 'repositories')
+          protected_repo_hrefs = protected_repos.map(&:pulp_href)
+          eligible_versions = versions.reject { |repo_version| protected_repo_hrefs.include?(repo_version.repository) }
+          version_hrefs = eligible_versions.map(&:pulp_href)
           repo_version_map[api] = version_hrefs - ::Katello::Repository.where(version_href: version_hrefs).pluck(:version_href)
         end
 
@@ -127,6 +134,37 @@ module Katello
 
       def delete_orphan_repositories
         fail NotImplementedError
+      end
+
+      def self.orphan_cleanup_protected?(item)
+        labels = item.try(:pulp_labels)
+        return false unless labels.is_a?(Hash)
+
+        labels = labels.with_indifferent_access
+        value = labels[:katello_orphan_cleanup]
+        value.to_s == 'false'
+      end
+
+      private
+
+      def partition_protected_orphan_cleanup(items, label)
+        protected_items, eligible_items = items.partition { |item| self.class.orphan_cleanup_protected?(item) }
+        return [protected_items, eligible_items] if protected_items.empty?
+
+        log_protected_orphan_cleanup(label, protected_items)
+        [protected_items, eligible_items]
+      end
+
+      def log_protected_orphan_cleanup(label, protected_items)
+        identifiers = protected_items.map { |item| protected_orphan_identifier(item) }
+        Rails.logger.debug(
+          "Orphan cleanup: skipping #{protected_items.length} protected #{label} on smart proxy #{smart_proxy.id}: " \
+          "#{identifiers.join(', ')}"
+        )
+      end
+
+      def protected_orphan_identifier(item)
+        item.try(:name).presence || item.try(:base_path).presence || item.try(:pulp_href)
       end
     end
   end

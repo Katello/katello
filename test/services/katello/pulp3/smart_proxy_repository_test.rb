@@ -55,6 +55,48 @@ module Katello
 
         assert_equal ['rhel-7-gone'], smart_proxy_mirror_repo.delete_orphan_repositories
       end
+
+      def test_delete_orphan_remotes_skips_protected_label
+        proxy = smart_proxies(:four)
+        fedora = katello_repositories(:fedora_17_x86_64)
+        protected_remote_href = '/protected/href'
+        orphan_remote_href = '/orphan/href'
+        smart_proxy_mirror_repo = ::Katello::Pulp3::SmartProxyMirrorRepository.new(proxy)
+        ::Katello::SmartProxyAlternateContentSource.destroy_all
+
+        pulp_remotes = [
+          PulpRpmClient::RpmRpmRemoteResponse.new(name: "protected-#{fedora.pulp_id}", pulp_href: protected_remote_href, pulp_labels: { 'katello_orphan_cleanup' => 'false' }),
+          PulpRpmClient::RpmRpmRemoteResponse.new(name: fedora.pulp_id, pulp_href: '/fedora/href'),
+          PulpRpmClient::RpmRpmRemoteResponse.new(name: 'orphan-remote', pulp_href: orphan_remote_href),
+        ]
+
+        smart_proxy_mirror_repo.expects(:pulp3_enabled_repo_types).once.returns([::Katello::RepositoryTypeManager.find(:yum)])
+        ::Katello::SmartProxyHelper.any_instance.expects(:combined_repos_available_to_capsule).once.returns([fedora])
+        ::Katello::Pulp3::Api::Yum.any_instance.expects(:remotes_list_all).once.returns(pulp_remotes)
+        ::Katello::Pulp3::Api::Yum.any_instance.expects(:delete_remote).once.with(orphan_remote_href).returns('orphan-gone')
+
+        assert_equal ['orphan-gone'], smart_proxy_mirror_repo.delete_orphan_remotes
+      end
+
+      def test_orphaned_repositories_skips_protected_label
+        proxy = smart_proxies(:four)
+        repo = katello_repositories(:pulp3_file_1)
+        smart_proxy_mirror_repo = ::Katello::Pulp3::SmartProxyMirrorRepository.new(proxy)
+        api = mock
+        repo_type = mock
+        protected_repo = OpenStruct.new(name: "protected-#{repo.pulp_id}", pulp_labels: { 'katello_orphan_cleanup' => 'false' })
+        known_repo = OpenStruct.new(name: repo.pulp_id)
+        orphan_repo = OpenStruct.new(name: 'file-orphan')
+        known_capsule_repo = OpenStruct.new(pulp_id: known_repo.name)
+
+        smart_proxy_mirror_repo.expects(:pulp3_enabled_repo_types).once.returns([repo_type])
+        repo_type.expects(:pulp3_api).with(proxy).once.returns(api)
+        api.expects(:list_all).once.returns([protected_repo, known_repo, orphan_repo])
+        ::Katello::SmartProxyHelper.any_instance.expects(:combined_repos_available_to_capsule).once.returns([known_capsule_repo])
+
+        result = smart_proxy_mirror_repo.orphaned_repositories
+        assert_equal [orphan_repo], result[api]
+      end
     end
 
     class SmartProxyMirrorRepositoryOrphanRepositoryVersionsTest < ActiveSupport::TestCase
@@ -133,6 +175,30 @@ module Katello
         @smart_proxy_repo.delete_orphan_repository_versions
       end
 
+      def test_orphan_repository_versions_skips_protected_label
+        api = mock
+        repo_type = mock
+        protected_repo = OpenStruct.new(
+          name: 'protected-file',
+          pulp_href: '/pulp/repos/protected',
+          pulp_labels: { 'katello_orphan_cleanup' => 'false' }
+        )
+        repo = OpenStruct.new(name: 'file-repo', pulp_href: '/pulp/repos/file')
+        protected_version = OpenStruct.new(number: 1, repository: protected_repo.pulp_href, pulp_href: '/pulp/versions/protected/1')
+        version_zero = OpenStruct.new(number: 0, repository: repo.pulp_href, pulp_href: '/pulp/versions/file/0')
+        orphan_version = OpenStruct.new(number: 1, repository: repo.pulp_href, pulp_href: '/pulp/versions/file/1')
+        relation = mock
+
+        @smart_proxy_repo.expects(:pulp3_enabled_repo_types).once.returns([repo_type])
+        repo_type.expects(:pulp3_api).with(@primary).once.returns(api)
+        api.expects(:list_all).once.returns([protected_repo, repo])
+        api.expects(:repository_versions).once.returns([protected_version, version_zero, orphan_version])
+        ::Katello::Repository.expects(:where).with(version_href: [orphan_version.pulp_href]).once.returns(relation)
+        relation.expects(:pluck).with(:version_href).once.returns([])
+
+        assert_equal [orphan_version.pulp_href], @smart_proxy_repo.orphan_repository_versions[api]
+      end
+
       def test_report_misconfigured_repository_version_yum_default_view
         fedora = katello_repositories(:fedora_17_x86_64)
         ver_href = 'ver_href'
@@ -192,6 +258,20 @@ module Katello
 
         errors = @smart_proxy_repo.report_misconfigured_repository_version(api, ver_href)
         assert_equal errors, []
+      end
+    end
+
+    class SmartProxyMirrorRepositoryOrphanDistributionProtectionTest < ActiveSupport::TestCase
+      def test_orphan_distribution_non_protected_still_uses_existing_logic
+        dist = OpenStruct.new(
+          name: 'repo',
+          base_path: '/library/repo',
+          publication: nil,
+          repository: nil,
+          repository_version: nil
+        )
+
+        assert Katello::Pulp3::SmartProxyMirrorRepository.orphan_distribution?(dist)
       end
     end
 
