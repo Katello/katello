@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.20.0.rc1",
+        "Project-Id-Version": "katello 4.21.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2025",
+        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
         "Language-Team": "Chinese (Taiwan) (https://app.transifex.com/foreman/teams/114/zh_TW/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -468,6 +468,9 @@
       "A post-promotion summary of hosts with installable errata": [
         "主機的後推送摘要與可安裝勘誤"
       ],
+      "A publish is already scheduled for this content view. Please wait for the scheduled publish to complete.": [
+        ""
+      ],
       "A remote execution job is in progress": [
         ""
       ],
@@ -504,6 +507,9 @@
       "Action unauthorized to be performed in this organization.": [
         ""
       ],
+      "Actions": [
+        ""
+      ],
       "Activation Key information": [
         ""
       ],
@@ -524,9 +530,6 @@
       ],
       "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
         ""
-      ],
-      "Activation key ID": [
-        "啟動金鑰 ID"
       ],
       "Activation key content view environments updated": [
         ""
@@ -1218,7 +1221,13 @@
       "Cancel repository discovery": [
         "取消軟體庫搜尋"
       ],
+      "Cancel repository synchronization": [
+        ""
+      ],
       "Cancel running smart proxy synchronization": [
+        ""
+      ],
+      "Cancel sync": [
         ""
       ],
       "Canceled": [
@@ -1374,6 +1383,9 @@
       "Cannot publish a link repository if multiple component clones are specified": [
         ""
       ],
+      "Cannot publish composite content view while its content views are being published. Please wait for component publishes to complete.": [
+        ""
+      ],
       "Cannot publish default content view": [
         "無法發佈預設內容視域"
       ],
@@ -1517,6 +1529,9 @@
       ],
       "Collapse All": [
         "全部收回"
+      ],
+      "Collapse all": [
+        ""
       ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
@@ -2394,12 +2409,6 @@
       "Delete activation key?": [
         ""
       ],
-      "Delete all subscriptions attached to activation keys.": [
-        ""
-      ],
-      "Delete all subscriptions that are attached to running hosts.": [
-        ""
-      ],
       "Delete an organization": [
         "刪除組織"
       ],
@@ -2550,9 +2559,6 @@
       "Disable": [
         "停用"
       ],
-      "Disable Red Hat Insights.": [
-        ""
-      ],
       "Disable a repository from the set": [
         ""
       ],
@@ -2561,9 +2567,6 @@
       ],
       "Disabled": [
         "已停用"
-      ],
-      "Disabling Simple Content Access failed for '%{subject}'.": [
-        ""
       ],
       "Discover Repositories": [
         "尋找軟體庫"
@@ -2711,9 +2714,6 @@
       ],
       "Enabled Repositories": [
         "已啟用的軟體庫"
-      ],
-      "Enabling Simple Content Access failed for '%{subject}'.": [
-        ""
       ],
       "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
         ""
@@ -2964,6 +2964,9 @@
       "Failed to initiate trace resolution job.": [
         ""
       ],
+      "Failed to start repository synchronization": [
+        ""
+      ],
       "Fails if any of the repositories belonging to this organization are unexportable. False by default.": [
         ""
       ],
@@ -3205,12 +3208,6 @@
       "Generated content views cannot be directly published. They can updated only via export.": [
         ""
       ],
-      "Get all content available, not just that provided by subscriptions": [
-        ""
-      ],
-      "Get all content available, not just that provided by subscriptions.": [
-        ""
-      ],
       "Get content and overrides for the host": [
         "為主機取得內容與覆寫"
       ],
@@ -3225,6 +3222,9 @@
       ],
       "Get status of synchronisation for given repository": [
         "為指定的軟體庫取得同步化的狀態"
+      ],
+      "Get sync status for all repositories in an organization": [
+        ""
       ],
       "Given a set of hosts and errata, lists the content view versions and environments that need updating.": [
         "給定一組主機與勘誤，列出需要更新的內容視域版本與環境。"
@@ -3451,6 +3451,9 @@
       "ID of an environment to show repositories in": [
         "欲顯示其軟體庫的環境之 ID"
       ],
+      "ID of an organization": [
+        ""
+      ],
       "ID of an organization to show repositories in": [
         "欲顯示其軟體庫的組織之 ID"
       ],
@@ -3562,13 +3565,13 @@
       "Id of the single content view to be associated with the activation key.": [
         ""
       ],
-      "Id of the single content view to be associated with the host.": [
+      "Id of the single content view to be associated with the host. Ignored for multi-environment hosts.": [
         ""
       ],
       "Id of the single lifecycle environment to be associated with the activation key.": [
         ""
       ],
-      "Id of the single lifecycle environment to be associated with the host.": [
+      "Id of the single lifecycle environment to be associated with the host. Ignored for multi-environment hosts.": [
         ""
       ],
       "Id of the smart proxy": [
@@ -3672,9 +3675,6 @@
       ],
       "Ignore subscription-manager errors for `subscription-manager register` command": [
         ""
-      ],
-      "Ignore subscriptions that are unavailable to the specified host": [
-        "忽略對於特定主機不可用的訂閱服務"
       ],
       "Ignored hosts": [
         ""
@@ -4275,7 +4275,7 @@
         ""
       ],
       "Limit": [
-        ""
+        "限制"
       ],
       "Limit actions to content in the host's environment.": [
         ""
@@ -4316,9 +4316,6 @@
       "List Content Credentials": [
         ""
       ],
-      "List a host's subscriptions": [
-        "列出主機訂閱"
-      ],
       "List activation keys": [
         "列出啟動金鑰"
       ],
@@ -4333,9 +4330,6 @@
       ],
       "List alternate content sources.": [
         ""
-      ],
-      "List an activation key's subscriptions": [
-        "列出啟動金鑰的訂閱"
       ],
       "List available releases in the organization": [
         ""
@@ -4505,6 +4499,12 @@
       "List of repositories in an organization": [
         ""
       ],
+      "List of repository IDs to poll": [
+        ""
+      ],
+      "List of repository IDs to sync": [
+        ""
+      ],
       "List of repository ids": [
         "軟體庫 ID 清單"
       ],
@@ -4513,9 +4513,6 @@
       ],
       "List of subscription products in a subscription": [
         "訂閱中的訂閱產品清單"
-      ],
-      "List of subscription products in an activation key": [
-        "啟動金鑰中的訂閱產品清單"
       ],
       "List of versions to exclude and not run an action on": [
         ""
@@ -4888,6 +4885,9 @@
       ],
       "Never Synced": [
         "從未同步"
+      ],
+      "Never synced": [
+        ""
       ],
       "New Errata": [
         "新勘誤"
@@ -5303,9 +5303,6 @@
       "Note: Deleting a subscription manifest is STRONGLY discouraged.": [
         ""
       ],
-      "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:": [
-        ""
-      ],
       "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available.": [
         "請注意：括號中的數字反映了來自於主機所無法使用之函式庫環境中的所有可套用勘誤。您將需要推送此內容至相關的內容視域，方能使用它。"
       ],
@@ -5347,9 +5344,6 @@
       ],
       "OSTree refs": [
         ""
-      ],
-      "Object to show subscriptions available for, either 'host' or 'activation_key'": [
-        "顯示訂閱服務的可用物件，值可以是「host」或「activation_key」"
       ],
       "On Demand": [
         "視需求"
@@ -5777,6 +5771,9 @@
       "Policy to set for mirroring content.  Must be one of %s.": [
         ""
       ],
+      "Poll sync status for specified repositories": [
+        ""
+      ],
       "Prefer registered through Smart Proxy for remote execution": [
         ""
       ],
@@ -5870,6 +5867,9 @@
       "Product with ID %s not found in Candlepin. Skipping content import for it.": [
         ""
       ],
+      "Product | Repository": [
+        ""
+      ],
       "Product: '%{product}', Repository: '%{repository}'": [
         ""
       ],
@@ -5883,6 +5883,9 @@
         ""
       ],
       "Profiles": [
+        ""
+      ],
+      "Progress / Result": [
         ""
       ],
       "Promote": [
@@ -6467,6 +6470,9 @@
       "Repository not found": [
         "找不到軟體庫"
       ],
+      "Repository not found or not syncable": [
+        ""
+      ],
       "Repository path": [
         ""
       ],
@@ -6506,6 +6512,9 @@
       "Repository sync failure": [
         ""
       ],
+      "Repository synchronization started": [
+        ""
+      ],
       "Repository type": [
         ""
       ],
@@ -6519,9 +6528,6 @@
         ""
       ],
       "Requested access to '%s' is denied": [
-        ""
-      ],
-      "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -6667,12 +6673,6 @@
       ],
       "Return same, different or all results": [
         ""
-      ],
-      "Return subscriptions that match installed products of the specified host": [
-        "回傳符合特定主機上已安裝項目的訂閱服務"
-      ],
-      "Return subscriptions which do not overlap with a currently-attached subscription": [
-        "傳回並沒有與目前相關連訂閱服務重複的訂閱服務"
       ],
       "Return the content of a Content Credential, used directly by yum": [
         ""
@@ -6971,6 +6971,9 @@
       "Select lifecycle environment": [
         ""
       ],
+      "Select node": [
+        ""
+      ],
       "Select none": [
         ""
       ],
@@ -6996,6 +6999,9 @@
         ""
       ],
       "Select products to associate to this source.": [
+        ""
+      ],
+      "Select repository": [
         ""
       ],
       "Select repository sets": [
@@ -7181,6 +7187,9 @@
       "Show repositories enabled on the host that are known to Katello": [
         ""
       ],
+      "Show syncing only": [
+        ""
+      ],
       "Show the available repository types": [
         "顯示可用軟體庫類型"
       ],
@@ -7192,15 +7201,6 @@
       ],
       "Shows version information": [
         "顯示版本資訊"
-      ],
-      "Simple Content Access has been disabled for '%{subject}'.": [
-        ""
-      ],
-      "Simple Content Access has been enabled for '%{subject}'.": [
-        ""
-      ],
-      "Simple Content Access is the only supported content access mode": [
-        ""
       ],
       "Simplified": [
         ""
@@ -7476,6 +7476,9 @@
       "Start date": [
         ""
       ],
+      "Started at": [
+        ""
+      ],
       "Starts": [
         "起始"
       ],
@@ -7541,9 +7544,6 @@
       ],
       "Subscription expiration notification": [
         ""
-      ],
-      "Subscription id is nil.": [
-        "無訂閱 ID。"
       ],
       "Subscription identifier": [
         "訂閱識別子"
@@ -7668,10 +7668,16 @@
       "Sync all repositories for a product": [
         "同步產品的所有軟體庫"
       ],
+      "Sync canceled": [
+        ""
+      ],
       "Sync complete.": [
         "完成同步。"
       ],
       "Sync errata": [
+        ""
+      ],
+      "Sync incomplete": [
         ""
       ],
       "Sync one or more products": [
@@ -7701,6 +7707,9 @@
       "Synchronize Now": [
         "立即同步"
       ],
+      "Synchronize repositories": [
+        ""
+      ],
       "Synchronize repository": [
         "同步軟體庫"
       ],
@@ -7716,8 +7725,14 @@
       "Synchronize: Validate Content": [
         ""
       ],
+      "Syncing": [
+        ""
+      ],
       "Syncing Complete.": [
         "同步完成。"
+      ],
+      "Syncing complete": [
+        ""
       ],
       "Synopsis": [
         ""
@@ -8043,9 +8058,6 @@
       "This action should only be taken for debugging purposes.": [
         ""
       ],
-      "This action should only be taken in extreme circumstances or for debugging purposes.": [
-        ""
-      ],
       "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \\\"%{name}\\\" before deleting.": [
         ""
       ],
@@ -8068,9 +8080,6 @@
         ""
       ],
       "This content view will be deleted. Changes will be effective after clicking Delete.": [
-        ""
-      ],
-      "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode.": [
         ""
       ],
       "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead.": [
@@ -8188,6 +8197,9 @@
         ""
       ],
       "To get started, add this host to a host collection.": [
+        ""
+      ],
+      "To get started, create a host collection.": [
         ""
       ],
       "To give your hosts access to content, assign content view environments.": [
@@ -8908,9 +8920,6 @@
       "Virtual host": [
         ""
       ],
-      "WARNING: Simple Content Access will be required for all organizations in Katello 4.12.": [
-        ""
-      ],
       "Waiting to start.": [
         ""
       ],
@@ -9465,9 +9474,6 @@
       ],
       "how often synchronization should run": [
         "多久同步一次"
-      ],
-      "id of a host": [
-        "主機的 ID"
       ],
       "id of host": [
         ""

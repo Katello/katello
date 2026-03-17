@@ -7,7 +7,6 @@
 # Hannes Schaller <admin@cyberkov.at>, 2017
 # stbenjam <stephen@redhat.com>, 2017
 # Christina Gurski <Gurski_christina@yahoo.de>, 2017
-# 47388d0d0847859fcc07f8955b27d2a7_d1cb104 <93875580def0fcc1a566b016c3948752_122921>, 2020
 # Bernhard Suttner <bernhard.suttner@atix.de>, 2021
 # abf90805572190d649c59f7a021d76cb, 2021
 # Martin Zimmermann <martin.zimmermann@gmx.com>, 2021
@@ -19,19 +18,20 @@
 # Wiederoder <stefanwiederoder@googlemail.com>, 2022
 # Lukas Kallies <github.com@luke-web.de>, 2022
 # Lukáš Zapletal, 2022
-# Bryan Kearney <bryan.kearney@gmail.com>, 2024
 # Markus Bucher <bucher@atix.de>, 2025
 # Alexander Stoll <Alexander.Stoll@netways.de>, 2025
 # Ettore Atalan <atalanttore@googlemail.com>, 2025
 # pdolinic, 2025
 # Donien, 2026
+# 47388d0d0847859fcc07f8955b27d2a7_d1cb104 <93875580def0fcc1a566b016c3948752_122921>, 2026
+# Bryan Kearney <bryan.kearney@gmail.com>, 2026
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 4.20.0.rc1\n"
+"Project-Id-Version: katello 4.21.0.pre.master\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
-"Last-Translator: Donien, 2026\n"
+"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2026\n"
 "Language-Team: German (https://app.transifex.com/foreman/teams/114/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -495,6 +495,9 @@ msgstr ""
 msgid "A post-promotion summary of hosts with installable errata"
 msgstr "Eine Zusammenfassung (nach Übertragung) der Hosts mit installierbaren Errata"
 
+msgid "A publish is already scheduled for this content view. Please wait for the scheduled publish to complete."
+msgstr ""
+
 msgid "A remote execution job is in progress"
 msgstr ""
 
@@ -531,6 +534,9 @@ msgstr "Aktion für den Standard-Smart-Proxy nicht zulässig."
 msgid "Action unauthorized to be performed in this organization."
 msgstr "Aktion ist nicht authorisiert in dieser Organization ausgeführt zu werden"
 
+msgid "Actions"
+msgstr ""
+
 msgid "Activation Key information"
 msgstr ""
 
@@ -551,9 +557,6 @@ msgstr ""
 
 msgid "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled."
 msgstr "Aktivierungsschlüssel '%s' ist mit mehreren Umgebungen verknüpft und das Registrieren in mehreren Umgebungen ist nicht aktiviert."
-
-msgid "Activation key ID"
-msgstr "Aktivierungsschlüssel-ID"
 
 msgid "Activation key content view environments updated"
 msgstr ""
@@ -1059,7 +1062,7 @@ msgid "Author"
 msgstr "Autor"
 
 msgid "Auto Publish"
-msgstr ""
+msgstr "Automatisch veröffentlichen"
 
 msgid "Auto Publish - Triggered by '%s'"
 msgstr "Automatische Veröffentlichung - Ausgelöst durch '%s'"
@@ -1253,8 +1256,14 @@ msgstr "Abbrechen"
 msgid "Cancel repository discovery"
 msgstr "Repository-Suche abbrechen"
 
+msgid "Cancel repository synchronization"
+msgstr ""
+
 msgid "Cancel running smart proxy synchronization"
 msgstr "Breche laufende Smart-Proxy Synchronizationen ab"
+
+msgid "Cancel sync"
+msgstr ""
 
 msgid "Canceled"
 msgstr "Abgebrochen"
@@ -1409,6 +1418,9 @@ msgstr "Ein Composite mit RPM-Dateinamen kann nicht veröffentlicht werden"
 msgid "Cannot publish a link repository if multiple component clones are specified"
 msgstr "Ein Link-Repository kann nicht veröffentlicht werden, wenn mehrere Komponentenklone angegeben sind"
 
+msgid "Cannot publish composite content view while its content views are being published. Please wait for component publishes to complete."
+msgstr ""
+
 msgid "Cannot publish default content view"
 msgstr "Standardinhaltsansicht kann nicht veröffentlicht werden"
 
@@ -1552,6 +1564,9 @@ msgstr "Schließen"
 
 msgid "Collapse All"
 msgstr "Alle einklappen"
+
+msgid "Collapse all"
+msgstr ""
 
 msgid "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on."
 msgstr ""
@@ -2429,12 +2444,6 @@ msgstr ""
 msgid "Delete activation key?"
 msgstr ""
 
-msgid "Delete all subscriptions attached to activation keys."
-msgstr "Löschen Sie alle Abonnements, die an Aktivierungsschlüssel angehängt sind."
-
-msgid "Delete all subscriptions that are attached to running hosts."
-msgstr "Löschen Sie alle Abonnements, die an ausgeführte Hosts angehängt sind."
-
 msgid "Delete an organization"
 msgstr "Organisation löschen"
 
@@ -2585,9 +2594,6 @@ msgstr "Verzeichnis welches die exportiere Kontent-View-Version beinhaltet"
 msgid "Disable"
 msgstr "Deaktivieren"
 
-msgid "Disable Red Hat Insights."
-msgstr "Deaktivieren Sie Red Hat Insights."
-
 msgid "Disable a repository from the set"
 msgstr "Deaktivieren Sie ein Repository aus dem Set"
 
@@ -2596,9 +2602,6 @@ msgstr ""
 
 msgid "Disabled"
 msgstr "Deaktiviert"
-
-msgid "Disabling Simple Content Access failed for '%{subject}'."
-msgstr "Fehler beim Deaktivieren des einfachen Inhaltszugriffs für '%{subject}'."
 
 msgid "Discover Repositories"
 msgstr "Repositorys suchen"
@@ -2746,9 +2749,6 @@ msgstr "Aktiviert"
 
 msgid "Enabled Repositories"
 msgstr "Aktivierte Repositorys"
-
-msgid "Enabling Simple Content Access failed for '%{subject}'."
-msgstr "Fehler beim Aktivieren des einfachen Inhaltszugriffs für '%{subject}'."
 
 msgid "Enabling Tracer requires installing the katello-host-tools-tracer package on the host."
 msgstr ""
@@ -2999,6 +2999,9 @@ msgstr ""
 msgid "Failed to initiate trace resolution job."
 msgstr ""
 
+msgid "Failed to start repository synchronization"
+msgstr ""
+
 msgid "Fails if any of the repositories belonging to this organization are unexportable. False by default."
 msgstr "Schlägt fehl falls irgendwelche Repositories dieser Organization nicht exportierbar sind. Der Default ist auf False eingestellt."
 
@@ -3245,12 +3248,6 @@ msgstr ""
 msgid "Generated content views cannot be directly published. They can updated only via export."
 msgstr ""
 
-msgid "Get all content available, not just that provided by subscriptions"
-msgstr "Besorge dir allen verfügbaren Content, nicht nur den der über Subskriptionen verfügbar ist"
-
-msgid "Get all content available, not just that provided by subscriptions."
-msgstr ""
-
 msgid "Get content and overrides for the host"
 msgstr "Inhalte und Überschreibungen für den Host abrufen"
 
@@ -3265,6 +3262,9 @@ msgstr "Liste der verfügbaren Repositorys für das Repository-Set abrufen"
 
 msgid "Get status of synchronisation for given repository"
 msgstr "Status der Synchronisation für angegebenes Repository abrufen"
+
+msgid "Get sync status for all repositories in an organization"
+msgstr ""
 
 msgid "Given a set of hosts and errata, lists the content view versions and environments that need updating."
 msgstr "Listet bei einer Reihe von Hosts und Errata die Inhaltsansichtsversionen und -umgebungen auf, die aktualisiert werden müssen."
@@ -3491,6 +3491,9 @@ msgstr "ID eines Produkts, von dem Repositorys angezeigt werden"
 msgid "ID of an environment to show repositories in"
 msgstr "ID einer Umgebung, in der Repositorys gezeigt werden"
 
+msgid "ID of an organization"
+msgstr ""
+
 msgid "ID of an organization to show repositories in"
 msgstr "ID einer Organisation, in der Repositorys gezeigt werden"
 
@@ -3602,13 +3605,13 @@ msgstr ""
 msgid "Id of the single content view to be associated with the activation key."
 msgstr ""
 
-msgid "Id of the single content view to be associated with the host."
+msgid "Id of the single content view to be associated with the host. Ignored for multi-environment hosts."
 msgstr ""
 
 msgid "Id of the single lifecycle environment to be associated with the activation key."
 msgstr ""
 
-msgid "Id of the single lifecycle environment to be associated with the host."
+msgid "Id of the single lifecycle environment to be associated with the host. Ignored for multi-environment hosts."
 msgstr ""
 
 msgid "Id of the smart proxy"
@@ -3714,9 +3717,6 @@ msgstr "Fehler im Abo-Manager ignorieren"
 
 msgid "Ignore subscription-manager errors for `subscription-manager register` command"
 msgstr "Abo-Manager-Fehler für den Befehl `subscription-manager register` ignorieren"
-
-msgid "Ignore subscriptions that are unavailable to the specified host"
-msgstr "Subskriptionen, die für den angegebenen Host nicht verfügbar sind, ignorieren"
 
 msgid "Ignored hosts"
 msgstr ""
@@ -4318,7 +4318,7 @@ msgid "Lifecycle environments cannot be modifed on the default Smart proxy.  The
 msgstr "Lebenszyklusumgebungen können auf dem standardmäßigen Smart Proxy nicht geändert werden. Der Inhalt aller Lifecycle-Umgebungen ist auf diesem Smart Proxy vorhanden."
 
 msgid "Limit"
-msgstr ""
+msgstr "Grenze"
 
 msgid "Limit actions to content in the host's environment."
 msgstr ""
@@ -4359,9 +4359,6 @@ msgstr ":resource_id auflisten"
 msgid "List Content Credentials"
 msgstr "Liste Kontent-Kredentials"
 
-msgid "List a host's subscriptions"
-msgstr "Subskriptionen eines Hosts auflisten"
-
 msgid "List activation keys"
 msgstr "Aktivierungsschlüssel auflisten"
 
@@ -4376,9 +4373,6 @@ msgstr ""
 
 msgid "List alternate content sources."
 msgstr "Alternative Inhaltsquellen auflisten."
-
-msgid "List an activation key's subscriptions"
-msgstr "Subskriptionen eines Aktivierungsschlüssels auflisten"
 
 msgid "List available releases in the organization"
 msgstr "Verfügbare Veröffentlichungen in der Organisation auflisten"
@@ -4548,6 +4542,12 @@ msgstr "Liste der Repositorys für ein Produkt"
 msgid "List of repositories in an organization"
 msgstr "Liste der Repositorys in einer Organisation"
 
+msgid "List of repository IDs to poll"
+msgstr ""
+
+msgid "List of repository IDs to sync"
+msgstr ""
+
 msgid "List of repository ids"
 msgstr "Liste mit Repository-IDs"
 
@@ -4556,9 +4556,6 @@ msgstr "Auflisten aller Ressourcetypen die automatisch zugewiesen werden"
 
 msgid "List of subscription products in a subscription"
 msgstr "Liste mit Subskriptionsprodukten in einer Subskription"
-
-msgid "List of subscription products in an activation key"
-msgstr "Liste mit Subskriptionsprodukten in einem Aktivierungsschlüssel"
 
 msgid "List of versions to exclude and not run an action on"
 msgstr ""
@@ -4943,6 +4940,9 @@ msgstr "Niemals"
 
 msgid "Never Synced"
 msgstr "Nie synchronisiert"
+
+msgid "Never synced"
+msgstr ""
 
 msgid "New Errata"
 msgstr "Neue Errata"
@@ -5358,9 +5358,6 @@ msgstr "Noch nicht veröffentlicht"
 msgid "Note: Deleting a subscription manifest is STRONGLY discouraged."
 msgstr ""
 
-msgid "Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:"
-msgstr ""
-
 msgid "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available."
 msgstr "Hinweis: Die Zahl in Klammern gibt alle relevanten Errata in der Library-Umgebung an, die dem Host nicht zur Verfügung stehen. Sie müssen diese Inhalte in die relevante Inhaltsansicht übertragen, um sie verfügbar zu machen."
 
@@ -5402,9 +5399,6 @@ msgstr ""
 
 msgid "OSTree refs"
 msgstr ""
-
-msgid "Object to show subscriptions available for, either 'host' or 'activation_key'"
-msgstr "Objekt zeigt Liste verfügbarer Subskriptionen für 'host' oder 'activation_key' an"
 
 msgid "On Demand"
 msgstr "Auf Nachfrage"
@@ -5832,6 +5826,9 @@ msgstr "Bitte warten..."
 msgid "Policy to set for mirroring content.  Must be one of %s."
 msgstr ""
 
+msgid "Poll sync status for specified repositories"
+msgstr ""
+
 msgid "Prefer registered through Smart Proxy for remote execution"
 msgstr ""
 
@@ -5929,6 +5926,9 @@ msgstr "Produktversion"
 msgid "Product with ID %s not found in Candlepin. Skipping content import for it."
 msgstr "Produkt mit ID %s nicht in Candlepin gefunden. Überspringen des Inhaltsimports dafür."
 
+msgid "Product | Repository"
+msgstr ""
+
 msgid "Product: '%{product}', Repository: '%{repository}'"
 msgstr "Produkt: '%{product}', Repository: '%{repository}'"
 
@@ -5943,6 +5943,9 @@ msgstr "Produkte aktualisiert."
 
 msgid "Profiles"
 msgstr "Profile"
+
+msgid "Progress / Result"
+msgstr ""
 
 msgid "Promote"
 msgstr "Fördern"
@@ -6526,6 +6529,9 @@ msgstr "Repository-Name '%{container_name}' existiert in diesem Produkt bereits 
 msgid "Repository not found"
 msgstr "Repository nicht gefunden"
 
+msgid "Repository not found or not syncable"
+msgstr ""
+
 msgid "Repository path"
 msgstr ""
 
@@ -6565,6 +6571,9 @@ msgstr ""
 msgid "Repository sync failure"
 msgstr ""
 
+msgid "Repository synchronization started"
+msgstr ""
+
 msgid "Repository type"
 msgstr ""
 
@@ -6579,9 +6588,6 @@ msgstr ""
 
 msgid "Requested access to '%s' is denied"
 msgstr "Angefragter Zugriff auf '%s' wurde verweigert"
-
-msgid "Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys."
-msgstr ""
 
 msgid "Requirements is not valid yaml."
 msgstr ""
@@ -6726,12 +6732,6 @@ msgstr "Gibt Pakete zurück, die dem angegebenen Objekt hinzugefügt werden kön
 
 msgid "Return same, different or all results"
 msgstr ""
-
-msgid "Return subscriptions that match installed products of the specified host"
-msgstr "Subskriptionen ausgeben, die auf dem angegebenen Host installierten Produkten entsprechen"
-
-msgid "Return subscriptions which do not overlap with a currently-attached subscription"
-msgstr "Subskriptionen ausgeben, die sich nicht mit einer derzeit zugewiesenen Subskription überschneiden"
 
 msgid "Return the content of a Content Credential, used directly by yum"
 msgstr "Gebe den Kontent eines Kontent-Kredentials zurück der direkt von Yum genutzt wird"
@@ -7030,6 +7030,9 @@ msgstr "Hosts zum Zuweisen zu %s auswählen"
 msgid "Select lifecycle environment"
 msgstr ""
 
+msgid "Select node"
+msgstr ""
+
 msgid "Select none"
 msgstr ""
 
@@ -7055,6 +7058,9 @@ msgid "Select products"
 msgstr "Produkte auswählen"
 
 msgid "Select products to associate to this source."
+msgstr ""
+
+msgid "Select repository"
 msgstr ""
 
 msgid "Select repository sets"
@@ -7240,6 +7246,9 @@ msgstr ""
 msgid "Show repositories enabled on the host that are known to Katello"
 msgstr ""
 
+msgid "Show syncing only"
+msgstr ""
+
 msgid "Show the available repository types"
 msgstr "Verfügbare Repository-Typen anzeigen"
 
@@ -7251,15 +7260,6 @@ msgstr "Zeigt den Status des Katello-Systems und seiner Unterkomponenten an"
 
 msgid "Shows version information"
 msgstr "Versionsinformationen anzeigen"
-
-msgid "Simple Content Access has been disabled for '%{subject}'."
-msgstr "Der einfache Inhaltszugriff wurde für '%{subject}' deaktiviert."
-
-msgid "Simple Content Access has been enabled for '%{subject}'."
-msgstr "Der einfache Inhaltszugriff wurde für '%{subject}' aktiviert."
-
-msgid "Simple Content Access is the only supported content access mode"
-msgstr ""
 
 msgid "Simplified"
 msgstr ""
@@ -7536,6 +7536,9 @@ msgstr "Startzeit"
 msgid "Start date"
 msgstr "Startdatum"
 
+msgid "Started at"
+msgstr ""
+
 msgid "Starts"
 msgstr "Beginnt"
 
@@ -7601,9 +7604,6 @@ msgstr ""
 
 msgid "Subscription expiration notification"
 msgstr "Benachrichtigung zum Ablauf des Abonnements"
-
-msgid "Subscription id is nil."
-msgstr "Subskriptions-ID ist Null."
 
 msgid "Subscription identifier"
 msgstr "Subskriptions-ID"
@@ -7728,11 +7728,17 @@ msgstr "Repository synchronisieren"
 msgid "Sync all repositories for a product"
 msgstr "Alle Repositorys für ein Produkt synchronisieren"
 
+msgid "Sync canceled"
+msgstr ""
+
 msgid "Sync complete."
 msgstr "Synchronisation abgeschlossen."
 
 msgid "Sync errata"
 msgstr "Synchronisierungsfehler"
+
+msgid "Sync incomplete"
+msgstr ""
 
 msgid "Sync one or more products"
 msgstr "Ein oder mehrere Produkte synchronisieren"
@@ -7761,6 +7767,9 @@ msgstr "Synchronisieren"
 msgid "Synchronize Now"
 msgstr "Jetzt synchronisieren"
 
+msgid "Synchronize repositories"
+msgstr ""
+
 msgid "Synchronize repository"
 msgstr "Repository synchronisieren"
 
@@ -7776,8 +7785,14 @@ msgstr "Synchronisieren: Metadatenprüfung überspringen"
 msgid "Synchronize: Validate Content"
 msgstr "Synchronisieren: Inhalt validieren"
 
+msgid "Syncing"
+msgstr ""
+
 msgid "Syncing Complete."
 msgstr "Synchronisation abgeschlossen."
+
+msgid "Syncing complete"
+msgstr ""
 
 msgid "Synopsis"
 msgstr ""
@@ -8111,9 +8126,6 @@ msgstr "Diese Aktion unterstützt keine Paketgruppen"
 msgid "This action should only be taken for debugging purposes."
 msgstr ""
 
-msgid "This action should only be taken in extreme circumstances or for debugging purposes."
-msgstr ""
-
 msgid "This activation key is associated to one or more Hosts/Hostgroups. Search and unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" before deleting."
 msgstr ""
 
@@ -8136,9 +8148,6 @@ msgid "This content view will be automatically updated to the latest version."
 msgstr ""
 
 msgid "This content view will be deleted. Changes will be effective after clicking Delete."
-msgstr ""
-
-msgid "This endpoint is deprecated and will be removed in an upcoming release. Simple Content Access is the only supported content access mode."
 msgstr ""
 
 msgid "This endpoint is primarily designed for UI interactions and uploading content into the repository. For API-based uploads, please use the 'content_uploads' endpoint instead."
@@ -8256,6 +8265,9 @@ msgid "To get started, add a filter rule to this filter"
 msgstr ""
 
 msgid "To get started, add this host to a host collection."
+msgstr ""
+
+msgid "To get started, create a host collection."
 msgstr ""
 
 msgid "To give your hosts access to content, assign content view environments."
@@ -8977,9 +8989,6 @@ msgstr ""
 msgid "Virtual host"
 msgstr ""
 
-msgid "WARNING: Simple Content Access will be required for all organizations in Katello 4.12."
-msgstr ""
-
 msgid "Waiting to start."
 msgstr ""
 
@@ -9534,9 +9543,6 @@ msgstr "Hosts"
 
 msgid "how often synchronization should run"
 msgstr "Häufigkeit der Synchronisation"
-
-msgid "id of a host"
-msgstr "ID eines Hosts"
 
 msgid "id of host"
 msgstr "ID des Hosts"
