@@ -16,6 +16,8 @@ const recommendedRepositoriesRHEL = [
   'rhel-10-for-x86_64-appstream-kickstart',
   'rhel-10-for-x86_64-baseos-eus-rpms',
   'rhel-10-for-x86_64-appstream-eus-rpms',
+  'rhel-10-for-x86_64-extensions-rpms',
+  'rhel-10-for-aarch64-extensions-rpms',
   'rhel-9-for-x86_64-baseos-rpms',
   'rhel-9-for-x86_64-baseos-kickstart',
   'rhel-9-for-x86_64-appstream-rpms',
