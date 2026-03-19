@@ -18,7 +18,7 @@ module Actions
           repository.root.arch = opts[:override_arch] if opts[:override_arch].present?
           if opts[:override_url]
             repository.root.url = opts[:override_url]
-            repository.root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE if URI(opts[:override_url]).scheme == 'file'
+            repository.root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
           end
           plan_action(Repository::Create, repository, clone: false)
           action_subject(repository)
