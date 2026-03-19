@@ -1,24 +1,16 @@
 FactoryBot.define do
   factory :katello_pool, :class => Katello::Pool do
-    active { true }
+    start_date { 1.day.ago }
     end_date { Date.today + 1.year }
-    cp_id { 1 }
+    sequence(:cp_id) { |n| n }
+    pool_type { "normal" }
+    quantity { 10 }
+    account_number { 512_387 }
+    contract_number { 6_208_983 }
 
     association :organization, :factory => :katello_organization
 
-    after(:build) do |pool, _evaluator|
-      pool.subscription.organization = pool.organization
-    end
-
-    association :subscription, :factory => :katello_subscription
-
-    trait :active do
-      active { true }
-    end
-
-    trait :inactive do
-      active { false }
-    end
+    subscription { association(:katello_subscription, organization: @instance.organization) }
 
     trait :unexpired do
       end_date { Date.today + 1.day }
@@ -38,14 +30,6 @@ FactoryBot.define do
 
     trait :not_expiring_soon do
       end_date { Date.today + (Setting[:expire_soon_days] || 120) + 1 }
-    end
-
-    trait :recently_expired do
-      end_date { Date.today - Katello::Pool::DAYS_RECENTLY_EXPIRED }
-    end
-
-    trait :long_expired do
-      end_date { Date.today - Katello::Pool::DAYS_RECENTLY_EXPIRED - 1 }
     end
   end
 end

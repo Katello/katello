@@ -30,16 +30,8 @@ module Katello
       products.redhat.any?
     end
 
-    def active?
-      pools.any?(&:active?)
-    end
-
     def expiring_soon?
       pools.any?(&:expiring_soon?)
-    end
-
-    def recently_expired?
-      pools.any?(&:recently_expired?)
     end
 
     def multi_entitlement?

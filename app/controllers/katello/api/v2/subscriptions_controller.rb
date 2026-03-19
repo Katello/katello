@@ -32,11 +32,11 @@ module Katello
           options[:csv] = true
           collection = scoped_search(*base_args, options)
           fields = [:id, :subscription_id, :name, :cp_id, :organization_id, :sockets, :cores,
-                    :start_date, :end_date, :consumed, :quantity, :account_number, :contract_number,
+                    :start_date, :end_date, :quantity, :account_number, :contract_number,
                     :support_level, :ram, :stacking_id, :multi_entitlement, :type, :product_id,
                     :unmapped_guest, :virt_only, :virt_who, :upstream?, :product_host_count]
           headers = ['Pool Id Number', 'Subscription Id', 'Name', 'Pool Id', 'Organization Id',
-                     'Sockets', 'Cores', 'Start Date', 'End Date', 'Consumed', 'Quantity', 'Account Number',
+                     'Sockets', 'Cores', 'Start Date', 'End Date', 'Quantity', 'Account Number',
                      'Contract Number', 'Support Level', 'RAM', 'Stacking Id', 'Multi Entitlement', 'Type',
                      'Product Id', 'Unmapped Guest', 'Virt Only', 'Requires Virt Who', 'Upstream', 'Product Host Count']
           csv_response(collection, fields, headers)

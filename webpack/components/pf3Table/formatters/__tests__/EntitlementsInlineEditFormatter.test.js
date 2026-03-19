@@ -97,7 +97,16 @@ describe('EntitlementsInlineEditFormatter', () => {
       const controller = mockController({ editing: false });
       const value = 200;
       const formatter = editFormatter(controller)(value, data({
-        upstream_pool_id: ' ',
+      }));
+
+      expect(toJson(shallow(formatter))).toMatchSnapshot();
+    });
+
+    it('shows NA for collapsible row', async () => {
+      const controller = mockController({ editing: false });
+      const value = undefined;
+      const formatter = editFormatter(controller)(value, data({
+        collapsible: true,
       }));
 
       expect(toJson(shallow(formatter))).toMatchSnapshot();
@@ -105,10 +114,8 @@ describe('EntitlementsInlineEditFormatter', () => {
 
     it('renders unlimited for -1', async () => {
       const controller = mockController({ editing: false });
-      const value = 200;
+      const value = -1;
       const formatter = editFormatter(controller)(value, data({
-        available: -1,
-        upstream_pool_id: ' ',
       }));
 
       expect(toJson(shallow(formatter))).toMatchSnapshot();

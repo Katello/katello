@@ -17,14 +17,6 @@ module Katello
       refute @custom_pool.upstream?
     end
 
-    def test_active
-      active_pool = FactoryBot.build(:katello_pool, :active)
-      inactive_pool = FactoryBot.build(:katello_pool, :inactive)
-      all_subscriptions = [active_pool, inactive_pool]
-      active_subscriptions = all_subscriptions.select(&:active?)
-      assert_equal active_subscriptions, all_subscriptions - [inactive_pool]
-    end
-
     def test_expiring_soon
       not_expiring_soon = FactoryBot.build(:katello_pool, :not_expiring_soon)
       expiring_soon_pool = FactoryBot.build(:katello_pool, :expiring_soon)
@@ -47,24 +39,6 @@ module Katello
       assert_equal @pool_two.subscription, Pool.stacking_subscription(@pool_one.organization, 'fake_stack')
     end
 
-    def test_recently_expired
-      unexpired = FactoryBot.build(:katello_pool, :unexpired)
-      recently_expired = FactoryBot.build(:katello_pool, :recently_expired)
-      all_subscriptions = [unexpired, recently_expired]
-      expired_subscriptions = all_subscriptions.select(&:recently_expired?)
-      assert_equal expired_subscriptions, all_subscriptions - [unexpired]
-    end
-
-    def test_recently_expired_does_not_get_long_expired_subscriptions
-      unexpired = FactoryBot.build(:katello_pool, :unexpired)
-      recently_expired = FactoryBot.build(:katello_pool, :recently_expired)
-      long_expired = FactoryBot.build(:katello_pool, :long_expired)
-
-      all_subscriptions = [unexpired, recently_expired, long_expired]
-      expired_subscriptions = all_subscriptions.select(&:recently_expired?)
-      assert_equal expired_subscriptions, all_subscriptions - [unexpired, long_expired]
-    end
-
     def test_with_identifiers
       assert_equal Pool.with_identifiers("#{@pool_one.cp_id}").first, @pool_one
       assert_equal Pool.with_identifiers("#{@pool_one.id}").first, @pool_one
@@ -77,11 +51,6 @@ module Katello
       assert_equal @pool_one.hypervisor, @host_one
     end
 
-    def test_search_consumed
-      subscriptions = Pool.search_for("consumed = \"#{@pool_one.consumed}\"")
-      assert_includes subscriptions, @pool_one
-    end
-
     def test_search_contract
       subscriptions = Pool.search_for("contract = \"#{@pool_one.contract_number}\"")
       assert_includes subscriptions, @pool_one
@@ -90,10 +59,6 @@ module Katello
     def test_search_account
       subscriptions = Pool.search_for("account = \"#{@pool_one.account_number}\"")
       assert_includes subscriptions, @pool_one
-    end
-
-    def test_quantity_available
-      assert_equal @pool_one.quantity_available, 9
     end
 
     def test_candlepin_data_rescue_gone
@@ -192,11 +157,6 @@ module Katello
       assert_raises(Katello::Errors::CandlepinPoolGone) do
         Pool.import_pool('abcd')
       end
-    end
-
-    def test_quantity_available_unlimited
-      pool = FactoryBot.build(:katello_pool, quantity: -1, consumed: 3)
-      assert_equal(-1, pool.quantity_available)
     end
 
     def test_search_cores

@@ -4,7 +4,6 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from 'patternfly-react';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import SubscriptionDetailInfo from './SubscriptionDetailInfo';
-import SubscriptionDetailAssociations from './SubscriptionDetailAssociations';
 import SubscriptionDetailProducts from './SubscriptionDetailProducts';
 import SubscriptionDetailProductContent from './SubscriptionDetailProductContent';
 import { LoadingState } from '../../../components/LoadingState';
@@ -97,9 +96,6 @@ class SubscriptionDetails extends Component {
                           />
                         </Col>
                         <Col sm={6}>
-                          <SubscriptionDetailAssociations
-                            subscriptionDetails={subscriptionDetails}
-                          />
                           <SubscriptionDetailProducts
                             subscriptionDetails={subscriptionDetails}
                           />

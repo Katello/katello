@@ -38,7 +38,7 @@ export const createSubscriptionsTableSchema = (
       formatters: [
         (value, additionalData) => {
           // eslint-disable-next-line no-param-reassign
-          additionalData.disabled = !hasPermission || additionalData.rowData.available === -1;
+          additionalData.disabled = !hasPermission || !additionalData.rowData.upstream_pool_id;
 
           return collapseableAndSelectionCellFormatter(
             groupingController,
@@ -124,16 +124,6 @@ export const createSubscriptionsTableSchema = (
           </td>
         ),
       ],
-    },
-  },
-  {
-    property: 'consumed',
-    header: {
-      label: __('Consumed'),
-      formatters: [headerFormatter],
-    },
-    cell: {
-      formatters: [cellFormatter],
     },
   },
   {

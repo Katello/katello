@@ -3,22 +3,11 @@ require 'katello_test_helper'
 module Katello
   class TestBase < ActiveSupport::TestCase
     let(:pool_expiring_soon) do
-      FactoryBot.create(
-        :katello_pool,
-        :expiring_in_12_days,
-        cp_id: "123",
-        subscription_id: ActiveRecord::FixtureSet.identify(:basic_subscription),
-        pool_type: "normal",
-        quantity: 10,
-        start_date: "2011-10-11T04:00:00.000+0000",
-        account_number: "12400203",
-        contract_number: "123403949")
+      FactoryBot.create(:katello_pool, :expiring_in_12_days)
     end
+
     let(:expiring_in_120) do
-      FactoryBot.create(
-        :katello_pool,
-        :expiring_soon,
-        subscription_id: ActiveRecord::FixtureSet.identify(:other_subscription)) # Setting[:expire_soon_days] || 120
+      FactoryBot.create(:katello_pool, :expiring_soon)
     end
   end
 
@@ -38,9 +27,7 @@ module Katello
       @user.user_mail_notifications.first.update(mail_query: Setting[:expire_soon_days])
 
       FactoryBot.create(:katello_pool,
-                        :not_expiring_soon,
-                        cp_id: "1234",
-                        subscription_id: ActiveRecord::FixtureSet.identify(:other_subscription))
+                        :not_expiring_soon)
 
       template = FactoryBot.create(:report_template, name: 'Subscription - General Report')
       FactoryBot.create(:template_input, name: 'Days from Now', template_id: template.id)
