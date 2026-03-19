@@ -25,15 +25,9 @@ module Katello
     end
 
     module ClassMethods
-      def candlepin_data(cp_id, rescue_gone = false)
+      def candlepin_data(cp_id)
         Katello::Resources::Candlepin::Pool.find(cp_id)
-      rescue Katello::Errors::CandlepinPoolGone => e
-        raise e unless rescue_gone
-
-        if (pool_id = ::Katello::Pool.find_by_cp_id(cp_id)&.id)
-          Katello::EventQueue.push_event(::Katello::Events::DeletePool::EVENT_TYPE, pool_id)
-          Rails.logger.warn("Sending pool delete event for missing candlepin pool cp_id=#{cp_id}")
-        end
+      rescue Katello::Errors::CandlepinPoolGone
         {}
       end
 

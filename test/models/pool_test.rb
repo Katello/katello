@@ -98,7 +98,7 @@ module Katello
 
     def test_candlepin_data_rescue_gone
       Katello::Resources::Candlepin::Pool.expects(:find).raises(Katello::Errors::CandlepinPoolGone)
-      assert_empty Pool.candlepin_data('abcd', true)
+      assert_empty Pool.candlepin_data('abcd')
     end
 
     def test_import_all_default
