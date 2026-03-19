@@ -12,6 +12,9 @@
 ### Subscriptions
  * Run content access mode migrator on each upgrade ([#39076](https://projects.theforeman.org/issues/39076), [47f0a039](https://github.com/Katello/katello/commit/47f0a03901954ed3e2c8b09d19c4d6816c0981f0))
 
+### Repositories
+ * Patch Pulp's polymorphic responses ([#38832](https://projects.theforeman.org/issues/38832), [4ae52c5a](https://github.com/Katello/katello/commit/4ae52c5a45d9da5ee2bfcc20a34af60dfa9f7077))
+
 ### Other
  * Fix typos and scan issues for rubygem-katello ([#39136](https://projects.theforeman.org/issues/39136), [a0a793b0](https://github.com/Katello/katello/commit/a0a793b08d4f0a897ee985d79a687ad043f99e57))
 
