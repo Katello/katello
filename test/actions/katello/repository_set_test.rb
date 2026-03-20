@@ -60,6 +60,26 @@ module ::Actions::Katello::RepositorySet
         plan_action(action, product, content, substitutions)
       end
     end
+
+    it 'sets download_policy to immediate when override_url is file://' do
+      override_url = 'file:///var/lib/pulp/exports/org/repo'
+      action.expects(:action_subject).with do |repository|
+        assert_equal ::Katello::RootRepository::DOWNLOAD_IMMEDIATE, repository.root.download_policy
+        assert_equal override_url, repository.root.url
+        true
+      end
+      plan_action(action, product, content, substitutions, override_url: override_url)
+    end
+
+    it 'sets download_policy to immediate when override_url is http://' do
+      override_url = 'http://localhost/pub/import/repo'
+      action.expects(:action_subject).with do |repository|
+        assert_equal ::Katello::RootRepository::DOWNLOAD_IMMEDIATE, repository.root.download_policy
+        assert_equal override_url, repository.root.url
+        true
+      end
+      plan_action(action, product, content, substitutions, override_url: override_url)
+    end
   end
 
   class DisableRepositoryTest < TestBase
