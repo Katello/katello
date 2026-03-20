@@ -9,6 +9,7 @@ module Katello
 
       delegate :root, to: :repo
       delegate :short_relative_path, to: :repo
+      delegate :short_paths_enabled?, to: :repo
       delegate :pulp3_api, to: :smart_proxy
 
       COPY_UNIT_PAGE_SIZE = 10_000
@@ -139,8 +140,19 @@ module Katello
         "#{root.label}-#{repo.id}#{rand(9999)}"
       end
 
+      def backend_object_name
+        @backend_object_name ||= generate_backend_object_name
+      end
+
       def distribution_name(path)
-        path == short_relative_path ? "#{generate_backend_object_name}-short" : generate_backend_object_name
+        # Keep legacy names for repo types that do not use short aliases (e.g. docker)
+        # so existing distributions are reused. For short-alias repos we need two
+        # distinct names: one for the canonical path and one for the short alias path.
+        if short_paths_enabled?
+          path == short_relative_path ? "#{backend_object_name}-short" : backend_object_name
+        else
+          repo.pulp_id
+        end
       end
 
       def repository_reference
@@ -317,8 +329,10 @@ module Katello
         rescue api.client_module::ApiError => e
           # Now it seems there is a distribution. Fetch it and save the reference.
           if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
-              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
+              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"") ||
+              e.message.include?("\"name\":[\"This field must be unique.\"]")
             dist = lookup_distributions(base_path: path).first
+            dist ||= lookup_distributions(name: distribution_name(path)).first
             save_distribution_references([dist.pulp_href])
             return update_distribution_for_path(path)
           else
