@@ -27,7 +27,7 @@ module Actions
                         type:            root.content_type,
                         arches:          root.format_arches,
                         label:           repository.content.label,
-                        content_url:     root.custom_content_path,
+                        content_url:     repository.custom_candlepin_content_path,
                         gpg_key_url:     repository.yum_gpg_key_url,
                         os_versions:     root.os_versions&.join(','),
                         metadata_expire: root.metadata_expire)

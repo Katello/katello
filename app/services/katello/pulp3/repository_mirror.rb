@@ -92,7 +92,7 @@ module Katello
       def distribution_options(path, options = {})
         ret = {
           base_path: path,
-          name: "#{backend_object_name}",
+          name: repo_service.distribution_name(path),
         }
         ret[:content_guard] = repo.unprotected ? nil : content_guard_href
         ret[:publication] = options[:publication] if options.key? :publication
@@ -180,7 +180,6 @@ module Katello
       end
 
       def refresh_distributions(_options = {})
-        path = repo_service.relative_path
         dist_params = {}
         if repo_service.repo.repository_type.pulp3_skip_publication
           dist_params[:repository_version] = version_href
@@ -190,18 +189,21 @@ module Katello
           fail "Could not lookup a publication_href for repo #{repo_service.repo.id}" if publication_href.nil?
         end
 
-        dist_options = distribution_options(path, dist_params)
-        dist_options.delete(:content_guard) if repo_service.repo.content_type == "docker"
-        if (distro = repo_service.lookup_distributions(base_path: path).first) ||
-          (distro = repo_service.lookup_distributions(name: "#{backend_object_name}").first)
-          # update dist
-          dist_options = dist_options.except(:name)
-          api.distributions_api.partial_update(distro.pulp_href, dist_options)
-        else
-          # create dist
-          distribution_data = api.distribution_class.new(dist_options)
-          api.distributions_api.create(distribution_data)
+        tasks = repo_service.distribution_paths.map do |path|
+          dist_options = distribution_options(path, dist_params)
+          dist_options.delete(:content_guard) if repo_service.repo.content_type == "docker"
+          if (distro = repo_service.lookup_distributions(base_path: path).first) ||
+            (distro = repo_service.lookup_distributions(name: repo_service.distribution_name(path)).first)
+            # update dist
+            dist_options = dist_options.except(:name)
+            api.distributions_api.partial_update(distro.pulp_href, dist_options)
+          else
+            # create dist
+            distribution_data = api.distribution_class.new(dist_options)
+            api.distributions_api.create(distribution_data)
+          end
         end
+        tasks.flatten.compact
       end
 
       def count_by_pulpcore_type(service_class)

@@ -8,6 +8,8 @@ module Katello
       attr_accessor :repo, :smart_proxy
 
       delegate :root, to: :repo
+      delegate :short_relative_path, to: :repo
+      delegate :short_paths_enabled?, to: :repo
       delegate :pulp3_api, to: :smart_proxy
 
       COPY_UNIT_PAGE_SIZE = 10_000
@@ -138,12 +140,35 @@ module Katello
         "#{root.label}-#{repo.id}#{rand(9999)}"
       end
 
+      def backend_object_name
+        @backend_object_name ||= generate_backend_object_name
+      end
+
+      def distribution_name(path)
+        # Keep legacy names for repo types that do not use short aliases (e.g. docker)
+        # so existing distributions are reused. For short-alias repos we need two
+        # distinct names: one for the canonical path and one for the short alias path.
+        if short_paths_enabled?
+          path == short_relative_path ? "#{backend_object_name}-short" : backend_object_name
+        else
+          repo.pulp_id
+        end
+      end
+
       def repository_reference
         RepositoryReference.find_by(:root_repository_id => repo.root_id, :content_view_id => repo.content_view.id)
       end
 
       def distribution_reference
-        DistributionReference.find_by(:repository_id => repo.id)
+        distribution_reference_for_path(distribution_reference_path)
+      end
+
+      def distribution_reference_for_path(path)
+        repo.distribution_references.find_by(path: path)
+      end
+
+      def distribution_reference_path
+        relative_path
       end
 
       def create_mirror_entities
@@ -161,7 +186,7 @@ module Katello
       def refresh_if_needed
         tasks = []
         tasks << update_remote #always update remote
-        tasks << update_distribution if distribution_needs_update?
+        tasks << refresh_distributions if distribution_needs_update?
         tasks.compact
       end
 
@@ -174,11 +199,15 @@ module Katello
       end
 
       def distribution_needs_update?
-        if distribution_reference
-          # FIXME: Workaround for https://github.com/pulp/pulpcore/issues/7004
-          expected = secure_distribution_options(relative_path).except(:name, :content_guard_prn).compact
-          actual = get_distribution&.to_hash || {}
-          expected != actual.slice(*expected.keys)
+        if repo.distribution_references.exists?
+          distribution_paths.any? do |path|
+            dist_ref = distribution_reference_for_path(path)
+            return true unless dist_ref
+            # FIXME: Workaround for https://github.com/pulp/pulpcore/issues/7004
+            expected = secure_distribution_options(path).except(:name, :content_guard_prn).compact
+            actual = get_distribution(dist_ref.href)&.to_hash || {}
+            expected != actual.slice(*expected.keys)
+          end
         elsif repo.environment
           true
         else
@@ -259,17 +288,29 @@ module Katello
         repo.relative_path.sub(/^\//, '')
       end
 
+      def distribution_paths
+        paths = [relative_path]
+        short_path = short_relative_path
+        paths << short_path if short_path.present?
+        paths.uniq
+      end
+
       def refresh_distributions
-        if repo.docker?
-          dist = lookup_distributions(base_path: repo.container_repository_name).first
-        else
-          dist = lookup_distributions(base_path: repo.relative_path).first
+        tasks = distribution_paths.map do |path|
+          refresh_distribution_for_path(path)
         end
-        dist_ref = distribution_reference
+        tasks.flatten.compact
+      end
+
+      def refresh_distribution_for_path(path)
+        dist = lookup_distributions(base_path: path).first
+        dist ||= lookup_distributions(name: distribution_name(path)).first
+        dist_ref = distribution_reference_for_path(path)
 
         if dist && !dist_ref
-          save_distribution_references([dist.pulp_href])
-          return update_distribution
+          repo.distribution_references.find_by(href: dist.pulp_href)&.update(path: path)
+          save_distribution_references([dist.pulp_href]) unless distribution_reference_for_path(path)
+          return update_distribution_for_path(path)
         end
 
         if dist && dist_ref
@@ -278,20 +319,22 @@ module Katello
             dist_ref.destroy
             save_distribution_references([dist.pulp_href])
           end
-          return update_distribution
+          return update_distribution_for_path(path)
         end
 
         # Since we got this far, we need to create a new distribution
         # Note: the distribution reference can't be saved yet because distribution creation is async
         begin
-          create_distribution(relative_path)
+          create_distribution(path)
         rescue api.client_module::ApiError => e
           # Now it seems there is a distribution. Fetch it and save the reference.
           if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
-              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
-            dist = lookup_distributions(base_path: repo.relative_path).first
+              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"") ||
+              e.message.include?("\"name\":[\"This field must be unique.\"]")
+            dist = lookup_distributions(base_path: path).first
+            dist ||= lookup_distributions(name: distribution_name(path)).first
             save_distribution_references([dist.pulp_href])
-            return update_distribution
+            return update_distribution_for_path(path)
           else
             raise e
           end
@@ -317,15 +360,23 @@ module Katello
       end
 
       def update_distribution
-        if distribution_reference
-          options = secure_distribution_options(relative_path).except(:name)
-          unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
-            fail_missing_publication(options[:publication])
-          end
-          content_guard_prn = options.delete(:content_guard_prn) # Extract PRN and remove from options
-          distribution_reference.update(:content_guard_href => options[:content_guard], :content_guard_prn => content_guard_prn)
-          api.distributions_api.partial_update(distribution_reference.href, options)
+        tasks = distribution_paths.map do |path|
+          update_distribution_for_path(path)
         end
+        tasks.flatten.compact
+      end
+
+      def update_distribution_for_path(path)
+        dist_ref = distribution_reference_for_path(path)
+        return unless dist_ref
+
+        options = secure_distribution_options(path).except(:name)
+        unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
+          fail_missing_publication(options[:publication])
+        end
+        content_guard_prn = options.delete(:content_guard_prn)
+        dist_ref.update(:content_guard_href => options[:content_guard], :content_guard_prn => content_guard_prn)
+        api.distributions_api.partial_update(dist_ref.href, options)
       end
 
       def copy_units_by_href(unit_hrefs)
@@ -408,13 +459,12 @@ module Katello
                                 self.class.build_prn(content_guard_href, 'certguard', 'rhsmcertguard')
                               end
 
-          if distribution_reference
-            found_distribution = read_distribution(distribution_reference.href)
-            unless found_distribution
-              distribution_reference.destroy
-            end
+          dist_ref = distribution_reference_for_path(path)
+          if dist_ref
+            found_distribution = read_distribution(dist_ref.href)
+            dist_ref.destroy unless found_distribution
           end
-          unless distribution_reference
+          unless distribution_reference_for_path(path)
             # Ensure that duplicates won't be created in the case of a race condition
             DistributionReference.where(
               path: path,
@@ -429,19 +479,20 @@ module Katello
       end
 
       def delete_distributions
-        if (dist_ref = distribution_reference)
+        repo.distribution_references.find_each do |dist_ref|
           ignore_404_exception { api.delete_distribution(dist_ref.href) }
-          dist_ref.destroy!
         end
+        repo.distribution_references.destroy_all
       end
 
       def delete_distributions_by_path
-        path = relative_path
-        dists = lookup_distributions(base_path: path)
-
-        task = api.delete_distribution(dists.first.pulp_href) if dists.first
-        Katello::Pulp3::DistributionReference.where(:path => path).destroy_all
-        task
+        tasks = []
+        distribution_paths.each do |path|
+          dists = lookup_distributions(base_path: path)
+          tasks << api.delete_distribution(dists.first.pulp_href) if dists.first
+          Katello::Pulp3::DistributionReference.where(:path => path, :repository_id => repo.id).destroy_all
+        end
+        tasks.compact
       end
 
       def common_remote_options

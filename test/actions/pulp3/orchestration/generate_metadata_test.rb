@@ -44,6 +44,22 @@ module ::Actions::Pulp3
         ::Actions::Pulp3::Orchestration::Repository::Delete, @clone, @primary)
     end
 
+    def test_generate_metadata_with_short_paths
+      original = Setting[:katello_pulp_short_paths]
+      Setting[:katello_pulp_short_paths] = true
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @repo, @primary)
+      @repo.reload
+
+      distribution_references = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
+
+      assert_equal 2, distribution_references.count
+      assert_includes distribution_references.pluck(:path), @repo.relative_path
+      assert_includes distribution_references.pluck(:path), @repo.short_relative_path
+    ensure
+      Setting[:katello_pulp_short_paths] = original
+    end
+
     def test_generate_with_sha1_root_repo_checksum
       root = @repo.root
       root.checksum_type = 'sha1'

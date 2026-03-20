@@ -194,6 +194,7 @@ module Katello
         content_view_environments.first.default_environment?
       end
 
+      # rubocop:disable Metrics/MethodLength
       def update_repositories_by_paths(paths)
         prefixes = %w(/pulp/deb/ /pulp/repos/ /pulp/content/)
         relative_paths = []
@@ -209,13 +210,31 @@ module Katello
           end
         end
 
+        short_paths = []
+        short_repos = []
+        if Setting[:katello_pulp_short_paths]
+          short_pattern = %r{(^|/)#{::Katello::Repository::SHORT_PATH_PREFIX}/}
+          short_paths = relative_paths.select { |path| path.match?(short_pattern) }
+          relative_paths -= short_paths
+
+          if short_paths.any?
+            scope = Repository.joins(:root => :product)
+            short_repos = scope.select { |repo| short_paths.include?(repo.short_relative_path) }
+            short_paths -= short_repos.map(&:short_relative_path)
+          end
+        end
+
         repos = Repository.where(relative_path: relative_paths)
         relative_paths -= repos.pluck(:relative_path) # remove relative paths that match our repos
+        repos += short_repos
 
         # Any leftover relative paths do not match the repos we've just retrieved from the db,
         # so we should log warnings about them.
         relative_paths.each do |repo_path|
           Rails.logger.warn("System #{self.host.name} (#{self.host.id}) requested binding to unknown repo #{repo_path}")
+        end
+        short_paths.each do |repo_path|
+          Rails.logger.warn("System #{self.host.name} (#{self.host.id}) requested binding to unknown short repo #{repo_path}")
         end
 
         unless self.bound_repositories.sort == repos.sort
@@ -224,6 +243,7 @@ module Katello
         end
         self.bound_repositories.pluck(:relative_path)
       end
+      # rubocop:enable Metrics/MethodLength
 
       def installable_errata(env = nil, content_view = nil)
         Erratum.installable_for_content_facet(self, env, content_view)

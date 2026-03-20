@@ -35,6 +35,41 @@ module Katello
       assert @repo.full_path =~ /abc123/
     end
 
+    def test_short_full_path_disabled
+      original = Setting[:katello_pulp_short_paths]
+      Setting[:katello_pulp_short_paths] = false
+
+      assert_nil katello_repositories(:generic_file).short_full_path
+    ensure
+      Setting[:katello_pulp_short_paths] = original
+    end
+
+    def test_short_full_path_enabled_custom
+      original = Setting[:katello_pulp_short_paths]
+      Setting[:katello_pulp_short_paths] = true
+
+      repo = katello_repositories(:generic_file)
+      relation = mock
+      relation.expects(:exists?).returns(true)
+      repo.distribution_references.expects(:where).with(path: repo.short_relative_path).returns(relation)
+
+      short_full_path = repo.short_full_path
+      assert_includes short_full_path, '/short/'
+      token = short_full_path.split('/short/').last.sub(%r{/}, '')
+      assert_equal ::Katello::Repository::SHORT_PATH_HASH_LENGTH, token.length
+    ensure
+      Setting[:katello_pulp_short_paths] = original
+    end
+
+    def test_short_full_path_enabled_non_custom
+      original = Setting[:katello_pulp_short_paths]
+      Setting[:katello_pulp_short_paths] = true
+
+      assert_nil katello_repositories(:rhel_6_x86_64).short_full_path
+    ensure
+      Setting[:katello_pulp_short_paths] = original
+    end
+
     def test_errata_counts
       source_repo = katello_repositories(:fedora_17_x86_64)
       source_repo.errata.destroy_all
