@@ -12,6 +12,7 @@ import ACSCreateContext from '../ACSCreateContext';
 import { selectCreateACS, selectCreateACSError, selectCreateACSStatus } from '../../ACSSelectors';
 import getAlternateContentSources, { createACS } from '../../ACSActions';
 import Loading from '../../../../components/Loading';
+import { spaceSepOrUndef } from '../../helpers';
 
 const ACSCreateFinishWrapper = () => (
   <WizardContextConsumer>
@@ -40,6 +41,9 @@ const ACSCreateFinish = ({ activeStep }) => {
     password,
     caCert,
     productIds,
+    debReleases,
+    debComponents,
+    debArchitectures,
   } = useContext(ACSCreateContext);
   const dispatch = useDispatch();
   const response = useSelector(state => selectCreateACS(state, name));
@@ -54,7 +58,15 @@ const ACSCreateFinish = ({ activeStep }) => {
       acsParams = {
         base_url: url, verify_ssl: verifySSL, ssl_ca_cert_id: caCert, ...acsParams,
       };
-      if (subpaths !== '') {
+      if (contentType === 'deb') {
+        acsParams = {
+          ...acsParams,
+          deb_releases: spaceSepOrUndef(debReleases),
+          deb_components: spaceSepOrUndef(debComponents),
+          deb_architectures: spaceSepOrUndef(debArchitectures),
+          subpaths: [],
+        };
+      } else if (subpaths !== '') {
         acsParams = { subpaths: subpaths.split(','), ...acsParams };
       }
     }
@@ -62,7 +74,17 @@ const ACSCreateFinish = ({ activeStep }) => {
       acsParams = { product_ids: productIds, ...acsParams };
     }
     return acsParams;
-  }, [caCert, productIds, subpaths, url, verifySSL]);
+  }, [
+    caCert,
+    productIds,
+    subpaths,
+    url,
+    verifySSL,
+    contentType,
+    debReleases,
+    debComponents,
+    debArchitectures,
+  ]);
 
   useDeepCompareEffect(() => {
     if (currentStep === 8 && !createACSDispatched) {
