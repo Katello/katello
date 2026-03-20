@@ -5,6 +5,7 @@ attributes :cp_id
 attributes :subscription_id
 attributes :name
 attributes :start_date, :end_date
+attributes :expired? => :expired
 attributes :quantity
 attributes :account_number, :contract_number
 attributes :support_level

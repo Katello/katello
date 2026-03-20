@@ -62,6 +62,10 @@ module Katello
       end
     end
 
+    def expired?
+      end_date < Time.zone.now
+    end
+
     def redhat?
       self.class.redhat.where(:id => self.id).exists?
     end
