@@ -3,10 +3,8 @@ require 'katello_test_helper'
 module ::Actions::Katello::ContentViewVersion
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
-    include Support::Actions::Fixtures
-    include FactoryBot::Syntax::Methods
-    include Support::Actions::RemoteAction
     include Support::ExportSupport
+
     let(:action_class) do
       ::Actions::Katello::ContentViewVersion::Import
     end
@@ -205,6 +203,20 @@ module ::Actions::Katello::ContentViewVersion
           refute_nil input[:target_repository_id]
           refute_nil input[:smart_proxy_id]
         end
+      end
+
+      it 'can clean up a failed import' do
+        action.stubs(:output).returns(content_view_version_id: 50)
+        run_steps = [mock(action_class: ::Actions::Pulp3::ContentViewVersion::CreateImport, state: :failed)]
+        action.execution_plan.stubs(:run_steps).returns(run_steps)
+
+        Katello::ContentViewVersion.expects(:find_by).with(id: 50).returns(content_view_version)
+
+        ForemanTasks.expects(:async_task).with(Actions::Katello::ContentView::Remove, content_view_version.content_view,
+                                               content_view_versions: [content_view_version],
+                                               content_view_environments: content_view_version.content_view_environments)
+
+        action.clean_failed_import(action.execution_plan)
       end
     end
   end
