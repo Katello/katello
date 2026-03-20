@@ -94,3 +94,5 @@ For detailed workflows, patterns, and troubleshooting, consult these topic-speci
 - VCR (Video Cassette Recorder) Testing
 - Code Quality Standards
 - TDD Workflow
+
+**[Upgrading Pulp](./pulp_upgrade.md)**
