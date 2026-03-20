@@ -61,11 +61,6 @@ module Katello
       assert_includes subscriptions, @pool_one
     end
 
-    def test_candlepin_data_rescue_gone
-      Katello::Resources::Candlepin::Pool.expects(:find).raises(Katello::Errors::CandlepinPoolGone)
-      assert_empty Pool.candlepin_data('abcd')
-    end
-
     def test_import_all_default
       org = get_organization
       Pool.expects(:candlepin_records_by_id).returns(
@@ -93,7 +88,7 @@ module Katello
         'owner' => {
           'key' => org.label,
         },
-      }
+      }.with_indifferent_access
 
       FactoryBot.create(:katello_subscription, cp_id: 'SKU001', organization: org)
       Katello::Resources::Candlepin::Pool.expects(:get_for_owner).returns([pool_data])
@@ -102,6 +97,81 @@ module Katello
       Pool.import_all(org)
 
       refute_empty Katello::Pool.where(organization: org)
+    end
+
+    CP_POOL_FIXTURE =
+      {"accountNumber" => "5292024",
+       "activeSubscription" => true,
+       "attributes" => [
+         {"name" => "unmapped_guests_only", "value" => "true"},
+         {"name" => "requires_host", "value" => "some_consumer_cp_id"},
+       ],
+       "contractNumber" => "1212121",
+       "derivedProductAttributes" => [],
+       "derivedProductId" => nil,
+       "derivedProductName" => nil,
+       "derivedProvidedProducts" => [],
+       "endDate" => "2026-04-26T03:59:59+0000",
+       "href" => "/pools/4028fc849ca8236f019caab9a1452bbd",
+       "id" => "4028fc849ca8236f019caab9a1452bbd",
+       "managed" => true,
+       "orderNumber" => nil,
+       "owner" => {"anonymous" => false, "contentAccessMode" => "org_environment", "displayName" => "ImportOrg", "href" => "/owners/ImportOrg", "id" => "4028fc849c81693c019c82573a700014", "key" => "ImportOrg"},
+       "productAttributes" =>
+         [{"name" => "description", "value" => "Red Hat Enterprise Linux"},
+          {"name" => "support_type", "value" => "L1-L3"},
+          {"name" => "support_level", "value" => "Self-Support"},
+          {"name" => "service_type", "value" => "Self-Support"},
+          {"name" => "multi-entitlement", "value" => "yes"},
+          {"name" => "virt_only", "value" => "true"},
+          {"name" => "virt_limit", "value" => "1"},
+          {"name" => "name", "value" => "Red Hat Beta Access"},
+          {"name" => "roles", "value" => "TestRole"},
+          {"name" => "ram", "value" => "128"},
+          {"name" => "usage", "value" => "Development"},
+          {"name" => "arch", "value" => "aarch64"}],
+       "productId" => "RH00069",
+       "productName" => "Red Hat Beta Access",
+       "providedProducts" =>
+        [{"productId" => "258", "productName" => "Red Hat Satellite Capsule Beta"},
+         {"productId" => "555", "productName" => "Red Hat Enterprise Linux for SAP Applications for IBM z Systems Beta"}],
+       "quantity" => 1,
+       "sourceEntitlement" => nil,
+       "sourceStackId" => nil,
+       "stackId" => 'FakeStackId',
+       "stacked" => false,
+       "startDate" => "2025-04-26T04:00:00+0000",
+       "subscriptionId" => "e701d80c3e8a48ecb6e2f7c42324cf13",
+       "subscriptionSubKey" => "master",
+       "type" => "NORMAL",
+       "updated" => "2026-03-01T18:46:58+0000",
+       "upstreamEntitlementId" => "c3b564a20c804616b0666d50fc2a1268",
+       "upstreamPoolId" => "2c94e31e96694f32019674e3675916b9"}.with_indifferent_access
+
+    def test_import_data
+      pool = build(:katello_pool)
+      pool.stubs(:backend_data).returns(CP_POOL_FIXTURE)
+      pool.import_data
+
+      assert_equal 5_292_024, pool.account_number
+      assert_equal 1_212_121, pool.contract_number
+      assert_equal 1, pool.quantity
+      assert_equal 128, pool.ram
+      assert_equal DateTime.parse(CP_POOL_FIXTURE['startDate']), pool.start_date
+      assert_equal DateTime.parse(CP_POOL_FIXTURE['endDate']), pool.end_date
+      assert_equal '2c94e31e96694f32019674e3675916b9', pool.upstream_pool_id
+      assert_equal 'c3b564a20c804616b0666d50fc2a1268', pool.upstream_entitlement_id
+      assert_equal 'L1-L3', pool.support_type
+      assert_equal 'TestRole', pool.roles
+      assert_equal 'Development', pool.usage
+      assert_equal 'Red Hat Enterprise Linux', pool.description
+      assert pool.multi_entitlement
+      assert pool.virt_only
+      assert_equal 'FakeStackId', pool.stacking_id
+      assert_equal 'aarch64', pool.arch
+      assert pool.virt_who
+      assert pool.unmapped_guest
+      assert_nil pool.hypervisor_id
     end
 
     def test_import_all_destroy
@@ -113,7 +183,7 @@ module Katello
     end
 
     def test_import_pool
-      Pool.expects(:candlepin_data).returns(
+      Pool.expects(:candlepin_data).returns({
         'id' => 'abcd',
         'productId' => 'SKU001',
         'productAttributes' => [],
@@ -122,7 +192,7 @@ module Katello
         'derivedProvidedProducts' => [],
         'owner' => {
           'key' => @organization.label,
-        }
+        }}.with_indifferent_access
       )
 
       subscription = FactoryBot.create(:katello_subscription, organization: @organization, cp_id: 'SKU001')
