@@ -1,9 +1,55 @@
-import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import IgnoreSubmanErrors from '../fields/IgnoreSubmanErrors';
 
-const fixtures = {
-  renders: { value: false, isLoading: false, onChange: () => {} },
-};
+describe('IgnoreSubmanErrors', () => {
+  const mockOnChange = jest.fn();
 
-describe('IgnoreSubmanErrors', () =>
-  testComponentSnapshotsWithFixtures(IgnoreSubmanErrors, fixtures));
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('renders with label and tooltip icon', () => {
+    render(<IgnoreSubmanErrors value={false} isLoading={false} onChange={mockOnChange} />);
+
+    expect(screen.getByText('Ignore errors')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
+  });
+
+  it('renders unchecked when value is false', () => {
+    render(<IgnoreSubmanErrors value={false} isLoading={false} onChange={mockOnChange} />);
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it('renders checked when value is true', () => {
+    render(<IgnoreSubmanErrors value isLoading={false} onChange={mockOnChange} />);
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toBeChecked();
+  });
+
+  it('calls onChange with toggled value when clicked', () => {
+    render(<IgnoreSubmanErrors value={false} isLoading={false} onChange={mockOnChange} />);
+
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+
+    expect(mockOnChange).toHaveBeenCalledWith({ ignoreSubmanErrors: true });
+  });
+
+  it('is disabled when isLoading is true', () => {
+    render(<IgnoreSubmanErrors value={false} isLoading onChange={mockOnChange} />);
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toBeDisabled();
+  });
+
+  it('is enabled when isLoading is false', () => {
+    render(<IgnoreSubmanErrors value={false} isLoading={false} onChange={mockOnChange} />);
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).not.toBeDisabled();
+  });
+});
