@@ -65,7 +65,7 @@ const ContentCredentialsPage = () => {
     name: {
       title: __('Name'),
       isSorted: true,
-      wrapper: rowData => rowData.name,
+      wrapper: rowData => <a href={`/labs/content_credentials/${rowData.id}`}>{rowData.name}</a>,
     },
     organization: {
       title: __('Organization'),
