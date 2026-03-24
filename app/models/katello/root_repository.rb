@@ -302,8 +302,6 @@ module Katello
         errors.add(:base, N_("Upstream username and password may only be set on custom repositories."))
       elsif self.upstream_username.blank?
         errors.add(:base, N_("Upstream password requires upstream username be set."))
-      elsif !self.upstream_password
-        errors.add(:base, N_("Upstream username requires upstream password be set.")) # requirement of pulp
       end
     end
 
