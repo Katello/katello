@@ -46,6 +46,18 @@ module Katello
       assert_response :success
     end
 
+    def test_create_container_tag_upload_request
+      size = 0
+      container_repo = katello_repositories(:busybox)
+      container_repo.backend_content_service(SmartProxy.pulp_primary).expects(:create_upload).with(size, nil, anything, container_repo).returns("upload_id" => "test")
+      post :create, params: { :repository_id => container_repo.id, :size => size}
+      assert_response :success
+
+      response_body = ActiveSupport::JSON.decode(@response.body)
+      assert_equal "test", response_body["upload_id"], "Expected upload_id to be returned for tag only uploads"
+      assert_nil response_body["error"], "Expected no error field in response for tag only uploads"
+    end
+
     def test_create_container_upload_request
       container_repo = katello_repositories(:busybox)
       post :create, params: { :repository_id => container_repo.id, :size => 100, :checksum => 'test_checksum2' }
