@@ -10,11 +10,13 @@ module ::Actions::Pulp3
       @repository = katello_repositories(:rhel_6_x86_64)
       @yum_acs = katello_alternate_content_sources(:yum_alternate_content_source)
       @file_acs = katello_alternate_content_sources(:file_alternate_content_source)
+      @deb_acs = katello_alternate_content_sources(:deb_alternate_content_source)
       @simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       @simplified_acs.products << @repository.product
       @rhui_acs = katello_alternate_content_sources(:yum_alternate_content_source_rhui)
       @yum_acs.save!
       @file_acs.save!
+      @deb_acs.save!
       @simplified_acs.save!
       @rhui_acs.save!
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:test_remote_name).returns('test-remote')
@@ -32,6 +34,11 @@ module ::Actions::Pulp3
             ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
       end
       @file_acs.reload
+
+      @deb_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
+        ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::AlternateContentSource::Delete, smart_proxy_acs)
+      end
 
       @simplified_acs.smart_proxy_alternate_content_sources.each do |smart_proxy_acs|
         ForemanTasks.sync_task(
@@ -70,6 +77,18 @@ module ::Actions::Pulp3
       pulp_remote = @file_acs.backend_service(@primary).get_remote
       assert_equal @file_acs.base_url, pulp_remote.url
       assert_equal @file_acs.subpaths.collect { |s| s + '/PULP_MANIFEST' }.sort, pulp_acs.paths.sort
+    end
+
+    def test_deb_update
+      ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@deb_acs.name)
+      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @deb_acs.id, smart_proxy_id: @primary.id)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
+      @deb_acs.update(base_url: 'https://fixtures.pulpproject.org/debian/', deb_releases: 'ragnarok ginnungagap')
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Update, smart_proxy_acs)
+
+      pulp_remote = @deb_acs.backend_service(@primary).get_remote
+      assert_equal @deb_acs.base_url, pulp_remote.url
+      assert_equal 'ragnarok ginnungagap', pulp_remote.distributions
     end
 
     def test_file_update_no_subpaths
@@ -151,6 +170,26 @@ module ::Actions::Pulp3
 
       @simplified_acs.update(use_http_proxies: false)
       remote_options = @simplified_acs.smart_proxy_alternate_content_sources.first.backend_service.remote_options
+      assert_nil remote_options[:proxy_url]
+      assert_nil remote_options[:proxy_username]
+      assert_nil remote_options[:proxy_password]
+    end
+
+    def test_http_proxy_url_update_deb_acs
+      proxy = FactoryBot.create(:http_proxy)
+      proxy.update!(url: "https://test_url", username: "foo", password: "bar")
+
+      @deb_acs.update!(use_http_proxies: true)
+      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @deb_acs.id, smart_proxy_id: @primary.id)
+      @deb_acs.smart_proxy_alternate_content_sources.first.backend_service.smart_proxy.update!(http_proxy_id: proxy.id)
+
+      remote_options = @deb_acs.smart_proxy_alternate_content_sources.first.backend_service.remote_options
+      assert_equal proxy.url, remote_options[:proxy_url]
+      assert_equal proxy.username, remote_options[:proxy_username]
+      assert_equal proxy.password, remote_options[:proxy_password]
+
+      @deb_acs.update(use_http_proxies: false)
+      remote_options = @deb_acs.smart_proxy_alternate_content_sources.first.backend_service.remote_options
       assert_nil remote_options[:proxy_url]
       assert_nil remote_options[:proxy_username]
       assert_nil remote_options[:proxy_password]

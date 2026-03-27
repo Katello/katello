@@ -1,0 +1,45 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://centos9-katello-devel-stable.example.com:9090/v2/features
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux x86_64) ruby/3.0.7p220
+      X-Request-Id:
+      - 28835526-efae-4fe9-8f06-a269c6956efe
+      X-Session-Id:
+      - 98742bdf-56c7-463f-a4e5-16419113ff9e
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '43'
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Content-Type-Options:
+      - nosniff
+      Server:
+      - foreman-proxy/3.17.0-develop
+      Date:
+      - Wed, 04 Mar 2026 14:18:26 GMT
+      Connection:
+      - Keep-Alive
+    body:
+      encoding: UTF-8
+      base64_string: 'Y291bGQgbm90IHJlYWQgY2xpZW50IGNlcnQgZnJvbSBlbnZpcm9ubWVudA==
+
+        '
+  recorded_at: Wed, 04 Mar 2026 14:18:26 GMT
+recorded_with: VCR 6.3.1
