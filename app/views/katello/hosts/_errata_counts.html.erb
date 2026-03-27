@@ -32,7 +32,7 @@
 <a href="/content_hosts/<%= host.id %>/packages/applicable">
 <% end %>
   <span class="aligned-errata-count">
-    <span class="errata-count <%= host.content_facet_attributes&.upgradable_rpm_count&.positive? ? 'green' : 'black' %>"
+    <span class="errata-count <%= host.content_facet_attributes&.upgradable_rpm_count&.positive? ? 'light-blue' : 'black' %>">
       <span>
         <%= host.content_facet_attributes&.upgradable_rpm_count || 0 %>
       </span>
@@ -48,7 +48,7 @@
 <a href="/content_hosts/<%= host.id %>/debs/applicable">
 <% end %>
   <span class="aligned-errata-count">
-    <span class="errata-count <%= host.content_facet_attributes&.upgradable_deb_count&.positive? ? 'green' : 'black' %>"
+    <span class="errata-count <%= host.content_facet_attributes&.upgradable_deb_count&.positive? ? 'light-blue' : 'black' %>">
       <span>
         <%= host.content_facet_attributes&.upgradable_deb_count || 0 %>
       </span>
