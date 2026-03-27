@@ -84,6 +84,7 @@ module Katello
         has_many :host_collections, :class_name => "::Katello::HostCollection", :through => :host_collection_hosts
 
         has_many :hypervisor_pools, :class_name => '::Katello::Pool', :foreign_key => :hypervisor_id, :dependent => :nullify
+        has_many :errata_applications, :class_name => '::Katello::ErrataApplication', :inverse_of => :host, :dependent => :destroy
 
         validates :name, format: { with: Net::Validations::HOST_REGEXP, message: _("%{value} can contain only lowercase letters, numbers, dashes and dots.") }
 
@@ -95,6 +96,8 @@ module Katello
 
         after_validation :queue_refresh_content_host_status
         register_rebuild(:queue_refresh_content_host_status, N_("Refresh_Content_Host_Status"))
+
+        register_rebuild(:clear_errata_applications_on_rebuild, N_("Clear_Errata_Applications"))
 
         scope :image_mode, -> do
           joins(:content_facet).where.not("#{::Katello::Host::ContentFacet.table_name}.bootc_booted_image" => nil)
@@ -175,6 +178,10 @@ module Katello
       def should_reset_content_host_status?
         return false unless self.is_a?(::Host::Base)
         !new_record? && build && self.changes.key?('build')
+      end
+
+      def clear_errata_applications_on_rebuild
+        errata_applications.delete_all
       end
 
       module ClassMethods
