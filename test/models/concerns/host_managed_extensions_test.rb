@@ -607,5 +607,26 @@ module Katello
       assert_equal @host.operatingsystem, os
       assert_equal @host.content_facet.kickstart_repository, @distro
     end
+
+    def test_clear_errata_applications_on_rebuild
+      erratum = katello_errata(:security)
+      user = User.first
+
+      # Create some errata application records
+      Katello::ErrataApplication.create!(
+        host: @host,
+        errata_ids: [erratum.id],
+        applied_at: Time.zone.now,
+        status: 'success',
+        user: user
+      )
+
+      assert_equal 1, @host.errata_applications.count
+
+      # Simulate rebuild
+      @host.clear_errata_applications_on_rebuild
+
+      assert_equal 0, @host.errata_applications.count
+    end
   end
 end

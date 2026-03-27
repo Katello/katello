@@ -127,6 +127,12 @@ module Katello
           world.middleware.use ::Actions::Middleware::KeepLocale
         end
       end
+
+      # Register middleware to track errata applications
+      ForemanTasks.dynflow.config.on_init do |world|
+        require_dependency 'actions/middleware/record_errata_application'
+        world.middleware.use ::Actions::Middleware::RecordErrataApplication
+      end
     end
 
     initializer "katello.load_app_instance_data" do |app|
