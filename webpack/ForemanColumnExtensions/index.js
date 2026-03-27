@@ -19,7 +19,6 @@ import {
   DescriptionListTerm as Dt,
   Text,
   TextVariants,
-  Icon,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
@@ -104,32 +103,38 @@ const hostsIndexColumnExtensions = [
         <Flex alignContent={{ default: 'alignContentSpaceBetween' }}>
           {security !== undefined &&
             <FlexItem>
-              <Icon color="#0066cc" >
-                <SecurityIcon />
-              </Icon>
+              <span style={{ marginRight: '0.25rem' }} title={__('Security')}>
+                <SecurityIcon color={security > 0 ? 'var(--pf-v5-global--primary-color--100)' : 'var(--pf-v5-global--palette--black-600)'} />
+              </span>
               <Link to={hostErrataUrl('security')}>{security}</Link>
             </FlexItem>
           }
           {bugfix !== undefined &&
             <FlexItem>
-              <Icon color="#8bc1f7" >
-                <BugIcon />
-              </Icon>
+              <span style={{ marginRight: '0.25rem' }} title={__('Bugfix')}>
+                <BugIcon color={bugfix > 0 ? 'var(--pf-v5-global--palette--blue-100)' : 'var(--pf-v5-global--palette--black-600)'} />
+              </span>
               <Link to={hostErrataUrl('bugfix')}>{bugfix}</Link>
             </FlexItem>
           }
           {enhancement !== undefined &&
             <FlexItem>
-
-              <Icon color="#002f5d" >
-                <EnhancementIcon color="#002f5d" />
-              </Icon>
+              <span style={{ marginRight: '0.25rem' }} title={__('Enhancement')}>
+                <EnhancementIcon color={enhancement > 0 ? 'var(--pf-v5-global--palette--blue-500)' : 'var(--pf-v5-global--palette--black-600)'} />
+              </span>
               <Link to={hostErrataUrl('enhancement')}>{enhancement}</Link>
             </FlexItem>
           }
           {(upgradableRpmCount !== undefined || upgradableDebCount !== undefined) &&
             <FlexItem>
-              <PackageIcon />
+              <span style={{ marginRight: '0.25rem' }} title={__('Packages')}>
+                <PackageIcon color={
+                  (hostDetails?.operatingsystem_family === 'Debian' ? upgradableDebCount : upgradableRpmCount) > 0
+                    ? 'var(--pf-v5-global--primary-color--100)'
+                    : 'var(--pf-v5-global--palette--black-600)'
+                }
+                />
+              </span>
               { hostDetails?.operatingsystem_family === 'Debian' ?
                 <Link to={`hosts/${hostDetails?.name}#/Content/Debs?status=Upgradable`}>{upgradableDebCount}</Link>
                 :
