@@ -1,5 +1,6 @@
 module Katello
   module Concerns
+    # rubocop:disable Metrics/ModuleLength
     module BaseTemplateScopeExtensions
       extend ActiveSupport::Concern
       extend ApipieDSL::Module
@@ -202,94 +203,26 @@ module Katello
       end
 
       apipie :method, 'Load errata applications' do
-        desc 'This macro returns a collection of task records relating to errata being applied.
+        desc 'This macro returns a collection of errata application records from the database.
           The collection is loaded in bulk, 1000 records at a time.'
         keyword :filter_errata_type, String, desc: "Errata type. One of: #{Katello::Erratum::TYPES.join(', ')}", default: nil
         keyword :include_last_reboot, String, desc: "Set to 'yes' to include the last reboot time of each host", default: 'yes'
         keyword :since, String, desc: 'Return errata applications after this date'
         keyword :up_to, String, desc: 'Return errata applications before this date'
-        keyword :status, String, desc: 'Task status. One of: "pending", "success", "error", "warning"'
+        keyword :status, String, desc: 'Application status. One of: "all", "success", "error", "warning", "cancelled"', default: 'all'
         keyword :host_filter, String, desc: 'A filter term to limit the resulting collection, using standard filter syntax', default: nil
-        returns array_of: 'Erratum', desc: 'The collection that can be iterated over using each_record'
+        returns array_of: Hash, desc: 'The collection that can be iterated over using each_record'
       end
-      # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/CyclomaticComplexity
-      # rubocop:disable Metrics/PerceivedComplexity
-      def load_errata_applications(filter_errata_type: nil, include_last_reboot: 'yes', since: nil, up_to: nil, status: nil, host_filter: nil)
-        result = []
-
-        filter_errata_type = filter_errata_type.presence || 'all'
-        search_up_to = up_to.present? ? "ended_at < \"#{up_to}\"" : nil
-        search_since = since.present? ? "ended_at > \"#{since}\"" : nil
-        search_result = status.present? && status != 'all' ? "result = #{status}" : nil
-        labels = 'label ^ (Actions::Katello::Host::Erratum::Install, Actions::Katello::Host::Erratum::ApplicableErrataInstall)'
-
-        new_labels = 'label = Actions::RemoteExecution::RunHostJob AND remote_execution_feature.label ^ (katello_errata_install, katello_errata_install_by_search)'
-        labels = [labels, new_labels].map { |label| "(#{label})" }.join(' OR ')
-
-        search = [search_up_to, search_since, search_result, "state = stopped", labels].compact.join(' and ')
-
-        tasks = load_resource(klass: ForemanTasks::Task,
-                              permission: 'view_foreman_tasks',
-                              joins: [:template_invocation],
-                              preload: [:template_invocation],
-                              search: search)
-        only_host_ids = ::Host.search_for(host_filter).pluck(:id) if host_filter
-
-        # batch of 1_000 records
-        tasks.each do |batch|
-          @_tasks_input = {}
-          @_tasks_errata_cache = {}
-          seen_errata_ids = []
-          seen_host_ids = []
-
-          batch.each do |task|
-            next if skip_task?(task)
-            seen_errata_ids = (seen_errata_ids + parse_errata(task)).uniq
-            seen_host_ids << get_task_input(task)['host']['id'].to_i if include_last_reboot == 'yes'
-          end
-          seen_host_ids &= only_host_ids if only_host_ids
-
-          # preload errata in one query for this batch
-          preloaded_errata = Katello::Erratum.where(:errata_id => seen_errata_ids).pluck(:errata_id, :errata_type, :issued)
-          preloaded_hosts = ::Host.where(:id => seen_host_ids).includes(:reported_data)
-
-          batch.each do |task|
-            next if skip_task?(task)
-            next unless only_host_ids.nil? || only_host_ids.include?(get_task_input(task)['host']['id'].to_i)
-            parse_errata(task).each do |erratum_id|
-              current_erratum = preloaded_errata.find { |k, _| k == erratum_id }
-              next if current_erratum.nil?
-              current_erratum_errata_type = current_erratum[1]
-              current_erratum_issued = current_erratum.last
-
-              if filter_errata_type != 'all' && !(filter_errata_type == current_erratum_errata_type)
-                next
-              end
-
-              hash = {
-                :date => task.ended_at,
-                :hostname => get_task_input(task)['host']['name'],
-                :erratum_id => erratum_id,
-                :erratum_type => current_erratum_errata_type,
-                :issued => current_erratum_issued,
-                :status => task.result,
-              }
-
-              if include_last_reboot == 'yes'
-                # It is possible that we can't find the host if it has been deleted.
-                hash[:last_reboot_time] = preloaded_hosts.find { |k, _| k.id == get_task_input(task)['host']['id'].to_i }&.uptime_seconds&.seconds&.ago
-              end
-
-              result << hash
-            end
-          end
-        end
-
-        result
+      def load_errata_applications(filter_errata_type: nil, include_last_reboot: 'yes', since: nil, up_to: nil, status: 'all', host_filter: nil)
+        load_errata_applications_from_db(
+          filter_errata_type: filter_errata_type,
+          include_last_reboot: include_last_reboot,
+          since: since,
+          up_to: up_to,
+          status: status,
+          host_filter: host_filter
+        )
       end
-      # rubocop:enable Metrics/MethodLength
 
       apipie :method, 'Converts package version to be sortable' do
         required :version, String, desc: 'Version to convert'
@@ -311,47 +244,113 @@ module Katello
         prepare_ssl_cert(ca_cert) + configure_subman(host.content_source)
       end
 
+      apipie :method, 'Load errata applications from database' do
+        desc 'This macro returns a collection of errata application records from the database.
+          This is the new recommended approach that uses dedicated database tracking instead of parsing tasks.'
+        keyword :filter_errata_type, String, desc: "Errata type. One of: #{Katello::Erratum::TYPES.join(', ')}", default: nil
+        keyword :include_last_reboot, String, desc: "Set to 'yes' to include the last reboot time of each host", default: 'yes'
+        keyword :since, String, desc: 'Return errata applications after this date'
+        keyword :up_to, String, desc: 'Return errata applications before this date'
+        keyword :status, String, desc: 'Application status. One of: "all", "success", "error", "warning", "cancelled"', default: 'all'
+        keyword :host_filter, String, desc: 'A filter term to limit the resulting collection, using standard filter syntax', default: nil
+        returns array_of: Hash, desc: 'Array of hashes containing errata application data'
+      end
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
+      def load_errata_applications_from_db(filter_errata_type: nil, include_last_reboot: 'yes', since: nil, up_to: nil, status: 'all', host_filter: nil)
+        result = []
+
+        authorized_hosts = ::Host::Managed.authorized('view_hosts').select(:id)
+        applications = Katello::ErrataApplication.where(host_id: authorized_hosts)
+
+        if status.present? && status != 'all'
+          return [] if status.to_s.casecmp('pending').zero?
+          applications = applications.where(status: status.to_s.downcase)
+        end
+
+        if since.present?
+          applications = applications.since(Time.zone.parse(since))
+        end
+
+        if up_to.present?
+          applications = applications.up_to(Time.zone.parse(up_to))
+        end
+
+        if host_filter.present?
+          applications = applications.where(host_id: ::Host.search_for(host_filter).select(:id))
+        end
+
+        # Preload hosts
+        if include_last_reboot == 'yes'
+          applications = applications.includes(host: :reported_data)
+        else
+          applications = applications.includes(:host)
+        end
+
+        # Fetch host_ids and errata_ids in a single query
+        application_data = applications.pluck(:host_id, :errata_ids)
+        host_ids = application_data.map(&:first).uniq
+        all_errata_ids = application_data.map(&:last).flatten.uniq
+
+        # Preload all errata to avoid N+1 queries
+        errata_by_id = Katello::Erratum.where(id: all_errata_ids).index_by(&:id)
+
+        # Fetch applicability only for errata that were applied
+        applicable_data = Katello::Host::ContentFacet
+          .where(host_id: host_ids)
+          .joins(:applicable_errata)
+          .where('katello_errata.id' => all_errata_ids)
+          .pluck(:host_id, 'katello_errata.id')
+
+        applicable_errata_map =
+          applicable_data
+            .group_by(&:first)
+            .transform_values { |pairs| pairs.map(&:last) }
+
+        # Process each application record
+        applications.find_each(batch_size: 1000) do |app|
+          # Get applicable erratum IDs for this host (from pre-built map)
+          applicable_erratum_ids = applicable_errata_map[app.host_id] || []
+
+          # Create one output row per erratum
+          app.errata_ids.each do |erratum_id|
+            erratum = errata_by_id[erratum_id]
+            next unless erratum
+
+            # Filter by errata type if specified
+            next if filter_errata_type.present? && filter_errata_type != 'all' && erratum.errata_type != filter_errata_type
+
+            hash = {
+              date: app.applied_at,
+              hostname: app.host.name,
+              erratum_id: erratum.errata_id,
+              erratum_type: erratum.errata_type,
+              issued: erratum.issued,
+              status: app.status,
+              still_applicable: applicable_erratum_ids.include?(erratum.id),
+            }
+
+            if include_last_reboot == 'yes'
+              hash[:last_reboot_time] = app.host&.uptime_seconds&.seconds&.ago
+            end
+
+            result << hash
+          end
+        end
+
+        result
+      end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/PerceivedComplexity
+
       private
 
       def host_subscription_facet(host)
         host.subscription_facet
-      end
-
-      def skip_task?(task)
-        # Skip task that doesn't apply errata
-        input = get_task_input(task)
-        input.blank? || input['host'].blank?
-      end
-
-      def get_task_input(task)
-        @_tasks_input[task.id] ||= if task.label == 'Actions::Katello::Host::Erratum::ApplicableErrataInstall'
-                                     task.execution_plan_action.all_planned_actions(Actions::Katello::Host::Erratum::Install).first.try(:input) || {}
-                                   else
-                                     task.input
-                                   end
-      end
-
-      def parse_errata(task)
-        task_input = get_task_input(task)
-        agent_input = task_input['errata'] || task_input['content']
-        # agent_input retrieves past katello-agent tasks.
-        # There are multiple template inputs, such as errata, pre_script and post_script.
-        # We only need the errata input here.
-        @_tasks_errata_cache[task.id] ||= agent_input.presence || errata_ids_from_template_invocation(task, task_input)
-      end
-
-      def errata_ids_from_template_invocation(task, task_input)
-        if task_input.key?('job_features') && task_input['job_features'].include?('katello_errata_install_by_search')
-          # This may give wrong results if the template is not rendered yet
-          # This also will not work for jobs run before we started storing
-          #   resolved ids in the template
-          script = task.execution_plan.actions[1].try(:input).try(:[], 'script') || ''
-          found = script.lines.find { |line| line.start_with? '# RESOLVED_ERRATA_IDS=' } || ''
-          (found.chomp.split('=', 2).last || '').split(',')
-        else
-          TemplateInvocationInputValue.joins(:template_input).where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation.id, 'errata')
-            .first&.value&.split(',') || []
-        end
       end
     end
   end
