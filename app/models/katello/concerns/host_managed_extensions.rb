@@ -120,6 +120,7 @@ module Katello
         has_many :host_collections, :class_name => "::Katello::HostCollection", :through => :host_collection_hosts
 
         has_many :hypervisor_pools, :class_name => '::Katello::Pool', :foreign_key => :hypervisor_id, :dependent => :nullify
+        has_many :errata_applications, :class_name => '::Katello::ErrataApplication', :inverse_of => :host, :dependent => :destroy
 
         validates :name, format: { with: Net::Validations::HOST_REGEXP, message: _("%{value} can contain only lowercase letters, numbers, dashes and dots.") }
 
