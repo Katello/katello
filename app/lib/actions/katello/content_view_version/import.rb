@@ -2,6 +2,8 @@ module Actions
   module Katello
     module ContentViewVersion
       class Import < Actions::EntryAction
+        execution_plan_hooks.use :clean_failed_import, on: :stopped
+
         def plan(opts = {})
           metadata_map = ::Katello::Pulp3::ContentViewVersion::MetadataMap.new(metadata: opts[:metadata])
 
@@ -34,23 +36,32 @@ module Actions
 
             if import.content_view
               plan_action(ResetContentViewRepositoriesFromMetadata, { import: import })
-              plan_action(::Actions::Katello::ContentView::Publish, import.content_view, metadata_map.content_view_version.description,
+              publish_output = plan_action(::Actions::Katello::ContentView::Publish, import.content_view, metadata_map.content_view_version.description,
                           { path: opts[:path],
                             metadata: opts[:metadata],
                             importing: !metadata_map.syncable_format?,
                             syncable: metadata_map.syncable_format?,
                             major: metadata_map.content_view_version.major,
                             minor: metadata_map.content_view_version.minor,
-                          })
-              plan_self(content_view_id: import.content_view.id)
+                          }).output
+              plan_self(content_view_id: import.content_view.id, content_view_version_id: publish_output[:content_view_version_id])
             end
           end
         end
 
-        def finalize
-          if task.execution_plan.run_steps.any? { |s| s.action_class == ::Actions::Pulp3::ContentViewVersion::CreateImport && s.state != :success }
-            ::Katello::EventQueue.push_event(::Katello::Events::DeleteLatestContentViewVersion::EVENT_TYPE, input[:content_view_id])
-          end
+        def run
+          output[:content_view_version_id] = input[:content_view_version_id]
+        end
+
+        def clean_failed_import(execution_plan)
+          return unless execution_plan.run_steps.any? { |s| s.action_class == ::Actions::Pulp3::ContentViewVersion::CreateImport && s.state != :success }
+
+          version = ::Katello::ContentViewVersion.find_by(id: output[:content_view_version_id])
+          return unless version
+
+          ForemanTasks.async_task(::Actions::Katello::ContentView::Remove, version.content_view,
+                        content_view_versions: [version],
+                        content_view_environments: version.content_view_environments)
         end
 
         def humanized_name
