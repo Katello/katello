@@ -91,5 +91,32 @@ module ::Actions::Pulp3
 
       assert_nil repo_reference
     end
+
+    def test_distribution_references_are_deleted_with_short_paths
+      original = Setting[:katello_pulp_short_paths]
+      Setting[:katello_pulp_short_paths] = true
+
+      short_repo = katello_repositories(:generic_file_dev)
+      repo_type = Katello::RepositoryTypeManager.find(short_repo.content_type)
+      repo_type.stubs(:short_path_alias_enabled).returns(true)
+      short_repo.root.update(:url => 'http://test/test/', :unprotected => true)
+      create_repo(short_repo, @primary)
+      ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, short_repo)
+
+      distribution_references = Katello::Pulp3::DistributionReference.where(repository_id: short_repo.id)
+      assert_equal 2, distribution_references.count
+      assert_includes distribution_references.pluck(:path), short_repo.relative_path
+      assert_includes distribution_references.pluck(:path), short_repo.short_relative_path
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, short_repo, @primary)
+      short_repo.reload
+
+      assert_empty Katello::Pulp3::DistributionReference.where(repository_id: short_repo.id)
+    ensure
+      Setting[:katello_pulp_short_paths] = original
+      if defined?(short_repo) && short_repo&.persisted?
+        ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, short_repo, @primary) rescue nil
+      end
+    end
   end
 end

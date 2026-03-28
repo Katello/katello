@@ -104,7 +104,7 @@ module Katello
           {
             base_path: path,
             publication: repo.publication_href,
-            name: "#{generate_backend_object_name}",
+            name: distribution_name(path),
           }
         end
 

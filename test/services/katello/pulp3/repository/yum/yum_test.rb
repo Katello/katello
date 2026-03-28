@@ -90,11 +90,11 @@ module Katello
             service = @repo.backend_service(@proxy)
             service.stubs(:lookup_distributions).returns([PulpRpmClient::RpmRpmDistributionResponse.new(pulp_href: 'some fake href')])
             fake_dist_ref = ::Katello::Pulp3::DistributionReference.new(href: 'hey its an href')
-            service.stubs(:distribution_reference).returns(fake_dist_ref)
+            service.stubs(:distribution_reference_for_path).with(service.relative_path).returns(fake_dist_ref)
 
             fake_dist_ref.expects(:destroy)
             service.expects(:save_distribution_references).with(['some fake href']).returns(nil)
-            service.expects(:update_distribution).returns(nil)
+            service.expects(:update_distribution_for_path).with(service.relative_path).returns(nil)
 
             service.refresh_distributions
           end
@@ -114,7 +114,7 @@ module Katello
           def test_fail_missing_pub_on_dist_update
             service = @repo.backend_service(@proxy)
             fake_dist_ref = ::Katello::Pulp3::DistributionReference.new(href: 'hey its an href')
-            service.stubs(:distribution_reference).returns(fake_dist_ref)
+            service.stubs(:distribution_reference_for_path).with(service.relative_path).returns(fake_dist_ref)
             dist_options = service.secure_distribution_options(@repo.relative_path)
             dist_options[:publication] = 'publication_href'
             service.expects(:secure_distribution_options).with(@repo.relative_path).returns(dist_options)

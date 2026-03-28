@@ -2,6 +2,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DEB_TYPE) do
   pulp3_service_class Katello::Pulp3::Repository::Apt
   pulp3_api_class Katello::Pulp3::Api::Apt
   pulp3_plugin 'deb'
+  short_path_alias_enabled true
   prevent_unneeded_metadata_publish
 
   client_module_class PulpDebClient
