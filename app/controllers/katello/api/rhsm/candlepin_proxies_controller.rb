@@ -16,7 +16,7 @@ module Katello
     before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
     before_action :authorize_client_or_user, :only => [:consumer_show, :regenerate_identity_certificates, :upload_tracer_profile, :facts, :proxy_jobs_get_path]
     before_action :authorize_client_or_admin, :only => [:hypervisors_update, :async_hypervisors_update, :hypervisors_heartbeat]
-    before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
+    before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete, :consumer_compliance]
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
                                                :enabled_repos, :available_releases]
 
@@ -82,6 +82,21 @@ module Katello
       r = Resources::Candlepin::Proxy.get(@request_path, extra_headers)
       logger.debug filter_sensitive_data(r)
       render :json => r, :status => r.code
+    end
+
+    class ComplianceFetchError < StandardError
+      attr_reader :response
+      def initialize(response)
+        super()
+        @response = response
+      end
+    end
+
+    def consumer_compliance
+      body, code = compliance_status(params[:id])
+      render :json => body, :status => code
+    rescue ComplianceFetchError => e
+      render :json => e.response, :status => e.response.code
     end
 
     def delete
@@ -286,6 +301,14 @@ module Katello
     end
 
     private
+
+    def compliance_status(id)
+      Rails.cache.fetch("katello/compliance/#{id}", expires_in: 1.minute) do
+        r = Resources::Candlepin::Proxy.get(@request_path)
+        raise ComplianceFetchError, r if r.code.to_i >= 400
+        [JSON.parse(r.body), r.code]
+      end
+    end
 
     # in case set taxonomy from core was skipped since the User.current was nil at that moment (typically AK was used instead of username/password)
     # we need to set proper context, unfortunately params[:organization_id] is already overridden again by set_organization_id so we need to
