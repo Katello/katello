@@ -16,18 +16,9 @@ module Katello
           end
         end
 
-        def initialize_empty
-          # For every empty APT library instance repository we must add at least a release component to
-          # ensure we have a publishable repo with consumable metadata. Otherwise smart proxy syncs will
-          # fail, and consuming hosts will choke on empty repos.
-          opts = {:repository => repository_reference.repository_href, :component => "empty", :distribution => "katello"}
-          api.content_release_components_api.create(opts)
-        end
-
-        def pulp_components
-          return [] if repo.version_href.blank?
-          return ["all"] if version_missing_structure_content?
-          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| x.plain_component }.uniq.sort
+        def pulp_content_summary
+          # Performs a Pulp API call, avoid duplicate invocations if possible!
+          return pulp_primary_api.repository_versions_api.read(repo.version_href).content_summary.present
         end
 
         def sanitize_pulp_distribution(distribution)
@@ -37,10 +28,17 @@ module Katello
           distribution
         end
 
-        def pulp_distributions
-          return [] if repo.version_href.blank?
-          return ["default"] if version_missing_structure_content?
-          pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results.map { |x| sanitize_pulp_distribution(x.distribution) }.uniq.sort
+        def pulp_distributions_and_components
+          # Performs Pulp API calls, avoid duplicate invocations if possible!
+          content_summary = pulp_content_summary
+          return ["default"], ["empty"] if content_summary == {}
+          return ["default"], ["all"] if version_missing_structure_content?(content_summary)
+          release_components = pulp_primary_api.content_release_components_api.list({:repository_version => repo.version_href}).results
+          distributions = release_components.map { |x| sanitize_pulp_distribution(x.distribution) }.uniq.sort
+          fail ::Katello::Errors::MissingDebDistributionError.new(repo.name, repo.version_href) if distributions.empty?
+          components = release_components.map { |x| x.plain_component }.uniq.sort
+
+          return distributions, components
         end
 
         def remote_options
@@ -67,10 +65,13 @@ module Katello
         end
 
         def mirror_remote_options
-          super.merge({distributions: pulp_distributions.join(' ')})
+          return super if repo.version_href.blank?
+
+          distributions, = pulp_distributions_and_components
+          super.merge({distributions: distributions.join(' ')})
         end
 
-        def version_missing_structure_content?
+        def version_missing_structure_content?(content_summary)
           # There may be old pulp_deb repo versions that have no structure content for some or all packages.
           # This could be because packages were uploaded with Katello < 4.12
           # It may also affect filtered CV versions created with very old Katello versions.
@@ -82,17 +83,15 @@ module Katello
           # If this results in an overall PRC count > than the number of packages, then the repo version is not
           # identified as affected. We have not seen such cases in the real world, and checking each package
           # individually would be prohibitively inefficent.
-          return false if repo.version_href.blank?
-          version_content = pulp_primary_api.repository_versions_api.read(repo.version_href).content_summary.present
-          packages = version_content.fetch('deb.package', {:count => 0})
-          prc = version_content.fetch('deb.package_release_component', {:count => 0})
+          packages = content_summary.fetch('deb.package', {:count => 0})
+          prc = content_summary.fetch('deb.package_release_component', {:count => 0})
           return packages.fetch(:count) > prc.fetch(:count)
         end
 
         def publication_options(repository)
           ss = api.signing_services_api.list(name: SIGNING_SERVICE_NAME).results
           popts = super(repository)
-          if version_missing_structure_content?
+          if repo.version_href.present? && version_missing_structure_content?(pulp_content_summary)
             popts.merge!({ structured: false })
             popts.merge!({ simple: true })
           end
