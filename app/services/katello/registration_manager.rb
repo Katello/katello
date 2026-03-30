@@ -197,11 +197,17 @@ module Katello
       # rubocop:enable Metrics/MethodLength
 
       def check_registration_services
-        ping_results = {}
+        cache_key = 'katello/candlepin_status'
+        cached = Rails.cache.read(cache_key)
+        return cached == Katello::Ping::OK_RETURN_CODE unless cached.nil?
+
+        ping_result = nil
         User.as_anonymous_admin do
-          ping_results = Katello::Ping.ping
+          ping_result = Katello::Ping.ping(services: [:candlepin])
         end
-        ping_results[:services][:candlepin][:status] == "ok"
+        status = ping_result&.dig(:services, :candlepin, :status)
+        Rails.cache.write(cache_key, status, expires_in: 1.minute) if status == Katello::Ping::OK_RETURN_CODE
+        status == Katello::Ping::OK_RETURN_CODE
       end
 
       private
