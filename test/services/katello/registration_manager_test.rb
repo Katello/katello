@@ -217,6 +217,8 @@ module Katello
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-candlepin').returns({})
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
+        ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
+        ForemanTasks.expects(:async_task).with(Actions::Katello::Host::ImportRegistrationFacts, anything, anything).once
 
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
@@ -235,6 +237,8 @@ module Katello
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
+        ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
+        ForemanTasks.expects(:async_task).with(Actions::Katello::Host::ImportRegistrationFacts, anything, anything).once
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
 
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [cvpe], [@activation_key])
@@ -274,6 +278,8 @@ module Katello
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns(:uuid => 'fake-uuid-from-katello')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
+        ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
+        ForemanTasks.expects(:async_task).with(Actions::Katello::Host::ImportRegistrationFacts, anything, anything).once
 
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
       end
@@ -283,6 +289,7 @@ module Katello
         ::Katello::RegistrationManager.expects(:unregister_host).raises(RestClient::Gone)
         ::Katello::RegistrationManager.expects(:create_in_candlepin)
         ::Katello::RegistrationManager.expects(:finalize_registration)
+        ForemanTasks.expects(:async_task).with(Actions::Katello::Host::ImportRegistrationFacts, anything, anything).once
         Rails.logger.expects(:debug).with("Host #{@host.name} has been removed in preparation for reregistration")
         Rails.logger.expects(:debug).with("ContentFacet: Marking CVEs changed for host #{@host.name}").times(1)
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])

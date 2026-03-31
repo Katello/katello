@@ -193,6 +193,21 @@ module Katello
 
           finalize_registration(host)
         end
+
+        unless consumer_params[:facts].blank?
+          begin
+            ForemanTasks.async_task(
+              Actions::Katello::Host::ImportRegistrationFacts,
+              host,
+              consumer_params[:facts]
+            )
+          rescue StandardError => e
+            # Registration succeeded — do not surface a task enqueue failure to
+            # the caller. Facts will be re-imported on the host's next checkin.
+            Rails.logger.warn("Failed to enqueue ImportRegistrationFacts for host " \
+                              "#{host&.name}: #{e.message}")
+          end
+        end
       end
       # rubocop:enable Metrics/MethodLength
 
@@ -230,7 +245,8 @@ module Katello
       def create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environments.map(&:cp_id), consumer_params, activation_keys.map(&:cp_name), host.organization)
-        ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
+        # Facts are imported asynchronously via Actions::Katello::Host::ImportRegistrationFacts
+        # to free the Puma thread from fact import work during the critical registration path.
         uuid = cp_create[:uuid]
         if uuid.present? && uuid != host.subscription_facet.uuid
           Rails.logger.info(_("Candlepin returned different consumer uuid than requested (%s), updating uuid in subscription_facet.") % uuid)
