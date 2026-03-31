@@ -63,6 +63,12 @@ module Katello
       Resources::Candlepin::Consumer.stubs(:get)
       ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
       ::Katello::RegistrationManager.expects(:process_registration).with(expected_consumer_params, [content_view_environment]).returns(@host)
+      # Use a non-empty consumer hash to document that realistic data flows
+      # through but the controller intentionally ignores it, rendering the
+      # host instead.
+      consumer_data = { 'uuid' => 'consumer-uuid-ignored-by-this-endpoint' }
+      Resources::Candlepin::Consumer.expects(:get).never
+      ::Katello::RegistrationManager.expects(:process_registration).with(expected_consumer_params, [content_view_environment]).returns([@host, consumer_data])
       post(:create,
         params: {
           :lifecycle_environment_id => content_view_environment.environment_id,
@@ -75,6 +81,12 @@ module Katello
       )
 
       assert_response :success
+      body = JSON.parse(response.body)
+      # The controller renders the host, not the consumer data returned by
+      # RegistrationManager. Verify the host name is present and the
+      # consumer UUID is not surfaced in the response.
+      assert_equal @host.name, body['name']
+      refute_equal consumer_data['uuid'], body['uuid']
     end
 
     def test_create_dead_backend
