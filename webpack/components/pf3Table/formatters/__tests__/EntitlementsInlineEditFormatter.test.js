@@ -1,6 +1,5 @@
-// import React from 'react';
-import { shallow } from 'enzyme';
-import toJson from 'enzyme-to-json';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
 import editFormatter from '../EntitlementsInlineEditFormatter';
 
 describe('EntitlementsInlineEditFormatter', () => {
@@ -16,109 +15,110 @@ describe('EntitlementsInlineEditFormatter', () => {
     };
   };
 
+  const renderFormatter = (controller, value, rowData) => {
+    const formatter = editFormatter(controller)(value, data(rowData));
+    const component = (
+      <table><tbody><tr>{formatter}</tr></tbody></table>
+    );
+    return render(component);
+  };
+
   describe('edit mode', () => {
     describe('when available quantities are being loaded', () => {
-      it('renders spinner', async () => {
+      it('renders spinner while loading', () => {
         const controller = mockController();
-        const value = 100;
-        const formatter = editFormatter(controller)(value, data({
+        renderFormatter(controller, 100, {
           upstreamAvailableLoaded: false,
-        }));
+        });
 
-        expect(toJson(shallow(formatter))).toMatchSnapshot();
+        expect(screen.queryByDisplayValue('100')).not.toBeInTheDocument();
       });
     });
 
     describe('when available quantities are loaded', () => {
-      it('renders edit field and max available', async () => {
+      it('renders edit field and max available', () => {
         const controller = mockController();
-        const value = 100;
-        const formatter = editFormatter(controller)(value, data({
+        renderFormatter(controller, 100, {
           upstreamAvailableLoaded: true,
           upstreamAvailable: 500,
           maxQuantity: 600,
-        }));
+        });
 
-        expect(toJson(shallow(formatter))).toMatchSnapshot();
+        expect(screen.getByDisplayValue('100')).toBeInTheDocument();
+        expect(screen.getByText('Max 600')).toBeInTheDocument();
       });
 
-      it('renders edit field and unlimited message', async () => {
+      it('renders edit field and unlimited message', () => {
         const controller = mockController();
-        const value = 100;
-        const formatter = editFormatter(controller)(value, data({
+        renderFormatter(controller, 100, {
           upstreamAvailableLoaded: true,
           upstreamAvailable: -1,
           maxQuantity: -1,
-        }));
+        });
 
-        expect(toJson(shallow(formatter))).toMatchSnapshot();
+        expect(screen.getByDisplayValue('100')).toBeInTheDocument();
+        expect(screen.getByText('Unlimited')).toBeInTheDocument();
       });
 
-      it('renders validation message', async () => {
+      it('renders validation message when value exceeds max', () => {
         const controller = mockController();
-        const value = 200;
-        const formatter = editFormatter(controller)(value, data({
+        renderFormatter(controller, 200, {
           upstreamAvailableLoaded: true,
           upstreamAvailable: 100,
           maxQuantity: 150,
-        }));
+        });
 
-        expect(toJson(shallow(formatter))).toMatchSnapshot();
+        expect(screen.getByDisplayValue('200')).toBeInTheDocument();
+        expect(screen.getByText('Max 150')).toBeInTheDocument();
+        expect(screen.getByText('Exceeds available quantity')).toBeInTheDocument();
       });
 
-      it('renders changed values', async () => {
+      it('renders when value has changed', () => {
         const controller = mockController({ changed: true });
-        const value = 100;
-        const formatter = editFormatter(controller)(value, data({
+        renderFormatter(controller, 100, {
           upstreamAvailableLoaded: true,
           upstreamAvailable: 200,
           maxQuantity: 300,
-        }));
+        });
 
-        expect(toJson(shallow(formatter))).toMatchSnapshot();
+        expect(screen.getByDisplayValue('100')).toBeInTheDocument();
       });
     });
 
     describe('when available quantities failed to load', () => {
-      it('renders just the edit field', async () => {
+      it('renders just the edit field', () => {
         const controller = mockController();
-        const value = 200;
-        const formatter = editFormatter(controller)(value, data({
+        renderFormatter(controller, 200, {
           upstreamAvailableLoaded: true,
-        }));
+        });
 
-        expect(toJson(shallow(formatter))).toMatchSnapshot();
+        expect(screen.getByDisplayValue('200')).toBeInTheDocument();
       });
     });
   });
 
   describe('value mode', () => {
-    it('renders the value', async () => {
+    it('renders the numeric value', () => {
       const controller = mockController({ editing: false });
-      const value = 200;
-      const formatter = editFormatter(controller)(value, data({
-      }));
+      renderFormatter(controller, 200, {});
 
-      expect(toJson(shallow(formatter))).toMatchSnapshot();
+      expect(screen.getByText('200')).toBeInTheDocument();
     });
 
-    it('shows NA for collapsible row', async () => {
+    it('shows NA for collapsible row', () => {
       const controller = mockController({ editing: false });
-      const value = undefined;
-      const formatter = editFormatter(controller)(value, data({
+      renderFormatter(controller, undefined, {
         collapsible: true,
-      }));
+      });
 
-      expect(toJson(shallow(formatter))).toMatchSnapshot();
+      expect(screen.getByText('NA')).toBeInTheDocument();
     });
 
-    it('renders unlimited for -1', async () => {
+    it('renders unlimited for -1', () => {
       const controller = mockController({ editing: false });
-      const value = -1;
-      const formatter = editFormatter(controller)(value, data({
-      }));
+      renderFormatter(controller, -1, {});
 
-      expect(toJson(shallow(formatter))).toMatchSnapshot();
+      expect(screen.getByText('Unlimited')).toBeInTheDocument();
     });
   });
 });
