@@ -1,46 +1,84 @@
-import { testActionSnapshotWithFixtures } from 'react-redux-test-utils';
-import api, { orgId } from '../../../services/api';
-import { apiError } from '../../../utils/helpers';
-
+import thunk from 'redux-thunk';
+import Immutable from 'seamless-immutable';
+import configureMockStore from 'redux-mock-store';
+import { mockRequest, mockErrorRequest, mockReset } from '../../../mockRequest';
 import { loadOrganizationProducts } from '../OrganizationProductsActions';
+import {
+  ORGANIZATION_PRODUCTS_REQUEST,
+  ORGANIZATION_PRODUCTS_SUCCESS,
+  ORGANIZATION_PRODUCTS_FAILURE,
+} from '../OrganizationProductsConstants';
+import organizationProductsData from './organizationProducts.fixtures.json';
 
-const params = {
-  search: 'some-search',
-};
+const mockStore = configureMockStore([thunk]);
+const orgId = 1;
+const endpoint = /\/organizations\/\d+\/products\//;
 
-jest.mock('../../../services/api');
-jest.mock('../../../utils/helpers');
+let store;
 
-const fixtures = {
-  'should load organization products and success': () => async (dispatch) => {
-    await loadOrganizationProducts(params)(dispatch);
+beforeEach(() => {
+  store = mockStore({ organizationProducts: Immutable({}) });
+});
 
-    expect(api.get.mock.calls).toMatchSnapshot('API get call');
-    expect(apiError).not.toHaveBeenCalled();
-  },
-  'should load organization products and fail': () => (dispatch) => {
-    api.get.mockImplementation(async () => {
-      throw new Error('some-error');
-    });
-
-    return loadOrganizationProducts(params)(dispatch);
-  },
-};
+afterEach(() => {
+  mockReset();
+});
 
 describe('OrganizationProducts actions', () => {
-  beforeEach(() => {
-    orgId.mockImplementation(() => 'some-org-id');
-    api.get.mockImplementation(async () => ({
-      data: {
-        results: [{ id: 'some-id' }],
-      },
-    }));
-  });
-  afterEach(() => {
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
-    jest.resetModules();
-  });
+  describe('loadOrganizationProducts', () => {
+    it('creates ORGANIZATION_PRODUCTS_REQUEST and succeeds with products data', async () => {
+      const params = { search: 'some-search' };
 
-  testActionSnapshotWithFixtures(fixtures);
+      mockRequest({
+        url: endpoint,
+        response: organizationProductsData,
+      });
+
+      await store.dispatch(loadOrganizationProducts(params, orgId));
+
+      const actions = store.getActions();
+      expect(actions[0]).toEqual({ type: ORGANIZATION_PRODUCTS_REQUEST });
+      expect(actions[1]).toEqual({
+        type: ORGANIZATION_PRODUCTS_SUCCESS,
+        payload: {
+          orgId,
+          ...organizationProductsData,
+        },
+      });
+    });
+
+    it('creates ORGANIZATION_PRODUCTS_REQUEST and fails with error', async () => {
+      const params = { search: 'some-search' };
+
+      mockErrorRequest({
+        url: endpoint,
+      });
+
+      await store.dispatch(loadOrganizationProducts(params, orgId));
+
+      const actions = store.getActions();
+      expect(actions[0]).toEqual({ type: ORGANIZATION_PRODUCTS_REQUEST });
+      expect(actions[1].type).toEqual(ORGANIZATION_PRODUCTS_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+
+    it('loads products without search params', async () => {
+      mockRequest({
+        url: endpoint,
+        response: organizationProductsData,
+      });
+
+      await store.dispatch(loadOrganizationProducts({}, orgId));
+
+      const actions = store.getActions();
+      expect(actions[0]).toEqual({ type: ORGANIZATION_PRODUCTS_REQUEST });
+      expect(actions[1]).toEqual({
+        type: ORGANIZATION_PRODUCTS_SUCCESS,
+        payload: {
+          orgId,
+          ...organizationProductsData,
+        },
+      });
+    });
+  });
 });
