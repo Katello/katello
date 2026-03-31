@@ -33,13 +33,13 @@ module Katello
         )
         host.organization = organization unless host.organization
 
-        register_host(host, rhsm_params, content_view_environments, activation_keys)
+        consumer_data = register_host(host, rhsm_params, content_view_environments, activation_keys)
 
         if host_uuid_overridden
           host.subscription_facet.update_dmi_uuid_override(host_uuid)
         end
 
-        host
+        [host, consumer_data]
       end
 
       def dmi_uuid_allowed_dups
@@ -181,8 +181,9 @@ module Katello
         host.subscription_facet = populate_subscription_facet(host, activation_keys, consumer_params, host_uuid)
         host.save! # the host has content and subscription facets at this point
 
+        consumer_data = nil
         User.as_anonymous_admin do
-          begin
+          consumer_data = begin
             create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
           rescue StandardError => e
             # we can't call CP here since something bad already happened. Just clean up our DB as best as we can.
@@ -191,8 +192,10 @@ module Katello
             raise e
           end
 
-          finalize_registration(host)
+          finalize_registration(host, consumer_data)
         end
+
+        consumer_data
       end
       # rubocop:enable Metrics/MethodLength
 
@@ -231,19 +234,29 @@ module Katello
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environments.map(&:cp_id), consumer_params, activation_keys.map(&:cp_name), host.organization)
         ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
-        uuid = cp_create[:uuid]
-        if uuid.present? && uuid != host.subscription_facet.uuid
-          Rails.logger.info(_("Candlepin returned different consumer uuid than requested (%s), updating uuid in subscription_facet.") % uuid)
-          host.subscription_facet.uuid = uuid
+        consumer_data = normalize_consumer_response(cp_create)
+        if consumer_data['uuid'] != host.subscription_facet.uuid
+          Rails.logger.info(_("Candlepin returned different consumer uuid than requested (%s), updating uuid in subscription_facet.") % consumer_data['uuid'])
+          host.subscription_facet.uuid = consumer_data['uuid']
           host.subscription_facet.save!
         end
-        uuid
+        # Return the normalized consumer response so callers can reuse it and
+        # avoid redundant GET /candlepin/consumers/{uuid} calls.
+        consumer_data
       end
 
-      def finalize_registration(host)
-        host = ::Host.find(host.id)
-        host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
-            consumer_attributes.except(:guestIds, :facts))
+      # Validates the minimum contract of a Candlepin consumer response
+      # (a consumer uuid must be present) before returning it. Centralises
+      # this check so callers can rely on the returned value being valid.
+      # Consumer.create already returns a HashWithIndifferentAccess so no
+      # type conversion is needed.
+      def normalize_consumer_response(cp_response)
+        raise ::Katello::Errors::CandlepinError, _("Candlepin consumer registration response is missing a uuid") if cp_response['uuid'].blank?
+        cp_response
+      end
+
+      def finalize_registration(host, consumer_attributes)
+        host.subscription_facet.update_from_consumer_attributes(consumer_attributes.except(:guestIds, :facts))
         host.subscription_facet.save!
         host.refresh_statuses([
                                 ::Katello::ErrataStatus,
