@@ -26,6 +26,7 @@ module Katello
       )
       location = taxonomies(:location1)
       Setting[:default_location_subscribed_hosts] = location.title
+      ::Katello::RegistrationManager.stubs(:check_registration_services).returns(true)
     end
 
     describe "register with activation key should fail" do
@@ -49,6 +50,7 @@ module Katello
       before do
         @facts = { 'network.hostname' => 'somehostname'}
         @activation_key = katello_activation_keys(:simple_key)
+        ::Katello::RegistrationManager.stubs(:check_registration_services).returns(true)
       end
 
       it "should register" do
@@ -89,11 +91,12 @@ module Katello
       before do
         @facts = { 'network.hostname' => 'somehostname'}
         @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
+        ::Katello::RegistrationManager.stubs(:check_registration_services).returns(true)
       end
 
       it "should register" do
-        Resources::Candlepin::Consumer.stubs(:get)
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
+        Resources::Candlepin::Consumer.stubs(:get)
         ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, [@content_view_environment]).returns(@host)
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environment_id => @content_view_environment.cp_id, :facts => @facts })
@@ -102,13 +105,23 @@ module Katello
       end
 
       it "should register with new environments param" do
-        Resources::Candlepin::Consumer.stubs(:get)
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
+        Resources::Candlepin::Consumer.stubs(:get)
         ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, [@content_view_environment]).returns(@host)
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environments => [{id: @content_view_environment.cp_id}], :facts => @facts })
 
         assert_response :success
+      end
+
+      it "should not register" do
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
+        ::Katello::RegistrationManager.expects(:process_registration).never
+
+        post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label,
+                                         :environment_id => @content_view_environment.cp_id, :facts => @facts })
+
+        assert_response 500
       end
 
       it "should not register with multiple envs" do
@@ -121,16 +134,6 @@ module Katello
 
         assert_equal 'Registering to multiple environments is not enabled.', body['displayMessage']
         assert_response 400
-      end
-
-      it "should not register" do
-        ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
-        ::Katello::RegistrationManager.expects(:process_registration).never
-
-        post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label,
-                                         :environment_id => @content_view_environment.cp_id, :facts => @facts })
-
-        assert_response 500
       end
     end
 
@@ -384,6 +387,7 @@ module Katello
         uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
         stub_cp_consumer_with_uuid(uuid)
+        ::Katello::RegistrationManager.stubs(:check_registration_services).returns(true)
       end
       it "should unregister" do
         Setting[:unregister_delete_host] = false
@@ -403,12 +407,16 @@ module Katello
         assert_response 204
       end
 
-      it "should error if backend services are down" do
-        ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
+      it "should return Candlepin error when backend is down" do
+        ::Katello::RegistrationManager.expects(:unregister_host).raises(RestClient::ServiceUnavailable.new(nil, 503))
+        delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
+        assert_response 503
+      end
 
+      it "should not unregister when services are down" do
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
         ::Katello::RegistrationManager.expects(:unregister_host).never
         delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
-
         assert_response 500
       end
     end
@@ -473,6 +481,29 @@ module Katello
         put :facts, params: { :id => uuid, :facts => facts }
         assert_response 200
         assert_equal ::Katello::RhelLifecycleStatus::FULL_SUPPORT, @host.reload.get_status(::Katello::RhelLifecycleStatus).status
+      end
+    end
+
+    describe "server_status" do
+      it "proxies Candlepin status and appends combined_reporting" do
+        candlepin_response = { 'mode' => 'NORMAL', 'managerCapabilities' => [] }.with_indifferent_access
+        Resources::Candlepin::CandlepinPing.stubs(:ping).returns(candlepin_response)
+
+        get :server_status
+        assert_response :success
+        assert_includes JSON.parse(response.body)['managerCapabilities'], 'combined_reporting'
+      end
+
+      it "does not cache on Candlepin error" do
+        Rails.cache.delete(::Katello::Resources::Candlepin::CandlepinPing::CACHE_KEY)
+        Resources::Candlepin::CandlepinPing.stubs(:ping).raises(RestClient::ServiceUnavailable.new(nil, 503))
+
+        2.times do
+          get :server_status
+          assert_response 503
+        end
+
+        assert_nil Rails.cache.read(::Katello::Resources::Candlepin::CandlepinPing::CACHE_KEY)
       end
     end
 
