@@ -250,9 +250,9 @@ module Katello
     #api :GET, "/status", N_("Shows version information")
     #description N_("This service is available for unauthenticated users")
     def server_status
-      candlepin_response = Resources::Candlepin::CandlepinPing.ping
-      candlepin_response[:managerCapabilities] << 'combined_reporting'
-      render :json => candlepin_response
+      response = Resources::Candlepin::CandlepinPing.ping(try_cache: true)
+      response[:managerCapabilities] << 'combined_reporting'
+      render :json => response, :status => :ok
     end
 
     #api :PUT, "/consumers/:id", N_("Update consumer information")

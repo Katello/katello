@@ -471,6 +471,19 @@ module Katello
         end
       end
 
+      def test_registration_dead_candlepin_clears_cache
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @library.organization)
+
+        ::Host.expects(:find).returns(new_host)
+        new_host.stubs(:destroy)
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).raises("uhoh!")
+        ::Katello::Resources::Candlepin::CandlepinPing.expects(:clear_cache).once
+
+        assert_raises(Exception) do
+          ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
+        end
+      end
+
       # this case can only happen if candlepin/pulp dies after the host is unregistered, but before it's re-registered.
       def test_registration_existing_host_dead_backend_service
         ::Host::Managed.any_instance.stubs(:update_candlepin_associations).twice
@@ -487,6 +500,18 @@ module Katello
         assert_raises(Exception) do
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
         end
+      end
+    end
+
+    class CheckRegistrationServicesTest < ActiveSupport::TestCase
+      def test_delegates_to_candlepin_ping
+        Katello::Resources::Candlepin::CandlepinPing.expects(:ok?).returns(true)
+        assert Katello::RegistrationManager.check_registration_services
+      end
+
+      def test_returns_false_when_candlepin_not_ok
+        Katello::Resources::Candlepin::CandlepinPing.expects(:ok?).returns(false)
+        refute Katello::RegistrationManager.check_registration_services
       end
     end
   end
