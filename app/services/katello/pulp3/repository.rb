@@ -319,9 +319,17 @@ module Katello
       def update_distribution
         if distribution_reference
           options = secure_distribution_options(relative_path).except(:name)
-          unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
+
+          # Primary server is always on latest Pulp - just handle publication clearing for transition
+          if ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
+            # Clear publication field when transitioning to repository_version (e.g., Python repos)
+            dist = read_distribution
+            options[:publication] = nil if dist&.publication.present?
+          else
+            # Content type uses publication
             fail_missing_publication(options[:publication])
           end
+
           content_guard_prn = options.delete(:content_guard_prn) # Extract PRN and remove from options
           distribution_reference.update(:content_guard_href => options[:content_guard], :content_guard_prn => content_guard_prn)
           api.distributions_api.partial_update(distribution_reference.href, options)
