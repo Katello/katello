@@ -61,7 +61,7 @@ module Katello
       }
       content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
       Resources::Candlepin::Consumer.stubs(:get)
-
+      ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
       ::Katello::RegistrationManager.expects(:process_registration).with(expected_consumer_params, [content_view_environment]).returns(@host)
       post(:create,
         params: {
@@ -78,20 +78,13 @@ module Katello
     end
 
     def test_create_dead_backend
-      facts = { 'network.hostname' => @host.name}
-      installed_products = [{
-        'product_id' => '1',
-        'product_name' => 'name',
-      }]
-      content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
-
       ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
+      ::Katello::RegistrationManager.expects(:process_registration).never
 
-      ::Katello::Host::SubscriptionFacet.expects(:find_or_create_host).never
-      ::Katello::RegistrationManager.expects(:register_host).never
+      content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
       post(:create, params: { :lifecycle_environment_id => content_view_environment.environment_id,
                               :content_view_id => content_view_environment.content_view_id,
-                              :facts => facts, :installed_products => installed_products })
+                              :facts => { 'network.hostname' => @host.name } })
 
       assert_response 500
     end
