@@ -40,13 +40,13 @@ const mockCredentialData = {
       id: 1,
       name: 'Test Repository',
       content_type: 'yum',
-      product: { id: 1, name: 'Test Product 1' }
+      product: { id: 1, name: 'Test Product 1' },
     },
     {
       id: 2,
       name: 'Another Repo',
       content_type: 'docker',
-      product: { id: 2, name: 'Another Product' }
+      product: { id: 2, name: 'Another Product' },
     },
   ],
   ssl_ca_root_repos: [
@@ -54,7 +54,7 @@ const mockCredentialData = {
       id: 3,
       name: 'SSL Repository',
       content_type: 'yum',
-      product: { id: 3, name: 'SSL Product' }
+      product: { id: 3, name: 'SSL Product' },
     },
   ],
   ssl_client_root_repos: [],

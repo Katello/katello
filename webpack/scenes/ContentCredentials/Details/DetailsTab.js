@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { addToast } from 'foremanReact/components/ToastsList';
 import {
   TextContent,
   TextList,
@@ -16,21 +17,18 @@ import { translate as __ } from 'foremanReact/common/I18n';
 
 import ActionableDetail from '../../../components/ActionableDetail';
 import { updateContentCredential, uploadContentCredentialContent } from './ContentCredentialsDetailsActions';
-import { selectIsContentCredentialUpdating } from './ContentCredentialsDetailsSelectors';
 import { CONTENT_CREDENTIAL_GPG_TYPE } from '../ContentCredentialConstants';
 
 const DetailsTab = ({ credentialId, details }) => {
   const dispatch = useDispatch();
   const [currentAttribute, setCurrentAttribute] = useState();
   const [uploading, setUploading] = useState(false);
-  const updating = useSelector(state => selectIsContentCredentialUpdating(state, credentialId));
+  const [updating, setUpdating] = useState(false);
   const isMountedRef = useRef(true);
 
   // Cleanup effect to prevent state updates after unmount
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
+  useEffect(() => () => {
+    isMountedRef.current = false;
   }, []);
 
   const {
@@ -51,9 +49,21 @@ const DetailsTab = ({ credentialId, details }) => {
     permissions = {},
   } = details;
 
-  const onEdit = (val, attribute) => {
+  const onEdit = async (val, attribute) => {
     if (val === details[attribute]) return;
-    dispatch(updateContentCredential(credentialId, { [attribute]: val }));
+
+    if (!isMountedRef.current) return;
+    setCurrentAttribute(attribute);
+    setUpdating(true);
+
+    try {
+      await dispatch(updateContentCredential(credentialId, { [attribute]: val }));
+    } finally {
+      if (isMountedRef.current) {
+        setUpdating(false);
+        setCurrentAttribute(null);
+      }
+    }
   };
 
   const handleFileUpload = async (event) => {
@@ -72,6 +82,13 @@ const DetailsTab = ({ credentialId, details }) => {
     } catch (error) {
       // Clear the file input even on failure
       if (inputElement) inputElement.value = '';
+
+      // Fallback error toast in case the action doesn't handle it
+      dispatch(addToast({
+        type: 'danger',
+        message: __('Failed to upload file.'),
+        key: `credential-upload-fallback-error-${credentialId}`,
+      }));
     } finally {
       // Always reset uploading state if component is still mounted
       if (isMountedRef.current) {

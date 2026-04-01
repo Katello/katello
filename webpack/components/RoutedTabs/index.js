@@ -1,8 +1,9 @@
 import React from 'react';
 import { shape, string, number, element, arrayOf } from 'prop-types';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { Switch, Route, Redirect, useLocation, withRouter, HashRouter } from 'react-router-dom';
+import { Switch, Route, Redirect, useLocation, useHistory, withRouter, HashRouter } from 'react-router-dom';
 import { head, last } from 'lodash';
+import './RoutedTabs.scss';
 
 const RoutedTabs = ({
   tabs, defaultTabIndex,
@@ -10,21 +11,28 @@ const RoutedTabs = ({
   const {
     hash, key: locationKey,
   } = useLocation();
+  const history = useHistory();
 
   // The below transforms #/history/6 to history
   const currentTabFromUrl = head(last(hash.split('#/')).split('/'));
+
+  const onSelect = (_e, eventKey) => {
+    // This prevents needless pushing on repeated clicks of a tab
+    if (currentTabFromUrl !== eventKey) {
+      history.push({ hash: `#/${eventKey}` });
+    }
+  };
 
   return (
     <>
       <Tabs
         activeKey={currentTabFromUrl}
         ouiaId="routed-tabs"
-        className="margin-0-24"
+        onSelect={onSelect}
       >
         {tabs.map(({ key, title }) => (
           <Tab
             ouiaId={`routed-tabs-tab-${key}`}
-            href={`#/${key}`}
             key={key}
             eventKey={key}
             aria-label={title}

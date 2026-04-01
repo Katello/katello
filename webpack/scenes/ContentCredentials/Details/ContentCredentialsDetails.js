@@ -127,16 +127,14 @@ const ContentCredentialsDetails = () => {
 
   return (
     <>
-      <Grid style={{ padding: '24px' }}>
-        <GridItem span={12}>
-          <Breadcrumb ouiaId="content-credential-breadcrumb">
+      <Grid>
+        <Grid className="margin-16-24">
+          <Breadcrumb ouiaId="content-credential-breadcrumb" className="margin-bottom-24">
             <BreadcrumbItem to="/labs/content_credentials">
               {__('Content Credentials')}
             </BreadcrumbItem>
             <BreadcrumbItem isActive>{name}</BreadcrumbItem>
           </Breadcrumb>
-        </GridItem>
-        <Grid className="margin-16-24">
           <GridItem md={8} sm={12}>
             <Flex alignItems={{
               default: 'alignItemsCenter',
@@ -171,7 +169,6 @@ const ContentCredentialsDetails = () => {
                 <Dropdown
                   position={DropdownPosition.right}
                   ouiaId="credential-details-actions"
-                  style={{ marginLeft: 'auto' }}
                   toggle={<KebabToggle
                     onToggle={(_event, val) => setDropdownOpen(val)}
                     id="toggle-dropdown"

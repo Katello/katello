@@ -1,4 +1,4 @@
-import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
+import { API_OPERATIONS, get } from 'foremanReact/redux/API';
 import { addToast } from 'foremanReact/components/ToastsList';
 import { translate as __ } from 'foremanReact/common/I18n';
 import api, { orgId } from '../../../services/api';
@@ -17,41 +17,39 @@ export const getContentCredentialDetails = credentialId => get({
   },
 });
 
-export const updateContentCredential = (credentialId, params) => {
-  return async (dispatch) => {
-    try {
-      // Update the credential
-      const response = await api.put(`/content_credentials/${credentialId}`, {
-        organization_id: orgId(),
-        ...params,
-      });
+export const updateContentCredential = (credentialId, params) => async (dispatch) => {
+  try {
+    // Update the credential
+    const response = await api.put(`/content_credentials/${credentialId}`, {
+      organization_id: orgId(),
+      ...params,
+    });
 
-      // Show success notification
-      dispatch(addToast({
-        type: 'success',
-        message: __('Content credential updated successfully.'),
-        key: `credential-update-success-${credentialId}`,
-      }));
+    // Show success notification
+    dispatch(addToast({
+      type: 'success',
+      message: __('Content credential updated successfully.'),
+      key: `credential-update-success-${credentialId}`,
+    }));
 
-      // Refetch the details to get updated content
-      dispatch(getContentCredentialDetails(credentialId));
+    // Refetch the details to get updated content
+    dispatch(getContentCredentialDetails(credentialId));
 
-      return response;
-    } catch (error) {
-      // Show error notification
-      const errorMessage = error?.response?.data?.displayMessage ||
-                           error?.response?.data?.message ||
-                           error?.message ||
-                           __('Failed to update content credential.');
-      dispatch(addToast({
-        type: 'danger',
-        message: errorMessage,
-        key: `credential-update-error-${credentialId}`,
-      }));
+    return response;
+  } catch (error) {
+    // Show error notification
+    const errorMessage = error?.response?.data?.displayMessage ||
+                         error?.response?.data?.message ||
+                         error?.message ||
+                         __('Failed to update content credential.');
+    dispatch(addToast({
+      type: 'danger',
+      message: errorMessage,
+      key: `credential-update-error-${credentialId}`,
+    }));
 
-      throw error;
-    }
-  };
+    throw error;
+  }
 };
 
 export const uploadContentCredentialContent = (credentialId, file) => {
@@ -76,7 +74,6 @@ export const uploadContentCredentialContent = (credentialId, file) => {
 
       return uploadResponse;
     } catch (error) {
-
       // Show error notification
       const errorMessage = error?.response?.data?.displayMessage ||
                            error?.response?.data?.message ||
