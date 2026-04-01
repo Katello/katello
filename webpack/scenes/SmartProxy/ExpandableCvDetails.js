@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Table /* data-codemods */, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
-import { CheckCircleIcon, TimesCircleIcon } from '@patternfly/react-icons';
+import { CheckCircleIcon, TimesCircleIcon, ExclamationTriangleIcon, InProgressIcon } from '@patternfly/react-icons';
+import { Tooltip, TooltipPosition } from '@patternfly/react-core';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
@@ -12,7 +13,7 @@ import ExpandedSmartProxyRepositories from './ExpandedSmartProxyRepositories';
 import { updateSmartProxyContentCounts, repairSmartProxyContent } from './SmartProxyContentActions';
 
 const ExpandableCvDetails = ({
-  smartProxyId, contentViews, contentCounts, envId,
+  smartProxyId, contentViews, contentCounts, envId, lastSync,
 }) => {
   const columnHeaders = [
     __('Content view'),
@@ -75,11 +76,50 @@ const ExpandableCvDetails = ({
           id, name: cvName, composite, rolling, up_to_date: upToDate,
           cvv_id: versionId, cvv_version: version, repositories,
         } = cv;
+
+        // Determine sync status icon with tooltip
         let upToDateVal;
-        if (upToDate === true) {
-          upToDateVal = <CheckCircleIcon style={{ color: 'green' }} />;
+        const lastSyncResult = lastSync?.result;
+
+        if (upToDate === false || upToDate === 'partial') {
+          upToDateVal = (
+            <Tooltip position={TooltipPosition.top} content={__('Content view not synced to capsule')}>
+              <TimesCircleIcon style={{ color: 'red' }} />
+            </Tooltip>
+          );
+        } else if (upToDate === true) {
+          // CV is synced - check environment sync result
+          if (lastSyncResult === 'warning') {
+            upToDateVal = (
+              <Tooltip position={TooltipPosition.top} content={__('Last sync finished with warnings')}>
+                <ExclamationTriangleIcon style={{ color: 'orange' }} />
+              </Tooltip>
+            );
+          } else if (lastSyncResult === 'in progress' || lastSyncResult === 'pending') {
+            upToDateVal = (
+              <Tooltip position={TooltipPosition.top} content={__('Sync in progress')}>
+                <InProgressIcon style={{ color: 'blue' }} />
+              </Tooltip>
+            );
+          } else if (lastSyncResult === 'error' || lastSyncResult === 'failed') {
+            upToDateVal = (
+              <Tooltip position={TooltipPosition.top} content={__('Last sync failed')}>
+                <TimesCircleIcon style={{ color: 'red' }} />
+              </Tooltip>
+            );
+          } else {
+            upToDateVal = (
+              <Tooltip position={TooltipPosition.top} content={__('Successfully synced')}>
+                <CheckCircleIcon style={{ color: 'green' }} />
+              </Tooltip>
+            );
+          }
         } else {
-          upToDateVal = <TimesCircleIcon style={{ color: 'red' }} />;
+          upToDateVal = (
+            <Tooltip position={TooltipPosition.top} content={__('Content view not synced to capsule')}>
+              <TimesCircleIcon style={{ color: 'red' }} />
+            </Tooltip>
+          );
         }
 
         const isExpanded = tableRowIsExpanded(versionId);
@@ -147,11 +187,18 @@ ExpandableCvDetails.propTypes = {
     PropTypes.number,
     PropTypes.string, // The API can sometimes return strings
   ]).isRequired,
+  lastSync: PropTypes.shape({
+    id: PropTypes.string,
+    result: PropTypes.string,
+    started_at: PropTypes.string,
+    last_sync_words: PropTypes.string,
+  }),
 };
 
 ExpandableCvDetails.defaultProps = {
   contentViews: [],
   contentCounts: {},
+  lastSync: null,
 };
 
 export default ExpandableCvDetails;
