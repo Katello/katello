@@ -65,6 +65,11 @@ module Katello
 
             assert_equal post_unit_count, 2
             assert_equal post_unit_repository_count, 2
+
+            # Verify distribution has repository_version attached (not detached)
+            distribution = @repo.backend_service(@primary).get_distribution
+            refute_nil distribution, "Distribution should exist"
+            refute_nil distribution.repository_version, "Distribution should have repository_version attached (not be detached)"
           end
         end
       end

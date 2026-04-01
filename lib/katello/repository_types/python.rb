@@ -5,6 +5,8 @@ Katello::RepositoryTypeManager.register('python') do
   pulp3_service_class Katello::Pulp3::Repository::Generic
   pulp3_api_class Katello::Pulp3::Api::Generic
   pulp3_plugin 'python'
+  pulp3_skip_publication true
+  pulp3_transitioning_from_publication true
 
   client_module_class PulpPythonClient
   api_class PulpPythonClient::ApiClient

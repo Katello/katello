@@ -51,6 +51,10 @@ PulpPythonClient::PythonPythonDistribution.class_eval do
       self.repository = attributes[:'repository']
     end
 
+    if attributes.key?(:'repository_version')
+      self.repository_version = attributes[:'repository_version']
+    end
+
     if attributes.key?(:'publication')
       self.publication = attributes[:'publication']
     end
