@@ -33,6 +33,7 @@ module Actions
 
           action_subject(old_version.content_view)
           validate_environments(environments, old_version)
+          validate_content_not_already_present(old_version, content) unless is_composite
 
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
 
@@ -330,23 +331,27 @@ module Actions
           end
         end
 
-        def validate_content(old_version, content, components)
-          if old_version.content_view.composite?
-            fail(_("Cannot specify content for composite views")) unless content.empty?
-            validate_components(old_version, components)
-          else
-            fail(_("Cannot specify components for non-composite views")) unless components.empty?
-          end
-        end
+        def validate_content_not_already_present(old_version, content)
+          # Throw an error if all requested content already exists in the base content view version.
+          return if content[:package_ids].blank? && content[:errata_ids].blank? && content[:deb_ids].blank?
+          old_repo_ids = old_version.repositories.pluck(:id)
 
-        def validate_components(old_version, components)
-          old_component_content_view_ids = old_version.components.map(&:content_view_id)
-          components.each do |cvv|
-            unless old_component_content_view_ids.include?(cvv.content_view_id)
-              fail _("No Version of Content View %{component} already exists as a component of the composite Content View %{composite} version %{version}") %
-                {:component => self.content_vew.name, :composite => old_version.content_view.name, :version => version.version}
-            end
+          # I'm using count on the assumption that incremental updates remain additive only. This will need to be
+          # corrected if that assumption changes.
+          if content[:package_ids].present?
+            existing_count = ::Katello::RepositoryRpm.where(repository_id: old_repo_ids, rpm_id: content[:package_ids]).distinct.count(:rpm_id)
+            return if existing_count < content[:package_ids].uniq.size
           end
+          if content[:errata_ids].present?
+            existing_count = ::Katello::RepositoryErratum.where(repository_id: old_repo_ids, erratum_id: content[:errata_ids]).distinct.count(:erratum_id)
+            return if existing_count < content[:errata_ids].uniq.size
+          end
+          if content[:deb_ids].present?
+            existing_count = ::Katello::RepositoryDeb.where(repository_id: old_repo_ids, deb_id: content[:deb_ids]).distinct.count(:deb_id)
+            return if existing_count < content[:deb_ids].uniq.size
+          end
+
+          fail _("Incremental update will not add any new content. The specified content is already present.")
         end
 
         def promote(new_version, environments)

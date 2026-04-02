@@ -170,5 +170,215 @@ module Actions::Katello::ContentViewVersion
         assert_nil mock_output[:auto_publish_content_view_version_id]
       end
     end
+
+    describe 'Content Validation' do
+      let(:cv) { katello_content_views(:library_dev_view) }
+      let(:old_version) { cv.versions.first }
+      let(:environments) { [katello_environments(:library)] }
+
+      it 'returns early when no content is specified' do
+        content = { package_ids: [], errata_ids: [], deb_ids: [] }
+
+        # Should not query the database or raise an error
+        ::Katello::RepositoryRpm.expects(:where).never
+        ::Katello::RepositoryErratum.expects(:where).never
+        ::Katello::RepositoryDeb.expects(:where).never
+
+        action.send(:validate_content_not_already_present, old_version, content)
+      end
+
+      it 'fails when all RPM packages are already present in the version' do
+        content = { package_ids: [1, 2, 3], errata_ids: [], deb_ids: [] }
+
+        mock_repos = mock('repos')
+        mock_repos.stubs(:pluck).with(:id).returns([10, 20])
+        old_version.stubs(:repositories).returns(mock_repos)
+
+        mock_relation = mock('relation')
+        mock_distinct = mock('distinct')
+        mock_distinct.stubs(:count).with(:rpm_id).returns(3)
+        mock_relation.stubs(:distinct).returns(mock_distinct)
+        ::Katello::RepositoryRpm.expects(:where)
+          .with(repository_id: [10, 20], rpm_id: [1, 2, 3])
+          .returns(mock_relation)
+
+        error = assert_raises(RuntimeError) do
+          action.send(:validate_content_not_already_present, old_version, content)
+        end
+
+        assert_match(/will not add any new content/, error.message)
+      end
+
+      it 'succeeds when some RPM packages are new' do
+        content = { package_ids: [1, 2, 3], errata_ids: [], deb_ids: [] }
+
+        mock_repos = mock('repos')
+        mock_repos.stubs(:pluck).with(:id).returns([10, 20])
+        old_version.stubs(:repositories).returns(mock_repos)
+
+        mock_relation = mock('relation')
+        mock_distinct = mock('distinct')
+        mock_distinct.stubs(:count).with(:rpm_id).returns(2)
+        mock_relation.stubs(:distinct).returns(mock_distinct)
+        ::Katello::RepositoryRpm.expects(:where)
+          .with(repository_id: [10, 20], rpm_id: [1, 2, 3])
+          .returns(mock_relation)
+
+        # Should not raise an error
+        action.send(:validate_content_not_already_present, old_version, content)
+      end
+
+      it 'fails when all errata are already present in the version' do
+        content = { package_ids: [], errata_ids: [5, 6], deb_ids: [] }
+
+        mock_repos = mock('repos')
+        mock_repos.stubs(:pluck).with(:id).returns([10, 20])
+        old_version.stubs(:repositories).returns(mock_repos)
+
+        mock_relation = mock('relation')
+        mock_distinct = mock('distinct')
+        mock_distinct.stubs(:count).with(:erratum_id).returns(2)
+        mock_relation.stubs(:distinct).returns(mock_distinct)
+        ::Katello::RepositoryErratum.expects(:where)
+          .with(repository_id: [10, 20], erratum_id: [5, 6])
+          .returns(mock_relation)
+
+        error = assert_raises(RuntimeError) do
+          action.send(:validate_content_not_already_present, old_version, content)
+        end
+
+        assert_match(/will not add any new content/, error.message)
+      end
+
+      it 'succeeds when some errata are new' do
+        content = { package_ids: [], errata_ids: [5, 6], deb_ids: [] }
+
+        mock_repos = mock('repos')
+        mock_repos.stubs(:pluck).with(:id).returns([10, 20])
+        old_version.stubs(:repositories).returns(mock_repos)
+
+        mock_relation = mock('relation')
+        mock_distinct = mock('distinct')
+        mock_distinct.stubs(:count).with(:erratum_id).returns(1)
+        mock_relation.stubs(:distinct).returns(mock_distinct)
+        ::Katello::RepositoryErratum.expects(:where)
+          .with(repository_id: [10, 20], erratum_id: [5, 6])
+          .returns(mock_relation)
+
+        # Should not raise an error
+        action.send(:validate_content_not_already_present, old_version, content)
+      end
+
+      it 'fails when all deb packages are already present in the version' do
+        content = { package_ids: [], errata_ids: [], deb_ids: [7, 8, 9] }
+
+        mock_repos = mock('repos')
+        mock_repos.stubs(:pluck).with(:id).returns([10, 20])
+        old_version.stubs(:repositories).returns(mock_repos)
+
+        mock_relation = mock('relation')
+        mock_distinct = mock('distinct')
+        mock_distinct.stubs(:count).with(:deb_id).returns(3)
+        mock_relation.stubs(:distinct).returns(mock_distinct)
+        ::Katello::RepositoryDeb.expects(:where)
+          .with(repository_id: [10, 20], deb_id: [7, 8, 9])
+          .returns(mock_relation)
+
+        error = assert_raises(RuntimeError) do
+          action.send(:validate_content_not_already_present, old_version, content)
+        end
+
+        assert_match(/will not add any new content/, error.message)
+      end
+
+      it 'succeeds when some deb packages are new' do
+        content = { package_ids: [], errata_ids: [], deb_ids: [7, 8, 9] }
+
+        mock_repos = mock('repos')
+        mock_repos.stubs(:pluck).with(:id).returns([10, 20])
+        old_version.stubs(:repositories).returns(mock_repos)
+
+        mock_relation = mock('relation')
+        mock_distinct = mock('distinct')
+        mock_distinct.stubs(:count).with(:deb_id).returns(2)
+        mock_relation.stubs(:distinct).returns(mock_distinct)
+        ::Katello::RepositoryDeb.expects(:where)
+          .with(repository_id: [10, 20], deb_id: [7, 8, 9])
+          .returns(mock_relation)
+
+        # Should not raise an error
+        action.send(:validate_content_not_already_present, old_version, content)
+      end
+
+      it 'succeeds when mixed content has some new items' do
+        content = { package_ids: [1, 2], errata_ids: [5, 6], deb_ids: [] }
+
+        mock_repos = mock('repos')
+        mock_repos.stubs(:pluck).with(:id).returns([10, 20])
+        old_version.stubs(:repositories).returns(mock_repos)
+
+        # RPMs: both already present
+        mock_rpm_relation = mock('rpm_relation')
+        mock_rpm_distinct = mock('rpm_distinct')
+        mock_rpm_distinct.stubs(:count).with(:rpm_id).returns(2)
+        mock_rpm_relation.stubs(:distinct).returns(mock_rpm_distinct)
+        ::Katello::RepositoryRpm.expects(:where)
+          .with(repository_id: [10, 20], rpm_id: [1, 2])
+          .returns(mock_rpm_relation)
+
+        # Errata: only 1 present, 1 is new
+        mock_erratum_relation = mock('erratum_relation')
+        mock_erratum_distinct = mock('erratum_distinct')
+        mock_erratum_distinct.stubs(:count).with(:erratum_id).returns(1)
+        mock_erratum_relation.stubs(:distinct).returns(mock_erratum_distinct)
+        ::Katello::RepositoryErratum.expects(:where)
+          .with(repository_id: [10, 20], erratum_id: [5, 6])
+          .returns(mock_erratum_relation)
+
+        # Should not raise an error because errata has new content
+        action.send(:validate_content_not_already_present, old_version, content)
+      end
+
+      it 'fails when all mixed content types are already present' do
+        content = { package_ids: [1, 2], errata_ids: [5, 6], deb_ids: [7] }
+
+        mock_repos = mock('repos')
+        mock_repos.stubs(:pluck).with(:id).returns([10, 20])
+        old_version.stubs(:repositories).returns(mock_repos)
+
+        # All RPMs present
+        mock_rpm_relation = mock('rpm_relation')
+        mock_rpm_distinct = mock('rpm_distinct')
+        mock_rpm_distinct.stubs(:count).with(:rpm_id).returns(2)
+        mock_rpm_relation.stubs(:distinct).returns(mock_rpm_distinct)
+        ::Katello::RepositoryRpm.expects(:where)
+          .with(repository_id: [10, 20], rpm_id: [1, 2])
+          .returns(mock_rpm_relation)
+
+        # All errata present
+        mock_erratum_relation = mock('erratum_relation')
+        mock_erratum_distinct = mock('erratum_distinct')
+        mock_erratum_distinct.stubs(:count).with(:erratum_id).returns(2)
+        mock_erratum_relation.stubs(:distinct).returns(mock_erratum_distinct)
+        ::Katello::RepositoryErratum.expects(:where)
+          .with(repository_id: [10, 20], erratum_id: [5, 6])
+          .returns(mock_erratum_relation)
+
+        # All debs present
+        mock_deb_relation = mock('deb_relation')
+        mock_deb_distinct = mock('deb_distinct')
+        mock_deb_distinct.stubs(:count).with(:deb_id).returns(1)
+        mock_deb_relation.stubs(:distinct).returns(mock_deb_distinct)
+        ::Katello::RepositoryDeb.expects(:where)
+          .with(repository_id: [10, 20], deb_id: [7])
+          .returns(mock_deb_relation)
+
+        error = assert_raises(RuntimeError) do
+          action.send(:validate_content_not_already_present, old_version, content)
+        end
+
+        assert_match(/will not add any new content/, error.message)
+      end
+    end
   end
 end
