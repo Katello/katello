@@ -1,5 +1,14 @@
 module Katello
   class RegistrationManager
+    # Facts strictly required at registration time so that RhelLifecycleStatus can be
+    # computed immediately. These drive OS and architecture detection in HostFactImporter.
+    # All remaining facts arrive via the subsequent PUT /rhsm/consumers/:id call (step 6).
+    REGISTRATION_CRITICAL_FACTS = %w[
+      distribution.name
+      distribution.version
+      uname.machine
+    ].freeze
+
     class << self
       private :new
       delegate :propose_existing_hostname, :new_host_from_facts, to: Katello::Host::SubscriptionFacet
@@ -191,6 +200,11 @@ module Katello
             raise e
           end
 
+          # Import only the facts needed for OS/architecture detection so that
+          # RhelLifecycleStatus is correct immediately after registration.
+          # The full fact set arrives via PUT /rhsm/consumers/:id (step 6).
+          import_critical_registration_facts(host, consumer_params[:facts])
+
           finalize_registration(host)
         end
       end
@@ -230,7 +244,6 @@ module Katello
       def create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environments.map(&:cp_id), consumer_params, activation_keys.map(&:cp_name), host.organization)
-        ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
         uuid = cp_create[:uuid]
         if uuid.present? && uuid != host.subscription_facet.uuid
           Rails.logger.info(_("Candlepin returned different consumer uuid than requested (%s), updating uuid in subscription_facet.") % uuid)
@@ -312,6 +325,19 @@ module Katello
         subscription_facet.save!
         subscription_facet.activation_keys = activation_keys
         subscription_facet
+      end
+
+      def import_critical_registration_facts(host, facts)
+        critical = facts&.slice(*REGISTRATION_CRITICAL_FACTS)
+        return if critical.blank?
+        ::Katello::Host::SubscriptionFacet.update_facts(host, critical, additive: true)
+      rescue StandardError => e
+        # This import is best-effort: Candlepin registration already succeeded and
+        # the full fact set will arrive via PUT /rhsm/consumers/:id (step 6).
+        # Rescuing StandardError (rather than a specific subclass) is intentional —
+        # any failure here is non-fatal, and propagating it would mislead the client
+        # into thinking registration failed when it actually succeeded.
+        Rails.logger.warn("Failed to import critical facts for host #{host.name}: #{e.class}: #{e.message}")
       end
 
       def remove_host_artifacts(host, clear_content_facet: true, preserve_for_provisioning: false)
