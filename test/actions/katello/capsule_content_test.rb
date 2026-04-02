@@ -64,6 +64,7 @@ module ::Actions::Katello::CapsuleContent
         assert_equal repo.id, input[:repository_id]
       end
 
+      assert_tree_planned_steps(tree, Actions::Pulp3::CapsuleContent::RefreshAllDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -104,6 +105,7 @@ module ::Actions::Katello::CapsuleContent
         assert_equal repo.id, input[:repository_id]
       end
 
+      assert_tree_planned_steps(tree, Actions::Pulp3::CapsuleContent::RefreshAllDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -121,6 +123,7 @@ module ::Actions::Katello::CapsuleContent
         assert_equal repo.id, input[:repository_id]
       end
 
+      assert_tree_planned_steps(tree, Actions::Pulp3::CapsuleContent::RefreshAllDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -134,6 +137,7 @@ module ::Actions::Katello::CapsuleContent
       repo = katello_repositories(:pulp3_ansible_collection_1)
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
       assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
+      assert_tree_planned_steps(tree, Actions::Pulp3::CapsuleContent::RefreshAllDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -164,6 +168,7 @@ module ::Actions::Katello::CapsuleContent
         assert_equal repo.id, input[:repository_id]
       end
 
+      assert_tree_planned_steps(tree, Actions::Pulp3::CapsuleContent::RefreshAllDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -183,6 +188,7 @@ module ::Actions::Katello::CapsuleContent
                 }
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+      refute_tree_planned(tree, ::Actions::Pulp3::CapsuleContent::RefreshAllDistributions)
     end
 
     it 'plans correctly for a pulp yum repo' do
@@ -242,13 +248,13 @@ module ::Actions::Katello::CapsuleContent
         assert_includes repos_in_dev, repo.pulp_id
       end
 
+      assert_tree_planned_steps(tree, Actions::Pulp3::CapsuleContent::RefreshAllDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         repo = Katello::Repository.find(input[:repository_id])
         assert_includes repos_in_dev, repo.pulp_id
         repos_in_dev.delete(repo.pulp_id)
       end
-
       assert_empty repos_in_dev
     end
 
