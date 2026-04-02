@@ -176,14 +176,14 @@ module Katello
         ::Host::Managed.new(:name => name, :organization => org, :location => location, :managed => false)
       end
 
-      def self.update_facts(host, rhsm_facts)
+      def self.update_facts(host, rhsm_facts, additive: false)
         return if host.build? || rhsm_facts.nil?
         rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
         rhsm_facts[:_timestamp] = Time.now.to_s
         if ignore_os?(host.operatingsystem, rhsm_facts)
           rhsm_facts[:ignore_os] = true
         end
-        ::HostFactImporter.new(host).import_facts(rhsm_facts)
+        ::HostFactImporter.new(host).import_facts(rhsm_facts, additive: additive)
       end
 
       def self.ignore_os?(host_os, rhsm_facts)
