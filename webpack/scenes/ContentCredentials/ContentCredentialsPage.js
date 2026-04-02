@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import {
@@ -65,7 +66,7 @@ const ContentCredentialsPage = () => {
     name: {
       title: __('Name'),
       isSorted: true,
-      wrapper: rowData => <a href={`/labs/content_credentials/${rowData.id}`}>{rowData.name}</a>,
+      wrapper: rowData => <Link to={`/labs/content_credentials/${rowData.id}`}>{rowData.name}</Link>,
     },
     organization: {
       title: __('Organization'),

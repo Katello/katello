@@ -69,3 +69,14 @@ test('shows empty state when no repositories', () => {
 
   expect(screen.getByText('No repositories using this credential')).toBeInTheDocument();
 });
+
+test('shows empty state when filter returns no matching repositories', () => {
+  renderWithRedux(<RepositoriesTab details={mockDetails} />);
+
+  const filterInput = screen.getByLabelText('Filter repositories');
+
+  // Apply a filter that matches no repositories
+  fireEvent.change(filterInput, { target: { value: 'non-matching-filter-text' } });
+
+  expect(screen.getByText('No matching repositories')).toBeInTheDocument();
+});

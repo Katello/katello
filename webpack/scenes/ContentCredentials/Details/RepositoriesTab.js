@@ -92,7 +92,7 @@ const RepositoriesTab = ({ details }) => {
               <Th>{__('Name')}</Th>
               <Th>{__('Product')}</Th>
               <Th>{__('Type')}</Th>
-              <Th>{__('Used As')}</Th>
+              <Th>{__('Used as')}</Th>
             </Tr>
           </Thead>
           <Tbody>

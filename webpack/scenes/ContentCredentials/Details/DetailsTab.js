@@ -25,6 +25,7 @@ const DetailsTab = ({ credentialId, details }) => {
   const [uploading, setUploading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const isMountedRef = useRef(true);
+  const fileInputRef = useRef(null);
 
   // Cleanup effect to prevent state updates after unmount
   useEffect(() => () => {
@@ -149,6 +150,7 @@ const DetailsTab = ({ credentialId, details }) => {
           value={content || ''}
           textAreaProps={{
             rows: 12,
+            cols: 60,
             style: { fontFamily: 'monospace', fontSize: '12px' },
           }}
           component="pre"
@@ -164,7 +166,7 @@ const DetailsTab = ({ credentialId, details }) => {
             <FlexItem>
               <input
                 type="file"
-                id="credential-file-upload"
+                ref={fileInputRef}
                 style={{ display: 'none' }}
                 onChange={handleFileUpload}
                 disabled={!canEdit || uploading}
@@ -175,7 +177,7 @@ const DetailsTab = ({ credentialId, details }) => {
                 icon={<FileUploadIcon />}
                 isLoading={uploading}
                 isDisabled={!canEdit || uploading}
-                onClick={() => document.getElementById('credential-file-upload').click()}
+                onClick={() => fileInputRef.current?.click()}
                 ouiaId="upload-file-button"
               >
                 {__('Choose file')}

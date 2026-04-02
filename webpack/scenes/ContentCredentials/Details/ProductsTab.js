@@ -88,7 +88,7 @@ const ProductsTab = ({ details }) => {
           <Thead>
             <Tr>
               <Th>{__('Name')}</Th>
-              <Th>{__('Used As')}</Th>
+              <Th>{__('Used as')}</Th>
             </Tr>
           </Thead>
           <Tbody>

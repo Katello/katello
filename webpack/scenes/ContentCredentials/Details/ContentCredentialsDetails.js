@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import {
@@ -25,6 +25,7 @@ import { STATUS } from 'foremanReact/constants';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { addToast } from 'foremanReact/components/ToastsList';
+import { getResponseErrorMsgs } from '../../../utils/helpers';
 
 import { getContentCredentialDetails } from './ContentCredentialsDetailsActions';
 import Loading from '../../../components/Loading';
@@ -50,6 +51,7 @@ const ContentCredentialsDetails = () => {
     selectContentCredentialDetails(state, credentialId), shallowEqual);
   const [dropDownOpen, setDropdownOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const isMountedRef = useRef(true);
   const dispatch = useDispatch();
   const status = useSelector(state =>
     selectContentCredentialDetailsStatus(state, credentialId), shallowEqual);
@@ -60,6 +62,10 @@ const ContentCredentialsDetails = () => {
     dispatch(getContentCredentialDetails(credentialId));
   }, [credentialId, dispatch]);
 
+  useEffect(() => () => {
+    isMountedRef.current = false;
+  }, []);
+
   const handleDelete = async () => {
     try {
       await api.delete(`/content_credentials/${credentialId}`, {}, {
@@ -67,12 +73,16 @@ const ContentCredentialsDetails = () => {
       });
       history.push('/labs/content_credentials');
     } catch (deleteError) {
+      const [errorMessage] = getResponseErrorMsgs(deleteError.response)
+        .filter(Boolean);
       dispatch(addToast({
         type: 'error',
-        message: __('Failed to delete content credential. Please try again.'),
+        message: errorMessage || __('Failed to delete content credential. Please try again.'),
       }));
     }
-    setDeleting(false);
+    if (isMountedRef.current) {
+      setDeleting(false);
+    }
   };
 
   if (status === STATUS.PENDING) return (<Loading />);
