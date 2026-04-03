@@ -1,4 +1,3 @@
-import { testSelectorsSnapshotWithFixtures } from 'react-redux-test-utils';
 import {
   selectIsPollingTask,
   selectIsPollingTasks,
@@ -11,11 +10,20 @@ const state = {
   },
 };
 
-const fixtures = {
-  'selects if polling a task': () => selectIsPollingTask(state, 'TEST'),
-  'selects if not polling a task': () => selectIsPollingTask({}),
-  'selects if polling tasks': () => selectIsPollingTasks(state, 'TEST'),
-  'selects if not polling tasks': () => selectIsPollingTasks({}),
-};
+describe('Task selectors', () => {
+  it('selects if polling a task', () => {
+    expect(selectIsPollingTask(state, 'TEST')).toBe(true);
+  });
 
-describe('Task selectors', () => testSelectorsSnapshotWithFixtures(fixtures));
+  it('selects if not polling a task', () => {
+    expect(selectIsPollingTask({})).toBe(false);
+  });
+
+  it('selects if polling tasks', () => {
+    expect(selectIsPollingTasks(state, 'TEST')).toBe(true);
+  });
+
+  it('selects if not polling tasks', () => {
+    expect(selectIsPollingTasks({})).toBe(false);
+  });
+});
