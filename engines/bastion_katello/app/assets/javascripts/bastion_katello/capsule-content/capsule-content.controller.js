@@ -192,7 +192,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         };
 
         $scope.syncStatusText = function (currentSyncState, syncStatus) {
-            var message, syncableEnvs, envNames;
+            var message, syncableEnvs, envNames, lastFailedTask, lastFailedSyncTasks;
 
             if (angular.isUndefined(syncStatus)) {
                 return "";
@@ -209,15 +209,27 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             } else if (currentSyncState.is(currentSyncState.RECLAIM_SPACE_TRIGGERED)) {
                 message = translate("Space reclamation is about to start...");
             } else {
-                syncableEnvs = _.filter(syncStatus['lifecycle_environments'], {syncable: true});
-
-                if (syncableEnvs.length > 0) {
-                    envNames = _.map(syncableEnvs, 'name').join(', ');
-                    message = translate("%count environment(s) can be synchronized: %envs")
-                                .replace('%count', syncableEnvs.length)
-                                .replace('%envs', envNames);
+                // Check for failed/warning syncs first
+                // This prevents showing "synchronized" when last sync had errors
+                lastFailedSyncTasks = syncStatus['last_failed_sync_tasks'] || [];
+                if (lastFailedSyncTasks.length > 0) {
+                    lastFailedTask = pickLastTask(lastFailedSyncTasks);
+                    if (lastFailedTask.result === 'warning') {
+                        message = translate("Smart proxy sync finished with warning");
+                    } else {
+                        message = translate("Smart proxy sync failed");
+                    }
                 } else {
-                    message = translate("Smart proxy is synchronized");
+                    syncableEnvs = _.filter(syncStatus['lifecycle_environments'], {syncable: true});
+
+                    if (syncableEnvs.length > 0) {
+                        envNames = _.map(syncableEnvs, 'name').join(', ');
+                        message = translate("%count environment(s) can be synchronized: %envs")
+                                    .replace('%count', syncableEnvs.length)
+                                    .replace('%envs', envNames);
+                    } else {
+                        message = translate("Smart proxy is synchronized");
+                    }
                 }
             }
             return message;

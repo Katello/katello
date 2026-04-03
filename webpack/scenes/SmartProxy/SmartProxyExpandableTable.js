@@ -128,6 +128,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
                         contentViews={contentViews}
                         contentCounts={contentCounts}
                         envId={id}
+                        lastSync={lastSync}
                       /> :
                       <></>}
                   </Td>
