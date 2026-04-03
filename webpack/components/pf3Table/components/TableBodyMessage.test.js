@@ -1,12 +1,17 @@
-import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
-
+import React from 'react';
+import { render, screen } from '@testing-library/react';
 import TableBodyMessage from './TableBodyMessage';
 
-const fixtures = {
-  'renders TableBodyMessage': {
-    colSpan: 2,
-    children: 'some children',
-  },
-};
+describe('TableBodyMessage', () => {
+  it('renders the message within a table body', () => {
+    const component = (
+      <table>
+        <TableBodyMessage colSpan={2}>some children</TableBodyMessage>
+      </table>
+    );
+    render(component);
 
-describe('TableBodyMessage', () => testComponentSnapshotsWithFixtures(TableBodyMessage, fixtures));
+    const cell = screen.getByText('some children').closest('td');
+    expect(cell).toHaveAttribute('colspan', '2');
+  });
+});
