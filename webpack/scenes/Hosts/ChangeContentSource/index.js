@@ -9,7 +9,7 @@ import { foremanUrl } from 'foremanReact/common/helpers';
 import { STATUS } from 'foremanReact/constants';
 import BreadcrumbBar from 'foremanReact/components/BreadcrumbBar';
 import Head from 'foremanReact/components/Head';
-import { useForemanHostsPageUrl } from 'foremanReact/Root/Context/ForemanContext';
+import { useForemanHostsPageUrl, useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
 import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 
 import { selectApiDataStatus,
@@ -63,11 +63,13 @@ const ChangeContentSourcePage = () => {
   const [contentViewName, setContentViewName] = useState('');
   const [shouldShowTemplate, setShouldShowTemplate] = useState(false);
   const [redirect, setRedirect] = useState('');
+  const [assignments, setAssignments] = useState([]);
+  const foremanContext = useForemanContext();
+  const allowMultipleContentViews =
+    foremanContext?.metadata?.katello?.allow_multiple_content_views ?? false;
 
-  const contentViewId = contentViews?.find(cv => cv.name === contentViewName)?.id;
   const hostIds = useMemo(() => getHostIds(urlParams.host_id), [urlParams.host_id]);
   const noHostSpecified = (hostIds.length === 0 && urlParams.searchParam === '');
-  const environmentId = selectedEnvironment[0]?.id;
 
   const handleSuccess = ({ redirectTo = '' }) => {
     if (redirectTo) {
@@ -79,8 +81,7 @@ const ChangeContentSourcePage = () => {
     e.preventDefault();
 
     dispatch(changeContentSource(
-      environmentId,
-      contentViewId,
+      assignments,
       contentSourceId,
       contentHosts.map(h => h.id),
       () => handleSuccess({ redirectTo }),
@@ -225,6 +226,10 @@ const ChangeContentSourcePage = () => {
               isLoading={isLoading}
               hostsUpdated={apiChangeStatus === STATUS.RESOLVED || shouldShowTemplate}
               showTemplate={showTemplate}
+              allowMultipleContentViews={allowMultipleContentViews}
+              assignments={assignments}
+              onAssignmentsChange={setAssignments}
+              organizationId={contentHosts[0]?.organization_id}
             />
           </> }
           { (apiChangeStatus === STATUS.RESOLVED && shouldShowTemplate) &&

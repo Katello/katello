@@ -18,18 +18,8 @@ import {
 } from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
-import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
-import { STATUS } from 'foremanReact/constants';
-import api, { orgId } from '../../../../services/api';
-import { ENVIRONMENT_PATHS_KEY } from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
-import EnvironmentPaths from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
-import ContentViewSelect from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelect';
-import ContentViewSelectOption from '../../../../scenes/ContentViews/components/ContentViewSelect/ContentViewSelectOption';
-import { selectContentViewsStatus, selectJobInvocationPath } from '../selectors';
-import { getCVPlaceholderText, shouldDisableCVSelect } from '../../../ContentViews/components/ContentViewSelect/helpers';
-import { selectEnvironmentPaths } from '../../../ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
-
-const ENV_PATH_OPTIONS = { key: ENVIRONMENT_PATHS_KEY };
+import { selectJobInvocationPath } from '../selectors';
+import MultiCVEnvForm from './MultiCVEnvForm';
 
 const ContentSourceSelect = ({
   contentSources,
@@ -89,11 +79,6 @@ ContentSourceSelect.defaultProps = {
 
 const ContentSourceForm = ({
   handleSubmit,
-  environments,
-  handleEnvironment,
-  contentViews,
-  handleContentView,
-  contentViewName,
   contentSources,
   handleContentSource,
   contentSourceId,
@@ -104,19 +89,13 @@ const ContentSourceForm = ({
   isLoading,
   hostsUpdated,
   showTemplate,
+  allowMultipleContentViews,
+  assignments,
+  onAssignmentsChange,
+  organizationId,
 }) => {
-  const pathsUrl = `/organizations/${orgId()}/environments/paths?permission_type=promotable${contentSourceId ? `&content_source_id=${contentSourceId}` : ''}`;
-  useAPI( // No TableWrapper here, so we can useAPI from Foreman
-    'get',
-    api.getApiUrl(pathsUrl),
-    ENV_PATH_OPTIONS,
-  );
-  const contentViewsStatus = useSelector(selectContentViewsStatus);
-  const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const jobInvocationPath = useSelector(selectJobInvocationPath);
-  const envList = environmentPathResponse?.results?.map(path => path.environments).flat();
   const [csSelectOpen, setCSSelectOpen] = useState(false);
-  const [cvSelectOpen, setCVSelectOpen] = useState(false);
   const hostCount = contentHosts.length;
 
   const handleCSSelect = (_event, selection) => {
@@ -124,35 +103,14 @@ const ContentSourceForm = ({
     setCSSelectOpen(false);
   };
 
-  const handleCVSelect = (_event, selection) => {
-    handleContentView(selection);
-    setCVSelectOpen(false);
-  };
-
-  const formIsValid = () => (!!environments &&
-    !!contentViewName &&
+  const formIsValid = () => (
     !!contentSourceId &&
-    hostCount !== 0);
+    assignments.length > 0 &&
+    assignments.every(a => a.contentView && a.selectedEnv?.length > 0) &&
+    hostCount !== 0
+  );
   const contentSourcesIsDisabled = (isLoading || contentSources.length === 0 ||
     hostCount === 0);
-  const environmentIsDisabled = (isLoading ||
-    contentSourceId === '');
-  const viewIsDisabled = (isLoading || contentViews.length === 0 ||
-    contentSourceId === '');
-
-  const cvPlaceholderText = getCVPlaceholderText({
-    contentSourceId,
-    environments,
-    contentViewsStatus,
-    cvSelectOptions: contentViews,
-  });
-
-  const disableCVSelect = shouldDisableCVSelect({
-    contentSourceId,
-    environments,
-    contentViewsStatus,
-    cvSelectOptions: contentViews,
-  });
 
   return (
     <Form
@@ -172,68 +130,26 @@ const ContentSourceForm = ({
           />
         </GridItem>
         )}
-        {contentViewsStatus === STATUS.RESOLVED &&
-            !!environments.length && contentViews.length === 0 &&
-            <Alert
-              ouiaId="no-cv-alert"
-              variant="warning"
-              className="margin-top-20"
-              title={__('No content views available for the selected environment')}
-              style={{ marginBottom: '1rem' }}
-            >
-              <a href="/content_views">{__('View the Content Views page')}</a>
-              {__(' to manage and promote content views, or select a different environment.')}
-            </Alert>
-        }
       </Grid>
       <ContentSourceSelect
         contentSources={contentSources}
         selections={contentSourceId}
-        onToggle={isExpanded => setCSSelectOpen(isExpanded)}
+        onToggle={isExpanded => setCSSelectOpen(!!isExpanded)}
         onSelect={handleCSSelect}
         onClear={() => handleContentSource(null)}
-        isOpen={csSelectOpen}
+        isOpen={!!csSelectOpen}
         isDisabled={contentSourcesIsDisabled || hostsUpdated}
       />
-      {envList?.some(env => env?.content_source?.environment_is_associated === false) &&
-        <Alert
-          ouiaId="disabled-environments-alert"
-          variant="info"
-          isInline
-          title={__('Some environments are disabled because they are not associated with the selected content source.')}
-          style={{ marginBottom: '1rem' }}
-        >
-          {__('To enable them, add the environment to the content source, or select a different content source.')}
-        </Alert>
-      }
-      <EnvironmentPaths
-        style={{ display: 'block' }}
-        userCheckedItems={environments}
-        setUserCheckedItems={handleEnvironment}
-        publishing={false}
-        multiSelect={false}
-        headerText={__('Lifecycle environment')}
-        isDisabled={environmentIsDisabled || hostsUpdated}
-      />
-      <ContentViewSelect
-        selections={contentViewName}
-        onClear={() => handleContentView(null)}
-        onSelect={handleCVSelect}
-        isOpen={cvSelectOpen}
-        isDisabled={viewIsDisabled || hostsUpdated || disableCVSelect}
-        onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-        headerText={__('Content view')}
-        ouiaId="SelectContentView"
-        className="set-select-width"
-        placeholderText={cvPlaceholderText}
-      >
-        {!environmentIsDisabled && contentViews?.map(cv => (<ContentViewSelectOption
-          key={cv.id}
-          value={cv.name}
-          cv={cv}
-          env={environments[0]}
-        />))}
-      </ContentViewSelect>
+      {contentSourceId && (
+        <MultiCVEnvForm
+          organizationId={organizationId}
+          contentSourceId={contentSourceId}
+          assignments={assignments}
+          onAssignmentsChange={onAssignmentsChange}
+          allowMultipleContentViews={allowMultipleContentViews}
+          isLoading={isLoading || hostsUpdated}
+        />
+      )}
       {showCVOnlyAlert &&
         <Alert
           ouiaId="cv-only-alert"
@@ -316,11 +232,6 @@ const ContentSourceForm = ({
 
 ContentSourceForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  environments: PropTypes.arrayOf(PropTypes.shape({})),
-  handleEnvironment: PropTypes.func.isRequired,
-  contentViews: PropTypes.arrayOf(PropTypes.shape({})),
-  handleContentView: PropTypes.func.isRequired,
-  contentViewName: PropTypes.string,
   contentSources: PropTypes.arrayOf(PropTypes.shape({})),
   handleContentSource: PropTypes.func.isRequired,
   contentSourceId: PropTypes.string,
@@ -331,18 +242,22 @@ ContentSourceForm.propTypes = {
   isLoading: PropTypes.bool,
   hostsUpdated: PropTypes.bool,
   showTemplate: PropTypes.func.isRequired,
+  allowMultipleContentViews: PropTypes.bool,
+  assignments: PropTypes.arrayOf(PropTypes.shape({})),
+  onAssignmentsChange: PropTypes.func.isRequired,
+  organizationId: PropTypes.number,
 };
 
 ContentSourceForm.defaultProps = {
-  environments: [],
-  contentViews: [],
-  contentViewName: '',
   contentSources: [],
   contentSourceId: '',
   showCVOnlyAlert: false,
   contentHosts: [],
   isLoading: false,
   hostsUpdated: false,
+  allowMultipleContentViews: false,
+  assignments: [],
+  organizationId: null,
 };
 
 export default ContentSourceForm;
