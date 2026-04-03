@@ -258,25 +258,36 @@ module Katello
 
     api :PUT, "/hosts/bulk/change_content_source", N_("Update the content source for specified hosts and generate the reconfiguration script")
     param :host_ids, Array, required: true, desc: N_("The ids of the hosts to alter. Hosts not managed by Katello are ignored")
-    param :environment_id, :number, required: true, desc: N_("The id of the lifecycle environment")
-    param :content_view_id, :number, required: true, desc: N_("The id of the content view")
+    param :content_view_environments, Array, required: true, desc: N_("Array of content view environment labels")
     param :content_source_id, :number, required: true, desc: N_("The id of the content source")
     def change_content_source
       hosts = ::Host.where(id: params[:host_ids])
       throw_resource_not_found(name: 'host', id: params[:host_ids]) unless hosts.any?
 
-      lifecycle_environment = KTEnvironment.readable.find(params[:environment_id])
-      content_view = Katello::ContentView.readable.find(params[:content_view_id])
       content_source = SmartProxy.authorized(:view_smart_proxies).find(params[:content_source_id])
+      organization = hosts.first&.organization
+
+      # Fetch content view environments using labels
+      if params[:content_view_environments].blank?
+        fail HttpErrors::UnprocessableEntity, _("content_view_environments must be provided")
+      end
+
+      content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
+        labels: params[:content_view_environments],
+        organization: organization
+      )
+
+      if content_view_environments.blank?
+        handle_errors(labels: params[:content_view_environments])
+      end
+
+      # Generate template for manual host updates
       template = prepare_ssl_cert(foreman_server_ca_cert) + configure_subman(content_source) + reconfigure_yggdrasild(hosts.first)
 
       hosts.each do |host|
         next unless host.content_facet
         host.content_facet.content_source = content_source
-        host.content_facet.assign_single_environment(
-          :content_view_id => content_view.id,
-          :environment_id => lifecycle_environment.id
-        )
+        host.content_facet.content_view_environments = content_view_environments
         host.update_candlepin_associations
       end
 

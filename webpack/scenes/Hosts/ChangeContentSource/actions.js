@@ -18,13 +18,34 @@ export const getFormData = (hostIds, search) => (post({
 }));
 
 export const changeContentSource =
-  (environmentId, contentViewId, contentSourceId, hostIds, handleSuccess, successToast) =>
-    put({
+  (assignments, contentSourceId, hostIds, handleSuccess, successToast) => {
+    // Build CVEnv labels from assignments
+    const cveLabels = assignments.map((assignment) => {
+      // If assignment has cveLabel from API, use it
+      if (assignment.cveLabel) {
+        return assignment.cveLabel;
+      }
+
+      // Otherwise construct from selected environment and CV
+      const env = assignment.selectedEnv?.[0];
+      const cv = assignment.contentView;
+
+      if (env?.label && cv?.label) {
+        const envLabel = env.label;
+        const cvLabel = cv.label;
+        const isLibraryEnv = env.lifecycle_environment_library || env.library;
+        const isDefaultCV = cv.content_view_default || cv.default;
+        // Special case: Library + Default CV = just environment label
+        return isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
+      }
+      return null;
+    }).filter(Boolean);
+
+    return put({
       key: CHANGE_CONTENT_SOURCE,
       url: foremanUrl('/api/v2/hosts/bulk/change_content_source'),
       params: {
-        environment_id: environmentId,
-        content_view_id: contentViewId,
+        content_view_environments: cveLabels,
         content_source_id: contentSourceId,
         host_ids: hostIds,
       },
@@ -32,6 +53,7 @@ export const changeContentSource =
       successToast,
       handleSuccess,
     });
+  };
 
 export const getProxy = id =>
   get({
