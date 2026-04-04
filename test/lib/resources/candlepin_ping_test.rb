@@ -99,6 +99,27 @@ module Katello
                             expires_in: CandlepinPing::CACHE_TTL)
           CandlepinPing.clear_cache
           assert_nil Rails.cache.read(CandlepinPing::CACHE_KEY)
+        # cache HIT/MISS logging
+
+        def test_ping_logs_cache_miss_on_cold_start
+          CandlepinPing.stubs(:get).returns(stub(:body => {'mode' => 'NORMAL'}.to_json))
+          reg_logger = mock('registration_logger')
+          reg_logger.expects(:debug).with { |msg| msg.include?('rhsm_status cache=MISS') }
+          reg_logger.stubs(:debug)
+          ::Foreman::Logging.stubs(:logger).with('registration').returns(reg_logger)
+
+          CandlepinPing.ping
+        end
+
+        def test_ping_logs_cache_hit_on_warm_cache
+          Rails.cache.write(CandlepinPing::CACHE_KEY, {'mode' => 'NORMAL'}.with_indifferent_access,
+                            expires_in: CandlepinPing::CACHE_TTL)
+          CandlepinPing.expects(:get).never
+          reg_logger = mock('registration_logger')
+          reg_logger.expects(:debug).with { |msg| msg.include?('rhsm_status cache=HIT') }
+          ::Foreman::Logging.stubs(:logger).with('registration').returns(reg_logger)
+
+          CandlepinPing.ping
         end
       end
     end

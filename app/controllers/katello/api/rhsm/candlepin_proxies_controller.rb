@@ -303,11 +303,16 @@ module Katello
     private
 
     def compliance_status(id)
-      Rails.cache.fetch("katello/compliance/#{id}", expires_in: 1.minute) do
+      cache_miss = false
+      result = Rails.cache.fetch("katello/compliance/#{id}", expires_in: 1.minute) do
+        cache_miss = true
+        ::Foreman::Logging.logger('registration').debug "compliance cache=MISS uuid=#{id}"
         r = Resources::Candlepin::Proxy.get(@request_path)
         raise ComplianceFetchError, r if r.code.to_i >= 400
         [JSON.parse(r.body), r.code]
       end
+      ::Foreman::Logging.logger('registration').debug "compliance cache=HIT uuid=#{id}" unless cache_miss
+      result
     end
 
     # in case set taxonomy from core was skipped since the User.current was nil at that moment (typically AK was used instead of username/password)
