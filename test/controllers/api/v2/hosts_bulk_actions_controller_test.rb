@@ -746,6 +746,25 @@ module Katello
       assert_response :not_found
     end
 
+    def test_change_cs_multiple_organizations
+      prepare_certificates
+      org2 = FactoryBot.create(:organization)
+      host1 = FactoryBot.create(:host, :with_content, content_view: katello_environments(:library).content_views.first,
+                                                      lifecycle_environment: katello_environments(:library),
+                                                      content_source: FactoryBot.create(:smart_proxy, :with_pulp3))
+      host2 = FactoryBot.create(:host, :with_content, organization: org2,
+                                                      content_source: FactoryBot.create(:smart_proxy, :with_pulp3))
+
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: @library.id)
+      content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
+
+      put :change_content_source, params: { content_view_environment_ids: [content_view_env.id],
+                                            content_source_id: content_source.id,
+                                            host_ids: [host1.id, host2.id] }
+      assert_response :unprocessable_entity
+      assert_includes @response.body, "All hosts must belong to the same organization"
+    end
+
     private
 
     def prepare_certificates

@@ -265,8 +265,8 @@ module Katello
       hosts = ::Host.where(id: params[:host_ids])
       throw_resource_not_found(name: 'host', id: params[:host_ids]) unless hosts.any?
 
+      organization = validate_hosts_organization(hosts)
       content_source = SmartProxy.authorized(:view_smart_proxies).find(params[:content_source_id])
-      organization = hosts.first&.organization
 
       # Ensure at least one parameter is provided
       if params[:content_view_environments].blank? && params[:content_view_environment_ids].blank?
@@ -290,8 +290,8 @@ module Katello
       hosts.each do |host|
         next unless host.content_facet
         host.content_facet.content_source = content_source
-        # content_view_environments= setter already calls update_candlepin_associations
         host.content_facet.content_view_environments = content_view_environments
+        host.save! # Persist content_source change
       end
 
       render plain: template
@@ -388,6 +388,16 @@ module Katello
       else
         fail HttpErrors::BadRequest, _("Either trace_search or trace_ids must be provided")
       end
+    end
+
+    def validate_hosts_organization(hosts)
+      organizations = hosts.map(&:organization).compact.uniq
+      if organizations.size > 1
+        fail HttpErrors::UnprocessableEntity, _("All hosts must belong to the same organization")
+      elsif organizations.empty?
+        fail HttpErrors::UnprocessableEntity, _("No valid organization found for the selected hosts")
+      end
+      organizations.first
     end
 
     def disable_erratum_hosts_count
