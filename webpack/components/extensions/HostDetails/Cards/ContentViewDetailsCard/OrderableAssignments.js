@@ -136,7 +136,7 @@ const AssignmentSection = ({
         </Tooltip>
       )}
       <span className="assignment-name">
-        {__('Select a content view')}
+        {__('Select a content view environment')}
       </span>
     </div>
   );
