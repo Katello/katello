@@ -105,7 +105,6 @@ Note: `$(hostname)` is used because the vagrant VM hostname varies.
 - **Candlepin**: Subscription and entitlement management service. Handles subscription certificates, product entitlements, and subscription pooling. Runs on port 8443. Based on the upstream Candlepin project.
 - **Dynflow**: Workflow orchestration engine that powers Foreman Tasks. Enables long-running, stateful operations with pause/resume capabilities, error handling, and complex job dependencies. All Katello background jobs use Dynflow.
 - **Foreman Tasks**: UI and infrastructure for viewing and managing asynchronous jobs. Built on Dynflow. Provides job history, status tracking, and the ability to cancel or resume tasks.
-- **Message Queue**: STOMP-based event system for Candlepin events
 
 ### Key Domain Models Glossary
 - **Host**: Foreman-managed systems consuming content from one or more content view versions.
