@@ -290,8 +290,8 @@ module Katello
       hosts.each do |host|
         next unless host.content_facet
         host.content_facet.content_source = content_source
+        # content_view_environments= setter already calls update_candlepin_associations
         host.content_facet.content_view_environments = content_view_environments
-        host.update_candlepin_associations
       end
 
       render plain: template
