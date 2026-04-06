@@ -87,6 +87,7 @@ const ChangeContentSourcePage = () => {
   const handleContentSource = (id) => {
     setCapsuleId(id);
     setAssignments([]); // Clear assignments when content source changes
+    setShouldShowTemplate(false); // Hide previously generated template
 
     if (id) {
       dispatch(getProxy(id));
@@ -96,6 +97,11 @@ const ChangeContentSourcePage = () => {
   const showTemplate = (e) => {
     handleSubmit(e);
     setShouldShowTemplate(true);
+  };
+
+  const handleAssignmentsChange = (newAssignments) => {
+    setAssignments(newAssignments);
+    setShouldShowTemplate(false); // Hide previously generated template when assignments change
   };
 
   const hostIndexUrl = useForemanHostsPageUrl();
@@ -180,8 +186,8 @@ const ChangeContentSourcePage = () => {
                         hosts: (
                           <strong>
                             <FormattedMessage
-                              defaultMessage="{count, plural, one {# selected host} other {# selected hosts}}"
-                              values={{ count: contentHosts.length + hostsWithoutContent.length }}
+                              defaultMessage="{count, plural, one {# eligible host} other {# eligible hosts}}"
+                              values={{ count: contentHosts.length }}
                               id="change-content-source-host-count-i18n"
                             />
                           </strong>
@@ -208,7 +214,7 @@ const ChangeContentSourcePage = () => {
               showTemplate={showTemplate}
               allowMultipleContentViews={allowMultipleContentViews}
               assignments={assignments}
-              onAssignmentsChange={setAssignments}
+              onAssignmentsChange={handleAssignmentsChange}
               organizationId={contentHosts[0]?.organization_id}
             />
           </> }
