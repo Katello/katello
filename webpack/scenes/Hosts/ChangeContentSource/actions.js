@@ -2,6 +2,7 @@
 import { foremanUrl } from 'foremanReact/common/helpers';
 import { get, post, put } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { buildContentViewEnvironmentLabel } from '../../../utils/contentViewEnvironmentLabel';
 
 import {
   CHANGE_CONTENT_SOURCE_DATA,
@@ -20,26 +21,7 @@ export const getFormData = (hostIds, search) => (post({
 export const changeContentSource =
   (assignments, contentSourceId, hostIds, handleSuccess, successToast) => {
     // Build CVEnv labels from assignments
-    const cveLabels = assignments.map((assignment) => {
-      // If assignment has cveLabel from API, use it
-      if (assignment.cveLabel) {
-        return assignment.cveLabel;
-      }
-
-      // Otherwise construct from selected environment and CV
-      const env = assignment.selectedEnv?.[0];
-      const cv = assignment.contentView;
-
-      if (env?.label && cv?.label) {
-        const envLabel = env.label;
-        const cvLabel = cv.label;
-        const isLibraryEnv = env.library;
-        const isDefaultCV = cv.default;
-        // Special case: Library + Default CV = just environment label
-        return isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
-      }
-      return null;
-    }).filter(Boolean);
+    const cveLabels = assignments.map(buildContentViewEnvironmentLabel).filter(Boolean);
 
     return put({
       key: CHANGE_CONTENT_SOURCE,

@@ -1,30 +1,8 @@
 import { useState } from 'react';
+import { buildContentViewEnvironmentLabel as constructCVELabel } from '../../../../utils/contentViewEnvironmentLabel';
 
-/**
- * Constructs a content view environment label from an assignment
- * Returns null if the assignment doesn't have both environment and content view
- */
-export const constructCVELabel = (assignment) => {
-  const env = assignment.selectedEnv?.[0];
-  const cv = assignment.contentView;
-
-  if (!env || !cv) return null;
-
-  // Get labels - support both camelCase and snake_case
-  const envLabel = env.label || env.lifecycle_environment_label;
-  const cvLabel = cv.label || cv.content_view_label;
-
-  if (!envLabel || !cvLabel) return null;
-
-  // Content view environment label format matches backend logic:
-  // - Default CV in Library: "Library"
-  // - Custom CV in Library: "Library/my_cv"
-  // - Any CV in other envs: "Production/my_cv"
-  const isLibraryEnv = env.lifecycle_environment_library || env.library;
-  const isDefaultCV = cv.content_view_default || cv.default;
-
-  return isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
-};
+// Re-export for backward compatibility
+export { constructCVELabel };
 
 /**
  * Custom hook for managing assignment state and validation in both

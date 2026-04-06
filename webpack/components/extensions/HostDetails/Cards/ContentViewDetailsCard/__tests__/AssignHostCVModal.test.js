@@ -131,7 +131,7 @@ describe('AssignHostCVModal', () => {
     );
 
     await patientlyWaitFor(() => {
-      expect(getByText('Select a content view')).toBeInTheDocument();
+      expect(getByText('Select a content view environment')).toBeInTheDocument();
     });
   });
 
@@ -406,7 +406,7 @@ describe('AssignHostCVModal', () => {
     );
 
     await patientlyWaitFor(() => {
-      expect(getByText('Select a content view')).toBeInTheDocument();
+      expect(getByText('Select a content view environment')).toBeInTheDocument();
       // Initially expanded, so env selection should be visible
       expect(getByText('Select a lifecycle environment')).toBeInTheDocument();
     });
