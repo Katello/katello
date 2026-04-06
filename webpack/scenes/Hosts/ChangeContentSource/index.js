@@ -189,7 +189,7 @@ const ChangeContentSourcePage = () => {
                 title={
                   <span style={{ fontWeight: 'normal' }}>
                     <FormattedMessage
-                      defaultMessage="Your selection of lifecycle environment and content view will {replace} all existing content view environments on {hosts}."
+                      defaultMessage="Your selection of content view environments here will {replace} all existing assignments on {hosts}."
                       values={{
                         replace: <strong>{__('replace')}</strong>,
                         hosts: (
