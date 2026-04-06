@@ -20,7 +20,7 @@ const Hosts = ({
 
   return (
     <>
-      <GridItem span={7}>
+      <GridItem span={8}>
         {hostsWithoutContent.length > 0 &&
         <p>
           { __('Some hosts are not registered as content hosts and will be ignored.') }
