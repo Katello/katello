@@ -640,19 +640,23 @@ module Katello
                                                      lifecycle_environment: katello_environments(:library),
                                                      content_source: FactoryBot.create(:smart_proxy, :with_pulp3))
 
-      lifecycle_environment = katello_environments(:dev)
-      content_view = lifecycle_environment.content_views.first
+      dev_env = katello_environments(:dev)
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: dev_env.id)
       content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
 
-      put :change_content_source, params: { environment_id: lifecycle_environment.id,
-                                            content_view_id: content_view.id,
+      # Stub Candlepin calls
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+
+      put :change_content_source, params: { content_view_environment_ids: [content_view_env.id],
                                             content_source_id: content_source.id,
                                             host_ids: [host.id] }
       assert_response :success
 
-      assert_equal host.reload.single_lifecycle_environment, lifecycle_environment
-      assert_equal host.reload.single_content_view, content_view
-      assert_equal host.reload.content_source_id, content_source.id
+      host.reload
+      host.content_facet.reload
+      assert_equal dev_env, host.single_lifecycle_environment
+      assert_equal @view_2, host.single_content_view
+      assert_equal content_source.id, host.content_facet.content_source_id
 
       assert_includes @response.body, "Configure subscription-manager"
       assert_includes @response.body, content_source.pulp_content_url.to_s
@@ -665,12 +669,14 @@ module Katello
                                                      content_source: FactoryBot.create(:smart_proxy, :with_pulp3))
 
       host2 = FactoryBot.create(:host)
-      lifecycle_environment = katello_environments(:dev)
-      content_view = lifecycle_environment.content_views.first
+      dev_env = katello_environments(:dev)
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: dev_env.id)
       content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
 
-      put :change_content_source, params: { environment_id: lifecycle_environment.id,
-                                            content_view_id: content_view.id,
+      # Stub Candlepin calls
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+
+      put :change_content_source, params: { content_view_environment_ids: [content_view_env.id],
                                             content_source_id: content_source.id,
                                             host_ids: [host.id] }
       assert_response :success
@@ -682,21 +688,25 @@ module Katello
       assert_response :not_found
     end
 
-    def test_change_cs_environment_not_found
-      put :change_content_source, params: { environment_id: 0, host_ids: ::Host.all.map(&:id).to_a }
-      assert_response :not_found
+    def test_change_cs_missing_content_view_environments
+      put :change_content_source, params: { content_source_id: FactoryBot.create(:smart_proxy).id,
+                                            host_ids: ::Host.all.map(&:id).to_a }
+      assert_response :unprocessable_entity
+      assert_includes @response.body, "Either content_view_environments or content_view_environment_ids must be provided"
     end
 
-    def test_change_cs_content_view_not_found
-      put :change_content_source, params: { environment_id: katello_environments(:library).id,
-                                            content_view_id: 0,
+    def test_change_cs_content_view_environment_not_found
+      put :change_content_source, params: { content_view_environments: ['invalid/label'],
+                                            content_source_id: FactoryBot.create(:smart_proxy).id,
                                             host_ids: ::Host.all.map(&:id).to_a }
-      assert_response :not_found
+      assert_response :unprocessable_entity
+      assert_includes @response.body, "No content view environments found"
     end
 
     def test_change_cs_content_source_not_found
-      put :change_content_source, params: { environment_id: katello_environments(:library).id,
-                                            content_view_id: katello_content_views.first.id,
+      content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: @library.id)
+
+      put :change_content_source, params: { content_view_environment_ids: [content_view_env.id],
                                             content_source_id: 0,
                                             host_ids: ::Host.all.map(&:id).to_a }
       assert_response :not_found
