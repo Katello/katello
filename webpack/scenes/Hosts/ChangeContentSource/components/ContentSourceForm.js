@@ -112,6 +112,9 @@ const ContentSourceForm = ({
   const contentSourcesIsDisabled = (isLoading || contentSources.length === 0 ||
     hostCount === 0);
 
+  const isAssignmentComplete = a => a.contentView && a.selectedEnv?.length > 0;
+  const completeAssignmentCount = assignments.filter(isAssignmentComplete).length;
+
   return (
     <Form
       onSubmit={e => handleSubmit(e)}
@@ -144,7 +147,7 @@ const ContentSourceForm = ({
         <MultiCVEnvForm
           organizationId={organizationId}
           contentSourceId={contentSourceId}
-          assignments={assignments}
+          assignmentCount={completeAssignmentCount}
           onAssignmentsChange={onAssignmentsChange}
           allowMultipleContentViews={allowMultipleContentViews}
           isLoading={isLoading || hostsUpdated}
