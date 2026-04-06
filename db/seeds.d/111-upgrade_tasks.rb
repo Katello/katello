@@ -11,5 +11,6 @@ UpgradeTask.define_tasks(:katello) do
     {:name => 'katello:upgrades:4.12:update_content_access_modes', :always_run => true },
     {:name => 'katello:upgrades:4.19:populate_repository_version_prns'},
     {:name => 'katello:upgrades:4.19:enable_structured_apt_for_deb', :long_running => true, :skip_failure => true},
+    {:name => 'katello:upgrades:4.21:import_pools'},
   ]
 end

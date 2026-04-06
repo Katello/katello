@@ -6,12 +6,12 @@ import { validateQuantity } from '../../../scenes/Subscriptions/SubscriptionVali
 import { getEntitlementsDisplayValue } from '../../../scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableHelpers';
 
 const renderValue = (quantity, additionalData, onActivate) => {
-  const { collapsible } = additionalData.rowData;
+  const { collapsible, expired } = additionalData.rowData;
 
   const value = getEntitlementsDisplayValue({
     quantity, collapsible,
   });
-  const editable = (typeof value === 'number');
+  const editable = (typeof value === 'number' && !expired);
 
   return (
     <td className={editable ? 'editable' : ''}>
