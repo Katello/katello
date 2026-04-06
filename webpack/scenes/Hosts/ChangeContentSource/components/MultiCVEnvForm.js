@@ -4,7 +4,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { FormGroup, Button, Badge } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
-import api from '../../../../services/api';
+import api, { orgId } from '../../../../services/api';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import { OrderableAssignmentList } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/OrderableAssignments';
 
@@ -19,7 +19,9 @@ const MultiCVEnvForm = ({
   isLoading,
 }) => {
   // Fetch environment paths filtered by content source
-  const pathsUrl = `/organizations/${organizationId}/environments/paths?permission_type=promotable${contentSourceId ? `&content_source_id=${contentSourceId}` : ''}`;
+  // Use organizationId prop if available, otherwise fall back to orgId() service
+  const orgIdToUse = organizationId || orgId();
+  const pathsUrl = `/organizations/${orgIdToUse}/environments/paths?permission_type=promotable${contentSourceId ? `&content_source_id=${contentSourceId}` : ''}`;
   useAPI('get', api.getApiUrl(pathsUrl), ENV_PATH_OPTIONS);
 
   const renderAddButton = (addNewAssignment, canAddAnother) => (
