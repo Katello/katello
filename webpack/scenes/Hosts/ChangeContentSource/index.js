@@ -18,7 +18,6 @@ import { selectApiDataStatus,
   selectContentHosts,
   selectContentHostsWithoutContent,
   selectContentSources,
-  selectContentViews,
   selectTemplate } from './selectors';
 
 import { getHostIds, formIsLoading } from './helpers';
@@ -26,7 +25,6 @@ import {
   getFormData,
   getProxy,
   changeContentSource,
-  getContentViews,
 } from './actions';
 import ContentSourceForm from './components/ContentSourceForm';
 import ContentSourceTemplate from './components/ContentSourceTemplate';
@@ -48,7 +46,6 @@ const ChangeContentSourcePage = () => {
   const contentSources = useSelector(selectContentSources);
 
   const template = useSelector(selectTemplate);
-  const contentViews = useSelector(selectContentViews);
   const { initialContentSourceId } = urlParams;
   const [contentSourceId, setCapsuleId] = useState(initialContentSourceId ?? '');
   // if this matches, we'll trust you that initialContentSourceId is the host's content source
@@ -59,8 +56,6 @@ const ChangeContentSourcePage = () => {
   );
   const hostDetailsPath = showCVOnlyAlert ? `new/hosts/${contentHosts[0].name}` : '';
   const hostEditPath = urlParams.fromPage === 'hostEdit' ? foremanUrl(`/hosts/${contentHosts[0]?.name}/edit`) : '';
-  const [selectedEnvironment, setSelectedEnvironment] = useState([]);
-  const [contentViewName, setContentViewName] = useState('');
   const [shouldShowTemplate, setShouldShowTemplate] = useState(false);
   const [redirect, setRedirect] = useState('');
   const [assignments, setAssignments] = useState([]);
@@ -91,8 +86,6 @@ const ChangeContentSourcePage = () => {
 
   const handleContentSource = (id) => {
     setCapsuleId(id);
-    setSelectedEnvironment([]);
-    setContentViewName('');
     setAssignments([]); // Clear assignments when content source changes
 
     if (id) {
@@ -116,15 +109,6 @@ const ChangeContentSourcePage = () => {
       return ([linkHosts, { caption: hostName, url: foremanUrl(`/new/hosts/${hostName}`) }, linkContent]);
     }
     return ([linkHosts, linkContent]);
-  };
-
-  const handleEnvironment = (selection) => {
-    setSelectedEnvironment(selection);
-    setContentViewName('');
-
-    if (selection[0].id) {
-      dispatch(getContentViews(selection[0].id));
-    }
   };
   useEffect(() => {
     dispatch(getFormData(hostIds, urlParams.searchParam));
@@ -212,11 +196,6 @@ const ChangeContentSourcePage = () => {
 
             <ContentSourceForm
               handleSubmit={handleSubmit}
-              handleEnvironment={handleEnvironment}
-              environments={selectedEnvironment}
-              contentViews={contentViews}
-              handleContentView={setContentViewName}
-              contentViewName={contentViewName}
               contentSources={contentSources}
               contentSourceId={contentSourceId}
               showCVOnlyAlert={showCVOnlyAlert}
