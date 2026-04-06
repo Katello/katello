@@ -13,6 +13,7 @@ import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
 import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import api from '../../../../../services/api';
+import { buildContentViewEnvironmentLabel } from '../../../../../utils/contentViewEnvironmentLabel';
 import { OrderableAssignmentList } from '../../../HostDetails/Cards/ContentViewDetailsCard/OrderableAssignments';
 import { bulkAssignContentViewEnvironments } from './actions';
 import './BulkAssignCVEnvsModal.scss';
@@ -58,20 +59,7 @@ const BulkAssignCVEnvsModal = ({
 
   const handleSave = () => {
     // Build array of content view environment labels
-    const cvEnvLabels = assignments.map((assignment) => {
-      const env = assignment.selectedEnv[0];
-      const cv = assignment.contentView;
-      const envLabel = env.label;
-      const cvLabel = cv.label;
-
-      // ContentViewEnvironment label format matches backend logic:
-      // - For default CV in Library: just "Library"
-      // - For default CV in non-Library: "Production/Default_Organization_View"
-      // - For non-default CV: "environment_label/content_view_label"
-      const isLibraryEnv = env.lifecycle_environment_library || env.library;
-      const isDefaultCV = cv.content_view_default || cv.default;
-      return isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
-    });
+    const cvEnvLabels = assignments.map(buildContentViewEnvironmentLabel).filter(Boolean);
 
     const requestBody = {
       content_view_environments: cvEnvLabels,
