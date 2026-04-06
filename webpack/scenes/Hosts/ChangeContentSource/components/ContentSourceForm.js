@@ -158,7 +158,7 @@ const ContentSourceForm = ({
           ouiaId="cv-only-alert"
           variant="info"
           className="margin-top-20"
-          title={__('Host content source will remain the same. Click Save below to update the host\'s content view environment.')}
+          title={__('Host content source will remain the same. Click Save below to update the host\'s content view environments.')}
         />
       }
       {!showCVOnlyAlert &&
