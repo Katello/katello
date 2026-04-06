@@ -644,8 +644,8 @@ module Katello
       content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: dev_env.id)
       content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
 
-      # Stub Candlepin calls
-      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+      # Stub Candlepin API calls but ensure content_facet is saved
+      ::Katello::Resources::Candlepin::Consumer.stubs(:update)
 
       put :change_content_source, params: { content_view_environment_ids: [content_view_env.id],
                                             content_source_id: content_source.id,
@@ -662,6 +662,40 @@ module Katello
       assert_includes @response.body, content_source.pulp_content_url.to_s
     end
 
+    def test_change_content_source_multiple_content_view_environments
+      prepare_certificates
+      host = FactoryBot.create(:host, :with_content, content_view: katello_environments(:library).content_views.first,
+                                                     lifecycle_environment: katello_environments(:library),
+                                                     content_source: FactoryBot.create(:smart_proxy, :with_pulp3))
+
+      dev_env = katello_environments(:dev)
+      content_view_env1 = Katello::ContentViewEnvironment.find_by(content_view_id: @view.id, environment_id: @library.id)
+      content_view_env2 = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: dev_env.id)
+      content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
+
+      # Stub Candlepin API calls but ensure content_facet is saved
+      ::Katello::Resources::Candlepin::Consumer.stubs(:update)
+
+      put :change_content_source, params: { content_view_environment_ids: [content_view_env1.id, content_view_env2.id],
+                                            content_source_id: content_source.id,
+                                            host_ids: [host.id] }
+      assert_response :success
+
+      host.reload
+      host.content_facet.reload
+      assert_equal content_source.id, host.content_facet.content_source_id
+
+      # Verify the host has both content view environments
+      assert_equal 2, host.content_facet.content_view_environments.size
+      assert_equal @view.id, host.content_facet.content_view_environments.first.content_view_id
+      assert_equal @library.id, host.content_facet.content_view_environments.first.environment_id
+      assert_equal @view_2.id, host.content_facet.content_view_environments.second.content_view_id
+      assert_equal dev_env.id, host.content_facet.content_view_environments.second.environment_id
+
+      assert_includes @response.body, "Configure subscription-manager"
+      assert_includes @response.body, content_source.pulp_content_url.to_s
+    end
+
     def test_change_cs_ignored_hosts
       prepare_certificates
       host = FactoryBot.create(:host, :with_content, content_view: katello_environments(:library).content_views.first,
@@ -673,8 +707,8 @@ module Katello
       content_view_env = Katello::ContentViewEnvironment.find_by(content_view_id: @view_2.id, environment_id: dev_env.id)
       content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
 
-      # Stub Candlepin calls
-      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+      # Stub Candlepin API calls but ensure content_facet is saved
+      ::Katello::Resources::Candlepin::Consumer.stubs(:update)
 
       put :change_content_source, params: { content_view_environment_ids: [content_view_env.id],
                                             content_source_id: content_source.id,

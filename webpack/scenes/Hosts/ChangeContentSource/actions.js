@@ -33,8 +33,8 @@ export const changeContentSource =
       if (env?.label && cv?.label) {
         const envLabel = env.label;
         const cvLabel = cv.label;
-        const isLibraryEnv = env.lifecycle_environment_library || env.library;
-        const isDefaultCV = cv.content_view_default || cv.default;
+        const isLibraryEnv = env.library;
+        const isDefaultCV = cv.default;
         // Special case: Library + Default CV = just environment label
         return isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
       }

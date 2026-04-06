@@ -291,7 +291,6 @@ module Katello
         next unless host.content_facet
         host.content_facet.content_source = content_source
         host.content_facet.content_view_environments = content_view_environments
-        host.content_facet.save!
         host.update_candlepin_associations
       end
 
