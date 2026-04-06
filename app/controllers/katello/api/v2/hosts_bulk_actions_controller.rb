@@ -258,7 +258,8 @@ module Katello
 
     api :PUT, "/hosts/bulk/change_content_source", N_("Update the content source for specified hosts and generate the reconfiguration script")
     param :host_ids, Array, required: true, desc: N_("The ids of the hosts to alter. Hosts not managed by Katello are ignored")
-    param :content_view_environments, Array, required: true, desc: N_("Array of content view environment labels")
+    param :content_view_environments, Array, desc: N_("Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.")
+    param :content_view_environment_ids, Array, desc: N_("Array of content view environment IDs")
     param :content_source_id, :number, required: true, desc: N_("The id of the content source")
     def change_content_source
       hosts = ::Host.where(id: params[:host_ids])
@@ -267,18 +268,20 @@ module Katello
       content_source = SmartProxy.authorized(:view_smart_proxies).find(params[:content_source_id])
       organization = hosts.first&.organization
 
-      # Fetch content view environments using labels
-      if params[:content_view_environments].blank?
-        fail HttpErrors::UnprocessableEntity, _("content_view_environments must be provided")
+      # Ensure at least one parameter is provided
+      if params[:content_view_environments].blank? && params[:content_view_environment_ids].blank?
+        fail HttpErrors::UnprocessableEntity, _("Either content_view_environments or content_view_environment_ids must be provided")
       end
 
       content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
         labels: params[:content_view_environments],
+        ids: params[:content_view_environment_ids],
         organization: organization
       )
 
       if content_view_environments.blank?
-        handle_errors(labels: params[:content_view_environments])
+        handle_errors(labels: params[:content_view_environments],
+                      ids: params[:content_view_environment_ids])
       end
 
       # Generate template for manual host updates
