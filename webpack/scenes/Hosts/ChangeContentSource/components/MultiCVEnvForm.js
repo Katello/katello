@@ -60,6 +60,7 @@ const MultiCVEnvForm = ({
         renderAddButton={renderAddButton}
         organizationId={organizationId}
         contentSourceId={contentSourceId}
+        key={contentSourceId} // Force re-mount when content source changes
       />
     </FormGroup>
   );

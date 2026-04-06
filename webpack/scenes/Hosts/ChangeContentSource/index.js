@@ -93,6 +93,7 @@ const ChangeContentSourcePage = () => {
     setCapsuleId(id);
     setSelectedEnvironment([]);
     setContentViewName('');
+    setAssignments([]); // Clear assignments when content source changes
 
     if (id) {
       dispatch(getProxy(id));

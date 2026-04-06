@@ -19,6 +19,7 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { selectJobInvocationPath } from '../selectors';
+import { selectEnvironmentPaths } from '../../../ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
 import MultiCVEnvForm from './MultiCVEnvForm';
 
 const ContentSourceSelect = ({
@@ -95,6 +96,8 @@ const ContentSourceForm = ({
   organizationId,
 }) => {
   const jobInvocationPath = useSelector(selectJobInvocationPath);
+  const environmentPathResponse = useSelector(selectEnvironmentPaths);
+  const envList = environmentPathResponse?.results?.map(path => path.environments).flat();
   const [csSelectOpen, setCSSelectOpen] = useState(false);
   const hostCount = contentHosts.length;
 
@@ -143,6 +146,27 @@ const ContentSourceForm = ({
         isOpen={!!csSelectOpen}
         isDisabled={contentSourcesIsDisabled || hostsUpdated}
       />
+      {envList?.some(env => env?.content_source?.environment_is_associated === false) &&
+        <Alert
+          ouiaId="disabled-environments-alert"
+          variant="info"
+          isInline
+          title={__('Some lifecycle environments are disabled because they are not associated with the selected content source.')}
+          style={{ marginBottom: '1rem' }}
+        >
+          <FormattedMessage
+            defaultMessage="To enable them, {editLink} to add the lifecycle environment, or select a different content source."
+            id="disabled-environments-help-text"
+            values={{
+              editLink: (
+                <a href={`/smart_proxies/${contentSourceId}/edit`}>
+                  {__('edit the content source')}
+                </a>
+              ),
+            }}
+          />
+        </Alert>
+      }
       {contentSourceId && (
         <MultiCVEnvForm
           organizationId={organizationId}
