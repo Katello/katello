@@ -68,7 +68,7 @@ const ProductsTab = ({ details }) => {
               value={filterText}
               onChange={(_event, value) => setFilterText(value)}
               ouiaId="products-filter-input"
-              aria-label="Filter products"
+              aria-label={__('Filter products')}
             />
           </ToolbarItem>
         </ToolbarContent>
@@ -84,7 +84,7 @@ const ProductsTab = ({ details }) => {
           </CardBody>
         </Card>
       ) : (
-        <Table aria-label="Products table" variant="compact" ouiaId="content-credential-products-table">
+        <Table aria-label={__('Products table')} variant="compact" ouiaId="content-credential-products-table">
           <Thead>
             <Tr>
               <Th>{__('Name')}</Th>

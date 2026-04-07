@@ -2,6 +2,7 @@ import { API_OPERATIONS, get } from 'foremanReact/redux/API';
 import { addToast } from 'foremanReact/components/ToastsList';
 import { translate as __ } from 'foremanReact/common/I18n';
 import api, { orgId } from '../../../services/api';
+import { getResponseErrorMsgs } from '../../../utils/helpers';
 
 export const CONTENT_CREDENTIAL_DETAILS_KEY = 'CONTENT_CREDENTIAL_DETAILS';
 export const contentCredentialDetailsKey = credentialId => `${CONTENT_CREDENTIAL_DETAILS_KEY}_${credentialId}`;
@@ -75,13 +76,12 @@ export const uploadContentCredentialContent = (credentialId, file) => {
       return uploadResponse;
     } catch (error) {
       // Show error notification
-      const errorMessage = error?.response?.data?.displayMessage ||
-                           error?.response?.data?.message ||
-                           error?.message ||
-                           __('Failed to upload content credential file.');
+      const [errorMessage] = getResponseErrorMsgs(error.response)
+        .filter(Boolean);
+      const fallbackMessage = errorMessage || __('Failed to upload content credential file.');
       dispatch(addToast({
         type: 'danger',
-        message: errorMessage,
+        message: fallbackMessage,
         key: `credential-upload-error-${credentialId}`,
       }));
 

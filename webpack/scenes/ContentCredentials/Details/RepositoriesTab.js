@@ -70,7 +70,7 @@ const RepositoriesTab = ({ details }) => {
               value={filterText}
               onChange={(_event, value) => setFilterText(value)}
               ouiaId="repositories-filter-input"
-              aria-label="Filter repositories"
+              aria-label={__('Filter repositories')}
             />
           </ToolbarItem>
         </ToolbarContent>
@@ -86,7 +86,7 @@ const RepositoriesTab = ({ details }) => {
           </CardBody>
         </Card>
       ) : (
-        <Table aria-label="Repositories table" variant="compact" ouiaId="content-credential-repositories-table">
+        <Table aria-label={__('Repositories table')} variant="compact" ouiaId="content-credential-repositories-table">
           <Thead>
             <Tr>
               <Th>{__('Name')}</Th>
@@ -100,7 +100,7 @@ const RepositoriesTab = ({ details }) => {
               <Tr key={`${repo.id}-${repo.used_as}`}>
                 <Td>
                   {repo.product?.id ? (
-                    <a href={`/products/${repo.product.id}/repositories/${repo.id}`}>
+                    <a href={`/products/${repo.product.id}/repositories/${repo.library_instance_id}`}>
                       {repo.name}
                     </a>
                   ) : (
@@ -108,11 +108,11 @@ const RepositoriesTab = ({ details }) => {
                   )}
                 </Td>
                 <Td>
-                  {repo.product ? (
+                  {repo.product?.id ? (
                     <a href={`/products/${repo.product.id}`}>
                       {repo.product.name}
                     </a>
-                  ) : '-'}
+                  ) : (repo.product?.name || '-')}
                 </Td>
                 <Td>{repo.content_type || '-'}</Td>
                 <Td>{repo.used_as}</Td>
@@ -131,6 +131,7 @@ RepositoriesTab.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       content_type: PropTypes.string,
+      library_instance_id: PropTypes.number,
       product: PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string,
@@ -140,6 +141,7 @@ RepositoriesTab.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       content_type: PropTypes.string,
+      library_instance_id: PropTypes.number,
       product: PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string,
@@ -149,6 +151,7 @@ RepositoriesTab.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       content_type: PropTypes.string,
+      library_instance_id: PropTypes.number,
       product: PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string,
@@ -158,6 +161,7 @@ RepositoriesTab.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       content_type: PropTypes.string,
+      library_instance_id: PropTypes.number,
       product: PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string,

@@ -66,7 +66,7 @@ const AlternateContentSourcesTab = ({ details }) => {
               value={filterText}
               onChange={(_event, value) => setFilterText(value)}
               ouiaId="acs-filter-input"
-              aria-label="Filter alternate content sources"
+              aria-label={__('Filter alternate content sources')}
             />
           </ToolbarItem>
         </ToolbarContent>
@@ -82,7 +82,7 @@ const AlternateContentSourcesTab = ({ details }) => {
           </CardBody>
         </Card>
       ) : (
-        <Table aria-label="Alternate content sources table" variant="compact" ouiaId="content-credential-acs-table">
+        <Table aria-label={__('Alternate content sources table')} variant="compact" ouiaId="content-credential-acs-table">
           <Thead>
             <Tr>
               <Th>{__('Name')}</Th>

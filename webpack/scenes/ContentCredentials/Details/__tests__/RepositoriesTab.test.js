@@ -1,5 +1,6 @@
 import React from 'react';
-import { screen, fireEvent } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { renderWithRedux } from 'react-testing-lib-wrapper';
 import RepositoriesTab from '../RepositoriesTab';
@@ -10,13 +11,15 @@ const mockDetails = {
       id: 1,
       name: 'Test Repository',
       content_type: 'yum',
-      product: { id: 1, name: 'Test Product 1' },
+      library_instance_id: 101,
+      product: { id: 1, name: 'Test Product 1', cp_id: 'prod1' },
     },
     {
       id: 2,
       name: 'Another Repo',
       content_type: 'docker',
-      product: { id: 2, name: 'Another Product' },
+      library_instance_id: 102,
+      product: { id: 2, name: 'Another Product', cp_id: 'prod2' },
     },
   ],
   ssl_ca_root_repos: [
@@ -24,7 +27,8 @@ const mockDetails = {
       id: 3,
       name: 'SSL Repository',
       content_type: 'yum',
-      product: { id: 3, name: 'SSL Product' },
+      library_instance_id: 103,
+      product: { id: 3, name: 'SSL Product', cp_id: 'ssl1' },
     },
   ],
   ssl_client_root_repos: [],
@@ -39,7 +43,8 @@ test('renders repositories table with correct data', () => {
   expect(screen.getByText('SSL Repository')).toBeInTheDocument();
 });
 
-test('filter functionality works correctly', () => {
+test('filter functionality works correctly', async () => {
+  const user = userEvent.setup();
   renderWithRedux(<RepositoriesTab details={mockDetails} />);
 
   // All repos should be visible initially
@@ -48,8 +53,8 @@ test('filter functionality works correctly', () => {
   expect(screen.getByText('SSL Repository')).toBeInTheDocument();
 
   // Filter by content type "docker"
-  const filterInput = screen.getByLabelText('Filter repositories');
-  fireEvent.change(filterInput, { target: { value: 'docker' } });
+  const filterInput = screen.getByPlaceholderText('Filter...');
+  await user.type(filterInput, 'docker');
 
   // Only "Another Repo" should be visible
   expect(screen.queryByText('Test Repository')).not.toBeInTheDocument();
@@ -70,13 +75,34 @@ test('shows empty state when no repositories', () => {
   expect(screen.getByText('No repositories using this credential')).toBeInTheDocument();
 });
 
-test('shows empty state when filter returns no matching repositories', () => {
+test('shows empty state when filter returns no matching repositories', async () => {
+  const user = userEvent.setup();
   renderWithRedux(<RepositoriesTab details={mockDetails} />);
 
-  const filterInput = screen.getByLabelText('Filter repositories');
+  const filterInput = screen.getByPlaceholderText('Filter...');
 
   // Apply a filter that matches no repositories
-  fireEvent.change(filterInput, { target: { value: 'non-matching-filter-text' } });
+  await user.type(filterInput, 'non-matching-filter-text');
 
   expect(screen.getByText('No matching repositories')).toBeInTheDocument();
+});
+
+test('repository name links to the correct repository page', () => {
+  renderWithRedux(<RepositoriesTab details={mockDetails} />);
+
+  const repoLink = screen.getByRole('link', { name: 'Test Repository' });
+  expect(repoLink).toHaveAttribute('href', '/products/1/repositories/101');
+
+  const anotherRepoLink = screen.getByRole('link', { name: 'Another Repo' });
+  expect(anotherRepoLink).toHaveAttribute('href', '/products/2/repositories/102');
+});
+
+test('product name links to the correct product page', () => {
+  renderWithRedux(<RepositoriesTab details={mockDetails} />);
+
+  const productLinks = screen.getAllByRole('link', { name: 'Test Product 1' });
+  expect(productLinks[0]).toHaveAttribute('href', '/products/1');
+
+  const anotherProductLink = screen.getByRole('link', { name: 'Another Product' });
+  expect(anotherProductLink).toHaveAttribute('href', '/products/2');
 });

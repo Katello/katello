@@ -76,7 +76,7 @@ const ContentCredentialsDetails = () => {
       const [errorMessage] = getResponseErrorMsgs(deleteError.response)
         .filter(Boolean);
       dispatch(addToast({
-        type: 'error',
+        type: 'danger',
         message: errorMessage || __('Failed to delete content credential. Please try again.'),
       }));
     }
@@ -165,7 +165,7 @@ const ContentCredentialsDetails = () => {
                 <Button
                   ouiaId="credential-details-view-tasks-button"
                   component="a"
-                  aria-label="view tasks button"
+                  aria-label={__('view tasks button')}
                   href={'/foreman_tasks/tasks?search=resource_type%3D+Katello%3A%3A' +
                         `ContentCredential+resource_id%3D${credentialId}`}
                   target="_blank"

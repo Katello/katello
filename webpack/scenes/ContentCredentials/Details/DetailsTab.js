@@ -84,12 +84,14 @@ const DetailsTab = ({ credentialId, details }) => {
       // Clear the file input even on failure
       if (inputElement) inputElement.value = '';
 
-      // Fallback error toast in case the action doesn't handle it
-      dispatch(addToast({
-        type: 'danger',
-        message: __('Failed to upload file.'),
-        key: `credential-upload-fallback-error-${credentialId}`,
-      }));
+      // Only show fallback if this wasn't an API error (no response means action didn't handle it)
+      if (!error?.response) {
+        dispatch(addToast({
+          type: 'danger',
+          message: __('Failed to upload file.'),
+          key: `credential-upload-fallback-error-${credentialId}`,
+        }));
+      }
     } finally {
       // Always reset uploading state if component is still mounted
       if (isMountedRef.current) {
@@ -132,7 +134,7 @@ const DetailsTab = ({ credentialId, details }) => {
           {__('Type')}
         </TextListItem>
         <TextListItem
-          aria-label="content type value"
+          aria-label={__('content type value')}
           component={TextListItemVariants.dd}
           className="foreman-spaced-list"
         >
@@ -146,7 +148,7 @@ const DetailsTab = ({ credentialId, details }) => {
           attribute="content"
           loading={updating && currentAttribute === 'content'}
           onEdit={onEdit}
-          disabled={!canEdit}
+          disabled={!canEdit || uploading}
           value={content || ''}
           textAreaProps={{
             rows: 12,
@@ -169,14 +171,14 @@ const DetailsTab = ({ credentialId, details }) => {
                 ref={fileInputRef}
                 style={{ display: 'none' }}
                 onChange={handleFileUpload}
-                disabled={!canEdit || uploading}
+                disabled={!canEdit || uploading || updating}
                 accept={contentType === CONTENT_CREDENTIAL_GPG_TYPE ? '.asc,.gpg,.key' : '.crt,.pem,.cer,.cert'}
               />
               <Button
                 variant="secondary"
                 icon={<FileUploadIcon />}
                 isLoading={uploading}
-                isDisabled={!canEdit || uploading}
+                isDisabled={!canEdit || uploading || updating}
                 onClick={() => fileInputRef.current?.click()}
                 ouiaId="upload-file-button"
               >
