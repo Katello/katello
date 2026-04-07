@@ -1,17 +1,22 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { renderWithRedux } from 'react-testing-lib-wrapper';
 import ProductsTab from '../ProductsTab';
 
 const mockDetails = {
   gpg_key_products: [
-    { id: 1, name: 'Test Product 1', cp_id: 'prod1', repository_count: 2, provider: { id: 1, name: 'Red Hat' } },
-    { id: 2, name: 'Another Product', cp_id: 'prod2', repository_count: 1, provider: { id: 2, name: 'Custom' } },
+    {
+      id: 1, name: 'Test Product 1', cp_id: 'prod1', repository_count: 2, provider: { id: 1, name: 'Red Hat' },
+    },
+    {
+      id: 2, name: 'Another Product', cp_id: 'prod2', repository_count: 1, provider: { id: 2, name: 'Custom' },
+    },
   ],
   ssl_ca_products: [
-    { id: 3, name: 'SSL Product', cp_id: 'ssl1', repository_count: 1, provider: { id: 1, name: 'Red Hat' } },
+    {
+      id: 3, name: 'SSL Product', cp_id: 'ssl1', repository_count: 1, provider: { id: 1, name: 'Red Hat' },
+    },
   ],
   ssl_client_products: [],
   ssl_key_products: [],
@@ -25,8 +30,7 @@ test('renders products table with correct data', () => {
   expect(screen.getByText('SSL Product')).toBeInTheDocument();
 });
 
-test('filter functionality works correctly', async () => {
-  const user = userEvent.setup();
+test('filter functionality works correctly', () => {
   renderWithRedux(<ProductsTab details={mockDetails} />);
 
   // All products should be visible initially
@@ -36,7 +40,7 @@ test('filter functionality works correctly', async () => {
 
   // Find filter input and filter by "Test"
   const filterInput = screen.getByPlaceholderText('Filter...');
-  await user.type(filterInput, 'Test');
+  fireEvent.change(filterInput, { target: { value: 'Test' } });
 
   // Only "Test Product 1" should be visible
   expect(screen.getByText('Test Product 1')).toBeInTheDocument();
@@ -57,12 +61,11 @@ test('shows empty state when no products', () => {
   expect(screen.getByText('No products using this credential')).toBeInTheDocument();
 });
 
-test('shows no results message when filter matches nothing', async () => {
-  const user = userEvent.setup();
+test('shows no results message when filter matches nothing', () => {
   renderWithRedux(<ProductsTab details={mockDetails} />);
 
   const filterInput = screen.getByPlaceholderText('Filter...');
-  await user.type(filterInput, 'NonexistentProduct');
+  fireEvent.change(filterInput, { target: { value: 'NonexistentProduct' } });
 
   expect(screen.getByText('No matching products')).toBeInTheDocument();
   expect(screen.getByText('No products match your filter criteria.')).toBeInTheDocument();

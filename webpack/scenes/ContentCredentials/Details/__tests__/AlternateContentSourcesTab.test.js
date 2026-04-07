@@ -1,6 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { renderWithRedux } from 'react-testing-lib-wrapper';
 import AlternateContentSourcesTab from '../AlternateContentSourcesTab';
@@ -21,8 +20,7 @@ test('renders alternate content sources table with correct data', () => {
   expect(screen.getByText('Another ACS')).toBeInTheDocument();
 });
 
-test('filter functionality works correctly', async () => {
-  const user = userEvent.setup();
+test('filter functionality works correctly', () => {
   renderWithRedux(<AlternateContentSourcesTab details={mockDetails} />);
 
   // All ACS should be visible initially
@@ -31,7 +29,7 @@ test('filter functionality works correctly', async () => {
 
   // Filter by "Test"
   const filterInput = screen.getByPlaceholderText('Filter...');
-  await user.type(filterInput, 'Test');
+  fireEvent.change(filterInput, { target: { value: 'Test' } });
 
   // Only "Test ACS 1" should be visible
   expect(screen.getByText('Test ACS 1')).toBeInTheDocument();
@@ -50,14 +48,13 @@ test('shows empty state when no alternate content sources', () => {
   expect(screen.getByText('No alternate content sources using this credential')).toBeInTheDocument();
 });
 
-test('shows empty state when filter returns no matching alternate content sources', async () => {
-  const user = userEvent.setup();
+test('shows empty state when filter returns no matching alternate content sources', () => {
   renderWithRedux(<AlternateContentSourcesTab details={mockDetails} />);
 
   const filterInput = screen.getByPlaceholderText('Filter...');
 
   // Apply a filter that matches no alternate content sources
-  await user.type(filterInput, 'non-matching-filter-text');
+  fireEvent.change(filterInput, { target: { value: 'non-matching-filter-text' } });
 
   expect(screen.getByText('No matching alternate content sources')).toBeInTheDocument();
 });
