@@ -273,6 +273,7 @@ describe('AssignHostCVModal', () => {
     const {
       getAllByRole,
       queryByText,
+      queryByRole,
     } = renderWithRedux(
       <AssignHostCVModal
         isOpen
@@ -299,15 +300,32 @@ describe('AssignHostCVModal', () => {
       userEvent.click(removeButtons[0]);
     });
 
-    // Verify only one assignment remains
+    // Verify only one assignment remains (no remove button since there's only one left)
     await patientlyWaitFor(() => {
-      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(1);
+      expect(queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
       expect(queryByText('cv_1')).not.toBeInTheDocument();
       expect(queryByText('composite_cv')).toBeInTheDocument();
     });
   });
 
   test('Displays remove button for each assignment in multiple CVE mode', async () => {
+    const existingAssignments = [
+      {
+        contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
+        environment: { id: 1, name: 'Library', label: 'Library' },
+      },
+      {
+        contentView: { id: 3, name: 'composite_cv', label: 'composite_cv' },
+        environment: { id: 2, name: 'dev', label: 'dev' },
+      },
+    ];
+
+    // Mock content views fetch for environment id 2 (dev) since it's not Library
+    nockInstance
+      .get(contentViewsUrl)
+      .query(getCVQuery(2))
+      .reply(200, mockContentViews);
+
     const { getAllByRole } = renderWithRedux(
       <AssignHostCVModal
         isOpen
@@ -315,14 +333,15 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
+        existingAssignments={existingAssignments}
         allowMultipleContentViews
       />,
       renderOptions(),
     );
 
     await patientlyWaitFor(() => {
-      // One assignment by default, so one remove button
-      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(1);
+      // Two assignments, so two remove buttons
+      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(2);
     });
   });
 
@@ -722,7 +741,7 @@ describe('AssignHostCVModal', () => {
       });
     });
 
-    test('Save button stays disabled when all assignments removed (length = 0)', async () => {
+    test('No remove button shown when there is only one assignment', async () => {
       const existingAssignments = [
         {
           contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
@@ -744,26 +763,14 @@ describe('AssignHostCVModal', () => {
         renderOptions(),
       );
 
-      // Initially disabled - no changes
+      // Wait for modal to load
       await patientlyWaitFor(() => {
         const saveButton = getAllByRole('button', { name: 'Save' })[0];
-        expect(saveButton).toHaveAttribute('aria-disabled', 'true');
+        expect(saveButton).toBeInTheDocument();
       });
 
-      // Remove the only assignment
-      const removeButton = getAllByRole('button', { name: 'Remove' })[0];
-      await act(async () => {
-        userEvent.click(removeButton);
-      });
-
-      // Verify the assignment was removed
-      await patientlyWaitFor(() => {
-        expect(queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
-      });
-
-      // Button stays disabled because canSave requires assignments.length > 0
-      const saveButton = getAllByRole('button', { name: 'Save' })[0];
-      expect(saveButton).toHaveAttribute('aria-disabled', 'true');
+      // Verify no remove button is shown when there's only one assignment
+      expect(queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
     });
   });
 
@@ -901,9 +908,19 @@ describe('AssignHostCVModal', () => {
         renderOptions(),
       );
 
-      // Wait for Library to be pre-selected
+      // Select Library environment
       await patientlyWaitFor(() => {
-        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeChecked();
+        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeInTheDocument();
+      });
+
+      const envRadio = getAllByRole('radio', { name: firstEnv.name })[0];
+      await act(async () => {
+        userEvent.click(envRadio);
+      });
+
+      // Wait for content views to load
+      await patientlyWaitFor(() => {
+        expect(getByRole('button', { name: 'Options menu' })).not.toHaveAttribute('disabled');
       });
 
       // Click to open CV select
@@ -965,9 +982,19 @@ describe('AssignHostCVModal', () => {
         renderOptions(),
       );
 
-      // Wait for Library to be pre-selected
+      // Select Library environment
       await patientlyWaitFor(() => {
-        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeChecked();
+        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeInTheDocument();
+      });
+
+      const envRadio = getAllByRole('radio', { name: firstEnv.name })[0];
+      await act(async () => {
+        userEvent.click(envRadio);
+      });
+
+      // Wait for content views to load
+      await patientlyWaitFor(() => {
+        expect(getByRole('button', { name: 'Options menu' })).not.toHaveAttribute('disabled');
       });
 
       // Click to open CV select
@@ -1207,9 +1234,19 @@ describe('AssignHostCVModal', () => {
         renderOptions(),
       );
 
-      // Wait for Library to be pre-selected
+      // Select Library environment
       await patientlyWaitFor(() => {
-        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeChecked();
+        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeInTheDocument();
+      });
+
+      const envRadio = getAllByRole('radio', { name: firstEnv.name })[0];
+      await act(async () => {
+        userEvent.click(envRadio);
+      });
+
+      // Wait for content views to load
+      await patientlyWaitFor(() => {
+        expect(getByRole('button', { name: 'Options menu' })).not.toHaveAttribute('disabled');
       });
 
       // Click to open CV select
@@ -1271,9 +1308,19 @@ describe('AssignHostCVModal', () => {
         renderOptions(),
       );
 
-      // Wait for Library to be pre-selected
+      // Select Library environment
       await patientlyWaitFor(() => {
-        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeChecked();
+        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeInTheDocument();
+      });
+
+      const envRadio = getAllByRole('radio', { name: firstEnv.name })[0];
+      await act(async () => {
+        userEvent.click(envRadio);
+      });
+
+      // Wait for content views to load
+      await patientlyWaitFor(() => {
+        expect(getByRole('button', { name: 'Options menu' })).not.toHaveAttribute('disabled');
       });
 
       // Select a CV
@@ -1328,9 +1375,19 @@ describe('AssignHostCVModal', () => {
         renderOptions(),
       );
 
-      // Wait for Library to be pre-selected
+      // Select Library environment
       await patientlyWaitFor(() => {
-        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeChecked();
+        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeInTheDocument();
+      });
+
+      const envRadio = getAllByRole('radio', { name: firstEnv.name })[0];
+      await act(async () => {
+        userEvent.click(envRadio);
+      });
+
+      // Wait for content views to load
+      await patientlyWaitFor(() => {
+        expect(getByRole('button', { name: 'Options menu' })).not.toHaveAttribute('disabled');
       });
 
       // Select a CV
