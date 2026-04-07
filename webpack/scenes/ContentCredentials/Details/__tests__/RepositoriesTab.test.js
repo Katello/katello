@@ -1,6 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { renderWithRedux } from 'react-testing-lib-wrapper';
 import RepositoriesTab from '../RepositoriesTab';
@@ -43,8 +42,7 @@ test('renders repositories table with correct data', () => {
   expect(screen.getByText('SSL Repository')).toBeInTheDocument();
 });
 
-test('filter functionality works correctly', async () => {
-  const user = userEvent.setup();
+test('filter functionality works correctly', () => {
   renderWithRedux(<RepositoriesTab details={mockDetails} />);
 
   // All repos should be visible initially
@@ -54,7 +52,7 @@ test('filter functionality works correctly', async () => {
 
   // Filter by content type "docker"
   const filterInput = screen.getByPlaceholderText('Filter...');
-  await user.type(filterInput, 'docker');
+  fireEvent.change(filterInput, { target: { value: 'docker' } });
 
   // Only "Another Repo" should be visible
   expect(screen.queryByText('Test Repository')).not.toBeInTheDocument();
@@ -75,14 +73,13 @@ test('shows empty state when no repositories', () => {
   expect(screen.getByText('No repositories using this credential')).toBeInTheDocument();
 });
 
-test('shows empty state when filter returns no matching repositories', async () => {
-  const user = userEvent.setup();
+test('shows empty state when filter returns no matching repositories', () => {
   renderWithRedux(<RepositoriesTab details={mockDetails} />);
 
   const filterInput = screen.getByPlaceholderText('Filter...');
 
   // Apply a filter that matches no repositories
-  await user.type(filterInput, 'non-matching-filter-text');
+  fireEvent.change(filterInput, { target: { value: 'non-matching-filter-text' } });
 
   expect(screen.getByText('No matching repositories')).toBeInTheDocument();
 });

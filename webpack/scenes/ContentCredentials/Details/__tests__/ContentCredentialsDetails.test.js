@@ -13,6 +13,10 @@ jest.mock('foremanReact/components/ToastsList', () => ({
   addToast: jest.fn(() => ({ type: 'ADD_TOAST' })),
 }));
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 const credentialId = 1;
 const credentialDetailsPath = api.getApiUrl(`/content_credentials/${credentialId}`);
 
@@ -37,11 +41,17 @@ const mockCredentialData = {
   created_at: '2026-03-24 16:16:57 -0400',
   updated_at: '2026-04-02 13:02:30 -0400',
   gpg_key_products: [
-    { id: 1, name: 'Test Product 1', cp_id: 'prod1', repository_count: 2, provider: { id: 1, name: 'Red Hat' } },
-    { id: 2, name: 'Another Product', cp_id: 'prod2', repository_count: 1, provider: { id: 2, name: 'Custom' } },
+    {
+      id: 1, name: 'Test Product 1', cp_id: 'prod1', repository_count: 2, provider: { id: 1, name: 'Red Hat' },
+    },
+    {
+      id: 2, name: 'Another Product', cp_id: 'prod2', repository_count: 1, provider: { id: 2, name: 'Custom' },
+    },
   ],
   ssl_ca_products: [
-    { id: 3, name: 'SSL Product', cp_id: 'ssl1', repository_count: 1, provider: { id: 1, name: 'Red Hat' } },
+    {
+      id: 3, name: 'SSL Product', cp_id: 'ssl1', repository_count: 1, provider: { id: 1, name: 'Red Hat' },
+    },
   ],
   ssl_client_products: [],
   ssl_key_products: [],
@@ -174,7 +184,7 @@ test('opens delete modal from kebab menu and confirms deletion', async () => {
   });
 
   // Open kebab menu
-  fireEvent.click(getByLabelText('Kebab toggle'));
+  fireEvent.click(getByLabelText('Actions'));
 
   // Click Delete from dropdown
   fireEvent.click(getByText('Delete'));
@@ -208,7 +218,7 @@ test('cancel button closes delete modal without deleting', async () => {
   });
 
   // Open kebab menu and click Delete
-  fireEvent.click(getByLabelText('Kebab toggle'));
+  fireEvent.click(getByLabelText('Actions'));
   fireEvent.click(getByText('Delete'));
 
   await patientlyWaitFor(() => {
@@ -248,7 +258,7 @@ test('shows error toast when delete fails', async () => {
   });
 
   // Open kebab menu and click Delete
-  fireEvent.click(getByLabelText('Kebab toggle'));
+  fireEvent.click(getByLabelText('Actions'));
   fireEvent.click(getByText('Delete'));
 
   await patientlyWaitFor(() => {
@@ -351,6 +361,112 @@ test('renders error empty state when loading credential details fails', async ()
     // Error empty state should be visible
     // NOTE: This checks for the actual error message shown by EmptyStateMessage
     expect(queryByText(/something went wrong/i)).toBeInTheDocument();
+  });
+
+  assertNockRequest(scope);
+});
+
+test('breadcrumb links back to content credentials list', async () => {
+  const scope = nockInstance
+    .get(credentialDetailsPath)
+    .query(true)
+    .reply(200, mockCredentialData);
+
+  renderWithRedux(
+    withCredentialRoute(<ContentCredentialsDetails />),
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    const breadcrumbLink = screen.getByRole('link', { name: 'Content Credentials' });
+    expect(breadcrumbLink).toHaveAttribute('href', '/labs/content_credentials');
+  });
+
+  assertNockRequest(scope);
+});
+
+test('breadcrumb shows current credential name as active item', async () => {
+  const scope = nockInstance
+    .get(credentialDetailsPath)
+    .query(true)
+    .reply(200, mockCredentialData);
+
+  const { container } = renderWithRedux(
+    withCredentialRoute(<ContentCredentialsDetails />),
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    const activeItem = container.querySelector('.pf-v5-c-breadcrumb__item:last-child');
+    expect(activeItem).toHaveTextContent('Test GPG Key');
+  });
+
+  assertNockRequest(scope);
+});
+
+test('disables edit controls when user lacks edit_content_credentials permission', async () => {
+  const readOnlyData = {
+    ...mockCredentialData,
+    permissions: {
+      edit_content_credentials: false,
+    },
+  };
+
+  const scope = nockInstance
+    .get(credentialDetailsPath)
+    .query(true)
+    .reply(200, readOnlyData);
+
+  renderWithRedux(
+    withCredentialRoute(<ContentCredentialsDetails />),
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    const uploadButton = screen.getByRole('button', { name: 'Choose file' });
+    expect(uploadButton).toBeDisabled();
+  });
+
+  assertNockRequest(scope);
+});
+
+test('enables edit controls when user has edit_content_credentials permission', async () => {
+  const scope = nockInstance
+    .get(credentialDetailsPath)
+    .query(true)
+    .reply(200, mockCredentialData);
+
+  renderWithRedux(
+    withCredentialRoute(<ContentCredentialsDetails />),
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    const uploadButton = screen.getByRole('button', { name: 'Choose file' });
+    expect(uploadButton).not.toBeDisabled();
+  });
+
+  assertNockRequest(scope);
+});
+
+test('view tasks button links to foreman tasks filtered by credential', async () => {
+  const scope = nockInstance
+    .get(credentialDetailsPath)
+    .query(true)
+    .reply(200, mockCredentialData);
+
+  renderWithRedux(
+    withCredentialRoute(<ContentCredentialsDetails />),
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    const viewTasksButton = screen.getByRole('link', { name: /view tasks/i });
+    expect(viewTasksButton).toHaveAttribute(
+      'href',
+      expect.stringContaining(`resource_id%3D${credentialId}`),
+    );
+    expect(viewTasksButton).toHaveAttribute('target', '_blank');
   });
 
   assertNockRequest(scope);
