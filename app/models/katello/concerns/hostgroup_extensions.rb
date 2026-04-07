@@ -6,20 +6,31 @@ module Katello
       included do
         before_save :add_organization_for_environment
 
+        has_one :content_view_environment, :through => :content_facet
         has_one :kickstart_repository, :through => :content_facet
         has_one :content_source, :through => :content_facet
-        has_one :content_view, :through => :content_facet
-        has_one :lifecycle_environment, :through => :content_facet
+
+        # Add scoped_search-friendly associations through content_view_environment
+        # These work alongside the delegations defined below
+        has_one :content_view, :through => :content_view_environment
+        has_one :lifecycle_environment, :through => :content_view_environment, :source => :environment
 
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source, :only_explicit => true
         scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view, :only_explicit => true
         scoped_search :relation => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment, :only_explicit => true
 
+        # Scope to filter hostgroups by lifecycle environment(s)
+        scope :in_environments, ->(lifecycle_environments) do
+          joins(:content_facet => :content_view_environment).
+            where("#{::Katello::ContentViewEnvironment.table_name}.environment_id" => lifecycle_environments)
+        end
+
         before_validation :correct_kickstart_repository
 
-        delegate :content_source_name, :content_view_name, :lifecycle_environment_name, to: :content_facet, allow_nil: true
-        delegate :content_source_id, :content_view_id, :lifecycle_environment_id, :kickstart_repository_id, to: :content_facet, allow_nil: true
-        delegate :'content_source_id=', :'content_view_id=', :'lifecycle_environment_id=', :'kickstart_repository_id=', to: :safe_content_facet, allow_nil: true
+        delegate :content_source_name, to: :content_facet, allow_nil: true
+        delegate :content_source_id, :kickstart_repository_id, :content_view_id, :lifecycle_environment_id, :content_view_environment_id, to: :content_facet, allow_nil: true
+        delegate :'content_source_id=', :'kickstart_repository_id=', :'content_view_id=', :'lifecycle_environment_id=', :'content_view_environment_id=', to: :safe_content_facet, allow_nil: true
+        delegate :'content_view=', :'lifecycle_environment=', :'content_view_environment=', to: :safe_content_facet, allow_nil: true
 
         apipie :class do
           property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host group'
@@ -45,12 +56,12 @@ module Katello
       end
 
       def content_view
-        return super if ancestry.nil? || self.content_view_id.present?
+        return content_facet&.content_view if ancestry.nil? || self.content_view_id.present?
         Katello::ContentView.find_by(:id => inherited_content_view_id)
       end
 
       def lifecycle_environment
-        return super if ancestry.nil? || self.lifecycle_environment_id.present?
+        return content_facet&.lifecycle_environment if ancestry.nil? || self.lifecycle_environment_id.present?
         Katello::KTEnvironment.find_by(:id => inherited_lifecycle_environment_id)
       end
 
@@ -70,15 +81,31 @@ module Katello
       end
 
       def inherited_content_view_id
-        inherited_ancestry_attribute(:content_view_id, :content_facet)
+        # After migration to content_view_environment, query the CV_ENV instead of the old column
+        cv_env_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
+        return nil unless cv_env_id
+
+        Katello::ContentViewEnvironment.find_by(id: cv_env_id)&.content_view_id
       end
 
       def inherited_lifecycle_environment_id
-        inherited_ancestry_attribute(:lifecycle_environment_id, :content_facet)
+        # After migration to content_view_environment, query the CV_ENV instead of the old column
+        cv_env_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
+        return nil unless cv_env_id
+
+        Katello::ContentViewEnvironment.find_by(id: cv_env_id)&.environment_id
       end
 
       def inherited_kickstart_repository_id
         inherited_ancestry_attribute(:kickstart_repository_id, :content_facet)
+      end
+
+      def content_view_name
+        content_view&.name
+      end
+
+      def lifecycle_environment_name
+        lifecycle_environment&.name
       end
 
       def rhsm_organization_label

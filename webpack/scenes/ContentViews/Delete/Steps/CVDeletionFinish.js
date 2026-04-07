@@ -17,7 +17,8 @@ const CVDeletionFinish = () => {
     cvEnvironments,
     setIsOpen,
     selectedCVForAK, selectedEnvForAK, selectedCVForHosts,
-    selectedEnvForHost, affectedActivationKeys, affectedHosts,
+    selectedEnvForHost, selectedCVForHostgroups, selectedEnvForHostgroup,
+    affectedActivationKeys, affectedHosts, affectedHostgroups,
   } = useContext(CVDeleteContext);
   const removeCVResponse = useSelector(state =>
     selectRemoveCVVersionResponse(state, cvId, cvEnvironments));
@@ -59,6 +60,14 @@ const CVDeletionFinish = () => {
         };
       }
 
+      if (affectedHostgroups) {
+        params = {
+          ...params,
+          hostgroup_content_view_id: selectedCVForHostgroups,
+          hostgroup_environment_id: selectedEnvForHostgroup[0].id,
+        };
+      }
+
       dispatch(removeContentViewVersion(
         cvId, cvId, cvEnvironments, params,
         // Only when we are on the contentViews page do we need to call getContentViews.
@@ -73,8 +82,9 @@ const CVDeletionFinish = () => {
       ));
       setRemoveDispatched(true);
     }
-  }, [cvId, cvEnvironments, dispatch, affectedActivationKeys, affectedHosts,
-    selectedCVForAK, selectedCVForHosts, selectedEnvForAK, selectedEnvForHost,
+  }, [cvId, cvEnvironments, dispatch, affectedActivationKeys, affectedHosts, affectedHostgroups,
+    selectedCVForAK, selectedCVForHosts, selectedCVForHostgroups,
+    selectedEnvForAK, selectedEnvForHost, selectedEnvForHostgroup,
     removeCVResponse, removeCVStatus, removeDispatched, pathname, push, setIsOpen]);
 
   return <Loading loadingText={__('Please wait while the task starts..')} />;

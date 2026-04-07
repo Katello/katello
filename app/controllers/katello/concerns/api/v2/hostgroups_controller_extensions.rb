@@ -7,8 +7,9 @@ module Katello
         update_api(:create, :update) do
           param :hostgroup, Hash do
             param :content_source_id, :number, :desc => N_('Content source ID')
-            param :content_view_id, :number, :desc => N_('Content view ID')
-            param :lifecycle_environment_id, :number, :desc => N_('Lifecycle environment ID')
+            param :content_view_id, :number, :desc => N_('Content view ID'), :deprecated => true
+            param :lifecycle_environment_id, :number, :desc => N_('Lifecycle environment ID'), :deprecated => true
+            param :content_view_environment_id, :number, :desc => N_('Content view environment ID')
             param :kickstart_repository_id, :number, :desc => N_('Kickstart repository ID')
           end
         end

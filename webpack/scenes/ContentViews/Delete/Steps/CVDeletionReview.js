@@ -12,12 +12,15 @@ const CVDeletionReview = () => {
   const {
     cvId, cvEnvironments, selectedCVNameForHosts,
     selectedEnvForHost, selectedCVNameForAK, selectedEnvForAK,
-    affectedHosts, affectedActivationKeys,
+    selectedCVNameForHostgroups, selectedEnvForHostgroup,
+    affectedHosts, affectedActivationKeys, affectedHostgroups,
+    cvDetailsResponse,
   } = useContext(CVDeleteContext);
   const activationKeysResponse = useSelector(state => selectCVActivationKeys(state, cvId));
   const hostsResponse = useSelector(state => selectCVHosts(state, cvId));
   const { results: hostResponse } = hostsResponse || {};
   const { results: akResponse } = activationKeysResponse || {};
+  const { hostgroups = [] } = cvDetailsResponse || {};
   return (
     <>
       <WizardHeader
@@ -46,6 +49,15 @@ const CVDeletionReview = () => {
             <FlexItem><ExclamationTriangleIcon /></FlexItem>
             <FlexItem><p>{__(`${pluralize(hostResponse.length, 'host')} will be moved to content view ${selectedCVNameForHosts} in `)}</p></FlexItem>
             <FlexItem><Label color="purple" href={`/lifecycle_environments/${selectedEnvForHost[0].id}`}>{selectedEnvForHost[0].name}</Label></FlexItem>
+          </Flex>
+        </>}
+      {affectedHostgroups &&
+        <>
+          <h3>{__('Host groups')}</h3>
+          <Flex>
+            <FlexItem><ExclamationTriangleIcon /></FlexItem>
+            <FlexItem><p>{__(`${pluralize(hostgroups.length, 'host group')} will be moved to content view ${selectedCVNameForHostgroups} in `)}</p></FlexItem>
+            <FlexItem><Label color="purple" href={`/lifecycle_environments/${selectedEnvForHostgroup[0].id}`}>{selectedEnvForHostgroup[0].name}</Label></FlexItem>
           </Flex>
         </>}
       {affectedActivationKeys &&

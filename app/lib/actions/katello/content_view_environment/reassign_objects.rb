@@ -20,7 +20,24 @@ module Actions
                 plan_action(ActivationKey::Reassign, key, options[:key_content_view_id], options[:key_environment_id])
               end
             end
+
+            content_view_environment.hostgroups.each do |hostgroup|
+              reassign_hostgroup(hostgroup, options[:hostgroup_content_view_id], options[:hostgroup_environment_id])
+            end
           end
+        end
+
+        private
+
+        def reassign_hostgroup(hostgroup, content_view_id, environment_id)
+          return unless content_view_id && environment_id
+
+          cve = ::Katello::ContentViewEnvironment.find_by(
+            content_view_id: content_view_id,
+            environment_id: environment_id
+          )
+          hostgroup.content_view_environment = cve if cve
+          hostgroup.save!
         end
       end
     end

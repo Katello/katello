@@ -48,6 +48,7 @@ node :environments do |cv|
       name: env.name,
       activation_keys: cv&.activation_keys&.in_environments([env])&.ids,
       hosts: cv&.hosts&.in_environments([env])&.ids,
+      hostgroups: cv&.hostgroups&.in_environments([env])&.ids,
       permissions: {readable: env.readable?},
     }
   end
@@ -114,6 +115,10 @@ child :activation_keys => :activation_keys do
 end
 
 child :hosts => :hosts do
+  attributes :id, :name
+end
+
+child :hostgroups => :hostgroups do
   attributes :id, :name
 end
 
