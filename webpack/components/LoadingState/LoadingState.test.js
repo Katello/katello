@@ -1,32 +1,42 @@
-/* eslint-disable */
-// Ignore eslint for this entire file because our rules
-// don't match patternfly-react's rules
 import React from 'react';
-import { shallow } from 'enzyme';
-import toJson from 'enzyme-to-json';
+import { render, act } from '@testing-library/react';
 
 import { LoadingState } from './index';
+
 jest.useFakeTimers();
 
-test('Loading State renders properly while loading', () => {
-  const component = shallow(
-    <LoadingState loading loadingText="Loading">
-      <p>Loading Complete</p>
-    </LoadingState>
-  );
-    jest.runAllTimers();
-    component.update();
-    expect(component.state('render')).toEqual(true);
-    expect(toJson(component.render())).toMatchSnapshot();
-});
+const loadingComponent = (
+  <LoadingState loading loadingText="Loading">
+    <p>Loading Complete</p>
+  </LoadingState>
+);
 
-test('Loading State renders properly while not loading', () => {
-  const component = shallow(
+test('Loading State renders children when not loading', () => {
+  const notLoadingComponent = (
     <LoadingState loading={false} loadingText="Loading">
       <p>Loading Complete</p>
     </LoadingState>
   );
-    jest.runAllTimers();
-    component.update();
-    expect(toJson(component.render())).toMatchSnapshot();
+  const { getByText } = render(notLoadingComponent);
+
+  act(() => { jest.runAllTimers(); });
+
+  expect(getByText('Loading Complete')).toBeInTheDocument();
+});
+
+test('Loading State renders nothing before timeout when loading', () => {
+  const { container } = render(loadingComponent);
+
+  expect(container.innerHTML).toBe('');
+
+  act(() => { jest.runAllTimers(); });
+});
+
+test('Loading State renders spinner after timeout when loading', () => {
+  const { getByText, queryByText } = render(loadingComponent);
+
+  act(() => { jest.runAllTimers(); });
+
+  expect(getByText('Loading')).toBeInTheDocument();
+  expect(queryByText('Loading Complete')).not.toBeInTheDocument();
 });
