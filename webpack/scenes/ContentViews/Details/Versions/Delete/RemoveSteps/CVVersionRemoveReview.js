@@ -9,15 +9,18 @@ import DeleteContext from '../DeleteContext';
 import WizardHeader from '../../../../components/WizardHeader';
 import AffectedHosts from '../affectedHosts';
 import AffectedActivationKeys from '../affectedActivationKeys';
+import AffectedHostgroups from '../affectedHostgroups';
 
 const CVVersionRemoveReview = () => {
   const [alertDismissed, setAlertDismissed] = useState(false);
   const [showHosts, setShowHosts] = useState(false);
   const [showAKs, setShowAKs] = useState(false);
+  const [showHostgroups, setShowHostgroups] = useState(false);
   const {
     cvId, versionEnvironments, versionIdToRemove, versionNameToRemove, selectedEnvSet,
     selectedEnvForAK, selectedCVNameForAK, selectedCVNameForHosts,
-    selectedEnvForHost, deleteFlow, removeDeletionFlow,
+    selectedEnvForHost, selectedCVNameForHostgroups, selectedEnvForHostgroup,
+    deleteFlow, removeDeletionFlow, affectedHostgroups,
   } = useContext(DeleteContext);
   const cvVersions = useSelector(state => selectCVVersions(state, cvId));
   const versionDeleteInfo = __(`Version ${versionNameToRemove} will be deleted from all environments. It will no longer be available for promotion.`);
@@ -42,6 +45,9 @@ const CVVersionRemoveReview = () => {
   const multiCVActivationKeysCount = selectedEnvs.reduce((sum, env) =>
     sum + (env.multi_env_ak_count || 0), 0);
   const singleCVActivationKeysCount = akCount - multiCVActivationKeysCount;
+
+  const hostgroupCount = selectedEnvs.reduce((sum, env) =>
+    sum + (env.hostgroup_count || 0), 0);
 
   return (
     <>
@@ -125,7 +131,7 @@ const CVVersionRemoveReview = () => {
             </Flex>
           )}
           <ExpandableSection
-            toggleText={showHosts ? 'Hide hosts' : 'Show hosts'}
+            toggleText={showHosts ? __('Hide hosts') : __('Show hosts')}
             onToggle={() => setShowHosts(prev => !prev)}
             isExpanded={showHosts}
           >
@@ -195,7 +201,7 @@ const CVVersionRemoveReview = () => {
             </Flex>
           )}
           <ExpandableSection
-            toggleText={showAKs ? 'Hide activation keys' : 'Show activation keys'}
+            toggleText={showAKs ? __('Hide activation keys') : __('Show activation keys')}
             onToggle={() => setShowAKs(prev => !prev)}
             isExpanded={showAKs}
           >
@@ -206,6 +212,40 @@ const CVVersionRemoveReview = () => {
                 selectedEnvSet,
               }}
               deleteCV={false}
+            />
+          </ExpandableSection>
+        </>}
+      {affectedHostgroups &&
+        <>
+          <h3>{__('Host groups')}</h3>
+          <Flex>
+            <FlexItem><ExclamationTriangleIcon /></FlexItem>
+            <FlexItem data-testid="hostgroups-remove">
+              <FormattedMessage
+                id="hostgroups-remove"
+                defaultMessage="{count, plural, one {# {singular}} other {# {plural}}} will be moved to content view {cvName} in {envName}."
+                values={{
+                  count: hostgroupCount,
+                  singular: __('host group'),
+                  plural: __('host groups'),
+                  cvName: selectedCVNameForHostgroups,
+                  envName: selectedEnvForHostgroup[0] && (
+                    <Label color="purple" href={`/lifecycle_environments/${selectedEnvForHostgroup[0].id}`}>
+                      {selectedEnvForHostgroup[0].name}
+                    </Label>
+                  ),
+                }}
+              />
+            </FlexItem>
+          </Flex>
+          <ExpandableSection
+            toggleText={showHostgroups ? __('Hide host groups') : __('Show host groups')}
+            onToggle={() => setShowHostgroups(prev => !prev)}
+            isExpanded={showHostgroups}
+          >
+            <AffectedHostgroups
+              cvId={cvId}
+              selectedEnvSet={selectedEnvSet}
             />
           </ExpandableSection>
         </>}

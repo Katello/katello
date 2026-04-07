@@ -679,6 +679,12 @@ module ::Actions::Katello::ContentView
       katello_content_views(:acme_default)
     end
 
+    let(:default_cv_env) do
+      Katello::ContentViewEnvironment.where(content_view_id: default_content_view.id,
+                                            environment_id: library.id
+                                           ).first
+    end
+
     it 'plans for removing environments' do
       assert_raises(RuntimeError) do
         action.validate_options(content_view, [cv_env], [], {})
@@ -741,6 +747,111 @@ module ::Actions::Katello::ContentView
         action.expects(:action_subject).with(content_view)
         refute_empty content_view.hosts.first.content_facet.content_facet_errata
         plan_action(action, content_view, options)
+      end
+    end
+
+    context 'hostgroup reassignment' do
+      it 'plans reassigning hostgroups when removing CV from environment (scenario 3)' do
+        # Scenario 3: Removing version from environment
+        # Setup: Create hostgroup using this CV/env
+        ::Hostgroup.create!(name: 'test-hostgroup',
+                            content_view: content_view,
+                            lifecycle_environment: environment)
+
+        # Setup reassignment target (default CV in library)
+        reassign_options = {
+          content_view_environments: [cv_env],
+          # Need to provide params for hosts too (they exist in the test fixture)
+          system_content_view_id: default_content_view.id,
+          system_environment_id: library.id,
+          # Params for hostgroups
+          hostgroup_content_view_environment_id: default_cv_env.id,
+        }
+
+        action.expects(:action_subject).with(content_view)
+
+        # Act: Remove the CV environment
+        plan_action(action, content_view, reassign_options)
+
+        # Assert: ReassignObjects action should be planned for the CVE with hostgroups
+        assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::ReassignObjects, cv_env, reassign_options)
+      end
+
+      it 'plans reassigning hostgroups when deleting CV version (scenario 2)' do
+        # Scenario 2: CV version deletion
+        cve = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
+                                                    environment_id: environment.id).first
+        version = cve.content_view_version
+
+        ::Hostgroup.create!(name: 'test-hostgroup-version',
+                            content_view: content_view,
+                            lifecycle_environment: environment)
+
+        # Remove hosts so we can focus on hostgroups
+        cve.hosts.each { |h| h.content_facet.destroy }
+
+        reassign_options = {
+          # Must specify both the version AND the environment to remove it from
+          content_view_versions: [version],
+          content_view_environments: [cve, library_cv_env],
+          hostgroup_content_view_environment_id: default_cv_env.id,
+        }
+
+        action.expects(:action_subject).with(content_view)
+
+        # Act: Delete the CV version
+        plan_action(action, content_view, reassign_options)
+
+        # Assert: ReassignObjects action should be planned
+        assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::ReassignObjects, cve, reassign_options)
+      end
+
+      it 'validates hostgroup reassignment params when deleting entire CV (scenario 1)' do
+        # Scenario 1: Deleting entire CV with destroy_content_view flag
+        # When destroy_content_view is true, hostgroups must still be reassigned
+        # (they're not automatically deleted with the CV)
+
+        ::Hostgroup.create!(name: 'test-hostgroup-cv-delete',
+                            content_view: content_view,
+                            lifecycle_environment: environment)
+
+        reassign_options_without_hg = {
+          content_view_environments: content_view.content_view_environments,
+          content_view_versions: content_view.versions,
+          destroy_content_view: true,
+          # Missing hostgroup reassignment params
+        }
+
+        # Act/Assert: Should raise error without hostgroup reassignment params
+        assert_raises(RuntimeError) do
+          action.validate_options(content_view, content_view.content_view_environments, content_view.versions, reassign_options_without_hg)
+        end
+      end
+
+      it 'validates hostgroup reassignment params when hostgroups exist' do
+        # Setup: Create hostgroup using this CV/env
+        ::Hostgroup.create!(name: 'test-hostgroup-validate',
+                            content_view: content_view,
+                            lifecycle_environment: environment)
+
+        # Act/Assert: Should raise error if reassignment params not provided
+        assert_raises(RuntimeError) do
+          action.validate_options(content_view, [cv_env], [], {})
+        end
+      end
+
+      it 'always reassigns hostgroups since they are single-CVE only' do
+        # Verify that hostgroups don't have multi_content_view_environment check
+        # (unlike hosts and activation keys)
+        hostgroup = ::Hostgroup.create!(name: 'single-cve-hg',
+                                        content_view: content_view,
+                                        lifecycle_environment: environment)
+
+        # Hostgroups should not respond to multi_content_view_environment?
+        refute_respond_to hostgroup.content_facet, :multi_content_view_environment?
+
+        # They should have exactly one CVE
+        assert_equal 1, [hostgroup.content_view_environment].compact.count
       end
     end
   end

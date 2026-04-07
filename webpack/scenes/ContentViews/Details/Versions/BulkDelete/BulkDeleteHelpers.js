@@ -9,6 +9,10 @@ export const getNumberOfHosts = versions =>
   sum(versions.map(({ environments }) =>
     sum(environments.map(({ host_count: hostCount }) => hostCount))));
 
+export const getNumberOfHostgroups = versions =>
+  sum(versions.map(({ environments }) =>
+    sum(environments.map(({ hostgroup_count: hostgroupCount }) => hostgroupCount || 0))));
+
 // Gets a non-duplicated list of environments from within a given set of versions
 export const getEnvironmentList = (versions) => {
   const envIds = [];

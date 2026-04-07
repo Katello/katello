@@ -16,8 +16,10 @@ $(document).on('ContentLoad', function(){
 KT.hosts.contentSourceChanged = function() {
   $("#hostgroup_lifecycle_environment_id").val("");
   $("#host_lifecycle_environment_id").val("");
+  $("#hostgroup_content_view_environment_id").val("");
   KT.hosts.fetchEnvironments();
   KT.hosts.environmentChanged();
+  KT.hosts.refreshContentViewEnvironments();
 };
 
 KT.hosts.environmentChanged = function() {
@@ -27,6 +29,60 @@ KT.hosts.environmentChanged = function() {
 
   KT.hosts.fetchContentViews();
   KT.hosts.toggle_installation_medium(previous_content_view);
+};
+
+KT.hosts.refreshContentViewEnvironments = function() {
+  var select = $("#hostgroup_content_view_environment_id");
+  if (select.length === 0) return; // Only for hostgroups
+
+  var content_source_id = $('#content_source_id').val();
+  var orgIdsElem = $("#hostgroup_organization_ids");
+  var orgIds = orgIdsElem.val();
+
+  if (orgIds === undefined || orgIds === null || orgIds.length === 0) {
+    orgIds = orgIdsElem.data('useds');
+  }
+  if (orgIds === undefined || orgIds === null || orgIds.length === 0) {
+    return; // Can't fetch without organization
+  }
+  var orgId = Array.isArray(orgIds) ? orgIds[0] : orgIds;
+
+  var previousInheritText = select.find('option:first-child').text();
+  var previousValue = select.val();
+  select.find('option').remove();
+
+  var url = tfm.tools.foremanUrl('/katello/api/v2/content_view_environments');
+  var params = { organization_id: orgId, full_result: true };
+
+  if (content_source_id) {
+    params.content_source_id = content_source_id;
+  }
+
+  $.get(url, params, function(data) {
+    var foundPreviousValue = false;
+
+    // Add inherit option back if it was there
+    if (previousInheritText && (previousInheritText.includes('Inherit') || previousInheritText === '')) {
+      select.append($("<option />").text(previousInheritText).val(''));
+    }
+
+    $.each(data.results, function(index, cve) {
+      var label = cve.lifecycle_environment.name + ' / ' + cve.content_view.name;
+      var option = $("<option />").val(cve.id).text(label);
+      if (cve.id === parseInt(previousValue)) {
+        option.prop('selected', true);
+        foundPreviousValue = true;
+      }
+      select.append(option);
+    });
+
+    // If previous value not found in filtered list, select the blank/inherit option
+    if (!foundPreviousValue) {
+      select.val('');
+    }
+
+    select.trigger('change');
+  });
 };
 
 KT.hosts.fetchEnvironments = function () {

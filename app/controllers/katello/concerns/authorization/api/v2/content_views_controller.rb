@@ -35,6 +35,7 @@ module Katello
                               :system_environment_id,
                               :key_content_view_id,
                               :key_environment_id,
+                              :hostgroup_content_view_environment_id,
                               :content_view_version_ids => [],
                               :environment_ids => []
                              )
@@ -45,7 +46,8 @@ module Katello
         authorize_system_content_view(view, options) &&
         authorize_system_environments(view, options) &&
         authorize_activation_key_content_view(view, options) &&
-        authorize_activation_key_environments(view, options)
+        authorize_activation_key_environments(view, options) &&
+        authorize_hostgroup_content_view_environment(view, options)
     end
 
     def authorize_remove_versions(view, options)
@@ -107,47 +109,89 @@ module Katello
       true
     end
 
-    def authorize_remove_environments(view, options) # rubocop:disable Metrics/CyclomaticComplexity
+    def authorize_hostgroup_content_view_environment(view, options)
+      cv_env_id = options[:hostgroup_content_view_environment_id]
+      if cv_env_id
+        cv_env = ContentViewEnvironment.joins(:content_view, :environment)
+          .where(id: cv_env_id)
+          .where("#{ContentView.table_name}.organization_id" => view.organization.id)
+          .first
+        fail HttpErrors::NotFound, _("Couldn't find host group content view environment id '%s'") % cv_env_id unless cv_env
+        # deny if we cannot reassign hostgroups to the new content view environment
+        return deny_access unless cv_env.content_view.readable? && cv_env.environment.readable?
+      end
+      true
+    end
+
+    def authorize_remove_environments(view, options)
       env_ids = options[:environment_ids]
-
       return true if env_ids.blank?
+      return deny_access unless authorize_environment_removal_permissions(view, env_ids)
 
-      return deny_access unless (env_ids.map(&:to_s) - view.environment_ids.map(&:to_s)).empty?
-      # If we are removing from the environments
-      # then we need to be sure that cv has the "remove" permission
-      # and also ensure that the environments have the remove permission
-      return deny_access unless KTEnvironment.promotable.where(:id => env_ids).count == env_ids.size && view.promotable_or_removable?
+      authorize_host_reassignment(view, env_ids, options)
+      authorize_activation_key_reassignment(view, env_ids, options)
+      authorize_hostgroup_reassignment(view, env_ids, options)
 
+      true
+    end
+
+    def authorize_environment_removal_permissions(view, env_ids)
+      # Verify that all env_ids belong to the view
+      return false unless (env_ids.map(&:to_s) - view.environment_ids.map(&:to_s)).empty?
+
+      # Ensure the content view has remove permission and environments are promotable
+      KTEnvironment.promotable.where(:id => env_ids).count == env_ids.size && view.promotable_or_removable?
+    end
+
+    def authorize_host_reassignment(view, env_ids, options)
       total_count = Katello::Host::ContentFacet.with_content_views(view).with_environments(env_ids).count
       single_env_host_count = Katello::Host::ContentFacet
         .with_content_views(view)
         .with_environments(env_ids)
         .count { |facet| !facet.multi_content_view_environment? }
-      if single_env_host_count > 0
-        unless options[:system_content_view_id] && options[:system_environment_id]
-          fail _("Unable to reassign content hosts. Please provide system_content_view_id and system_environment_id.")
-        end
 
-        # if we are reassigning systems to a different environment or cv
-        # make sure all the systems in existing environments are editable.
-        if total_count != ::Host::Managed.authorized('edit_hosts').in_content_view_environment(:content_view => view,
-                                            :lifecycle_environment => ::Katello::KTEnvironment.where(:id => env_ids)).count
-          deny_access
-        end
+      return unless single_env_host_count > 0
+
+      unless options[:system_content_view_id] && options[:system_environment_id]
+        fail _("Unable to reassign content hosts. Please provide system_content_view_id and system_environment_id.")
       end
 
+      # Ensure all hosts in existing environments are editable
+      authorized_count = ::Host::Managed.authorized('edit_hosts').in_content_view_environment(
+        :content_view => view,
+        :lifecycle_environment => ::Katello::KTEnvironment.where(:id => env_ids)
+      ).count
+
+      deny_access if total_count != authorized_count
+    end
+
+    def authorize_activation_key_reassignment(view, env_ids, options)
       keys = Katello::ActivationKey.with_content_views(view).with_environments(env_ids)
       single_env_keys_exist = keys.any? { |key| !key.multi_content_view_environment? }
-      if single_env_keys_exist
-        # if we are reassigning activation key environments/ cv
-        # make sure the activation key using present environments or cv are editable.
-        unless options[:key_content_view_id] && options[:key_environment_id]
-          fail _("Unable to reassign activation_keys. Please provide key_content_view_id and key_environment_id.")
-        end
-        # deny if any of the activation keys belonging to the selected environments are not editable
-        return deny_access unless Katello::ActivationKey.all_editable?(view, env_ids)
+
+      return unless single_env_keys_exist
+
+      unless options[:key_content_view_id] && options[:key_environment_id]
+        fail _("Unable to reassign activation_keys. Please provide key_content_view_id and key_environment_id.")
       end
-      true
+
+      # Ensure all activation keys are editable
+      return deny_access unless Katello::ActivationKey.all_editable?(view, env_ids)
+    end
+
+    def authorize_hostgroup_reassignment(view, env_ids, options)
+      hostgroups = ::Hostgroup.joins(:content_facet => :content_view_environment)
+        .where("#{::Katello::ContentViewEnvironment.table_name}.content_view_id" => view.id)
+        .where("#{::Katello::ContentViewEnvironment.table_name}.environment_id" => env_ids)
+
+      return unless hostgroups.any?
+
+      unless options[:hostgroup_content_view_environment_id]
+        fail _("Unable to reassign host groups. Please provide hostgroup_content_view_environment_id.")
+      end
+
+      # Ensure all hostgroups are editable
+      return deny_access unless hostgroups.all? { |hg| hg.authorized?('edit_hostgroups') }
     end
 
     def find_content_view_for_authorization

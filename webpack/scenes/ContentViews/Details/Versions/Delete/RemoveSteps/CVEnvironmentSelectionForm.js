@@ -9,7 +9,7 @@ const CVEnvironmentSelectionForm = () => {
   const [alertDismissed, setAlertDismissed] = useState(false);
   const {
     versionNameToRemove, versionEnvironments, selectedEnvSet,
-    setAffectedActivationKeys, setAffectedHosts, deleteFlow,
+    setAffectedActivationKeys, setAffectedHosts, setAffectedHostgroups, deleteFlow,
     removeDeletionFlow, setRemoveDeletionFlow,
   } = useContext(DeleteContext);
 
@@ -34,7 +34,12 @@ const CVEnvironmentSelectionForm = () => {
     const needsAKReassignment = selectedEnvironments.some(env =>
       (env.activation_key_count || 0) > (env.multi_env_ak_count || 0));
     setAffectedActivationKeys(needsAKReassignment);
-  }, [setAffectedActivationKeys, setAffectedHosts,
+
+    // Hostgroups are always single-CVE, so any hostgroups in selected envs need reassignment
+    const needsHostgroupReassignment = selectedEnvironments.some(env =>
+      (env.hostgroup_count || 0) > 0);
+    setAffectedHostgroups(needsHostgroupReassignment);
+  }, [setAffectedActivationKeys, setAffectedHosts, setAffectedHostgroups,
     versionEnvironments, selectedEnvSet, selectedEnvSet.size]);
 
   const onSelectAll = (event, isSelected) => {
@@ -49,6 +54,7 @@ const CVEnvironmentSelectionForm = () => {
   const columnHeaders = [
     __('Environment'),
     __('Hosts'),
+    __('Host groups'),
     __('Activation keys'),
   ];
 
@@ -102,7 +108,7 @@ const CVEnvironmentSelectionForm = () => {
           <Tbody>
             {versionEnvironments?.map(({
               id, name, activation_key_count: akCount,
-              host_count: hostCount,
+              host_count: hostCount, hostgroup_count: hostgroupCount,
             }, rowIndex) =>
               (
                 <Tr ouiaId={`${name}_${id}`} key={`${name}_${id}`}>
@@ -119,6 +125,7 @@ const CVEnvironmentSelectionForm = () => {
                     {name}
                   </Td>
                   <Td>{hostCount}</Td>
+                  <Td>{hostgroupCount}</Td>
                   <Td>{akCount}</Td>
                 </Tr>
               ))

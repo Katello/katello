@@ -84,6 +84,7 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
   assertNockRequest(cvDetailsScope);
   assertNockRequest(cvVersionsScope);
   done();
+  act(done);
 });
 
 test('Can open Delete wizard and delete CV with all steps', async (done) => {

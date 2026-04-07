@@ -15,6 +15,9 @@ module Katello
     has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet", :dependent => :destroy, :inverse_of => :content_view_environment
     has_many :content_facets, through: :content_view_environment_content_facets, :class_name => "::Katello::Host::ContentFacet", :inverse_of => :content_view_environments
 
+    has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet", :dependent => :nullify, :inverse_of => :content_view_environment
+    has_many :hostgroups, through: :hostgroup_content_facets, :class_name => "::Hostgroup"
+
     has_many :content_view_environment_activation_keys, :class_name => "Katello::ContentViewEnvironmentActivationKey", :dependent => :destroy, :inverse_of => :content_view_environment
     has_many :activation_keys, through: :content_view_environment_activation_keys, :class_name => "::Katello::ActivationKey", :inverse_of => :content_view_environments
 

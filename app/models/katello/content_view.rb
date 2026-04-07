@@ -52,10 +52,9 @@ module Katello
     has_many :activation_keys, -> { reorder(:id).distinct }, :class_name => "Katello::ActivationKey", :through => :content_view_environment_activation_keys,
              :inverse_of => :content_views
 
-    has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet",
-             :inverse_of => :content_view, :dependent => :nullify
-    has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,
-             :inverse_of => :content_view
+    has_many :hostgroup_content_facets, :through => :content_view_environments,
+             :class_name => "Katello::Hostgroup::ContentFacet"
+    has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets
 
     has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference',
              :dependent => :destroy, :inverse_of => :content_view
@@ -612,8 +611,18 @@ module Katello
       # Do not remove the content view environment, if there is still a view
       # version in the environment.
       if self.versions.in_environment(env).blank?
-        view_env = self.content_view_environments.where(:environment_id => env.id)
-        view_env.first.destroy unless view_env.blank?
+        view_env = self.content_view_environments.where(:environment_id => env.id).first
+        if view_env
+          # Check for hostgroup dependencies before removal
+          if view_env.hostgroup_content_facets.any?
+            hostgroup_names = view_env.hostgroup_content_facets.map { |f| f.hostgroup.name }.join(", ")
+            fail _("Cannot remove '%{view}' from lifecycle environment '%{env}' due to associated host groups: %{names}.") %
+              { view: self.name, env: env.name, names: hostgroup_names }
+          end
+          unless view_env.destroy
+            fail _("Failed to remove content view environment: %{errors}") % { errors: view_env.errors.full_messages.join(", ") }
+          end
+        end
       end
     end
 
@@ -754,6 +763,7 @@ module Katello
 
       dependencies = { hosts: _("hosts"),
                        activation_keys: _("activation keys"),
+                       hostgroups: _("host groups"),
       }
 
       dependencies.each do |key, name|
@@ -774,6 +784,7 @@ module Katello
       dependencies = { environments: _("environments"),
                        hosts: _("hosts"),
                        activation_keys: _("activation keys"),
+                       hostgroups: _("host groups"),
       }
 
       dependencies.each do |key, name|

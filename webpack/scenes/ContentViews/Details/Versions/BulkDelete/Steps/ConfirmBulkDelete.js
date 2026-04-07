@@ -19,17 +19,20 @@ import {
   getEnvironmentList,
   getNumberOfActivationKeys,
   getNumberOfHosts,
+  getNumberOfHostgroups,
   getVersionListString,
 } from '../BulkDeleteHelpers';
 
 export default () => {
   const {
     versions, selectedCVForHosts, selectedEnvForHosts, selectedCVForAK, selectedEnvForAK,
+    selectedCVForHostgroups, selectedEnvForHostgroups,
   } = useContext(BulkDeleteContext);
   const { results: contentViewResults = [] } = useSelector(selectContentViews);
   const versionList = getVersionListString(versions);
   const numberOfActivationKeys = getNumberOfActivationKeys(versions);
   const numberOfHosts = getNumberOfHosts(versions);
+  const numberOfHostgroups = getNumberOfHostgroups(versions);
   const affectedVersions = versions.filter(({ environments }) => !!environments.length);
   const affectedVersionsListString = getVersionListString(affectedVersions);
   const environments = getEnvironmentList(versions);
@@ -118,6 +121,25 @@ export default () => {
             />
           }
           selectedEnv={first(selectedEnvForAK)}
+        />
+      }
+      {!!numberOfHostgroups &&
+        <ActionSummary
+          title={__('Host groups')}
+          text={
+            <FormattedMessage
+              id="bulk-delete-summary-hostgroups"
+              values={{
+                numberOfHostgroups,
+                cvName: contentViewResults
+                  .find(({ id }) => id === selectedCVForHostgroups)?.name || '',
+              }}
+              defaultMessage={numberOfHostgroups > 1 ?
+                __('{numberOfHostgroups} host groups will be assigned to content view {cvName} in') :
+                __('{numberOfHostgroups} host group will be assigned to content view {cvName} in')}
+            />
+          }
+          selectedEnv={first(selectedEnvForHostgroups)}
         />
       }
     </>
