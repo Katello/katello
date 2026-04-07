@@ -4,6 +4,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { FormGroup, Button, Badge } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
+import { STATUS } from 'foremanReact/constants';
 import api, { orgId } from '../../../../services/api';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import { OrderableAssignmentList } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/OrderableAssignments';
@@ -57,6 +58,7 @@ const MultiCVEnvForm = ({
       <OrderableAssignmentList
         existingAssignments={[]} // Start blank per user requirement
         isOpen
+        assignmentStatus={isLoading ? STATUS.PENDING : undefined}
         onAssignmentsChange={onAssignmentsChange}
         allowMultipleContentViews={allowMultipleContentViews}
         renderAddButton={renderAddButton}

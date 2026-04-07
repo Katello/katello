@@ -105,6 +105,7 @@ const AssignmentSection = ({
     assignmentStatus === STATUS.PENDING;
   const noContentViewsAvailable = availableContentViews.length === 0 ||
     assignment.selectedEnv.length === 0;
+  const isDisabled = assignmentStatus === STATUS.PENDING;
 
   const toggleContent = assignment.contentView && assignment.selectedEnv.length > 0 ? (
     <ContentViewEnvironmentDisplay
@@ -144,11 +145,11 @@ const AssignmentSection = ({
   return (
     <div className="assignment-section" style={isDragging ? { opacity: 0.5 } : {}}>
       <div className="assignment-header">
-        <GripVerticalIcon className="drag-handle" />
+        <GripVerticalIcon className="drag-handle" style={isDisabled ? { cursor: 'not-allowed', opacity: 0.5 } : {}} />
         <ExpandableSection
           toggleContent={toggleContent}
-          onToggle={onToggleExpanded}
-          isExpanded={assignment.isExpanded}
+          onToggle={isDisabled ? undefined : onToggleExpanded}
+          isExpanded={isDisabled ? false : assignment.isExpanded}
           isIndented
         >
           <div className="assignment-content">
@@ -218,8 +219,10 @@ const AssignmentSection = ({
             variant="link"
             icon={<MinusCircleIcon />}
             onClick={onRemove}
+            isDisabled={isDisabled}
             className="remove-assignment-button"
             ouiaId={`remove-assignment-${index}`}
+            style={isDisabled ? { color: 'var(--pf-v5-global--disabled-color--100)', cursor: 'not-allowed' } : {}}
           >
             {__('Remove')}
           </Button>
@@ -377,6 +380,9 @@ export const OrderableAssignmentList = ({
   };
 
   const moveAssignment = (dragIndex, hoverIndex) => {
+    // Prevent reordering when disabled
+    if (assignmentStatus === STATUS.PENDING) return;
+
     setAssignments((prev) => {
       const draggedAssignment = prev[dragIndex];
       const newAssignments = [...prev];

@@ -26,3 +26,12 @@
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+// Content view environments label should not show pointer cursor
+.content_source_form .pf-v5-c-form__group .pf-v5-c-form__label[for="content-view-environments"] {
+  cursor: default;
+}
+
+.content_source_form .pf-v5-c-form__group .pf-v5-c-form__label[for="content-view-environments"] * {
+  cursor: default;
+}
