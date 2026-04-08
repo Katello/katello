@@ -181,6 +181,21 @@ module Katello
 
       def refresh_distributions(_options = {})
         path = repo_service.relative_path
+        dist_params = build_distribution_params
+        dist_options = distribution_options(path, dist_params)
+        dist_options.delete(:content_guard) if repo_service.repo.content_type == "docker"
+
+        distro = repo_service.lookup_distributions(base_path: path).first ||
+                 repo_service.lookup_distributions(name: "#{backend_object_name}").first
+
+        if distro
+          update_existing_distribution(distro, dist_options)
+        else
+          create_new_distribution(dist_options)
+        end
+      end
+
+      def build_distribution_params
         dist_params = {}
         if repo_service.repo.repository_type.pulp3_skip_publication
           dist_params[:repository_version] = version_href
@@ -189,18 +204,46 @@ module Katello
           dist_params[:publication] = publication_href
           fail "Could not lookup a publication_href for repo #{repo_service.repo.id}" if publication_href.nil?
         end
+        dist_params
+      end
 
-        dist_options = distribution_options(path, dist_params)
-        dist_options.delete(:content_guard) if repo_service.repo.content_type == "docker"
-        if (distro = repo_service.lookup_distributions(base_path: path).first) ||
-          (distro = repo_service.lookup_distributions(name: "#{backend_object_name}").first)
-          # update dist
-          dist_options = dist_options.except(:name)
-          api.distributions_api.partial_update(distro.pulp_href, dist_options)
+      def update_existing_distribution(distro, dist_options)
+        dist_options = dist_options.except(:name)
+        adjust_distribution_options_for_pulp_version(distro, dist_options) if repo_service.repo.repository_type.pulp3_skip_publication
+        api.distributions_api.partial_update(distro.pulp_href, dist_options)
+      end
+
+      def adjust_distribution_options_for_pulp_version(distro, dist_options)
+        if distro.respond_to?(:repository_version)
+          # New Pulp supports repository_version - use it and clear publication
+          dist_options[:publication] = nil if distro.publication.present?
         else
-          # create dist
+          # Old Pulp doesn't support repository_version - fall back to publication
+          dist_options.delete(:repository_version)
+          dist_options[:publication] = publication_href
+          fail "Could not lookup a publication_href for repo #{repo_service.repo.id}" if publication_href.nil?
+        end
+      end
+
+      def create_new_distribution(dist_options)
+        distribution_data = api.distribution_class.new(dist_options)
+        api.distributions_api.create(distribution_data)
+      rescue api.client_module::ApiError => e
+        retry_distribution_with_publication(e, dist_options)
+      end
+
+      def retry_distribution_with_publication(error, dist_options)
+        # If repository_version is not supported (old Pulp), retry with publication
+        if repo_service.repo.repository_type.pulp3_skip_publication &&
+           error.code == 400 &&
+           (error.message.include?("repository_version") || error.message.include?("publication"))
+          dist_options.delete(:repository_version)
+          dist_options[:publication] = publication_href
+          fail "Could not lookup a publication_href for repo #{repo_service.repo.id}" if publication_href.nil?
           distribution_data = api.distribution_class.new(dist_options)
           api.distributions_api.create(distribution_data)
+        else
+          fail error
         end
       end
 
