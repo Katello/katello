@@ -52,19 +52,18 @@ module Katello
       end
 
       it "should register" do
-        Resources::Candlepin::Consumer.stubs(:get)
-
-        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts}, nil, [@activation_key]).returns(@host)
+        Resources::Candlepin::Consumer.expects(:get).never
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts}, nil, [@activation_key]).returns([@host, { 'uuid' => 'fake-uuid' }])
 
         post(:consumer_activate, params: { :organization_id => @activation_key.organization.label, :activation_keys => @activation_key.name, :facts => @facts })
 
         assert_response :success
+        assert_equal 'fake-uuid', JSON.parse(response.body)['uuid']
       end
 
       it "de-duplicates provided activation key names" do
-        Resources::Candlepin::Consumer.stubs(:get)
-
-        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts}, nil, [@activation_key]).returns(@host)
+        Resources::Candlepin::Consumer.expects(:get).never
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts}, nil, [@activation_key]).returns([@host, { 'uuid' => 'fake-uuid' }])
 
         key_names = "#{@activation_key.name},#{@activation_key.name}"
 
@@ -92,19 +91,20 @@ module Katello
       end
 
       it "should register" do
-        Resources::Candlepin::Consumer.stubs(:get)
+        Resources::Candlepin::Consumer.expects(:get).never
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
-        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, [@content_view_environment]).returns(@host)
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, [@content_view_environment]).returns([@host, { 'uuid' => 'fake-uuid' }])
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environment_id => @content_view_environment.cp_id, :facts => @facts })
 
         assert_response :success
+        assert_equal 'fake-uuid', JSON.parse(response.body)['uuid']
       end
 
       it "should register with new environments param" do
-        Resources::Candlepin::Consumer.stubs(:get)
+        Resources::Candlepin::Consumer.expects(:get).never
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
-        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, [@content_view_environment]).returns(@host)
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, [@content_view_environment]).returns([@host, { 'uuid' => 'fake-uuid' }])
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environments => [{id: @content_view_environment.cp_id}], :facts => @facts })
 
