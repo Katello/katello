@@ -476,6 +476,37 @@ module Katello
       end
     end
 
+    describe "consumer_compliance" do
+      before do
+        uuid = @host.subscription_facet.uuid
+        User.stubs(:consumer?).returns(true)
+        stub_cp_consumer_with_uuid(uuid)
+        Rails.cache.delete("katello/compliance/#{uuid}")
+      end
+
+      it "caches successful compliance responses" do
+        uuid = @host.subscription_facet.uuid
+        compliance_body = { 'status' => 'valid' }
+        stub = Resources::Candlepin::Proxy.expects(:get).once
+          .returns(stub(:code => '200', :body => compliance_body.to_json))
+
+        2.times { get :consumer_compliance, params: { :id => uuid } }
+
+        assert_response :success
+        assert_requested stub if stub.respond_to?(:assert_requested)
+      end
+
+      it "does not cache error responses" do
+        uuid = @host.subscription_facet.uuid
+        Resources::Candlepin::Proxy.expects(:get).twice
+          .returns(stub(:code => '503', :body => 'unavailable'))
+
+        2.times { get :consumer_compliance, params: { :id => uuid } }
+
+        assert_response :service_unavailable
+      end
+    end
+
     describe "get parent host" do
       it "can get parent host" do
         capsule = "foocapsule.example.com"
