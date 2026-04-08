@@ -16,6 +16,19 @@ module Katello
             ensure_creatable(@repo, @proxy)
           end
 
+          def test_pulp_distributions
+            @repo.version_href = 'blub'
+            ::Katello::Pulp3::Repository::Apt.any_instance.stubs(:version_missing_structure_content?).returns(false)
+            service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
+            api_response = mock
+            api_response.expects(:results).returns([])
+            PulpDebClient::ContentReleaseComponentsApi.any_instance.expects(:list).returns(api_response)
+            error = assert_raises(Katello::Errors::MissingDebEntityError) do
+              service.pulp_distributions
+            end
+            assert_equal "The referenced Pulp repo version 'blub' for 'deb' repository 'Debian 9 amd64' should contain at least one distribution.", error.message
+          end
+
           def test_remote_options
             @repo.root.url = "http://foo.com/bar/"
             service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
