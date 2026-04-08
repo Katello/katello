@@ -49,6 +49,12 @@ module Actions
                 end
               end
             end
+
+            pulp3_repos = repos.select { |repo| smart_proxy.pulp3_support?(repo) }
+            if pulp3_repos.any?
+              plan_action(Actions::Pulp3::CapsuleContent::RefreshAllDistributions,
+                          smart_proxy, pulp3_repos)
+            end
           end
         end
         # rubocop:enable Metrics/MethodLength
