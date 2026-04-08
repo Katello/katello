@@ -36,7 +36,6 @@ module Katello
       :katello_host_collections => Katello::HostCollection,
       :katello_subscriptions => Katello::Subscription,
       :katello_host_collection_hosts => Katello::HostCollectionHosts,
-      :katello_task_statuses => Katello::TaskStatus,
       :katello_errata => Katello::Erratum,
       :katello_erratum_packages => Katello::ErratumPackage,
       :katello_erratum_cves => Katello::ErratumCve,
