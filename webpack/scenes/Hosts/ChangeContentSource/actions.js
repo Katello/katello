@@ -2,6 +2,7 @@
 import { foremanUrl } from 'foremanReact/common/helpers';
 import { get, post, put } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { buildContentViewEnvironmentLabel } from '../../../utils/contentViewEnvironmentLabel';
 
 import {
   CHANGE_CONTENT_SOURCE_DATA,
@@ -18,13 +19,15 @@ export const getFormData = (hostIds, search) => (post({
 }));
 
 export const changeContentSource =
-  (environmentId, contentViewId, contentSourceId, hostIds, handleSuccess, successToast) =>
-    put({
+  (assignments, contentSourceId, hostIds, handleSuccess, successToast) => {
+    // Build CVEnv labels from assignments
+    const cveLabels = assignments.map(buildContentViewEnvironmentLabel).filter(Boolean);
+
+    return put({
       key: CHANGE_CONTENT_SOURCE,
       url: foremanUrl('/api/v2/hosts/bulk/change_content_source'),
       params: {
-        environment_id: environmentId,
-        content_view_id: contentViewId,
+        content_view_environments: cveLabels,
         content_source_id: contentSourceId,
         host_ids: hostIds,
       },
@@ -32,6 +35,7 @@ export const changeContentSource =
       successToast,
       handleSuccess,
     });
+  };
 
 export const getProxy = id =>
   get({

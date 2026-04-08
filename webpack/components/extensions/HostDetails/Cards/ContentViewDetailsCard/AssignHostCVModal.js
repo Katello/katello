@@ -17,6 +17,7 @@ import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
 import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
 import api from '../../../../../services/api';
+import { buildContentViewEnvironmentLabel } from '../../../../../utils/contentViewEnvironmentLabel';
 import {
   assignHostCVEnvironments,
   runSubmanRepos,
@@ -131,30 +132,7 @@ const AssignHostCVModal = ({
     // Build array of content view environment labels for all assignments
     // Use the existing CVE label if available (for existing assignments),
     // otherwise construct it from env/cv labels (for new assignments)
-    const cveLabels = assignments.map((a) => {
-      // If this assignment has an existing CVE with a label, use it
-      if (a.cveLabel) {
-        return a.cveLabel;
-      }
-
-      // Otherwise, construct the label for new assignments
-      const env = a.selectedEnv?.[0];
-      const cv = a.contentView;
-
-      if (env?.label && cv?.label) {
-        const envLabel = env.label;
-        const cvLabel = cv.label;
-
-        // ContentViewEnvironment label format matches backend logic:
-        // - For default CV in Library lce: just "Library"
-        // - For default CV in non-Library lce: "Production/Default Organization View"
-        // - For non-default CV: "lce_label/content_view_label"
-        const isLibraryEnv = env.lifecycle_environment_library || env.library;
-        const isDefaultCV = cv.content_view_default || cv.default;
-        return isDefaultCV && isLibraryEnv ? envLabel : `${envLabel}/${cvLabel}`;
-      }
-      return null;
-    }).filter(Boolean); // Remove any null entries
+    const cveLabels = assignments.map(buildContentViewEnvironmentLabel).filter(Boolean);
 
     const requestBody = {
       id: hostId,

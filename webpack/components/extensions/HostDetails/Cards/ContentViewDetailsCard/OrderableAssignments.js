@@ -74,7 +74,6 @@ const AssignmentSection = ({
   onToggleCVSelect,
   assignmentStatus,
   isDragging,
-  allowMultipleContentViews,
   allowZeroAssignments,
 }) => {
   const contentViewsResponse = useSelector(state =>
@@ -106,6 +105,7 @@ const AssignmentSection = ({
     assignmentStatus === STATUS.PENDING;
   const noContentViewsAvailable = availableContentViews.length === 0 ||
     assignment.selectedEnv.length === 0;
+  const isDisabled = assignmentStatus === STATUS.PENDING;
 
   const toggleContent = assignment.contentView && assignment.selectedEnv.length > 0 ? (
     <ContentViewEnvironmentDisplay
@@ -137,7 +137,7 @@ const AssignmentSection = ({
         </Tooltip>
       )}
       <span className="assignment-name">
-        {__('Select a content view')}
+        {__('Select a content view environment')}
       </span>
     </div>
   );
@@ -145,11 +145,11 @@ const AssignmentSection = ({
   return (
     <div className="assignment-section" style={isDragging ? { opacity: 0.5 } : {}}>
       <div className="assignment-header">
-        <GripVerticalIcon className="drag-handle" />
+        <GripVerticalIcon className="drag-handle" style={isDisabled ? { cursor: 'not-allowed', opacity: 0.5 } : {}} />
         <ExpandableSection
           toggleContent={toggleContent}
-          onToggle={onToggleExpanded}
-          isExpanded={assignment.isExpanded}
+          onToggle={isDisabled ? undefined : onToggleExpanded}
+          isExpanded={isDisabled ? false : assignment.isExpanded}
           isIndented
         >
           <div className="assignment-content">
@@ -213,14 +213,16 @@ const AssignmentSection = ({
         </ExpandableSection>
       </div>
 
-      {(allowMultipleContentViews || assignments.length > 1 || allowZeroAssignments) && (
+      {(assignments.length > 1 || allowZeroAssignments) && (
         <div className="assignment-controls">
           <Button
             variant="link"
             icon={<MinusCircleIcon />}
             onClick={onRemove}
+            isDisabled={isDisabled}
             className="remove-assignment-button"
             ouiaId={`remove-assignment-${index}`}
+            style={isDisabled ? { color: 'var(--pf-v5-global--disabled-color--100)', cursor: 'not-allowed' } : {}}
           >
             {__('Remove')}
           </Button>
@@ -241,7 +243,6 @@ AssignmentSection.propTypes = {
   onToggleCVSelect: PropTypes.func.isRequired,
   assignmentStatus: PropTypes.string,
   isDragging: PropTypes.bool,
-  allowMultipleContentViews: PropTypes.bool.isRequired,
   allowZeroAssignments: PropTypes.bool,
 };
 
@@ -314,9 +315,10 @@ export const OrderableAssignmentList = ({
       }));
       setAssignments(initialAssignments);
 
-      // Fetch content views for each existing assignment's environment
+      // Fetch content views for each existing assignment's environment (if associated)
       initialAssignments.forEach((assignment) => {
-        if (assignment.environment?.id) {
+        if (assignment.environment?.id &&
+            assignment.environment?.content_source?.environment_is_associated !== false) {
           dispatch(getContentViews({
             environment_id: assignment.environment.id,
             include_default: true,
@@ -327,33 +329,18 @@ export const OrderableAssignmentList = ({
       });
       setInitializationStatus(STATUS.RESOLVED);
     } else {
-      // Find the Library environment to pre-select it
-      const libraryEnv = environmentPaths
-        .flatMap(path => path.environments)
-        .find(env => env.library);
-
-      // Add new assignment inline with Library pre-selected if available
+      // Add new blank assignment
       nextIdRef.current += 1;
       const newAssignment = {
         id: `new-${nextIdRef.current}`,
         contentView: null,
-        environment: libraryEnv || null,
+        environment: null,
         isExpanded: true,
         cvSelectOpen: false,
-        selectedEnv: libraryEnv ? [libraryEnv] : [],
+        selectedEnv: [],
         selectedCV: null,
       };
       setAssignments([newAssignment]);
-
-      // If Library was selected, fetch its content views
-      if (libraryEnv) {
-        dispatch(getContentViews({
-          environment_id: libraryEnv.id,
-          include_default: true,
-          full_result: true,
-          order: 'default DESC',
-        }, `FOR_ENV_${newAssignment.id}`));
-      }
       setInitializationStatus(STATUS.RESOLVED);
     }
   }, [isOpen, existingAssignments, environmentPaths, dispatch]);
@@ -393,6 +380,9 @@ export const OrderableAssignmentList = ({
   };
 
   const moveAssignment = (dragIndex, hoverIndex) => {
+    // Prevent reordering when disabled
+    if (assignmentStatus === STATUS.PENDING) return;
+
     setAssignments((prev) => {
       const draggedAssignment = prev[dragIndex];
       const newAssignments = [...prev];
@@ -416,7 +406,7 @@ export const OrderableAssignmentList = ({
   };
 
   const handleEnvSelect = (assignmentId, selection) => {
-    if (selection[0]) {
+    if (selection[0] && selection[0]?.content_source?.environment_is_associated !== false) {
       dispatch(getContentViews({
         environment_id: selection[0].id,
         include_default: true,

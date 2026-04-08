@@ -9,7 +9,7 @@ import { foremanUrl } from 'foremanReact/common/helpers';
 import { STATUS } from 'foremanReact/constants';
 import BreadcrumbBar from 'foremanReact/components/BreadcrumbBar';
 import Head from 'foremanReact/components/Head';
-import { useForemanHostsPageUrl } from 'foremanReact/Root/Context/ForemanContext';
+import { useForemanHostsPageUrl, useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
 import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 
 import { selectApiDataStatus,
@@ -18,7 +18,6 @@ import { selectApiDataStatus,
   selectContentHosts,
   selectContentHostsWithoutContent,
   selectContentSources,
-  selectContentViews,
   selectTemplate } from './selectors';
 
 import { getHostIds, formIsLoading } from './helpers';
@@ -26,7 +25,6 @@ import {
   getFormData,
   getProxy,
   changeContentSource,
-  getContentViews,
 } from './actions';
 import ContentSourceForm from './components/ContentSourceForm';
 import ContentSourceTemplate from './components/ContentSourceTemplate';
@@ -48,7 +46,6 @@ const ChangeContentSourcePage = () => {
   const contentSources = useSelector(selectContentSources);
 
   const template = useSelector(selectTemplate);
-  const contentViews = useSelector(selectContentViews);
   const { initialContentSourceId } = urlParams;
   const [contentSourceId, setCapsuleId] = useState(initialContentSourceId ?? '');
   // if this matches, we'll trust you that initialContentSourceId is the host's content source
@@ -59,15 +56,15 @@ const ChangeContentSourcePage = () => {
   );
   const hostDetailsPath = showCVOnlyAlert ? `new/hosts/${contentHosts[0].name}` : '';
   const hostEditPath = urlParams.fromPage === 'hostEdit' ? foremanUrl(`/hosts/${contentHosts[0]?.name}/edit`) : '';
-  const [selectedEnvironment, setSelectedEnvironment] = useState([]);
-  const [contentViewName, setContentViewName] = useState('');
   const [shouldShowTemplate, setShouldShowTemplate] = useState(false);
   const [redirect, setRedirect] = useState('');
+  const [assignments, setAssignments] = useState([]);
+  const foremanContext = useForemanContext();
+  const allowMultipleContentViews =
+    foremanContext?.metadata?.katello?.allow_multiple_content_views ?? false;
 
-  const contentViewId = contentViews?.find(cv => cv.name === contentViewName)?.id;
   const hostIds = useMemo(() => getHostIds(urlParams.host_id), [urlParams.host_id]);
   const noHostSpecified = (hostIds.length === 0 && urlParams.searchParam === '');
-  const environmentId = selectedEnvironment[0]?.id;
 
   const handleSuccess = ({ redirectTo = '' }) => {
     if (redirectTo) {
@@ -79,8 +76,7 @@ const ChangeContentSourcePage = () => {
     e.preventDefault();
 
     dispatch(changeContentSource(
-      environmentId,
-      contentViewId,
+      assignments,
       contentSourceId,
       contentHosts.map(h => h.id),
       () => handleSuccess({ redirectTo }),
@@ -90,8 +86,8 @@ const ChangeContentSourcePage = () => {
 
   const handleContentSource = (id) => {
     setCapsuleId(id);
-    setSelectedEnvironment([]);
-    setContentViewName('');
+    setAssignments([]); // Clear assignments when content source changes
+    setShouldShowTemplate(false); // Hide previously generated template
 
     if (id) {
       dispatch(getProxy(id));
@@ -101,6 +97,11 @@ const ChangeContentSourcePage = () => {
   const showTemplate = (e) => {
     handleSubmit(e);
     setShouldShowTemplate(true);
+  };
+
+  const handleAssignmentsChange = (newAssignments) => {
+    setAssignments(newAssignments);
+    setShouldShowTemplate(false); // Hide previously generated template when assignments change
   };
 
   const hostIndexUrl = useForemanHostsPageUrl();
@@ -114,15 +115,6 @@ const ChangeContentSourcePage = () => {
       return ([linkHosts, { caption: hostName, url: foremanUrl(`/new/hosts/${hostName}`) }, linkContent]);
     }
     return ([linkHosts, linkContent]);
-  };
-
-  const handleEnvironment = (selection) => {
-    setSelectedEnvironment(selection);
-    setContentViewName('');
-
-    if (selection[0].id) {
-      dispatch(getContentViews(selection[0].id));
-    }
   };
   useEffect(() => {
     dispatch(getFormData(hostIds, urlParams.searchParam));
@@ -147,7 +139,7 @@ const ChangeContentSourcePage = () => {
           />
         </div>
         <Grid className="margin-left-20">
-          <GridItem span={7}>
+          <GridItem span={8}>
             <Title
               ouiaId="change-cs-title"
               headingLevel="h5"
@@ -163,7 +155,7 @@ const ChangeContentSourcePage = () => {
             </TextContent>
           </GridItem>
           {noHostSpecified &&
-            <GridItem span={7}>
+            <GridItem span={8}>
               <Alert
                 ouiaId="no-host-alert"
                 variant="danger"
@@ -179,7 +171,7 @@ const ChangeContentSourcePage = () => {
               hostsWithoutContent={hostsWithoutContent}
             />
 
-            <GridItem span={7}>
+            <GridItem span={8}>
               <Alert
                 ouiaId="change-content-source-warning"
                 variant="warning"
@@ -188,14 +180,14 @@ const ChangeContentSourcePage = () => {
                 title={
                   <span style={{ fontWeight: 'normal' }}>
                     <FormattedMessage
-                      defaultMessage="Your selection of lifecycle environment and content view will {replace} all existing content view environments on {hosts}."
+                      defaultMessage="Your selection of content view environments here will {replace} all existing assignments on {hosts}."
                       values={{
                         replace: <strong>{__('replace')}</strong>,
                         hosts: (
                           <strong>
                             <FormattedMessage
-                              defaultMessage="{count, plural, one {# selected host} other {# selected hosts}}"
-                              values={{ count: contentHosts.length + hostsWithoutContent.length }}
+                              defaultMessage="{count, plural, one {# eligible host} other {# eligible hosts}}"
+                              values={{ count: contentHosts.length }}
                               id="change-content-source-host-count-i18n"
                             />
                           </strong>
@@ -210,11 +202,6 @@ const ChangeContentSourcePage = () => {
 
             <ContentSourceForm
               handleSubmit={handleSubmit}
-              handleEnvironment={handleEnvironment}
-              environments={selectedEnvironment}
-              contentViews={contentViews}
-              handleContentView={setContentViewName}
-              contentViewName={contentViewName}
               contentSources={contentSources}
               contentSourceId={contentSourceId}
               showCVOnlyAlert={showCVOnlyAlert}
@@ -225,6 +212,10 @@ const ChangeContentSourcePage = () => {
               isLoading={isLoading}
               hostsUpdated={apiChangeStatus === STATUS.RESOLVED || shouldShowTemplate}
               showTemplate={showTemplate}
+              allowMultipleContentViews={allowMultipleContentViews}
+              assignments={assignments}
+              onAssignmentsChange={handleAssignmentsChange}
+              organizationId={contentHosts[0]?.organization_id}
             />
           </> }
           { (apiChangeStatus === STATUS.RESOLVED && shouldShowTemplate) &&

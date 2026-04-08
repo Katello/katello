@@ -258,26 +258,40 @@ module Katello
 
     api :PUT, "/hosts/bulk/change_content_source", N_("Update the content source for specified hosts and generate the reconfiguration script")
     param :host_ids, Array, required: true, desc: N_("The ids of the hosts to alter. Hosts not managed by Katello are ignored")
-    param :environment_id, :number, required: true, desc: N_("The id of the lifecycle environment")
-    param :content_view_id, :number, required: true, desc: N_("The id of the content view")
+    param :content_view_environments, Array, desc: N_("Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.")
+    param :content_view_environment_ids, Array, desc: N_("Array of content view environment IDs")
     param :content_source_id, :number, required: true, desc: N_("The id of the content source")
     def change_content_source
       hosts = ::Host.where(id: params[:host_ids])
       throw_resource_not_found(name: 'host', id: params[:host_ids]) unless hosts.any?
 
-      lifecycle_environment = KTEnvironment.readable.find(params[:environment_id])
-      content_view = Katello::ContentView.readable.find(params[:content_view_id])
+      organization = validate_hosts_organization(hosts)
       content_source = SmartProxy.authorized(:view_smart_proxies).find(params[:content_source_id])
+
+      # Ensure at least one parameter is provided
+      if params[:content_view_environments].blank? && params[:content_view_environment_ids].blank?
+        fail HttpErrors::UnprocessableEntity, _("Either content_view_environments or content_view_environment_ids must be provided")
+      end
+
+      content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
+        labels: params[:content_view_environments],
+        ids: params[:content_view_environment_ids],
+        organization: organization
+      )
+
+      if content_view_environments.blank?
+        handle_errors(labels: params[:content_view_environments],
+                      ids: params[:content_view_environment_ids])
+      end
+
+      # Generate template for manual host updates
       template = prepare_ssl_cert(foreman_server_ca_cert) + configure_subman(content_source) + reconfigure_yggdrasild(hosts.first)
 
       hosts.each do |host|
         next unless host.content_facet
         host.content_facet.content_source = content_source
-        host.content_facet.assign_single_environment(
-          :content_view_id => content_view.id,
-          :environment_id => lifecycle_environment.id
-        )
-        host.update_candlepin_associations
+        host.content_facet.content_view_environments = content_view_environments
+        host.save! # Persist content_source change
       end
 
       render plain: template
@@ -374,6 +388,16 @@ module Katello
       else
         fail HttpErrors::BadRequest, _("Either trace_search or trace_ids must be provided")
       end
+    end
+
+    def validate_hosts_organization(hosts)
+      organizations = hosts.map(&:organization).compact.uniq
+      if organizations.size > 1
+        fail HttpErrors::UnprocessableEntity, _("All hosts must belong to the same organization")
+      elsif organizations.empty?
+        fail HttpErrors::UnprocessableEntity, _("No valid organization found for the selected hosts")
+      end
+      organizations.first
     end
 
     def disable_erratum_hosts_count
