@@ -7,6 +7,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import {
   Modal, ModalVariant, Form, FormGroup, TextInput,
   ActionGroup, Button, FormSelect, FormSelectOption, Popover,
+  FormHelperText, HelperText, HelperTextItem,
 } from '@patternfly/react-core';
 import {
   HelpIcon,
@@ -195,7 +196,10 @@ const AddEditPackageRuleModal = ({
           </FormSelect>
         </FormGroup>
         {showVersion &&
-          <FormGroup label={__('Version')} fieldId="version">
+          <FormGroup
+            label={__('Version')}
+            fieldId="version"
+          >
             <TextInput
               ouiaId="input-version"
               type="text"
@@ -205,9 +209,21 @@ const AddEditPackageRuleModal = ({
               value={version}
               onChange={(_event, val) => setVersion(val)}
             />
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem>
+                  {__('Format: [epoch:]version[-release]')}
+                  <br />
+                  {__('Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).')}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
           </FormGroup>}
         {showMinVersion &&
-          <FormGroup label={__('Minimum version')} fieldId="min_version">
+          <FormGroup
+            label={__('Minimum version')}
+            fieldId="min_version"
+          >
             <TextInput
               ouiaId="input-min-version"
               type="text"
@@ -217,9 +233,19 @@ const AddEditPackageRuleModal = ({
               value={minVersion}
               onChange={(_event, val) => setMinVersion(val)}
             />
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem>
+                  {__('Format: [epoch:]version[-release]. If epoch is omitted, defaults to epoch 0.')}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
           </FormGroup>}
         {showMaxVersion &&
-          <FormGroup label={__('Maximum version')} fieldId="max_version">
+          <FormGroup
+            label={__('Maximum version')}
+            fieldId="max_version"
+          >
             <TextInput
               ouiaId="input-max-version"
               type="text"
@@ -229,6 +255,13 @@ const AddEditPackageRuleModal = ({
               value={maxVersion}
               onChange={(_event, val) => setMaxVersion(val)}
             />
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem>
+                  {__('Format: [epoch:]version[-release]. If epoch is omitted, defaults to epoch 0.')}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
           </FormGroup>}
         <ActionGroup>
           <Button

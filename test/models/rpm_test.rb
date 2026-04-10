@@ -352,9 +352,9 @@ module Katello
     end
 
     def test_equal_filter
+      # When epoch is not specified, match all epochs
       results = Rpm.in_repositories(@repo).search_version_equal("1.0.0")
-      expected = @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/",
-                             "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/",
+      expected = @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/",
                              "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/",
                              "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52057/"]
       assert_equal expected, results.map(&:pulp_id).sort
@@ -363,8 +363,10 @@ module Katello
       expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
+      # When epoch is not specified in version-release, match all epochs
       results = Rpm.in_repositories(@repo).search_version_equal("1.0.0-1.0")
-      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52050/"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52050/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_equal("1:1.0.0-1.0")

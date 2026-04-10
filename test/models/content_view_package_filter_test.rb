@@ -112,5 +112,174 @@ module Katello
 
       assert_equal [@rpm5.pulp_id], @filter.content_unit_pulp_ids(@repo)
     end
+
+    def test_version_filter_without_epoch_matches_all_epochs
+      # Test that when epoch is not specified, it matches packages with any epoch
+      openssl_epoch0 = katello_rpms(:openssl_epoch0)
+      openssl_epoch1 = katello_rpms(:openssl_epoch1)
+      @repo.rpms << [openssl_epoch0, openssl_epoch1]
+      @repo.rpms.each do |rpm|
+        rpm.version_sortable = Util::Package.sortable_version(rpm.version)
+        rpm.release_sortable = Util::Package.sortable_version(rpm.release)
+        rpm.save!
+      end
+
+      @filter = FactoryBot.create(:katello_content_view_package_filter)
+      # Filter for version 3.2.2 without specifying epoch
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "openssl",
+                                   :version => "3.2.2")
+
+      matched_pulp_ids = @filter.content_unit_pulp_ids(@repo)
+      # Should match both epoch 0 and epoch 1
+      assert_includes matched_pulp_ids, openssl_epoch0.pulp_id
+      assert_includes matched_pulp_ids, openssl_epoch1.pulp_id
+    end
+
+    def test_version_filter_with_explicit_epoch_matches_only_that_epoch
+      # Test that when epoch is explicitly specified, it only matches that epoch
+      openssl_epoch0 = katello_rpms(:openssl_epoch0)
+      openssl_epoch1 = katello_rpms(:openssl_epoch1)
+      @repo.rpms << [openssl_epoch0, openssl_epoch1]
+      @repo.rpms.each do |rpm|
+        rpm.version_sortable = Util::Package.sortable_version(rpm.version)
+        rpm.release_sortable = Util::Package.sortable_version(rpm.release)
+        rpm.save!
+      end
+
+      @filter = FactoryBot.create(:katello_content_view_package_filter)
+      # Filter for version 1:3.2.2 (explicitly specifying epoch 1)
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "openssl",
+                                   :version => "1:3.2.2")
+
+      matched_pulp_ids = @filter.content_unit_pulp_ids(@repo)
+      # Should only match epoch 1
+      refute_includes matched_pulp_ids, openssl_epoch0.pulp_id
+      assert_includes matched_pulp_ids, openssl_epoch1.pulp_id
+    end
+
+    def test_version_filter_with_epoch_zero_specified_matches_only_epoch_zero
+      # Test that when epoch 0 is explicitly specified, it only matches epoch 0
+      openssl_epoch0 = katello_rpms(:openssl_epoch0)
+      openssl_epoch1 = katello_rpms(:openssl_epoch1)
+      @repo.rpms << [openssl_epoch0, openssl_epoch1]
+      @repo.rpms.each do |rpm|
+        rpm.version_sortable = Util::Package.sortable_version(rpm.version)
+        rpm.release_sortable = Util::Package.sortable_version(rpm.release)
+        rpm.save!
+      end
+
+      @filter = FactoryBot.create(:katello_content_view_package_filter)
+      # Filter for version 0:3.2.2 (explicitly specifying epoch 0)
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "openssl",
+                                   :version => "0:3.2.2")
+
+      matched_pulp_ids = @filter.content_unit_pulp_ids(@repo)
+      # Should only match epoch 0
+      assert_includes matched_pulp_ids, openssl_epoch0.pulp_id
+      refute_includes matched_pulp_ids, openssl_epoch1.pulp_id
+    end
+
+    def test_version_filter_greater_than_without_epoch
+      # Test that comparison operators work without epoch specified
+      # "version > 3.2.1" should use epoch 0 for comparison
+      openssl_epoch0 = katello_rpms(:openssl_epoch0)
+      openssl_epoch1 = katello_rpms(:openssl_epoch1)
+      openssl_epoch1_diff = katello_rpms(:openssl_epoch1_diff_version)
+      @repo.rpms << [openssl_epoch0, openssl_epoch1, openssl_epoch1_diff]
+      @repo.rpms.each do |rpm|
+        rpm.version_sortable = Util::Package.sortable_version(rpm.version)
+        rpm.release_sortable = Util::Package.sortable_version(rpm.release)
+        rpm.save!
+      end
+
+      @filter = FactoryBot.create(:katello_content_view_package_filter)
+      # min_version > 3.2.1 without epoch (defaults to epoch 0)
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "openssl",
+                                   :min_version => "3.2.1")
+
+      matched_pulp_ids = @filter.content_unit_pulp_ids(@repo)
+      # Should match openssl_epoch0 (0:3.2.2 > 0:3.2.1) and both epoch 1 packages (epoch 1 > epoch 0)
+      assert_includes matched_pulp_ids, openssl_epoch0.pulp_id
+      assert_includes matched_pulp_ids, openssl_epoch1.pulp_id
+      assert_includes matched_pulp_ids, openssl_epoch1_diff.pulp_id
+    end
+
+    def test_version_filter_greater_than_with_epoch
+      # Test that comparison operators work with epoch specified
+      # "version > 1:3.2.1" should only match packages with epoch 1 and version > 3.2.1
+      openssl_epoch0 = katello_rpms(:openssl_epoch0)
+      openssl_epoch1 = katello_rpms(:openssl_epoch1)
+      openssl_epoch1_diff = katello_rpms(:openssl_epoch1_diff_version)
+      @repo.rpms << [openssl_epoch0, openssl_epoch1, openssl_epoch1_diff]
+      @repo.rpms.each do |rpm|
+        rpm.version_sortable = Util::Package.sortable_version(rpm.version)
+        rpm.release_sortable = Util::Package.sortable_version(rpm.release)
+        rpm.save!
+      end
+
+      @filter = FactoryBot.create(:katello_content_view_package_filter)
+      # min_version > 1:3.2.1 (explicitly epoch 1)
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "openssl",
+                                   :min_version => "1:3.2.1")
+
+      matched_pulp_ids = @filter.content_unit_pulp_ids(@repo)
+      # Should NOT match epoch 0 (epoch 0 < epoch 1)
+      refute_includes matched_pulp_ids, openssl_epoch0.pulp_id
+      # Should match openssl_epoch1 (1:3.2.2 > 1:3.2.1)
+      assert_includes matched_pulp_ids, openssl_epoch1.pulp_id
+      # Should NOT match openssl_epoch1_diff (1:3.2.1 is not > 1:3.2.1)
+      refute_includes matched_pulp_ids, openssl_epoch1_diff.pulp_id
+    end
+
+    def test_version_filter_less_than_without_epoch
+      # Test that less than operator works without epoch specified
+      openssl_epoch0 = katello_rpms(:openssl_epoch0)
+      openssl_epoch1 = katello_rpms(:openssl_epoch1)
+      openssl_epoch1_diff = katello_rpms(:openssl_epoch1_diff_version)
+      @repo.rpms << [openssl_epoch0, openssl_epoch1, openssl_epoch1_diff]
+      @repo.rpms.each do |rpm|
+        rpm.version_sortable = Util::Package.sortable_version(rpm.version)
+        rpm.release_sortable = Util::Package.sortable_version(rpm.release)
+        rpm.save!
+      end
+
+      @filter = FactoryBot.create(:katello_content_view_package_filter)
+      # max_version < 3.2.2 without epoch (defaults to epoch 0)
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "openssl",
+                                   :max_version => "3.2.2")
+
+      matched_pulp_ids = @filter.content_unit_pulp_ids(@repo)
+      # Should NOT match openssl_epoch0 (0:3.2.2 is not < 0:3.2.2)
+      refute_includes matched_pulp_ids, openssl_epoch0.pulp_id
+      # Should NOT match epoch 1 packages (epoch 1 > epoch 0)
+      refute_includes matched_pulp_ids, openssl_epoch1.pulp_id
+      refute_includes matched_pulp_ids, openssl_epoch1_diff.pulp_id
+    end
+
+    def test_version_filter_less_than_with_explicit_epoch
+      # Test that less than operator works with epoch specified
+      openssl_epoch0 = katello_rpms(:openssl_epoch0)
+      openssl_epoch1 = katello_rpms(:openssl_epoch1)
+      openssl_epoch1_diff = katello_rpms(:openssl_epoch1_diff_version)
+      @repo.rpms << [openssl_epoch0, openssl_epoch1, openssl_epoch1_diff]
+      @repo.rpms.each do |rpm|
+        rpm.version_sortable = Util::Package.sortable_version(rpm.version)
+        rpm.release_sortable = Util::Package.sortable_version(rpm.release)
+        rpm.save!
+      end
+
+      @filter = FactoryBot.create(:katello_content_view_package_filter)
+      # max_version < 1:3.2.2 (explicitly epoch 1)
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "openssl",
+                                   :max_version => "1:3.2.2")
+
+      matched_pulp_ids = @filter.content_unit_pulp_ids(@repo)
+      # Should match epoch 0 (epoch 0 < epoch 1)
+      assert_includes matched_pulp_ids, openssl_epoch0.pulp_id
+      # Should NOT match openssl_epoch1 (1:3.2.2 is not < 1:3.2.2)
+      refute_includes matched_pulp_ids, openssl_epoch1.pulp_id
+      # Should match openssl_epoch1_diff (1:3.2.1 < 1:3.2.2)
+      assert_includes matched_pulp_ids, openssl_epoch1_diff.pulp_id
+    end
   end
 end
