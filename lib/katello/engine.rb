@@ -90,6 +90,16 @@ module Katello
         ::ForemanTasks.dynflow.config.on_init(false) do |_world|
           Katello::Engine.register_scheduled_task(Actions::Candlepin::Consumer::CleanBackendObjects, '0 0 1 * *')
         end
+
+        unless Rails.env.test?
+          ::ForemanTasks.dynflow.config.post_executor_init do |world|
+            locked = Actions::Katello::Applicability::Scheduler.singleton_locked?(world)
+            # Can't find a nice way to do this without singleton lock runtime errors which emit an ugly stack trace
+            if !locked && ForemanTasks::Task::DynflowTask.for_action(Actions::Katello::Applicability::Scheduler).where(state: 'paused').empty?
+              Katello::Applicability::Scheduler.trigger_scheduler_task
+            end
+          end
+        end
       end
     rescue ActiveRecord::NoDatabaseError # rubocop:disable Lint/SuppressedException
     end
@@ -230,7 +240,6 @@ module Katello
       load 'katello/scheduled_jobs.rb'
 
       Katello::EventQueue.register_event(Katello::Events::DeleteLatestContentViewVersion::EVENT_TYPE, Katello::Events::DeleteLatestContentViewVersion)
-      Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
     end
 
     rake_tasks do

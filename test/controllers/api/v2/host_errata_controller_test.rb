@@ -138,11 +138,11 @@ module Katello
     end
 
     def test_applicability
+      Katello::Host::ContentFacet.expects(:trigger_applicability_generation).with(@host.id)
+
       put :applicability, params: { :host_id => @host.id }
 
       assert_response :success
-
-      assert Katello::HostQueueElement.find_by(host_id: @host.id)
     end
   end
 end

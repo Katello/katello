@@ -11,6 +11,7 @@ module Katello
     end
 
     def test_pop_1_host
+      Katello::Applicability::Scheduler.expects(:trigger_drain)
       ApplicableHostQueue.push_hosts([999])
       popped_hosts = ApplicableHostQueue.pop_hosts
 
@@ -18,6 +19,7 @@ module Katello
     end
 
     def test_pop_5_hosts
+      Katello::Applicability::Scheduler.expects(:trigger_drain).times(5)
       5.times { |i| ApplicableHostQueue.push_hosts([i]) }
       popped_hosts = ApplicableHostQueue.pop_hosts
 
@@ -25,6 +27,7 @@ module Katello
     end
 
     def test_pop_batch_size_only
+      Katello::Applicability::Scheduler.expects(:trigger_drain).times(5)
       Setting['applicability_batch_size'] = 3
       5.times { |i| ApplicableHostQueue.push_hosts([i]) }
       popped_hosts = ApplicableHostQueue.pop_hosts
@@ -33,6 +36,7 @@ module Katello
     end
 
     def test_pop_duplicate_hosts
+      Katello::Applicability::Scheduler.expects(:trigger_drain).times(10)
       5.times { |i| ApplicableHostQueue.push_hosts([i]) }
       5.times { |i| ApplicableHostQueue.push_hosts([i]) }
       popped_hosts = ApplicableHostQueue.pop_hosts
@@ -41,6 +45,7 @@ module Katello
     end
 
     def test_queue_depth
+      Katello::Applicability::Scheduler.expects(:trigger_drain).times(3)
       3.times { |i| ApplicableHostQueue.push_hosts([i]) }
 
       assert_equal 3, ApplicableHostQueue.queue_depth
