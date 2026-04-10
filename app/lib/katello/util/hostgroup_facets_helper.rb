@@ -11,8 +11,7 @@ module Katello
                     id: Katello::Hostgroup::ContentFacet.
                         where(content_source_id: nil,
                               kickstart_repository_id: nil,
-                              content_view_id: nil,
-                              lifecycle_environment_id: nil).select(:hostgroup_id))
+                              content_view_environment_id: nil).select(:hostgroup_id))
         parents = groups.select { |group| group.parent.blank? }
         children = groups.reject { |group| group.parent.blank? }
         # we want the parents to get created before the children
@@ -71,12 +70,18 @@ module Katello
         # So when it goes to version 1 since cv_id and ks_repo are already set,
         # it will ignore. It will finally
         # return {content_view_id: 11, kickstart_repository_id: 1200}
+        #
+        # NOTE: After migration to content_view_environment_id, old audit logs still contain
+        # the legacy field names (lifecycle_environment_id, content_view_id).
+        # The model's virtual attribute setters handle conversion to content_view_environment.
+        # We also include the new content_view_environment_id for newer audits.
         facet_values = {}
         hg.audits.reverse_each do |audit|
           hg_changes = audit.audited_changes.slice("lifecycle_environment_id",
                                                    "kickstart_repository_id",
                                                    "content_view_id",
-                                                   "content_source_id")
+                                                   "content_source_id",
+                                                   "content_view_environment_id")
           facet_values = hg_changes.merge(facet_values)
         end
 

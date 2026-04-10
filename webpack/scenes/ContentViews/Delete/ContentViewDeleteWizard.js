@@ -18,6 +18,7 @@ import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathA
 import getContentViewDetails, { getContentViewVersions } from '../Details/ContentViewDetailActions';
 import CVDeletionReassignHostsForm from './Steps/CVDeletionReassignHostsForm';
 import CVDeletionReassignActivationKeysForm from './Steps/CVDeletionReassignActivationKeysForm';
+import CVDeletionReassignHostgroupsForm from './Steps/CVDeletionReassignHostgroupsForm';
 import CVDeletionReview from './Steps/CVDeletionReview';
 import CVDeletionFinish from './Steps/CVDeletionFinish';
 import CVDeleteContext from './CVDeleteContext';
@@ -33,13 +34,17 @@ const ContentViewDeleteWizard =
     const cvDetailsStatus = useSelector(state => selectCVDetailStatus(state, cvId));
     const [selectedEnvForAK, setSelectedEnvForAK] = useState([]);
     const [selectedEnvForHost, setSelectedEnvForHost] = useState([]);
+    const [selectedEnvForHostgroup, setSelectedEnvForHostgroup] = useState([]);
     const dispatch = useDispatch();
     const [selectedCVForAK, setSelectedCVForAK] = useState(null);
     const [selectedCVNameForAK, setSelectedCVNameForAK] = useState(null);
     const [selectedCVForHosts, setSelectedCVForHosts] = useState(null);
     const [selectedCVNameForHosts, setSelectedCVNameForHosts] = useState(null);
+    const [selectedCVForHostgroups, setSelectedCVForHostgroups] = useState(null);
+    const [selectedCVNameForHostgroups, setSelectedCVNameForHostgroups] = useState(null);
     const [affectedActivationKeys, setAffectedActivationKeys] = useState(false);
     const [affectedHosts, setAffectedHosts] = useState(false);
+    const [affectedHostgroups, setAffectedHostgroups] = useState(false);
     const [canReview, setCanReview] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
 
@@ -63,9 +68,13 @@ const ContentViewDeleteWizard =
       const activationStepComplete = affectedActivationKeys ?
         selectedEnvForAK && selectedCVForAK :
         true;
-      setCanReview(hostsStepComplete && activationStepComplete);
+      const hostgroupsStepComplete = affectedHostgroups ?
+        selectedEnvForHostgroup && selectedCVForHostgroups :
+        true;
+      setCanReview(hostsStepComplete && activationStepComplete && hostgroupsStepComplete);
     }, [affectedHosts, selectedEnvForHost, selectedCVForHosts,
-      affectedActivationKeys, selectedEnvForAK, selectedCVForAK]);
+      affectedActivationKeys, selectedEnvForAK, selectedCVForAK,
+      affectedHostgroups, selectedEnvForHostgroup, selectedCVForHostgroups]);
 
     const environmentSelectionStep = {
       id: 1,
@@ -77,21 +86,26 @@ const ContentViewDeleteWizard =
       name: __('Reassign affected hosts'),
       component: <CVDeletionReassignHostsForm />,
     };
-    const affectedKeysStep = {
+    const affectedHostgroupsStep = {
       id: 3,
+      name: __('Reassign affected host groups'),
+      component: <CVDeletionReassignHostgroupsForm />,
+    };
+    const affectedKeysStep = {
+      id: 4,
       name: __('Reassign affected activation keys'),
       component: <CVDeletionReassignActivationKeysForm />,
       enableNext: canReview,
     };
     const reviewStep = {
-      id: 4,
+      id: 5,
       name: __('Review details'),
       component: <CVDeletionReview />,
       canJumpTo: canReview,
       nextButtonText: __('Delete'),
     };
     const finishStep = {
-      id: 5,
+      id: 6,
       name: __('Delete'),
       component: <CVDeletionFinish />,
       isFinishedStep: true,
@@ -99,15 +113,17 @@ const ContentViewDeleteWizard =
 
     useDeepCompareEffect(() => {
       if (!(cvVersionStatus === STATUS.LOADING || cvDetailsStatus === STATUS.LOADING)) {
-        const { activation_keys: keys, hosts } = cvDetailsResponse;
+        const { activation_keys: keys, hosts, hostgroups } = cvDetailsResponse;
         setAffectedHosts(!!(hosts?.length));
         setAffectedActivationKeys(!!(keys?.length));
+        setAffectedHostgroups(!!(hostgroups?.length));
       }
     }, [cvVersionResponse, cvVersionStatus, cvDetailsResponse, cvDetailsStatus]);
 
     const steps = [
       environmentSelectionStep,
       ...(affectedHosts ? [affectedHostsStep] : []),
+      ...(affectedHostgroups ? [affectedHostgroupsStep] : []),
       ...(affectedActivationKeys ? [affectedKeysStep] : []),
       reviewStep,
       finishStep,
@@ -132,6 +148,8 @@ const ContentViewDeleteWizard =
         setSelectedEnvForAK,
         selectedEnvForHost,
         setSelectedEnvForHost,
+        selectedEnvForHostgroup,
+        setSelectedEnvForHostgroup,
         selectedCVForAK,
         setSelectedCVForAK,
         selectedCVNameForAK,
@@ -140,8 +158,13 @@ const ContentViewDeleteWizard =
         setSelectedCVForHosts,
         selectedCVNameForHosts,
         setSelectedCVNameForHosts,
+        selectedCVForHostgroups,
+        setSelectedCVForHostgroups,
+        selectedCVNameForHostgroups,
+        setSelectedCVNameForHostgroups,
         affectedActivationKeys,
         affectedHosts,
+        affectedHostgroups,
       }}
       >
         <Wizard
