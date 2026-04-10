@@ -210,7 +210,6 @@ module Katello
           # The full fact set arrives via PUT /rhsm/consumers/:id (step 6).
           import_critical_registration_facts(host, consumer_params[:facts])
 
-          finalize_registration(host)
           finalize_registration(host, consumer_data)
         end
 
@@ -248,11 +247,6 @@ module Katello
       def create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environments.map(&:cp_id), consumer_params, activation_keys.map(&:cp_name), host.organization)
-        uuid = cp_create[:uuid]
-        if uuid.present? && uuid != host.subscription_facet.uuid
-          Rails.logger.info(_("Candlepin returned different consumer uuid than requested (%s), updating uuid in subscription_facet.") % uuid)
-          host.subscription_facet.uuid = uuid
-        ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
         consumer_data = normalize_consumer_response(cp_create)
         if consumer_data['uuid'] != host.subscription_facet.uuid
           Rails.logger.info(_("Candlepin returned different consumer uuid than requested (%s), updating uuid in subscription_facet.") % consumer_data['uuid'])
