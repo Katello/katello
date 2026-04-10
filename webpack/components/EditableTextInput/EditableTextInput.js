@@ -17,7 +17,7 @@ const PASSWORD_MASK = '••••••••';
 
 const EditableTextInput = ({
   onEdit, value, textArea, attribute, placeholder, isPassword, hasPassword,
-  component, currentAttribute, setCurrentAttribute, disabled, ouiaId,
+  component, currentAttribute, setCurrentAttribute, disabled, ouiaId, textAreaProps,
 }) => {
   const [inputValue, setInputValue] = useState(value);
   const [editing, setEditing] = useState(false);
@@ -76,7 +76,7 @@ const EditableTextInput = ({
     <Split>
       <SplitItem>
         {textArea ?
-          (<TextArea {...inputProps} aria-label={`${attribute} text area`} />) :
+          (<TextArea {...inputProps} {...textAreaProps} aria-label={`${attribute} text area`} />) :
           (<TextInput
             {...inputProps}
             type={(isPassword && !showPassword) ? 'password' : 'text'}
@@ -149,6 +149,7 @@ EditableTextInput.propTypes = {
   isPassword: PropTypes.bool,
   hasPassword: PropTypes.bool,
   ouiaId: PropTypes.string,
+  textAreaProps: PropTypes.shape({}),
 };
 
 EditableTextInput.defaultProps = {
@@ -162,6 +163,7 @@ EditableTextInput.defaultProps = {
   isPassword: false,
   hasPassword: false,
   ouiaId: undefined,
+  textAreaProps: {},
 };
 
 export default EditableTextInput;
