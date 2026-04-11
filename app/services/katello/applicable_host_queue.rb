@@ -9,6 +9,8 @@ module Katello
     end
 
     def self.push_hosts(ids)
+      return if ids.empty?
+
       ActiveSupport::Notifications.instrument("applicability_push_hosts") do
         HostQueueElement.import ids.map { |host_id| { host_id: host_id } }, validate: false
       end

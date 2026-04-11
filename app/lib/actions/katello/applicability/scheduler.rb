@@ -16,6 +16,7 @@ module Actions
         def drain_queue
           until (hosts = ::Katello::ApplicableHostQueue.pop_hosts).empty?
             ForemanTasks.async_task(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: hosts.map(&:host_id))
+            sleep 3 unless hosts.length == ::Katello::ApplicableHostQueue.batch_size # allow some time for the queue to fill
           end
         rescue => e
           Rails.logger.error("Error while draining applicability queue #{e}")

@@ -16,7 +16,6 @@ module Katello
     test 'params are not parsed in the controller' do
       Resources::Candlepin::Consumer.expects(:get).returns({})
       stub_organization_creator
-      Katello::Host::ContentFacet.expects(:trigger_applicability_generation).with(@host.id)
       packages = [{"vendor" => "CentOS", "name" => "python-six", "epoch" => 0, "version" => "1.9.0", "release" => "2.el7", "arch" => "noarch"}]
 
       put "/rhsm/consumers/#{@host.subscription_facet.uuid}/packages", params: packages.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }

@@ -19,7 +19,6 @@ module Katello
         ForemanTasks.trigger(Actions::Katello::Applicability::Scheduler)
       end
 
-      # Alternative to this, the Scheduler action could just poll in a loop.
       def self.trigger_drain
         return if TRIGGER_MUTEX.locked?
 
@@ -27,8 +26,11 @@ module Katello
           return if Katello::ApplicableHostQueue.queue_depth == 0
           return unless scheduler_task # Anything else to do in this scenario?
 
-          ForemanTasks.dynflow.world.event(scheduler_task.external_id, 2, nil)
-          Rails.logger.info "Host applicability generation scheduled"
+          run_step = scheduler_task.running_steps.first
+          return unless run_step # is this possible?
+          return unless run_step.state == :suspended
+
+          ForemanTasks.dynflow.world.event(scheduler_task.external_id, run_step.id, nil)
         end
       end
     end
