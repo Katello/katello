@@ -91,7 +91,7 @@ module Katello
           Katello::Engine.register_scheduled_task(Actions::Candlepin::Consumer::CleanBackendObjects, '0 0 1 * *')
         end
 
-        unless Rails.env.test? || !Foreman.in_rake?
+        unless Rails.env.test? || Foreman.in_rake?
           ::ForemanTasks.dynflow.config.post_executor_init do |world|
             locked = Actions::Katello::Applicability::Scheduler.singleton_locked?(world)
             # Can't find a nice way to do this without singleton lock runtime errors which emit an ugly stack trace
