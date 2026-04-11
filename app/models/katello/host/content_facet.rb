@@ -266,7 +266,6 @@ module Katello
       def self.trigger_applicability_generation(host_ids)
         host_ids = [host_ids] unless host_ids.is_a?(Array)
         ::Katello::ApplicableHostQueue.push_hosts(host_ids)
-        ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, 0)
       end
 
       # Katello applicability
