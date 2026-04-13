@@ -25,10 +25,18 @@ const ActionableDetail = ({
   setCurrentAttribute,
   disabled,
   loading,
+  textAreaProps,
   ...rest
 }) => {
   const displayProps = {
-    attribute, value, onEdit, disabled, currentAttribute, setCurrentAttribute, ...rest,
+    attribute,
+    value,
+    onEdit,
+    disabled,
+    currentAttribute,
+    setCurrentAttribute,
+    textAreaProps,
+    ...rest,
   };
 
   return (
@@ -81,6 +89,7 @@ ActionableDetail.propTypes = {
   setCurrentAttribute: PropTypes.func,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
+  textAreaProps: PropTypes.shape({}),
 };
 
 ActionableDetail.defaultProps = {
@@ -93,6 +102,7 @@ ActionableDetail.defaultProps = {
   setCurrentAttribute: undefined,
   disabled: false,
   loading: false,
+  textAreaProps: {},
 };
 
 export default ActionableDetail;

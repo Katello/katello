@@ -1,0 +1,21 @@
+// Fix for PatternFly 5 horizontal tabs active indicator position
+// The active indicator should appear at the bottom border of the tab area
+// Scoped to RoutedTabs component only
+.pf-v5-c-tabs[data-ouia-component-id="routed-tabs"] {
+  &:not(.pf-m-vertical) {
+    .pf-v5-c-tabs__list {
+      // Remove any extra margin that pushes the indicator up
+      margin-bottom: 0;
+    }
+    // Ensure the active indicator is positioned at the actual bottom
+    .pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__link::after {
+      bottom: 0;
+      top: auto;
+    }
+  }
+}
+
+// Apply margin only to RoutedTabs component
+.pf-v5-c-tabs[data-ouia-component-id="routed-tabs"] {
+  margin: 0 24px;
+}
