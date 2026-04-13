@@ -2,25 +2,21 @@ module Actions
   module Katello
     module Applicability
       module Hosts
-        class BulkGenerate < Actions::EntryAction
+        class BulkGenerate < Actions::Base
           input_format do
             param :host_ids, Array
           end
 
           def run
             error = false
-            input[:host_ids].each do |host_id|
-              content_facet = ::Katello::Host::ContentFacet.find_by_host_id(host_id)
-              if content_facet.present?
-                # Catch errors and log them, but continue processing the rest of the hosts
-                content_facet.calculate_and_import_applicability
-              else
-                Rails.logger.warn(_("Content Facet for host with id %s is non-existent. Skipping applicability calculation.") % host_id)
-              end
+
+            ::Katello::Host::ContentFacet.includes(:host).where(host_id: input[:host_ids]).find_each do |content_facet|
+              content_facet.calculate_and_import_applicability
             rescue NoMethodError, PG::Error => e
-              Rails.logger.error("Error calculating applicability for host #{host_id}: #{e.message}")
+              Rails.logger.error("Error calculating applicability for host #{content_facet.host_id}: #{e.message}")
               error = true
             end
+
             fail "Error calculating applicability for one or more hosts" if error
           end
 
@@ -30,10 +26,6 @@ module Actions
 
           def queue
             ::Katello::HOST_TASKS_QUEUE
-          end
-
-          def resource_locks
-            :link
           end
 
           def hostname(host_id)

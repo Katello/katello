@@ -9,13 +9,18 @@ module Katello
     end
 
     def self.push_hosts(ids)
-      HostQueueElement.import ids.map { |host_id| { host_id: host_id } }, validate: false
+      return if ids.empty?
+
+      result = HostQueueElement.insert_all(ids.map { |host_id| { host_id: host_id } })
+      ActiveSupport::Notifications.instrument("applicability_push_hosts") if result.rows.count > 0
     end
 
+    DELETE_QUERY = "DELETE FROM #{Katello::HostQueueElement.table_name} WHERE id IN (%s) RETURNING host_id".freeze
+
     def self.pop_hosts(amount = self.batch_size)
-      queue = HostQueueElement.group(:host_id).select("MIN(created_at) as created_at, host_id").limit(amount)
-      HostQueueElement.where(host_id: queue.map(&:host_id)).delete_all
-      queue
+      query = HostQueueElement.order(:id).select(:id).limit(amount)
+      result = ActiveRecord::Base.connection.execute(format(DELETE_QUERY, query.to_sql))
+      result.values.flatten
     end
   end
 end
