@@ -33,9 +33,10 @@ module Katello
       end
 
       def self.trigger_drain
-        return unless DRAIN_MUTEX.try_lock
+        return if DRAIN_MUTEX.locked?
 
-        begin
+        # synchronize instead of try_lock -> consistency is more important than performance
+        DRAIN_MUTEX.synchronize do
           depth = Katello::ApplicableHostQueue.queue_depth
           return if depth == 0
           return if scheduler_task
@@ -47,8 +48,6 @@ module Katello
             # High applicability activity detected
             trigger_scheduler_task
           end
-        ensure
-          DRAIN_MUTEX.unlock
         end
       end
     end
