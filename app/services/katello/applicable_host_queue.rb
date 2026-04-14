@@ -11,8 +11,8 @@ module Katello
     def self.push_hosts(ids)
       return if ids.empty?
 
-      result = HostQueueElement.insert_all(ids.map { |host_id| { host_id: host_id } }, unique_by: :host_id)
-      ActiveSupport::Notifications.instrument("applicability_push_hosts") if result.rows.count > 0
+      HostQueueElement.insert_all(ids.map { |host_id| { host_id: host_id } }, unique_by: :host_id)
+      ActiveSupport::Notifications.instrument("applicability_push_hosts")
     end
 
     DELETE_QUERY = "DELETE FROM #{Katello::HostQueueElement.table_name} WHERE id IN (%s) RETURNING host_id".freeze
