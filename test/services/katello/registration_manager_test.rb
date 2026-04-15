@@ -294,7 +294,6 @@ module Katello
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Katello::EventQueue.expects(:push_event).never
         ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
       end
 
