@@ -3,64 +3,111 @@ require 'katello_test_helper'
 module Katello
   module Applicability
     class SchedulerTest < ActiveSupport::TestCase
-      def queue
-        Katello::ApplicableHostQueue
+      let(:scheduler) { Katello::Applicability::Scheduler }
+      let(:queue) { @queue }
+
+      def setup_queue(queue)
+        @queue = queue
+        scheduler.stubs(:queue).returns(queue)
+      end
+
+      class TestQueue
+        def pop_hosts
+          @ids = @queue.pop
+          yield(@ids)
+          @ids
+        end
+
+        def queue_depth
+          @queue.flatten.length
+        end
+      end
+
+      class EmptyQueue < TestQueue
+        def initialize
+          @queue = []
+          super
+        end
+      end
+
+      class SingleBatchQueue < TestQueue
+        def initialize
+          @queue = [[], [1]]
+          super
+        end
+
+        def batch_size
+          1
+        end
+      end
+
+      class LowVolumeQueue < TestQueue
+        def initialize
+          @queue = [[], [1]]
+          super
+        end
+
+        def batch_size
+          5
+        end
       end
 
       class DrainLoopTest < SchedulerTest
         test "does nothing when queue is empty" do
-          queue.expects(:pop_hosts).returns([])
-          ForemanTasks.expects(:async_task).never
+          setup_queue EmptyQueue.new
 
-          Katello::Applicability::Scheduler.drain_loop
+          ForemanTasks.expects(:async_task).never
+          scheduler.expects(:sleep).never
+
+          scheduler.drain_loop
         end
 
         test "spawns BulkGenerate" do
-          queue.stubs(:pop_hosts).returns([1]).then.returns([])
-          ForemanTasks.expects(:async_task).with(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: [1])
-          Katello::Applicability::Scheduler.expects(:sleep)
+          setup_queue SingleBatchQueue.new
 
-          Katello::Applicability::Scheduler.drain_loop
+          ForemanTasks.expects(:async_task).with(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: [1])
+          scheduler.expects(:sleep).never
+
+          scheduler.drain_loop
         end
 
-        test "doesn't sleep when queue is full" do
-          queue.stubs(:pop_hosts).returns([1, 2, 3]).then.returns([])
-          queue.stubs(:batch_size).returns(3)
-          ForemanTasks.expects(:async_task)
-          Katello::Applicability::Scheduler.expects(:sleep).never
+        test "sleeps when queue is filling" do
+          setup_queue LowVolumeQueue.new
 
-          Katello::Applicability::Scheduler.drain_loop
+          ForemanTasks.expects(:async_task).with(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: [1])
+          scheduler.expects(:sleep)
+
+          scheduler.drain_loop
         end
       end
 
       class TriggerDrainTest < SchedulerTest
         test "spawns BulkGenerate" do
-          queue.expects(:batch_size).returns(2)
-          queue.expects(:queue_depth).returns(1)
-          Katello::Applicability::Scheduler.expects(:bulk_generate_tasks).returns([])
-          queue.expects(:pop_hosts).returns([:fake])
-          ForemanTasks.expects(:async_task).with(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: [:fake])
+          setup_queue LowVolumeQueue.new
+          scheduler.expects(:bulk_generate_tasks).returns([])
+          ForemanTasks.expects(:async_task).with(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: [1])
 
           Katello::Applicability::Scheduler.trigger_drain
         end
 
         test "spawns scheduler task" do
-          queue.expects(:batch_size).returns(2)
-          queue.expects(:queue_depth).returns(3)
+          setup_queue LowVolumeQueue.new
+          scheduler.expects(:bulk_generate_tasks).returns([:fake])
+
           ForemanTasks.expects(:async_task).with(Actions::Katello::Applicability::Scheduler)
 
           Katello::Applicability::Scheduler.trigger_drain
         end
 
         test "does nothing when queue is empty" do
-          queue.expects(:queue_depth).returns(0)
+          setup_queue EmptyQueue.new
           ForemanTasks.expects(:async_task).never
 
           Katello::Applicability::Scheduler.trigger_drain
         end
 
         test "spawns nothing when scheduler task is running" do
-          queue.expects(:queue_depth).returns(1)
+          setup_queue LowVolumeQueue.new
           Katello::Applicability::Scheduler.expects(:scheduler_task).returns(stub)
           ForemanTasks.expects(:async_task).never
 

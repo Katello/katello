@@ -15,12 +15,16 @@ module Katello
       ActiveSupport::Notifications.instrument("applicability_push_hosts")
     end
 
-    DELETE_QUERY = "DELETE FROM #{Katello::HostQueueElement.table_name} WHERE id IN (%s) RETURNING host_id".freeze
-
     def self.pop_hosts(amount = self.batch_size)
-      query = HostQueueElement.order(:id).select(:id).limit(amount)
-      result = ActiveRecord::Base.connection.execute(format(DELETE_QUERY, query.to_sql))
-      result.values.flatten
+      HostQueueElement.transaction do
+        elements = HostQueueElement.order(:id).select(:id, :host_id).limit(amount).lock
+
+        host_ids = elements.map(&:host_id)
+        yield(host_ids) if block_given?
+
+        elements.delete_all
+        host_ids
+      end
     end
   end
 end

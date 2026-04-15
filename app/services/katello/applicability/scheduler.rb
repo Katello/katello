@@ -8,6 +8,10 @@ module Katello
       DRAIN_MUTEX = Mutex.new
       DRAIN_SLEEP_SECONDS = 3
 
+      def self.queue
+        Katello::ApplicableHostQueue
+      end
+
       def self.scheduler_task
         ::ForemanTasks::Task::DynflowTask.running.for_action(Actions::Katello::Applicability::Scheduler).first
       end
@@ -21,32 +25,38 @@ module Katello
       end
 
       def self.drain_loop
-        until (host_ids = ::Katello::ApplicableHostQueue.pop_hosts).empty?
-          begin
-            ForemanTasks.async_task(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: host_ids)
-          rescue => e
-            Rails.logger.error("Error while draining applicability queue #{e}")
-          end
+        catch(:done) do
+          loop do
+            ids = queue.pop_hosts do |host_ids|
+              throw(:done) if host_ids.empty?
 
-          sleep DRAIN_SLEEP_SECONDS unless host_ids.length == ::Katello::ApplicableHostQueue.batch_size # allow some time for the queue to fill
+              ForemanTasks.async_task(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: host_ids)
+            end
+            sleep DRAIN_SLEEP_SECONDS unless ids.length == queue.batch_size # allow some time for the queue to fill
+          end
         end
       end
 
       def self.trigger_drain
         return if DRAIN_MUTEX.locked?
 
-        # synchronize instead of try_lock -> consistency is more important than performance
         DRAIN_MUTEX.synchronize do
-          depth = Katello::ApplicableHostQueue.queue_depth
+          depth = queue.queue_depth
           return if depth == 0
           return if scheduler_task
 
-          if depth < Katello::ApplicableHostQueue.batch_size && bulk_generate_tasks.empty?
-            host_ids = Katello::ApplicableHostQueue.pop_hosts
-            ForemanTasks.async_task(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: host_ids)
+          if depth < queue.batch_size && bulk_generate_tasks.empty?
+            queue.pop_hosts do |host_ids|
+              ForemanTasks.async_task(Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: host_ids)
+            end
           else
             # High applicability activity detected
-            trigger_scheduler_task
+            begin
+              trigger_scheduler_task
+            rescue RuntimeError => e
+              # Scheduler already started
+              Rails.logger.error "[applicability] #{e}"
+            end
           end
         end
       end
