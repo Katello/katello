@@ -6,7 +6,7 @@ module Katello
       end
 
       DRAIN_MUTEX = Mutex.new
-      DRAIN_SLEEP_SECONDS = 3
+      DRAIN_SLEEP_SECONDS = 1
 
       def self.queue
         Katello::ApplicableHostQueue
