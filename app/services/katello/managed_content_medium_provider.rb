@@ -17,7 +17,8 @@ module Katello
     # If there are any 'AppStream' variants, we need to make them
     # available to Anaconda
     def additional_media
-      appstream_repos = entity.operatingsystem.variant_repos(entity, 'AppStream')
+      os = entity.operatingsystem
+      appstream_repos = (os&.respond_to?(:variant_repos) ? os.variant_repos(entity, 'AppStream') : [])
       super + (appstream_repos.present? ? appstream_repos : [])
     end
 
