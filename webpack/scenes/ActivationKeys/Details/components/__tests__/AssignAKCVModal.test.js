@@ -127,7 +127,7 @@ describe('AssignAKCVModal', () => {
     );
 
     await patientlyWaitFor(() => {
-      expect(getByText('Select a content view')).toBeInTheDocument();
+      expect(getByText('Select a content view environment')).toBeInTheDocument();
     });
   });
 

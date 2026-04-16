@@ -20,10 +20,10 @@ const Hosts = ({
 
   return (
     <>
-      <GridItem span={7}>
+      <GridItem span={8}>
         {hostsWithoutContent.length > 0 &&
         <p>
-          { __('Some hosts are not registered as content hosts and will be ignored.') }
+          { __('Some hosts are not registered and will be ignored.') }
         </p>
 }
         {contentHosts.length > 0 && (<Label as="button" color="green" onClick={() => setModalHosts(true)}>{titleHosts}: {contentHosts.length}</Label>)}
