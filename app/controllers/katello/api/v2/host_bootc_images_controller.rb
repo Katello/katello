@@ -11,12 +11,8 @@ module Katello
     param_group :search, Api::V2::ApiController
     def bootc_images
       params[:sort_by] = sanitize_sort_column(params[:sort_by])
-      params[:sort_order] ||= 'asc'
-      if params[:order]
-        params[:order] = "#{params[:order].split(' ')[0]} #{sanitize_sort_order(params[:order].split(' ')[1])}"
-      else
-        params[:order] = "#{params[:sort_by]} #{sanitize_sort_order(params[:sort_order])}"
-      end
+      params[:sort_order] = sanitize_sort_order(params[:sort_order])
+      params[:order] = "#{params[:sort_by]} #{params[:sort_order]}"
       per_page = params[:per_page].present? ? params[:per_page].to_i : Setting[:entries_per_page]
       page = params[:page].present? ? params[:page].to_i : 1
 
