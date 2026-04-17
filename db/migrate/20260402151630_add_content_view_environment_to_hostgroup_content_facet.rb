@@ -94,6 +94,13 @@ class AddContentViewEnvironmentToHostgroupContentFacet < ActiveRecord::Migration
     end
 
     handle_migration_results(failed_migrations, total_count, success_count)
+
+    # Return counts for decision making
+    {
+      total_count: total_count,
+      success_count: success_count,
+      failed_count: failed_migrations.count,
+    }
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -116,6 +123,15 @@ class AddContentViewEnvironmentToHostgroupContentFacet < ActiveRecord::Migration
     if cv_env_id.present? && hostgroup_facet.update_column(:content_view_environment_id, cv_env_id)
       { success: true }
     else
+      # Log the failure with actual values for debugging
+      if cv_env_id.blank?
+        hg_name = hostgroup&.name || "Unknown"
+        hg_id = hostgroup_facet.hostgroup_id
+        say "⚠️  Hostgroup '#{hg_name}' (HG ID: #{hg_id}, Facet ID: #{hostgroup_facet.id}): " \
+            "content_view_id=#{cv_id}, lifecycle_environment_id=#{lce_id} " \
+            "could not be migrated (no matching ContentViewEnvironment found)"
+      end
+
       {
         success: false,
         error_info: build_error_info(hostgroup_facet, hostgroup, cv_id, lce_id, cv_env_id),
@@ -200,20 +216,111 @@ class AddContentViewEnvironmentToHostgroupContentFacet < ActiveRecord::Migration
   end
 
   def build_error_info(hostgroup_facet, hostgroup, cv_id, lce_id, cv_env_id, custom_reason = nil)
+    # Look up names for easier manual fixing
+    cv_name = cv_id.present? ? ::Katello::ContentView.find_by(id: cv_id)&.name : nil
+    lce_name = lce_id.present? ? ::Katello::KTEnvironment.find_by(id: lce_id)&.name : nil
+
     {
       content_facet_id: hostgroup_facet.id,
       hostgroup_id: hostgroup_facet.hostgroup_id,
       hostgroup_name: hostgroup&.name || "Unknown",
       content_view_id: cv_id,
+      content_view_name: cv_name || "Unknown",
       lifecycle_environment_id: lce_id,
+      lifecycle_environment_name: lce_name || "Unknown",
       reason: custom_reason || (cv_env_id.present? ? "Update failed" : "ContentViewEnvironment not found"),
     }
   end
 
-  def handle_migration_results(failed_migrations, total_count, success_count)
+  def write_failed_migrations_to_file(failed_migrations)
+    timestamp = Time.now.strftime('%Y%m%d_%H%M%S')
+    log_file = Rails.root.join('tmp', "hostgroup_cve_migration_failures_#{timestamp}.log")
+    csv_file = Rails.root.join('tmp', "hostgroup_cve_migration_failures_#{timestamp}.csv")
+
+    write_log_file(log_file, failed_migrations)
+    write_csv_file(csv_file, failed_migrations)
+
+    say "   CSV file saved to: #{csv_file}"
+    log_file.to_s
+  end
+
+  def write_log_file(log_file, failed_migrations)
+    File.open(log_file, 'w') do |f|
+      write_log_header(f)
+      write_log_failures(f, failed_migrations)
+      f.puts "=" * 80
+      f.puts "Total failed: #{failed_migrations.count}"
+    end
+  end
+
+  def write_log_header(file)
+    file.puts "Hostgroup Content View Environment Migration Failures"
+    file.puts "Migration timestamp: #{Time.now}"
+    file.puts "=" * 80
+    file.puts ""
+    file.puts "The following hostgroups could not be automatically migrated because their"
+    file.puts "content_view_id and lifecycle_environment_id combination does not have a"
+    file.puts "corresponding ContentViewEnvironment record."
+    file.puts ""
+    file.puts "To fix each hostgroup:"
+    file.puts "1. Ensure the content view is published and promoted to the lifecycle environment"
+    file.puts "2. Edit the hostgroup in the UI and select a Content View Environment"
+    file.puts "3. Or use the Rails console:"
+    file.puts ""
+    file.puts "   hg = Hostgroup.find(<hostgroup_id>)"
+    file.puts "   hg.content_view = ContentView.find(<content_view_id>)"
+    file.puts "   hg.lifecycle_environment = KTEnvironment.find(<lifecycle_environment_id>)"
+    file.puts "   hg.save!"
+    file.puts ""
+    file.puts "=" * 80
+    file.puts ""
+  end
+
+  def write_log_failures(file, failed_migrations)
+    failed_migrations.each_with_index do |failure, index|
+      file.puts "#{index + 1}. Hostgroup: #{failure[:hostgroup_name]} (ID: #{failure[:hostgroup_id]})"
+      file.puts "   Content Facet ID: #{failure[:content_facet_id]}"
+      file.puts "   Content View: #{failure[:content_view_name]} (ID: #{failure[:content_view_id]})"
+      lce_line = "   Lifecycle Environment: #{failure[:lifecycle_environment_name]} " \
+                 "(ID: #{failure[:lifecycle_environment_id]})"
+      file.puts lce_line
+      file.puts "   Reason: #{failure[:reason]}"
+      file.puts ""
+    end
+  end
+
+  def write_csv_file(csv_file, failed_migrations)
+    File.open(csv_file, 'w') do |f|
+      f.puts csv_header
+      failed_migrations.each do |failure|
+        f.puts csv_row(failure)
+      end
+    end
+  end
+
+  def csv_header
+    "Hostgroup ID,Hostgroup Name,Content Facet ID,Content View ID,Content View Name," \
+      "Lifecycle Environment ID,Lifecycle Environment Name,Reason"
+  end
+
+  def csv_row(failure)
+    "#{failure[:hostgroup_id]},\"#{failure[:hostgroup_name]}\",#{failure[:content_facet_id]}," \
+      "#{failure[:content_view_id]},\"#{failure[:content_view_name]}\"," \
+      "#{failure[:lifecycle_environment_id]},\"#{failure[:lifecycle_environment_name]}\"," \
+      "\"#{failure[:reason]}\""
+  end
+
+  def handle_migration_results(failed_migrations, _total_count, success_count)
     if failed_migrations.any?
-      warning_message = build_error_message(failed_migrations, total_count)
-      say warning_message
+      log_file = write_failed_migrations_to_file(failed_migrations)
+
+      say "=" * 80
+      say "⚠️  WARNING: #{failed_migrations.count} hostgroups could not be migrated"
+      say "   These hostgroups will have no Content View Environment set."
+      say "   Failed migration details saved to: #{log_file}"
+      say "   To fix: Edit each hostgroup and select a Content View Environment"
+      say "   Affected hostgroups: #{failed_migrations.map { |e| e[:hostgroup_name] }.join(', ')}"
+      say "=" * 80
     else
       say "Successfully migrated all #{success_count} hostgroup content facets"
     end

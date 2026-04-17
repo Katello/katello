@@ -7,7 +7,7 @@ Katello is a plugin for Foreman that orchestrates content distribution and subsc
 - **Commands must use `bundle exec` prefix** to ensure correct gem versions
 - **Edit files in Katello directory** (`/home/vagrant/katello`)
 - **Run commands from Foreman directory** (`/home/vagrant/foreman`)
-- **Never use "CVE" as abbreviation for Content View Environment** - CVE means "Common Vulnerabilities and Exposures" in security contexts. Use "CVEnv" or spell out "Content View Environment" instead.
+- **Never use "CVE" as abbreviation for content view environment** - CVE means "Common Vulnerabilities and Exposures" in security contexts. Use "CVEnv" or spell out "content view environment" instead.
 
 ### Command Quick Reference
 **Development Server:**

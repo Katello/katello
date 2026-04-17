@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { Flex, FlexItem, Label } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import CVDeleteContext from '../CVDeleteContext';
 import { selectCVActivationKeys, selectCVHosts } from '../../Details/ContentViewDetailSelectors';
-import { pluralize } from '../../../../utils/helpers';
 import WizardHeader from '../../components/WizardHeader';
 
 const CVDeletionReview = () => {
@@ -47,7 +47,18 @@ const CVDeletionReview = () => {
           <h3>{__('Content hosts')}</h3>
           <Flex>
             <FlexItem><ExclamationTriangleIcon /></FlexItem>
-            <FlexItem><p>{__(`${pluralize(hostResponse.length, 'host')} will be moved to content view ${selectedCVNameForHosts} in `)}</p></FlexItem>
+            <FlexItem>
+              <p>
+                <FormattedMessage
+                  id="cv-deletion-hosts-message"
+                  defaultMessage="{count, plural, one {# host} other {# hosts}} will be moved to content view {cvName} in "
+                  values={{
+                    count: hostResponse.length,
+                    cvName: selectedCVNameForHosts,
+                  }}
+                />
+              </p>
+            </FlexItem>
             <FlexItem><Label color="purple" href={`/lifecycle_environments/${selectedEnvForHost[0].id}`}>{selectedEnvForHost[0].name}</Label></FlexItem>
           </Flex>
         </>}
@@ -56,7 +67,18 @@ const CVDeletionReview = () => {
           <h3>{__('Host groups')}</h3>
           <Flex>
             <FlexItem><ExclamationTriangleIcon /></FlexItem>
-            <FlexItem><p>{__(`${pluralize(hostgroups.length, 'host group')} will be moved to content view ${selectedCVNameForHostgroups} in `)}</p></FlexItem>
+            <FlexItem>
+              <p>
+                <FormattedMessage
+                  id="cv-deletion-hostgroups-message"
+                  defaultMessage="{count, plural, one {# host group} other {# host groups}} will be moved to content view {cvName} in "
+                  values={{
+                    count: hostgroups.length,
+                    cvName: selectedCVNameForHostgroups,
+                  }}
+                />
+              </p>
+            </FlexItem>
             <FlexItem><Label color="purple" href={`/lifecycle_environments/${selectedEnvForHostgroup[0].id}`}>{selectedEnvForHostgroup[0].name}</Label></FlexItem>
           </Flex>
         </>}
@@ -65,7 +87,18 @@ const CVDeletionReview = () => {
           <h3>{__('Activation keys')}</h3>
           <Flex>
             <FlexItem><ExclamationTriangleIcon /></FlexItem>
-            <FlexItem><p>{__(`${pluralize(akResponse.length, 'activation key')} will be moved to content view ${selectedCVNameForAK} in `)}</p></FlexItem>
+            <FlexItem>
+              <p>
+                <FormattedMessage
+                  id="cv-deletion-activation-keys-message"
+                  defaultMessage="{count, plural, one {# activation key} other {# activation keys}} will be moved to content view {cvName} in "
+                  values={{
+                    count: akResponse.length,
+                    cvName: selectedCVNameForAK,
+                  }}
+                />
+              </p>
+            </FlexItem>
             <FlexItem><Label color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>{selectedEnvForAK[0].name}</Label></FlexItem>
           </Flex>
         </>}
