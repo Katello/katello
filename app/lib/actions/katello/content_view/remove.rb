@@ -12,7 +12,8 @@ module Actions
         # system_content_view_id - content view to reassociate systems with
         # system_environment_id - environment to reassociate systems with
         # key_content_view_id - content view to reassociate actvation keys with
-        # key_environment_id - environment to reassociate activation keys with'
+        # key_environment_id - environment to reassociate activation keys with
+        # hostgroup_content_view_environment_id - content view environment to reassociate host groups with
         # destroy_content_view - delete the CV completely along with all cv versions and environments
         # organization_destroy
         # rubocop:disable Metrics/MethodLength
@@ -32,7 +33,7 @@ module Actions
             unless organization_destroy
               concurrence do
                 all_cv_envs.each do |cv_env|
-                  if cv_env.hosts.any? || cv_env.activation_keys.any?
+                  if cv_env.hosts.any? || cv_env.activation_keys.any? || cv_env.hostgroups.any?
                     plan_action(ContentViewEnvironment::ReassignObjects, cv_env, options)
                   end
                 end
@@ -79,7 +80,10 @@ module Actions
         end
 
         def destroy_host_and_hostgroup_associations(content_view:)
-          content_view.hostgroups.destroy_all
+          # Destroy hostgroup content facets associated with this content view
+          hostgroup_content_facet_ids = content_view.hostgroup_content_facets.ids
+          ::Katello::Hostgroup::ContentFacet.where(:id => hostgroup_content_facet_ids).destroy_all
+
           host_ids = content_view.hosts.ids
           ::Katello::Host::ContentFacet.where(:host_id => host_ids).destroy_all
           ::Katello::Host::SubscriptionFacet.where(:host_id => host_ids).destroy_all
@@ -134,6 +138,11 @@ module Actions
           if single_env_keys_exist && !cve_exists?(options[:key_environment_id], options[:key_content_view_id])
             fail _("Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.")
           end
+
+          hostgroups_exist = all_cv_envs.flat_map(&:hostgroups).any?
+          if hostgroups_exist && !cve_exists_by_id?(options[:hostgroup_content_view_environment_id])
+            fail _("Unable to reassign host groups. Please check hostgroup_content_view_environment_id.")
+          end
         end
 
         def combined_cv_envs(cv_envs, versions)
@@ -144,6 +153,10 @@ module Actions
           ::Katello::ContentViewEnvironment.where(:environment_id => environment_id,
                                                   :content_view_id => content_view_id
                                                  ).exists?
+        end
+
+        def cve_exists_by_id?(cv_env_id)
+          ::Katello::ContentViewEnvironment.where(:id => cv_env_id).exists?
         end
       end
     end

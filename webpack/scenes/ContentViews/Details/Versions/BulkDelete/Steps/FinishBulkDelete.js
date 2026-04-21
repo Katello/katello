@@ -7,6 +7,7 @@ import {
 } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
+import api from 'foremanReact/API';
 import Loading from '../../../../../../components/Loading';
 import getContentViewDetails, {
   bulkDeleteContentViewVersion,
@@ -22,6 +23,8 @@ export default () => {
     selectedCVForAK,
     selectedEnvForHosts,
     selectedCVForHosts,
+    selectedEnvForHostgroups,
+    selectedCVForHostgroups,
   } = useContext(BulkDeleteContext);
   const { content_view: { id: cvId } } = first(versions);
 
@@ -29,9 +32,8 @@ export default () => {
 
   // Call the remove api on load
   useDeepCompareEffect(() => {
-    dispatch(bulkDeleteContentViewVersion(
-      cvId,
-      {
+    const performBulkDelete = async () => {
+      const params = {
         bulk_content_view_version_ids: {
           included: {
             ids: versions.map(({ id }) => id),
@@ -43,17 +45,37 @@ export default () => {
         system_environment_id: first(selectedEnvForHosts)?.id ?? undefined,
         key_content_view_id: selectedCVForAK ?? undefined,
         key_environment_id: first(selectedEnvForAK)?.id ?? undefined,
-      },
-      // Callback to update on success
-      () => {
-        onClose(true);
-        dispatch(getContentViewDetails(cvId));
-      },
-      // onError
-      () => { onClose(true); },
-    ));
+      };
+
+      if (selectedCVForHostgroups && selectedEnvForHostgroups?.length > 0) {
+        // Fetch the CVEnv ID for the selected CV and environment
+        const response = await api.get('/katello/api/v2/content_view_environments', {}, {
+          content_view_id: selectedCVForHostgroups,
+          lifecycle_environment_id: first(selectedEnvForHostgroups)?.id,
+        });
+        const cvEnvId = response.data?.results?.[0]?.id;
+        if (cvEnvId) {
+          params.hostgroup_content_view_environment_id = cvEnvId;
+        }
+      }
+
+      dispatch(bulkDeleteContentViewVersion(
+        cvId,
+        params,
+        // Callback to update on success
+        () => {
+          onClose(true);
+          dispatch(getContentViewDetails(cvId));
+        },
+        // onError
+        () => { onClose(true); },
+      ));
+    };
+
+    performBulkDelete();
   }, [dispatch, cvId, versions,
-    selectedCVForHosts, selectedEnvForHosts, selectedCVForAK, selectedEnvForAK, onClose]);
+    selectedCVForHosts, selectedEnvForHosts, selectedCVForAK, selectedEnvForAK,
+    selectedCVForHostgroups, selectedEnvForHostgroups, onClose]);
 
 
   return <Loading loadingText={__('Please wait while the task starts..')} />;

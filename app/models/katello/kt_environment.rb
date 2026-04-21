@@ -45,10 +45,9 @@ module Katello
 
     has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
                           :inverse_of => :lifecycle_environments
-    has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet", :foreign_key => :lifecycle_environment_id,
-                          :inverse_of => :lifecycle_environment, :dependent => :restrict_with_exception
-    has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,
-                          :inverse_of => :lifecycle_environment
+    has_many :hostgroup_content_facets, :through => :content_view_environments,
+                          :class_name => "Katello::Hostgroup::ContentFacet"
+    has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets
 
     alias_method :content_sources, :capsules
 
@@ -207,6 +206,12 @@ module Katello
         errors.add(:base,
            _("Lifecycle Environment %s has associated Activation Keys." \
              " Please change or remove the associated Activation Keys before trying to delete this lifecycle environment.") % self.name)
+      end
+
+      if hostgroup_content_facets.any?
+        errors.add(:base,
+           _("Lifecycle environment %s has associated host groups." \
+             " Please change or remove the associated host groups before trying to delete this lifecycle environment.") % self.name)
       end
 
       return errors.empty?

@@ -14,6 +14,8 @@ const BulkDeleteContextWrapper = ({
   const [selectedCVForAK, setSelectedCVForAK] = useState(null);
   const [selectedEnvForHosts, setSelectedEnvForHosts] = useState([]);
   const [selectedCVForHosts, setSelectedCVForHosts] = useState(null);
+  const [selectedEnvForHostgroups, setSelectedEnvForHostgroups] = useState([]);
+  const [selectedCVForHostgroups, setSelectedCVForHostgroups] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
 
   return (
@@ -28,6 +30,10 @@ const BulkDeleteContextWrapper = ({
       setSelectedEnvForHosts,
       selectedCVForHosts,
       setSelectedCVForHosts,
+      selectedEnvForHostgroups,
+      setSelectedEnvForHostgroups,
+      selectedCVForHostgroups,
+      setSelectedCVForHostgroups,
       currentStep,
       setCurrentStep,
     }}

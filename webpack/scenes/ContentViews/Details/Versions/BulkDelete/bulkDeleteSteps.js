@@ -7,22 +7,26 @@ import {
   getNumberOfActivationKeys,
   getNumberOfEnvironments,
   getNumberOfHosts,
+  getNumberOfHostgroups,
 } from './BulkDeleteHelpers';
 import ConfirmBulkDelete from './Steps/ConfirmBulkDelete';
 import FinishBulkDelete from './Steps/FinishBulkDelete';
 import ReassignActivationKeys from './Steps/ReassignActivationKeys';
 import ReassignHosts from './Steps/ReassignHosts';
+import ReassignHostgroups from './Steps/ReassignHostgroups';
 import ReviewEnvironments from './Steps/ReviewEnvironments';
 
 const bulkDeleteSteps = ({
   versions,
   selectedCVForAK,
   selectedCVForHosts,
+  selectedCVForHostgroups,
   currentStep,
 }) => {
   const affectedEnvironmentCount = getNumberOfEnvironments(versions);
   const activationKeyCount = getNumberOfActivationKeys(versions);
   const hostCount = getNumberOfHosts(versions);
+  const hostgroupCount = getNumberOfHostgroups(versions);
   const deleteSteps = [];
 
   if (affectedEnvironmentCount) {
@@ -41,6 +45,16 @@ const bulkDeleteSteps = ({
         __('Reassign affected host'),
       component: <ReassignHosts />,
       enableNext: !!selectedCVForHosts,
+    });
+  }
+
+  if (hostgroupCount) {
+    deleteSteps.push({
+      name: hostgroupCount > 1 ?
+        __('Reassign affected host groups') :
+        __('Reassign affected host group'),
+      component: <ReassignHostgroups />,
+      enableNext: !!selectedCVForHostgroups,
     });
   }
 

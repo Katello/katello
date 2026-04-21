@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
+import api from 'foremanReact/API';
 import { removeContentViewVersion } from '../../Details/ContentViewDetailActions';
 import { selectRemoveCVVersionResponse, selectRemoveCVVersionStatus } from '../../Details/ContentViewDetailSelectors';
 import getContentViews from '../../ContentViewsActions';
@@ -17,7 +18,8 @@ const CVDeletionFinish = () => {
     cvEnvironments,
     setIsOpen,
     selectedCVForAK, selectedEnvForAK, selectedCVForHosts,
-    selectedEnvForHost, affectedActivationKeys, affectedHosts,
+    selectedEnvForHost, selectedCVForHostgroups, selectedEnvForHostgroup,
+    affectedActivationKeys, affectedHosts, affectedHostgroups,
   } = useContext(CVDeleteContext);
   const removeCVResponse = useSelector(state =>
     selectRemoveCVVersionResponse(state, cvId, cvEnvironments));
@@ -38,43 +40,63 @@ const CVDeletionFinish = () => {
 
   useDeepCompareEffect(() => {
     if (!removeDispatched) {
-      let params = {
-        id: cvId,
-        destroy_content_view: true,
+      const buildParamsAndDispatch = async () => {
+        let params = {
+          id: cvId,
+          destroy_content_view: true,
+        };
+
+        if (affectedActivationKeys) {
+          params = {
+            ...params,
+            key_content_view_id: selectedCVForAK,
+            key_environment_id: selectedEnvForAK[0].id,
+          };
+        }
+
+        if (affectedHosts) {
+          params = {
+            ...params,
+            system_content_view_id: selectedCVForHosts,
+            system_environment_id: selectedEnvForHost[0].id,
+          };
+        }
+
+        if (affectedHostgroups) {
+          // Fetch the CVEnv ID for the selected CV and environment
+          const response = await api.get('/katello/api/v2/content_view_environments', {}, {
+            content_view_id: selectedCVForHostgroups,
+            lifecycle_environment_id: selectedEnvForHostgroup[0].id,
+          });
+          const cvEnvId = response.data?.results?.[0]?.id;
+          if (cvEnvId) {
+            params = {
+              ...params,
+              hostgroup_content_view_environment_id: cvEnvId,
+            };
+          }
+        }
+
+        dispatch(removeContentViewVersion(
+          cvId, cvId, cvEnvironments, params,
+          // Only when we are on the contentViews page do we need to call getContentViews.
+          () => {
+            if (pathname === '/content_views') dispatch(getContentViews());
+            else push('/content_views');
+            setIsOpen(false);
+          },
+          () => {
+            setIsOpen(false);
+          },
+        ));
       };
 
-      if (affectedActivationKeys) {
-        params = {
-          ...params,
-          key_content_view_id: selectedCVForAK,
-          key_environment_id: selectedEnvForAK[0].id,
-        };
-      }
-
-      if (affectedHosts) {
-        params = {
-          ...params,
-          system_content_view_id: selectedCVForHosts,
-          system_environment_id: selectedEnvForHost[0].id,
-        };
-      }
-
-      dispatch(removeContentViewVersion(
-        cvId, cvId, cvEnvironments, params,
-        // Only when we are on the contentViews page do we need to call getContentViews.
-        () => {
-          if (pathname === '/content_views') dispatch(getContentViews());
-          else push('/content_views');
-          setIsOpen(false);
-        },
-        () => {
-          setIsOpen(false);
-        },
-      ));
+      buildParamsAndDispatch();
       setRemoveDispatched(true);
     }
-  }, [cvId, cvEnvironments, dispatch, affectedActivationKeys, affectedHosts,
-    selectedCVForAK, selectedCVForHosts, selectedEnvForAK, selectedEnvForHost,
+  }, [cvId, cvEnvironments, dispatch, affectedActivationKeys, affectedHosts, affectedHostgroups,
+    selectedCVForAK, selectedCVForHosts, selectedCVForHostgroups,
+    selectedEnvForAK, selectedEnvForHost, selectedEnvForHostgroup,
     removeCVResponse, removeCVStatus, removeDispatched, pathname, push, setIsOpen]);
 
   return <Loading loadingText={__('Please wait while the task starts..')} />;

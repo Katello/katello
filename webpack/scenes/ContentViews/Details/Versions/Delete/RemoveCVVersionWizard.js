@@ -10,6 +10,7 @@ import getEnvironmentPaths from '../../../components/EnvironmentPaths/Environmen
 import CVEnvironmentSelectionForm from './RemoveSteps/CVEnvironmentSelectionForm';
 import CVReassignActivationKeysForm from './RemoveSteps/CVReassignActivationKeysForm';
 import CVReassignHostsForm from './RemoveSteps/CVReassignHostsForm';
+import CVReassignHostgroupsForm from './RemoveSteps/CVReassignHostgroupsForm';
 import CVVersionRemoveReview from './RemoveSteps/CVVersionRemoveReview';
 import CVVersionDeleteFinish from './RemoveSteps/CVVersionDeleteFinish';
 import getContentViewDetails from '../../ContentViewDetailActions';
@@ -23,14 +24,18 @@ const RemoveCVVersionWizard = ({
 }) => {
   const [selectedEnvForAK, setSelectedEnvForAK] = useState([]);
   const [selectedEnvForHost, setSelectedEnvForHost] = useState([]);
+  const [selectedEnvForHostgroup, setSelectedEnvForHostgroup] = useState([]);
   const dispatch = useDispatch();
   const selectedEnvSet = useSet([]);
   const [selectedCVForAK, setSelectedCVForAK] = useState(null);
   const [selectedCVNameForAK, setSelectedCVNameForAK] = useState(null);
   const [selectedCVForHosts, setSelectedCVForHosts] = useState(null);
   const [selectedCVNameForHosts, setSelectedCVNameForHosts] = useState(null);
+  const [selectedCVForHostgroups, setSelectedCVForHostgroups] = useState(null);
+  const [selectedCVNameForHostgroups, setSelectedCVNameForHostgroups] = useState(null);
   const [affectedActivationKeys, setAffectedActivationKeys] = useState(false);
   const [affectedHosts, setAffectedHosts] = useState(false);
+  const [affectedHostgroups, setAffectedHostgroups] = useState(false);
   const [deleteFlow, setDeleteFlow] = useState(deleteWizard || false);
   const [removeDeletionFlow, setRemoveDeletionFlow] = useState(false);
   const [canReview, setCanReview] = useState(false);
@@ -53,11 +58,17 @@ const RemoveCVVersionWizard = ({
     const activationStepComplete = affectedActivationKeys ?
       selectedEnvForAK && selectedCVForAK :
       true;
+    const hostgroupsStepComplete = affectedHostgroups ?
+      selectedEnvForHostgroup && selectedCVForHostgroups :
+      true;
     setCanReview(hostsStepComplete &&
       activationStepComplete &&
+      hostgroupsStepComplete &&
       (selectedEnvSet.size || versionEnvironments.length === 0));
   }, [affectedHosts, selectedEnvForHost, selectedCVForHosts, versionEnvironments,
-    affectedActivationKeys, selectedEnvForAK, selectedCVForAK, selectedEnvSet.size]);
+    affectedActivationKeys, selectedEnvForAK, selectedCVForAK,
+    affectedHostgroups, selectedEnvForHostgroup, selectedCVForHostgroups,
+    selectedEnvSet.size]);
 
   const environmentSelectionStep = {
     id: 1,
@@ -74,17 +85,27 @@ const RemoveCVVersionWizard = ({
     canJumpTo: affectedHosts,
   };
 
-  const activationStep = {
+  const hostgroupStep = {
     id: 3,
+    name: 'Reassign affected host groups',
+    component: <CVReassignHostgroupsForm />,
+    enableNext: (affectedHostgroups ? selectedEnvForHostgroup && selectedCVForHostgroups : true),
+    canJumpTo: affectedHostgroups &&
+      (affectedHosts ? selectedEnvForHost && selectedCVForHosts : true),
+  };
+
+  const activationStep = {
+    id: 4,
     name: 'Reassign affected activation keys',
     component: <CVReassignActivationKeysForm />,
     enableNext: canReview,
     canJumpTo: affectedActivationKeys &&
-      (affectedHosts ? selectedEnvForHost && selectedCVForHosts : true),
+      (affectedHosts ? selectedEnvForHost && selectedCVForHosts : true) &&
+      (affectedHostgroups ? selectedEnvForHostgroup && selectedCVForHostgroups : true),
   };
 
   const reviewStep = {
-    id: 4,
+    id: 5,
     name: 'Review',
     component: <CVVersionRemoveReview />,
     canJumpTo: canReview,
@@ -92,7 +113,7 @@ const RemoveCVVersionWizard = ({
   };
 
   const finishStep = {
-    id: 5,
+    id: 6,
     name: 'Finish',
     component: <CVVersionDeleteFinish />,
     isFinishedStep: true,
@@ -101,6 +122,7 @@ const RemoveCVVersionWizard = ({
   const steps = [
     environmentSelectionStep,
     ...(affectedHosts ? [hostStep] : []),
+    ...(affectedHostgroups ? [hostgroupStep] : []),
     ...(affectedActivationKeys ? [activationStep] : []),
     reviewStep,
     finishStep,
@@ -115,8 +137,10 @@ const RemoveCVVersionWizard = ({
       setIsOpen,
       affectedActivationKeys,
       affectedHosts,
+      affectedHostgroups,
       setAffectedActivationKeys,
       setAffectedHosts,
+      setAffectedHostgroups,
       deleteFlow,
       setDeleteFlow,
       removeDeletionFlow,
@@ -125,15 +149,21 @@ const RemoveCVVersionWizard = ({
       selectedCVForHosts,
       setSelectedCVNameForHosts,
       setSelectedCVForHosts,
+      selectedCVForHostgroups,
+      setSelectedCVNameForHostgroups,
+      setSelectedCVForHostgroups,
       selectedCVForAK,
       setSelectedCVNameForAK,
       selectedCVNameForAK,
       selectedCVNameForHosts,
+      selectedCVNameForHostgroups,
       setSelectedCVForAK,
       selectedEnvForAK,
       setSelectedEnvForAK,
       selectedEnvForHost,
       setSelectedEnvForHost,
+      selectedEnvForHostgroup,
+      setSelectedEnvForHostgroup,
       selectedEnvSet,
     }}
     >
