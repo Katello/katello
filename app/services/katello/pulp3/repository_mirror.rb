@@ -27,7 +27,10 @@ module Katello
         if href
           # Do not consider remotes_uln_api, since the Katello server is not a ULN server. Even if the sync
           # to Katello used ULN, the sync from Katello server to smart proxy will use a normal RPM remote!
-          [api.remotes_api.partial_update(href, remote_options)]
+          result = api.remotes_api.partial_update(href, remote_options)
+          # partial_update can return nil or an empty AsyncOperationResponse ({}) when there are no changes (HTTP 204)
+          # Only return the task if it has content (check for task href)
+          (result && result.respond_to?(:task) && result.task.present?) ? [result] : []
         else
           create_remote
           []
