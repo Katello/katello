@@ -90,7 +90,9 @@ module Katello
       end
 
       def update_remote(href = smart_proxy_acs.remote_href)
-        api.get_remotes_api(href: href).partial_update(href, remote_options)
+        response = api.get_remotes_api(href: href).partial_update(href, remote_options)
+        # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
+        response if response.respond_to?(:task) && response.task.present?
       end
 
       def delete_remote(options = {})
@@ -121,7 +123,9 @@ module Katello
         if acs.content_type == ::Katello::Repository::FILE_TYPE && acs.subpaths.present?
           paths = insert_pulp_manifest!(paths)
         end
-        api.alternate_content_source_api.update(href, name: generate_backend_object_name, paths: paths.sort, remote: smart_proxy_acs.remote_href)
+        response = api.alternate_content_source_api.update(href, name: generate_backend_object_name, paths: paths.sort, remote: smart_proxy_acs.remote_href)
+        # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
+        response if response.respond_to?(:task) && response.task.present?
       end
 
       def delete_alternate_content_source
