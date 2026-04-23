@@ -7,6 +7,7 @@ module Katello
         has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
         has_many :activation_keys, :dependent => :nullify, :class_name => "Katello::ActivationKey"
         has_many :subscription_facets, :dependent => :nullify, :class_name => "Katello::Host::SubscriptionFacet"
+        has_many :errata_applications, :dependent => :nullify, :class_name => "Katello::ErrataApplication", :inverse_of => :user
 
         def self.remote_user
           SETTINGS[:katello][:pulp][:default_login]
