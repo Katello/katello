@@ -51,7 +51,7 @@ module Katello
     private
 
     def find_repository
-      @repository = Repository.find(params[:repository_id])
+      @repository = Repository.editable.find(params[:repository_id])
     end
   end
 end
