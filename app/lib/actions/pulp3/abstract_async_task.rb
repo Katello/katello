@@ -98,6 +98,9 @@ module Actions
         response = [response] unless response.is_a?(Array)
         response.map do |task|
           task.as_json
+        end.reject do |task_json|
+          # Filter out empty responses from HTTP 204 (no changes) - these have no 'task' field
+          task_json.is_a?(Hash) && task_json.empty?
         end
       end
 
