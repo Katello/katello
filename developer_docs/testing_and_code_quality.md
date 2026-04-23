@@ -41,21 +41,21 @@ Note for AI agents: The `record_vcr` command is available to assist with VCR rec
 3. Restart Pulp with `sudo systemctl restart pulpcore* --all` and confirm services are running.
 4. Configure SSL certificates by editing `~/foreman/config/settings.yaml.test` to include:
    ```yaml
-   :ssl_ca_file: /home/vagrant/foreman-certs/proxy_ca.pem
-   :ssl_certificate: /home/vagrant/foreman-certs/client_cert.pem
-   :ssl_priv_key: /home/vagrant/foreman-certs/client_key.pem
+:ssl_ca_file: /home/vagrant/foreman-certs/proxy_ca.pem
+:ssl_certificate: /home/vagrant/foreman-certs/client_cert.pem
+:ssl_priv_key: /home/vagrant/foreman-certs/client_key.pem
    ```
 5. Update test fixtures by editing `~/foreman/test/fixtures/settings.yml` to include:
    ```yaml
-   attribute101:
-       name: ssl_ca_file
-       value: "/home/vagrant/foreman-certs/proxy_ca.pem"
-   attribute102:
-       name: ssl_certificate
-       value: "/home/vagrant/foreman-certs/client_cert.pem"
-   attribute103:
-       name: ssl_priv_key
-       value: "/home/vagrant/foreman-certs/client_key.pem"
+attribute101:
+    name: ssl_ca_file
+    value: "/home/vagrant/foreman-certs/proxy_ca.pem"
+attribute102:
+    name: ssl_certificate
+    value: "/home/vagrant/foreman-certs/client_cert.pem"
+attribute103:
+    name: ssl_priv_key
+    value: "/home/vagrant/foreman-certs/client_key.pem"
    ```
 6. Reset development database, Candlepin with `cd $GITDIR/foreman && bundle exec rake katello:reset`
 7. Reset test database with:
