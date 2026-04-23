@@ -228,8 +228,6 @@ module Katello
       ::RemoteExecutionProxySelector.prepend Katello::Concerns::RemoteExecutionProxySelectorExtensions
 
       load 'katello/scheduled_jobs.rb'
-
-      Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
     end
 
     rake_tasks do
