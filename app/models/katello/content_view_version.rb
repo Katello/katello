@@ -28,7 +28,6 @@ module Katello
     has_many :import_histories, :class_name => "::Katello::ContentViewVersionImportHistory", :dependent => :destroy,
              :inverse_of => :content_view_version
     has_many :repositories, :class_name => "::Katello::Repository", :dependent => :destroy
-    has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
     has_many :content_view_components, :class_name => "Katello::ContentViewComponent",
              :inverse_of => :content_view_version, :dependent => :destroy
