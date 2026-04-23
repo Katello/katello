@@ -182,5 +182,17 @@ module Katello
     class InvalidExportFormat < StandardError; end
 
     class InvalidConfiguration < StandardError; end
+
+    class MissingDebEntityError < StandardError
+      attr_reader :entity_name, :repo_name, :version_href
+
+      def initialize(entity_name, repo_name, version_href)
+        @entity_name, @repo_name, @version_href = entity_name, repo_name, version_href
+        message = _(
+          "The referenced Pulp repo version '%{version}' for 'deb' repository '%{name}' should contain at least one %{entity}."
+        ) % { entity: entity_name, name: repo_name, version: version_href }
+        super(message)
+      end
+    end
   end
 end

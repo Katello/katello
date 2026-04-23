@@ -767,6 +767,7 @@ module ::Actions::Katello::Repository
     end
 
     it 'plans pulp3 orchestration actions with apt repo' do
+      repository_apt_pulp3.version_href = "/pulp/api/v3/repositories/deb/apt/019c22e3-8afe-78cd-bf6d-c3d408a76db5/versions/3/"
       action = create_action pulp3_action_class
       action.stubs(:action_subject).with(repository_apt_pulp3)
       plan_action action, repository_apt_pulp3, proxy, {}
