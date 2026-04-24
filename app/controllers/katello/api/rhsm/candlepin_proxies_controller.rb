@@ -278,10 +278,15 @@ module Katello
     end
 
     def get_content_source_id(hostname)
-      proxies = SmartProxy.unscoped.authorized.filter do |sp|
+      proxies = SmartProxy.unscoped.authorized.with_content.order(:id).filter do |sp|
         hostname == URI.parse(sp.url).hostname
       end
-      return nil if proxies.length != 1
+      return nil if proxies.empty?
+
+      if proxies.length > 1
+        Rails.logger.warn "Multiple content proxies found for hostname #{hostname}: #{proxies.map(&:name).join(', ')}. Using #{proxies.first.name}."
+      end
+
       proxies.first.id
     end
 
