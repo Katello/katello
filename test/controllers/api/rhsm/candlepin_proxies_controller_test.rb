@@ -492,10 +492,10 @@ module Katello
     end
 
     describe "get content source id" do
-      let(:hostname) { "satellite.example.com" }
+      let(:hostname) { "content-source-test-#{SecureRandom.hex(8)}.example.com" }
 
       it "returns nil when no proxies match hostname" do
-        result = @controller.get_content_source_id("nonexistent.example.com")
+        result = @controller.get_content_source_id("nonexistent-#{SecureRandom.hex(8)}.example.com")
         assert_nil result
       end
 
@@ -509,9 +509,14 @@ module Katello
       end
 
       it "returns nil when no content proxies match hostname" do
-        unique_hostname = "definitely-nonexistent-#{SecureRandom.hex(8)}.example.com"
-        # Don't create any proxies with this hostname
-        result = @controller.get_content_source_id(unique_hostname)
+        no_content_hostname = "no-content-#{SecureRandom.hex(8)}.example.com"
+        proxy = FactoryBot.create(:smart_proxy, :url => "https://#{no_content_hostname}:9090")
+        proxy.smart_proxy_features.where(
+          :feature_id => Feature.where(:name => [SmartProxy::PULP_FEATURE, SmartProxy::PULP_NODE_FEATURE, SmartProxy::PULP3_FEATURE])
+        ).destroy_all
+        proxy.reload
+
+        result = @controller.get_content_source_id(no_content_hostname)
         assert_nil result
       end
 
@@ -528,7 +533,7 @@ module Katello
         assert_equal content_proxy.id, result
       end
 
-      it "returns first proxy id when multiple content proxies match hostname" do
+      it "returns lowest-id proxy when multiple content proxies match hostname" do
         pulp3_feature = Feature.find_or_create_by(:name => SmartProxy::PULP3_FEATURE)
         proxy1 = FactoryBot.create(:smart_proxy, :url => "https://#{hostname}:9090")
         proxy1.features << pulp3_feature unless proxy1.features.include?(pulp3_feature)

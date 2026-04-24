@@ -278,7 +278,7 @@ module Katello
     end
 
     def get_content_source_id(hostname)
-      proxies = SmartProxy.unscoped.authorized.with_content.filter do |sp|
+      proxies = SmartProxy.unscoped.authorized.with_content.order(:id).filter do |sp|
         hostname == URI.parse(sp.url).hostname
       end
       return nil if proxies.empty?
