@@ -490,5 +490,57 @@ module Katello
         assert_equal 'foreman.example.com', @controller.get_parent_host(nil_host)
       end
     end
+
+    describe "get content source id" do
+      let(:hostname) { "satellite.example.com" }
+
+      it "returns nil when no proxies match hostname" do
+        result = @controller.get_content_source_id("nonexistent.example.com")
+        assert_nil result
+      end
+
+      it "returns proxy id when single content proxy matches hostname" do
+        pulp3_feature = Feature.find_or_create_by(:name => SmartProxy::PULP3_FEATURE)
+        proxy = FactoryBot.create(:smart_proxy, :url => "https://#{hostname}:9090")
+        proxy.features << pulp3_feature unless proxy.features.include?(pulp3_feature)
+
+        result = @controller.get_content_source_id(hostname)
+        assert_equal proxy.id, result
+      end
+
+      it "returns nil when no content proxies match hostname" do
+        unique_hostname = "definitely-nonexistent-#{SecureRandom.hex(8)}.example.com"
+        # Don't create any proxies with this hostname
+        result = @controller.get_content_source_id(unique_hostname)
+        assert_nil result
+      end
+
+      it "returns content proxy id when multiple proxies match but only one has content features" do
+        pulp3_feature = Feature.find_or_create_by(:name => SmartProxy::PULP3_FEATURE)
+        content_proxy = FactoryBot.create(:smart_proxy, :url => "https://#{hostname}:9090")
+        content_proxy.features << pulp3_feature unless content_proxy.features.include?(pulp3_feature)
+
+        dev_feature = Feature.find_or_create_by(:name => "Development")
+        non_content_proxy = FactoryBot.create(:smart_proxy, :url => "https://#{hostname}:9091")
+        non_content_proxy.features << dev_feature unless non_content_proxy.features.include?(dev_feature)
+
+        result = @controller.get_content_source_id(hostname)
+        assert_equal content_proxy.id, result
+      end
+
+      it "returns first proxy id when multiple content proxies match hostname" do
+        pulp3_feature = Feature.find_or_create_by(:name => SmartProxy::PULP3_FEATURE)
+        proxy1 = FactoryBot.create(:smart_proxy, :url => "https://#{hostname}:9090")
+        proxy1.features << pulp3_feature unless proxy1.features.include?(pulp3_feature)
+
+        proxy2 = FactoryBot.create(:smart_proxy, :url => "https://#{hostname}:9091")
+        proxy2.features << pulp3_feature unless proxy2.features.include?(pulp3_feature)
+
+        Rails.logger.expects(:warn).with(includes("Multiple content proxies found"))
+
+        result = @controller.get_content_source_id(hostname)
+        assert_equal proxy1.id, result
+      end
+    end
   end
 end
