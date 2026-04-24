@@ -52,7 +52,7 @@ module Katello
         auth = authenticate_client
         if auth
           ::User.current = ::User.anonymous_admin
-          @host = Katello::Host::ContentFacet.find_by(uuid: uuid)&.host
+          @host = Katello::Host::SubscriptionFacet.find_by(uuid: uuid)&.host
         end
       end
     end
@@ -79,7 +79,7 @@ module Katello
           return false
         end
       elsif header_host_uuid
-        @host = Katello::Host::ContentFacet.find_by(uuid: header_host_uuid)&.host
+        @host = Katello::Host::SubscriptionFacet.find_by(uuid: header_host_uuid)&.host
       else
         authenticate_cert_request
       end

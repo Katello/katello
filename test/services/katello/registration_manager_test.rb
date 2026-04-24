@@ -352,7 +352,8 @@ module Katello
         # Verify other data is still cleared as expected
         assert_empty @host.content_facet.bound_repositories
         assert_empty @host.content_facet.applicable_errata
-        assert_nil @host.content_facet.uuid
+        # Reload to clear cached association - subscription_facet is destroyed, so uuid is nil
+        assert_nil @host.reload.subscription_facet&.uuid
       end
 
       def test_unregister_host_retains_build_profile_when_setting_enabled
@@ -381,7 +382,8 @@ module Katello
         # Verify other data is still cleared as expected
         assert_empty @host.content_facet.bound_repositories
         assert_empty @host.content_facet.applicable_errata
-        assert_nil @host.content_facet.uuid
+        # Reload to clear cached association - subscription_facet is destroyed, so uuid is nil
+        assert_nil @host.reload.subscription_facet&.uuid
       end
 
       def test_re_register_host_preserves_build_profile_regardless_of_setting # rubocop:disable Metrics/AbcSize
@@ -422,7 +424,7 @@ module Katello
         # Verify other data is still cleared as expected during unregistration
         assert_empty @host.content_facet.bound_repositories
         assert_empty @host.content_facet.applicable_errata
-        assert_equal 'fake-uuid-from-katello', @host.content_facet.uuid
+        assert_equal 'fake-uuid-from-katello', @host.subscription_facet.uuid
       end
 
       def test_destroy_host_not_found

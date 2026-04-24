@@ -50,8 +50,8 @@ module Katello
       consumer_ids = []
 
       self.hosts.each do |host|
-        if host.content_facet
-          consumer_ids.push(host.content_facet.uuid)
+        if host.subscription_facet
+          consumer_ids.push(host.subscription_facet.uuid)
         end
       end
 

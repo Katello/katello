@@ -176,7 +176,7 @@ module Katello
 
         host_uuid = get_uuid(consumer_params)
         consumer_params[:uuid] = host_uuid
-        host.content_facet = populate_content_facet(host, content_view_environments, host_uuid)
+        host.content_facet = populate_content_facet(host, content_view_environments)
         host.content_facet.cves_changed = false # prevent backend_update_needed from triggering an update on a nonexistent consumer
         host.subscription_facet = populate_subscription_facet(host, activation_keys, consumer_params, host_uuid)
         host.save! # the host has content and subscription facets at this point
@@ -295,10 +295,9 @@ module Katello
         Rails.logger.warn(_("Candlepin consumer %s has already been removed") % host_uuid)
       end
 
-      def populate_content_facet(host, content_view_environments, uuid)
+      def populate_content_facet(host, content_view_environments)
         content_facet = host.content_facet || ::Katello::Host::ContentFacet.new(:host => host)
         content_facet.content_view_environments = content_view_environments
-        content_facet.uuid = uuid
         content_facet.save!
         content_facet
       end
@@ -319,7 +318,6 @@ module Katello
         if host.content_facet && clear_content_facet
           host.content_facet.bound_repositories = []
           host.content_facet.applicable_errata = []
-          host.content_facet.uuid = nil
 
           # Clear or retain provisioning information based on setting
           unless Setting[:retain_build_profile_upon_unregistration] || preserve_for_provisioning

@@ -382,7 +382,7 @@ module Katello
                                  :organization => @organization)
 
         # Mock certificate authentication for the host
-        uuid = host.content_facet.uuid
+        uuid = host.subscription_facet.uuid
         client_cert = mock('client_cert')
         client_cert.stubs(:uuid).returns(uuid)
         ::Cert::RhsmClient.expects(:new).returns(client_cert)
@@ -1438,7 +1438,7 @@ module Katello
       end
 
       it "authenticates with client certificate and sets host" do
-        uuid = @host.content_facet.uuid
+        uuid = @host.subscription_facet.uuid
 
         # Mock certificate authentication
         client_cert = mock('client_cert')
@@ -1577,7 +1577,7 @@ module Katello
       end
 
       it "filters repositories based on host permissions" do
-        uuid = @host.content_facet.uuid
+        uuid = @host.subscription_facet.uuid
 
         # Mock certificate authentication
         client_cert = mock('client_cert')
