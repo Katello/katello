@@ -3,7 +3,7 @@ module Katello
     module Candlepin
       class CandlepinPing < CandlepinResource
         CACHE_KEY = 'katello/candlepin_status_response'.freeze
-        CACHE_TTL = 60.seconds
+        CACHE_TTL = 180.seconds
 
         class << self
           # Fetch Candlepin status. By default always polls Candlepin live.
