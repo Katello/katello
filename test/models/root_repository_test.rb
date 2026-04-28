@@ -721,6 +721,47 @@ module Katello
       @fedora_root.save!
       assert @fedora_root.pulp_update_needed?
     end
+
+    def test_pulp_format_arches_removes_architecture_variant_separator
+      deb = katello_root_repositories(:debian_10_amd64_root)
+      deb.deb_architectures = "amd64:v3"
+
+      assert_equal "amd64v3", deb.format_arches
+    end
+
+    def test_deb_format_arches_removes_variant_separator_and_handles_multiple
+      deb = katello_root_repositories(:debian_10_amd64_root)
+      deb.deb_architectures = "amd64:v3 arm64"
+
+      assert_equal "amd64v3,arm64", deb.format_arches
+    end
+
+    def test_deb_format_arches_keeps_base_and_variant_as_distinct_arches
+      deb = katello_root_repositories(:debian_10_amd64_root)
+      deb.deb_architectures = "amd64 amd64:v3"
+
+      assert_equal "amd64,amd64v3", deb.format_arches
+    end
+
+    def test_deb_format_arches_deduplicates_identical_normalized_arches
+      deb = katello_root_repositories(:debian_10_amd64_root)
+      deb.deb_architectures = "amd64:v3 amd64v3"
+
+      assert_equal "amd64v3", deb.format_arches
+    end
+
+    def test_deb_architectures_allows_and_persists_variant_token
+      deb = FactoryBot.build(:katello_root_repository,
+                           :deb_root,
+                           product: katello_products(:debian))
+      deb.url = "http://myrepo.com"
+      deb.deb_releases = "buster"
+      deb.deb_components = "main"
+      deb.deb_architectures = "amd64:v3"
+
+      assert deb.save, deb.errors.full_messages.join(", ")
+      assert_equal "amd64:v3", deb.reload.deb_architectures
+    end
   end
 
   class RootRepositoryApplicabilityTest < RepositoryTestBase

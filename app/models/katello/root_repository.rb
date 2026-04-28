@@ -441,8 +441,15 @@ module Katello
 
     def format_arches
       if self.deb?
-        # Pulp 2 needed a "," separated string-list, but Pulp 3 needs " " separated!
-        self.deb_architectures&.gsub(" ", ",")
+        return nil if self.deb_architectures.blank?
+
+        bases = self.deb_architectures
+          .split(/[,\s]+/)
+          .reject(&:blank?)
+          .map { |t| t.delete(":") }
+          .uniq
+
+        bases.empty? ? nil : bases.join(",")
       else
         self.arch == "noarch" ? nil : self.arch
       end
