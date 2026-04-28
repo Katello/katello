@@ -41,8 +41,8 @@ Katello::Engine.routes.draw do
   match '/subscriptions' => 'react#index', :via => [:get]
   match '/subscriptions/*page' => 'react#index', :via => [:get]
 
-  match '/module_streams' => 'react#index', :via => [:get]
-  match '/module_streams/*page' => 'react#index', :via => [:get]
+  match '/content/module_streams' => 'react#index', :via => [:get]
+  match '/content/module_streams/*page' => 'react#index', :via => [:get]
 
   match '/legacy_ansible_collections' => 'react#index', :via => [:get]
   match '/legacy_ansible_collections/*page' => 'react#index', :via => [:get]

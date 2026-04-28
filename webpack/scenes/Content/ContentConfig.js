@@ -5,6 +5,8 @@ import ContentInfo from './Details/ContentInfo';
 import LastSync from '../ContentViews/Details/Repositories/LastSync';
 import ContentRepositories from './Details/ContentRepositories';
 import ContentCounts from '../ContentViews/Details/Repositories/ContentCounts';
+import ModuleStreamDetailProfiles from '../ModuleStreams/Details/Profiles/ModuleStreamDetailProfiles';
+import ModuleStreamDetailArtifacts from '../ModuleStreams/Details/ModuleStreamDetailArtifacts';
 
 // Keep in mind when editing this file that the ContentViewVersionDetailConfig consumes this array.
 export default [
@@ -201,6 +203,89 @@ export default [
               />),
           },
         ],
+      },
+    ],
+  },
+  {
+    names: {
+      pluralTitle: __('Module Streams'),
+      singularTitle: __('Module Stream'),
+      pluralLowercase: __('Module streams'),
+      singularLowercase: __('Module stream'),
+      pluralLabel: 'module_streams',
+      singularLabel: 'modulemd',
+      capsuleCountLabel: 'modulemd',
+    },
+    columnHeaders: [
+      { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`content/module_streams/${unit?.id}`, '')}>{unit?.name}</a>) },
+      { title: __('Stream'), getProperty: unit => unit?.stream },
+      { title: __('Version'), getProperty: unit => unit?.version },
+      { title: __('Arch'), getProperty: unit => unit?.arch },
+      { title: __('Context'), getProperty: unit => unit?.context },
+    ],
+    tabs: [
+      {
+        tabKey: 'details',
+        title: __('Details'),
+        getContent: (contentType, id, tabKey) => <ContentInfo {...{ contentType, id, tabKey }} />,
+        columnHeaders: [
+          { title: __('Name'), getProperty: unit => unit?.name },
+          { title: __('Summary'), getProperty: unit => unit?.summary },
+          { title: __('Description'), getProperty: unit => unit?.description },
+          { title: __('Stream'), getProperty: unit => unit?.stream },
+          { title: __('Version'), getProperty: unit => unit?.version },
+          { title: __('Arch'), getProperty: unit => unit?.arch },
+          { title: __('Context'), getProperty: unit => unit?.context },
+          { title: __('UUID'), getProperty: unit => unit?.uuid },
+        ],
+      },
+      {
+        tabKey: 'repositories',
+        title: __('Repositories'),
+        getContent: (contentType, id, tabKey) =>
+          <ContentRepositories {...{ contentType, id, tabKey }} />,
+        columnHeaders: [
+          {
+            title: __('Name'),
+            getProperty: unit =>
+              <a href={urlBuilder(`products/${unit?.product.id}/repositories/${unit?.id}`, '')}>{unit?.name}</a>,
+          },
+          {
+            title: __('Product'),
+            getProperty: unit =>
+              <a href={urlBuilder(`products/${unit?.product.id}`, '')}>{unit?.product.name}</a>,
+          },
+          {
+            title: __('Sync Status'),
+            getProperty: unit =>
+              (<LastSync
+                startedAt={unit?.started_at}
+                lastSyncWords={unit?.last_sync_words}
+                lastSync={unit?.last_sync}
+              />),
+          },
+          {
+            title: __('Content Count'),
+            getProperty: unit =>
+              (<ContentCounts
+                productId={unit.product.id}
+                repoId={unit.id}
+                counts={unit.content_counts}
+              />),
+          },
+        ],
+      },
+      {
+        tabKey: 'profiles',
+        title: __('Profiles'),
+        getContent: (contentType, id) =>
+          <ModuleStreamDetailProfiles {...{ contentType, id }} />,
+      },
+      {
+        tabKey: 'artifacts',
+        title: __('Artifacts'),
+        getContent: (contentType, id) =>
+          <ModuleStreamDetailArtifacts {...{ contentType, id }} />,
       },
     ],
   },
