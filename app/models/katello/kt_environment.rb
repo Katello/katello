@@ -273,6 +273,14 @@ module Katello
       self.repositories.map(&:minor).compact.uniq.sort
     end
 
+    def delete_host_and_hostgroup_associations
+      hgcf_ids = hostgroup_content_facets.ids
+      ::Katello::Hostgroup::ContentFacet.where(id: hgcf_ids).destroy_all
+      host_ids = hosts.ids
+      ::Katello::Host::ContentFacet.where(:host_id => host_ids).destroy_all
+      ::Katello::Host::SubscriptionFacet.where(:host_id => host_ids).destroy_all
+    end
+
     def self.humanize_class_name
       _("Lifecycle Environment")
     end

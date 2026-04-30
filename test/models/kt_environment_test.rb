@@ -129,4 +129,26 @@ module Katello
       assert_equal succ.prior, @dev
     end
   end
+
+  class KTEnvironmentDeleteAssociationsTest < KTEnvironmentTestBase
+    def test_delete_host_and_hostgroup_associations_removes_content_facets
+      assert @dev.content_facets.any?, "expected dev environment to have content facets via fixtures"
+      @dev.delete_host_and_hostgroup_associations
+      assert_empty @dev.reload.content_facets
+    end
+
+    def test_delete_host_and_hostgroup_associations_removes_subscription_facets
+      host_ids = @dev.hosts.ids
+      assert host_ids.any?, "expected dev environment to have hosts via fixtures"
+      @dev.delete_host_and_hostgroup_associations
+      assert_empty ::Katello::Host::SubscriptionFacet.where(:host_id => host_ids)
+    end
+
+    def test_delete_host_and_hostgroup_associations_does_not_raise_on_nested_through
+      # Regression: calling destroy on a doubly-nested has_many :through raises
+      # HasManyThroughNestedAssociationsAreReadonly. The method must operate on
+      # the join model directly rather than environment.hostgroups.
+      assert_nothing_raised { @dev.delete_host_and_hostgroup_associations }
+    end
+  end
 end

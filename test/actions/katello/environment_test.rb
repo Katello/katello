@@ -65,9 +65,7 @@ module ::Actions::Katello::Environment
       action.stubs(:action_subject).with(environment)
       environment.expects(:content_view_environments).returns([cve])
       environment.expects(:deletable?).returns(true)
-      environment.expects(:hostgroups).returns(::Hostgroup.none)
-      environment.expects(:hosts).returns(::Host.none)
-      environment.expects(:hosts=).never
+      environment.expects(:delete_host_and_hostgroup_associations)
       plan_action(action, environment, :organization_destroy => true)
       assert_action_planned_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => true)
     end
