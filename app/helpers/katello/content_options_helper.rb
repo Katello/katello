@@ -158,9 +158,9 @@ module Katello
       %(<option data-id="#{inherited_value}" value="">#{blank_or_inherit_f(f, attr)}</option>)
     end
 
-    def blank_or_inherit_cve(f) # f is Rails convention for form objects
+    def blank_or_inherit_cvenv(f) # f is Rails convention for form objects
       return true unless f.object.respond_to?(:parent_id) && f.object.parent_id
-      parent_cve = f.object.parent&.content_facet&.content_view_environment
+      parent_cve = f.object.parent&.content_view_environment
       inherited_value = parent_cve.try(:id) || ''
 
       if parent_cve
@@ -169,7 +169,7 @@ module Katello
                    else
                      "#{parent_cve.environment.name} / #{parent_cve.content_view.name}"
                    end
-        %(<option data-id="#{inherited_value}" value="">#{_('Inherit parent (%s)') % cve_name}</option>)
+        %(<option data-id="#{inherited_value}" value="">#{h(_('Inherit parent (%s)') % cve_name)}</option>)
       else
         %(<option value="">#{_('Inherit parent')}</option>)
       end

@@ -47,7 +47,9 @@ KT.hosts.refreshContentViewEnvironments = function() {
   }
   var orgId = Array.isArray(orgIds) ? orgIds[0] : orgIds;
 
-  var previousInheritText = select.find('option:first-child').text();
+  var inheritOption = select.find('option:first-child');
+  var previousInheritText = inheritOption.text();
+  var previousInheritDataId = inheritOption.attr('data-id');
   var previousValue = select.val();
   select.find('option').remove();
 
@@ -63,7 +65,9 @@ KT.hosts.refreshContentViewEnvironments = function() {
 
     // Add inherit option back if it was there
     if (previousInheritText && (previousInheritText.includes('Inherit') || previousInheritText === '')) {
-      select.append($("<option />").text(previousInheritText).val(''));
+      var inheritOpt = $("<option />").text(previousInheritText).val('');
+      if (previousInheritDataId) inheritOpt.attr('data-id', previousInheritDataId);
+      select.append(inheritOpt);
     }
 
     $.each(data.results, function(index, cve) {
