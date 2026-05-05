@@ -15,8 +15,6 @@ import {
   selectFilesComparisonStatus,
   selectErrataComparison,
   selectErrataComparisonStatus,
-  selectModuleStreamsComparison,
-  selectModuleStreamsComparisonStatus,
   selectDebPackagesComparison,
   selectDebPackagesComparisonStatus,
   selectDockerTagsComparison,
@@ -33,7 +31,6 @@ import {
   getRPMPackagesComparison,
   getFilesComparison,
   getErrataComparison,
-  getModuleStreamsComparison,
   getDebPackagesComparison,
   getDockerTagsComparison,
   getContainerManifestListsComparison,
@@ -278,40 +275,6 @@ export default ({
         [__('Errata ID')]: 'errata_id',
         [__('Title')]: 'title',
         [__('Type')]: 'type',
-      },
-    },
-    {
-      name: __('Module streams'),
-      getCountKey: (itemVersionOne, itemVersionTwo) =>
-        itemVersionOne?.module_stream_count || itemVersionTwo?.module_stream_count,
-      responseSelector: state =>
-        selectModuleStreamsComparison(state, versionOneId, versionTwoId, viewBy),
-      statusSelector: state =>
-        selectModuleStreamsComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/katello/api/v2/module_streams',
-      bookmarkController: 'katello_content_view_components',
-      fetchItems: params => getModuleStreamsComparison(versionOneId, versionTwoId, viewBy, params),
-      columnHeaders: [
-        {
-          title: __('Name'),
-          getProperty: item => (
-            <a href={urlBuilder(`module_streams/${item?.id}`, '')}>
-              {item?.name}
-            </a>),
-        },
-        { title: __('Stream'), getProperty: item => item?.stream },
-        { title: __('Version'), getProperty: item => item?.version },
-        { title: __('Context'), getProperty: item => item?.context },
-        { title: __('Arch'), getProperty: item => item?.arch },
-        { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
-        { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
-      ],
-      sortConfig: {
-        [__('Name')]: 'name',
-        [__('Stream')]: 'stream',
-        [__('Version')]: 'version',
-        [__('Context')]: 'context',
-        [__('Arch')]: 'arch',
       },
     },
     {

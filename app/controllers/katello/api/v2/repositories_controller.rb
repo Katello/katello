@@ -107,6 +107,7 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
     param :rpm_id, String, :desc => N_("Id of a rpm package to find repositories that contain the rpm")
     param :file_id, String, :desc => N_("Id of a file to find repositories that contain the file")
     param :ansible_collection_id, String, :desc => N_("Id of an ansible collection to find repositories that contain the ansible collection")
+    param :modulemd_id, String, :desc => N_("Id of a module stream to find repositories that contain the module stream")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :archived, :bool, :desc => N_("show archived repositories")
     param :content_type, String, :desc => N_("Limit the repository type. Available types endpoint: /katello/api/repositories/repository_types")
@@ -205,6 +206,7 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
       query
     end
 
+    # rubocop:disable Metrics/AbcSize
     def index_relation_content_unit(query)
       if params[:deb_id]
         query = query.joins(:debs)
@@ -231,6 +233,11 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
                     .where("#{AnsibleCollection.table_name}.id" => AnsibleCollection.with_identifiers(params[:ansible_collection_id]))
       end
 
+      if params[:modulemd_id]
+        query = query.joins(:module_streams)
+                    .where("#{ModuleStream.table_name}.id" => ModuleStream.with_identifiers(params[:modulemd_id]))
+      end
+
       generic_type_param = RepositoryTypeManager.generic_content_types.find { |type| params["#{type}_id".to_sym] }
       if generic_type_param
         query = query.joins(:generic_content_units)
@@ -239,6 +246,7 @@ Pass [] to make repo available for clients regardless of OS version. Maximum len
 
       query
     end
+    # rubocop:enable Metrics/AbcSize
 
     api :GET, "/repositories/compare/", N_("List :resource")
     param :content_view_version_ids, Array, :desc => N_("content view versions to compare")

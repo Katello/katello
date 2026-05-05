@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'patternfly-react';
+import { AngleRightIcon, AngleDownIcon } from '@patternfly/react-icons';
+import { Button } from '@patternfly/react-core';
 
 import './ProfileRpmsCellFormatter.scss';
 
@@ -23,31 +24,37 @@ class ProfileRpmsCellFormatter extends Component {
     }));
   };
 
-  iconName = () => (this.state.expanded ? 'angle-down' : 'angle-right');
-
   render() {
-    const { rpms } = this.props;
+    const { rpms, profileId } = this.props;
     const largeList = rpms.length > this.minAmount;
+    const Icon = this.state.expanded ? AngleDownIcon : AngleRightIcon;
 
     return (
-      <td>
-        {largeList && <Icon
-          className="expand-profile-rpms"
-          onClick={this.onClick}
-          name={this.iconName()}
-        />}
+      <>
+        {largeList && (
+          <Button
+            variant="plain"
+            className="expand-profile-rpms"
+            onClick={this.onClick}
+            aria-label={this.state.expanded ? 'Collapse' : 'Expand'}
+            ouiaId={`expand-profile-rpms-button-${profileId}`}
+          >
+            <Icon />
+          </Button>
+        )}
         {rpms
           .slice(0, this.state.showAmount)
           .map(rpm => rpm.name)
           .join(', ')}
         {largeList && !this.state.expanded && ', ...'}
-      </td>
+      </>
     );
   }
 }
 
 ProfileRpmsCellFormatter.propTypes = {
   rpms: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  profileId: PropTypes.number.isRequired,
 };
 
 export default ProfileRpmsCellFormatter;

@@ -1,14 +1,30 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { renderWithRedux } from 'react-testing-lib-wrapper';
+import * as ContentSelectors from '../../../../Content/ContentSelectors';
+import * as ContentActions from '../../../../Content/ContentActions';
 import ModuleStreamDetailProfiles from '../ModuleStreamDetailProfiles';
 import { details } from '../../__tests__/moduleStreamDetails.fixtures';
 
+jest.mock('../../../../Content/ContentSelectors');
+jest.mock('../../../../Content/ContentActions');
+
 describe('Module stream detail profiles component', () => {
-  // eslint-disable-next-line prefer-destructuring
-  const { profiles } = details;
+  const contentType = 'modulemd';
+  const id = 22;
+
+  beforeEach(() => {
+    ContentSelectors.selectContentDetails.mockReturnValue(details);
+    ContentSelectors.selectContentDetailsStatus.mockReturnValue('RESOLVED');
+    ContentActions.getContentDetails.mockReturnValue({ type: 'GET_CONTENT_DETAILS' });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   test('renders table with profile data', () => {
-    const { getByText, container } = render(<ModuleStreamDetailProfiles profiles={profiles} />);
+    const component = <ModuleStreamDetailProfiles contentType={contentType} id={id} />;
+    const { getByText, container } = renderWithRedux(component);
 
     // Verify table headers
     expect(getByText('Name')).toBeInTheDocument();
@@ -23,7 +39,8 @@ describe('Module stream detail profiles component', () => {
   });
 
   test('renders RPM names for each profile', () => {
-    const { container } = render(<ModuleStreamDetailProfiles profiles={profiles} />);
+    const component = <ModuleStreamDetailProfiles contentType={contentType} id={id} />;
+    const { container } = renderWithRedux(component);
 
     // Check that RPMs from the default profile are visible
     // The ProfileRpmsCellFormatter shows first 10 RPMs for the 'default' profile
@@ -47,18 +64,31 @@ describe('Module stream detail profiles component', () => {
   });
 
   test('renders multiple profiles from fixture data', () => {
-    const { container } = render(<ModuleStreamDetailProfiles profiles={profiles} />);
+    const component = <ModuleStreamDetailProfiles contentType={contentType} id={id} />;
+    const { container } = renderWithRedux(component);
 
     // Verify both profiles are rendered (2 tbody rows expected)
     const tableRows = container.querySelectorAll('tbody tr');
     expect(tableRows).toHaveLength(2);
   });
 
-  test('renders with empty profiles array', () => {
-    const { getByText } = render(<ModuleStreamDetailProfiles profiles={[]} />);
+  test('renders empty state when no profiles', () => {
+    ContentSelectors.selectContentDetails.mockReturnValue({ profiles: [] });
 
-    // Table headers should still render
-    expect(getByText('Name')).toBeInTheDocument();
-    expect(getByText('RPMs')).toBeInTheDocument();
+    const component = <ModuleStreamDetailProfiles contentType={contentType} id={id} />;
+    const { getByText } = renderWithRedux(component);
+
+    // Should show "No profiles to show" message
+    expect(getByText('No profiles to show')).toBeInTheDocument();
+  });
+
+  test('renders loading state when pending', () => {
+    ContentSelectors.selectContentDetailsStatus.mockReturnValue('PENDING');
+
+    const component = <ModuleStreamDetailProfiles contentType={contentType} id={id} />;
+    const { getByText } = renderWithRedux(component);
+
+    // Should show loading text
+    expect(getByText('Loading')).toBeInTheDocument();
   });
 });

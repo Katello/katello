@@ -172,7 +172,7 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :module_streams,
          :caption => N_('Module Streams'),
-         :url => '/module_streams',
+         :url => '/content/module_streams',
          :url_hash => {:controller => 'katello/api/v2/module_streams',
                        :action => 'index'},
          :engine => Katello::Engine,

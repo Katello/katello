@@ -6,8 +6,6 @@ import SubscriptionDetails from '../../scenes/Subscriptions/Details';
 import ActivationKeyDetails from '../../scenes/ActivationKeys/Details/ActivationKeyDetails';
 import SetOrganization from '../../components/SelectOrg/SetOrganization';
 import WithOrganization from '../../components/WithOrganization/withOrganization';
-import ModuleStreams from '../../scenes/ModuleStreams';
-import ModuleStreamDetails from '../../scenes/ModuleStreams/Details';
 import ContentViews from '../../scenes/ContentViews';
 import ContentViewDetails from '../../scenes/ContentViews/Details';
 import Content from '../../scenes/Content';
@@ -52,14 +50,6 @@ export const links = [
   {
     path: 'organization_select',
     component: SetOrganization,
-  },
-  {
-    path: 'module_streams',
-    component: WithOrganization(withHeader(ModuleStreams, { title: __('Module Streams') })),
-  },
-  {
-    path: 'module_streams/:id([0-9]+)',
-    component: WithOrganization(withHeader(ModuleStreamDetails, { title: __('Module Stream Details') })),
   },
   {
     path: 'content_views',

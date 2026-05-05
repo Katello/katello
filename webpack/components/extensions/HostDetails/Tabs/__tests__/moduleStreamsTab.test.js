@@ -4,7 +4,7 @@ import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-test
 import { nockInstance, assertNockRequest, mockForemanAutocomplete } from '../../../../../test-utils/nockWrapper';
 import { ModuleStreamsTab } from '../ModuleStreamsTab/ModuleStreamsTab.js';
 import mockModuleStreams from './moduleStreams.fixtures.json';
-import { MODULE_STREAMS_KEY } from '../../../../../scenes/ModuleStreams/ModuleStreamsConstants';
+import { MODULE_STREAMS_KEY } from '../ModuleStreamsTab/ModuleStreamsConstants';
 import { foremanApi } from '../../../../../services/api';
 
 jest.mock('../../hostDetailsHelpers', () => ({

@@ -270,7 +270,7 @@ export default ({ cvId, versionId }) => [
       {
         title: __('Name'),
         getProperty: item => (
-          <a href={urlBuilder(`module_streams/${item?.id}`, '')}>
+          <a href={urlBuilder(`content/module_streams/${item?.id}`, '')}>
             {item?.name}
           </a>),
       },

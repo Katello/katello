@@ -6,9 +6,7 @@ import { upstreamSubscriptions } from '../../scenes/Subscriptions/UpstreamSubscr
 import { manifestHistory } from '../../scenes/Subscriptions/Manifest';
 import { subscriptionDetails } from '../../scenes/Subscriptions/Details';
 import { setOrganization } from '../../components/SelectOrg/SetOrganization';
-import { moduleStreams } from '../../scenes/ModuleStreams';
 import { reducers as organizationProductsReducers } from '../OrganizationProducts';
-import { moduleStreamDetails } from '../../scenes/ModuleStreams/Details';
 import { contentViewDetails } from '../../scenes/ContentViews/Details';
 import hostDetails from '../../components/extensions/HostDetails/HostDetailsReducer';
 import searchBar from '../../components/extensions/SearchBar/SearchBarReducer';
@@ -21,8 +19,6 @@ export default combineReducers({
   manifestHistory,
   subscriptionDetails,
   setOrganization,
-  moduleStreams,
-  moduleStreamDetails,
   contentViewDetails,
   hostDetails,
   searchBar,

@@ -623,7 +623,7 @@ export const ModuleStreamsTab = () => {
                 <Tr key={`${id} ${index}`} ouiaId={`tr-${id}-${index}`}>
                   <Td>
                     <a
-                      href={`/module_streams?search=module_spec%3D${moduleSpec}+and+host%3D${hostname}`}
+                      href={`/content/module_streams?search=module_spec%3D${encodeURIComponent(moduleSpec)}+and+host%3D${encodeURIComponent(hostname)}`}
                     >
                       {name}
                     </a>
