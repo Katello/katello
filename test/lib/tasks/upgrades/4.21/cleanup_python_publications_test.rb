@@ -94,11 +94,25 @@ module Katello
       task_response = OpenStruct.new(task: '/pulp/api/v3/tasks/12345/')
       service_mock = mock('repository_service')
       service_mock.expects(:update_distribution).returns([task_response])
+
+      # Mock repository_reference for repair_python_metadata
+      repository_reference_mock = mock('repository_reference')
+      repository_reference_mock.stubs(:repository_href).returns('/pulp/api/v3/repositories/python/pypi/repo123/')
+      service_mock.stubs(:repository_reference).returns(repository_reference_mock)
+
+      # Mock api for repair_python_metadata
+      repositories_api_mock = mock('repositories_api')
+      repair_task_response = OpenStruct.new(task: '/pulp/api/v3/tasks/repair123/')
+      repositories_api_mock.stubs(:repair_metadata).returns(repair_task_response)
+      api_mock = mock('api')
+      api_mock.stubs(:repositories_api).returns(repositories_api_mock)
+      service_mock.stubs(:api).returns(api_mock)
+
       Katello::Pulp3::Repository.stubs(:instance_for_type).returns(service_mock)
       task_mock = mock('task')
       task_mock.stubs(:done?).returns(true)
       task_mock.stubs(:error).returns(nil)
-      Katello::Pulp3::Task.expects(:new).returns(task_mock)
+      Katello::Pulp3::Task.stubs(:new).returns(task_mock)
 
       Katello::Pulp3::Api::Core.any_instance.stubs(:publications_list_all).returns([])
 
@@ -116,12 +130,26 @@ module Katello
       task_response = OpenStruct.new(task: '/pulp/api/v3/tasks/12345/')
       service_mock = mock('repository_service')
       service_mock.stubs(:update_distribution).returns([task_response])
+
+      # Mock repository_reference for repair_python_metadata
+      repository_reference_mock = mock('repository_reference')
+      repository_reference_mock.stubs(:repository_href).returns('/pulp/api/v3/repositories/python/pypi/repo123/')
+      service_mock.stubs(:repository_reference).returns(repository_reference_mock)
+
+      # Mock api for repair_python_metadata
+      repositories_api_mock = mock('repositories_api')
+      repair_task_response = OpenStruct.new(task: '/pulp/api/v3/tasks/repair123/')
+      repositories_api_mock.stubs(:repair_metadata).returns(repair_task_response)
+      api_mock = mock('api')
+      api_mock.stubs(:repositories_api).returns(repositories_api_mock)
+      service_mock.stubs(:api).returns(api_mock)
+
       Katello::Pulp3::Repository.stubs(:instance_for_type).returns(service_mock)
       task_mock = mock('task')
       task_mock.stubs(:done?).returns(false).then.returns(true)
       task_mock.stubs(:poll).returns(task_mock)
       task_mock.stubs(:error).returns(nil)
-      Katello::Pulp3::Task.expects(:new).returns(task_mock)
+      Katello::Pulp3::Task.stubs(:new).returns(task_mock)
 
       Katello::Pulp3::Api::Core.any_instance.stubs(:publications_list_all).returns([])
 
@@ -178,6 +206,20 @@ module Katello
 
       service_mock = mock('repository_service')
       service_mock.expects(:update_distribution).times(3).returns([task1_response], [task2_response], [task3_response])
+
+      # Mock repository_reference for repair_python_metadata
+      repository_reference_mock = mock('repository_reference')
+      repository_reference_mock.stubs(:repository_href).returns('/pulp/api/v3/repositories/python/pypi/repo123/')
+      service_mock.stubs(:repository_reference).returns(repository_reference_mock)
+
+      # Mock api for repair_python_metadata
+      repositories_api_mock = mock('repositories_api')
+      repair_task_response = OpenStruct.new(task: '/pulp/api/v3/tasks/repair123/')
+      repositories_api_mock.stubs(:repair_metadata).returns(repair_task_response)
+      api_mock = mock('api')
+      api_mock.stubs(:repositories_api).returns(repositories_api_mock)
+      service_mock.stubs(:api).returns(api_mock)
+
       Katello::Pulp3::Repository.stubs(:instance_for_type).returns(service_mock)
 
       task_mock1 = mock('task1')
@@ -189,7 +231,8 @@ module Katello
       task_mock3 = mock('task3')
       task_mock3.stubs(:done?).returns(true)
       task_mock3.stubs(:error).returns(nil)
-      Katello::Pulp3::Task.expects(:new).times(3).returns(task_mock1, task_mock2, task_mock3)
+      # Task.new called 3 times for distribution tasks + 3 times for repair tasks = 6 total
+      Katello::Pulp3::Task.expects(:new).times(6).returns(task_mock1, task_mock2, task_mock3, task_mock1, task_mock2, task_mock3)
 
       pub1 = OpenStruct.new(pulp_href: '/pulp/api/v3/publications/python/pypi/pub1/')
       pub2 = OpenStruct.new(pulp_href: '/pulp/api/v3/publications/python/pypi/pub2/')

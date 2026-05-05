@@ -31,7 +31,8 @@ module Katello
         end
 
         def partial_repo_path
-          "/pulp/content/#{repo.relative_path}/".sub('//', '/')
+          prefix = repo.repository_type.generic_content_path_prefix || '/pulp/content'
+          "#{prefix}/#{repo.relative_path}/".sub('//', '/')
         end
       end
     end
