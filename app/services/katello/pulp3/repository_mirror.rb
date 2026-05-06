@@ -222,14 +222,14 @@ module Katello
       end
 
       def adjust_distribution_options_for_pulp_version(distro, dist_options)
+        # REMOVE when N-2 capsules use Pulp >= 3.105 (enables publication-free distribution for old capsules)
         if distro.respond_to?(:repository_version)
           # New Pulp supports repository_version - use it and clear publication
           dist_options[:publication] = nil if distro.publication.present?
         else
           # Old Pulp doesn't support repository_version - fall back to publication
           dist_options.delete(:repository_version)
-          dist_options[:publication] = publication_href
-          fail "Could not lookup a publication_href for repo #{repo_service.repo.id}" if publication_href.nil?
+          dist_options[:publication] = publication_href_or_create
         end
       end
 
@@ -241,13 +241,13 @@ module Katello
       end
 
       def retry_distribution_update_with_publication(error, distro, dist_options)
+        # REMOVE when N-2 capsules use Pulp >= 3.105
         # If repository_version is not supported (old Pulp), retry with publication
         if repo_service.repo.repository_type.pulp3_transitioning_from_publication &&
            error.code == 400 &&
            (error.message.include?("repository_version") || error.message.include?("publication"))
           dist_options.delete(:repository_version)
-          dist_options[:publication] = publication_href
-          fail "Could not lookup a publication_href for repo #{repo_service.repo.id}" if publication_href.nil?
+          dist_options[:publication] = publication_href_or_create
           response = api.distributions_api.partial_update(distro.pulp_href, dist_options)
           # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
           (response.respond_to?(:task) && response.task.present?) ? [response] : []
@@ -257,18 +257,44 @@ module Katello
       end
 
       def retry_distribution_create_with_publication(error, dist_options)
+        # REMOVE when N-2 capsules use Pulp >= 3.105
         # If repository_version is not supported (old Pulp), retry with publication
         if repo_service.repo.repository_type.pulp3_transitioning_from_publication &&
            error.code == 400 &&
            (error.message.include?("repository_version") || error.message.include?("publication"))
           dist_options.delete(:repository_version)
-          dist_options[:publication] = publication_href
-          fail "Could not lookup a publication_href for repo #{repo_service.repo.id}" if publication_href.nil?
+          dist_options[:publication] = publication_href_or_create
           distribution_data = api.distribution_class.new(dist_options)
           [api.distributions_api.create(distribution_data)]
         else
           fail error
         end
+      end
+
+      def publication_href_or_create
+        # Get existing publication href, or create one on-demand if needed (for N-1 capsule compatibility)
+        pub_href = publication_href
+        if pub_href.nil?
+          Rails.logger.info("No publication found for capsule #{smart_proxy.name}, creating one for repo #{repo_service.repo.id}")
+          task_response = create_publication
+          fail "Failed to create publication task for repo #{repo_service.repo.id}" if task_response.nil?
+
+          task = Katello::Pulp3::Task.new(smart_proxy, { 'task' => task_response.task })
+
+          # Poll with timeout to prevent indefinite blocking
+          timeout = Setting[:sync_total_timeout] || 3600
+          start_time = Time.now
+          until task.done?
+            elapsed = Time.now - start_time
+            fail "Publication creation timed out after #{elapsed.to_i} seconds for repo #{repo_service.repo.id}" if elapsed > timeout
+            sleep 1
+            task.poll
+          end
+
+          pub_href = Katello::Pulp3::Task.publication_href([task.task_data])
+          fail "Failed to create publication for repo #{repo_service.repo.id}" if pub_href.nil?
+        end
+        pub_href
       end
 
       def count_by_pulpcore_type(service_class)

@@ -7,6 +7,7 @@ Katello::RepositoryTypeManager.register('python') do
   pulp3_plugin 'python'
   pulp3_skip_publication true
   pulp3_transitioning_from_publication true
+  generic_content_path_prefix '/pypi'
 
   client_module_class PulpPythonClient
   api_class PulpPythonClient::ApiClient

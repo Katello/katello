@@ -18,6 +18,7 @@ namespace :katello do
         end
 
         migrate_distributions(python_repos, smart_proxy)
+        repair_python_metadata(python_repos, smart_proxy)
         delete_python_publications(smart_proxy)
         clear_publication_hrefs(python_repos)
       end
@@ -72,6 +73,46 @@ namespace :katello do
         if migration_failed
           puts "ERROR: One or more distribution migrations failed."
           exit 1
+        end
+      end
+      # rubocop:enable Metrics/MethodLength
+
+      # rubocop:disable Metrics/MethodLength
+      def self.repair_python_metadata(python_repos, smart_proxy)
+        puts "Repairing Python package metadata..."
+        tasks = []
+        python_repos.select { |repo| repo.environment.present? }.each do |repo|
+          begin
+            service = Katello::Pulp3::Repository.instance_for_type(repo, smart_proxy)
+            repository_href = service.repository_reference.repository_href
+            api = service.api
+            response = api.repositories_api.repair_metadata(repository_href)
+            tasks << { task: Katello::Pulp3::Task.new(smart_proxy, { 'task' => response.task }), repo: repo }
+            puts "Queued metadata repair for: #{repo.name}"
+          rescue StandardError => e
+            puts "WARNING: Could not queue metadata repair for #{repo.name}: #{e.message}"
+          end
+        end
+
+        # Wait for repair tasks and log results
+        tasks.each do |task_info|
+          max_wait = 300
+          elapsed = 0
+          until task_info[:task].done?
+            if elapsed >= max_wait
+              puts "WARNING: Metadata repair timed out for #{task_info[:repo].name} after #{max_wait} seconds (Pulp will continue processing in background)"
+              break
+            end
+            sleep 5
+            elapsed += 5
+            task_info[:task].poll
+          end
+
+          if task_info[:task].error
+            puts "WARNING: Metadata repair failed for #{task_info[:repo].name}: #{task_info[:task].error}"
+          elsif task_info[:task].done?
+            puts "Metadata repair completed for #{task_info[:repo].name}"
+          end
         end
       end
       # rubocop:enable Metrics/MethodLength
