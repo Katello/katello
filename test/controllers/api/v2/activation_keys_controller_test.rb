@@ -62,6 +62,50 @@ module Katello
       assert_equal results["results"].size, 5
     end
 
+    def test_index_filter_by_environment
+      dev = katello_environments(:dev)
+      results = JSON.parse(get(:index, params: { :environment_id => dev.id }).body)
+
+      assert_response :success
+      assert_equal 1, results['results'].size
+      result_ids = results['results'].map { |r| r['id'] }
+      assert_includes result_ids, katello_activation_keys(:library_dev_staging_view_key).id
+      refute_includes result_ids, @activation_key.id
+    end
+
+    def test_index_filter_by_environment_with_no_activation_keys
+      staging = katello_environments(:staging)
+      results = JSON.parse(get(:index, params: { :environment_id => staging.id }).body)
+
+      assert_response :success
+      assert_equal 0, results['results'].size
+    end
+
+    def test_index_filter_by_nonexistent_environment
+      get :index, params: { :environment_id => -1 }
+      assert_response :not_found
+    end
+
+    def test_index_filter_by_environment_and_content_view
+      dev = katello_environments(:dev)
+      cv = katello_content_views(:library_dev_staging_view)
+      results = JSON.parse(get(:index, params: { :environment_id => dev.id, :content_view_id => cv.id }).body)
+
+      assert_response :success
+      assert_equal 1, results['results'].size
+      assert_equal katello_activation_keys(:library_dev_staging_view_key).id, results['results'].first['id']
+    end
+
+    def test_index_filter_by_environment_id_and_lifecycle_environments_with_different_values
+      dev = katello_environments(:dev)
+      library = @organization.library
+      results = JSON.parse(get(:index, params: { :environment_id => dev.id, :lifecycle_environments => library.id }).body)
+
+      assert_response :success
+      assert_equal 1, results['results'].size
+      assert_equal katello_activation_keys(:library_dev_staging_view_key).id, results['results'].first['id']
+    end
+
     def test_show
       results = JSON.parse(get(:show, params: { :id => @activation_key.id }).body)
 

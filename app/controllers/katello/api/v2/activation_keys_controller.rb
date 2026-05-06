@@ -5,6 +5,7 @@ module Katello
     include Katello::Concerns::Api::V2::MultiCVParamsHandling
     before_action :verify_presence_of_organization_or_environment, :only => [:index]
     before_action :find_optional_organization, :only => [:index, :create, :show]
+    before_action :find_optional_environment, :only => [:index]
     before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :available_releases,
                                                                :available_host_collections, :add_host_collections, :remove_host_collections,
                                                                :content_override]
@@ -219,7 +220,11 @@ module Katello
       activation_keys = activation_keys.where(:organization_id => @organization) if @organization
       activation_keys = activation_keys.with_content_view_environments(@content_view_environments) if @content_view_environments
       activation_keys = activation_keys.with_content_views(params[:content_view_id]) if params[:content_view_id]
-      activation_keys = activation_keys.with_environments(params[:lifecycle_environments]) if params[:lifecycle_environments]
+      if @environment
+        activation_keys = activation_keys.with_environments([@environment.id])
+      elsif params[:lifecycle_environments]
+        activation_keys = activation_keys.with_environments(params[:lifecycle_environments])
+      end
       activation_keys
     end
 
@@ -305,6 +310,11 @@ module Katello
         fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % host_collection_id if host_collection.nil?
         @host_collections << host_collection
       end
+    end
+
+    def find_optional_environment
+      return unless params[:environment_id]
+      @environment = KTEnvironment.readable.find(params[:environment_id])
     end
 
     def verify_presence_of_organization_or_environment
