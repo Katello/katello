@@ -406,7 +406,8 @@ export const ErrataTab = () => {
   // Show the Applicable/Installable toggle when not all errata are installable.
   // contentViewEnvironmentsAllDefaultOrRolling is true when all CVEnvs are Library or rolling,
   // meaning all applicable errata are installable and the toggle is unnecessary.
-  const showApplicableInstallableToggle = contentFacet?.contentViewEnvironmentsAllDefaultOrRolling === false;
+  const showApplicableInstallableToggle =
+    contentFacet?.contentViewEnvironmentsAllDefaultOrRolling === false;
   const toggleGroup = (
     <Split hasGutter>
       <SplitItem>
