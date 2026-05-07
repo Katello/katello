@@ -16,7 +16,7 @@ module Katello
     before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
     before_action :authorize_client_or_user, :only => [:consumer_show, :regenerate_identity_certificates, :upload_tracer_profile, :facts, :proxy_jobs_get_path]
     before_action :authorize_client_or_admin, :only => [:hypervisors_update, :async_hypervisors_update, :hypervisors_heartbeat]
-    before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
+    before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete, :consumer_compliance, :consumer_purpose_compliance]
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
                                                :enabled_repos, :available_releases]
 
@@ -70,6 +70,44 @@ module Katello
     def drop_api_namespace(original_request_path)
       prefix = "/rhsm"
       original_request_path.gsub(prefix, '')
+    end
+
+    SCA_COMPLIANCE_RESPONSE = {
+      'compliant' => true,
+      'compliantProducts' => {},
+      'compliantUntil' => nil,
+      'date' => nil,
+      'nonCompliantProducts' => [],
+      'partialStacks' => {},
+      'partiallyCompliantProducts' => {},
+      'productComplianceDateRanges' => {},
+      'reasons' => [],
+      'status' => 'disabled',
+    }.freeze
+
+    SCA_PURPOSE_COMPLIANCE_RESPONSE = {
+      'compliant' => true,
+      'compliantAddOns' => {},
+      'compliantRole' => {},
+      'compliantSLA' => {},
+      'compliantServiceType' => {},
+      'compliantUsage' => {},
+      'date' => nil,
+      'nonCompliantAddOns' => [],
+      'nonCompliantRole' => nil,
+      'nonCompliantSLA' => nil,
+      'nonCompliantServiceType' => nil,
+      'nonCompliantUsage' => nil,
+      'reasons' => [],
+      'status' => 'disabled',
+    }.freeze
+
+    def consumer_compliance
+      render :json => SCA_COMPLIANCE_RESPONSE.merge('date' => Time.now.utc.iso8601)
+    end
+
+    def consumer_purpose_compliance
+      render :json => SCA_PURPOSE_COMPLIANCE_RESPONSE.merge('date' => Time.now.utc.iso8601)
     end
 
     def get

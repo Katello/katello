@@ -507,6 +507,44 @@ module Katello
       end
     end
 
+    describe "consumer_compliance" do
+      before do
+        uuid = @host.subscription_facet.uuid
+        User.stubs(:consumer?).returns(true)
+        stub_cp_consumer_with_uuid(uuid)
+      end
+
+      it "returns static SCA compliance without calling Candlepin" do
+        Resources::Candlepin::Proxy.expects(:get).never
+        get :consumer_compliance, params: { :id => @host.subscription_facet.uuid }
+        assert_response :success
+        body = JSON.parse(response.body)
+        assert_equal 'disabled', body['status']
+        assert_equal true, body['compliant']
+        assert_empty body['reasons']
+        assert body.key?('date')
+      end
+    end
+
+    describe "consumer_purpose_compliance" do
+      before do
+        uuid = @host.subscription_facet.uuid
+        User.stubs(:consumer?).returns(true)
+        stub_cp_consumer_with_uuid(uuid)
+      end
+
+      it "returns static SCA purpose compliance without calling Candlepin" do
+        Resources::Candlepin::Proxy.expects(:get).never
+        get :consumer_purpose_compliance, params: { :id => @host.subscription_facet.uuid }
+        assert_response :success
+        body = JSON.parse(response.body)
+        assert_equal 'disabled', body['status']
+        assert_equal true, body['compliant']
+        assert_empty body['reasons']
+        assert body.key?('compliantRole')
+      end
+    end
+
     describe "get parent host" do
       it "can get parent host" do
         capsule = "foocapsule.example.com"
