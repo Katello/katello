@@ -88,11 +88,16 @@ export const cancelPollTasks = () => (dispatch, getState) => {
   }
 };
 
-export const pollTasks = () => dispatch => dispatch(startPollingTasks(SUBSCRIPTIONS, {
-  organization_id: orgId(),
-  result: 'pending',
-  label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-}));
+export const pollTasks = () => (dispatch, getState) => {
+  if (selectIsPollingTasks(getState(), SUBSCRIPTIONS)) {
+    dispatch(stopPollingTasks(SUBSCRIPTIONS));
+  }
+  return dispatch(startPollingTasks(SUBSCRIPTIONS, {
+    organization_id: orgId(),
+    result: 'pending',
+    label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
+  }));
+};
 
 export const resetTasks = () => (dispatch) => {
   dispatch({
