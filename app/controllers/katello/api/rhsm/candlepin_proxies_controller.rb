@@ -302,8 +302,14 @@ module Katello
 
     private
 
+    COMPLIANCE_CACHE_TTL = 180.seconds
+
+    def compliance_cache_key(id)
+      "katello/compliance/#{id}"
+    end
+
     def compliance_status(id)
-      Rails.cache.fetch("katello/compliance/#{id}", expires_in: 180.seconds) do
+      Rails.cache.fetch(compliance_cache_key(id), expires_in: COMPLIANCE_CACHE_TTL) do
         r = Resources::Candlepin::Proxy.get(@request_path)
         raise ComplianceFetchError, r if r.code.to_i >= 400
         [JSON.parse(r.body), r.code]
