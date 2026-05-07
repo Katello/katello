@@ -185,6 +185,10 @@ module Katello
           begin
             create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
           rescue StandardError => e
+            # Invalidate the cached Candlepin status immediately so subsequent
+            # registrations fail fast at check_registration_services rather than
+            # proceeding through DB writes only to roll back when CP is down.
+            Katello::Resources::Candlepin::CandlepinPing.clear_cache
             # we can't call CP here since something bad already happened. Just clean up our DB as best as we can.
             host.subscription_facet.try(:destroy!)
             new_host ? remove_partially_registered_new_host(host) : remove_host_artifacts(host)
@@ -197,11 +201,7 @@ module Katello
       # rubocop:enable Metrics/MethodLength
 
       def check_registration_services
-        ping_results = {}
-        User.as_anonymous_admin do
-          ping_results = Katello::Ping.ping
-        end
-        ping_results[:services][:candlepin][:status] == "ok"
+        Katello::Resources::Candlepin::CandlepinPing.ok?
       end
 
       private
