@@ -1,15 +1,15 @@
-# Monkey patch to handle Pulpcore 3.90+ polymorphic update responses (PULP-734)
+# Pulpcore 3.90+ AsyncUpdateMixin bug workaround
 #
-# Pulpcore 3.90+ introduced polymorphic responses on all update endpoints via AsyncUpdateMixin
-# (see https://github.com/pulp/pulpcore/commit/c8ca610a4e968c10fde8bf607b9f384f892d216c):
-# - HTTP 202 with AsyncOperationResponse {task: "task_href"} when changes detected
-# - HTTP 200 with resource response when no changes detected
+# update/partial_update endpoints return either HTTP 202 {"task": "..."} when changes
+# are detected, or HTTP 200 with the resource when nothing changed. At the moment, the
+# Pulp Ruby bindings drop the task data from the response.
 #
-# This optimization (tracked in PULP-734) skips task dispatch when update requests contain
-# no actual changes to the resource. We must patch all affected API classes to override the
-# _with_http_info methods for partial_update and update. Force the expected return_type from
-# XxxResponse to AsyncOperationResponse by setting the debug_return_type option before calling
-# the original method.
+# This patch forces debug_return_type to AsyncOperationResponse on all update methods
+# so the 202 body deserializes correctly. On 200 (no-op), AsyncOperationResponse gets
+# task=nil, which callers already handle.
+#
+# Remove when pulpcore fixes the schema for AsyncUpdateMixin endpoints:
+# https://github.com/pulp/pulpcore/issues/7705
 
 require 'pulp_rpm_client'
 require 'pulp_file_client'
@@ -42,8 +42,8 @@ module PulpPolymorphicResponsePatch
   end
 end
 
-# Apply patches to all affected ViewSets (via AsyncUpdateMixin)
-# Note: File, Deb, and Python remote clients already expect AsyncOperationResponse in their bindings
+# Every API class whose ViewSet inherits AsyncUpdateMixin must be listed here.
+# When adding new Pulp plugins or bumping gem versions, verify coverage.
 [
   # RemoteViewSet
   PulpRpmClient::RemotesRpmApi,
@@ -54,6 +54,9 @@ end
   PulpContainerClient::RemotesContainerApi,
   PulpContainerClient::RemotesPullThroughApi,
   PulpOstreeClient::RemotesOstreeApi,
+  PulpDebClient::RemotesAptApi,
+  PulpFileClient::RemotesFileApi,
+  PulpPythonClient::RemotesPythonApi,
   # RepositoryViewSet
   PulpRpmClient::RepositoriesRpmApi,
   PulpFileClient::RepositoriesFileApi,
