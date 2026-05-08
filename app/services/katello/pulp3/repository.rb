@@ -523,7 +523,7 @@ module Katello
           }
         elsif root.redhat? && root.cdn_configuration.custom_cdn?
           options = {
-            ca_cert: root.cdn_configuration.ssl_ca || ::File.read(::Katello::Resources::CDN::CdnResource.ca_file),
+            ca_cert: custom_cdn_ca_cert,
           }
         elsif root.redhat? && root.cdn_configuration.network_sync?
           options = {
@@ -540,6 +540,11 @@ module Katello
         end
         append_proxy_cacert(options) if options.key?(:cacert)
         options
+      end
+
+      def custom_cdn_ca_cert
+        return root.cdn_configuration.ssl_ca if root.cdn_configuration.ssl_ca.present?
+        ::File.read(::Katello::Resources::CDN::CdnResource.ca_file) if URI.parse(root.url).host&.end_with?('.redhat.com')
       end
 
       def append_proxy_cacert(options)

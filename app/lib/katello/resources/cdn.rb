@@ -34,14 +34,12 @@ module Katello
                                     :ssl_ca_cert,
                                     :custom_cdn)
 
+          @cert_store = OpenSSL::X509::Store.new
           if options[:ssl_ca_cert].present?
-            @cert_store = OpenSSL::X509::Store.new
             Foreman::Util.add_ca_bundle_to_store(options[:ssl_ca_cert], @cert_store)
           elsif options[:ssl_ca_file]
-            @cert_store = OpenSSL::X509::Store.new
             @cert_store.add_file(options[:ssl_ca_file])
           else
-            @cert_store = OpenSSL::X509::Store.new
             @cert_store.set_default_paths
           end
 
