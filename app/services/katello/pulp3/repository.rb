@@ -523,7 +523,7 @@ module Katello
           }
         elsif root.redhat? && root.cdn_configuration.custom_cdn?
           options = {
-            ca_cert: root.cdn_configuration.ssl_ca,
+            ca_cert: root.cdn_configuration.ssl_ca || ::File.read(::Katello::Resources::CDN::CdnResource.ca_file),
           }
         elsif root.redhat? && root.cdn_configuration.network_sync?
           options = {
