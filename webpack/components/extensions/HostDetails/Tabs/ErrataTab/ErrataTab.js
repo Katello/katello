@@ -403,11 +403,11 @@ export const ErrataTab = () => {
     </>
   ) : null;
 
-  const hostIsNonLibrary = (
-    (contentFacet?.contentViewDefault === false ||
-      contentFacet.lifecycleEnvironmentLibrary === false) &&
-    contentFacet.contentView.rolling === false
-  );
+  // Show the Applicable/Installable toggle when not all errata are installable.
+  // contentViewEnvironmentsAllDefaultOrRolling is true when all CVEnvs are Library or rolling,
+  // meaning all applicable errata are installable and the toggle is unnecessary.
+  const showApplicableInstallableToggle =
+    contentFacet?.contentViewEnvironmentsAllDefaultOrRolling === false;
   const toggleGroup = (
     <Split hasGutter>
       <SplitItem>
@@ -432,7 +432,7 @@ export const ErrataTab = () => {
           isDisabled={!results?.length}
         />
       </SplitItem>
-      {hostIsNonLibrary &&
+      {showApplicableInstallableToggle &&
         <SplitItem>
           <ToggleGroup aria-label="Installable Errata">
             <ToggleGroupItem
@@ -510,7 +510,7 @@ export const ErrataTab = () => {
           displaySelectAllCheckbox={showActions}
           requestKey={HOST_ERRATA_KEY}
           alwaysShowActionButtons={false}
-          alwaysShowToggleGroup={hostIsNonLibrary && neededErrata}
+          alwaysShowToggleGroup={showApplicableInstallableToggle && neededErrata}
         >
           <Thead>
             <Tr ouiaId="row-header">
