@@ -145,6 +145,41 @@ module Katello
       content_facet_rec = host1.associated_audits.where(auditable_id: content_facet1.id)
       assert content_facet_rec, "No associated audit record for content_facet"
     end
+
+    def test_all_default_or_rolling_returns_nil_when_no_cves
+      content_facet.content_view_environments = []
+      assert_nil content_facet.content_view_environments_all_default_or_rolling?
+    end
+
+    def test_all_default_or_rolling_returns_false_when_non_rolling_non_library
+      non_rolling_cve = katello_content_view_environments(:library_dev_view_dev)
+      content_facet.content_view_environments = [non_rolling_cve]
+      refute content_facet.content_view_environments_all_default_or_rolling?
+    end
+
+    def test_all_default_or_rolling_returns_true_when_first_is_library_with_others
+      library_cve = katello_content_view_environments(:library_default_view_environment)
+      non_rolling_cve = katello_content_view_environments(:library_dev_view_dev)
+      Setting['allow_multiple_content_views'] = true
+      content_facet.content_view_environments = [library_cve, non_rolling_cve]
+      assert content_facet.content_view_environments_all_default_or_rolling?
+    end
+
+    def test_all_default_or_rolling_returns_false_when_rolling_first_non_rolling_second
+      rolling_cve = katello_content_view_environments(:rolling_view_library)
+      non_rolling_cve = katello_content_view_environments(:library_dev_view_dev)
+      Setting['allow_multiple_content_views'] = true
+      content_facet.content_view_environments = [rolling_cve, non_rolling_cve]
+      refute content_facet.content_view_environments_all_default_or_rolling?
+    end
+
+    def test_all_default_or_rolling_returns_true_when_all_rolling_or_library
+      rolling_cve = katello_content_view_environments(:rolling_view_library)
+      library_cve = katello_content_view_environments(:library_default_view_environment)
+      Setting['allow_multiple_content_views'] = true
+      content_facet.content_view_environments = [rolling_cve, library_cve]
+      assert content_facet.content_view_environments_all_default_or_rolling?
+    end
   end
 
   class ContentFacetErrataTest < ContentFacetBase

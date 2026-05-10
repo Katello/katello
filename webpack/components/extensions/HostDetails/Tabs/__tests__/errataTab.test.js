@@ -19,11 +19,7 @@ jest.mock('../../hostDetailsHelpers', () => ({
 const contentFacetAttributes = {
   id: 11,
   uuid: 'e5761ea3-4117-4ecf-83d0-b694f99b389e',
-  content_view_default: false,
-  contentView: {
-    rolling: false,
-  },
-  lifecycle_environment_library: false,
+  content_view_environments_all_default_or_rolling: false,
   errata_counts: {
     total: 3,
   },
@@ -572,139 +568,45 @@ test('Select all is disabled if all rows are selected', async (done) => {
   done(); // Pass jest callback to confirm test is done
 });
 
-test('Toggle Group shows if it\'s not the default content view or library enviroment', async (done) => {
-  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
-  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const mockErrata = makeMockErrata({});
-  // return errata data results when we look for errata
-  const scope = nockInstance
-    .get(hostErrata)
-    .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const {
-    queryByLabelText,
-    getAllByText,
-  } = renderWithRedux(<ErrataTab />, renderOptions(cfWithErrataTotal(mockErrata.total)));
-
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
-  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(scope);
-  done(); // Pass jest callback to confirm test is done
-});
-
-test('Toggle Group shows if it\'s the default content view but non-library environment', async (done) => {
-  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+test('Toggle Group shows when content_view_environments_all_default_or_rolling is false', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
   const options = renderOptions({
     ...cfWithErrataTotal(mockErrata.total),
-    content_view_default: true,
+    content_view_environments_all_default_or_rolling: false,
   });
-  // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
     .query(defaultQuery)
     .reply(200, mockErrata);
 
-  const {
-    queryByLabelText,
-    getAllByText,
-  } = renderWithRedux(<ErrataTab />, options);
+  const { queryByLabelText, getAllByText } = renderWithRedux(<ErrataTab />, options);
 
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  done(); // Pass jest callback to confirm test is done
+  done();
 });
 
-test('Toggle Group shows if it\'s the library environment but non-default content view', async (done) => {
-  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+test('Toggle Group does not show when content_view_environments_all_default_or_rolling is true', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
   const options = renderOptions({
     ...cfWithErrataTotal(mockErrata.total),
-    lifecycle_environment_library: true,
+    content_view_environments_all_default_or_rolling: true,
   });
-
-  // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
     .query(defaultQuery)
     .reply(200, mockErrata);
 
-  const {
-    queryByLabelText,
-    getAllByText,
-  } = renderWithRedux(<ErrataTab />, options);
+  const { queryByLabelText, getAllByText } = renderWithRedux(<ErrataTab />, options);
 
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
-  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(scope);
-  done(); // Pass jest callback to confirm test is done
-});
-
-test('Toggle Group does not show if it\'s the default content view and library environment', async (done) => {
-  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
-  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const mockErrata = makeMockErrata({});
-  const options = renderOptions({
-    ...cfWithErrataTotal(mockErrata.total),
-    content_view_default: true,
-    lifecycle_environment_library: true,
-  });
-  // return errata data results when we look for errata
-  const scope = nockInstance
-    .get(hostErrata)
-    .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const {
-    queryByLabelText,
-    getAllByText,
-  } = renderWithRedux(<ErrataTab />, options);
-
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
   expect(queryByLabelText('Installable Errata')).not.toBeInTheDocument();
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope);
-  done(); // Pass jest callback to confirm test is done
-});
-
-test('Toggle Group does not show if it\'s a rolling content view and library environment', async (done) => {
-  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
-  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const mockErrata = makeMockErrata({});
-  const options = renderOptions({
-    ...cfWithErrataTotal(mockErrata.total),
-    contentView: {
-      rolling: true,
-    },
-    lifecycle_environment_library: true,
-  });
-  // return errata data results when we look for errata
-  const scope = nockInstance
-    .get(hostErrata)
-    .query(defaultQuery)
-    .reply(200, mockErrata);
-
-  const {
-    queryByLabelText,
-    getAllByText,
-  } = renderWithRedux(<ErrataTab />, options);
-
-  // Assert that the errata are now showing on the screen, but wait for them to appear.
-  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
-  expect(queryByLabelText('Installable Errata')).not.toBeInTheDocument();
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope, done);
 });
 
 test('Selection is disabled for errata which are applicable but not installable', async (done) => {

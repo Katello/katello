@@ -194,6 +194,19 @@ module Katello
         content_view_environments.first.default_environment?
       end
 
+      def content_view_environments_all_default_or_rolling?
+        return if content_view_environments.blank?
+        # Returns true if all applicable errata are installable, meaning:
+        # - First CVEnv is Library (Default Org View + Library environment), OR
+        # - All CVEnvs are rolling CVs or Library hosts
+        # This determines whether the Applicable/Installable toggle should be hidden.
+        return true if content_view_environments.first.default_environment?
+
+        content_view_environments.all? do |cve|
+          cve.content_view&.rolling? || cve.default_environment?
+        end
+      end
+
       def update_repositories_by_paths(paths)
         prefixes = %w(/pulp/deb/ /pulp/repos/ /pulp/content/)
         relative_paths = []
