@@ -44,6 +44,10 @@ node :multi_content_view_environment do |content_facet|
   content_facet.multi_content_view_environment?
 end
 
+node :content_view_environments_all_default_or_rolling do |content_facet|
+  content_facet.content_view_environments_all_default_or_rolling?
+end
+
 node :allow_multiple_content_views do
   Setting['allow_multiple_content_views']
 end
