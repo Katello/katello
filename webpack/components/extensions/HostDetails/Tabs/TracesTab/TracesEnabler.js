@@ -52,7 +52,7 @@ EnableTracerButton.propTypes = {
   pollingStarted: PropTypes.bool.isRequired,
 };
 
-const TracesEnabler = ({ hostname, tracerRpmAvailable }) => {
+const TracesEnabler = ({ hostname, tracerAvailable, isDebHost }) => {
   const title = __('Traces are not enabled');
   const enablingTitle = __('Traces are being enabled');
   const body = __('Traces help administrators identify applications that need to be restarted after a system is patched.');
@@ -93,7 +93,8 @@ const TracesEnabler = ({ hostname, tracerRpmAvailable }) => {
           isOpen={enableTracerModalOpen}
           setIsOpen={setEnableTracerModalOpen}
           triggerJobStart={triggerJobStart}
-          tracerRpmAvailable={tracerRpmAvailable}
+          tracerAvailable={tracerAvailable}
+          isDebHost={isDebHost}
         />
       </EmptyStateFooter>
     </EmptyState>
@@ -102,7 +103,13 @@ const TracesEnabler = ({ hostname, tracerRpmAvailable }) => {
 
 TracesEnabler.propTypes = {
   hostname: PropTypes.string.isRequired,
-  tracerRpmAvailable: PropTypes.bool.isRequired,
+  tracerAvailable: PropTypes.bool,
+  isDebHost: PropTypes.bool,
+};
+
+TracesEnabler.defaultProps = {
+  tracerAvailable: false,
+  isDebHost: false,
 };
 
 export default TracesEnabler;

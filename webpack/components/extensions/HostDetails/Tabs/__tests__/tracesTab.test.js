@@ -35,19 +35,31 @@ const tracerNotInstalledResponse = {
   },
 };
 
-const renderOptions = isTracerInstalled => ({ // sets initial Redux state
+const tracerNotInstalledDebResponse = {
+  ...tracerInstalledResponse,
+  operatingsystem_family: 'Debian',
+  content_facet_attributes: {
+    katello_tracer_installed: false,
+    katello_tracer_deb_available: false,
+  },
+};
+
+const buildRenderOptions = response => ({
   apiNamespace: HOST_TRACES_KEY,
   initialState: {
     API: {
       HOST_DETAILS: {
         name: hostName,
         id: 1,
-        response: isTracerInstalled ? tracerInstalledResponse : tracerNotInstalledResponse,
+        response,
         status: 'RESOLVED',
       },
     },
   },
 });
+
+const renderOptions = isTracerInstalled =>
+  buildRenderOptions(isTracerInstalled ? tracerInstalledResponse : tracerNotInstalledResponse);
 
 const actionMenuToTheRightOf = node => node.nextElementSibling.firstElementChild;
 
@@ -493,10 +505,16 @@ describe('Without tracer installed', () => {
   });
 
   test('Detects when tracer package is available to install', async () => {
-    tracerNotInstalledResponse.content_facet_attributes.katello_tracer_rpm_available = true;
+    const rpmAvailableResponse = {
+      ...tracerNotInstalledResponse,
+      content_facet_attributes: {
+        ...tracerNotInstalledResponse.content_facet_attributes,
+        katello_tracer_rpm_available: true,
+      },
+    };
 
     const { getByText, queryByText }
-      = renderWithRedux(<TracesTab />, renderOptions(false));
+      = renderWithRedux(<TracesTab />, buildRenderOptions(rpmAvailableResponse));
 
     await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
     const enableTracesButton = getByText('Enable Traces');
@@ -530,5 +548,44 @@ describe('Without tracer installed', () => {
       );
     enableTracesModalLink.click();
     expect(enableTracesModalLink).toHaveClass('pf-m-in-progress');
+  });
+});
+
+describe('Without tracer installed on a DEB host', () => {
+  test('Shows Enable Tracer empty state on deb host', async () => {
+    const { queryByText } =
+      renderWithRedux(<TracesTab />, buildRenderOptions(tracerNotInstalledDebResponse));
+
+    await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
+  });
+
+  test('Shows DEB-specific prerequisites when deb tracer package is not available', async () => {
+    const { getByText, queryByText }
+      = renderWithRedux(<TracesTab />, buildRenderOptions(tracerNotInstalledDebResponse));
+
+    await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
+    getByText('Enable Traces').click();
+
+    expect(getByText('Before continuing, ensure that all of the following prerequisites are met:')).toBeInTheDocument();
+    expect(queryByText('The Foreman Client DEB repository is enabled and synced.')).toBeInTheDocument();
+    expect(queryByText('Enable Red Hat repositories')).not.toBeInTheDocument();
+  });
+
+  test('Does not show prerequisites when deb tracer package is available', async () => {
+    const debAvailableResponse = {
+      ...tracerNotInstalledDebResponse,
+      content_facet_attributes: {
+        ...tracerNotInstalledDebResponse.content_facet_attributes,
+        katello_tracer_deb_available: true,
+      },
+    };
+
+    const { getByText, queryByText }
+      = renderWithRedux(<TracesTab />, buildRenderOptions(debAvailableResponse));
+
+    await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
+    getByText('Enable Traces').click();
+
+    expect(queryByText('Before continuing, ensure that all of the following prerequisites are met:')).not.toBeInTheDocument();
   });
 });

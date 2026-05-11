@@ -46,10 +46,14 @@ const TracesTab = () => {
     id: hostId,
     name: hostname,
     content_facet_attributes: contentFacetAttributes,
+    operatingsystem_family: osFamily,
   } = hostDetails;
   const showActions = can(invokeRexJobs, userPermissionsFromHostDetails({ hostDetails }));
   const showEnableTracer = (contentFacetAttributes?.katello_tracer_installed === false);
-  const tracerRpmAvailable = contentFacetAttributes?.katello_tracer_rpm_available;
+  const isDebHost = osFamily === 'Debian';
+  const tracerAvailable = isDebHost
+    ? contentFacetAttributes?.katello_tracer_deb_available
+    : contentFacetAttributes?.katello_tracer_rpm_available;
   const emptyContentTitle = showActions ? __('No applications to restart') : __('Traces not available');
   const tracesNotAvailBody = showEnableTracer ? __('Traces may be enabled by a user with the appropriate permissions.') :
     __('Traces will be shown here to a user with the appropriate permissions.');
@@ -198,7 +202,9 @@ const TracesTab = () => {
   ) : null;
   const status = useSelector(state => selectHostTracesStatus(state));
   if (showEnableTracer && showActions) {
-    return <TracesEnabler hostname={hostname} tracerRpmAvailable={tracerRpmAvailable} />;
+    return (
+      <TracesEnabler hostname={hostname} tracerAvailable={tracerAvailable} isDebHost={isDebHost} />
+    );
   }
 
   if (!hostId) return <Skeleton />;
