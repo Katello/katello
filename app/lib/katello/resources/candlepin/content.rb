@@ -22,8 +22,9 @@ module Katello
             fail ArgumentError, "content id has to be specified" unless id
 
             begin
-              self.delete(path(owner_label, id), self.default_headers).code.to_i
-            rescue RestClient::NotFound
+              self.delete(path(owner_label, id), self.default_headers).status
+            rescue HttpResource::RestClientException => e
+              raise e unless e.code == '404'
               # this is OK
               :content_gone
             end

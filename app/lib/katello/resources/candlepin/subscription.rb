@@ -5,7 +5,7 @@ module Katello
         class << self
           def destroy(subscription_id)
             fail ArgumentError, "subscription id has to be specified" unless subscription_id
-            self.delete(path(subscription_id), self.default_headers).code.to_i
+            self.delete(path(subscription_id), self.default_headers).status
           end
 
           def get(id = nil)

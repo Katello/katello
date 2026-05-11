@@ -6,9 +6,10 @@ module Katello
 
         class << self
           def get(*args)
-            resource.get(*args)
-          rescue RestClient::Gone
-            raise Katello::Errors::UpstreamConsumerGone
+            conn = resource
+            response = conn.get(path, *args)
+            raise Katello::Errors::UpstreamConsumerGone if response.status == 410
+            response
           end
 
           def path(id = nil, owner_label = nil)

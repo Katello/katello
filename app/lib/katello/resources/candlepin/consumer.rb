@@ -80,7 +80,7 @@ module Katello
           end
 
           def destroy(uuid)
-            self.delete(path(uuid), User.cp_oauth_header).code.to_i
+            self.delete(path(uuid), User.cp_oauth_header).status
           end
 
           def serials(uuid)
@@ -101,7 +101,7 @@ module Katello
           def virtual_guests(uuid)
             response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-          rescue RestClient::Exception
+          rescue HttpResource::RestClientException
             return []
           end
 
@@ -112,7 +112,7 @@ module Katello
             else
               return nil
             end
-          rescue RestClient::Exception
+          rescue HttpResource::RestClientException
             return nil
           end
 
@@ -140,10 +140,13 @@ module Katello
                                                         attrs_to_update.to_json, self.default_headers)
             end
             if attrs_to_delete.present?
-              client = Candlepin::CandlepinResource.rest_client(Net::HTTP::Delete, :delete,
-                                                                join_path(path(id), 'content_overrides'))
-              client.options[:payload] = attrs_to_delete.to_json
-              result = client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
+              override_path = join_path(path(id), 'content_overrides')
+              conn = Candlepin::CandlepinResource.faraday_connection
+              result = conn.delete(override_path) do |req|
+                CandlepinResource.sign_request(req, CandlepinResource.site + override_path, :delete)
+                req.headers.merge!(HttpResource.stringify_headers({'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.cp_oauth_header)))
+                req.body = attrs_to_delete.to_json
+              end
             end
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
           end

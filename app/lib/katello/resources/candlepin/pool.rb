@@ -19,8 +19,9 @@ module Katello
           def find(pool_id)
             begin
               pool_json = self.get(path(pool_id), self.default_headers).body
-            rescue RestClient::ResourceNotFound
-              raise Katello::Errors::CandlepinPoolGone
+            rescue HttpResource::RestClientException => e
+              raise Katello::Errors::CandlepinPoolGone if e.code == '404'
+              raise e
             end
 
             JSON.parse(pool_json).with_indifferent_access
@@ -28,7 +29,7 @@ module Katello
 
           def destroy(id)
             fail ArgumentError, "pool id has to be specified" unless id
-            self.delete(path(id), self.default_headers).code.to_i
+            self.delete(path(id), self.default_headers).status
           end
         end
       end

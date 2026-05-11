@@ -8,30 +8,45 @@ module Katello
 
         def self.post(path, body)
           logger.debug "Sending POST request to Candlepin: #{path}"
-          client = CandlepinResource.rest_client(Net::HTTP::Post, :post, path_with_cp_prefix(path))
-          client.post body, {:accept => :json, :content_type => :json}.merge(User.cp_oauth_header)
+          conn = CandlepinResource.faraday_connection
+          full_path = path_with_cp_prefix(path)
+          conn.post(full_path) do |req|
+            CandlepinResource.sign_request(req, CandlepinResource.site + full_path, :post)
+            req.headers.merge!(stringify_headers({'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.cp_oauth_header)))
+            req.body = body
+          end
         end
 
         def self.delete(path, body = nil)
           logger.debug "Sending DELETE request to Candlepin: #{path}"
-          client = CandlepinResource.rest_client(Net::HTTP::Delete, :delete, path_with_cp_prefix(path))
-          # Some candlepin calls will set the body in DELETE requests.
-          client.options[:payload] = body unless body.nil?
-          client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
+          conn = CandlepinResource.faraday_connection
+          full_path = path_with_cp_prefix(path)
+          conn.delete(full_path) do |req|
+            CandlepinResource.sign_request(req, CandlepinResource.site + full_path, :delete)
+            req.headers.merge!(stringify_headers({'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.cp_oauth_header)))
+            req.body = body unless body.nil?
+          end
         end
 
         def self.get(path, extra_headers = {})
           logger.debug "Sending GET request to Candlepin: #{path}"
-          client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
-          client.get(extra_headers.merge!(default_request_headers))
-        rescue RestClient::NotModified => e
-          e.response
+          conn = CandlepinResource.faraday_connection
+          full_path = path_with_cp_prefix(path)
+          conn.get(full_path) do |req|
+            CandlepinResource.sign_request(req, CandlepinResource.site + full_path, :get)
+            req.headers.merge!(stringify_headers(extra_headers.merge!(default_request_headers)))
+          end
         end
 
         def self.put(path, body)
           logger.debug "Sending PUT request to Candlepin: #{path}"
-          client = CandlepinResource.rest_client(Net::HTTP::Put, :put, path_with_cp_prefix(path))
-          client.put body, {:accept => :json, :content_type => :json}.merge(User.cp_oauth_header)
+          conn = CandlepinResource.faraday_connection
+          full_path = path_with_cp_prefix(path)
+          conn.put(full_path) do |req|
+            CandlepinResource.sign_request(req, CandlepinResource.site + full_path, :put)
+            req.headers.merge!(stringify_headers({'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.cp_oauth_header)))
+            req.body = body
+          end
         end
 
         def self.path_with_cp_prefix(path)
@@ -39,7 +54,11 @@ module Katello
         end
 
         def self.default_request_headers
-          @default_request_headers ||= User.cp_oauth_header.merge(accept: :json)
+          User.cp_oauth_header.merge('accept' => 'application/json')
+        end
+
+        def self.stringify_headers(headers)
+          HttpResource.stringify_headers(headers)
         end
       end
     end

@@ -80,26 +80,26 @@ module Katello
       end
 
       r = Resources::Candlepin::Proxy.get(@request_path, extra_headers)
-      logger.debug filter_sensitive_data(r)
-      render :json => r, :status => r.code
+      logger.debug filter_sensitive_data(r.body)
+      render :json => r.body, :status => r.status
     end
 
     def delete
       r = Resources::Candlepin::Proxy.delete(@request_path, @request_body.read)
-      logger.debug filter_sensitive_data(r)
-      render :json => r
+      logger.debug filter_sensitive_data(r.body)
+      render :json => r.body, :status => r.status
     end
 
     def post
       r = Resources::Candlepin::Proxy.post(@request_path, @request_body.read)
-      logger.debug filter_sensitive_data(r)
-      render :json => r
+      logger.debug filter_sensitive_data(r.body)
+      render :json => r.body, :status => r.status
     end
 
     def put
       r = Resources::Candlepin::Proxy.put(@request_path, @request_body.read)
-      logger.debug filter_sensitive_data(r)
-      render :json => r
+      logger.debug filter_sensitive_data(r.body)
+      render :json => r.body, :status => r.status
     end
 
     #api :GET, "/consumers/:id", N_("Show a system")
