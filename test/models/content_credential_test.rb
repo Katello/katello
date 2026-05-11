@@ -49,6 +49,27 @@ module Katello
         assert_nothing_raised { content_credential.destroy }
       end
 
+      it 'should not be destroyable when used as ssl_ca_cert in an alternate content source' do
+        content_credential = katello_gpg_keys(:real_ca)
+        assert_raises(ActiveRecord::DeleteRestrictionError) { content_credential.destroy }
+        content_credential.ssl_ca_alternate_content_sources.update_all(:ssl_ca_cert_id => nil)
+        assert_nothing_raised { content_credential.destroy }
+      end
+
+      it 'should not be destroyable when used as ssl_client_cert in an alternate content source' do
+        content_credential = katello_gpg_keys(:real_cert)
+        assert_raises(ActiveRecord::DeleteRestrictionError) { content_credential.destroy }
+        content_credential.ssl_client_alternate_content_sources.update_all(:ssl_client_cert_id => nil)
+        assert_nothing_raised { content_credential.destroy }
+      end
+
+      it 'should not be destroyable when used as ssl_client_key in an alternate content source' do
+        content_credential = katello_gpg_keys(:real_key)
+        assert_raises(ActiveRecord::DeleteRestrictionError) { content_credential.destroy }
+        content_credential.ssl_key_alternate_content_sources.update_all(:ssl_client_key_id => nil)
+        assert_nothing_raised { content_credential.destroy }
+      end
+
       it "should be unsuccessful without content" do
         content_credential = ContentCredential.new(:name => "Gpg Key 1", :organization => @organization)
         refute content_credential.valid?
