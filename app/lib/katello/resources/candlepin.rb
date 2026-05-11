@@ -1,9 +1,11 @@
 module Katello
   module Resources
     module Candlepin
-      TOTAL_COUNT_HEADER = :x_total_count # as parsed by rest_client
+      TOTAL_COUNT_HEADER = 'x-total-count'
 
       class CandlepinResource < HttpResource
+        include Katello::Concerns::OauthRequestSigning
+
         cfg = SETTINGS[:katello][:candlepin]
         url = cfg[:url]
         uri = URI.parse(url)
@@ -15,15 +17,13 @@ module Katello
 
         class << self
           def process_response(response)
-            debug_level = response.code >= 400 ? :error : :debug
-            logger.send(debug_level, "Candlepin request #{response.headers[:x_candlepin_request_uuid]} returned with code #{response.code}")
+            debug_level = response.status >= 400 ? :error : :debug
+            logger.send(debug_level, "Candlepin request #{response.headers['x-candlepin-request-uuid']} returned with code #{response.status}")
             super
           end
 
-          def raise_rest_client_exception(error, path, http_method)
-            # this differentiates between Tomcat returning a 404 (candlepin is down or not deployed)
-            # vs a 404 from Candlepin itself
-            unless error&.response&.headers&.dig(:x_version)
+          def raise_faraday_exception(error, path, http_method)
+            unless error.response && error.response[:headers]&.key?('x-version')
               fail ::Katello::Errors::CandlepinNotRunning
             end
 
@@ -86,42 +86,44 @@ module Katello
         self.prefix = '/subscription'
 
         class << self
-          delegate :[], to: :json_resource
+          def sign_request(_req, _url, _method)
+          end
 
           def default_headers(uuid = nil)
             super(uuid).except('cp-user', 'cp-consumer')
           end
 
-          def resource(options = {}, url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
-            cert_store = OpenSSL::X509::Store.new
-            cert_store.add_file(ca_file) if ca_file
+          def resource(url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
+            timeout = Setting[:manifest_refresh_timeout]
 
-            if proxy&.cacert&.present?
-              Foreman::Util.add_ca_bundle_to_store(proxy.cacert, cert_store)
+            Faraday.new(url: url) do |f|
+              f.options.open_timeout = timeout
+              f.options.timeout = timeout
+              f.headers = self.default_headers
+
+              f.ssl.client_cert = OpenSSL::X509::Certificate.new(client_cert)
+              f.ssl.client_key = OpenSSL::PKey::RSA.new(client_key)
+              if ca_file
+                f.ssl.ca_file = ca_file
+                f.ssl.verify = true
+              else
+                f.ssl.verify = false
+              end
+
+              if proxy&.cacert&.present?
+                cert_store = OpenSSL::X509::Store.new
+                Foreman::Util.add_ca_bundle_to_store(proxy.cacert, cert_store)
+                f.ssl.cert_store = cert_store
+              end
+
+              f.proxy = self.proxy_uri if self.proxy_uri
+
+              f.adapter :net_http_persistent
             end
-            RestClient::Resource.new(url,
-                                     :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
-                                     :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
-                                     :ssl_cert_store => cert_store,
-                                     :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE,
-                                     :open_timeout => Setting[:manifest_refresh_timeout],
-                                     :timeout => Setting[:manifest_refresh_timeout],
-                                     :proxy => self.proxy_uri,
-                                     **options
-                                    )
           end
 
-          def json_resource(options = {}, url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
-            options.deep_merge!(headers: self.default_headers)
-            resource(options, url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file)
-          end
-
-          def rest_client(_http_type = nil, method = :get, path = self.path)
-            # No oauth upstream
-            self.consumer_secret = nil
-            self.consumer_key = nil
-
-            resource({ http_method: method }, url: self.site + path, client_cert: client_cert, client_key: client_key, ca_file: nil)
+          def faraday_connection(_path = '')
+            resource(url: self.site + self.path, client_cert: client_cert, client_key: client_key, ca_file: nil)
           end
 
           def client_cert
@@ -149,8 +151,10 @@ module Katello
           end
 
           def upstream_owner_id
-            JSON.parse(Katello::Resources::Candlepin::UpstreamConsumer.resource.get.body)['owner']['key']
-          rescue RestClient::Exception => e
+            conn = Katello::Resources::Candlepin::UpstreamConsumer.resource
+            response = conn.get(Katello::Resources::Candlepin::UpstreamConsumer.path)
+            JSON.parse(response.body)['owner']['key']
+          rescue Faraday::Error => e
             Rails.logger.error "Unable to find upstream owner for consumer"
             raise e
           end

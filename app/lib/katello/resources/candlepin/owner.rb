@@ -31,7 +31,7 @@ module Katello
           end
 
           def destroy(key)
-            self.delete(path(key), User.cp_oauth_header).code.to_i
+            self.delete(path(key), User.cp_oauth_header).status
           end
 
           def find(key)
@@ -55,8 +55,19 @@ module Katello
               path += "?force=#{SETTINGS[:katello][:force_manifest_import]}"
             end
 
-            response = self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
-            JSON.parse(response)
+            conn = Faraday.new(url: self.site) do |f|
+              f.request :multipart
+              f.options.timeout = SETTINGS[:katello][:rest_client_timeout]
+              f.ssl.ca_file = self.ssl_ca_file if self.ssl_ca_file
+              f.adapter :net_http_persistent
+            end
+            payload = { :import => Faraday::Multipart::FilePart.new(path_to_file, 'application/zip') }
+            headers = self.default_headers.except('content-type')
+            response = conn.post(path, payload) do |req|
+              sign_request(req, self.site + path, :post)
+              req.headers.merge!(headers)
+            end
+            JSON.parse(response.body)
           end
 
           def product_content(organization_name)

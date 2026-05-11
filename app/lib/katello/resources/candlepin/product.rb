@@ -60,15 +60,15 @@ module Katello
 
           def destroy(owner_label, product_id)
             fail ArgumentError, "product id has to be specified" unless product_id
-            self.delete(path(owner_label, product_id), self.default_headers).code.to_i
+            self.delete(path(owner_label, product_id), self.default_headers).status
           end
 
           def add_content(owner_label, product_id, content_id, enabled)
-            self.post(join_path(path(owner_label, product_id), "content/#{content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
+            self.post(join_path(path(owner_label, product_id), "content/#{content_id}?enabled=#{enabled}"), nil, self.default_headers).status
           end
 
           def remove_content(owner_label, product_id, content_id)
-            self.delete(join_path(path(owner_label, product_id), "content/#{content_id}"), self.default_headers).code.to_i
+            self.delete(join_path(path(owner_label, product_id), "content/#{content_id}"), self.default_headers).status
           end
 
           def create_unlimited_subscription(owner_key, product_id, start_date)

@@ -9,8 +9,11 @@ module Katello
 
           def update(entitlement_id, quantity)
             body = {quantity: quantity}.to_json
-
-            self[entitlement_id].put(body)
+            conn = resource
+            conn.put(path(entitlement_id)) do |req|
+              req.headers.merge!(HttpResource.stringify_headers(self.default_headers))
+              req.body = body
+            end
           end
         end
       end

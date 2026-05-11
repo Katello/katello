@@ -19,9 +19,10 @@ module Katello
           end
 
           def destroy(id)
-            self.delete(path(id), User.cp_oauth_header).code.to_i
-          rescue RestClient::NotFound => e
-            raise ::Katello::Errors::CandlepinEnvironmentGone, e.message
+            self.delete(path(id), User.cp_oauth_header).status
+          rescue HttpResource::RestClientException => e
+            raise ::Katello::Errors::CandlepinEnvironmentGone, e.message if e.code == '404'
+            raise e
           end
 
           def path(id = '')
@@ -37,7 +38,7 @@ module Katello
           def delete_content(env_id, content_ids)
             path = self.path(env_id) + "/content"
             params = content_ids.map { |content_id| {:content => content_id}.to_param }.join("&")
-            self.delete("#{path}?#{params}", self.default_headers).code.to_i
+            self.delete("#{path}?#{params}", self.default_headers).status
           end
         end
       end
