@@ -29,11 +29,11 @@ module Katello
     has_many :ssl_key_root_repos, :class_name => "Katello::RootRepository", :foreign_key => "ssl_client_key_id",
                              :inverse_of => :ssl_client_key, :dependent => :restrict_with_exception
     has_many :ssl_ca_alternate_content_sources, :class_name => "Katello::AlternateContentSource", :foreign_key => "ssl_ca_cert_id",
-                                :inverse_of => :ssl_ca_cert, :dependent => :nullify
+                                :inverse_of => :ssl_ca_cert, :dependent => :restrict_with_exception
     has_many :ssl_client_alternate_content_sources, :class_name => "Katello::AlternateContentSource", :foreign_key => "ssl_client_cert_id",
-                                :inverse_of => :ssl_client_cert, :dependent => :nullify
+                                :inverse_of => :ssl_client_cert, :dependent => :restrict_with_exception
     has_many :ssl_key_alternate_content_sources, :class_name => "Katello::AlternateContentSource", :foreign_key => "ssl_client_key_id",
-                                :inverse_of => :ssl_client_key, :dependent => :nullify
+                                :inverse_of => :ssl_client_key, :dependent => :restrict_with_exception
     belongs_to :organization, :inverse_of => :gpg_keys
 
     validates_lengths_from_database
