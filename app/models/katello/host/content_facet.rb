@@ -410,6 +410,10 @@ module Katello
         ::Katello::Rpm.yum_installable_for_host(self.host).where(name: ALL_TRACER_PACKAGE_NAMES).any?
       end
 
+      def tracer_deb_available?
+        ::Katello::Deb.deb_installable_for_host(self.host).where(name: HOST_TOOLS_TRACER_PACKAGE_NAME).any?
+      end
+
       def host_tools_installed?(force_update_cache: false)
         Rails.cache.fetch("#{self.host.id}/host_tools_installed", expires_in: 7.days, force: force_update_cache) do
           self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => ALL_HOST_TOOLS_PACKAGE_NAMES).any? ||

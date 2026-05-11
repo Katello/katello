@@ -8,25 +8,23 @@ import {
   ModalVariant,
   Text,
   TextContent,
-  TextList,
-  TextListItem,
-  Alert,
 } from '@patternfly/react-core';
 import {
   Dropdown,
   DropdownItem,
   DropdownToggle,
 } from '@patternfly/react-core/deprecated';
-import { CaretDownIcon, ArrowRightIcon } from '@patternfly/react-icons';
+import { CaretDownIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { katelloPackageInstallUrl } from '../customizedRexUrlHelpers';
 import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
+import TracerPrerequisites from './TracerPrerequisites';
 import './EnableTracerModal.scss';
 
 const EnableTracerModal = ({
-  isOpen, setIsOpen, triggerJobStart, tracerRpmAvailable,
+  isOpen, setIsOpen, triggerJobStart, tracerAvailable, isDebHost,
 }) => {
   const title = __('Enable Tracer');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -51,53 +49,68 @@ const EnableTracerModal = ({
     handleClose();
   };
 
+  const debPrereqItems = [
+    {
+      text: __('The Foreman Client DEB repository is enabled and synced. '),
+      href: '/products',
+      linkText: __('View products'),
+      id: 'enable-tracer-deb-products-link',
+    },
+    {
+      text: __("The Foreman Client DEB repository is available in the host's content view environment(s). "),
+      href: '/content_views',
+      linkText: __('View content views'),
+      id: 'enable-tracer-deb-cv-link',
+    },
+    {
+      text: __('The Foreman Client DEB repository set is enabled for the host. '),
+      href: '#/Content/Repository%20sets',
+      linkText: __('Enable repository sets'),
+      id: 'enable-tracer-deb-reposets-link',
+      itemId: 'enable-repo-deb-sets-p',
+    },
+    { text: __('Remote execution is enabled.') },
+  ];
+
+  const rpmPrereqItems = [
+    {
+      text: __('The Foreman Client repository is enabled. '),
+      href: '/redhat_repositories',
+      linkText: __('Enable Red Hat repositories'),
+      id: 'enable-tracer-enable-red-hat-repos-link',
+    },
+    {
+      text: __('The Foreman Client repository is synced. '),
+      href: '/katello/sync_management',
+      linkText: __('View sync status'),
+      id: 'enable-tracer-sync-status-link',
+    },
+    {
+      text: __("The Foreman Client repository is available in the host's content view environment(s). "),
+      href: '/content_views',
+      linkText: __('View content views'),
+      id: 'enable-tracer-cv-link',
+    },
+    {
+      text: __('The Foreman Client repository set is enabled for the host. '),
+      href: '#/Content/Repository%20sets',
+      linkText: __('Enable repository sets'),
+      id: 'enable-tracer-reposets-link',
+      itemId: 'enable-repo-sets-p',
+    },
+    { text: __('Remote execution is enabled.') },
+  ];
+
   const body = (
     <TextContent>
       <Text ouiaId="enable-tracer-modal-text" id="enable-tracer-modal-p">
         {__('Enabling Tracer requires installing the katello-host-tools-tracer package on the host.')}
       </Text>
-      {!tracerRpmAvailable && (
-        <>
-          <Alert
-            ouiaId="enable-tracer-modal-prereq-text"
-            variant="warning"
-            isInline
-            title={__('Before continuing, ensure that all of the following prerequisites are met:')}
-          />
-          <TextList className="enable-tracer-modal-prereq-list">
-            <TextListItem>
-              {__('The Foreman Client repository is enabled. ')}
-              <a onClick={() => setButtonLoading(true)} href="/redhat_repositories" id="enable-tracer-enable-red-hat-repos-link">
-                {__('Enable Red Hat repositories')}
-              </a>
-              <ArrowRightIcon />
-            </TextListItem>
-            <TextListItem>
-              {__('The Foreman Client repository is synced. ')}
-              <a onClick={() => setButtonLoading(true)} href="/katello/sync_management" id="enable-tracer-sync-status-link">
-                {__('View sync status')}
-              </a>
-              <ArrowRightIcon />
-            </TextListItem>
-            <TextListItem>
-              {__('The Foreman Client repository is available in the host\'s content view environment(s). ')}
-              <a onClick={() => setButtonLoading(true)} href="/content_views" id="enable-tracer-cv-link">
-                {__('View content views')}
-              </a>
-              <ArrowRightIcon />
-            </TextListItem>
-            <TextListItem id="enable-repo-sets-p">
-              {__('The Foreman Client repository set is enabled for the host. ')}
-              <a onClick={() => setButtonLoading(true)} href="#/Content/Repository%20sets" id="enable-tracer-reposets-link">
-                {__('Enable repository sets')}
-              </a>
-              <ArrowRightIcon />
-            </TextListItem>
-            <TextListItem>
-              {__('Remote execution is enabled.')}
-            </TextListItem>
-          </TextList>
-        </>
+      {!tracerAvailable && (
+        <TracerPrerequisites
+          items={isDebHost ? debPrereqItems : rpmPrereqItems}
+          onLinkClick={() => setButtonLoading(true)}
+        />
       )}
     </TextContent>
   );
@@ -159,8 +172,9 @@ const EnableTracerModal = ({
         <FlexItem>
           <TextContent>
             <Text ouiaId="enable-tracer-modal-provider-text">
-              {tracerRpmAvailable ? __('Select a provider to install katello-host-tools-tracer') :
-                __('Once the prerequisites are met, select a provider to install katello-host-tools-tracer')}
+              {tracerAvailable
+                ? __('Select a provider to install katello-host-tools-tracer')
+                : __('Once the prerequisites are met, select a provider to install katello-host-tools-tracer')}
             </Text>
           </TextContent>
         </FlexItem>
@@ -193,7 +207,13 @@ EnableTracerModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
   triggerJobStart: PropTypes.func.isRequired,
-  tracerRpmAvailable: PropTypes.bool.isRequired,
+  tracerAvailable: PropTypes.bool,
+  isDebHost: PropTypes.bool,
+};
+
+EnableTracerModal.defaultProps = {
+  tracerAvailable: false,
+  isDebHost: false,
 };
 
 export default EnableTracerModal;

@@ -308,6 +308,14 @@ module Katello
       assert_equal 1, host_one.content_facet.upgradable_deb_count
     end
 
+    def test_tracer_deb_available?
+      refute host_one.content_facet.tracer_deb_available?
+
+      host_one.content_facet.bound_repositories << repo
+
+      assert host_one.reload.content_facet.tracer_deb_available?
+    end
+
     def test_installable_debs
       lib_applicable = host_one.applicable_debs
       cf_one = host_one.content_facet
