@@ -6,7 +6,7 @@ module Actions
           plan_self(:smart_proxy_id => smart_proxy.id)
         end
 
-        def run
+        def invoke_external_task
           output[:pulp_tasks] = ::Katello::Pulp3::Api::Core.new(smart_proxy).purge_completed_tasks
         end
       end
