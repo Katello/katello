@@ -81,7 +81,7 @@ module Katello
         (headers || {}).transform_keys(&:to_s).transform_values(&:to_s)
       end
 
-      def issue_request(method:, path:, headers: {}, payload: nil, params: nil, process: true)
+      def issue_request(method:, path:, headers: {}, payload: nil, params: nil, process: true, connection: nil)
         path = "#{path}#{query_string(params)}" if params
         headers = stringify_headers(headers)
         logger.debug("Resource #{method.upcase} request: #{path}")
@@ -92,7 +92,7 @@ module Katello
           logger.debug "Body: Error: could not render payload as json"
         end
 
-        conn = faraday_connection
+        conn = connection || faraday_connection
         response = conn.send(method, path) do |req|
           sign_request(req, self.site + path, method)
           req.headers.merge!(headers) if headers
