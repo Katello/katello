@@ -155,13 +155,15 @@ module Katello
           end
 
           def upstream_owner_id
-            response = Katello::Resources::Candlepin::UpstreamConsumer.issue_request(
-              method: :get,
-              path: Katello::Resources::Candlepin::UpstreamConsumer.path,
-              headers: default_headers,
-              process: false
-            )
-            JSON.parse(response.body)['owner']['key']
+            @upstream_owner_id ||= begin
+              response = Katello::Resources::Candlepin::UpstreamConsumer.issue_request(
+                method: :get,
+                path: Katello::Resources::Candlepin::UpstreamConsumer.path,
+                headers: default_headers,
+                process: false
+              )
+              JSON.parse(response.body)['owner']['key']
+            end
           end
 
           def upstream_consumer_id

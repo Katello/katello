@@ -54,8 +54,8 @@ module Katello
       end
 
       def process_response(resp)
-        logger.debug "Processing response: #{resp.status}"
-        logger.debug filter_sensitive_data(resp.body)
+        logger.debug { "Processing response: #{resp.status}" }
+        logger.debug { filter_sensitive_data(resp.body) }
         return resp unless resp.status >= 400
         parsed = {}
         message = "HTTP error while processing the call"
@@ -85,17 +85,12 @@ module Katello
         path = "#{path}#{query_string(params)}" if params
         headers = stringify_headers(headers)
         conn = connection || faraday_connection
-        url = connection ? "#{conn.url_prefix}#{path}" : path
-        logger.debug("Resource #{method.upcase} request: #{url}")
-        logger.debug "Headers: #{headers.to_json}"
-        begin
-          logger.debug "Body: #{filter_sensitive_data(payload.to_json)}"
-        rescue JSON::GeneratorError, Encoding::UndefinedConversionError
-          logger.debug "Body: Error: could not render payload as json"
-        end
-        sign_url = connection ? "#{conn.url_prefix}#{path}" : self.site + path
+        full_url = connection ? "#{conn.url_prefix}#{path}" : self.site + path
+        logger.debug { "Resource #{method.upcase} request: #{full_url}" }
+        logger.debug { "Headers: #{headers.to_json}" }
+        logger.debug { "Body: #{filter_sensitive_data(payload.to_json)}" } if payload
         response = conn.send(method, path) do |req|
-          sign_request(req, sign_url, method)
+          sign_request(req, full_url, method)
           req.headers.merge!(headers) if headers
           req.body = payload if payload
         end
