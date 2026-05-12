@@ -8,12 +8,13 @@ module Katello
           end
 
           def update(entitlement_id, quantity)
-            body = {quantity: quantity}.to_json
-            conn = resource
-            conn.put(path(entitlement_id)) do |req|
-              req.headers.merge!(HttpResource.stringify_headers(self.default_headers))
-              req.body = body
-            end
+            issue_request(
+              method: :put,
+              path: path(entitlement_id),
+              headers: default_headers,
+              payload: {quantity: quantity}.to_json,
+              process: false
+            )
           end
         end
       end
