@@ -10,8 +10,7 @@ module Katello
           end
 
           def ping
-            conn = resource
-            conn.head(path)
+            issue_request(method: :head, path: path, headers: default_headers, process: false)
           rescue HttpResource::HttpError => e
             raise ::Katello::Errors::UpstreamConsumerGone if %w(401 410).include?(e.code)
             raise ::Katello::Errors::UpstreamConsumerNotFound if e.code == '404'

@@ -140,13 +140,12 @@ module Katello
                                                         attrs_to_update.to_json, headers: self.default_headers)
             end
             if attrs_to_delete.present?
-              override_path = join_path(path(id), 'content_overrides')
-              conn = Candlepin::CandlepinResource.faraday_connection
-              result = conn.delete(override_path) do |req|
-                CandlepinResource.sign_request(req, CandlepinResource.site + override_path, :delete)
-                req.headers.merge!(HttpResource.stringify_headers({'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.cp_oauth_header)))
-                req.body = attrs_to_delete.to_json
-              end
+              result = Candlepin::CandlepinResource.issue_request(
+                method: :delete,
+                path: join_path(path(id), 'content_overrides'),
+                headers: self.default_headers,
+                payload: attrs_to_delete.to_json
+              )
             end
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
           end
