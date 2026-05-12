@@ -93,6 +93,10 @@ module Katello
             super(uuid).except('cp-user', 'cp-consumer')
           end
 
+          # Creates a new Faraday connection with client cert auth for upstream
+          # Candlepin (Red Hat CDN). Use for calls with custom URL/certs (export,
+          # update, regenerate). For default upstream calls, use faraday_connection
+          # which memoizes the connection for reuse.
           def resource(url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
             timeout = Setting[:manifest_refresh_timeout]
 
@@ -151,12 +155,13 @@ module Katello
           end
 
           def upstream_owner_id
-            conn = Katello::Resources::Candlepin::UpstreamConsumer.resource
-            response = conn.get(Katello::Resources::Candlepin::UpstreamConsumer.path)
+            response = Katello::Resources::Candlepin::UpstreamConsumer.issue_request(
+              method: :get,
+              path: Katello::Resources::Candlepin::UpstreamConsumer.path,
+              headers: default_headers,
+              process: false
+            )
             JSON.parse(response.body)['owner']['key']
-          rescue Faraday::Error => e
-            Rails.logger.error "Unable to find upstream owner for consumer"
-            raise e
           end
 
           def upstream_consumer_id
