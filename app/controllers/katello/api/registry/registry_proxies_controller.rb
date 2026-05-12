@@ -45,6 +45,15 @@ module Katello
       end
     end
 
+    rescue_from HttpResource::RestClientException do |e|
+      Rails.logger.error(pp_exception(e, with_backtrace: false))
+      if request_from_katello_cli?
+        render json: { errors: [e.message] }, status: e.code
+      else
+        render plain: e.message, status: e.code
+      end
+    end
+
     def authenticate_cert_request
       if cert_present?
         client_cert = ::Cert::RhsmClient.new(cert_from_request)

@@ -64,6 +64,15 @@ module Katello
       end
     end
 
+    rescue_from HttpResource::RestClientException do |e|
+      Rails.logger.error(pp_exception(e, with_backtrace: false))
+      if request_from_katello_cli?
+        render :json => { :errors => [e.message] }, :status => e.code
+      else
+        render :plain => e.message, :status => e.code
+      end
+    end
+
     def proxy_request_path
       @request_path = drop_api_namespace(@_request.fullpath)
     end

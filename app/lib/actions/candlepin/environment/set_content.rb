@@ -30,20 +30,22 @@ module Actions
             begin
               output[:add_response] = ::Katello::Resources::Candlepin::Environment.add_content(input[:cp_environment_id], output[:add_ids])
               break
-            rescue RestClient::Conflict => e
-              raise e if ((retries += 1) == max_retries)
-              # Candlepin raises a 409 in case it gets a duplicate content id add to an environment
-              # Since its a dup id refresh the existing ids list (which hopefully will not have the duplicate content)
-              # and try again.
-              output[:add_ids] = content_ids - existing_ids
-            rescue RestClient::ResourceNotFound, RestClient::NotFound => e
-              # Set a higher limit for retries just in case the missing content is not being parsed from the error body correctly.
-              # If the content is not found after the retries, assume it is gone and continue.
-              raise e if ((retries += 1) == 1_000)
-              # Parse the missing content from the Candlepin response and remove it from the add_ids list.
-              missing_content = JSON.parse(e.response.body)['displayMessage'].split(' ')[-1].gsub(/[".]/, '')
-              Rails.logger.debug "Content #{missing_content} not found in the environment. Removing it from the add_ids list."
-              output[:add_ids].delete(missing_content)
+            rescue HttpResource::RestClientException => e
+              if e.code == '409'
+                # Candlepin raises a 409 in case it gets a duplicate content id add to an environment.
+                # Refresh the existing ids list and try again.
+                raise e if ((retries += 1) == max_retries)
+                output[:add_ids] = content_ids - existing_ids
+              elsif e.code == '404'
+                # Set a higher limit for retries just in case the missing content is not being parsed correctly.
+                # If the content is not found after the retries, assume it is gone and continue.
+                raise e if ((retries += 1) == 1_000)
+                missing_content = e.message.split(' ')[-1].gsub(/[".]/, '')
+                Rails.logger.debug "Content #{missing_content} not found in the environment. Removing it from the add_ids list."
+                output[:add_ids].delete(missing_content)
+              else
+                raise
+              end
             end
           end
           retries = 0
@@ -51,12 +53,12 @@ module Actions
             begin
               output[:delete_response] = ::Katello::Resources::Candlepin::Environment.delete_content(input[:cp_environment_id], output[:delete_ids])
               break
-            rescue RestClient::ResourceNotFound
-              # If the content is not found after the retries, assume it is gone and continue.
-              break if ((retries += 1) == max_retries)
+            rescue HttpResource::RestClientException => e
+              raise unless e.code == '404'
               # Candlepin raises a 404 in case a content id is not found in this environment
               # If thats the case lets just refresh the existing ids list (which hopefully will not have the 404'd content)
               # and try again.
+              break if ((retries += 1) == max_retries)
               output[:delete_ids] = existing_ids - content_ids
             end
           end

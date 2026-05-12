@@ -5,9 +5,10 @@ module Katello
         extend PoolResource
 
         class << self
-          def get(*args)
+          def get(params = [])
             conn = resource
-            response = conn.get(path, *args)
+            query = params.empty? ? '' : "?#{URI.encode_www_form(params)}"
+            response = conn.get(path + query)
             raise Katello::Errors::UpstreamConsumerGone if response.status == 410
             response
           end

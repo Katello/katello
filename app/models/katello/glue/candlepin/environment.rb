@@ -12,7 +12,8 @@ module Katello
       def exists_in_candlepin?
         candlepin_info
         true
-      rescue RestClient::NotFound
+      rescue HttpResource::RestClientException => e
+        raise unless e.code == '404'
         false
       end
 

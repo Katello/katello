@@ -66,8 +66,9 @@ module Actions
 
               unregister_options = host_unregister_options(host)
               ::Katello::RegistrationManager.unregister_host(host, unregister_options)
-            rescue RestClient::ResourceNotFound
+            rescue HttpResource::RestClientException => e
               # Ignore if already gone
+              raise unless e.code == '404'
             rescue => e
               output[:results][:errors] << {
                 type: 'unregister_host',
@@ -94,8 +95,9 @@ module Actions
 
               unregister_options = host_unregister_options(host)
               ::Katello::RegistrationManager.unregister_host(host, unregister_options)
-            rescue RestClient::ResourceNotFound
+            rescue HttpResource::RestClientException => e
               # Ignore if already gone
+              raise unless e.code == '404'
             rescue => e
               output[:results][:errors] << {
                 type: 'unregister_host',
@@ -117,8 +119,9 @@ module Actions
               }
 
               ::Katello::Resources::Candlepin::Consumer.destroy(consumer_uuid)
-            rescue RestClient::ResourceNotFound
+            rescue HttpResource::RestClientException => e
               # Ignore if already gone
+              raise unless e.code == '404'
             rescue => e
               output[:results][:errors] << {
                 type: 'destroy_consumer',
