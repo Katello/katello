@@ -130,6 +130,11 @@ module Katello
             @faraday_connection ||= resource(url: self.site + self.path, client_cert: client_cert, client_key: client_key, ca_file: nil)
           end
 
+          def reset_connection!
+            @faraday_connection = nil
+            @upstream_owner_id = nil
+          end
+
           def client_cert
             upstream_id_cert['cert']
           end
