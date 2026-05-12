@@ -9,64 +9,88 @@ module Katello
       end
     end
 
-    def test_hash_to_query_empty
-      params = {}
-
-      result = TestHttpResource.hash_to_query(params)
-
-      assert_equal "?", result
+    def setup
+      @mock_response = stub(status: 200, body: '', headers: {})
+      @mock_conn = stub
+      TestHttpResource.stubs(:faraday_connection).returns(@mock_conn)
     end
 
-    def test_hash_to_query
-      params = {
-        foo: 'fru',
-        bar: 'bru',
-        too: 'tru',
-        arr: [
-          :arr_one,
-          :arr_two,
-        ],
-      }
+    def test_query_string_empty_hash
+      assert_equal '', TestHttpResource.query_string({})
+    end
 
-      result = TestHttpResource.hash_to_query(params)
+    def test_query_string_empty_array
+      assert_equal '', TestHttpResource.query_string([])
+    end
 
-      assert_equal "?foo=fru&bar=bru&too=tru&arr=arr_one&arr=arr_two", result
+    def test_query_string_nil
+      assert_equal '', TestHttpResource.query_string(nil)
+    end
+
+    def test_query_string_hash
+      params = { foo: 'fru', bar: 'bru', arr: [:arr_one, :arr_two] }
+      result = TestHttpResource.query_string(params)
+      assert_equal "?foo=fru&bar=bru&arr=arr_one&arr=arr_two", result
+    end
+
+    def test_query_string_array_of_tuples
+      params = [[:poolid, 'abc'], [:poolid, 'def'], [:include, 'id']]
+      result = TestHttpResource.query_string(params)
+      assert_equal "?poolid=abc&poolid=def&include=id", result
+    end
+
+    def test_hash_to_query_alias
+      assert_equal "?foo=bar", TestHttpResource.hash_to_query(foo: 'bar')
     end
 
     def test_get
-      headers = { headerOne: 'headerOneValue' }
-      mock_response = stub(code: 200, body: '')
-      RestClient::Resource.any_instance.expects(:get).with(headers).returns(mock_response)
-      TestHttpResource.get('/path', headers)
+      @mock_conn.expects(:send).with(:get, '/path').yields(stub_request).returns(@mock_response)
+      TestHttpResource.get('/path', { 'headerOne' => 'headerOneValue' })
     end
 
     def test_get_no_headers
-      mock_response = stub(code: 200, body: '')
-      RestClient::Resource.any_instance.expects(:get).returns(mock_response)
+      @mock_conn.expects(:send).with(:get, '/path').yields(stub_request).returns(@mock_response)
       TestHttpResource.get('/path')
     end
 
     def test_delete
-      headers = { headerOne: 'headerOneValue' }
-      mock_response = stub(code: 200, body: '')
-      RestClient::Resource.any_instance.expects(:delete).with(headers).returns(mock_response)
-      TestHttpResource.delete('/path', headers)
+      @mock_conn.expects(:send).with(:delete, '/path').yields(stub_request).returns(@mock_response)
+      TestHttpResource.delete('/path', { 'headerOne' => 'headerOneValue' })
     end
 
     def test_put
-      headers = { headerOne: 'headerOneValue' }
-      payload = { payloadKey: 'payloadValue' }
-      mock_response = stub(code: 200, body: '')
-      RestClient::Resource.any_instance.expects(:put).with(payload, headers).returns(mock_response)
-      TestHttpResource.put('/path', payload, headers)
+      @mock_conn.expects(:send).with(:put, '/path').yields(stub_request).returns(@mock_response)
+      TestHttpResource.put('/path', { payloadKey: 'payloadValue' }, { 'headerOne' => 'headerOneValue' })
     end
 
     def test_post
-      headers = { headerOne: 'headerOneValue' }
-      payload = { payloadKey: 'payloadValue' }
-      mock_response = stub(code: 200, body: '')
-      RestClient::Resource.any_instance.expects(:post).with(payload, headers).returns(mock_response)
-      TestHttpResource.post('/path', payload, headers)
+      @mock_conn.expects(:send).with(:post, '/path').yields(stub_request).returns(@mock_response)
+      TestHttpResource.post('/path', { payloadKey: 'payloadValue' }, { 'headerOne' => 'headerOneValue' })
+    end
+
+    def test_process_response_success
+      response = stub(status: 200, body: '{"result": "ok"}')
+      result = TestHttpResource.process_response(response)
+      assert_equal response, result
+    end
+
+    def test_process_response_error
+      response = stub(status: 404, body: '{"displayMessage": "Not found"}')
+      error = assert_raises(HttpResource::HttpError) do
+        TestHttpResource.process_response(response)
+      end
+      assert_equal '404', error.code
+      assert_equal 'Not found', error.message
+      assert_equal '{"displayMessage": "Not found"}', error.response_body
+    end
+
+    private
+
+    def stub_request
+      req = stub
+      req.stubs(:headers).returns({})
+      req.stubs(:body=)
+      req
     end
   end
 end

@@ -35,13 +35,12 @@ module Katello
                [:tomato, "salad"],
                [:include, "mayo"]]
 
-      RestClient::ParamsArray.expects(:new).with(input)
-
-      Katello::UpstreamPool.request_params(
+      result = Katello::UpstreamPool.request_params(
         base_params: {bacon: "jam"},
         extra_params: [[:tomato, "sandwich"], [:tomato, "salad"]],
         included_fields: ["mayo"]
       )
+      assert_equal input, result
     end
 
     def test_fetch_pools

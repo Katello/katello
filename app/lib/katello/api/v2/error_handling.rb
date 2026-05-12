@@ -146,15 +146,25 @@ module Katello
           message = ""
           message << "#{exception.class}: " if options[:with_class]
           message << "#{exception.message}\n"
-          message << "Body: #{exception.http_body}\n" if options[:with_body] && exception.respond_to?(:http_body)
+          body = if exception.respond_to?(:http_body)
+                   exception.http_body
+                 elsif exception.respond_to?(:response_body)
+                   exception.response_body
+                 end
+          message << "Body: #{body}\n" if options[:with_body] && body
           message << exception.backtrace.join("\n") if options[:with_backtrace]
           message
         end
 
         def format_subsys_exception_hash(exception)
-          orig_hash = JSON.parse(exception.response).with_indifferent_access rescue {}
+          raw_body = if exception.respond_to?(:response)
+                       exception.response
+                     elsif exception.respond_to?(:response_body)
+                       exception.response_body
+                     end
+          orig_hash = JSON.parse(raw_body).with_indifferent_access rescue {}
 
-          orig_hash[:displayMessage] = exception.response.to_s.gsub(/^"|"$/, "") if orig_hash[:displayMessage].nil? && exception.respond_to?(:response)
+          orig_hash[:displayMessage] = raw_body.to_s.gsub(/^"|"$/, "") if orig_hash[:displayMessage].nil? && raw_body
           orig_hash[:displayMessage] = exception.message if orig_hash[:displayMessage].blank?
           orig_hash[:errors] = [orig_hash[:displayMessage]] if orig_hash[:errors].nil?
           orig_hash

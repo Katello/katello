@@ -43,7 +43,7 @@ module Katello
         end
 
         def test_with_failure
-          Net::HTTP.any_instance.stubs(:request).raises(RestClient::Forbidden)
+          Net::HTTP.any_instance.stubs(:request).raises(HttpResource::HttpError.new(message: 'Forbidden', code: '403', service_code: ''))
           @class.deliver!([@product.organization])
           assert_equal 1, NotificationBlueprint.find_by(name: 'manifest_expired_warning').notifications.count
         end
