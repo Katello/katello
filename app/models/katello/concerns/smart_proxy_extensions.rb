@@ -141,6 +141,19 @@ module Katello
           .distinct
       end
 
+      def subscription_facets_for_sync
+        if load_balanced?
+          sibling_ids = self.class.behind_load_balancer(registration_host).pluck(:id)
+          ::Katello::Host::SubscriptionFacet.joins(:host => :content_facet)
+            .includes(:host)
+            .where('katello_content_facets.content_source_id IN (?)', sibling_ids) # matches host assigned to capsule behind load balancer.
+            .where.not('katello_subscription_facets.uuid' => nil)
+            .distinct
+        else
+          subscription_facets
+        end
+      end
+
       def registration_url
         url = self.setting('Registration', 'registration_url').presence || self.url
         URI(url)
@@ -257,7 +270,7 @@ module Katello
         end
 
         begin
-          facets = subscription_facets
+          facets = subscription_facets_for_sync
           if facets.exists?
             update_container_gateway_hosts(facets)
             update_host_container_repo_mapping(facets)
