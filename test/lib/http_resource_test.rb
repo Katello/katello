@@ -73,6 +73,25 @@ module Katello
       TestHttpResource.post('/path', { payloadKey: 'payloadValue' }, headers: { 'headerOne' => 'headerOneValue' })
     end
 
+    def test_issue_request_with_custom_connection
+      custom_conn = stub
+      custom_conn.stubs(:url_prefix).returns(URI.parse('https://upstream.example.com'))
+      custom_conn.expects(:send).with(:get, '/subscription/consumers').yields(stub_request).returns(@mock_response)
+      TestHttpResource.issue_request(
+        method: :get,
+        path: '/subscription/consumers',
+        headers: {},
+        connection: custom_conn,
+        process: false
+      )
+    end
+
+    def test_issue_request_process_false_returns_raw_response
+      @mock_conn.expects(:send).with(:get, '/path').yields(stub_request).returns(@mock_response)
+      result = TestHttpResource.issue_request(method: :get, path: '/path', process: false)
+      assert_equal @mock_response, result
+    end
+
     def test_process_response_success
       response = stub(status: 200, body: '{"result": "ok"}')
       result = TestHttpResource.process_response(response)

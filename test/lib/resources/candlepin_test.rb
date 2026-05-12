@@ -71,6 +71,33 @@ module Katello
         end
       end
 
+      class UpstreamConsumerPingTest < ActiveSupport::TestCase
+        def setup
+          @mock_response = stub(status: 200, body: '', headers: {})
+          UpstreamConsumer.stubs(:issue_request).returns(@mock_response)
+        end
+
+        def test_ping_success
+          response = UpstreamConsumer.ping
+          assert_equal 200, response.status
+        end
+
+        def test_ping_401_raises_gone
+          @mock_response.stubs(:status).returns(401)
+          assert_raises(Katello::Errors::UpstreamConsumerGone) { UpstreamConsumer.ping }
+        end
+
+        def test_ping_410_raises_gone
+          @mock_response.stubs(:status).returns(410)
+          assert_raises(Katello::Errors::UpstreamConsumerGone) { UpstreamConsumer.ping }
+        end
+
+        def test_ping_404_raises_not_found
+          @mock_response.stubs(:status).returns(404)
+          assert_raises(Katello::Errors::UpstreamConsumerNotFound) { UpstreamConsumer.ping }
+        end
+      end
+
       class CandlepinResourceTest < ActiveSupport::TestCase
         def test_default_headers_includes_cp_oauth_header
           User.stubs(:cp_oauth_header).returns({'cp-user' => 'admin'})
