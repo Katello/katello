@@ -4,40 +4,29 @@ module Katello
       class Proxy
         class << self
           def get(path, extra_headers = {})
-            CandlepinResource.issue_request(
-              method: :get,
-              path: CandlepinResource.prefix + path,
-              headers: CandlepinResource.default_headers.merge(extra_headers),
-              process: false
-            )
+            issue_proxy(:get, path, headers: extra_headers)
           end
 
           def post(path, body)
-            CandlepinResource.issue_request(
-              method: :post,
-              path: CandlepinResource.prefix + path,
-              headers: CandlepinResource.default_headers,
-              payload: body,
-              process: false
-            )
+            issue_proxy(:post, path, payload: body)
           end
 
           def put(path, body)
-            CandlepinResource.issue_request(
-              method: :put,
-              path: CandlepinResource.prefix + path,
-              headers: CandlepinResource.default_headers,
-              payload: body,
-              process: false
-            )
+            issue_proxy(:put, path, payload: body)
           end
 
           def delete(path, body = nil)
+            issue_proxy(:delete, path, payload: body)
+          end
+
+          private
+
+          def issue_proxy(method, path, payload: nil, headers: {})
             CandlepinResource.issue_request(
-              method: :delete,
+              method: method,
               path: CandlepinResource.prefix + path,
-              headers: CandlepinResource.default_headers,
-              payload: body,
+              headers: CandlepinResource.default_headers.merge(headers),
+              payload: payload,
               process: false
             )
           end
