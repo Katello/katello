@@ -61,6 +61,15 @@ module Katello
       end
     end
 
+    rescue_from HttpResource::RestClientException do |e|
+      Rails.logger.error(pp_exception(e, with_backtrace: false))
+      if request_from_katello_cli?
+        render :json => { :errors => [e.message] }, :status => e.code
+      else
+        render :plain => e.message, :status => e.code
+      end
+    end
+
     def authorize_client_or_user
       client_authorized? || authorize
     end

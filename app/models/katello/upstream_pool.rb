@@ -13,7 +13,7 @@ module Katello
           included_fields: included_field_params(quantities_only)
         )
 
-        upstream_response = CP_POOL.get(params: cp_params)
+        upstream_response = CP_POOL.get(cp_params)
         pools = response_to_pools(upstream_response, pool_id_map: pool_id_map)
         total = upstream_response.headers[total_count_header] || pools.count
 
@@ -42,7 +42,7 @@ module Katello
       end
 
       def response_to_pools(response, pool_id_map: {})
-        pools = JSON.parse(response)
+        pools = JSON.parse(response.body)
         if pool_id_map.empty?
           pool_id_map = Katello::Candlepin::PoolService.map_upstream_pools_to_local(pools)
         end
@@ -87,7 +87,7 @@ module Katello
         # use extra_params when you have duplicate keys
         # i.e. [[:michael, "bolton"], [:michael, "jordan"]]
         included_fields.map! { |field| [:include, field] }
-        RestClient::ParamsArray.new(base_params.to_a + extra_params + included_fields)
+        base_params.to_a + extra_params + included_fields
       end
 
       def pool_id_params(pool_ids)

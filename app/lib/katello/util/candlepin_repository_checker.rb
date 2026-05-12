@@ -37,7 +37,8 @@ module Katello
 
         ::Katello::Resources::Candlepin::Content.get(repository.organization.label, repository.content_id)
         true
-      rescue RestClient::NotFound
+      rescue HttpResource::RestClientException => e
+        raise unless e.code == '404'
         false
       end
 
