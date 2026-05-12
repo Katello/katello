@@ -158,7 +158,7 @@ module Katello
           # provisioning information (including kickstart repository) is preserved
           begin
             unregister_host(host, :unregistering => true, :preserve_for_provisioning => true)
-          rescue HttpResource::RestClientException => e
+          rescue HttpResource::HttpError => e
             raise unless e.code == '410'
             Rails.logger.debug("Host %s has been removed in preparation for reregistration" % host&.name)
           end
@@ -290,7 +290,7 @@ module Katello
 
       def candlepin_consumer_destroy(host_uuid)
         ::Katello::Resources::Candlepin::Consumer.destroy(host_uuid)
-      rescue HttpResource::RestClientException => e
+      rescue HttpResource::HttpError => e
         if e.code == '404'
           Rails.logger.warn(_("Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin") % host_uuid)
         elsif e.code == '410'

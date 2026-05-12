@@ -101,7 +101,7 @@ module Katello
           def virtual_guests(uuid)
             response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-          rescue HttpResource::RestClientException
+          rescue HttpResource::HttpError
             return []
           end
 
@@ -112,7 +112,7 @@ module Katello
             else
               return nil
             end
-          rescue HttpResource::RestClientException
+          rescue HttpResource::HttpError
             return nil
           end
 

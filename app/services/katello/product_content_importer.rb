@@ -108,7 +108,7 @@ module Katello
     private def content_exists?(org, content)
       Resources::Candlepin::Content.get(org.label, content.cp_content_id)
       true
-    rescue HttpResource::RestClientException => e
+    rescue HttpResource::HttpError => e
       raise unless e.code == '404'
       false
     end

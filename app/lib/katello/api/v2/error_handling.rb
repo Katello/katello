@@ -10,7 +10,7 @@ module Katello
           rescue_from HttpErrors::WrappedError, :with => :rescue_from_wrapped_error
 
           rescue_from RestClient::ExceptionWithResponse, :with => :rescue_from_exception_with_response
-          rescue_from HttpResource::RestClientException, :with => :rescue_from_exception_with_response
+          rescue_from HttpResource::HttpError, :with => :rescue_from_exception_with_response
           rescue_from ActiveRecord::RecordInvalid, :with => :rescue_from_record_invalid
           rescue_from ActiveRecord::RecordNotFound, :with => :rescue_from_record_not_found
 

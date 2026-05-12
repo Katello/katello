@@ -23,7 +23,7 @@ module Katello
       def candlepin_owner_exists?
         find_owner
         true
-      rescue HttpResource::RestClientException => e
+      rescue HttpResource::HttpError => e
         raise unless e.code == '404'
         false
       end
@@ -48,7 +48,7 @@ module Katello
 
       def load_debug_cert
         return Resources::Candlepin::Owner.get_ueber_cert(label)
-      rescue HttpResource::RestClientException => e
+      rescue HttpResource::HttpError => e
         raise unless e.code == '404'
         return generate_debug_cert
       end

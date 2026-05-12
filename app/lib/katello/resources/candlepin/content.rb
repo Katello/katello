@@ -23,7 +23,7 @@ module Katello
 
             begin
               self.delete(path(owner_label, id), self.default_headers).status
-            rescue HttpResource::RestClientException => e
+            rescue HttpResource::HttpError => e
               raise e unless e.code == '404'
               # this is OK
               :content_gone

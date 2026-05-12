@@ -12,7 +12,7 @@ module Katello
           def ping
             conn = resource
             conn.head(path)
-          rescue HttpResource::RestClientException => e
+          rescue HttpResource::HttpError => e
             raise ::Katello::Errors::UpstreamConsumerGone if %w(401 410).include?(e.code)
             raise ::Katello::Errors::UpstreamConsumerNotFound if e.code == '404'
             raise e
@@ -21,7 +21,7 @@ module Katello
           def get(params)
             includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
             JSON.parse(super(path + hash_to_query(params) + includes, self.default_headers).body)
-          rescue HttpResource::RestClientException => e
+          rescue HttpResource::HttpError => e
             raise ::Katello::Errors::UpstreamConsumerGone if e.code == '410'
             raise e
           end
@@ -29,7 +29,7 @@ module Katello
           def remove_entitlement(entitlement_id)
             fail ArgumentError, "No entitlement ID given to remove." if entitlement_id.blank?
             self.delete(join_path(path, "entitlements/#{entitlement_id}"), self.default_headers)
-          rescue HttpResource::RestClientException => e
+          rescue HttpResource::HttpError => e
             raise ::Katello::Errors::UpstreamEntitlementGone if e.code == '404'
             raise e
           end

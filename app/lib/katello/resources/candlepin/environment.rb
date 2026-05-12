@@ -20,7 +20,7 @@ module Katello
 
           def destroy(id)
             self.delete(path(id), User.cp_oauth_header).status
-          rescue HttpResource::RestClientException => e
+          rescue HttpResource::HttpError => e
             raise ::Katello::Errors::CandlepinEnvironmentGone, e.message if e.code == '404'
             raise e
           end
