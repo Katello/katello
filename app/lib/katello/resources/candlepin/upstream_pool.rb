@@ -6,8 +6,13 @@ module Katello
 
         class << self
           def get(params = [])
-            conn = resource
-            response = conn.get(path + query_string(params))
+            response = issue_request(
+              method: :get,
+              path: path,
+              headers: default_headers,
+              params: params,
+              process: false
+            )
             raise Katello::Errors::UpstreamConsumerGone if response.status == 410
             response
           end

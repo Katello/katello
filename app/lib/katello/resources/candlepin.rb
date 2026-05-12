@@ -123,7 +123,7 @@ module Katello
           end
 
           def faraday_connection(_path = '')
-            resource(url: self.site + self.path, client_cert: client_cert, client_key: client_key, ca_file: nil)
+            @faraday_connection ||= resource(url: self.site + self.path, client_cert: client_cert, client_key: client_key, ca_file: nil)
           end
 
           def client_cert

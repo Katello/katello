@@ -80,7 +80,7 @@ module Katello
         (headers || {}).transform_keys(&:to_s).transform_values(&:to_s)
       end
 
-      def issue_request(method:, path:, headers: {}, payload: nil, params: nil)
+      def issue_request(method:, path:, headers: {}, payload: nil, params: nil, process: true)
         path = "#{path}#{query_string(params)}" if params
         headers = stringify_headers(headers)
         logger.debug("Resource #{method.upcase} request: #{path}")
@@ -98,7 +98,7 @@ module Katello
           req.body = payload if payload
         end
 
-        process_response(response)
+        process ? process_response(response) : response
       rescue Faraday::ConnectionFailed
         service = path.split("/").second
         raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
