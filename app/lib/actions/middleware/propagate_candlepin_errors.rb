@@ -17,7 +17,7 @@ module Actions
 
       def propagate_candlepin_errors
         yield
-      rescue HttpResource::RestClientException => e
+      rescue HttpResource::HttpError => e
         raise(::Katello::Errors::CandlepinError.new(e.message) || e)
       end
     end

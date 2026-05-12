@@ -45,7 +45,7 @@ module Katello
       end
     end
 
-    rescue_from HttpResource::RestClientException do |e|
+    rescue_from HttpResource::HttpError do |e|
       Rails.logger.error(pp_exception(e, with_backtrace: false))
       if request_from_katello_cli?
         render json: { errors: [e.message] }, status: e.code

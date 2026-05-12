@@ -19,7 +19,7 @@ module Katello
           def find(pool_id)
             begin
               pool_json = self.get(path(pool_id), self.default_headers).body
-            rescue HttpResource::RestClientException => e
+            rescue HttpResource::HttpError => e
               raise Katello::Errors::CandlepinPoolGone if e.code == '404'
               raise e
             end

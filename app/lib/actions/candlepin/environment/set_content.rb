@@ -30,7 +30,7 @@ module Actions
             begin
               output[:add_response] = ::Katello::Resources::Candlepin::Environment.add_content(input[:cp_environment_id], output[:add_ids])
               break
-            rescue HttpResource::RestClientException => e
+            rescue HttpResource::HttpError => e
               if e.code == '409'
                 # Candlepin raises a 409 in case it gets a duplicate content id add to an environment.
                 # Refresh the existing ids list and try again.
@@ -53,7 +53,7 @@ module Actions
             begin
               output[:delete_response] = ::Katello::Resources::Candlepin::Environment.delete_content(input[:cp_environment_id], output[:delete_ids])
               break
-            rescue HttpResource::RestClientException => e
+            rescue HttpResource::HttpError => e
               raise unless e.code == '404'
               # Candlepin raises a 404 in case a content id is not found in this environment
               # If thats the case lets just refresh the existing ids list (which hopefully will not have the 404'd content)
