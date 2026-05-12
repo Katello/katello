@@ -8,12 +8,13 @@ module Katello
     end
 
     class HttpError < StandardError
-      attr_reader :service_code, :code
+      attr_reader :service_code, :code, :response_body
 
       def initialize(params)
         super params[:message]
         @service_code = params[:service_code]
         @code = params[:code]
+        @response_body = params[:response_body]
       end
     end
 
@@ -68,12 +69,12 @@ module Katello
           logger.error "Error parsing the body: " << error.backtrace.join("\n")
           if %w(404 500 502 503 504).member? resp.status.to_s
             logger.error "Remote server status code " << resp.status.to_s
-            raise HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code}, caller
+            raise HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
           else
             raise NetworkException, [resp.status.to_s, resp.body].reject { |s| s.blank? }.join(' ')
           end
         end
-        fail HttpError, {:message => message, :service_code => service_code, :code => status_code}, caller
+        fail HttpError, {:message => message, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
       end
 
       def stringify_headers(headers)
@@ -107,7 +108,7 @@ module Katello
 
       def raise_faraday_exception(e, a_path, http_method)
         msg = "#{name}: #{e.message} (#{http_method} #{a_path})"
-        raise HttpError, { message: msg, service_code: '', code: e.response&.dig(:status).to_s }
+        raise HttpError, { message: msg, service_code: '', code: e.response&.dig(:status).to_s, response_body: e.response&.dig(:body) }
       end
 
       def join_path(*args)
