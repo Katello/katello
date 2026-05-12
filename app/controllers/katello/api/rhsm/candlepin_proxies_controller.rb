@@ -51,7 +51,6 @@ module Katello
 
     rescue_from RestClient::Exception do |e|
       Rails.logger.error(pp_exception(e, with_backtrace: false))
-      Rails.logger.error(e.backtrace.detect { |line| line.match("katello.*controller") })
       if request_from_katello_cli?
         render :json => { :errors => [e.http_body] }, :status => e.http_code
       else
@@ -61,10 +60,11 @@ module Katello
 
     rescue_from HttpResource::HttpError do |e|
       Rails.logger.error(pp_exception(e, with_backtrace: false))
+      body = e.response_body || e.message
       if request_from_katello_cli?
-        render :json => { :errors => [e.message] }, :status => e.code
+        render :json => { :errors => [body] }, :status => e.code
       else
-        render :plain => e.message, :status => e.code
+        render :plain => body, :status => e.code
       end
     end
 
@@ -326,7 +326,7 @@ module Katello
       uuid ||= params[:id]
       facet = Katello::Host::SubscriptionFacet.where(:uuid => uuid).first
       if facet.nil?
-        # check with candlepin if consumer is Gone, raises RestClient::Gone
+        # check with candlepin if consumer is Gone, raises HttpError
         User.as_anonymous_admin { Resources::Candlepin::Consumer.get(uuid) }
       end
       @host = ::Host::Managed.unscoped.find(facet.host_id)

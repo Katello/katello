@@ -18,7 +18,12 @@ module Actions
       def propagate_candlepin_errors
         yield
       rescue HttpResource::HttpError => e
-        raise(::Katello::Errors::CandlepinError.new(e.message) || e)
+        display_message = e.message
+        if e.response_body.present?
+          parsed = JSON.parse(e.response_body) rescue {}
+          display_message = parsed['displayMessage'] || display_message
+        end
+        raise ::Katello::Errors::CandlepinError, display_message
       end
     end
   end

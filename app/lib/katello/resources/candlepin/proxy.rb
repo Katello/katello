@@ -26,9 +26,8 @@ module Katello
           logger.debug "Sending #{method.upcase} request to Candlepin: #{path}"
           full_path = CandlepinResource.prefix + path
           headers = HttpResource.stringify_headers(
-            headers.merge('accept' => 'application/json').merge(User.cp_oauth_header)
+            CandlepinResource.default_headers.merge(headers)
           )
-          headers['content-type'] = 'application/json' unless method == :get
 
           CandlepinResource.faraday_connection.send(method, full_path) do |req|
             CandlepinResource.sign_request(req, CandlepinResource.site + full_path, method)

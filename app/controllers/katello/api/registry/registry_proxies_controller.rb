@@ -47,10 +47,11 @@ module Katello
 
     rescue_from HttpResource::HttpError do |e|
       Rails.logger.error(pp_exception(e, with_backtrace: false))
+      body = e.response_body || e.message
       if request_from_katello_cli?
-        render json: { errors: [e.message] }, status: e.code
+        render json: { errors: [body] }, status: e.code
       else
-        render plain: e.message, status: e.code
+        render plain: body, status: e.code
       end
     end
 
