@@ -58,6 +58,7 @@ module Actions
         def finalize
           subject_organization.clear_manifest_expired_notifications
           subject_organization.audit_manifest_action(_('Manifest imported'))
+          ::Katello::Resources::Candlepin::UpstreamCandlepinResource.reset_connection!
         end
       end
     end
