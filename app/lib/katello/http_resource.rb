@@ -1,4 +1,3 @@
-require 'cgi'
 require 'faraday'
 require 'faraday/net_http_persistent'
 
@@ -58,7 +57,7 @@ module Katello
         logger.debug filter_sensitive_data(resp.body)
         return resp unless resp.status >= 400
         parsed = {}
-        message = "Rest exception while processing the call"
+        message = "HTTP error while processing the call"
         service_code = ""
         status_code = resp.status.to_s
         begin

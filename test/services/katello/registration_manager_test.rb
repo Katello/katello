@@ -294,7 +294,7 @@ module Katello
 
       def test_force_registration_existing_host
         ::Host::Managed.any_instance.expects(:update_candlepin_associations).times(1)
-        ::Katello::RegistrationManager.expects(:unregister_host).raises(RestClient::Gone)
+        ::Katello::RegistrationManager.expects(:unregister_host).raises(HttpResource::HttpError.new(message: 'Gone', code: '410', service_code: ''))
         ::Katello::RegistrationManager.expects(:create_in_candlepin)
         ::Katello::RegistrationManager.expects(:finalize_registration)
         Rails.logger.expects(:debug).with("Host #{@host.name} has been removed in preparation for reregistration")
@@ -445,7 +445,7 @@ module Katello
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
 
         ::Host.expects(:find).returns(@host)
-        ::Katello::Resources::Candlepin::Consumer.expects(:destroy).raises(RestClient::ResourceNotFound)
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy).raises(HttpResource::HttpError.new(message: 'Not found', code: '404', service_code: ''))
 
         @host.expects(:destroy).returns(true)
 
