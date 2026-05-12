@@ -133,9 +133,8 @@ module Katello
           end
 
           def reset_connection!
-            org_id = Organization.current&.id
-            @faraday_connections&.delete(org_id)
-            @upstream_owner_ids&.delete(org_id)
+            @faraday_connections = nil
+            @upstream_owner_ids = nil
           end
 
           def client_cert
