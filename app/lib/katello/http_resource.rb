@@ -81,7 +81,8 @@ module Katello
         (headers || {}).transform_keys(&:to_s).transform_values(&:to_s)
       end
 
-      def issue_request(method:, path:, headers: {}, payload: nil)
+      def issue_request(method:, path:, headers: {}, payload: nil, params: nil)
+        path = "#{path}#{query_string(params)}" if params
         headers = stringify_headers(headers)
         logger.debug("Resource #{method.upcase} request: #{path}")
         logger.debug "Headers: #{headers.to_json}"
@@ -135,9 +136,12 @@ module Katello
       def sign_request(_req, _url, _method)
       end
 
-      def hash_to_query(query_parameters)
-        "?#{URI.encode_www_form(query_parameters)}"
+      def query_string(params)
+        return '' if params.nil? || (params.respond_to?(:empty?) && params.empty?)
+        "?#{URI.encode_www_form(params)}"
       end
+
+      alias_method :hash_to_query, :query_string
     end
   end
 end

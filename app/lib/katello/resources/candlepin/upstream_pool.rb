@@ -7,8 +7,7 @@ module Katello
         class << self
           def get(params = [])
             conn = resource
-            query = params.empty? ? '' : "?#{URI.encode_www_form(params)}"
-            response = conn.get(path + query)
+            response = conn.get(path + query_string(params))
             raise Katello::Errors::UpstreamConsumerGone if response.status == 410
             response
           end
