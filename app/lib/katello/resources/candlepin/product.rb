@@ -5,7 +5,7 @@ module Katello
         class << self
           def all(owner_label, included = [])
             url = path(owner_label) + "?active=include" + "&#{included_list(included)}"
-            products = JSON.parse(Candlepin::CandlepinResource.get(url, self.default_headers).body)
+            products = JSON.parse(Candlepin::CandlepinResource.get(url, headers: self.default_headers).body)
             ::Katello::Util::Data.array_with_indifferent_access products
           end
 
@@ -19,11 +19,11 @@ module Katello
           end
 
           def create(owner_label, attr)
-            JSON.parse(self.post(path(owner_label), attr.to_json, self.default_headers).body).with_indifferent_access
+            JSON.parse(self.post(path(owner_label), attr.to_json, headers: self.default_headers).body).with_indifferent_access
           end
 
           def get(owner_label, id = nil, included = [])
-            products_json = super(path(owner_label, id + "/?#{included_list(included)}"), self.default_headers).body
+            products_json = super(path(owner_label, id + "/?#{included_list(included)}"), headers: self.default_headers).body
             products = JSON.parse(products_json)
             products = [products] unless id.nil?
             ::Katello::Util::Data.array_with_indifferent_access products
@@ -34,7 +34,7 @@ module Katello
                           derivedProvidedProducts.id startDate)
             subscriptions_json = Candlepin::CandlepinResource.get(
               "/candlepin/owners/#{owner}/subscriptions?#{included_list(included)}",
-              self.default_headers
+              headers: self.default_headers
             ).body
             subscriptions = JSON.parse(subscriptions_json)
 
@@ -60,11 +60,11 @@ module Katello
 
           def destroy(owner_label, product_id)
             fail ArgumentError, "product id has to be specified" unless product_id
-            self.delete(path(owner_label, product_id), self.default_headers).status
+            self.delete(path(owner_label, product_id), headers: self.default_headers).status
           end
 
           def add_content(owner_label, product_id, content_id, enabled)
-            self.post(join_path(path(owner_label, product_id), "content/#{content_id}?enabled=#{enabled}"), nil, self.default_headers).status
+            self.post(join_path(path(owner_label, product_id), "content/#{content_id}?enabled=#{enabled}"), nil, headers: self.default_headers).status
           end
 
           def remove_content(owner_label, product_id, content_id)
@@ -117,7 +117,7 @@ module Katello
           end
 
           def update(owner_label, attrs)
-            JSON.parse(self.put(path(owner_label, attrs[:id] || attrs['id']), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
+            JSON.parse(self.put(path(owner_label, attrs[:id] || attrs['id']), JSON.generate(attrs), headers: self.default_headers).body).with_indifferent_access
           end
         end
       end

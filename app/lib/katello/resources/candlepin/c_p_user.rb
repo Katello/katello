@@ -4,7 +4,7 @@ module Katello
       class CPUser < CandlepinResource
         class << self
           def create(attrs)
-            JSON.parse(self.post(path, JSON.generate(attrs), self.default_headers).body).with_indifferent_access
+            JSON.parse(self.post(path, JSON.generate(attrs), headers: self.default_headers).body).with_indifferent_access
           end
 
           def path(id = nil)
