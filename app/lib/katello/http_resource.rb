@@ -84,15 +84,15 @@ module Katello
       def issue_request(method:, path:, headers: {}, payload: nil, params: nil, process: true, connection: nil)
         path = "#{path}#{query_string(params)}" if params
         headers = stringify_headers(headers)
-        logger.debug("Resource #{method.upcase} request: #{path}")
+        conn = connection || faraday_connection
+        url = connection ? "#{conn.url_prefix}#{path}" : path
+        logger.debug("Resource #{method.upcase} request: #{url}")
         logger.debug "Headers: #{headers.to_json}"
         begin
           logger.debug "Body: #{filter_sensitive_data(payload.to_json)}"
         rescue JSON::GeneratorError, Encoding::UndefinedConversionError
           logger.debug "Body: Error: could not render payload as json"
         end
-
-        conn = connection || faraday_connection
         response = conn.send(method, path) do |req|
           sign_request(req, self.site + path, method)
           req.headers.merge!(headers) if headers
