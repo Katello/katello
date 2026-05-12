@@ -127,12 +127,15 @@ module Katello
           end
 
           def faraday_connection(_path = '')
-            @faraday_connection ||= resource(url: self.site + self.path, client_cert: client_cert, client_key: client_key, ca_file: nil)
+            org_id = Organization.current&.id
+            @faraday_connections ||= {}
+            @faraday_connections[org_id] ||= resource(url: self.site + self.path, client_cert: client_cert, client_key: client_key, ca_file: nil)
           end
 
           def reset_connection!
-            @faraday_connection = nil
-            @upstream_owner_id = nil
+            org_id = Organization.current&.id
+            @faraday_connections&.delete(org_id)
+            @upstream_owner_ids&.delete(org_id)
           end
 
           def client_cert
@@ -160,7 +163,9 @@ module Katello
           end
 
           def upstream_owner_id
-            @upstream_owner_id ||= begin
+            org_id = Organization.current&.id
+            @upstream_owner_ids ||= {}
+            @upstream_owner_ids[org_id] ||= begin
               response = Katello::Resources::Candlepin::UpstreamConsumer.issue_request(
                 method: :get,
                 path: Katello::Resources::Candlepin::UpstreamConsumer.path,
