@@ -68,7 +68,7 @@ module Katello
           end
 
           def remove_content(owner_label, product_id, content_id)
-            self.delete(join_path(path(owner_label, product_id), "content/#{content_id}"), self.default_headers).status
+            self.delete(join_path(path(owner_label, product_id), "content/#{content_id}"), headers: self.default_headers).status
           end
 
           def create_unlimited_subscription(owner_key, product_id, start_date)

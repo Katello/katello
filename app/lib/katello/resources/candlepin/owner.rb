@@ -49,6 +49,8 @@ module Katello
             self.put(path(key), JSON.generate(owner), headers: self.default_headers).body
           end
 
+          # Multipart upload — uses its own Faraday connection with f.request :multipart
+          # instead of issue_request, which only handles string/JSON payloads.
           def import(organization_name, path_to_file, options)
             path = join_path(path(organization_name), 'imports/async')
             if options[:force] || SETTINGS[:katello].key?(:force_manifest_import)

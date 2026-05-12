@@ -28,7 +28,7 @@ module Katello
 
           def remove_entitlement(entitlement_id)
             fail ArgumentError, "No entitlement ID given to remove." if entitlement_id.blank?
-            self.delete(join_path(path, "entitlements/#{entitlement_id}"), self.default_headers)
+            self.delete(join_path(path, "entitlements/#{entitlement_id}"), headers: self.default_headers)
           rescue HttpResource::HttpError => e
             raise ::Katello::Errors::UpstreamEntitlementGone if e.code == '404'
             raise e
