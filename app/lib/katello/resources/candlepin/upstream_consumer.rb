@@ -20,7 +20,7 @@ module Katello
 
           def get(params)
             includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
-            JSON.parse(super(path + hash_to_query(params) + includes, self.default_headers).body)
+            JSON.parse(super(path + hash_to_query(params) + includes, headers: self.default_headers).body)
           rescue HttpResource::HttpError => e
             raise ::Katello::Errors::UpstreamConsumerGone if e.code == '410'
             raise e
@@ -63,7 +63,7 @@ module Katello
 
           def bind_entitlement(**pool)
             entitlements_path = join_path(path, 'entitlements') + hash_to_query(pool)
-            response = self.post(entitlements_path, nil, self.default_headers)
+            response = self.post(entitlements_path, nil, headers: self.default_headers)
             JSON.parse(response.body)
           end
         end

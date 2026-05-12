@@ -8,17 +8,17 @@ module Katello
           def get_for_owner(owner_key, include_temporary_guests = false)
             url = "#{prefix}/owners/#{owner_key}/pools?add_future=true"
             url += "&attribute=unmapped_guests_only:!true" if include_temporary_guests
-            pools_json = self.get(url, self.default_headers).body
+            pools_json = self.get(url, headers: self.default_headers).body
             JSON.parse(pools_json)
           end
 
           def create(owner_key, attrs)
-            self.post("/candlepin/owners/#{owner_key}/pools", attrs.to_json, self.default_headers).body
+            self.post("/candlepin/owners/#{owner_key}/pools", attrs.to_json, headers: self.default_headers).body
           end
 
           def find(pool_id)
             begin
-              pool_json = self.get(path(pool_id), self.default_headers).body
+              pool_json = self.get(path(pool_id), headers: self.default_headers).body
             rescue HttpResource::HttpError => e
               raise Katello::Errors::CandlepinPoolGone if e.code == '404'
               raise e
@@ -29,7 +29,7 @@ module Katello
 
           def destroy(id)
             fail ArgumentError, "pool id has to be specified" unless id
-            self.delete(path(id), self.default_headers).status
+            self.delete(path(id), headers: self.default_headers).status
           end
         end
       end

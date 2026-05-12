@@ -37,14 +37,15 @@ module Katello
     end
 
     class << self
-      [:get, :post, :put, :patch, :delete].each do |method|
-        define_method(method) do |*args|
-          issue_request(
-            method: method,
-            path: args.first,
-            headers: args.length > 1 ? args.last : nil,
-            payload: args.length > 2 ? args[1] : nil
-          )
+      [:get, :delete].each do |method|
+        define_method(method) do |path, headers: nil, params: nil|
+          issue_request(method: method, path: path, headers: headers, params: params)
+        end
+      end
+
+      [:post, :put, :patch].each do |method|
+        define_method(method) do |path, payload = nil, headers: nil, params: nil|
+          issue_request(method: method, path: path, headers: headers, payload: payload, params: params)
         end
       end
 

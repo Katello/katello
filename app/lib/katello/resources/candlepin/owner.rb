@@ -6,7 +6,7 @@ module Katello
 
         class << self
           def all
-            response = self.get(path, default_headers)
+            response = self.get(path, headers: default_headers)
             JSON.parse(response.body)
           end
 
@@ -20,7 +20,7 @@ module Katello
               :contentAccessMode => 'org_environment',
               :contentAccessModeList => 'org_environment',
             }
-            owner_json = self.post(path, attrs.to_json, self.default_headers).body
+            owner_json = self.post(path, attrs.to_json, headers: self.default_headers).body
             JSON.parse(owner_json).with_indifferent_access
           end
 
@@ -31,11 +31,11 @@ module Katello
           end
 
           def destroy(key)
-            self.delete(path(key), User.cp_oauth_header).status
+            self.delete(path(key), headers: User.cp_oauth_header).status
           end
 
           def find(key)
-            owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
+            owner_json = self.get(path(key), headers: {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
             JSON.parse(owner_json).with_indifferent_access
           end
 
@@ -46,7 +46,7 @@ module Katello
               :contentAccessMode => 'org_environment',
               :contentAccessModeList => 'org_environment'
             )
-            self.put(path(key), JSON.generate(owner), self.default_headers).body
+            self.put(path(key), JSON.generate(owner), headers: self.default_headers).body
           end
 
           def import(organization_name, path_to_file, options)
@@ -75,12 +75,12 @@ module Katello
           end
 
           def destroy_imports(organization_name, wait_until_complete: false)
-            response_json = self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
+            response_json = self.delete(join_path(path(organization_name), 'imports'), headers: self.default_headers)
             response = JSON.parse(response_json).with_indifferent_access
             if wait_until_complete && response['state'] == 'CREATED'
               while !response['state'].nil? && response['state'] != 'FINISHED' && response['state'] != 'ERROR'
                 path = join_path('candlepin', response['statusPath'][1..])
-                response_json = self.get(path, self.default_headers)
+                response_json = self.get(path, headers: self.default_headers)
                 response = JSON.parse(response_json).with_indifferent_access
               end
             end
@@ -89,7 +89,7 @@ module Katello
           end
 
           def imports(organization_name)
-            imports_json = self.get(join_path(path(organization_name), 'imports'), self.default_headers)
+            imports_json = self.get(join_path(path(organization_name), 'imports'), headers: self.default_headers)
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(imports_json)
           end
 
@@ -99,25 +99,25 @@ module Katello
             if owner_label
               # hash_to_query escapes the ":!" to "%3A%21" which candlepin rejects
               params += '&attribute=unmapped_guests_only:!true'
-              json_str = self.get(join_path(path(owner_label), 'pools') + params, self.default_headers).body
+              json_str = self.get(join_path(path(owner_label), 'pools') + params, headers: self.default_headers).body
             else
-              json_str = self.get(join_path('candlepin', 'pools') + params, self.default_headers).body
+              json_str = self.get(join_path('candlepin', 'pools') + params, headers: self.default_headers).body
             end
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
           end
 
           def statistics(key)
-            json_str = self.get(join_path(path(key), 'statistics'), self.default_headers).body
+            json_str = self.get(join_path(path(key), 'statistics'), headers: self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
           end
 
           def generate_ueber_cert(key)
-            ueber_cert_json = self.post(join_path(path(key), "uebercert"), {}.to_json, self.default_headers).body
+            ueber_cert_json = self.post(join_path(path(key), "uebercert"), {}.to_json, headers: self.default_headers).body
             JSON.parse(ueber_cert_json).with_indifferent_access
           end
 
           def get_ueber_cert(key)
-            ueber_cert_json = self.get(join_path(path(key), "uebercert"), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
+            ueber_cert_json = self.get(join_path(path(key), "uebercert"), headers: {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
             JSON.parse(ueber_cert_json).with_indifferent_access
           end
 
@@ -129,7 +129,7 @@ module Katello
           end
 
           def service_levels(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'servicelevels'), self.default_headers).body
+            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'servicelevels'), headers: self.default_headers).body
             if response.empty?
               return []
             else
@@ -138,7 +138,7 @@ module Katello
           end
 
           def system_purpose(key)
-            response = Candlepin::CandlepinResource.get(join_path(path(key), 'system_purpose'), self.default_headers).body
+            response = Candlepin::CandlepinResource.get(join_path(path(key), 'system_purpose'), headers: self.default_headers).body
             if response.empty?
               return []
             else

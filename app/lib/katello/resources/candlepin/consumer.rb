@@ -15,11 +15,11 @@ module Katello
 
           def get(params)
             if params.is_a?(String)
-              JSON.parse(super(path(params), self.default_headers).body).with_indifferent_access
+              JSON.parse(super(path(params), headers: self.default_headers).body).with_indifferent_access
             else
               includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
               fetch_paged do |page_add|
-                response = super(path + hash_to_query(params) + includes + "&#{page_add}", self.default_headers).body
+                response = super(path + hash_to_query(params) + includes + "&#{page_add}", headers: self.default_headers).body
                 JSON.parse(response).map(&:with_indifferent_access)
               end
             end
@@ -40,7 +40,7 @@ module Katello
             url = "/candlepin/consumers/?owner=#{org.label}"
             url += "&activation_keys=" + activation_key_cp_ids.join(",") if activation_key_cp_ids.length > 0
 
-            response = self.post(url, parameters.to_json, self.default_headers).body
+            response = self.post(url, parameters.to_json, headers: self.default_headers).body
             JSON.parse(response).with_indifferent_access
           end
 
@@ -48,13 +48,13 @@ module Katello
             url = "/candlepin/hypervisors/#{owner}?reporter_id=#{reporter_id}"
             headers = self.default_headers
             headers['content-type'] = 'text/plain'
-            response = self.post(url, raw_json, headers)
+            response = self.post(url, raw_json, headers: headers)
             JSON.parse(response).with_indifferent_access
           end
 
           def hypervisors_heartbeat(owner:, reporter_id:)
             url = "/candlepin/hypervisors/#{owner}/heartbeat?reporter_id=#{reporter_id}"
-            response = self.put(url, {}.to_json, self.default_headers).body
+            response = self.put(url, {}.to_json, headers: self.default_headers).body
             JSON.parse(response).with_indifferent_access
           end
 
@@ -62,7 +62,7 @@ module Katello
             url = "/candlepin/hypervisors"
             url << "?owner=#{params[:owner]}&env=#{params[:env]}"
             attrs = params.except(:owner, :env)
-            response = self.post(url, attrs.to_json, self.default_headers).body
+            response = self.post(url, attrs.to_json, headers: self.default_headers).body
             JSON.parse(response).with_indifferent_access
           end
 
@@ -73,14 +73,14 @@ module Katello
               if params.key?(:environment) && params[:environment].key?(:id)
                 params[:environments] = [{"id": params[:environment][:id]}]
               end
-              self.put(path(uuid), params.to_json, self.default_headers).body
+              self.put(path(uuid), params.to_json, headers: self.default_headers).body
             end
             # consumer update doesn't return any data atm
             # JSON.parse(response).with_indifferent_access
           end
 
           def destroy(uuid)
-            self.delete(path(uuid), User.cp_oauth_header).status
+            self.delete(path(uuid), headers: User.cp_oauth_header).status
           end
 
           def serials(uuid)
@@ -90,23 +90,23 @@ module Katello
 
           def checkin(uuid, checkin_date)
             checkin_date ||= Time.now
-            self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body
+            self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, headers: self.default_headers).body
           end
 
           def regenerate_identity_certificates(uuid)
-            response = self.post(path(uuid), {}, self.default_headers).body
+            response = self.post(path(uuid), {}, headers: self.default_headers).body
             JSON.parse(response).with_indifferent_access
           end
 
           def virtual_guests(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
+            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), headers: self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
           rescue HttpResource::HttpError
             return []
           end
 
           def virtual_host(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'host'), self.default_headers).body
+            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'host'), headers: self.default_headers).body
             if response.present?
               JSON.parse(response).with_indifferent_access
             else
@@ -117,7 +117,7 @@ module Katello
           end
 
           def content_overrides(id)
-            result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), self.default_headers).body
+            result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), headers: self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
           end
 
@@ -137,7 +137,7 @@ module Katello
 
             if attrs_to_update.present?
               result = Candlepin::CandlepinResource.put(join_path(path(id), 'content_overrides'),
-                                                        attrs_to_update.to_json, self.default_headers)
+                                                        attrs_to_update.to_json, headers: self.default_headers)
             end
             if attrs_to_delete.present?
               override_path = join_path(path(id), 'content_overrides')
