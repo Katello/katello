@@ -45,7 +45,7 @@ module Katello
 
     def test_get
       @mock_conn.expects(:send).with(:get, '/path').yields(stub_request).returns(@mock_response)
-      TestHttpResource.get('/path', { 'headerOne' => 'headerOneValue' })
+      TestHttpResource.get('/path', headers: { 'headerOne' => 'headerOneValue' })
     end
 
     def test_get_no_headers
@@ -53,19 +53,24 @@ module Katello
       TestHttpResource.get('/path')
     end
 
+    def test_get_with_params
+      @mock_conn.expects(:send).with(:get, '/path?foo=bar').yields(stub_request).returns(@mock_response)
+      TestHttpResource.get('/path', params: { foo: 'bar' })
+    end
+
     def test_delete
       @mock_conn.expects(:send).with(:delete, '/path').yields(stub_request).returns(@mock_response)
-      TestHttpResource.delete('/path', { 'headerOne' => 'headerOneValue' })
+      TestHttpResource.delete('/path', headers: { 'headerOne' => 'headerOneValue' })
     end
 
     def test_put
       @mock_conn.expects(:send).with(:put, '/path').yields(stub_request).returns(@mock_response)
-      TestHttpResource.put('/path', { payloadKey: 'payloadValue' }, { 'headerOne' => 'headerOneValue' })
+      TestHttpResource.put('/path', { payloadKey: 'payloadValue' }, headers: { 'headerOne' => 'headerOneValue' })
     end
 
     def test_post
       @mock_conn.expects(:send).with(:post, '/path').yields(stub_request).returns(@mock_response)
-      TestHttpResource.post('/path', { payloadKey: 'payloadValue' }, { 'headerOne' => 'headerOneValue' })
+      TestHttpResource.post('/path', { payloadKey: 'payloadValue' }, headers: { 'headerOne' => 'headerOneValue' })
     end
 
     def test_process_response_success
