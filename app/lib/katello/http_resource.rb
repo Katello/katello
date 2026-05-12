@@ -93,8 +93,9 @@ module Katello
         rescue JSON::GeneratorError, Encoding::UndefinedConversionError
           logger.debug "Body: Error: could not render payload as json"
         end
+        sign_url = connection ? "#{conn.url_prefix}#{path}" : self.site + path
         response = conn.send(method, path) do |req|
-          sign_request(req, self.site + path, method)
+          sign_request(req, sign_url, method)
           req.headers.merge!(headers) if headers
           req.body = payload if payload
         end
