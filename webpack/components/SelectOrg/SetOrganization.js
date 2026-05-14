@@ -1,116 +1,106 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Form, Button } from 'patternfly-react';
-import { withRouter } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import Select from '../../components/Select/Select';
-import * as SelectOrgActions from './SelectOrgAction';
+import {
+  Form,
+  FormGroup,
+  FormSelect,
+  FormSelectOption,
+  Button,
+  Card,
+  CardBody,
+  Title,
+  Grid,
+  GridItem,
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrganiztionsList } from './SelectOrgAction';
 import reducer from './SelectOrgReducer';
 import { LoadingState } from '../../components/LoadingState';
 import './SelectOrg.scss';
 
-class SetOrganization extends Component {
-  constructor(props) {
-    super(props);
-    this.onSelectItem = this.onSelectItem.bind(this);
-    this.onSend = this.onSend.bind(this);
-    this.state = { disabled: true };
-  }
+const SetOrganization = () => {
+  const [selectedOrgId, setSelectedOrgId] = useState('');
+  const dispatch = useDispatch();
 
-  componentDidMount() {
-    this.props.getOrganiztionsList();
-  }
+  const list = useSelector(state => state.katello.setOrganization.list) || [];
+  const loading = useSelector(state => state.katello.setOrganization.loading);
 
-  onSelectItem(e) {
-    this.setState({
-      id: e.target.value,
-      disabled: false,
-    });
-  }
+  useEffect(() => {
+    dispatch(getOrganiztionsList());
+  }, [dispatch]);
 
-  onSend() {
-    this.setState({
-      disabled: true,
-    });
-  }
+  const isDisabled = !selectedOrgId;
 
-  render() {
-    const {
-      list,
-      loading,
-    } = this.props;
+  return (
+    <Grid hasGutter>
+      <GridItem span={6} offset={3}>
+        <Card id="select-org" ouiaId="select-org-card">
+          <CardBody>
+            <LoadingState loading={loading} loadingText={__('Loading')}>
+              <Form>
+                <Title headingLevel="h1" size="2xl" className="pf-v5-u-text-align-center" ouiaId="select-org-title">
+                  {__('Select an Organization')}
+                </Title>
+                <p className="pf-v5-u-text-align-center">
+                  {__('The page you are attempting to access requires selecting a specific organization.')}
+                </p>
+                <p className="pf-v5-u-text-align-center">
+                  {__('Please select one from the list below and you will be redirected.')}
+                </p>
 
-    const { id } = this.state;
-
-    return (
-      <div id="select-org" className="well col-sm-6 col-sm-offset-3">
-        <LoadingState loading={loading} loadingText={__('Loading')}>
-          <Form>
-            <h1 className="text-center">{__('Select an Organization')}</h1>
-            <p className="text-center">
-              {__('The page you are attempting to access requires selecting a specific organization.')}
-            </p>
-            <p className="text-center">
-              {__('Please select one from the list below and you will be redirected.')}
-            </p>
-
-            <div className="form-group">
-              <div className="col-sm-6 col-sm-offset-3">
-                <Select
-                  ouiaId="select-org-select"
-                  value={this.state.id}
-                  placeholder={__('Select an organization')}
-                  id="organization"
-                  name="organization"
-                  className="form-control without_select2"
-                  options={list}
-                  onChange={this.onSelectItem}
-                />
-
-              </div>
-
-              <div className="col-sm-3">
-                <a href={`/organizations/${id}/select`}>
-                  <Button
-                    disabled={this.state.disabled}
-                    className="btn btn-primary"
-                    onClick={this.onSend}
-                  >
-                    {__('Select')}
-                  </Button>
-                </a>
-              </div>
-            </div>
-          </Form>
-        </LoadingState>
-      </div>
-    );
-  }
-}
-
-
-SetOrganization.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.shape({})),
-  loading: PropTypes.bool.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }).isRequired,
-  getOrganiztionsList: PropTypes.func.isRequired,
+                <FormGroup fieldId="organization">
+                  <Flex alignItems={{ default: 'alignItemsFlexStart' }}>
+                    <FlexItem flex={{ default: 'flex_1' }}>
+                      <FormSelect
+                        ouiaId="select-org-select"
+                        value={selectedOrgId}
+                        id="organization"
+                        name="organization"
+                        onChange={(_event, value) => setSelectedOrgId(value)}
+                        aria-label={__('Select an organization')}
+                      >
+                        <FormSelectOption
+                          key="placeholder"
+                          value=""
+                          label={__('Select an organization')}
+                          isDisabled
+                        />
+                        {list.map(({ id, name }) => (
+                          <FormSelectOption
+                            key={id}
+                            value={id}
+                            label={name}
+                          />
+                        ))}
+                      </FormSelect>
+                    </FlexItem>
+                    <FlexItem>
+                      <Button
+                        variant="primary"
+                        isDisabled={isDisabled}
+                        ouiaId="select-org-button"
+                        onClick={() => {
+                          if (selectedOrgId) {
+                            window.location.href = `/organizations/${selectedOrgId}/select`;
+                          }
+                        }}
+                      >
+                        {__('Select')}
+                      </Button>
+                    </FlexItem>
+                  </Flex>
+                </FormGroup>
+              </Form>
+            </LoadingState>
+          </CardBody>
+        </Card>
+      </GridItem>
+    </Grid>
+  );
 };
 
-SetOrganization.defaultProps = {
-  list: [],
-};
-
-const mapStateToProps = state => ({
-  orgId: state.katello.setOrganization.currentId,
-  list: state.katello.setOrganization.list,
-  loading: state.katello.setOrganization.loading,
-});
 export const setOrganization = reducer;
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(SelectOrgActions, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SetOrganization));
+export default SetOrganization;
