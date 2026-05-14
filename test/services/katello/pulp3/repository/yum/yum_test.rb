@@ -41,6 +41,17 @@ module Katello
             assert_equal 'my key', options[:client_key]
           end
 
+          def test_append_proxy_cacert_with_nil_ca_cert
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            http_proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',
+                              :username => 'admin',
+                              :password => 'password',
+                              :cacert => "proxy cert")
+            ::Katello::RootRepository.any_instance.stubs(:http_proxy).returns(http_proxy)
+            options = service.append_proxy_cacert(ca_cert: nil)
+            assert_equal "proxy cert", options[:ca_cert]
+          end
+
           def test_append_proxy_cacert
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             http_proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',

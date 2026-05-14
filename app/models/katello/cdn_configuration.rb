@@ -43,6 +43,8 @@ module Katello
 
     def redhat_cdn_host?
       URI.parse(url).host&.end_with?('.redhat.com')
+    rescue URI::InvalidURIError
+      false
     end
 
     def export_sync?
