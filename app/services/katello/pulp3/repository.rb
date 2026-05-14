@@ -538,18 +538,18 @@ module Katello
             ca_cert: root.ssl_ca_cert&.content,
           }
         end
-        append_proxy_cacert(options) if options.key?(:cacert)
+        append_proxy_cacert(options) if options.key?(:ca_cert)
         options
       end
 
       def custom_cdn_ca_cert
         return root.cdn_configuration.ssl_ca if root.cdn_configuration.ssl_ca.present?
-        ::File.read(::Katello::Resources::CDN::CdnResource.ca_file) if URI.parse(root.url).host&.end_with?('.redhat.com')
+        ::File.read(::Katello::Resources::CDN::CdnResource.ca_file) if root.cdn_configuration.redhat_cdn_host?
       end
 
       def append_proxy_cacert(options)
-        if root.http_proxy&.cacert&.present? && options.key?(:cacert)
-          options[:cacert] += "\n#{root.http_proxy&.cacert}"
+        if root.http_proxy&.cacert&.present? && options.key?(:ca_cert)
+          options[:ca_cert] += "\n#{root.http_proxy.cacert}"
         end
         options
       end

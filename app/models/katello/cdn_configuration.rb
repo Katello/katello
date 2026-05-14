@@ -41,8 +41,8 @@ module Katello
       custom_cdn_auth_enabled
     end
 
-    def redhat_cdn_url?
-      Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
+    def redhat_cdn_host?
+      URI.parse(url).host&.end_with?('.redhat.com')
     end
 
     def export_sync?

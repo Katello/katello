@@ -34,8 +34,8 @@ module Katello
                               :cacert => "")
             ::Katello::RootRepository.any_instance.expects(:http_proxy).returns(http_proxy)
             cert = "MY cert"
-            options = service.append_proxy_cacert(cacert: cert)
-            assert_equal(options[:cacert], cert)
+            options = service.append_proxy_cacert(ca_cert: cert)
+            assert_equal(options[:ca_cert], cert)
           end
 
           def test_additional_content_hrefs_properly_includes_errata
