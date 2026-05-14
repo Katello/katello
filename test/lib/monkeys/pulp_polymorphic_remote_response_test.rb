@@ -177,6 +177,66 @@ class PulpPolymorphicRemoteResponseTest < ActiveSupport::TestCase
     assert_kind_of PulpOstreeClient::AsyncOperationResponse, result
   end
 
+  test "Deb RemotesAptApi partial_update returns AsyncOperationResponse" do
+    task_json = {
+      task: '/pulp/api/v3/tasks/aaa11111-1111-1111-1111-111111111111/',
+    }.to_json
+
+    stub_request(:patch, %r{.*remotes/deb/apt.*})
+      .to_return(status: 202, body: task_json, headers: {'Content-Type' => 'application/json'})
+
+    deb_config = PulpDebClient::Configuration.default
+    deb_config.host = 'localhost:24817'
+    api = PulpDebClient::RemotesAptApi.new(PulpDebClient::ApiClient.new(deb_config))
+    patched_remote = PulpDebClient::PatcheddebAptRemote.new(name: 'test-deb')
+
+    result = api.partial_update('/pulp/api/v3/remotes/deb/apt/test/', patched_remote)
+
+    assert_not_nil result
+    assert_equal '/pulp/api/v3/tasks/aaa11111-1111-1111-1111-111111111111/', result.task
+    assert_kind_of PulpDebClient::AsyncOperationResponse, result
+  end
+
+  test "File RemotesFileApi partial_update returns AsyncOperationResponse" do
+    task_json = {
+      task: '/pulp/api/v3/tasks/bbb22222-2222-2222-2222-222222222222/',
+    }.to_json
+
+    stub_request(:patch, %r{.*remotes/file/file.*})
+      .to_return(status: 202, body: task_json, headers: {'Content-Type' => 'application/json'})
+
+    file_config = PulpFileClient::Configuration.default
+    file_config.host = 'localhost:24817'
+    api = PulpFileClient::RemotesFileApi.new(PulpFileClient::ApiClient.new(file_config))
+    patched_remote = PulpFileClient::PatchedfileFileRemote.new(name: 'test-file')
+
+    result = api.partial_update('/pulp/api/v3/remotes/file/file/test/', patched_remote)
+
+    assert_not_nil result
+    assert_equal '/pulp/api/v3/tasks/bbb22222-2222-2222-2222-222222222222/', result.task
+    assert_kind_of PulpFileClient::AsyncOperationResponse, result
+  end
+
+  test "Python RemotesPythonApi partial_update returns AsyncOperationResponse" do
+    task_json = {
+      task: '/pulp/api/v3/tasks/ccc33333-3333-3333-3333-333333333333/',
+    }.to_json
+
+    stub_request(:patch, %r{.*remotes/python/python.*})
+      .to_return(status: 202, body: task_json, headers: {'Content-Type' => 'application/json'})
+
+    python_config = PulpPythonClient::Configuration.default
+    python_config.host = 'localhost:24817'
+    api = PulpPythonClient::RemotesPythonApi.new(PulpPythonClient::ApiClient.new(python_config))
+    patched_remote = PulpPythonClient::PatchedpythonPythonRemote.new(name: 'test-python')
+
+    result = api.partial_update('/pulp/api/v3/remotes/python/python/test/', patched_remote)
+
+    assert_not_nil result
+    assert_equal '/pulp/api/v3/tasks/ccc33333-3333-3333-3333-333333333333/', result.task
+    assert_kind_of PulpPythonClient::AsyncOperationResponse, result
+  end
+
   test "Patch preserves original method arguments" do
     # Test that patching doesn't break argument passing
     task_json = {
