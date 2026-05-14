@@ -43,7 +43,7 @@ module Katello
             @cert_store.set_default_paths
           end
 
-          if @cert_store && proxy&.cacert&.present?
+          if proxy&.cacert&.present?
             Foreman::Util.add_ca_bundle_to_store(proxy.cacert, @cert_store)
           end
 
