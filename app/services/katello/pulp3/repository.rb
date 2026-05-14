@@ -525,6 +525,10 @@ module Katello
           options = {
             ca_cert: custom_cdn_ca_cert,
           }
+          if root.cdn_configuration.redhat_cdn_host?
+            options[:client_cert] = root.product.certificate
+            options[:client_key] = root.product.key
+          end
         elsif root.redhat? && root.cdn_configuration.network_sync?
           options = {
             client_cert: root.cdn_configuration.ssl_cert,

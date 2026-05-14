@@ -65,7 +65,7 @@ module Katello
             elsif cdn_configuration.redhat_cdn_host?
               options[:ssl_ca_file] = self.ca_file
             end
-            if cdn_configuration.custom_cdn_auth_enabled?
+            if cdn_configuration.custom_cdn_auth_enabled? || cdn_configuration.redhat_cdn_host?
               options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
               options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
             end
