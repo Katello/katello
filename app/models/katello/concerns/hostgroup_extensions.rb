@@ -55,6 +55,12 @@ module Katello
         end
       end
 
+      def content_view_environment
+        return super if ancestry.nil? || self.content_view_environment_id.present?
+        cve_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
+        Katello::ContentViewEnvironment.find_by(:id => cve_id)
+      end
+
       def content_view
         return content_facet&.content_view if ancestry.nil? || self.content_view_id.present?
         Katello::ContentView.find_by(:id => inherited_content_view_id)

@@ -65,8 +65,8 @@ module Katello
         controller_name
       end
 
-      def resource_name
-        controller_name.singularize
+      def resource_name(resource = controller_name)
+        resource.singularize
       end
 
       def respond(options = {})

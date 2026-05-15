@@ -35,7 +35,7 @@
   <% cve_inherited = content_view_inherited?(@hostgroup) || lifecycle_environment_inherited?(@hostgroup) %>
 
   <%= field(f, cve_select_attr, {:label => _("Content View Environment"), :help_inline => cve_inherited ? 'Inherited from host group' : nil}) do %>
-    <%= select_tag cve_select_id, content_view_environment_options(@hostgroup, :include_blank => blank_or_inherit_cve(f)), :class => 'form-control', :name => cve_select_name %>
+    <%= select_tag cve_select_id, content_view_environment_options(@hostgroup, :include_blank => blank_or_inherit_cvenv(f)), :class => 'form-control', :name => cve_select_name %>
   <% end %>
 <% else %>
   <%# Hosts use separate Lifecycle Environment and Content View fields %>
