@@ -523,8 +523,12 @@ module Katello
           }
         elsif root.redhat? && root.cdn_configuration.custom_cdn?
           options = {
-            ca_cert: root.cdn_configuration.ssl_ca,
+            ca_cert: custom_cdn_ca_cert,
           }
+          if root.cdn_configuration.redhat_cdn_host?
+            options[:client_cert] = root.product.certificate
+            options[:client_key] = root.product.key
+          end
         elsif root.redhat? && root.cdn_configuration.network_sync?
           options = {
             client_cert: root.cdn_configuration.ssl_cert,
@@ -538,13 +542,18 @@ module Katello
             ca_cert: root.ssl_ca_cert&.content,
           }
         end
-        append_proxy_cacert(options) if options.key?(:cacert)
+        append_proxy_cacert(options) if options.key?(:ca_cert)
         options
       end
 
+      def custom_cdn_ca_cert
+        return root.cdn_configuration.ssl_ca if root.cdn_configuration.ssl_ca.present?
+        ::File.read(::Katello::Resources::CDN::CdnResource.ca_file) if root.cdn_configuration.redhat_cdn_host?
+      end
+
       def append_proxy_cacert(options)
-        if root.http_proxy&.cacert&.present? && options.key?(:cacert)
-          options[:cacert] += "\n#{root.http_proxy&.cacert}"
+        if root.http_proxy&.cacert&.present? && options.key?(:ca_cert)
+          options[:ca_cert] = [options[:ca_cert], root.http_proxy.cacert].compact.join("\n")
         end
         options
       end
