@@ -6,7 +6,7 @@
         "Project-Id-Version": "katello 4.21.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ondřej Gajdušek, 2026",
+        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
         "Language-Team": "Korean (https://app.transifex.com/foreman/teams/114/ko/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -86,9 +86,6 @@
       " or any step on the left.": [
         " 또는 왼쪽의 아무 단계나 선택"
       ],
-      " to manage and promote content views, or select a different environment.": [
-        " 콘텐츠 뷰를 관리하고 홍보하거나 다른 환경을 선택합니다."
-      ],
       " to manage and promote content views, or select a different lifecycle environment.": [
         "이미 관리 및 홍보용으로 할당되어 있으니 다른 라이프사이클 환경을 선택하세요."
       ],
@@ -100,12 +97,6 @@
       ],
       "${option}": [
         "${option}"
-      ],
-      "${pluralize(akResponse.length, 'activation key')} will be moved to content view ${selectedCVNameForAK} in ": [
-        "${pluralize(akResponse.length, 'activation key')}은 콘텐츠 뷰 ${selectedCVNameForAK}로 이동됩니다 "
-      ],
-      "${pluralize(hostResponse.length, 'host')} will be moved to content view ${selectedCVNameForHosts} in ": [
-        "${pluralize(hostResponse.length, 'host')}은 콘텐츠 뷰 ${selectedCVNameForHosts}로 이동됩니다 "
       ],
       "${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted": [
         "아래 환경에서 ${pluralize(versionCount, 'content view version')}은/는 콘텐츠 뷰가 삭제되면 제거됩니다."
@@ -491,6 +482,9 @@
       "About page": [
         "정보 페이지"
       ],
+      "Abstract async task": [
+        ""
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "Red Hat Subscription Management에 대한 액세스가 금지되어 있습니다. 이를 변경하려면 콘텐츠 설정 '서브스크립션 연결 활성화됨'을 업데이트하세요."
       ],
@@ -507,7 +501,7 @@
         "이 조직에서 수행할 수 없는 작업입니다."
       ],
       "Actions": [
-        ""
+        "동작 "
       ],
       "Activation Key information": [
         "활성화 키 정보"
@@ -644,6 +638,9 @@
       "Add repositories with package groups to content view to select them here.": [
         "패키지 그룹이 있는 리포지토리를 콘텐츠 뷰에 추가하여 여기에서 선택할 수 있습니다."
       ],
+      "Add rolling repo clone": [
+        ""
+      ],
       "Add rule": [
         "규칙 추가"
       ],
@@ -719,6 +716,9 @@
       "All errata up-to-date": [
         "모든 에라타는 최신 상태입니다."
       ],
+      "All hosts must belong to the same organization": [
+        ""
+      ],
       "All selected hosts were already members of host collection %{host_collection}.": [
         "선택된 모든 호스트가 이미 호스트 컬렉션 %{host_collection}의 구성원입니다."
       ],
@@ -776,8 +776,14 @@
       "Alternate content source edited": [
         "대체 콘텐츠 소스가 편집되었습니다."
       ],
+      "Alternate content sources": [
+        ""
+      ],
       "Alternate content sources define new locations to download content from at repository or smart proxy sync time.": [
         "대체 콘텐츠 소스는 리포지토리 또는 스마트 프록시 동기화 시간에 콘텐츠를 다운로드할 새로운 위치를 정의합니다."
+      ],
+      "Alternate content sources table": [
+        ""
       ],
       "Alternate content sources use the HTTP proxy of their assigned smart proxy for communication.": [
         "대체 콘텐츠 소스는 통신을 위해 할당된 스마트 프록시의 HTTP 프록시를 사용합니다."
@@ -893,6 +899,9 @@
       "Architecture(s)": [
         "아키텍처 "
       ],
+      "Architectures": [
+        ""
+      ],
       "Are you sure you want to delete %(entitlementCount)s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
         "%(entitlementCount)s 서브스크립션을 삭제하시겠습니까? 이 작업을 수행하면 서브스크립션이 제거되고 매니페스트가 새로 고쳐집니다. 이 서브스크립션을 사용하는 모든 시스템은 서브스크립션을 잃게 되며 업데이트 및 Errata에 대한 액세스도 잃을 수 있습니다."
       ],
@@ -917,6 +926,9 @@
       "Array of content view component IDs to remove. Identifier of the component association": [
         "제거할 콘텐츠 뷰 구성 요소 ID 배열. 구성 요소 연결 식별자"
       ],
+      "Array of content view environment IDs": [
+        ""
+      ],
       "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
         "호스트와 연결할 콘텐츠 뷰 환경 ID 배열입니다. allow_multiple_content_views 설정이 활성화되어 있어야 합니다."
       ],
@@ -928,6 +940,9 @@
       ],
       "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         "호스트와 연관될 콘텐츠 뷰 환경 ID 배열. content_view_id와 lifecycle_environment_id가 지정된 경우 무시됩니다. allow_multiple_content_views 설정이 켜져 있어야 합니다."
+      ],
+      "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
+        ""
       ],
       "Array of dependency repository IDs to mirror along with the main repository": [
         "메인 리포지토리와 함께 미러링할 종속 리포지토리 ID 배열"
@@ -989,9 +1004,6 @@
       "Associated version": [
         "연관된 버전"
       ],
-      "Associations": [
-        "연결 "
-      ],
       "At least one Content View Version must be specified": [
         "최소 하나의 컨텐츠 뷰 버전을 지정해야 합니다 "
       ],
@@ -1000,6 +1012,9 @@
       ],
       "At least one activation key must have a lifecycle environment and content view assigned to it": [
         "최소 하나의 활성키가 라이프 사이클 환경에 필요하며, 콘텐츠 뷰를 이에 할당해야 합니다 "
+      ],
+      "At least one distribution is required for custom Deb ACS.": [
+        ""
       ],
       "At least one errata type option needs to be selected.": [
         "하나 이상의 에라타 유형 옵션을 선택해야 합니다."
@@ -1394,6 +1409,9 @@
       "Cannot remove '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}.": [
         "연결된 %{dependent}로 인해 환경 '%{env}'에서 '%{view}'을(를) 삭제할 수 없습니다: %{names}"
       ],
+      "Cannot remove '%{view}' from lifecycle environment '%{env}' due to associated host groups: %{names}.": [
+        ""
+      ],
       "Cannot remove content from a non-custom repository": [
         "비-사용자 지정 리포지터리에서 컨텐츠를 삭제할 수 없습니다 "
       ],
@@ -1411,12 +1429,6 @@
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
         "yum/deb가 아닌 저장소에서는 메타데이터 확인을 건너뛸 수 없습니다."
-      ],
-      "Cannot specify components for non-composite views": [
-        "비-복합적 뷰의 구성 요소를 지정할 수 없습니다"
-      ],
-      "Cannot specify content for composite views": [
-        "복합적 뷰의 컨텐츠를 지정할 수 없습니다 "
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "온디멘드 다운로드 정책을 사용하여 file:// 리포지토리를 동기화할 수 없습니다."
@@ -1438,6 +1450,9 @@
       ],
       "Capacity": [
         "용량 "
+      ],
+      "Certificate": [
+        ""
       ],
       "Change Content Source": [
         "콘텐츠 소스 변경"
@@ -1495,6 +1510,9 @@
       ],
       "Choose content credentials if required for this RHUI source.": [
         "필요한 경우 이 RHUI 소스에 대한 콘텐츠 자격 증명을 선택하세요."
+      ],
+      "Choose file": [
+        ""
       ],
       "Clean Backend Objects": [
         "백엔드 객체 정리"
@@ -1556,6 +1574,9 @@
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
         "명령에 선택된 %(selectedWord)s에서 %(packageCount)s/%(selectedCount)s개가 포함되어 있습니다."
       ],
+      "Commit upload": [
+        ""
+      ],
       "Compare": [
         "비교"
       ],
@@ -1600,9 +1621,6 @@
       ],
       "Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.": [
         "라이프사이클 환경의 레지스트리 이름 패턴을 좀 더 구체적인 것으로 변경하는 것을 고려하세요."
-      ],
-      "Consumed": [
-        "사용됨 "
       ],
       "Container Image Manifest": [
         "컨테이너 이미지 매니페스트"
@@ -1658,6 +1676,9 @@
       "Content Count": [
         "콘텐츠 수"
       ],
+      "Content Credential Details": [
+        ""
+      ],
       "Content Credential ID": [
         "컨텐츠 인증 정보 ID"
       ],
@@ -1699,6 +1720,9 @@
       ],
       "Content View Details": [
         "콘텐츠 뷰 세부 정보"
+      ],
+      "Content View Environment": [
+        ""
       ],
       "Content View Environments": [
         "콘텐츠 뷰 환경"
@@ -1748,6 +1772,12 @@
       "Content credential": [
         "컨텐츠 인증 정보"
       ],
+      "Content credential file uploaded successfully.": [
+        ""
+      ],
+      "Content credential updated successfully.": [
+        ""
+      ],
       "Content credentials": [
         "컨텐츠 인증 정보"
       ],
@@ -1786,6 +1816,9 @@
       ],
       "Content source ID": [
         "콘텐츠 소스 ID"
+      ],
+      "Content source identifier to filter by available lifecycle environments": [
+        ""
       ],
       "Content source was not set for host '%{host}'": [
         "호스트 '%{host}'에 대한 콘텐츠 소스가 설정되지 않았습니다."
@@ -1832,11 +1865,17 @@
       "Content view and lifecycle environment must be provided together": [
         "콘텐츠 뷰와 라이프사이클 환경은 함께 제공되어야 합니다."
       ],
+      "Content view and lifecycle environment must both be set, or both be empty": [
+        ""
+      ],
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
         "마지막 게시 이후 감사된 변경 사항이 없으므로 콘텐츠 뷰는 게시가 필요하지 않습니다. 콘텐츠 뷰에 게시가 필요한지 확인하지 않으려면 check_needs_publish 매개변수를 false로 전달합니다."
       ],
       "Content view environment": [
         "콘텐츠 뷰 환경"
+      ],
+      "Content view environment ID": [
+        ""
       ],
       "Content view environments": [
         "콘텐츠 보기 환경"
@@ -1864,6 +1903,9 @@
       ],
       "Content view not provided in the metadata": [
         "메타데이터에 콘텐츠 뷰가 제공되지 않음"
+      ],
+      "Content view not synced to capsule": [
+        ""
       ],
       "Content view numeric identifier": [
         "숫자로된 컨텐츠 뷰 ID "
@@ -1922,8 +1964,14 @@
       "Copy": [
         "복사"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "활성키 복사 "
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "콘텐츠 뷰 복사"
@@ -1936,6 +1984,12 @@
       ],
       "Copy to clipboard": [
         "클립보드에 복사"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        ""
       ],
       "Cores per socket": [
         "소켓당 코어 수 "
@@ -2048,6 +2102,9 @@
       "Couldn't find host collection '%s'": [
         "호스트 컬렉션 '%s'을 찾을 수 없습니다 "
       ],
+      "Couldn't find host group content view environment id '%s'": [
+        ""
+      ],
       "Couldn't find host with host id '%s'": [
         "호스트 ID가 '%s'인 호스트를 찾을 수 없습니다."
       ],
@@ -2153,17 +2210,32 @@
       "Create content view": [
         "콘텐츠 뷰 만들기"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "필터 생성"
       ],
       "Create host collection": [
         "호스트 컬렉션 만들기"
       ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
+        ""
+      ],
       "Create new activation key": [
         "새로운 활성화 키 생성"
       ],
       "Create organization": [
         "조직 생성 "
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
       ],
       "Creation": [
         "만들기"
@@ -2246,8 +2318,17 @@
       "Deb packages": [
         "Deb 패키지"
       ],
+      "Debian architectures (e.g., amd64, arm64)": [
+        ""
+      ],
+      "Debian components (e.g., main, contrib)": [
+        ""
+      ],
       "Debian packages": [
         "Debian 패키지"
+      ],
+      "Debian releases/distributions (e.g., trixie, bookworm)": [
+        ""
       ],
       "Debug Certificate": [
         "디버그 인증서 "
@@ -2375,6 +2456,9 @@
       "Delete Activation Key": [
         "활성키 삭제 "
       ],
+      "Delete Content Credential": [
+        ""
+      ],
       "Delete Flatpak remote?": [
         "Flatpak 원격을 삭제하시겠습니까?"
       ],
@@ -2420,11 +2504,32 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         "이 리포지토리를 마지막으로 연관된 리포지토리로 하는 콘텐츠 뷰 필터를 삭제합니다. 기본값은 true입니다. false인 경우 이러한 필터는 이제 콘텐츠 뷰의 모든 리포지토리에 적용됩니다."
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Red Hat 공급자에서 매니페스트 삭제 "
       ],
       "Delete multiple filters from a content view": [
         "콘텐츠 뷰에서 여러 필터 삭제"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         "버전 삭제"
@@ -2528,6 +2633,12 @@
       "Destroy an environment in an organization": [
         "조직에서 환경 삭제 "
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         "하나 이상의 대체 콘텐츠 소스를 삭제합니다."
       ],
@@ -2567,11 +2678,17 @@
       "Disabled": [
         "사용 안함"
       ],
+      "Discover": [
+        ""
+      ],
       "Discover Repositories": [
         "리포지터리 검색 "
       ],
       "Distribute archived content view versions": [
         "보관된 콘텐츠 뷰 버전 배포"
+      ],
+      "Distributions": [
+        ""
       ],
       "Do not include this array of content views": [
         "컨텐츠 뷰의 어레이를 포함하지 않습니다 "
@@ -2626,6 +2743,9 @@
       ],
       "Edit RPM rule": [
         "RPM 규칙 편집"
+      ],
+      "Edit URL and Debian fields": [
+        ""
       ],
       "Edit URL and subpaths": [
         "URL 및 하위 경로 편집"
@@ -2747,6 +2867,9 @@
       "Enter in the base path and any subpaths that should be searched for alternate content.": [
         "대체 콘텐츠를 검색하기 위해 기본 경로와 하위 경로를 입력합니다."
       ],
+      "Enter in the base url and the Debian fields that should be searched for alternate content. The base path can be a web address or a filesystem location.": [
+        ""
+      ],
       "Entitlements": [
         "인타이틀먼트"
       ],
@@ -2764,6 +2887,9 @@
       ],
       "Environment cannot be in its own promotion path": [
         "환경은 자체 승격 경로에 존재할 수 없음 "
+      ],
+      "Environment contents refresh": [
+        ""
       ],
       "Environment identifier": [
         "환경 식별자"
@@ -2803,6 +2929,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "에라타의 에라타 ID (RHSA-2012:108)"
+      ],
+      "Errata mail": [
+        ""
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "UUID %s가 있는 삭제된 콘텐츠 패싯에 대한 에라타 상태가 업데이트되지 않음 "
@@ -2951,6 +3080,9 @@
       "Failed to delete %{host}: %{errors}": [
         "%{host} 삭제에 실패했습니다: %{errors}"
       ],
+      "Failed to delete content credential. Please try again.": [
+        ""
+      ],
       "Failed to delete latest content view version of Content View '%{subject}'.": [
         "콘텐츠 뷰 '%{subject}'의 최신 콘텐츠 뷰 버전을 삭제하지 못했습니다."
       ],
@@ -2963,7 +3095,19 @@
       "Failed to initiate trace resolution job.": [
         "추적 해결 작업을 시작하는 데 실패했습니다."
       ],
+      "Failed to remove content view environment: %{errors}": [
+        ""
+      ],
       "Failed to start repository synchronization": [
+        ""
+      ],
+      "Failed to update content credential.": [
+        ""
+      ],
+      "Failed to upload content credential file.": [
+        ""
+      ],
+      "Failed to upload file.": [
         ""
       ],
       "Fails if any of the repositories belonging to this organization are unexportable. False by default.": [
@@ -2980,6 +3124,9 @@
       ],
       "Fetch installable errata for one or more hosts.": [
         "하나 이상의 호스트에 대한 설치 가능한 오류를 가져옵니다."
+      ],
+      "Fetch pxe files": [
+        ""
       ],
       "Fetch traces for one or more hosts": [
         "하나 이상의 호스트에 대한 추적을 가져옵니다."
@@ -3001,6 +3148,9 @@
       ],
       "Files": [
         "파일"
+      ],
+      "Filter alternate content sources": [
+        ""
       ],
       "Filter by Product": [
         "제품별 필터링"
@@ -3032,6 +3182,9 @@
       "Filter out default content views": [
         "기본값 컨텐츠 뷰 필터링 "
       ],
+      "Filter products": [
+        ""
+      ],
       "Filter products by host id": [
         "호스트 ID별로 제품 필터링"
       ],
@@ -3046,6 +3199,9 @@
       ],
       "Filter products by sync plan id": [
         "동기화 계획 ID를 기준으로 제품 필터링"
+      ],
+      "Filter repositories": [
+        ""
       ],
       "Filter repositories by content unit type (erratum, docker_tag, etc.). Check the \\\"Indexed?\\\" types here: /katello/api/repositories/repository_types": [
         "콘텐츠 단위 유형(erratum, docker_tag 등)으로 리포지토리를 필터링합니다. \\\"Indexed?\\\" 유형을 여기에서 확인하세요: /katello/api/repositories/repository_types"
@@ -3073,6 +3229,12 @@
       ],
       "Filter versions that are components in the specified composite version": [
         "지정된 복합 버전에 있는 구성 요소인 버전을 필터링 "
+      ],
+      "Filter...": [
+        ""
+      ],
+      "Filtered index content": [
+        ""
       ],
       "Filters": [
         "필터 "
@@ -3167,11 +3329,20 @@
       "Forces a republish of the version's repositories' metadata": [
         "버전 저장소의 메타데이터를 강제로 다시 게시합니다."
       ],
+      "Format: [epoch:]version[-release]": [
+        ""
+      ],
+      "Format: [epoch:]version[-release]. If epoch is omitted, defaults to epoch 0.": [
+        ""
+      ],
       "Full description": [
         "전체 설명"
       ],
       "Full support": [
         "전체 지원"
+      ],
+      "GPG Key": [
+        ""
       ],
       "GPG Key URL": [
         "GPG 키 URL"
@@ -3190,6 +3361,9 @@
       ],
       "Generate host applicability": [
         "호스트 적용성 생성"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "리포지토리 적용성 생성"
@@ -3275,6 +3449,9 @@
       "Hide Reclaim Space Warning": [
         "공간 회수 경고 숨기기"
       ],
+      "Hide activation keys": [
+        ""
+      ],
       "Hide affected activation keys": [
         "영향을 받은 활성화 키 숨기기"
       ],
@@ -3283,6 +3460,12 @@
       ],
       "Hide description": [
         "설명 숨기기"
+      ],
+      "Hide host groups": [
+        ""
+      ],
+      "Hide hosts": [
+        ""
       ],
       "History": [
         "기록 "
@@ -3347,8 +3530,8 @@
       "Host collections updated": [
         "호스트 컬렉션이 업데이트됨"
       ],
-      "Host content source will remain the same. Click Save below to update the host's content view environment.": [
-        "호스트 콘텐츠 소스는 동일하게 유지됩니다. 아래의 저장을 클릭하여 호스트의 콘텐츠 뷰 환경을 업데이트합니다."
+      "Host content source will remain the same. Click Save below to update the host's content view environments.": [
+        ""
       ],
       "Host content view environment(s) assigned": [
         "호스트에 콘텐츠 뷰 환경이 할당됨"
@@ -3367,6 +3550,9 @@
       ],
       "Host group IDs": [
         "호스트 그룹 ID"
+      ],
+      "Host groups": [
+        ""
       ],
       "Host has not been registered with subscription-manager": [
         "호스트가 subscription-manager에 등록되지 않았습니다."
@@ -3427,6 +3613,12 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "정렬된 결고를 정렬하는 방법 (예: 오름차순의 ASC) "
+      ],
+      "Hypervisors": [
+        ""
+      ],
+      "Hypervisors update": [
+        ""
       ],
       "ID": [
         "ID"
@@ -3502,6 +3694,9 @@
       ],
       "Id of a file to find repositories that contain the file": [
         "파일이 포함된 리포지터리를 찾기 위한 파일의 ID"
+      ],
+      "Id of a module stream to find repositories that contain the module stream": [
+        ""
       ],
       "Id of a rpm package to find repositories that contain the rpm": [
         "rpm을 포함하는리포지터리를 찾기 위한 rpm 패키지 ID"
@@ -3743,6 +3938,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "호스트가 Red Hat 콘텐츠에 액세스할 수 있도록 서브스크립션 매니페스트를 가져옵니다."
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         "새로운 매니페스트 가져오기"
       ],
@@ -3751,6 +3949,12 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "가져오기 전용 콘텐츠 뷰는 직접 게시할 수 없습니다. 콘텐츠는 뷰로 가져오기를 통해서만 업데이트할 수 있습니다."
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "리포지터리에 업로드 가져오기 "
@@ -3824,6 +4028,9 @@
       "Incremental Update incomplete.": [
         "증분 업데이트가 완료되지 않았습니다. "
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        ""
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 콘텐츠 뷰 버전의 증분 업데이트"
       ],
@@ -3836,11 +4043,35 @@
       "Incremental update specified for composite %{name} version %{version}, but no components updated.": [
         "복합 %{name} v버전 %{version}에 대해 증분 업데이트가 지정되었지만 구성 요소가 업데이트되지 않았습니다."
       ],
+      "Incremental update will not add any new content. The specified content is already present.": [
+        ""
+      ],
+      "Index content": [
+        ""
+      ],
+      "Index errata": [
+        ""
+      ],
+      "Index module streams": [
+        ""
+      ],
+      "Index package groups": [
+        ""
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "정보 유형은 다음 중 하나이어야 합니다 [ %{list} ]"
       ],
       "Inherit from Repository": [
         "리포지토리에서 상속"
+      ],
+      "Inherit parent": [
+        ""
+      ],
+      "Inherit parent (%s)": [
+        ""
+      ],
+      "Initialize": [
+        ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "동기화 계획에 연결된 제품 동기화 시작"
@@ -3919,6 +4150,9 @@
       ],
       "Installing Package...": [
         "패키지 설치 중..."
+      ],
+      "Instance update": [
+        ""
       ],
       "Instance-based": [
         "인스턴스 기반 "
@@ -4196,6 +4430,12 @@
       "Last sync": [
         "마지막 동기화"
       ],
+      "Last sync failed": [
+        ""
+      ],
+      "Last sync finished with warnings": [
+        ""
+      ],
       "Last task": [
         "마지막 작업"
       ],
@@ -4249,6 +4489,9 @@
       ],
       "Lifecycle environment": [
         "라이프사이클 환경"
+      ],
+      "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
+        ""
       ],
       "Lifecycle environment '%{environment}' is not attached to this capsule.": [
         "라이프 사이클 환경 '%{environment}'이 capsule에 할당되어 있지 않습니다. "
@@ -4703,6 +4946,9 @@
       "Messaging connection": [
         "메시징 연결"
       ],
+      "Metadata generate": [
+        ""
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "'완전 미러링' 리포지터리에서 메타데이터 재게시는 위험합니다. 미러링 정책을 변경하고 다시 시도하세요. 또는 '강제' 매개변수를 사용하여 로컬에서 메타데이터를 재생성하세요. 다음 동기화에서 업스트림 리포지터리의 메타데이터는 '완전 미러링' 리포지터리의 로컬 메타데이터를 덮어씁니다."
       ],
@@ -4760,9 +5006,6 @@
       "Module Stream": [
         "모듈 스트림"
       ],
-      "Module Stream Details": [
-        "모듈 스트림 세부 정보"
-      ],
       "Module Streams": [
         "모듈 스트림"
       ],
@@ -4777,6 +5020,15 @@
       ],
       "Multi Content View Environment": [
         "다중 콘텐츠 뷰 환경"
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
+        ""
       ],
       "Multi-entitlement": [
         "멀티 인타이틀먼트 "
@@ -4884,7 +5136,7 @@
         "동기화하지 않음 "
       ],
       "Never synced": [
-        ""
+        "동기화하지 않음 "
       ],
       "New Errata": [
         "새 에라타 "
@@ -4934,14 +5186,17 @@
       "No URL found for a container registry. Please check the configuration.": [
         "컨테이너 레지스트리에 대한 URL을 찾을 수 없습니다. 구성을 확인하세요."
       ],
-      "No Version of Content View %{component} already exists as a component of the composite Content View %{composite} version %{version}": [
-        "컨텐츠 뷰 %{component}의 버전이 복합 컨텐츠 뷰 %{composite} 버전 %{version}의 구성 요소로 존재하지 않습니다 "
-      ],
       "No action is needed because there are no applicable errata for this host.": [
         "이 호스트에 적용되는 에라타가 없으므로 별도의 조치가 필요하지 않습니다."
       ],
       "No action required": [
         "작업이 필요하지 않습니다"
+      ],
+      "No alternate content sources match your filter criteria.": [
+        ""
+      ],
+      "No alternate content sources using this credential": [
+        ""
       ],
       "No applicable errata": [
         "해당 에라타 없음"
@@ -4996,9 +5251,6 @@
       ],
       "No content views available": [
         "사용 가능한 콘텐츠 뷰가 없음"
-      ],
-      "No content views available for the selected environment": [
-        "선택한 환경에 사용할 수 있는 콘텐츠 뷰가 없습니다."
       ],
       "No content views available for the selected lifecycle environment": [
         "선택한 라이프사이클 환경에 사용할 수 있는 콘텐츠 뷰가 없습니다"
@@ -5063,6 +5315,9 @@
       "No host collections yet": [
         "아직 호스트 컬렉션이 없습니다."
       ],
+      "No host groups found.": [
+        ""
+      ],
       "No hosts found": [
         "호스트를 찾을 수 없습니다"
       ],
@@ -5108,6 +5363,9 @@
       "No matching activation keys found.": [
         "일치하는 활성화 키를 찾을 수 없습니다."
       ],
+      "No matching alternate content sources": [
+        ""
+      ],
       "No matching alternate content sources found": [
         "일치하는 대체 콘텐츠 소스를 찾을 수 없습니다."
       ],
@@ -5137,6 +5395,12 @@
       ],
       "No matching packages found": [
         "일치하는 패키지를 찾을 수 없습니다."
+      ],
+      "No matching products": [
+        ""
+      ],
+      "No matching repositories": [
+        ""
       ],
       "No matching repositories found": [
         "일치하는 리포지토리가 없습니다."
@@ -5192,6 +5456,12 @@
       "No products are enabled.": [
         "활성화된 제품이 없습니다."
       ],
+      "No products match your filter criteria.": [
+        ""
+      ],
+      "No products using this credential": [
+        ""
+      ],
       "No profiles to show": [
         "표시할 프로필이 없음"
       ],
@@ -5222,11 +5492,14 @@
       "No repositories enabled.": [
         "활성화된 리포지토리가 없음"
       ],
+      "No repositories match your filter criteria.": [
+        ""
+      ],
       "No repositories selected.": [
         "선택된 저장소가 없습니다."
       ],
-      "No repositories to show": [
-        "표시할 리포지토리가 없음"
+      "No repositories using this credential": [
+        ""
       ],
       "No repository sets match your search criteria.": [
         "검색 기준과 일치하는 리포지토리 세트가 없습니다."
@@ -5260,6 +5533,9 @@
       ],
       "No uploads param specified. An array of uploads to import is required.": [
         "업로드 매개변수가 지정되지 않았습니다. 가져올 업로드 배열이 필요합니다."
+      ],
+      "No valid organization found for the selected hosts": [
+        ""
       ],
       "No versions yet": [
         "아직 버전이 없습니다"
@@ -5876,6 +6152,9 @@
       "Products": [
         "제품 "
       ],
+      "Products table": [
+        ""
+      ],
       "Products updated.": [
         "제품이 업데이트되었습니다."
       ],
@@ -6017,6 +6296,9 @@
       "Pulp task error": [
         "Pulp 작업 오류 "
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         "Python 패키지"
       ],
@@ -6104,6 +6386,12 @@
       "Reassign affected host": [
         "영향을 받은 호스트를 다시 할당합니다."
       ],
+      "Reassign affected host group": [
+        ""
+      ],
+      "Reassign affected host groups": [
+        ""
+      ],
       "Reassign affected hosts": [
         "영향을 받은 호스트를 다시 할당합니다."
       ],
@@ -6118,6 +6406,9 @@
       ],
       "Reclaim Space": [
         "공간 회수"
+      ],
+      "Reclaim space": [
+        ""
       ],
       "Reclaim space from On Demand repositories": [
         "온디맨드 리포지토리에서 공간 회수"
@@ -6188,6 +6479,9 @@
       "Refresh all alternate content sources": [
         "모든 대체 콘텐츠 소스 새로 고침"
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         "대체 콘텐츠 소스 새로 고침"
       ],
@@ -6200,14 +6494,26 @@
       "Refresh counts": [
         "새로 고침 횟수"
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
         "에라타 적용 가능성 새로 고침"
+      ],
+      "Refresh if needed": [
+        ""
       ],
       "Refresh package applicability": [
         "패키지 적용 가능성 새로 고침"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Red Hat 공급자에 대해 이전에 가져온 매니페스트를 새로 고침 "
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         "소스 새로 고침"
@@ -6251,6 +6557,9 @@
       "Registry token expiration time": [
         "레지스트리 토큰 만료 시간"
       ],
+      "Reindex subscriptions": [
+        ""
+      ],
       "Related composite content views": [
         "관련 복합 콘텐츠 뷰"
       ],
@@ -6277,6 +6586,9 @@
       ],
       "Release version of the content host": [
         "컨텐츠 호스트의 릴리즈 버전 "
+      ],
+      "Releases/Distributions": [
+        ""
       ],
       "Releasever to disable": [
         "비활성화할 Releasever "
@@ -6350,6 +6662,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "업스트림 매니페스트에서 하나 이상의 서브스크립션 제거"
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Katello 인터페이스를 통해 패키지 그룹 삭제"
       ],
@@ -6364,6 +6679,15 @@
       ],
       "Remove products from sync plan": [
         "동기화 계획에서 제품 삭제 "
+      ],
+      "Remove rolling repo clone": [
+        ""
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "컨텐츠 뷰에서 버전 및 환경 삭제 후 시스템 및 키 다시 지정 "
@@ -6392,6 +6716,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "모든 환경에서 이 버전을 제거해도 버전은 삭제되지 않습니다. 버전은 나중에 승격에 사용할 수 있습니다."
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         "대상 컴퓨터에서 콘텐츠 소스를 교체"
       ],
@@ -6410,11 +6737,20 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "CDN 구성이 Air-gapped(연결 끊김)로 설정되어 있는 동안에는 리포지터리를 사용할 수 없습니다."
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "선택한 콘텐츠 뷰 버전에 공통된 리포지토리는 병합되어 각 콘텐츠 뷰 버전의 모든 콘텐츠를 합친 복합 콘텐츠 뷰가 생성됩니다."
       ],
       "Repositories from published Content Views are not allowed.": [
         "공개된 컨텐츠 뷰에서 리포지터리는 허용되지 않습니다. "
+      ],
+      "Repositories gpg reset": [
+        ""
+      ],
+      "Repositories table": [
+        ""
       ],
       "Repository": [
         "리포지터리 "
@@ -6562,9 +6898,6 @@
       ],
       "Resolve traces via Katello interface": [
         "Katello 인터페이스를 통해 추적 문제 해결"
-      ],
-      "Resource": [
-        "리소스"
       ],
       "Restart Services via Katello interface": [
         "Katello 인터페이스를 통한 서비스 재시작"
@@ -6761,11 +7094,20 @@
       "SRPM details": [
         "SRPM 세부 정보"
       ],
+      "SSL CA Certificate": [
+        ""
+      ],
       "SSL CA Content Credential": [
         "SSL CA 콘텐츠 자격 증명"
       ],
       "SSL CA certificate": [
         "SSL CA 인증서"
+      ],
+      "SSL Client Certificate": [
+        ""
+      ],
+      "SSL Client Key": [
+        ""
       ],
       "SSL client certificate": [
         "SSL 클라이언트 인증서"
@@ -6782,6 +7124,21 @@
       "Save Environments": [
         "환경 저장"
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "대체 콘텐츠 소스를 저장 중입니다..."
       ],
@@ -6790,6 +7147,12 @@
       ],
       "Scan a flatpak remote": [
         "flatpak 원격 스캔"
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
+        ""
       ],
       "Schema version 1": [
         "스키마 버전 1"
@@ -6881,11 +7244,20 @@
       "Select a content view": [
         "콘텐츠 뷰 선택"
       ],
+      "Select a content view environment": [
+        ""
+      ],
       "Select a lifecycle environment": [
         "라이프사이클 환경 선택"
       ],
+      "Select a lifecycle environment and a content view to move these host groups.": [
+        ""
+      ],
       "Select a lifecycle environment and a content view to move these hosts.": [
         "이러한 호스트를 이동하려면 라이프사이클 환경과 콘텐츠 뷰를 선택하세요."
+      ],
+      "Select a lifecycle environment and a content view to move this host group.": [
+        ""
       ],
       "Select a lifecycle environment and a content view to move this host.": [
         "이 호스트를 이동하려면 라이프사이클 환경과 콘텐츠 뷰를 선택하세요."
@@ -7133,6 +7505,9 @@
       "Show a sync plan": [
         "동기화 계획 표시 "
       ],
+      "Show activation keys": [
+        ""
+      ],
       "Show affected activation keys": [
         "영향을 받은 활성화 키 표시"
       ],
@@ -7165,6 +7540,12 @@
       ],
       "Show full description": [
         "전체 설명 보기"
+      ],
+      "Show host groups": [
+        ""
+      ],
+      "Show hosts": [
+        ""
       ],
       "Show hosts associated to an activation key": [
         "활성화 키에 연결된 호스트 표시"
@@ -7259,14 +7640,14 @@
       "Some environments are disabled because they are not associated with all of the affected hosts' content sources.": [
         "일부 환경은 영향을 받는 모든 호스트의 콘텐츠 소스와 연결되어 있지 않기 때문에 비활성화됩니다."
       ],
-      "Some environments are disabled because they are not associated with the selected content source.": [
-        "일부 환경은 선택한 콘텐츠 소스와 연관되지 않아 비활성화되어 있습니다."
-      ],
-      "Some hosts are not registered as content hosts and will be ignored.": [
-        "일부 호스트는 콘텐츠 호스트로 등록되지 않아 무시됩니다."
+      "Some hosts are not registered and will be ignored.": [
+        ""
       ],
       "Some lifecycle environments are disabled because they are not associated with the host's content source.": [
         "일부 라이프사이클 환경은 호스트의 콘텐츠 소스와 연결되어 있지 않기 때문에 비활성화되어 있습니다."
+      ],
+      "Some lifecycle environments are disabled because they are not associated with the selected content source.": [
+        ""
       ],
       "Some of your inputs contain errors. Please update them and save your changes again.": [
         "일부 입력 내용에 오류가 있습니다. 이를 업데이트하고 변경 사항을 다시 저장하세요."
@@ -7592,6 +7973,9 @@
       "Successfully removed %s Host(s).": [
         "%s개의 호스트를 삭제했습니다."
       ],
+      "Successfully synced": [
+        ""
+      ],
       "Successfully synced capsule.": [
         "캡슐을 성공적으로 동기화했습니다."
       ],
@@ -7609,6 +7993,9 @@
       ],
       "Supported Content Types": [
         "지원되는 콘텐츠 유형"
+      ],
+      "Sync": [
+        ""
       ],
       "Sync Canceled": [
         "동기화 취소 "
@@ -7667,11 +8054,17 @@
       "Sync canceled": [
         ""
       ],
+      "Sync capsule": [
+        ""
+      ],
       "Sync complete.": [
         "동기화가 완료되었습니다. "
       ],
       "Sync errata": [
         "에라타 동기화"
+      ],
+      "Sync in progress": [
+        ""
       ],
       "Sync incomplete": [
         ""
@@ -7687,6 +8080,9 @@
       ],
       "Sync state": [
         "동기화 상태"
+      ],
+      "Syncable export": [
+        ""
       ],
       "Synced": [
         "동기화됨"
@@ -7865,14 +8261,8 @@
       "The id of the content source": [
         "콘텐츠 소스의 ID"
       ],
-      "The id of the content view": [
-        "콘텐츠 뷰의 ID"
-      ],
       "The id of the host to alter": [
         "변경할 호스트의 ID"
-      ],
-      "The id of the lifecycle environment": [
-        "라이프사이클 환경의 ID"
       ],
       "The ids of the hosts to alter. Hosts not managed by Katello are ignored": [
         "변경할 호스트의 ID입니다. Katello에서 관리하지 않는 호스트는 무시됩니다."
@@ -8000,6 +8390,9 @@
       "There are {numberOfActivationKeys} activation keys that need to be reassigned.": [
         "재할당이 필요한 활성화 키 {numberOfActivationKeys}이/가 있습니다."
       ],
+      "There are {numberOfHostgroups} host groups that need to be reassigned.": [
+        ""
+      ],
       "There are {numberOfHosts} hosts that need to be reassigned.": [
         "재할당이 필요한 {numberOfHosts} 호스트가 있습니다."
       ],
@@ -8020,6 +8413,9 @@
       ],
       "There is {numberOfActivationKeys} activation key that needs to be reassigned.": [
         "재할당이 필요한 활성화 키 {numberOfActivationKeys}이/가 있습니다."
+      ],
+      "There is {numberOfHostgroups} host group that needs to be reassigned.": [
+        ""
       ],
       "There is {numberOfHosts} host that needs to be reassigned.": [
         "재할당이 필요한 {numberOfHosts} 호스트가 있습니다."
@@ -8062,6 +8458,15 @@
       ],
       "This certificate allows a user to view the repositories in any environment from a browser.": [
         "이 인증서를 통해 사용자는 브라우저에서 모든 환경에 있는 리포지터리를 볼 수 있습니다."
+      ],
+      "This content credential is not currently being used by any alternate content sources.": [
+        ""
+      ],
+      "This content credential is not currently being used by any products.": [
+        ""
+      ],
+      "This content credential is not currently being used by any repositories.": [
+        ""
       ],
       "This content view does not have any versions associated.": [
         "이 콘텐츠 뷰에는 연관된 버전이 없습니다."
@@ -8180,9 +8585,6 @@
       "To enable the synced content option, this host must use a content source, content view, and lifecycle environment which contain synced kickstart repositories for the selected architecture and operating system.": [
         "동기화된 콘텐츠 옵션을 사용하려면 이 호스트가 선택한 아키텍처 및 운영 체제에 대한 동기화된 킥스타트 저장소가 포함된 콘텐츠 소스, 콘텐츠 뷰 및 라이프사이클 환경을 사용해야 합니다."
       ],
-      "To enable them, add the environment to the content source, or select a different content source.": [
-        "이를 활성화하려면 콘텐츠 소스에 환경을 추가하거나 다른 콘텐츠 소스를 선택하세요."
-      ],
       "To enable them, add the lifecycle environment to the host's content source, or ": [
         "이를 활성화하려면 호스트의 콘텐츠 소스에 라이프사이클 환경을 추가하거나 "
       ],
@@ -8300,6 +8702,9 @@
       "URL": [
         "URL"
       ],
+      "URL and Debian fields": [
+        ""
+      ],
       "URL and paths": [
         "URL 및 경로"
       ],
@@ -8383,6 +8788,12 @@
       ],
       "Unable to reassign content hosts. Please provide system_content_view_id and system_environment_id.": [
         "컨텐츠 호스트를 재할당할 수 없습니다. system_content_view_id 및 system_environment_id를 지정하십시오. "
+      ],
+      "Unable to reassign host groups. Please check hostgroup_content_view_environment_id.": [
+        ""
+      ],
+      "Unable to reassign host groups. Please provide hostgroup_content_view_environment_id.": [
+        ""
       ],
       "Unable to reassign systems. Please check system_content_view_id and system_environment_id.": [
         "시스템을 재할당할 수 없습니다. system_content_view_id 및 system_environment_id를 확인하십시오. "
@@ -8534,14 +8945,26 @@
       "Update content counts for the smart proxy": [
         "스마트 프록시에 대한 콘텐츠 수 업데이트"
       ],
+      "Update content urls": [
+        ""
+      ],
       "Update content view environments for host": [
         "호스트에 대한 콘텐츠 뷰 환경 업데이트"
       ],
       "Update content view environments for host %s": [
         "호스트%s에 대한 콘텐츠 뷰 환경 업데이트"
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         "호스트를 수동으로 업데이트"
+      ],
+      "Update http proxy": [
+        ""
+      ],
+      "Update http proxy details": [
+        ""
       ],
       "Update installed packages, enabled repos, module inventory": [
         "설치된 패키지, 활성화된 리포지토리, 모듈 인벤토리 업데이트"
@@ -8558,11 +8981,20 @@
       "Update packages via Katello interface": [
         "Katello 인터페이스를 통해 패키지 업데이트"
       ],
+      "Update redhat repository": [
+        ""
+      ],
       "Update release version for host": [
         "호스트에 대한 릴리스 버전 업데이트"
       ],
       "Update release version for host %s": [
         "호스트%s에 대한 릴리스 버전 업데이트"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "재시작이 필요한 서비스 업데이트"
@@ -8657,14 +9089,26 @@
       "Upload a subscription manifest": [
         "서브스크립션 매니페스트 업로드 "
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "업로드 "
+      ],
+      "Upload new file": [
+        ""
       ],
       "Upload package / repos profile": [
         "패키지/리포지토리 프로필 업로드"
       ],
       "Upload request id": [
         "요청 ID 업로드 "
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "Candlepin 업스트림"
@@ -8708,9 +9152,6 @@
       "Upstream username and upstream password cannot be blank for ULN repositories": [
         "ULN 저장소의 경우 업스트림 사용자 이름과 업스트림 암호는 비워둘 수 없습니다."
       ],
-      "Upstream username requires upstream password be set.": [
-        "업스트림 사용자 이름은 업스트림 비밀번호를 설정해야 합니다."
-      ],
       "Usage": [
         "사용법"
       ],
@@ -8731,6 +9172,9 @@
       ],
       "Use container certificates for container registry authentication. If it is set to true, container registry certificates will be installed on the host": [
         "컨테이너 레지스트리 인증에 컨테이너 인증서를 사용합니다. 이 값을 true로 설정하면 컨테이너 레지스트리 인증서가 호스트에 설치됩니다."
+      ],
+      "Used as": [
+        ""
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "pulp3에서 리포지토리의 다운로드 동시성을 결정하는 데 사용됩니다. 20보다 작은 값을 사용합니다. 기본값은 10입니다."
@@ -8785,6 +9229,9 @@
       ],
       "Verify SSL": [
         "SSL 확인 "
+      ],
+      "Verify checksum": [
+        ""
       ],
       "Verify checksum for content on smart proxy": [
         "스마트 프록시의 콘텐츠에 대한 체크섬 확인"
@@ -8962,6 +9409,9 @@
       ],
       "Whether to include available content attribute in results": [
         "사용 가능한 컨텐츠 속성을 결과에 포함할지 여부"
+      ],
+      "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
+        ""
       ],
       "Workers": [
         "작업자"
@@ -9272,8 +9722,14 @@
       "content type ('deb', 'file', 'ostree_ref', 'rpm', 'srpm')": [
         "콘텐츠 유형('deb', 'file', 'ostree_ref', 'rpm', 'srpm')"
       ],
+      "content type value": [
+        ""
+      ],
       "content view component ID. Identifier of the component association": [
         "콘텐츠 뷰 구성 요소 ID. 구성 요소 연결의 식별자"
+      ],
+      "content view environment to reassign orphaned host groups to": [
+        ""
       ],
       "content view filter identifier": [
         "컨텐츠 뷰 필터 ID "
@@ -9358,6 +9814,9 @@
       ],
       "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
         "deb, docker, file 및 yum 리포지토리('immediate' 또는 'on_demand')에 대한 다운로드 정책"
+      ],
+      "edit the content source": [
+        ""
       ],
       "enables or disables synchronization": [
         "동기화 활성화 또는 비활성화 "
@@ -9463,6 +9922,12 @@
       ],
       "host collection name to filter by": [
         "필터링할 호스트 컬렉션 이름 "
+      ],
+      "host group": [
+        ""
+      ],
+      "host groups": [
+        ""
       ],
       "hosts": [
         "호스트"
@@ -9893,6 +10358,9 @@
       "view content view tabs.": [
         "콘텐츠 뷰 탭에처 참조."
       ],
+      "view tasks button": [
+        ""
+      ],
       "waiting for %s to finish the task": [
         "%s 작업 완료 대기 중"
       ],
@@ -9928,6 +10396,12 @@
       ],
       "{numberOfActivationKeys} activation keys will be assigned to content view {cvName} in": [
         "{numberOfActivationKeys} 활성화 키는 콘텐츠 뷰 {cvName}에 할당됩니다."
+      ],
+      "{numberOfHostgroups} host group will be assigned to content view {cvName} in": [
+        ""
+      ],
+      "{numberOfHostgroups} host groups will be assigned to content view {cvName} in": [
+        ""
       ],
       "{numberOfHosts} host will be assigned to content view {cvName} in": [
         "{numberOfHosts} 호스트는 콘텐츠 뷰 {cvName}에 할당됩니다."
