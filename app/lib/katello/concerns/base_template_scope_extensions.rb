@@ -118,6 +118,14 @@ module Katello
         host_subscription_facet(host)&.registered_at
       end
 
+      apipie :method, 'Returns activation key names associated with the host' do
+        required :host, 'Host::Managed', desc: 'Host object to get activation key names for'
+        returns array_of: String, desc: 'Activation key names used to register the host'
+      end
+      def activation_key_names(host)
+        host_subscription_facet(host)&.activation_key_names || []
+      end
+
       apipie :method, 'Returns IDs of the applicable errata on the host' do
         required :host, 'Host::Managed', desc: 'Host object to get the applicable errata for'
         returns array_of: Integer, desc: 'Array with applicable errata IDs of the host'
