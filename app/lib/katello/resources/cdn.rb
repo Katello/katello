@@ -34,15 +34,16 @@ module Katello
                                     :ssl_ca_cert,
                                     :custom_cdn)
 
+          @cert_store = OpenSSL::X509::Store.new
           if options[:ssl_ca_cert].present?
-            @cert_store = OpenSSL::X509::Store.new
             Foreman::Util.add_ca_bundle_to_store(options[:ssl_ca_cert], @cert_store)
           elsif options[:ssl_ca_file]
-            @cert_store = OpenSSL::X509::Store.new
             @cert_store.add_file(options[:ssl_ca_file])
+          else
+            @cert_store.set_default_paths
           end
 
-          if @cert_store && proxy&.cacert&.present?
+          if proxy&.cacert&.present?
             Foreman::Util.add_ca_bundle_to_store(proxy.cacert, @cert_store)
           end
 
@@ -59,8 +60,12 @@ module Katello
             options[:ssl_ca_file] = self.ca_file
             self.new(cdn_configuration.url, options)
           elsif cdn_configuration.custom_cdn?
-            options[:ssl_ca_cert] = cdn_configuration.ssl_ca
-            if cdn_configuration.custom_cdn_auth_enabled?
+            if cdn_configuration.ssl_ca.present?
+              options[:ssl_ca_cert] = cdn_configuration.ssl_ca
+            elsif cdn_configuration.redhat_cdn_host?
+              options[:ssl_ca_file] = self.ca_file
+            end
+            if cdn_configuration.custom_cdn_auth_enabled? || cdn_configuration.redhat_cdn_host?
               options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
               options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
             end
