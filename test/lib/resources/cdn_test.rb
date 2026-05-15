@@ -11,6 +11,39 @@ class CdnResourceTest < ActiveSupport::TestCase
     Katello::Resources::CDN::CdnResource.new('http://foo.com', ssl_ca_file: "lol")
   end
 
+  def test_custom_cdn_no_ssl_ca_redhat_url
+    organization = taxonomies(:empty_organization)
+    product = ::Katello::Product.find_by(cp_id: 'redhat_empty')
+    organization.cdn_configuration.update(
+      type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE,
+      url: 'https://cdn-eu.redhat.com',
+      ssl_ca_credential_id: nil
+    )
+    product.expects(:certificate).once.returns('')
+    product.expects(:key).once.returns('')
+    OpenSSL::X509::Certificate.expects(:new).once.returns('mock cert')
+    OpenSSL::PKey::RSA.expects(:new).once.returns('mock key')
+    cdn_resource = Katello::Resources::CDN::CdnResource.create(product: product, cdn_configuration: organization.cdn_configuration)
+    cdn_resource_options = cdn_resource.instance_variable_get(:@options)
+    assert_equal Katello::Resources::CDN::CdnResource.ca_file, cdn_resource_options[:ssl_ca_file]
+    assert_nil cdn_resource_options[:ssl_ca_cert]
+    assert_equal 'mock cert', cdn_resource_options[:ssl_client_cert]
+    assert_equal 'mock key', cdn_resource_options[:ssl_client_key]
+  end
+
+  def test_custom_cdn_no_ssl_ca_non_redhat_url
+    organization = taxonomies(:empty_organization)
+    organization.cdn_configuration.update(
+      type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE,
+      url: 'https://cdn.example.com',
+      ssl_ca_credential_id: nil
+    )
+    cdn_resource = Katello::Resources::CDN::CdnResource.create(product: nil, cdn_configuration: organization.cdn_configuration)
+    cdn_resource_options = cdn_resource.instance_variable_get(:@options)
+    assert_nil cdn_resource_options[:ssl_ca_file]
+    assert_nil cdn_resource_options[:ssl_ca_cert]
+  end
+
   def test_custom_cdn_auth
     organization = taxonomies(:empty_organization)
     credential = FactoryBot.create(:katello_content_credential, organization: organization)
