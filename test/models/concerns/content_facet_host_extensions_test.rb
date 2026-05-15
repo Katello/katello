@@ -36,27 +36,21 @@ module Katello
     def test_action_triggered_on_facet_cve_update
       host.reload
       host.expects(:update_candlepin_associations).twice
-      host.content_facet.assign_single_environment(
-        :content_view => view,
-        :lifecycle_environment => dev
-      )
+      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view.id, dev.id)
+      host.content_facet.content_view_environments = [cve]
       host.save!
 
       host.reload
       host.expects(:update_candlepin_associations).twice
-      host.content_facet.assign_single_environment(
-        :content_view => view2,
-        :lifecycle_environment => dev
-      )
+      cve2 = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view2.id, dev.id)
+      host.content_facet.content_view_environments = [cve2]
       host.save!
     end
 
     def test_content_facet_cve_update
       host.expects(:update_candlepin_associations).twice
-      host.content_facet.assign_single_environment(
-        :content_view => view2,
-        :lifecycle_environment => dev
-      )
+      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view2.id, dev.id)
+      host.content_facet.content_view_environments = [cve]
       host.save!
       host.reload.content_facet.reload
 

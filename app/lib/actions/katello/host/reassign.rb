@@ -3,10 +3,8 @@ module Actions
     module Host
       class Reassign < Actions::Base
         def plan(host, content_view_id, environment_id)
-          host.content_facet.assign_single_environment(
-            content_view: ::Katello::ContentView.find(content_view_id),
-            lifecycle_environment: ::Katello::KTEnvironment.find(environment_id)
-          )
+          cve = ::Katello::ContentViewEnvironment.find_by_cv_and_lce!(content_view_id, environment_id)
+          host.content_facet.content_view_environments = [cve]
           host.update_candlepin_associations
         end
       end

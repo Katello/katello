@@ -143,38 +143,11 @@ module Katello
     def test_update_with_invalid_cv_env_combo
       host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
       assert_raises(Katello::Errors::ContentViewEnvironmentError) do
-        host.content_facet.assign_single_environment(
-          content_view: @library_view,
-          lifecycle_environment: @organization1_library # env is not in the same org as @library_view
+        Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+          @library_view.id,
+          @organization1_library.id
         )
       end
-    end
-
-    def test_update_with_blank_lifecycle_environment
-      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
-      refute host.update(content_facet_attributes: {content_view_id: @view.id, lifecycle_environment_id: nil})
-      refute_valid host
-      assert_equal host.errors[:base].first, "Content view and lifecycle environment must be provided together"
-    end
-
-    def test_check_cve_attributes_removes_cv_and_lce
-      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
-      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
-      host_attrs = host.attributes.deep_clone
-      host_attrs[:content_facet_attributes] = {content_view_id: @view.id, lifecycle_environment_id: @library.id}
-      # check_cve_attributes should remove the content_view_id and lifecycle_environment_id
-      # so the following should not error
-      host.attributes = host_attrs
-    end
-
-    def test_check_cve_attributes
-      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
-      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
-      host_attrs = host.attributes.deep_clone
-      host_attrs[:content_facet_attributes] = {content_view_id: @view.id, lifecycle_environment_id: @library.id}
-      host.check_cve_attributes(host_attrs)
-      refute host_attrs.key?(:content_view_id)
-      refute host_attrs.key?(:lifecycle_environment_id)
     end
 
     def test_remote_execution_proxies_registered_through
@@ -207,29 +180,6 @@ module Katello
   end
 
   class HostManagedExtensionsUpdateTest < HostManagedExtensionsTestBase
-    def test_multi_environment_host_ignores_single_params
-      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
-      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
-
-      # Add a second content view environment to make this a multi-environment host
-      library_dev_view = katello_content_views(:library_dev_view)
-      dev_env = katello_environments(:dev)
-      second_cve = ContentViewEnvironment.find_by(content_view: library_dev_view, environment: dev_env)
-      original_cves = host.content_facet.content_view_environments.to_a
-      host.content_facet.content_view_environments = original_cves + [second_cve]
-      host.save!
-      assert host.content_facet.multi_content_view_environment?
-
-      # Try to update with single params
-      host_attrs = host.attributes.deep_clone
-      host_attrs[:content_facet_attributes] = {content_view_id: @view.id, lifecycle_environment_id: @dev.id}
-      Rails.logger.expects(:warn).with("content_view_id and lifecycle_environment_id cannot be used to reassign multi-environment host '#{host.name}'. Use content_view_environment_ids instead")
-      host.check_cve_attributes(host_attrs)
-
-      # Multi-environment host should ignore single params and keep original environments
-      assert_equal original_cves + [second_cve], host.content_facet.content_view_environments
-    end
-
     def test_update
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_facet.expects(:save!)
@@ -295,10 +245,8 @@ module Katello
       subscription_facet.reload
       refute subscription_facet.backend_update_needed?
 
-      subscription_facet.host.content_facet.assign_single_environment(
-        content_view: @view,
-        lifecycle_environment: @library
-      )
+      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@view.id, @library.id)
+      subscription_facet.host.content_facet.content_view_environments = [cve]
       assert subscription_facet.backend_update_needed?
     end
 

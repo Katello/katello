@@ -81,6 +81,20 @@ module Katello
       end
     end
 
+    def self.find_by_cv_and_lce!(content_view_id, lifecycle_environment_id)
+      cve = find_by(content_view_id: content_view_id, environment_id: lifecycle_environment_id)
+      return cve if cve
+
+      env_label = Katello::KTEnvironment.find_by(id: lifecycle_environment_id)&.label
+      fail Katello::Errors::ContentViewEnvironmentError,
+        _("Unable to find a lifecycle environment with ID %s") % lifecycle_environment_id if env_label.nil?
+      cv_label = Katello::ContentView.find_by(id: content_view_id)&.label
+      fail Katello::Errors::ContentViewEnvironmentError,
+        _("Unable to find a content view with ID %s") % content_view_id if cv_label.nil?
+      fail Katello::Errors::ContentViewEnvironmentError,
+        _("Cannot assign content view environment %s/%s: The content view has either not been published or has not been promoted to that lifecycle environment.") % [env_label, cv_label]
+    end
+
     def self.fetch_content_view_environments(organization:, labels: [], ids: [])
       # Must ensure CVEs remain in the same order.
       # Using ActiveRecord .where will return them in a different order.

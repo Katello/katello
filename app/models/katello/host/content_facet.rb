@@ -86,14 +86,10 @@ module Katello
 
       def initialize(*args)
         init_args = args.first || {}
-        env_id = init_args.delete(:lifecycle_environment_id)
-        cv_id = init_args.delete(:content_view_id)
+        cve_ids = init_args.delete(:content_view_environment_ids)
         super(*args)
-        if env_id && cv_id
-          assign_single_environment(
-            lifecycle_environment_id: env_id,
-            content_view_id: cv_id
-          )
+        if cve_ids.present?
+          self.content_view_environments = ContentViewEnvironment.where(id: cve_ids)
         end
         self.cves_changed = false
       end
@@ -162,36 +158,6 @@ module Katello
         content_view_environments.map(&:label).join(',')
       end
 
-      # rubocop:disable Metrics/CyclomaticComplexity
-      # rubocop:disable Metrics/PerceivedComplexity
-      def assign_single_environment(
-        content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
-        content_view: nil, lifecycle_environment: nil, environment: nil
-      )
-        lifecycle_environment_id ||= environment_id || lifecycle_environment&.id || environment&.id || self.single_lifecycle_environment&.id
-        content_view_id ||= content_view&.id || self.single_content_view&.id
-
-        unless lifecycle_environment_id
-          fail _("Lifecycle environment must be specified")
-        end
-
-        unless content_view_id
-          fail _("Content view must be specified")
-        end
-
-        content_view_environment = ::Katello::ContentViewEnvironment
-          .find_by(:content_view_id => content_view_id, :environment_id => lifecycle_environment_id)
-        if content_view_environment.nil?
-          env_label = ::Katello::KTEnvironment.find_by(:id => lifecycle_environment_id)&.label
-          fail ::Katello::Errors::ContentViewEnvironmentError, _("Unable to find a lifecycle environment with ID %s") % lifecycle_environment_id if env_label.nil?
-          cv_label = ::Katello::ContentView.find_by(:id => content_view_id)&.label
-          fail ::Katello::Errors::ContentViewEnvironmentError, _("Unable to find a content view with ID %s") % content_view_id if cv_label.nil?
-          hypothetical_cve_label = "%s/%s" % [env_label, cv_label]
-          fail ::Katello::Errors::ContentViewEnvironmentError, _("Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.") % hypothetical_cve_label
-        end
-
-        self.content_view_environments = [content_view_environment]
-      end
 
       def default_environment?
         return if content_view_environments.blank?
@@ -456,9 +422,12 @@ module Katello
 
       def self.inherited_attributes(hostgroup, facet_attributes)
         facet_attributes[:kickstart_repository_id] ||= hostgroup.inherited_kickstart_repository_id
-        facet_attributes[:content_view_id] ||= hostgroup.inherited_content_view_id
-        facet_attributes[:lifecycle_environment_id] ||= hostgroup.inherited_lifecycle_environment_id
         facet_attributes[:content_source_id] ||= hostgroup.inherited_content_source_id
+        unless facet_attributes.key?(:content_view_environment_ids)
+          cve_id = hostgroup.content_facet&.content_view_environment_id
+          cve_id ||= hostgroup.send(:inherited_ancestry_attribute, :content_view_environment_id, :content_facet) if cve_id.nil? && hostgroup.ancestry.present?
+          facet_attributes[:content_view_environment_ids] = [cve_id] if cve_id
+        end
         facet_attributes
       end
 

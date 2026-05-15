@@ -56,15 +56,17 @@ module Katello
 
         if (host.is_a? ::Hostgroup)
           new_host.content_facet = hostgroup_content_facet(host, param_host)
-        elsif host.content_facet.present?
+        elsif host.content_facet.present? && host.content_facet.content_view_environments.any?
           new_host.content_facet = ::Katello::Host::ContentFacet.new(:content_source_id => host.content_source_id)
           if host.single_content_view_environment?
-            # assign new_host the same CVEnv as host
-            new_host.content_facet.assign_single_environment(
-              :lifecycle_environment => host.content_facet.single_lifecycle_environment,
-              :content_view => host.content_facet.single_content_view
+            cve = ::Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+              host.content_facet.single_content_view.id,
+              host.content_facet.single_lifecycle_environment.id
             )
+            new_host.content_facet.content_view_environments = [cve]
           end
+        else
+          return os_updated_kickstart_options(new_host)
         end
         new_host.operatingsystem.kickstart_repos(new_host).map { |repo| OpenStruct.new(repo) }
       else
@@ -74,11 +76,7 @@ module Katello
     end
 
     def os_updated_kickstart_options(host = nil)
-      # this method gets called in 1 place Once you chose a diff os/content source/arch/lifecycle env/cv
-      # via the os_selected method.
-      # In this case we want it play by the rules of "one of these params" and
-      # need to figure out the available KS repos for the given params.
-      os_selection_params = ["operatingsystem_id", 'content_view_id', 'lifecycle_environment_id',
+      os_selection_params = ["operatingsystem_id", 'content_view_environment_id',
                              'content_source_id', 'architecture_id']
       view_options = []
 
@@ -90,15 +88,13 @@ module Katello
         end
         host.operatingsystem = fetch_inherited_param(host_params[:operatingsystem_id], ::Operatingsystem, parent&.os)
         host.architecture = fetch_inherited_param(host_params[:architecture_id], ::Architecture, parent&.architecture)
-        lifecycle_env = fetch_inherited_param(host_params[:lifecycle_environment_id], ::Katello::KTEnvironment, parent&.lifecycle_environment)
-        content_view = fetch_inherited_param(host_params[:content_view_id], ::Katello::ContentView, parent&.content_view)
         content_source = fetch_inherited_param(host_params[:content_source_id], ::SmartProxy, parent&.content_source)
 
+        cve_id = host_params[:content_view_environment_id]
+        cve = cve_id.present? ? ::Katello::ContentViewEnvironment.find_by(id: cve_id) : parent&.content_view_environment
+
         host.content_facet = Host::ContentFacet.new(:content_source => content_source)
-        host.content_facet.assign_single_environment(
-          :lifecycle_environment_id => lifecycle_env.id,
-          :content_view_id => content_view.id
-        )
+        host.content_facet.content_view_environments = [cve] if cve
         if host.operatingsystem.is_a?(Redhat)
           view_options = host.operatingsystem.kickstart_repos(host).map { |repo| OpenStruct.new(repo) }
         end

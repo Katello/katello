@@ -483,10 +483,8 @@ module Katello
     end
 
     def test_save_bound_repos_by_paths
-      content_facet.assign_single_environment(
-        content_view: repo.content_view,
-        lifecycle_environment: repo.environment
-      )
+      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(repo.content_view.id, repo.environment.id)
+      content_facet.content_view_environments = [cve]
       assert_empty content_facet.bound_repositories
 
       content_facet.update_repositories_by_paths([
@@ -499,10 +497,8 @@ module Katello
     end
 
     def test_save_bound_repos_by_paths_same_path
-      content_facet.assign_single_environment(
-        content_view: repo.content_view,
-        lifecycle_environment: repo.environment
-      )
+      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(repo.content_view.id, repo.environment.id)
+      content_facet.content_view_environments = [cve]
       content_facet.bound_repositories = [repo]
       ForemanTasks.expects(:async_task).never
 

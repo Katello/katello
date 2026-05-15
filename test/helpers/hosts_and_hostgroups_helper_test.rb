@@ -14,10 +14,11 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
     @library = katello_environments(:library)
     @host =  FactoryBot.build(:host, :with_content, :with_subscription, :id => 343)
     content_facet = Katello::Host::ContentFacet.new
-    content_facet.assign_single_environment(
-      :content_view => katello_content_views(:library_dev_view),
-      :lifecycle_environment => katello_environments(:library)
+    cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+      katello_content_views(:library_dev_view).id,
+      katello_environments(:library).id
     )
+    content_facet.content_view_environments = [cve]
     @host.content_facet = content_facet
     @host.organization = taxonomies(:organization1)
     @group = FactoryBot.build(:hostgroup)
@@ -192,10 +193,8 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   test "kickstart_repository_options should provide options for a populated host with a selected_host_group and differing consumed content" do
     host = ::Host.new
     host.content_facet = ::Katello::Host::ContentFacet.new(:content_source_id => 999)
-    host.content_facet.assign_single_environment(
-      lifecycle_environment_id: @env.id,
-      content_view_id: @cv2.id
-    )
+    cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv2.id, @env.id)
+    host.content_facet.content_view_environments = [cve]
     host.content_facet.content_view_environments.first.stubs(:generate_info)
     hostgroup = ::Hostgroup.new(
       :content_facet_attributes => {

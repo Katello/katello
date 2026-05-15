@@ -26,6 +26,7 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
       content_source_name
       content_view_id
       content_view_name
+      content_view_environment_id
       lifecycle_environment_id
       lifecycle_environment_name
     ].sort
@@ -58,30 +59,29 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
     assert_equal content_source_id, assigns[:hostgroup].content_source_id
   end
 
-  def test_create_with_content_view_and_lifecycle_environment
+  def test_create_with_content_view_environment_id_sets_cv_and_lce
     org = FactoryBot.create(:katello_organization)
     library = FactoryBot.create(:katello_environment, :library, organization: org)
     view = FactoryBot.create(:katello_content_view, organization: org)
     view_version = FactoryBot.create(:katello_content_view_version, content_view: view)
-    FactoryBot.create(:katello_content_view_environment,
-                      content_view_version: view_version,
-                      environment: library)
+    cve = FactoryBot.create(:katello_content_view_environment,
+                            content_view_version: view_version,
+                            environment: library)
 
     post :create, params: {
       :hostgroup => {
-        :name => 'Test HG with CV',
-        :lifecycle_environment_id => library.id,
-        :content_view_id => view.id,
+        :name => 'Test HG with CVEnv',
+        :content_view_environment_id => cve.id,
       },
     }
 
     assert_response :success
-    assert_equal 'Test HG with CV', assigns[:hostgroup].name
+    assert_equal 'Test HG with CVEnv', assigns[:hostgroup].name
     assert_equal library.id, assigns[:hostgroup].lifecycle_environment_id
     assert_equal view.id, assigns[:hostgroup].content_view_id
   end
 
-  def test_update_content_view_and_lifecycle_environment
+  def test_update_content_view_environment_id
     org = FactoryBot.create(:katello_organization)
     library = FactoryBot.create(:katello_environment, :library, organization: org)
     dev = FactoryBot.create(:katello_environment, name: 'Dev', organization: org, prior: library)
@@ -92,23 +92,21 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
     view1_version = FactoryBot.create(:katello_content_view_version, content_view: view1)
     view2_version = FactoryBot.create(:katello_content_view_version, content_view: view2)
 
-    FactoryBot.create(:katello_content_view_environment,
-                      content_view_version: view1_version,
-                      environment: library)
-    FactoryBot.create(:katello_content_view_environment,
-                      content_view_version: view2_version,
-                      environment: dev)
+    cve1 = FactoryBot.create(:katello_content_view_environment,
+                             content_view_version: view1_version,
+                             environment: library)
+    cve2 = FactoryBot.create(:katello_content_view_environment,
+                             content_view_version: view2_version,
+                             environment: dev)
 
     hostgroup = ::Hostgroup.create!(name: 'TestHG')
-    hostgroup.lifecycle_environment_id = library.id
-    hostgroup.content_view_id = view1.id
+    hostgroup.content_view_environment_id = cve1.id
     hostgroup.save!
 
     put :update, params: {
       :id => hostgroup.id,
       :hostgroup => {
-        :lifecycle_environment_id => dev.id,
-        :content_view_id => view2.id,
+        :content_view_environment_id => cve2.id,
       },
     }
 
@@ -123,13 +121,12 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
     library = FactoryBot.create(:katello_environment, :library, organization: org)
     view = FactoryBot.create(:katello_content_view, organization: org)
     view_version = FactoryBot.create(:katello_content_view_version, content_view: view)
-    FactoryBot.create(:katello_content_view_environment,
-                      content_view_version: view_version,
-                      environment: library)
+    cve = FactoryBot.create(:katello_content_view_environment,
+                            content_view_version: view_version,
+                            environment: library)
 
     hostgroup = ::Hostgroup.create!(name: 'TestShowHG')
-    hostgroup.lifecycle_environment_id = library.id
-    hostgroup.content_view_id = view.id
+    hostgroup.content_view_environment_id = cve.id
     hostgroup.save!
 
     get :show, params: { :id => hostgroup.id }
@@ -140,6 +137,7 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
     assert_equal library.name, response['lifecycle_environment_name']
     assert_equal view.id, response['content_view_id']
     assert_equal view.name, response['content_view_name']
+    assert_equal cve.id, response['content_view_environment_id']
   end
 
   def test_create_with_content_view_environment_id
@@ -201,35 +199,4 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
     assert_equal view2.id, hostgroup.content_view_id
   end
 
-  def test_create_with_only_content_view_fails_validation
-    org = FactoryBot.create(:katello_organization)
-    view = FactoryBot.create(:katello_content_view, organization: org)
-
-    post :create, params: {
-      :hostgroup => {
-        :name => 'Invalid HG',
-        :content_view_id => view.id,
-        # Missing lifecycle_environment_id
-      },
-    }
-
-    # Should fail validation - need both CV and LCE together
-    assert_response 422
-  end
-
-  def test_create_with_only_lifecycle_environment_fails_validation
-    org = FactoryBot.create(:katello_organization)
-    library = FactoryBot.create(:katello_environment, :library, organization: org)
-
-    post :create, params: {
-      :hostgroup => {
-        :name => 'Invalid HG',
-        :lifecycle_environment_id => library.id,
-        # Missing content_view_id
-      },
-    }
-
-    # Should fail validation - need both CV and LCE together
-    assert_response 422
-  end
 end

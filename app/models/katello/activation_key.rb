@@ -110,14 +110,6 @@ module Katello
       content_view_environments&.first&.content_view
     end
 
-    def content_view
-      single_content_view
-    end
-
-    def environment
-      single_lifecycle_environment
-    end
-
     def single_lifecycle_environment
       if multi_content_view_environment?
         Rails.logger.warn _("Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.") % name
@@ -125,38 +117,6 @@ module Katello
       content_view_environments&.first&.lifecycle_environment
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
-    def assign_single_environment(
-      content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
-      content_view: nil, lifecycle_environment: nil, environment: nil
-    )
-      lifecycle_environment_id ||= environment_id || lifecycle_environment&.id || environment&.id || self.single_lifecycle_environment&.id
-      content_view_id ||= content_view&.id || self.single_content_view&.id
-
-      unless lifecycle_environment_id
-        fail _("Lifecycle environment must be specified")
-      end
-
-      unless content_view_id
-        fail _("Content view must be specified")
-      end
-
-      content_view_environment = ::Katello::ContentViewEnvironment
-        .where(:content_view_id => content_view_id, :environment_id => lifecycle_environment_id)
-        .first_or_create do |cve|
-        Rails.logger.info("ContentViewEnvironment not found for content view '#{cve.content_view_name}' and environment '#{cve.environment&.name}'; creating a new one.")
-      end
-      fail _("Unable to create ContentViewEnvironment. Check the logs for more information.") if content_view_environment.nil?
-
-      if self.content_view_environments.include?(content_view_environment)
-        Rails.logger.info("Activation key '#{name}' already has the content view environment '#{content_view_environment.content_view_name}' and environment '#{content_view_environment.environment&.name}'.")
-      else
-        self.content_view_environments = [content_view_environment]
-      end
-    end
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
 
     def usage_count
       subscription_facet_activation_keys.count

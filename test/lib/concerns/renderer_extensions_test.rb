@@ -10,10 +10,11 @@ module Katello
       @host.content_facet.content_source.lifecycle_environments << katello_environments(:library)
       @host.operatingsystem = operatingsystems(:redhat)
       @host.content_facet.kickstart_repository = @repo
-      @host.content_facet.assign_single_environment(
-        content_view: @repo.content_view,
-        lifecycle_environment: katello_environments(:library)
+      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+        @repo.content_view.id,
+        katello_environments(:library).id
       )
+      @host.content_facet.content_view_environments = [cve]
       @hostgroup = ::Hostgroup.new
       @hostgroup.content_source = smart_proxies(:one)
       @hostgroup.operatingsystem = operatingsystems(:redhat)

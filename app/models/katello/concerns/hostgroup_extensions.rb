@@ -29,8 +29,7 @@ module Katello
 
         delegate :content_source_name, to: :content_facet, allow_nil: true
         delegate :content_source_id, :kickstart_repository_id, :content_view_id, :lifecycle_environment_id, :content_view_environment_id, to: :content_facet, allow_nil: true
-        delegate :'content_source_id=', :'kickstart_repository_id=', :'content_view_id=', :'lifecycle_environment_id=', :'content_view_environment_id=', to: :safe_content_facet, allow_nil: true
-        delegate :'content_view=', :'lifecycle_environment=', :'content_view_environment=', to: :safe_content_facet, allow_nil: true
+        delegate :'content_source_id=', :'kickstart_repository_id=', :'content_view_environment_id=', to: :safe_content_facet, allow_nil: true
 
         apipie :class do
           property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host group'
