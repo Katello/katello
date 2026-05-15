@@ -88,7 +88,7 @@ module Katello
       User.current = users(:restricted)
       key = katello_activation_keys(:simple_key)
       setup_current_user_with_permissions({ :name => "view_activation_keys",
-                                            :search => "environment = #{key.environment}" },
+                                            :search => "environment = #{key.single_lifecycle_environment}" },
                                           organizations: [key.organization])
 
       @options = { :resource_class => Katello::ActivationKey }

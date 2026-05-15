@@ -95,8 +95,8 @@ module Katello
       hostgroup = ::Hostgroup.find(hostgroups(:common).id)
       hostgroup.operatingsystem = os
       hostgroup.architecture = architectures(:x86_64)
-      hostgroup.lifecycle_environment = @repo_with_distro.environment
-      hostgroup.content_view = @repo_with_distro.content_view
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@repo_with_distro.content_view.id, @repo_with_distro.environment.id)
+      hostgroup.content_view_environment_id = cvenv.id
       hostgroup.save!
       assert_equal @repo_with_distro.distribution_arch, other_repo.distribution_arch
       assert_equal @repo_with_distro.distribution_version, other_repo.distribution_version
@@ -123,9 +123,9 @@ module Katello
       assert_includes repo_list, @repo_with_distro
 
       diff_os = ::Redhat.create_operating_system("RedHat", version[0], "#{version[1]}0")
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@repo_with_distro.content_view.id, @repo_with_distro.environment.id)
       host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => diff_os,
-                        :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
-                                                      :content_view_id => @repo_with_distro.content_view.id})
+                        :content_facet_attributes => {:content_view_environment_ids => [cvenv.id]})
       repo_list = diff_os.distribution_repositories(host)
       refute_includes repo_list, @repo_with_distro
     end
@@ -140,15 +140,15 @@ module Katello
       @os.architectures << architectures(:x86_64)
       @content_source = FactoryBot.create(:smart_proxy, :name => "foobar", :url => "http://capsule.com/")
 
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@repo_with_distro.content_view.id, @repo_with_distro.environment.id)
       @host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => @os,
-                        :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
-                                                      :content_view_id => @repo_with_distro.content_view.id,
+                        :content_facet_attributes => {:content_view_environment_ids => [cvenv.id],
                                                       :content_source => @content_source})
 
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@repo_with_distro.content_view.id, @repo_with_distro.environment.id)
       @hostgroup = ::Hostgroup.new(:name => "testhg",
         :content_facet_attributes => {
-          :lifecycle_environment_id => @repo_with_distro.environment.id,
-          :content_view_id => @repo_with_distro.content_view.id,
+          :content_view_environment => cvenv,
         }
       )
       @hostgroup.architecture = architectures(:x86_64)

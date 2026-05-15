@@ -54,16 +54,16 @@ KT.hosts.refreshContentViewEnvironments = function() {
   $.get(url, params, function(data) {
     var foundPreviousValue = false;
 
-    if (previousInheritText && (previousInheritText.includes('Inherit') || previousInheritText === '')) {
+    if (inheritOption.length && (inheritOption.val() === '' || previousInheritDataId)) {
       var inheritOpt = $("<option />").text(previousInheritText).val('');
       if (previousInheritDataId) inheritOpt.attr('data-id', previousInheritDataId);
       select.append(inheritOpt);
     }
 
-    $.each(data.results, function(index, cve) {
-      var label = cve.lifecycle_environment.name + ' / ' + cve.content_view.name;
-      var option = $("<option />").val(cve.id).text(label);
-      if (cve.id === parseInt(previousValue)) {
+    $.each(data.results, function(index, cvEnv) {
+      var label = cvEnv.label;
+      var option = $("<option />").val(cvEnv.id).text(label);
+      if (cvEnv.id === parseInt(previousValue)) {
         option.prop('selected', true);
         foundPreviousValue = true;
       }
@@ -99,14 +99,20 @@ KT.hosts.onKatelloHostEditLoad = function(){
 };
 
 KT.hosts.getSelectedContentViewEnvironment = function() {
-    var cveId = $("#hostgroup_content_view_environment_id").val();
-    if (!cveId) {
-        cveId = $("#host_content_view_environment_id").val();
+    var cvEnvId = $("#hostgroup_content_view_environment_id").val();
+    if (!cvEnvId) {
+        cvEnvId = $("#host_content_view_environment_id").val();
     }
-    if (!cveId) {
-        cveId = $("#hostgroup_content_view_environment_id > option:selected").data("id");
+    if (!cvEnvId) {
+        cvEnvId = $("#hostgroup_content_view_environment_id > option:selected").data("id");
     }
-    return cveId;
+    if (!cvEnvId) {
+        var hiddenInput = $("input[name='host[content_facet_attributes][content_view_environment_ids][]']").first();
+        if (hiddenInput.length) {
+            cvEnvId = hiddenInput.val();
+        }
+    }
+    return cvEnvId;
 };
 
 KT.hosts.toggle_installation_medium = function() {

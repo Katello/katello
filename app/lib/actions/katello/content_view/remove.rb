@@ -19,37 +19,37 @@ module Actions
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/CyclomaticComplexity
         def plan(content_view, options)
-          cv_envs = options.fetch(:content_view_environments, [])
+          cvenvs = options.fetch(:content_view_environments, [])
           versions = options.fetch(:content_view_versions, [])
           organization_destroy = options.fetch(:organization_destroy, false)
           skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
           action_subject(content_view)
-          validate_options(content_view, cv_envs, versions, options) unless organization_destroy
+          validate_options(content_view, cvenvs, versions, options) unless organization_destroy
 
-          all_cv_envs = combined_cv_envs(cv_envs, versions)
-          check_version_deletion(versions, cv_envs)
+          all_cvenvs = combined_cvenvs(cvenvs, versions)
+          check_version_deletion(versions, cvenvs)
 
           sequence do
             unless organization_destroy
               concurrence do
-                all_cv_envs.each do |cv_env|
-                  if cv_env.hosts.any? || cv_env.activation_keys.any? || cv_env.hostgroups.any?
-                    plan_action(ContentViewEnvironment::ReassignObjects, cv_env, options)
+                all_cvenvs.each do |cvenv|
+                  if cvenv.hosts.any? || cvenv.activation_keys.any? || cvenv.hostgroups.any?
+                    plan_action(ContentViewEnvironment::ReassignObjects, cvenv, options)
                   end
                 end
               end
             end
 
             cv_histories = []
-            all_cv_envs.each do |cve|
-              cv_histories << ::Katello::ContentViewHistory.create!(:content_view_version => cve.content_view_version,
+            all_cvenvs.each do |cvenv|
+              cv_histories << ::Katello::ContentViewHistory.create!(:content_view_version => cvenv.content_view_version,
                                                                     :user => ::User.current.login,
-                                                                    :environment => cve.environment,
+                                                                    :environment => cvenv.environment,
                                                                     :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                                     :action => ::Katello::ContentViewHistory.actions[:removal],
                                                                     :task => self.task)
               plan_action(ContentViewEnvironment::Destroy,
-                          cve,
+                          cvenv,
                           :skip_repo_destroy => skip_repo_destroy,
                           :organization_destroy => organization_destroy)
             end
@@ -68,8 +68,8 @@ module Actions
             end
             plan_self(content_view_id: content_view.id,
                       destroy_content_view: options[:destroy_content_view],
-                      environment_ids: cv_envs.map(&:environment_id),
-                      environment_names: cv_envs.map { |cve| cve.environment.name },
+                      environment_ids: cvenvs.map(&:environment_id),
+                      environment_names: cvenvs.map { |cvenv| cvenv.environment.name },
                       version_ids: versions.map(&:id),
                       content_view_history_ids: cv_histories.map { |history| history.id })
 
@@ -89,10 +89,10 @@ module Actions
           ::Katello::Host::SubscriptionFacet.where(:host_id => host_ids).destroy_all
         end
 
-        def check_version_deletion(versions, cv_envs)
+        def check_version_deletion(versions, cvenvs)
           versions.each do |version|
             version.environments.each do |env|
-              if cv_envs.none? { |cv_env| cv_env.content_view_version == version && cv_env.environment == env }
+              if cvenvs.none? { |cvenv| cvenv.content_view_version == version && cvenv.environment == env }
                 fail _("Cannot delete version while it is in environment %s") % env.name
               end
             end
@@ -119,44 +119,44 @@ module Actions
           end
         end
 
-        def validate_options(_content_view, cv_envs, versions, options)
-          if !options[:destroy_content_view] && cv_envs.empty? && versions.empty?
+        def validate_options(_content_view, cvenvs, versions, options)
+          if !options[:destroy_content_view] && cvenvs.empty? && versions.empty?
             fail _("Either environments or versions must be specified.")
           end
-          all_cv_envs = combined_cv_envs(cv_envs, versions)
+          all_cvenvs = combined_cvenvs(cvenvs, versions)
 
-          single_env_hosts_exist = all_cv_envs.flat_map(&:hosts).any? do |host|
+          single_env_hosts_exist = all_cvenvs.flat_map(&:hosts).any? do |host|
             !host.content_facet.multi_content_view_environment?
           end
-          if single_env_hosts_exist && !cve_exists?(options[:system_environment_id], options[:system_content_view_id])
+          if single_env_hosts_exist && !cvenv_exists?(options[:system_environment_id], options[:system_content_view_id])
             fail _("Unable to reassign systems. Please check system_content_view_id and system_environment_id.")
           end
 
-          single_env_keys_exist = all_cv_envs.flat_map(&:activation_keys).any? do |key|
+          single_env_keys_exist = all_cvenvs.flat_map(&:activation_keys).any? do |key|
             !key.multi_content_view_environment?
           end
-          if single_env_keys_exist && !cve_exists?(options[:key_environment_id], options[:key_content_view_id])
+          if single_env_keys_exist && !cvenv_exists?(options[:key_environment_id], options[:key_content_view_id])
             fail _("Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.")
           end
 
-          hostgroups_exist = all_cv_envs.flat_map(&:hostgroups).any?
-          if hostgroups_exist && !cve_exists_by_id?(options[:hostgroup_content_view_environment_id])
+          hostgroups_exist = all_cvenvs.flat_map(&:hostgroups).any?
+          if hostgroups_exist && !cvenv_exists_by_id?(options[:hostgroup_content_view_environment_id])
             fail _("Unable to reassign host groups. Please check hostgroup_content_view_environment_id.")
           end
         end
 
-        def combined_cv_envs(cv_envs, versions)
-          (cv_envs + versions.flat_map(&:content_view_environments)).uniq
+        def combined_cvenvs(cvenvs, versions)
+          (cvenvs + versions.flat_map(&:content_view_environments)).uniq
         end
 
-        def cve_exists?(environment_id, content_view_id)
+        def cvenv_exists?(environment_id, content_view_id)
           ::Katello::ContentViewEnvironment.where(:environment_id => environment_id,
                                                   :content_view_id => content_view_id
                                                  ).exists?
         end
 
-        def cve_exists_by_id?(cv_env_id)
-          ::Katello::ContentViewEnvironment.where(:id => cv_env_id).exists?
+        def cvenv_exists_by_id?(cvenv_id)
+          ::Katello::ContentViewEnvironment.where(:id => cvenv_id).exists?
         end
       end
     end

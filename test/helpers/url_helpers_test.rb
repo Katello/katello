@@ -33,8 +33,8 @@ class HostUrlHelpers < UrlHelperBase
                        :location => @location,
                        :organization => @organization
                       )
-    cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
-    @host.content_facet.content_view_environments = [cve]
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
+    @host.content_facet.content_view_environments = [cvenv]
   end
 
   test 'repository_url must render the right path based on host configuration' do
@@ -43,8 +43,8 @@ class HostUrlHelpers < UrlHelperBase
     repository_url('/custom/zoo/zoo/zoo.iso')
     assert_equal path, repository_url('/custom/zoo/zoo/zoo.iso')
 
-    cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(katello_content_views(:library_dev_view).id, @env.id)
-    @host.content_facet.content_view_environments = [cve]
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(katello_content_views(:library_dev_view).id, @env.id)
+    @host.content_facet.content_view_environments = [cvenv]
     @host.reload
     path = "http://#{@host.content_source.hostname}/pulp/content/#{@host.single_lifecycle_environment.organization.label}/#{@host.single_lifecycle_environment.label}/#{@host.single_content_view.label}/custom/zoo/zoo/zoo.iso".freeze
     assert_equal path, repository_url('/custom/zoo/zoo/zoo.iso')

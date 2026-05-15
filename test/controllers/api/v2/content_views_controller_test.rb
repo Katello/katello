@@ -580,10 +580,10 @@ module Katello
       ak_edit_permission = {:name => :edit_activation_keys, :search => "name=\"#{ak.name}\"" }
 
       ak_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
-                                  :search => "name=\"#{ak.environment.name}\"" }
+                                  :search => "name=\"#{ak.single_lifecycle_environment.name}\"" }
 
       ak_cv_remove_permission = {:name => :promote_or_remove_content_views,
-                                 :search => "name=\"#{ak.content_view.name}\"" }
+                                 :search => "name=\"#{ak.single_content_view.name}\"" }
 
       alternate_env = @staging
       alternate_env_read_permission = {:name => :view_lifecycle_environments,
@@ -616,7 +616,7 @@ module Katello
                      ]
 
       assert_protected_action(:remove, allowed_perms, denied_perms, [@organization]) do
-        put :remove, params: { :id => ak.content_view.id, :environment_ids => [ak.environment.id], :key_content_view_id => alternate_cv.id, :key_environment_id => alternate_env.id }
+        put :remove, params: { :id => ak.single_content_view.id, :environment_ids => [ak.single_lifecycle_environment.id], :key_content_view_id => alternate_cv.id, :key_environment_id => alternate_env.id }
       end
     end
 
@@ -630,10 +630,10 @@ module Katello
       hostgroup.organizations = [content_view.organization]
       hostgroup.save!
 
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(content_view.id, environment.id)
       Katello::Hostgroup::ContentFacet.create!(
         :hostgroup => hostgroup,
-        :content_view_id => content_view.id,
-        :lifecycle_environment_id => environment.id
+        :content_view_environment => cvenv
       )
 
       hg_edit_permission = { :name => :edit_hostgroups, :search => "name=\"#{hostgroup.name}\"" }
@@ -652,11 +652,7 @@ module Katello
       alternate_cv_read_permission = { :name => :view_content_views,
                                        :search => "name=\"#{alternate_cv.name}\"" }
 
-      # Get the CVE ID for the alternate CV and environment
-      alternate_cve = Katello::ContentViewEnvironment.find_by(
-        :content_view_version_id => alternate_cv.versions.first.id,
-        :environment_id => alternate_env.id
-      )
+      alternate_cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(alternate_cv.id, alternate_env.id)
 
       bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       bad_cv_read_permission = { :name => :view_content_views,
@@ -687,7 +683,7 @@ module Katello
                             at_least_once.returns(with_environments)
 
       assert_protected_action(:remove, allowed_perms, denied_perms, hostgroup.organizations, hostgroup.locations) do
-        put :remove, params: { :id => content_view.id, :environment_ids => env_ids, :hostgroup_content_view_environment_id => alternate_cve.id }
+        put :remove, params: { :id => content_view.id, :environment_ids => env_ids, :hostgroup_content_view_environment_id => alternate_cvenv.id }
       end
     end
   end

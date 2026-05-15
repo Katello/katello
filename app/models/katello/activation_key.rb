@@ -49,7 +49,7 @@ module Katello
       end
     end
     validates_with Katello::Validators::GeneratedContentViewValidator
-    validate :check_cves
+    validate :check_cvenvs
 
     scope :with_environments, ->(lifecycle_environments) do
       joins(:content_view_environment_activation_keys => :content_view_environment).
@@ -83,13 +83,13 @@ module Katello
       with_environments(envs)
     end
 
-    def content_view_environments=(new_cves)
-      if new_cves.length > 1 && !Setting['allow_multiple_content_views']
+    def content_view_environments=(new_cvenvs)
+      if new_cvenvs.length > 1 && !Setting['allow_multiple_content_views']
         fail ::Katello::Errors::MultiEnvironmentNotSupportedError,
         _("Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.")
       end
-      super(new_cves)
-      Katello::ContentViewEnvironmentActivationKey.reprioritize_for_activation_key(self, new_cves)
+      super(new_cvenvs)
+      Katello::ContentViewEnvironmentActivationKey.reprioritize_for_activation_key(self, new_cvenvs)
       self.content_view_environments.reload unless self.new_record?
     end
 
@@ -117,7 +117,6 @@ module Katello
       content_view_environments&.first&.lifecycle_environment
     end
 
-
     def usage_count
       subscription_facet_activation_keys.count
     end
@@ -127,8 +126,8 @@ module Katello
     end
 
     def available_releases
-      releases = self.content_view_environments.flat_map do |cve|
-        cve.content_view.version(cve.lifecycle_environment).available_releases
+      releases = self.content_view_environments.flat_map do |cvenv|
+        cvenv.content_view.version(cvenv.lifecycle_environment).available_releases
       end
       return self.organization.library.available_releases if releases.blank?
       releases
@@ -172,13 +171,13 @@ module Katello
       true
     end
 
-    def check_cves
-      cves_not_in_org = self.content_view_environments.any? do |cve|
-        cve.content_view.organization != cve.environment.organization ||
-          self.organization != cve.content_view.organization
+    def check_cvenvs
+      cvenvs_not_in_org = self.content_view_environments.any? do |cvenv|
+        cvenv.content_view.organization != cvenv.environment.organization ||
+          self.organization != cvenv.content_view.organization
       end
 
-      errors.add(:base, _("Cannot add content view environments from a different organization")) if cves_not_in_org
+      errors.add(:base, _("Cannot add content view environments from a different organization")) if cvenvs_not_in_org
     end
 
     apipie :class, desc: "A class representing #{model_name.human} object" do

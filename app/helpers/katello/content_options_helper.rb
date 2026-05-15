@@ -21,7 +21,7 @@ module Katello
         end
 
         if orgs.count > 1
-          all_options << %(<optgroup label="#{org.name}">#{content_object_options}</optgroup>)
+          all_options << %(<optgroup label="#{h(org.name)}">#{content_object_options}</optgroup>)
         else
           all_options << content_object_options
         end
@@ -58,54 +58,54 @@ module Katello
       include_blank = '<option></option>' if include_blank == true
 
       orgs = relevant_organizations(hostgroup)
-      current_cve = fetch_content_view_environment(hostgroup, options)
+      current_cvenv = fetch_content_view_environment(hostgroup, options)
       content_source = fetch_content_source(hostgroup, options)
 
-      all_options = build_cve_options_for_orgs(orgs, current_cve, content_source)
+      all_options = build_cvenv_options_for_orgs(orgs, current_cvenv, content_source)
       all_options = all_options.join
       all_options.insert(0, include_blank) if include_blank
       all_options.html_safe # User content is safely escaped with h()
     end
     # rubocop:enable Rails/OutputSafety
 
-    def build_cve_options_for_orgs(orgs, current_cve, content_source)
+    def build_cvenv_options_for_orgs(orgs, current_cvenv, content_source)
       orgs.map do |org|
-        cves = fetch_cves_for_org(org, current_cve, content_source)
-        cve_options = build_cve_option_tags(cves, current_cve)
+        cvenvs = fetch_cvenvs_for_org(org, current_cvenv, content_source)
+        cvenv_options = build_cvenv_option_tags(cvenvs, current_cvenv)
 
         if orgs.count > 1
-          %(<optgroup label="#{org.name}">#{cve_options}</optgroup>)
+          %(<optgroup label="#{h(org.name)}">#{cvenv_options}</optgroup>)
         else
-          cve_options
+          cvenv_options
         end
       end
     end
 
-    def fetch_cves_for_org(org, current_cve, content_source)
-      cves = Katello::ContentViewEnvironment.joins(:content_view, :environment)
+    def fetch_cvenvs_for_org(org, current_cvenv, content_source)
+      cvenvs = Katello::ContentViewEnvironment.joins(:content_view, :environment)
                .where("#{Katello::ContentView.table_name}.organization_id" => org.id)
                .order("#{Katello::KTEnvironment.table_name}.name", "#{Katello::ContentView.table_name}.name")
                .to_a
 
-      cves = filter_cves_by_content_source(cves, content_source, org) if content_source.present?
-      cves |= [current_cve] if current_cve.present? && current_cve.content_view.organization_id == org.id
-      cves
+      cvenvs = filter_cvenvs_by_content_source(cvenvs, content_source, org) if content_source.present?
+      cvenvs |= [current_cvenv] if current_cvenv.present? && current_cvenv.content_view.organization_id == org.id
+      cvenvs
     end
 
-    def filter_cves_by_content_source(cves, content_source, org)
-      return cves if content_source.pulp_primary?
+    def filter_cvenvs_by_content_source(cvenvs, content_source, org)
+      return cvenvs if content_source.pulp_primary?
 
       available_env_ids = content_source.lifecycle_environments.where(organization_id: org.id).pluck(:id)
-      return cves unless available_env_ids.any?
+      return cvenvs unless available_env_ids.any?
 
-      cves.select { |cve| available_env_ids.include?(cve.environment_id) }
+      cvenvs.select { |cvenv| available_env_ids.include?(cvenv.environment_id) }
     end
 
-    def build_cve_option_tags(cves, current_cve)
-      option_tags = cves.map do |cve|
-        selected = current_cve&.id == cve.id ? 'selected' : ''
-        label = cve.default_environment? ? cve.environment.name : "#{cve.environment.name} / #{cve.content_view.name}"
-        %(<option value="#{cve.id}" #{selected}>#{h(label)}</option>)
+    def build_cvenv_option_tags(cvenvs, current_cvenv)
+      option_tags = cvenvs.map do |cvenv|
+        selected = current_cvenv&.id == cvenv.id ? 'selected' : ''
+        label = cvenv.label
+        %(<option value="#{cvenv.id}" #{selected}>#{h(label)}</option>)
       end
       option_tags.join
     end
@@ -160,16 +160,11 @@ module Katello
 
     def blank_or_inherit_cvenv(f) # f is Rails convention for form objects
       return true unless f.object.respond_to?(:parent_id) && f.object.parent_id
-      parent_cve = f.object.parent&.content_view_environment
-      inherited_value = parent_cve.try(:id) || ''
+      parent_cvenv = f.object.parent&.content_view_environment
+      inherited_value = parent_cvenv.try(:id) || ''
 
-      if parent_cve
-        cve_name = if parent_cve.default_environment?
-                     parent_cve.environment.name
-                   else
-                     "#{parent_cve.environment.name} / #{parent_cve.content_view.name}"
-                   end
-        %(<option data-id="#{inherited_value}" value="">#{h(_('Inherit parent (%s)') % cve_name)}</option>)
+      if parent_cvenv
+        %(<option data-id="#{inherited_value}" value="">#{h(_('Inherit parent (%s)') % parent_cvenv.label)}</option>)
       else
         %(<option value="">#{_('Inherit parent')}</option>)
       end

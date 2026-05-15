@@ -110,15 +110,15 @@ module Katello
     end
 
     def authorize_hostgroup_content_view_environment(view, options)
-      cv_env_id = options[:hostgroup_content_view_environment_id]
-      if cv_env_id
-        cv_env = ContentViewEnvironment.joins(:content_view, :environment)
-          .where(id: cv_env_id)
+      cvenv_id = options[:hostgroup_content_view_environment_id]
+      if cvenv_id
+        cvenv = ContentViewEnvironment.joins(:content_view, :environment)
+          .where(id: cvenv_id)
           .where("#{ContentView.table_name}.organization_id" => view.organization.id)
           .first
-        fail HttpErrors::NotFound, _("Couldn't find host group content view environment id '%s'") % cv_env_id unless cv_env
+        fail HttpErrors::NotFound, _("Couldn't find host group content view environment id '%s'") % cvenv_id unless cvenv
         # deny if we cannot reassign hostgroups to the new content view environment
-        return deny_access unless cv_env.content_view.readable? && cv_env.environment.readable?
+        return deny_access unless cvenv.content_view.readable? && cvenv.environment.readable?
       end
       true
     end

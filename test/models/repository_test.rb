@@ -678,11 +678,11 @@ module Katello
       # validate that clone repo path for a component view does not include the component view label
       library = KTEnvironment.find(katello_environments(:library).id)
       cv = ContentView.find(katello_content_views(:composite_view).id)
-      cve = ContentViewEnvironment.where(:environment_id => library,
+      cvenv = ContentViewEnvironment.where(:environment_id => library,
                                          :content_view_id => cv).first
-      @fedora_17_x86_64.content_view_version = cve.content_view_version
+      @fedora_17_x86_64.content_view_version = cvenv.content_view_version
 
-      assert_equal "#{cv.organization.label}/#{cve.label}/fedora_17_label", @fedora_17_x86_64.generate_repo_path
+      assert_equal "#{cv.organization.label}/#{cvenv.label}/fedora_17_label", @fedora_17_x86_64.generate_repo_path
 
       @fedora_17_x86_64.content_view_version = katello_content_view_versions(:library_view_version_1)
       @fedora_17_x86_64.environment = nil

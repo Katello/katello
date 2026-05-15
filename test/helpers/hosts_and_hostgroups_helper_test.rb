@@ -14,11 +14,11 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
     @library = katello_environments(:library)
     @host =  FactoryBot.build(:host, :with_content, :with_subscription, :id => 343)
     content_facet = Katello::Host::ContentFacet.new
-    cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
       katello_content_views(:library_dev_view).id,
       katello_environments(:library).id
     )
-    content_facet.content_view_environments = [cve]
+    content_facet.content_view_environments = [cvenv]
     @host.content_facet = content_facet
     @host.organization = taxonomies(:organization1)
     @group = FactoryBot.build(:hostgroup)
@@ -85,10 +85,10 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   end
 
   test "kickstart_repository_options should handle os - selected call with all params" do
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
     self.params = {"host" => {
       "operatingsystem_id" => @os.id,
-      "content_view_id" => @cv.id,
-      "lifecycle_environment_id" => @env.id,
+      "content_view_environment_id" => cvenv.id,
       "content_source_id" => @content_source.id,
       "architecture_id" => @arch.id,
     }}.with_indifferent_access
@@ -108,9 +108,9 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   end
 
   test "kickstart_repository_options should provide options for a populated host" do
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
     host = ::Host.new(:architecture => @arch, :operatingsystem => @os,
-                      :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                    :content_view_id => @cv.id,
+                      :content_facet_attributes => {:content_view_environment_ids => [cvenv.id],
                                                     :content_source_id => @content_source.id})
     ret = [{:name => "boo" }]
 
@@ -129,10 +129,10 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   end
 
   test "kickstart_repository_options should_handle_non_redhat_host" do
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
     hostgroup = ::Hostgroup.new(:operatingsystem => @os)
     host = ::Host.new(:architecture => @arch, :operatingsystem => operatingsystems(:opensuse), :hostgroup => hostgroup,
-                      :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                    :content_view_id => @cv.id,
+                      :content_facet_attributes => {:content_view_environment_ids => [cvenv.id],
                                                     :content_source_id => @content_source.id})
 
     options = kickstart_repository_options(host, :selected_host_group => hostgroup)
@@ -141,10 +141,9 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
 
   test "kickstart_repository_options should provide options for a populated hostgroup" do
     self.params = {}
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
     hostgroup = ::Hostgroup.new(
-      :content_facet_attributes => {
-        :lifecycle_environment_id => @env.id,
-        :content_view_id => @cv.id })
+      :content_view_environment_id => cvenv.id)
     hostgroup.architecture = @arch
     hostgroup.operatingsystem = @os
     hostgroup.content_source = @content_source
@@ -165,11 +164,10 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   end
 
   test "kickstart_repository_options should provide options for a populated host with a selected_host_group" do
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
     host = ::Host.new
     hostgroup = ::Hostgroup.new(
-      :content_facet_attributes => {
-        :lifecycle_environment_id => @env.id,
-        :content_view_id => @cv.id})
+      :content_view_environment_id => cvenv.id)
     hostgroup.architecture = @arch
     hostgroup.operatingsystem = @os
     hostgroup.content_source = @content_source
@@ -193,13 +191,12 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   test "kickstart_repository_options should provide options for a populated host with a selected_host_group and differing consumed content" do
     host = ::Host.new
     host.content_facet = ::Katello::Host::ContentFacet.new(:content_source_id => 999)
-    cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv2.id, @env.id)
-    host.content_facet.content_view_environments = [cve]
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv2.id, @env.id)
+    host.content_facet.content_view_environments = [cvenv]
     host.content_facet.content_view_environments.first.stubs(:generate_info)
+    cvenv2 = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
     hostgroup = ::Hostgroup.new(
-      :content_facet_attributes => {
-        :lifecycle_environment_id => @env.id,
-        :content_view_id => @cv.id})
+      :content_view_environment_id => cvenv2.id)
     hostgroup.architecture = @arch
     hostgroup.operatingsystem = @os
     hostgroup.content_source = @content_source
@@ -227,18 +224,17 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
     @env = @repo_with_distro.environment
+    @cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@cv.id, @env.id)
     @hostgroup = ::Hostgroup.new
     @hostgroup.architecture = @arch
     @hostgroup.operatingsystem = @os
     @hostgroup.build_content_facet(
-      :lifecycle_environment_id => @env.id,
-      :content_view_id => @cv.id,
+      :content_view_environment => @cvenv,
       :content_source => @content_source
     )
 
     @host = ::Host.new(:architecture => @arch, :operatingsystem => @os,
-                       :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                     :content_view_id => @cv.id,
+                       :content_facet_attributes => {:content_view_environment_ids => [@cvenv.id],
                                                      :content_source_id => @content_source.id}
                       )
   end
@@ -302,8 +298,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     @hostgroup.medium_id = 1000
 
     host = ::Host.new(:architecture => @arch, :operatingsystem => @os, :hostgroup => @hostgroup,
-                      :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                    :content_view_id => @cv.id,
+                      :content_facet_attributes => {:content_view_environment_ids => [@cvenv.id],
                                                     :content_source_id => @content_source.id,
                                                     :kickstart_repository_id => id}
                      )
@@ -318,8 +313,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
 
     host = ::Host.new(:architecture => @arch, :operatingsystem => @os, :hostgroup => @hostgroup,
                       :medium_id => id,
-                      :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                    :content_view_id => @cv.id,
+                      :content_facet_attributes => {:content_view_environment_ids => [@cvenv.id],
                                                     :content_source_id => @content_source.id,
                                                     :kickstart_repository_id => nil}
                      )

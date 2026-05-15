@@ -22,9 +22,9 @@ module Katello
       end
     end
 
-    def self.reprioritize_for_content_facet(content_facet, new_cves)
-      new_order = new_cves.map do |cve|
-        content_facet.content_view_environment_content_facets.find_by(:content_view_environment_id => cve.id)
+    def self.reprioritize_for_content_facet(content_facet, new_cvenvs)
+      new_order = new_cvenvs.map do |cvenv|
+        content_facet.content_view_environment_content_facets.find_by(:content_view_environment_id => cvenv.id)
       end
       new_order.compact.each_with_index do |cvecf, index|
         cvecf.update_column(:priority, index)

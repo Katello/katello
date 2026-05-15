@@ -61,15 +61,15 @@ module Katello
         def validate_content_view_environment_params
           content_facet_attributes = params.dig(:host, :content_facet_attributes)
           return if content_facet_attributes.blank?
-          return unless cve_params[:content_view_environments].present? || cve_params[:content_view_environment_ids].present?
+          return unless cvenv_params[:content_view_environments].present? || cvenv_params[:content_view_environment_ids].present?
 
           cves = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
-            labels: cve_params[:content_view_environments],
-            ids: cve_params[:content_view_environment_ids],
+            labels: cvenv_params[:content_view_environments],
+            ids: cvenv_params[:content_view_environment_ids],
             organization: find_organization || @host&.organization)
           if cves.blank?
-            handle_errors(labels: cve_params[:content_view_environments],
-              ids: cve_params[:content_view_environment_ids])
+            handle_errors(labels: cvenv_params[:content_view_environments],
+              ids: cvenv_params[:content_view_environment_ids])
           end
           cves
         end
@@ -88,7 +88,7 @@ module Katello
         end
         # rubocop:enable Naming/AccessorMethodName
 
-        def cve_params
+        def cvenv_params
           params.require(:host).require(:content_facet_attributes).permit(content_view_environments: [], content_view_environment_ids: [])
         end
       end

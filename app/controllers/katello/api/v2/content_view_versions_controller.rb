@@ -229,7 +229,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. New ver
           @composite_version_environments += lookup_all_composites(version_environment[:content_view_version]) if params[:propagate_all_composites]
         end
       end
-      @composite_version_environments.uniq! { |cve| cve[:content_view_version] }
+      @composite_version_environments.uniq! { |cvenv| cvenv[:content_view_version] }
     end
 
     def lookup_all_composites(component)

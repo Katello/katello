@@ -128,8 +128,8 @@ module Katello
 
       def candlepin_environments
         if self.host.content_facet
-          self.host.content_facet.content_view_environments.map do |cve|
-            { :id => cve.content_view.cp_environment_id(cve.lifecycle_environment) }
+          self.host.content_facet.content_view_environments.map do |cvenv|
+            { :id => cvenv.content_view.cp_environment_id(cvenv.lifecycle_environment) }
           end
         else
           [{ :id => self.host.organization.default_content_view.cp_environment_id(self.host.organization.library) }]
@@ -144,12 +144,12 @@ module Katello
         self.host.content_facet.try(:content_view_environments)
       end
 
-      def consumer_cve_order_from_candlepin
+      def consumer_cvenv_order_from_candlepin
         Katello::Resources::Candlepin::Consumer.get(uuid)['environments'].map { |e| e['id'] }
       end
 
-      def cves_ordered_correctly?
-        consumer_cve_order_from_candlepin == candlepin_environments_cp_ids
+      def cvenvs_ordered_correctly?
+        consumer_cvenv_order_from_candlepin == candlepin_environments_cp_ids
       end
 
       def organization
@@ -256,8 +256,8 @@ module Katello
           end
         end
         facet = self.host&.content_facet
-        if facet&.cves_changed? && !facet.new_record?
-          Rails.logger.debug("backend_update_needed: content facet CVEs changed")
+        if facet&.cvenvs_changed? && !facet.new_record?
+          Rails.logger.debug("backend_update_needed: content facet CVEnvs changed")
           return true
         end
         false

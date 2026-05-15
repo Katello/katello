@@ -58,7 +58,7 @@ module Katello
     param_group :activation_key
     def create
       @activation_key = ActivationKey.new(activation_key_params) do |activation_key|
-        activation_key.content_view_environments = @content_view_environments if update_cves?
+        activation_key.content_view_environments = @content_view_environments if update_cvenvs?
         activation_key.organization = @organization
         activation_key.user = current_user
       end
@@ -73,7 +73,7 @@ module Katello
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :name, String, :desc => N_("name"), :required => false
     def update
-      if @content_view_environments.present? || update_cves?
+      if @content_view_environments.present? || update_cvenvs?
         @activation_key.update!(content_view_environments: @content_view_environments)
       end
       sync_task(::Actions::Katello::ActivationKey::Update, @activation_key, activation_key_params)
@@ -220,7 +220,7 @@ module Katello
 
     def find_content_view_environments
       @content_view_environments = []
-      if params[:content_view_environments] || params[:content_view_environment_ids]
+      if params_likely_not_from_angularjs? && (params[:content_view_environments] || params[:content_view_environment_ids])
         @content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
           labels: params[:content_view_environments],
           ids: params[:content_view_environment_ids],
@@ -229,12 +229,27 @@ module Katello
           handle_errors(labels: params[:content_view_environments],
           ids: params[:content_view_environment_ids])
         end
+        @content_view_environments.each do |cvenv|
+          throw_resource_not_found(name: 'content_view_environment', id: cvenv.id) unless cvenv.readable?
+        end
       end
-      handle_blank_cve_params
+      handle_blank_cvenv_params
       @organization ||= @content_view_environments.first&.organization
     end
 
-    def handle_blank_cve_params
+    def params_likely_not_from_angularjs?
+      # AngularJS sends back the activation key's existing API response as params.
+      # This means content_view_environments arrives as a nested hash instead of
+      # a comma-separated string of labels, which would cause fetch_content_view_environments to fail.
+      # We detect AngularJS by the presence of multi_content_view_environment — a computed
+      # response-only value that a real API client would never submit.
+      !params.key?(:multi_content_view_environment)
+    end
+
+    def handle_blank_cvenv_params
+      if params.key?(:environment) && params.key?(:content_view)
+        return # AngularJS sends nested environment and content_view params; ignore them
+      end
       if params.key?(:content_view_environments) && params[:content_view_environments].blank?
         @content_view_environments = []
       elsif params.key?(:content_view_environment_ids) && params[:content_view_environment_ids].blank?
@@ -242,7 +257,8 @@ module Katello
       end
     end
 
-    def update_cves?
+    def update_cvenvs?
+      return false unless params_likely_not_from_angularjs?
       params.key?(:content_view_environments) ||
         params.key?(:content_view_environment_ids)
     end

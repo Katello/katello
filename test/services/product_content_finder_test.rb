@@ -45,7 +45,7 @@ module Katello
       @key.update!(content_view_environments: cves)
 
       Katello::Repository.where(:root => Katello::RootRepository.where(:content_id => @repo1.content_id),
-                                :content_view_version_id => @key.content_view.version(@key.environment)).destroy_all
+                                :content_view_version_id => @key.single_content_view.version(@key.single_lifecycle_environment)).destroy_all
 
       pcf = Katello::ProductContentFinder.new(:consumable => @key, :match_environment => true)
       product_content = pcf.product_content

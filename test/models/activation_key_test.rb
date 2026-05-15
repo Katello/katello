@@ -5,7 +5,7 @@ module Katello
     def setup
       @dev_key = katello_activation_keys(:dev_key)
       @dev_staging_view_key = katello_activation_keys(:library_dev_staging_view_key)
-      @dev_staging_cve = katello_content_view_environments(:library_dev_staging_view_dev)
+      @dev_staging_cvenv = katello_content_view_environments(:library_dev_staging_view_dev)
 
       @dev_view = katello_content_views(:library_dev_view)
       @lib_view = katello_content_views(:library_view)
@@ -19,10 +19,10 @@ module Katello
 
     test "can have content view environment" do
       @dev_key = katello_activation_keys(:dev_key)
-      @dev_key.content_view_environments = [@dev_staging_cve]
+      @dev_key.content_view_environments = [@dev_staging_cvenv]
       assert @dev_key.save!
       assert_not_nil @dev_key.single_content_view
-      assert_includes @dev_staging_cve.content_view.activation_keys, @dev_key
+      assert_includes @dev_staging_cvenv.content_view.activation_keys, @dev_key
     end
 
     test "does not require a content view environment" do
@@ -31,10 +31,10 @@ module Katello
     end
 
     test "content view environment must be in the same org" do
-      library_dev_staging_cve = katello_content_view_environments(:library_dev_staging_view_dev)
+      library_dev_staging_cvenv = katello_content_view_environments(:library_dev_staging_view_dev)
       org2 = taxonomies(:organization2)
       ak = ActivationKey.create!(name: 'new_key', organization: org2)
-      ak.content_view_environments << library_dev_staging_cve
+      ak.content_view_environments << library_dev_staging_cvenv
       refute ak.save
       refute_empty ak.errors.attribute_names
       assert_raises(ActiveRecord::RecordInvalid) do
@@ -113,17 +113,17 @@ module Katello
     end
 
     def test_search_environment
-      activation_keys = ActivationKey.search_for("environment = \"#{@dev_staging_view_key.environment.name}\"")
+      activation_keys = ActivationKey.search_for("environment = \"#{@dev_staging_view_key.single_lifecycle_environment.name}\"")
       assert_includes activation_keys, @dev_staging_view_key
     end
 
     def test_search_content_view
-      activation_keys = ActivationKey.search_for("content_view = \"#{@dev_staging_view_key.content_view.name}\"")
+      activation_keys = ActivationKey.search_for("content_view = \"#{@dev_staging_view_key.single_content_view.name}\"")
       assert_includes activation_keys, @dev_staging_view_key
     end
 
     def test_search_content_view_id
-      activation_keys = ActivationKey.search_for("content_view_id = \"#{@dev_staging_view_key.content_view.id}\"")
+      activation_keys = ActivationKey.search_for("content_view_id = \"#{@dev_staging_view_key.single_content_view.id}\"")
       assert_includes activation_keys, @dev_staging_view_key
     end
 

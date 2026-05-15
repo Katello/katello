@@ -82,51 +82,55 @@ module Katello
     end
 
     def self.find_by_cv_and_lce!(content_view_id, lifecycle_environment_id)
-      cve = find_by(content_view_id: content_view_id, environment_id: lifecycle_environment_id)
-      return cve if cve
+      cvenv = find_by(content_view_id: content_view_id, environment_id: lifecycle_environment_id)
+      return cvenv if cvenv
 
       env_label = Katello::KTEnvironment.find_by(id: lifecycle_environment_id)&.label
-      fail Katello::Errors::ContentViewEnvironmentError,
-        _("Unable to find a lifecycle environment with ID %s") % lifecycle_environment_id if env_label.nil?
+      if env_label.nil?
+        fail Katello::Errors::ContentViewEnvironmentError,
+          _("Unable to find a lifecycle environment with ID %s") % lifecycle_environment_id
+      end
       cv_label = Katello::ContentView.find_by(id: content_view_id)&.label
+      if cv_label.nil?
+        fail Katello::Errors::ContentViewEnvironmentError,
+          _("Unable to find a content view with ID %s") % content_view_id
+      end
       fail Katello::Errors::ContentViewEnvironmentError,
-        _("Unable to find a content view with ID %s") % content_view_id if cv_label.nil?
-      fail Katello::Errors::ContentViewEnvironmentError,
-        _("Cannot assign content view environment %s/%s: The content view has either not been published or has not been promoted to that lifecycle environment.") % [env_label, cv_label]
+        _("Cannot assign content view environment %{env}/%{cv}: The content view has either not been published or has not been promoted to that lifecycle environment.") % {env: env_label, cv: cv_label}
     end
 
     def self.fetch_content_view_environments(organization:, labels: [], ids: [])
-      # Must ensure CVEs remain in the same order.
+      # Must ensure content view environments remain in the same order.
       # Using ActiveRecord .where will return them in a different order.
       id_errors = []
       label_errors = []
-      cves = []
+      cvenvs = []
       if ids.present?
         ids.each do |id|
-          cve = ::Katello::ContentViewEnvironment.find_by(id: id)
-          if cve.blank?
+          cvenv = ::Katello::ContentViewEnvironment.find_by(id: id)
+          if cvenv.blank?
             id_errors << id
           else
-            cves << cve
+            cvenvs << cvenv
           end
         end
       elsif labels.present?
         environment_names = labels.map(&:strip)
         environment_names.each do |name|
-          cve = with_label_and_org(name, organization: organization)
-          if cve.blank?
+          cvenv = with_label_and_org(name, organization: organization)
+          if cvenv.blank?
             label_errors << name
           else
-            cves << cve
+            cvenvs << cvenv
           end
         end
       end
-      if labels.present? && labels.length != cves.length
+      if labels.present? && labels.length != cvenvs.length
         fail HttpErrors::UnprocessableEntity, _("No content view environments found with names: %{names}") % {names: label_errors.join(', ')} if label_errors.present?
-      elsif ids.present? && ids.length != cves.length
+      elsif ids.present? && ids.length != cvenvs.length
         fail HttpErrors::UnprocessableEntity, _("No content view environments found with ids: %{ids}") % {ids: id_errors.join(', ')} if id_errors.present?
       end
-      cves
+      cvenvs
     end
 
     private

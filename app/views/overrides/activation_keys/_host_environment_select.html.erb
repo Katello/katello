@@ -29,32 +29,32 @@
 
 <% if using_hostgroups_page? %>
   <%# Hostgroups use a single Content View Environment field %>
-  <% cve_select_id = :hostgroup_content_view_environment_id %>
-  <% cve_select_name = 'hostgroup[content_view_environment_id]' %>
-  <% cve_select_attr = 'content_facet.content_view_environment' %>
-  <% cve_inherited = content_view_inherited?(@hostgroup) || lifecycle_environment_inherited?(@hostgroup) %>
+  <% cv_env_select_id = :hostgroup_content_view_environment_id %>
+  <% cv_env_select_name = 'hostgroup[content_view_environment_id]' %>
+  <% cvenv_select_attr = 'content_facet.content_view_environment' %>
+  <% cvenv_inherited = content_view_inherited?(@hostgroup) || lifecycle_environment_inherited?(@hostgroup) %>
 
-  <%= field(f, cve_select_attr, {:label => _("Content View Environment"), :help_inline => cve_inherited ? 'Inherited from host group' : nil}) do %>
-    <%= select_tag cve_select_id, content_view_environment_options(@hostgroup, :include_blank => blank_or_inherit_cvenv(f)), :class => 'form-control', :name => cve_select_name %>
+  <%= field(f, cvenv_select_attr, {:label => _("Content View Environment"), :help_inline => cvenv_inherited ? 'Inherited from host group' : nil}) do %>
+    <%= select_tag cv_env_select_id, content_view_environment_options(@hostgroup, :include_blank => blank_or_inherit_cvenv(f)), :class => 'form-control', :name => cv_env_select_name %>
   <% end %>
 <% else %>
   <%# Hosts use a single Content View Environment field %>
-  <% cve_inherited = content_view_inherited?(@host) || lifecycle_environment_inherited?(@host) %>
+  <% cvenv_inherited = content_view_inherited?(@host) || lifecycle_environment_inherited?(@host) %>
 
   <% if cv_lce_disabled? %>
     <%# On host edit, submit existing CVEnv IDs as hidden fields to preserve them %>
-    <% host_cve_ids = @host.content_view_environments.any? ? @host.content_view_environment_ids : (@host.hostgroup&.content_view_environment_id ? [@host.hostgroup.content_view_environment_id] : []) %>
-    <% host_cve_ids.each do |cve_id| %>
-      <%= hidden_field_tag 'host[content_facet_attributes][content_view_environment_ids][]', cve_id %>
+    <% host_cvenv_ids = @host.content_view_environments.any? ? @host.content_view_environment_ids : (@host.hostgroup&.content_view_environment_id ? [@host.hostgroup.content_view_environment_id] : []) %>
+    <% host_cvenv_ids.each do |cvenv_id| %>
+      <%= hidden_field_tag 'host[content_facet_attributes][content_view_environment_ids][]', cvenv_id, :id => nil %>
     <% end %>
   <% else %>
     <%# On host create, show a CVEnv dropdown %>
-    <% host_cve_select_id = :host_content_view_environment_id %>
-    <% host_cve_select_name = 'host[content_facet_attributes][content_view_environment_ids][]' %>
-    <% host_cve_select_attr = 'content_facet.content_view_environment' %>
+    <% host_cv_env_select_id = :host_content_view_environment_id %>
+    <% host_cv_env_select_name = 'host[content_facet_attributes][content_view_environment_ids][]' %>
+    <% host_cvenv_select_attr = 'content_facet.content_view_environment' %>
 
-    <%= field(f, host_cve_select_attr, {:label => _("Content View Environment"), :help_inline => cve_inherited ? 'Inherited from host group' : nil}) do %>
-      <%= select_tag host_cve_select_id, content_view_environment_options(@host, :include_blank => true, :selected_host_group => @hostgroup || @host&.hostgroup), :class => 'form-control', :name => host_cve_select_name %>
+    <%= field(f, host_cvenv_select_attr, {:label => _("Content View Environment"), :help_inline => cvenv_inherited ? 'Inherited from host group' : nil}) do %>
+      <%= select_tag host_cv_env_select_id, content_view_environment_options(@host, :include_blank => true, :selected_host_group => @hostgroup || @host&.hostgroup), :class => 'form-control', :name => host_cv_env_select_name %>
     <% end %>
   <% end %>
 <% end %>

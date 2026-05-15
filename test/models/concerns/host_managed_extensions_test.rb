@@ -140,8 +140,8 @@ module Katello
       assert_includes @foreman_host.info['parameters']['foreman_host_collections'], host_collection.name
     end
 
-    def test_update_with_invalid_cv_env_combo
-      host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
+    def test_update_with_invalid_cvenv_combo
+      FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
       assert_raises(Katello::Errors::ContentViewEnvironmentError) do
         Katello::ContentViewEnvironment.find_by_cv_and_lce!(
           @library_view.id,
@@ -236,7 +236,7 @@ module Katello
       ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
       subscription_facet = host.subscription_facet
-      host.content_facet.cves_changed = false
+      host.content_facet.cvenvs_changed = false
       refute subscription_facet.backend_update_needed?
 
       subscription_facet.service_level = 'terrible'
@@ -245,8 +245,8 @@ module Katello
       subscription_facet.reload
       refute subscription_facet.backend_update_needed?
 
-      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@view.id, @library.id)
-      subscription_facet.host.content_facet.content_view_environments = [cve]
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@view.id, @library.id)
+      subscription_facet.host.content_facet.content_view_environments = [cvenv]
       assert subscription_facet.backend_update_needed?
     end
 

@@ -34,7 +34,7 @@ module Katello
 
     def test_all_editable?
       ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
-      assert ActivationKey.all_editable?(ak.content_view, ak.environment)
+      assert ActivationKey.all_editable?(ak.single_content_view, ak.single_lifecycle_environment)
     end
   end
 
@@ -67,7 +67,7 @@ module Katello
 
     def test_all_editable?
       ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
-      refute ActivationKey.all_editable?(ak.content_view, ak.environment)
+      refute ActivationKey.all_editable?(ak.single_content_view, ak.single_lifecycle_environment)
     end
   end
 
@@ -79,13 +79,13 @@ module Katello
 
     def test_all_editable?
       ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
-      keys = ActivationKey.with_content_views(ak.single_content_view).with_environments(ak.single_content_view)
+      keys = ActivationKey.with_content_views(ak.single_content_view).with_environments(ak.single_lifecycle_environment)
 
       clause = keys.map { |key| "name=\"#{key.name}\"" }.join(" or ")
 
       setup_current_user_with_permissions({ :name => "edit_activation_keys",
                                             :search => clause })
-      assert ActivationKey.all_editable?(ak.content_view, ak.environment)
+      assert ActivationKey.all_editable?(ak.single_content_view, ak.single_lifecycle_environment)
     end
   end
 end

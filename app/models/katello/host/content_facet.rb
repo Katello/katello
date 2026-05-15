@@ -39,7 +39,7 @@ module Katello
       has_many :content_view_environment_content_facets, :class_name => "Katello::ContentViewEnvironmentContentFacet", :dependent => :destroy, :inverse_of => :content_facet
       has_many :content_view_environments, :through => :content_view_environment_content_facets,
                :class_name => "Katello::ContentViewEnvironment", :source => :content_view_environment,
-               :after_add => :mark_cves_changed, :after_remove => :mark_cves_changed
+               :after_add => :mark_cvenvs_changed, :after_remove => :mark_cvenvs_changed
       has_many :content_views, :through => :content_view_environments, :class_name => "Katello::ContentView"
       has_many :lifecycle_environments, :through => :content_view_environments, :class_name => "Katello::KTEnvironment"
 
@@ -82,25 +82,26 @@ module Katello
           where("#{::Katello::ContentViewEnvironment.table_name}.id" => content_view_environments)
       end
 
-      attr_accessor :cves_changed
+      attr_accessor :cvenvs_changed
 
       def initialize(*args)
         init_args = args.first || {}
-        cve_ids = init_args.delete(:content_view_environment_ids)
+        cvenv_ids = init_args.delete(:content_view_environment_ids)&.reject(&:blank?)
         super(*args)
-        if cve_ids.present?
-          self.content_view_environments = ContentViewEnvironment.where(id: cve_ids)
+        if cvenv_ids.present?
+          # find() preserves input order and raises on missing IDs, unlike where()
+          self.content_view_environments = ContentViewEnvironment.find(cvenv_ids)
         end
-        self.cves_changed = false
+        self.cvenvs_changed = false
       end
 
-      def mark_cves_changed(_cve)
-        Rails.logger.debug("ContentFacet: Marking CVEs changed for host #{host&.to_label}")
-        self.cves_changed = true
+      def mark_cvenvs_changed(_cvenv)
+        Rails.logger.debug("ContentFacet: Marking content view environments changed for host #{host&.to_label}")
+        self.cvenvs_changed = true
       end
 
-      def mark_cves_unchanged
-        self.cves_changed = false
+      def mark_cvenvs_unchanged
+        self.cvenvs_changed = false
       end
 
       def image_mode_host?
@@ -115,8 +116,8 @@ module Katello
         end
       end
 
-      def cves_changed?
-        cves_changed
+      def cvenvs_changed?
+        cvenvs_changed
       end
 
       def multi_content_view_environment?
@@ -143,13 +144,13 @@ module Katello
         content_view_environments&.first&.lifecycle_environment
       end
 
-      def content_view_environments=(new_cves)
-        if new_cves.length > 1 && !Setting['allow_multiple_content_views']
+      def content_view_environments=(new_cvenvs)
+        if new_cvenvs.length > 1 && !Setting['allow_multiple_content_views']
           fail ::Katello::Errors::MultiEnvironmentNotSupportedError,
           _("Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.")
         end
-        super(new_cves)
-        Katello::ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(self, new_cves)
+        super(new_cvenvs)
+        Katello::ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(self, new_cvenvs)
         self.content_view_environments.reload unless self.new_record?
         self.host&.update_candlepin_associations unless self.host&.new_record?
       end
@@ -158,11 +159,10 @@ module Katello
         content_view_environments.map(&:label).join(',')
       end
 
-
       def default_environment?
         return if content_view_environments.blank?
-        # if default cve is first, this is equivalent to default being the only one.
-        # if default cve is not first, candlepin will prioritize CV repos over library repos in case of conflicts.
+        # if default content view environment is first, this is equivalent to default being the only one.
+        # if default content view environment is not first, candlepin will prioritize CV repos over library repos in case of conflicts.
         content_view_environments.first.default_environment?
       end
 
@@ -174,8 +174,8 @@ module Katello
         # This determines whether the Applicable/Installable toggle should be hidden.
         return true if content_view_environments.first.default_environment?
 
-        content_view_environments.all? do |cve|
-          cve.content_view&.rolling? || cve.default_environment?
+        content_view_environments.all? do |cvenv|
+          cvenv.content_view&.rolling? || cvenv.default_environment?
         end
       end
 
@@ -379,8 +379,8 @@ module Katello
       end
 
       def available_releases
-        self.content_view_environments.flat_map do |cve|
-          cve.content_view.version(cve.lifecycle_environment).available_releases
+        self.content_view_environments.flat_map do |cvenv|
+          cvenv.content_view.version(cvenv.lifecycle_environment).available_releases
         end
       end
 
@@ -424,9 +424,9 @@ module Katello
         facet_attributes[:kickstart_repository_id] ||= hostgroup.inherited_kickstart_repository_id
         facet_attributes[:content_source_id] ||= hostgroup.inherited_content_source_id
         unless facet_attributes.key?(:content_view_environment_ids)
-          cve_id = hostgroup.content_facet&.content_view_environment_id
-          cve_id ||= hostgroup.send(:inherited_ancestry_attribute, :content_view_environment_id, :content_facet) if cve_id.nil? && hostgroup.ancestry.present?
-          facet_attributes[:content_view_environment_ids] = [cve_id] if cve_id
+          cvenv_id = hostgroup.content_facet&.content_view_environment_id
+          cvenv_id ||= hostgroup.inherited_content_view_environment_id if cvenv_id.nil? && hostgroup.ancestry.present?
+          facet_attributes[:content_view_environment_ids] = [cvenv_id] if cvenv_id
         end
         facet_attributes
       end

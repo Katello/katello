@@ -402,7 +402,7 @@ module ::Actions::Katello::ContentView
                       content_view_version: content_view.versions.first,
                       environment: library
     end
-    let(:cv_env) { content_view.content_view_environment(library) }
+    let(:cvenv) { content_view.content_view_environment(library) }
 
     before do
       [repository_rpm, repository_deb].each do |repository|
@@ -423,9 +423,9 @@ module ::Actions::Katello::ContentView
       assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone_deb, false
 
       assert_action_planned_with action, ::Actions::Candlepin::Environment::AddContentToEnvironment,
-                                 view_env_cp_id: cv_env.cp_id, content_id: repository_rpm.content_id
+                                 view_env_cp_id: cvenv.cp_id, content_id: repository_rpm.content_id
       assert_action_planned_with action, ::Actions::Candlepin::Environment::AddContentToEnvironment,
-                                 view_env_cp_id: cv_env.cp_id, content_id: repository_deb.content_id
+                                 view_env_cp_id: cvenv.cp_id, content_id: repository_deb.content_id
     end
 
     it 'plan refresh for existing' do
@@ -442,7 +442,7 @@ module ::Actions::Katello::ContentView
       assert_equal 1, content_view.get_repo_clone(library, repository_deb).count
       assert_action_planned_with action, ::Actions::Katello::ContentView::RefreshRollingRepo, clone_deb, false
       assert_action_planned_with action, ::Actions::Candlepin::Environment::AddContentToEnvironment,
-                                 view_env_cp_id: cv_env.cp_id, content_id: repository_deb.content_id
+                                 view_env_cp_id: cvenv.cp_id, content_id: repository_deb.content_id
     end
 
     it 'plans nothing' do
@@ -492,8 +492,8 @@ module ::Actions::Katello::ContentView
       assert_action_planned_with action, ::Actions::Pulp3::Repository::DeleteDistributions, clone_rpm.id, primary
       assert_action_planned_with action, ::Actions::Pulp3::Repository::DeleteDistributions, clone_deb.id, primary
 
-      cv_env = content_view.content_view_environment(library)
-      assert_action_planned_with action, ::Actions::Candlepin::Environment::SetContent, content_view, library, cv_env
+      cvenv = content_view.content_view_environment(library)
+      assert_action_planned_with action, ::Actions::Candlepin::Environment::SetContent, content_view, library, cvenv
     end
 
     it 'plan ignores gone repo' do
@@ -503,8 +503,8 @@ module ::Actions::Katello::ContentView
 
       refute_action_planned action, ::Actions::Pulp3::Repository::DeleteDistributions
 
-      cv_env = content_view.content_view_environment(library)
-      assert_action_planned_with action, ::Actions::Candlepin::Environment::SetContent, content_view, library, cv_env
+      cvenv = content_view.content_view_environment(library)
+      assert_action_planned_with action, ::Actions::Candlepin::Environment::SetContent, content_view, library, cvenv
     end
 
     it 'plans nothing' do
@@ -603,15 +603,15 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
-      cve = Katello::ContentViewEnvironment.where(:content_view_id => content_view, :environment_id => environment).first
-      cve.hosts.each { |host| host.content_facet.destroy }
-      Katello::ContentViewEnvironment.stubs(:where).returns([cve])
+      cvenv = Katello::ContentViewEnvironment.where(:content_view_id => content_view, :environment_id => environment).first
+      cvenv.hosts.each { |host| host.content_facet.destroy }
+      Katello::ContentViewEnvironment.stubs(:where).returns([cvenv])
 
       action.stubs(:task).returns(success_task)
 
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, environment)
-      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cve)
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cvenv)
     end
   end
 
@@ -659,7 +659,7 @@ module ::Actions::Katello::ContentView
       katello_environments(:dev)
     end
 
-    let(:cv_env) do
+    let(:cvenv) do
       Katello::ContentViewEnvironment.where(content_view_id: content_view,
                                             environment_id: environment
                                            ).first
@@ -669,7 +669,7 @@ module ::Actions::Katello::ContentView
       katello_environments(:library)
     end
 
-    let(:library_cv_env) do
+    let(:library_cvenv) do
       Katello::ContentViewEnvironment.where(content_view_id: content_view,
                                             environment_id: library
                                            ).first
@@ -679,7 +679,7 @@ module ::Actions::Katello::ContentView
       katello_content_views(:acme_default)
     end
 
-    let(:default_cv_env) do
+    let(:default_cvenv) do
       Katello::ContentViewEnvironment.where(content_view_id: default_content_view.id,
                                             environment_id: library.id
                                            ).first
@@ -687,41 +687,41 @@ module ::Actions::Katello::ContentView
 
     it 'plans for removing environments' do
       assert_raises(RuntimeError) do
-        action.validate_options(content_view, [cv_env], [], {})
+        action.validate_options(content_view, [cvenv], [], {})
       end
 
-      options = {content_view_environments: [cv_env],
+      options = {content_view_environments: [cvenv],
                  system_content_view_id: default_content_view.id,
                  system_environment_id: library.id,
                 }
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, options)
 
-      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cvenv, :skip_repo_destroy => false, :organization_destroy => false)
     end
 
     it 'plans for removing a version and an environment' do
-      cve = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
+      cvenv_local = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
                                                       environment_id: environment.id
                                                  ).first
-      version = cve.content_view_version
-      cve.hosts.each { |h| h.content_facet.destroy }
-      options = {content_view_environments: [cv_env, library_cv_env],
+      version = cvenv_local.content_view_version
+      cvenv_local.hosts.each { |h| h.content_facet.destroy }
+      options = {content_view_environments: [cvenv, library_cvenv],
                  content_view_versions: [version],
                 }
       action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view, options)
-      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cvenv, :skip_repo_destroy => false, :organization_destroy => false)
       assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true, :skip_destroy_env_content => true)
     end
 
     it 'plans deleting all CV env and versions and removing repository references with destroy_content_view param' do
       smart_proxy_service_1 = new_capsule_content(:three)
       ::SmartProxy.stubs(:pulp_primary).returns(smart_proxy_service_1.smart_proxy)
-      cve = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
+      cvenv_local = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
                                                   environment_id: environment.id).first
-      cve.hosts.each { |h| h.content_facet.destroy }
+      cvenv_local.hosts.each { |h| h.content_facet.destroy }
       options = {content_view_environments: content_view.content_view_environments,
                  content_view_versions: content_view.versions,
                  destroy_content_view: true,
@@ -741,8 +741,7 @@ module ::Actions::Katello::ContentView
     context 'organization destroy' do
       it 'works' do
         ::Hostgroup.create!(name: 'foo',
-                            content_view: content_view,
-                            lifecycle_environment: environment)
+                            content_view_environment_id: cvenv.id)
         options = { organization_destroy: true }
         action.expects(:action_subject).with(content_view)
         refute_empty content_view.hosts.first.content_facet.content_facet_errata
@@ -755,17 +754,16 @@ module ::Actions::Katello::ContentView
         # Scenario 3: Removing version from environment
         # Setup: Create hostgroup using this CV/env
         ::Hostgroup.create!(name: 'test-hostgroup',
-                            content_view: content_view,
-                            lifecycle_environment: environment)
+                            content_view_environment_id: cvenv.id)
 
         # Setup reassignment target (default CV in library)
         reassign_options = {
-          content_view_environments: [cv_env],
+          content_view_environments: [cvenv],
           # Need to provide params for hosts too (they exist in the test fixture)
           system_content_view_id: default_content_view.id,
           system_environment_id: library.id,
           # Params for hostgroups
-          hostgroup_content_view_environment_id: default_cv_env.id,
+          hostgroup_content_view_environment_id: default_cvenv.id,
         }
 
         action.expects(:action_subject).with(content_view)
@@ -773,28 +771,27 @@ module ::Actions::Katello::ContentView
         # Act: Remove the CV environment
         plan_action(action, content_view, reassign_options)
 
-        # Assert: ReassignObjects action should be planned for the CVE with hostgroups
-        assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::ReassignObjects, cv_env, reassign_options)
+        # Assert: ReassignObjects action should be planned for the content view environment with hostgroups
+        assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::ReassignObjects, cvenv, reassign_options)
       end
 
       it 'plans reassigning hostgroups when deleting CV version (scenario 2)' do
         # Scenario 2: CV version deletion
-        cve = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
+        cvenv_local = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
                                                     environment_id: environment.id).first
-        version = cve.content_view_version
+        version = cvenv_local.content_view_version
 
         ::Hostgroup.create!(name: 'test-hostgroup-version',
-                            content_view: content_view,
-                            lifecycle_environment: environment)
+                            content_view_environment_id: cvenv.id)
 
         # Remove hosts so we can focus on hostgroups
-        cve.hosts.each { |h| h.content_facet.destroy }
+        cvenv_local.hosts.each { |h| h.content_facet.destroy }
 
         reassign_options = {
           # Must specify both the version AND the environment to remove it from
           content_view_versions: [version],
-          content_view_environments: [cve, library_cv_env],
-          hostgroup_content_view_environment_id: default_cv_env.id,
+          content_view_environments: [cvenv_local, library_cvenv],
+          hostgroup_content_view_environment_id: default_cvenv.id,
         }
 
         action.expects(:action_subject).with(content_view)
@@ -803,7 +800,7 @@ module ::Actions::Katello::ContentView
         plan_action(action, content_view, reassign_options)
 
         # Assert: ReassignObjects action should be planned
-        assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::ReassignObjects, cve, reassign_options)
+        assert_action_planned_with(action, ::Actions::Katello::ContentViewEnvironment::ReassignObjects, cvenv_local, reassign_options)
       end
 
       it 'validates hostgroup reassignment params when deleting entire CV (scenario 1)' do
@@ -812,8 +809,7 @@ module ::Actions::Katello::ContentView
         # (they're not automatically deleted with the CV)
 
         ::Hostgroup.create!(name: 'test-hostgroup-cv-delete',
-                            content_view: content_view,
-                            lifecycle_environment: environment)
+                            content_view_environment_id: cvenv.id)
 
         reassign_options_without_hg = {
           content_view_environments: content_view.content_view_environments,
@@ -831,26 +827,24 @@ module ::Actions::Katello::ContentView
       it 'validates hostgroup reassignment params when hostgroups exist' do
         # Setup: Create hostgroup using this CV/env
         ::Hostgroup.create!(name: 'test-hostgroup-validate',
-                            content_view: content_view,
-                            lifecycle_environment: environment)
+                            content_view_environment_id: cvenv.id)
 
         # Act/Assert: Should raise error if reassignment params not provided
         assert_raises(RuntimeError) do
-          action.validate_options(content_view, [cv_env], [], {})
+          action.validate_options(content_view, [cvenv], [], {})
         end
       end
 
-      it 'always reassigns hostgroups since they are single-CVE only' do
+      it 'always reassigns hostgroups since they are single content view environment only' do
         # Verify that hostgroups don't have multi_content_view_environment check
         # (unlike hosts and activation keys)
-        hostgroup = ::Hostgroup.create!(name: 'single-cve-hg',
-                                        content_view: content_view,
-                                        lifecycle_environment: environment)
+        hostgroup = ::Hostgroup.create!(name: 'single-cvenv-hg',
+                                        content_view_environment_id: cvenv.id)
 
         # Hostgroups should not respond to multi_content_view_environment?
         refute_respond_to hostgroup.content_facet, :multi_content_view_environment?
 
-        # They should have exactly one CVE
+        # They should have exactly one content view environment
         assert_equal 1, [hostgroup.content_view_environment].compact.count
       end
     end

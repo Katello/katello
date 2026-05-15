@@ -5,12 +5,12 @@ module Actions
         middleware.use Actions::Middleware::PropagateCandlepinErrors
 
         def plan(organization)
-          organization.content_view_environments.each do |cve|
+          organization.content_view_environments.each do |cvenv|
             plan_action(
               Actions::Candlepin::Environment::SetContent,
-              cve.content_view,
-              cve.owner,
-              cve
+              cvenv.content_view,
+              cvenv.owner,
+              cvenv
             )
           end
         end

@@ -22,10 +22,10 @@ module Katello
         :mismatched_ks_repo => 'The selected kickstart repository is not part of the assigned content view, lifecycle environment, ' \
                                'content source, operating system, and architecture',
       }
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(content_view.id, library_environment.id)
       @content_facet = Katello::Hostgroup::ContentFacet.new(
         :kickstart_repository_id => 4,
-        :lifecycle_environment_id => library_environment.id,
-        :content_view_id => content_view.id,
+        :content_view_environment => cvenv,
         :content_source_id => content_source.id)
       @hostgroup = ::Hostgroup.new(
         :operatingsystem => @os,
@@ -82,8 +82,8 @@ module Katello
       assert_equal @error_messages[:invalid_os], @content_facet.hostgroup.errors[:base].first
     end
 
-    test 'it invalidates if content_view not in environment' do
-      @content_facet.lifecycle_environment_id = katello_environments(:candlepin_dev).id
+    test 'it invalidates if content_view_environment is missing' do
+      @content_facet.content_view_environment = nil
       @validator.validate(@content_facet)
       assert_equal @error_messages[:missing_content_view], @content_facet.hostgroup.errors[:lifecycle_environment].first
     end

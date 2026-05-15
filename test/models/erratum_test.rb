@@ -164,11 +164,11 @@ module Katello
       super
       @host = hosts(:one)
       @host.expects(:update_candlepin_associations)
-      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
         katello_content_views(:library_dev_view).id,
         katello_environments(:library).id
       )
-      @host.content_facet.content_view_environments = [cve]
+      @host.content_facet.content_view_environments = [cvenv]
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
       @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!
@@ -223,11 +223,11 @@ module Katello
       @security = katello_errata(:security)
       @host = hosts(:one)
       @host.expects(:update_candlepin_associations)
-      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
         katello_content_views(:library_dev_view).id,
         katello_environments(:library).id
       )
-      @host.content_facet.content_view_environments = [cve]
+      @host.content_facet.content_view_environments = [cvenv]
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
       @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!

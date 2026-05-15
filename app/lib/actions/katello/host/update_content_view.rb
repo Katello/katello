@@ -4,8 +4,8 @@ module Actions
       class UpdateContentView < Actions::EntryAction
         def plan(host, content_view_id, lifecycle_environment_id)
           if host.content_facet
-            cve = ::Katello::ContentViewEnvironment.find_by_cv_and_lce!(content_view_id, lifecycle_environment_id)
-            host.content_facet.content_view_environments = [cve]
+            cvenv = ::Katello::ContentViewEnvironment.find_by_cv_and_lce!(content_view_id, lifecycle_environment_id)
+            host.content_facet.content_view_environments = [cvenv]
             host.update_candlepin_associations
             plan_self(:hostname => host.name)
           else

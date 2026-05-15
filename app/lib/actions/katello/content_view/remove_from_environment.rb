@@ -8,22 +8,22 @@ module Actions
           action_subject(content_view)
           content_view.check_remove_from_environment!(environment)
 
-          cv_env = ::Katello::ContentViewEnvironment.where(:content_view_id => content_view.id,
+          cvenv = ::Katello::ContentViewEnvironment.where(:content_view_id => content_view.id,
                                                            :environment_id => environment.id).first
 
-          if cv_env.nil?
+          if cvenv.nil?
             fail _("Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'.") %
               {view: content_view.name, env: environment.name}
           end
 
-          history = ::Katello::ContentViewHistory.create!(:content_view_version => cv_env.content_view_version,
+          history = ::Katello::ContentViewHistory.create!(:content_view_version => cvenv.content_view_version,
                                                           :environment => environment,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                           :action => ::Katello::ContentViewHistory.actions[:removal],
                                                           :task => self.task)
 
-          plan_action(ContentViewEnvironment::Destroy, cv_env)
+          plan_action(ContentViewEnvironment::Destroy, cvenv)
           plan_self(history_id: history.id)
         end
 

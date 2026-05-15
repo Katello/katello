@@ -69,8 +69,8 @@ module Katello
 
       def validate_content_view_environment_org(content_view_environments, activation_key)
         orgs = Set.new([activation_key&.organization])
-        content_view_environments&.each do |cve|
-          orgs << cve&.environment&.organization
+        content_view_environments&.each do |cvenv|
+          orgs << cvenv&.environment&.organization
         end
         orgs.delete(nil)
         if orgs.size != 1
@@ -177,7 +177,7 @@ module Katello
         host_uuid = get_uuid(consumer_params)
         consumer_params[:uuid] = host_uuid
         host.content_facet = populate_content_facet(host, content_view_environments)
-        host.content_facet.cves_changed = false # prevent backend_update_needed from triggering an update on a nonexistent consumer
+        host.content_facet.cvenvs_changed = false # prevent backend_update_needed from triggering an update on a nonexistent consumer
         host.subscription_facet = populate_subscription_facet(host, activation_keys, consumer_params, host_uuid)
         host.save! # the host has content and subscription facets at this point
 
@@ -266,14 +266,14 @@ module Katello
       end
 
       def lookup_content_view_environments(activation_keys)
-        # If the setting is on, we combine all CVEs from all AKs
+        # If the setting is on, we combine all CVEnvs from all AKs
         if Setting['allow_multiple_content_views']
-          cves = activation_keys.map do |act_key|
+          cvenvs = activation_keys.map do |act_key|
             act_key.content_view_environments
           end
-          cves = cves.flatten.uniq
-          fail _('At least one activation key must have a lifecycle environment and content view assigned to it') if cves.blank?
-          return cves
+          cvenvs = cvenvs.flatten.uniq
+          fail _('At least one activation key must have a lifecycle environment and content view assigned to it') if cvenvs.blank?
+          return cvenvs
         end
 
         # If the setting is off, we stick with the previous behavior (the last AK with a valid cv/lce wins).
@@ -281,7 +281,7 @@ module Katello
           act_key.content_view_environments.any?
         end
         if activation_key
-          ::Katello::ContentViewEnvironment.where(:content_view_id => activation_key.content_view, :environment_id => activation_key.environment)
+          [activation_key.content_view_environments.first]
         else
           fail _('At least one activation key must have a lifecycle environment and content view assigned to it')
         end
@@ -326,11 +326,11 @@ module Katello
             host.content_facet.kickstart_repository_id = nil
             host.content_facet.content_source = ::SmartProxy.pulp_primary
           end
-          # If setting is enabled, keep current values (CVEs, kickstart_repository_id, content_source)
+          # If setting is enabled, keep current values (CVEnvs, kickstart_repository_id, content_source)
 
           host.content_facet.save!
-          Rails.logger.debug "remove_host_artifacts: marking CVEs unchanged to prevent backend update"
-          host.content_facet.mark_cves_unchanged
+          Rails.logger.debug "remove_host_artifacts: marking CVEnvs unchanged to prevent backend update"
+          host.content_facet.mark_cvenvs_unchanged
           host.content_facet.calculate_and_import_applicability
         end
 

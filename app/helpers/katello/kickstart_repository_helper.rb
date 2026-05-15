@@ -59,11 +59,11 @@ module Katello
         elsif host.content_facet.present? && host.content_facet.content_view_environments.any?
           new_host.content_facet = ::Katello::Host::ContentFacet.new(:content_source_id => host.content_source_id)
           if host.single_content_view_environment?
-            cve = ::Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+            cvenv = ::Katello::ContentViewEnvironment.find_by_cv_and_lce!(
               host.content_facet.single_content_view.id,
               host.content_facet.single_lifecycle_environment.id
             )
-            new_host.content_facet.content_view_environments = [cve]
+            new_host.content_facet.content_view_environments = [cvenv]
           end
         else
           return os_updated_kickstart_options(new_host)
@@ -90,11 +90,11 @@ module Katello
         host.architecture = fetch_inherited_param(host_params[:architecture_id], ::Architecture, parent&.architecture)
         content_source = fetch_inherited_param(host_params[:content_source_id], ::SmartProxy, parent&.content_source)
 
-        cve_id = host_params[:content_view_environment_id]
-        cve = cve_id.present? ? ::Katello::ContentViewEnvironment.find_by(id: cve_id) : parent&.content_view_environment
+        cvenv_id = host_params[:content_view_environment_id]
+        cvenv = cvenv_id.present? ? ::Katello::ContentViewEnvironment.find_by(id: cvenv_id) : parent&.content_view_environment
 
         host.content_facet = Host::ContentFacet.new(:content_source => content_source)
-        host.content_facet.content_view_environments = [cve] if cve
+        host.content_facet.content_view_environments = [cvenv] if cvenv
         if host.operatingsystem.is_a?(Redhat)
           view_options = host.operatingsystem.kickstart_repos(host).map { |repo| OpenStruct.new(repo) }
         end

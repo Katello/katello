@@ -43,8 +43,8 @@ module Katello
         if host&.subscription_facet&.uuid.present?
           repo_ids = []
           if host&.content_view_environments&.any?
-            repo_ids = host.content_view_environments.flat_map do |cve|
-              cve&.content_view_version&.repositories&.where(environment_id: cve.environment)&.pluck(:id)
+            repo_ids = host.content_view_environments.flat_map do |cvenv|
+              cvenv&.content_view_version&.repositories&.where(environment_id: cvenv.environment)&.pluck(:id)
             end
             repo_ids = repo_ids.compact.uniq
           end

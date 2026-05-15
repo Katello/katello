@@ -33,31 +33,31 @@ module Katello
       host.update!(:content_facet_attributes => { :content_source_id => nil })
     end
 
-    def test_action_triggered_on_facet_cve_update
+    def test_action_triggered_on_facet_cvenv_update
       host.reload
       host.expects(:update_candlepin_associations).twice
-      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view.id, dev.id)
-      host.content_facet.content_view_environments = [cve]
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view.id, dev.id)
+      host.content_facet.content_view_environments = [cvenv]
       host.save!
 
       host.reload
       host.expects(:update_candlepin_associations).twice
-      cve2 = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view2.id, dev.id)
-      host.content_facet.content_view_environments = [cve2]
+      cvenv2 = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view2.id, dev.id)
+      host.content_facet.content_view_environments = [cvenv2]
       host.save!
     end
 
-    def test_content_facet_cve_update
+    def test_content_facet_cvenv_update
       host.expects(:update_candlepin_associations).twice
-      cve = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view2.id, dev.id)
-      host.content_facet.content_view_environments = [cve]
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view2.id, dev.id)
+      host.content_facet.content_view_environments = [cvenv]
       host.save!
       host.reload.content_facet.reload
 
       refute_nil host.subscription_facet.uuid # not reset to nil
-      host_cve = host.content_view_environments.first
-      assert_equal dev.id, host_cve.environment_id # unchanged
-      assert_equal view2.id, host_cve.content_view_id # changed
+      host_cvenv = host.content_view_environments.first
+      assert_equal dev.id, host_cvenv.environment_id # unchanged
+      assert_equal view2.id, host_cvenv.content_view_id # changed
     end
 
     def test_other_content_facet_update
