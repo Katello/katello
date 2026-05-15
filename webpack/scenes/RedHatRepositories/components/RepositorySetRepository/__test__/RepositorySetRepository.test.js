@@ -106,11 +106,11 @@ describe('RepositorySetRepository Component', () => {
     // Verify the Y-stream version number appears
     expect(getByText('x86_64 8.5')).toBeInTheDocument();
 
-    // For legacy PatternFly v3 FieldLevelHelp - verify info icon appears
-    // The FieldLevelHelp component renders an info icon button with popover help content
+    // For PatternFly v5 Popover with help button - verify help button appears
+    // The Popover component renders a help button with popover help content
     // The popover contains a link to https://access.redhat.com/articles/1586183
-    const helpIcon = container.querySelector('.pficon-info');
-    expect(helpIcon).toBeInTheDocument();
+    const helpButton = container.querySelector('.ystream-help-button');
+    expect(helpButton).toBeInTheDocument();
   });
 
   test('does not show help icon for non-Y-stream repository', () => {
@@ -124,9 +124,9 @@ describe('RepositorySetRepository Component', () => {
     const listItem = container.querySelector('.deemphasize');
     expect(listItem).not.toBeInTheDocument();
 
-    // Should NOT have FieldLevelHelp info icon
-    const helpIcon = container.querySelector('.pficon-info');
-    expect(helpIcon).not.toBeInTheDocument();
+    // Should NOT have help button
+    const helpButton = container.querySelector('.ystream-help-button');
+    expect(helpButton).not.toBeInTheDocument();
   });
 
   test('does not deemphasize kickstart repositories even if Y-stream', () => {
@@ -199,12 +199,13 @@ describe('RepositorySetRepository Component', () => {
       getInitialState(),
     );
 
-    // For legacy PatternFly v3 icon - error icon should be visible
-    const errorIcon = container.querySelector('.fa-times-circle-o');
-    expect(errorIcon).toBeInTheDocument();
-
+    // For PatternFly v5 icon - error icon should be visible
     const errorContainer = container.querySelector('.list-error-danger');
     expect(errorContainer).toBeInTheDocument();
+
+    // Verify TimesCircleIcon is rendered inside error container
+    const errorIcon = errorContainer.querySelector('svg');
+    expect(errorIcon).toBeInTheDocument();
   });
 
   test('enables repository via API when enable button is clicked', async () => {

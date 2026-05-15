@@ -1,96 +1,141 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { Component } from 'react';
-import { DropdownButton, MenuItem } from 'patternfly-react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
+import {
+  Menu,
+  MenuContent,
+  MenuList,
+  MenuItem,
+  MenuToggle,
+  Popper,
+} from '@patternfly/react-core';
 import SearchBar from 'foremanReact/components/SearchBar';
 import { translate as __ } from 'foremanReact/common/I18n';
-import '../index.scss';
 import { orgId } from '../../../services/api';
 
-class RepositorySearch extends Component {
-  constructor(props) {
-    super(props);
-    this.dropDownItems = [
-      {
-        key: 'available',
-        endpoint: 'repository_sets',
-        title: __('Available'),
-      },
-      {
-        key: 'enabled',
-        endpoint: 'enabled_repositories',
-        title: __('Enabled'),
-      },
-      {
-        key: 'both',
-        endpoint: false,
-        title: __('Both'),
-      },
-    ];
-    this.state = { searchList: this.dropDownItems[0] };
-    this.onSearch = this.onSearch.bind(this);
-  }
+const RepositorySearch = ({ onSearch, onSelectSearchList }) => {
+  const dropDownItems = useMemo(() => [
+    {
+      key: 'available',
+      endpoint: 'repository_sets',
+      title: __('Available'),
+    },
+    {
+      key: 'enabled',
+      endpoint: 'enabled_repositories',
+      title: __('Enabled'),
+    },
+    {
+      key: 'both',
+      endpoint: false,
+      title: __('Both'),
+    },
+  ], []);
 
-  onSearch(search) {
-    this.props.onSearch(search);
-  }
+  const [searchList, setSearchList] = useState(dropDownItems[0]);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const toggleRef = useRef(null);
+  const menuRef = useRef(null);
 
-  onSelectSearchList(searchList) {
-    this.setState({ searchList });
-    this.props.onSelectSearchList(searchList.key);
-  }
+  const handleSearch = useCallback((search) => {
+    onSearch(search);
+  }, [onSearch]);
 
-  getAutoCompleteEndpoint() {
-    let endpoint = '';
-    if (this.state.searchList.key === 'enabled') {
-      endpoint = '/katello/api/v2/repositories/auto_complete_search';
-    } else if (this.state.searchList.key === 'available') {
-      endpoint = '/katello/api/v2/repository_sets/auto_complete_search';
+  const handleSelectSearchList = useCallback((_event, selectedKey) => {
+    const selected = dropDownItems.find(item => item.key === selectedKey);
+    if (selected) {
+      setSearchList(selected);
+      onSelectSearchList(selected.key);
+      setIsSelectOpen(false);
     }
+  }, [dropDownItems, onSelectSearchList]);
 
-    return endpoint;
-  }
+  const getAutoCompleteEndpoint = useCallback(() => {
+    if (searchList.key === 'enabled') {
+      return '/katello/api/v2/repositories/auto_complete_search';
+    } else if (searchList.key === 'available') {
+      return '/katello/api/v2/repository_sets/auto_complete_search';
+    }
+    return '';
+  }, [searchList.key]);
 
-  autocompleteQueryParams() {
+  const autocompleteQueryParams = useCallback(() => {
     const params = { organization_id: orgId() };
-    if (this.state.searchList.key === 'enabled') {
+    if (searchList.key === 'enabled') {
       params.enabled = true;
     }
-
     return params;
-  }
+  }, [searchList.key]);
 
-  render() {
-    return (
-      <div style={{ display: 'flex' }}>
-        <DropdownButton title={this.state.searchList.title} id="search-list-select">
-          {this.dropDownItems
-            .filter(({ key }) => key !== this.state.searchList.key)
-            .map(({ key, title, ...rest }) => (
-              <MenuItem
-                key={key}
-                onClick={() =>
-                  this.onSelectSearchList({ key, title, ...rest })
-                }
-              >
-                {title}
-              </MenuItem>
-            ))}
-        </DropdownButton>
+  const toggle = (
+    <MenuToggle
+      ref={toggleRef}
+      onClick={() => setIsSelectOpen(!isSelectOpen)}
+      isExpanded={isSelectOpen}
+      ouiaId="search-list-select"
+    >
+      {searchList.title}
+    </MenuToggle>
+  );
+
+  const menu = (
+    <Menu
+      ref={menuRef}
+      onSelect={handleSelectSearchList}
+      selected={searchList.key}
+      ouiaId="search-list-menu"
+    >
+      <MenuContent>
+        <MenuList>
+          {dropDownItems.map(({ key, title }) => (
+            <MenuItem
+              key={key}
+              itemId={key}
+              isSelected={searchList.key === key}
+            >
+              {title}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </MenuContent>
+    </Menu>
+  );
+
+  return (
+    <>
+      <div className="search-list-select-container">
+        <Popper
+          trigger={toggle}
+          popper={menu}
+          isVisible={isSelectOpen}
+          appendTo={() => document.body}
+          onDocumentClick={(event) => {
+            if (
+              toggleRef.current &&
+              !toggleRef.current.contains(event.target) &&
+              menuRef.current &&
+              !menuRef.current.contains(event.target)
+            ) {
+              setIsSelectOpen(false);
+            }
+          }}
+        />
+      </div>
+      <div className="search-input-container">
         <SearchBar
           data={{
             autocomplete: {
-              url: this.getAutoCompleteEndpoint(),
-              apiParams: this.autocompleteQueryParams(),
+              url: getAutoCompleteEndpoint(),
+              apiParams: autocompleteQueryParams(),
             },
             bookmarks: {},
           }}
-          onSearch={this.onSearch}
+          onSearch={handleSearch}
         />
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
 RepositorySearch.propTypes = {
   onSearch: PropTypes.func.isRequired,

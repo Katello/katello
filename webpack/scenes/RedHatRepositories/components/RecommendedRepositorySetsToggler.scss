@@ -1,16 +1,16 @@
 @import "foremanReact/common/variables";
 
 .recommended-repositories-toggler-container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 
-  > * {
-    margin: 0 3px;
+  // Style only the StarIcon (not the question icon)
+  > svg {
+    color: var(--pf-v5-global--warning-color--100);
+  }
 
-    &.fa.fa-star {
-      color: $color-pf-gold-300;
-    }
-
-    &:last-child {
-      margin: 0;
-    }
+  .recommended-repos-help-button {
+    padding: 0.25rem 0 0 0;
   }
 }

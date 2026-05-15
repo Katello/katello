@@ -1,18 +1,18 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import { Form, FormGroup } from 'react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
 
-import { selectOrganizationProducts }
-  from '../../../redux/OrganizationProducts/OrganizationProductsSelectors';
-import { loadOrganizationProducts }
+import {
+  selectOrganizationProducts,
+  selectOrganizationProductsLoading,
+} from '../../../redux/OrganizationProducts/OrganizationProductsSelectors';
+import { loadOrganizationProducts as loadOrganizationProductsAction }
   from '../../../redux/OrganizationProducts/OrganizationProductsActions';
 
-import { loadEnabledRepos } from '../../../redux/actions/RedHatRepositories/enabled';
-import { loadRepositorySets } from '../../../redux/actions/RedHatRepositories/sets';
+import { loadEnabledRepos as loadEnabledReposAction } from '../../../redux/actions/RedHatRepositories/enabled';
+import { loadRepositorySets as loadRepositorySetsAction } from '../../../redux/actions/RedHatRepositories/sets';
 
 import Search from './Search';
 import MultiSelect from '../../../components/MultiSelect/index';
@@ -26,124 +26,117 @@ const filterOptions = [
   { value: 'other', label: __('Other') },
 ];
 
-class SearchBar extends Component {
-  constructor(props) {
-    super(props);
+const SearchBar = ({
+  loadOrganizationProducts,
+  loadEnabledRepos,
+  loadRepositorySets,
+  organizationProducts,
+  organizationProductsLoading,
+  enabledRepositories,
+  repositorySets,
+}) => {
+  const [query, setQuery] = useState('');
+  const [searchList, setSearchList] = useState('available');
+  const [filters, setFilters] = useState(['rpm']);
+  const [products, setProducts] = useState([]);
 
-    this.state = {
-      query: '',
-      searchList: 'available',
-      filters: ['rpm'],
-    };
-
-    this.onSearch = this.onSearch.bind(this);
-    this.onSelectSearchList = this.onSelectSearchList.bind(this);
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     // load all products until we use filtering and pagination
-    this.props.loadOrganizationProducts({ per_page: 1000, redhat_only: true });
-  }
+    loadOrganizationProducts({ per_page: 1000, redhat_only: true });
+  }, [loadOrganizationProducts]);
 
-  onSearch(query) {
-    this.updateSearch({ query });
-  }
-
-  onSelectSearchList(searchList) {
-    this.updateSearch({ searchList });
-  }
-
-  onSelectFilterType(filters) {
-    this.updateSearch({ filters });
-  }
-
-  onSelectProduct(products) {
-    this.updateSearch({ products });
-  }
-
-  updateSearch(stateUpdate = {}) {
-    const newState = {
-      ...this.state,
-      ...stateUpdate,
-    };
-    this.setState(stateUpdate);
-
-    const clearSearch = stateUpdate.searchList ? {} : null;
-
-    if (newState.searchList === 'available') {
-      this.reloadRepos(newState, clearSearch);
-    } else if (newState.searchList === 'enabled') {
-      this.reloadRepos(clearSearch, newState);
-    } else {
-      this.reloadRepos(newState, newState);
-    }
-  }
-
-  reloadRepos(repoSetsSearch, enabledSearch) {
+  const reloadRepos = useCallback((repoSetsSearch, enabledSearch) => {
     if (repoSetsSearch !== null) {
       const setsParams = {
-        perPage: this.props.repositorySets.pagination.perPage,
+        perPage: repositorySets.pagination.perPage,
         search: repoSetsSearch,
       };
-      this.props.loadRepositorySets(setsParams);
+      loadRepositorySets(setsParams);
     }
 
     if (enabledSearch !== null) {
       const enabledParams = {
-        perPage: this.props.enabledRepositories.pagination.perPage,
+        perPage: enabledRepositories.pagination.perPage,
         search: enabledSearch,
       };
-      this.props.loadEnabledRepos(enabledParams);
+      loadEnabledRepos(enabledParams);
     }
-  }
+  }, [loadRepositorySets, loadEnabledRepos, repositorySets.pagination.perPage,
+    enabledRepositories.pagination.perPage]);
 
-  render() {
-    const { organizationProducts } = this.props;
+  const updateSearch = useCallback((stateUpdate = {}) => {
+    const newState = {
+      query,
+      searchList,
+      filters,
+      products,
+      ...stateUpdate,
+    };
 
-    const getMultiSelectValuesFromEvent = e => [...e.target.options]
-      .filter(({ selected }) => selected)
-      .map(({ value }) => value);
+    // Update local state
+    if (stateUpdate.query !== undefined) setQuery(stateUpdate.query);
+    if (stateUpdate.searchList !== undefined) setSearchList(stateUpdate.searchList);
+    if (stateUpdate.filters !== undefined) setFilters(stateUpdate.filters);
+    if (stateUpdate.products !== undefined) setProducts(stateUpdate.products);
 
-    return (
-      <Form className="toolbar-pf-actions">
-        <div className="search-bar-row">
-          <FormGroup className="toolbar-pf-filter">
-            <Search onSearch={this.onSearch} onSelectSearchList={this.onSelectSearchList} />
-          </FormGroup>
-        </div>
+    const clearSearch = stateUpdate.searchList ? {} : null;
 
-        <div className="search-bar-row search-bar-selects-row">
-          <MultiSelect
-            className="product-select"
-            value="product"
-            options={organizationProducts.map(product => ({
-              value: product.id, label: product.name,
-            }))}
-            defaultValues={[]}
-            noneSelectedText={__('Filter by Product')}
-            maxItemsCountForFullLabel={2}
-            onChange={(e) => {
-              const values = getMultiSelectValuesFromEvent(e);
-              this.onSelectProduct(values);
-            }}
-          />
-          <MultiSelect
-            value={this.state.filters}
-            options={filterOptions}
-            defaultValues={['rpm']}
-            noneSelectedText={__('Filter by type')}
-            onChange={(e) => {
-              const values = [...e.target.options]
-                .filter(({ selected }) => selected)
-                .map(({ value }) => value);
-              this.onSelectFilterType(values);
-            }}
-          />
-        </div>
-      </Form>
-    );
-  }
-}
+    if (newState.searchList === 'available') {
+      reloadRepos(newState, clearSearch);
+    } else if (newState.searchList === 'enabled') {
+      reloadRepos(clearSearch, newState);
+    } else {
+      reloadRepos(newState, newState);
+    }
+  }, [query, searchList, filters, products, reloadRepos]);
+
+  const handleSearch = useCallback((searchQuery) => {
+    updateSearch({ query: searchQuery });
+  }, [updateSearch]);
+
+  const handleSelectSearchList = useCallback((selectedSearchList) => {
+    updateSearch({ searchList: selectedSearchList });
+  }, [updateSearch]);
+
+  const handleSelectFilterType = useCallback((selectedFilters) => {
+    updateSearch({ filters: selectedFilters });
+  }, [updateSearch]);
+
+  const handleSelectProduct = useCallback((selectedProducts) => {
+    updateSearch({ products: selectedProducts });
+  }, [updateSearch]);
+
+  return (
+    <div className="toolbar-pf-actions">
+      <div className="search-bar-row">
+        <Search onSearch={handleSearch} onSelectSearchList={handleSelectSearchList} />
+      </div>
+
+      <div className="search-bar-row search-bar-selects-row">
+        <MultiSelect
+          className="product-select"
+          ouiaId="filter-by-product"
+          options={organizationProducts.map(product => ({
+            value: product.id, label: product.name,
+          }))}
+          defaultValues={[]}
+          noneSelectedText={__('Filter by Product')}
+          maxItemsCountForFullLabel={2}
+          onChange={handleSelectProduct}
+          isLoading={organizationProductsLoading}
+          searchable
+        />
+        <MultiSelect
+          ouiaId="filter-by-type"
+          options={filterOptions}
+          defaultValues={['rpm']}
+          noneSelectedText={__('Filter by type')}
+          onChange={handleSelectFilterType}
+        />
+      </div>
+    </div>
+  );
+};
 
 SearchBar.propTypes = {
   loadEnabledRepos: PropTypes.func.isRequired,
@@ -153,6 +146,7 @@ SearchBar.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     name: PropTypes.string,
   })).isRequired,
+  organizationProductsLoading: PropTypes.bool.isRequired,
   enabledRepositories: PropTypes.shape({
     pagination: PropTypes.shape({
       perPage: PropTypes.number,
@@ -172,11 +166,12 @@ const mapStateToProps = (state) => {
     enabledRepositories: enabled,
     repositorySets: sets,
     organizationProducts: selectOrganizationProducts(state),
+    organizationProductsLoading: selectOrganizationProductsLoading(state),
   };
 };
 
 export default connect(mapStateToProps, {
-  loadEnabledRepos,
-  loadRepositorySets,
-  loadOrganizationProducts,
+  loadEnabledRepos: loadEnabledReposAction,
+  loadRepositorySets: loadRepositorySetsAction,
+  loadOrganizationProducts: loadOrganizationProductsAction,
 })(SearchBar);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListView } from 'patternfly-react';
+import { DataList } from '@patternfly/react-core';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import Pagination from 'foremanReact/components/Pagination';
 
@@ -31,7 +31,7 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
     return <p dangerouslySetInnerHTML={{ __html: noProductsMessage }} />;
   }
   return (
-    <ListView>
+    <>
       <div className="sticky-pagination">
         <Pagination
           itemCount={itemCount}
@@ -41,8 +41,10 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
           {...pagination}
         />
       </div>
-      {results.map(set => <RepositorySet id={set.id} key={set.id} {...set} />)}
-    </ListView>
+      <DataList aria-label={__('Available repository sets')}>
+        {results.map(set => <RepositorySet id={set.id} key={set.id} {...set} />)}
+      </DataList>
+    </>
   );
 };
 
@@ -62,7 +64,7 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
   }
 
   return (
-    <ListView>
+    <>
       <div className="sticky-pagination sticky-pagination-grey">
         <Pagination
           isCompact
@@ -72,7 +74,9 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
           {...pagination}
         />
       </div>
-      {repositories.map(repo => <EnabledRepository key={repo.id} {...repo} />)}
-    </ListView>
+      <DataList aria-label={__('Enabled repositories')}>
+        {repositories.map(repo => <EnabledRepository key={repo.id} {...repo} />)}
+      </DataList>
+    </>
   );
 };

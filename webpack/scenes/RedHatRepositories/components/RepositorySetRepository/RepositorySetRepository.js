@@ -1,134 +1,160 @@
-import React, { Component } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
-import { ListView, Spinner, OverlayTrigger, Tooltip, Icon, FieldLevelHelp } from 'patternfly-react';
+import {
+  DataListItem,
+  DataListItemRow,
+  DataListItemCells,
+  DataListCell,
+  DataListAction,
+  Spinner,
+  Tooltip,
+  Popover,
+  Button,
+} from '@patternfly/react-core';
+import { TimesCircleIcon, PlusCircleIcon, InfoCircleIcon } from '@patternfly/react-icons';
 
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { yStream } from '../RepositorySetRepositoriesHelpers';
 import '../../index.scss';
 
-class RepositorySetRepository extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const RepositorySetRepository = ({
+  contentId,
+  productId,
+  displayArch,
+  arch,
+  releasever,
+  type,
+  label,
+  enabledSearch,
+  enabledPagination,
+  loading,
+  error,
+  setRepositoryEnabled,
+  loadEnabledRepos,
+  enableRepository,
+}) => {
+  const repoForAction = useCallback(() => ({
+    arch,
+    productId,
+    contentId,
+    releasever,
+    label,
+  }), [arch, productId, contentId, releasever, label]);
 
-  setEnabled = () => {
-    this.props.setRepositoryEnabled(this.repoForAction());
-  };
-
-  repoForAction = () => {
-    const {
-      productId, contentId, arch, releasever, label,
-    } = this.props;
-
-    return {
-      arch,
-      productId,
-      contentId,
-      releasever,
-      label,
-    };
-  };
-
-  reloadEnabledRepos = () => (
-    this.props.loadEnabledRepos({
-      ...this.props.enabledPagination,
-      search: this.props.enabledSearch,
+  const reloadEnabledRepos = useCallback(() => (
+    loadEnabledRepos({
+      ...enabledPagination,
+      search: enabledSearch,
     }, true)
-  );
+  ), [loadEnabledRepos, enabledPagination, enabledSearch]);
 
-  notifyEnabled = (data) => {
+  const notifyEnabled = useCallback((data) => {
     const repoName = data.output.repository.name;
     window.tfm.toastNotifications.notify({
       message: sprintf(__("Repository '%(repoName)s' has been enabled."), { repoName }),
       type: 'success',
     });
-  };
+  }, []);
 
-  reloadAndNotify = async (result) => {
+  const reloadAndNotify = useCallback(async (result) => {
     if (result && result.success) {
-      await this.reloadEnabledRepos();
-      await this.setEnabled();
-      await this.notifyEnabled(result.data);
+      await reloadEnabledRepos();
+      await setRepositoryEnabled(repoForAction());
+      await notifyEnabled(result.data);
     }
-  };
+  }, [reloadEnabledRepos, setRepositoryEnabled, repoForAction, notifyEnabled]);
 
-  enableRepository = async () => {
-    const result = await this.props.enableRepository(this.repoForAction());
-    this.reloadAndNotify(result);
-  };
+  const handleEnableRepository = useCallback(async () => {
+    const result = await enableRepository(repoForAction());
+    await reloadAndNotify(result);
+  }, [enableRepository, repoForAction, reloadAndNotify]);
 
-  render() {
-    const { displayArch, releasever, type } = this.props;
+  const archLabel = displayArch || __('Unspecified');
+  const releaseverLabel = releasever || '';
 
-    const archLabel = displayArch || __('Unspecified');
-    const releaseverLabel = releasever || '';
-
-    const yStreamHelpText =
-      sprintf(
-        __('This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.'),
-        {
-          anchorBegin: '<a href="https://access.redhat.com/articles/1586183">',
-          anchorEnd: '</a>',
-        },
-      );
-    // eslint-disable-next-line react/no-danger
-    const yStreamHelp = <span dangerouslySetInnerHTML={{ __html: yStreamHelpText }} />;
-    const shouldDeemphasize = () => type !== 'kickstart' && yStream(releaseverLabel);
-    const repositoryHeading = () => (
-      <span>
-        {archLabel} {releaseverLabel}
-        {shouldDeemphasize() ? (<FieldLevelHelp content={yStreamHelp} />) : null}
-      </span>
+  const yStreamHelpText =
+    sprintf(
+      __('This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.'),
+      {
+        anchorBegin: '<a href="https://access.redhat.com/articles/1586183">',
+        anchorEnd: '</a>',
+      },
     );
+  // eslint-disable-next-line react/no-danger
+  const yStreamHelp = <span dangerouslySetInnerHTML={{ __html: yStreamHelpText }} />;
+  const shouldDeemphasize = type !== 'kickstart' && yStream(releaseverLabel);
+  const headingId = `repo-${arch || 'unspecified'}-${releasever || 'unspecified'}`;
 
-    return (
-      <ListView.Item
-        heading={repositoryHeading()}
-        className={`list-item-with-divider ${shouldDeemphasize() ? 'deemphasize' : ''}`}
-        leftContent={
-          this.props.error ? (
-            <div className="list-error-danger">
-              <Icon name="times-circle-o" />
-            </div>
-          ) : null
-        }
-        additionalInfo={
-          this.state.error
-            ? [
-              <ListView.InfoItem key="error" stacked className="list-error-danger">
-                {this.state.error.displayMessage}
-              </ListView.InfoItem>,
-            ]
-            : null
-        }
-        actions={
-          <Spinner loading={this.props.loading} inline>
-            <OverlayTrigger
-              overlay={<Tooltip id="enable">{__('Enable')}</Tooltip>}
-              placement="bottom"
-              trigger={['hover', 'focus']}
-              rootClose={false}
-            >
-              <button
-                onClick={this.enableRepository}
-                style={{
-                  backgroundColor: 'initial',
-                  border: 'none',
-                  color: '#0388ce',
-                }}
-              >
-                <i className={cx('fa-2x', 'fa fa-plus-circle')} />
-              </button>
-            </OverlayTrigger>
-          </Spinner>
-        }
-        stacked
-      />
+  const repositoryHeading = (
+    <span>
+      {archLabel} {releaseverLabel}
+      {shouldDeemphasize ? (
+        <Popover bodyContent={yStreamHelp}>
+          <Button
+            variant="plain"
+            aria-label={__('Help')}
+            ouiaId="ystream-help-button"
+            className="ystream-help-button"
+          >
+            <InfoCircleIcon />
+          </Button>
+        </Popover>
+      ) : null}
+    </span>
+  );
+
+  const dataListCells = [];
+
+  // Error icon cell (if error exists)
+  if (error) {
+    const errorCell = (
+      <DataListCell key="error-icon" className="repository-cell-icon">
+        <div className="list-error-danger">
+          <TimesCircleIcon />
+        </div>
+      </DataListCell>
     );
+    dataListCells.push(errorCell);
   }
-}
+
+  // Main content cell
+  const contentCell = (
+    <DataListCell key="content" className="repository-cell-content">
+      <div
+        id={headingId}
+        className={shouldDeemphasize ? 'deemphasize repository-text-md' : 'repository-name repository-text-md'}
+      >
+        {repositoryHeading}
+      </div>
+    </DataListCell>
+  );
+  dataListCells.push(contentCell);
+
+  return (
+    <DataListItem aria-labelledby={headingId} className="list-item-with-divider">
+      <DataListItemRow className="repository-item-row">
+        <DataListItemCells dataListCells={dataListCells} />
+        <DataListAction>
+          {loading ? (
+            <Spinner size="md" />
+          ) : (
+            <Tooltip content={__('Enable')} position="bottom">
+              <Button
+                variant="plain"
+                onClick={handleEnableRepository}
+                aria-label={__('Enable')}
+                ouiaId="enable-repository-button"
+                className="enable-repository-button"
+              >
+                <PlusCircleIcon />
+              </Button>
+            </Tooltip>
+          )}
+        </DataListAction>
+      </DataListItemRow>
+    </DataListItem>
+  );
+};
 
 RepositorySetRepository.propTypes = {
   contentId: PropTypes.number.isRequired,
