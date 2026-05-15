@@ -26,6 +26,32 @@ module Katello
             assert_match(/Please run `foreman-rake katello:delete_orphaned_content` to fix the following repository: Fedora 17 x86_64./, error.message)
           end
 
+          def test_ssl_remote_options_custom_cdn_redhat_host
+            repo = katello_repositories(:rhel_7_x86_64)
+            service = Katello::Pulp3::Repository::Yum.new(repo, @proxy)
+            repo.root.organization.cdn_configuration.update(
+              type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE,
+              url: 'https://cdn-eu.redhat.com'
+            )
+            ::Katello::RootRepository.any_instance.stubs(:http_proxy).returns(nil)
+            ::Katello::Product.any_instance.stubs(:certificate).returns('my cert')
+            ::Katello::Product.any_instance.stubs(:key).returns('my key')
+            options = service.ssl_remote_options
+            assert_equal 'my cert', options[:client_cert]
+            assert_equal 'my key', options[:client_key]
+          end
+
+          def test_append_proxy_cacert_with_nil_ca_cert
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            http_proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',
+                              :username => 'admin',
+                              :password => 'password',
+                              :cacert => "proxy cert")
+            ::Katello::RootRepository.any_instance.stubs(:http_proxy).returns(http_proxy)
+            options = service.append_proxy_cacert(ca_cert: nil)
+            assert_equal "proxy cert", options[:ca_cert]
+          end
+
           def test_append_proxy_cacert
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             http_proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',
@@ -34,8 +60,8 @@ module Katello
                               :cacert => "")
             ::Katello::RootRepository.any_instance.expects(:http_proxy).returns(http_proxy)
             cert = "MY cert"
-            options = service.append_proxy_cacert(cacert: cert)
-            assert_equal(options[:cacert], cert)
+            options = service.append_proxy_cacert(ca_cert: cert)
+            assert_equal(options[:ca_cert], cert)
           end
 
           def test_additional_content_hrefs_properly_includes_errata
