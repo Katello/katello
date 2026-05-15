@@ -3,23 +3,20 @@ import { renderWithRedux } from 'react-testing-lib-wrapper';
 import ActivationKeysSearch from './index';
 
 describe('ActivationKeysSearch', () => {
-  const mockQuerySelector = jest.spyOn(document, 'querySelector');
-  mockQuerySelector.mockImplementation((selector) => {
-    if (selector === '#hostgroup_lifecycle_environment_id') {
-      return {
-        options: [{}],
-        selectedIndex: 0,
-        value: '1',
-      };
-    }
-    if (selector === '#hostgroup_content_view_id') {
-      return {
-        options: [{}],
-        selectedIndex: 0,
-        value: '2 ',
-      };
-    }
-    return null;
+  let orgSelect;
+
+  beforeEach(() => {
+    orgSelect = document.createElement('select');
+    orgSelect.id = 'hostgroup_organization_ids';
+    const option = document.createElement('option');
+    option.value = '1';
+    option.selected = true;
+    orgSelect.appendChild(option);
+    document.body.appendChild(orgSelect);
+  });
+
+  afterEach(() => {
+    orgSelect.remove();
   });
   it('renders without crashing', () => {
     const { getByText } = renderWithRedux(<ActivationKeysSearch />, {});

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   Form,
   FormGroup,
@@ -14,57 +14,72 @@ import {
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
 import { FormattedMessage } from 'react-intl';
-import $ from 'jquery';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { get } from 'foremanReact/redux/API';
 import { foremanUrl } from 'foremanReact/common/helpers';
-import { STATUS } from 'foremanReact/constants';
-import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 
-const getSelectedEnvId = () => {
-  const selectElement = document.querySelector('#hostgroup_lifecycle_environment_id');
-  const selectedOption = selectElement.options[selectElement.selectedIndex];
-  let dataId = selectedOption?.getAttribute?.('data-id');
-  if (!dataId) {
-    dataId = selectElement.value;
+const getOrganizationIds = () => {
+  const orgIdsElem = document.querySelector('#hostgroup_organization_ids');
+  if (!orgIdsElem) return [];
+  const ids = new Set();
+  Array.from(orgIdsElem.selectedOptions || []).forEach((opt) => {
+    if (opt.value) ids.add(opt.value);
+  });
+  const useds = orgIdsElem.getAttribute('data-useds');
+  if (useds) {
+    try {
+      const parsed = JSON.parse(useds);
+      if (Array.isArray(parsed)) parsed.forEach(id => ids.add(String(id)));
+    } catch (e) {
+      useds.toString().split(',').filter(Boolean).forEach(id => ids.add(id));
+    }
   }
-  return dataId;
+  return Array.from(ids);
 };
-const getSelectedContentViewId = () => {
-  const selectElement = document.querySelector('#hostgroup_content_view_id');
-  const selectedOption = selectElement.options[selectElement.selectedIndex];
-  let dataId = selectedOption?.getAttribute?.('data-id');
-  if (!dataId) {
-    dataId = selectElement.value;
-  }
-  return dataId;
-};
+
+const ACTIVATION_KEYS = 'ACTIVATION_KEYS';
+
 const ActivationKeysSearch = () => {
-  const ACTIVATION_KEYS = 'ACTIVATION_KEYS';
   const KT_AK_LABEL = 'kt_activation_keys';
-  const [selectedEnvId, setSelectedEnvId] = useState(getSelectedEnvId());
-  const [selectedContentViewId, setSelectedContentViewId] = useState(getSelectedContentViewId());
-  const isLoading =
-    useSelector(state => selectAPIStatus(state, ACTIVATION_KEYS)) === STATUS.PENDING;
+  const [organizationIds, setOrganizationIds] = useState(getOrganizationIds());
+  const [isLoading, setIsLoading] = useState(false);
   const [activationKeys, setActivationKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
   const ktLoadActivationKeys = useCallback(() => {
-    if (selectedEnvId && selectedContentViewId) {
+    if (organizationIds.length === 0) return;
+    setIsLoading(true);
+    setActivationKeys([]);
+    let completed = 0;
+    organizationIds.forEach((orgId) => {
       dispatch(get({
-        key: ACTIVATION_KEYS,
-        url: foremanUrl(`/katello/api/v2/environments/${selectedEnvId}/activation_keys`),
-        params: { content_view_id: selectedContentViewId },
+        key: `${ACTIVATION_KEYS}_${orgId}`,
+        url: foremanUrl('/katello/api/v2/activation_keys'),
+        params: {
+          organization_id: orgId,
+          full_result: true,
+        },
         handleSuccess: ({ data }) => {
-          setActivationKeys(data.results);
+          setActivationKeys((prev) => {
+            const existingIds = new Set(prev.map(ak => ak.id));
+            const newKeys = data.results.filter(ak => !existingIds.has(ak.id));
+            return [...prev, ...newKeys];
+          });
+          completed += 1;
+          if (completed >= organizationIds.length) setIsLoading(false);
+        },
+        handleError: () => {
+          completed += 1;
+          if (completed >= organizationIds.length) setIsLoading(false);
         },
         errorToast: () =>
           __('There was a problem retrieving Activation Key data from the server.'),
       }));
-    }
-  }, [dispatch, selectedEnvId, selectedContentViewId, setActivationKeys]);
+    });
+  }, [dispatch, organizationIds]);
+
   const getParamContainer = useCallback(() => {
     let ret;
     const inputs = document.querySelectorAll("div#parameters .fields input[type='text']");
@@ -76,14 +91,25 @@ const ActivationKeysSearch = () => {
     return ret;
   }, [KT_AK_LABEL]);
 
+  // Update organization IDs when they change
   useEffect(() => {
-    $('#hostgroup_lifecycle_environment_id').on('change', () => setSelectedEnvId(getSelectedEnvId)); // cant use eventlistener on select2
-    $('#hostgroup_content_view_id').on('change', () =>
-      setSelectedContentViewId(getSelectedContentViewId())); // cant use eventlistener on select2
-    if (selectedEnvId && selectedContentViewId) {
-      ktLoadActivationKeys();
-    }
+    const orgElem = document.querySelector('#hostgroup_organization_ids');
+    if (!orgElem) return undefined;
 
+    const handleChange = () => setOrganizationIds(getOrganizationIds());
+
+    const observer = new MutationObserver(handleChange);
+    observer.observe(orgElem, { childList: true, attributes: true, subtree: true });
+    orgElem.addEventListener('change', handleChange);
+
+    return () => {
+      observer.disconnect();
+      orgElem.removeEventListener('change', handleChange);
+    };
+  }, []);
+
+  // Initialize from hidden parameter on mount
+  useEffect(() => {
     const ktHideParams = () => {
       const container = getParamContainer();
       if (container) {
@@ -104,15 +130,21 @@ const ActivationKeysSearch = () => {
     };
     ktHideParams();
     setSelectedKeys(ktAkGetKeysFromParam());
-  }, [getParamContainer, ktLoadActivationKeys, selectedContentViewId, selectedEnvId]);
+  }, [getParamContainer]);
+
+  // Load activation keys when organizations change
+  useEffect(() => {
+    if (organizationIds.length > 0) {
+      ktLoadActivationKeys();
+    }
+  }, [ktLoadActivationKeys, organizationIds]);
 
   useEffect(() => {
     function ktSetParam() {
       let paramContainerCopy = getParamContainer();
       if (selectedKeys.length > 0) {
-        const value = selectedKeys.map(key => key.trim()).join(',');
+        const value = selectedKeys.map(key => key.split(' — ')[0].trim()).join(',');
         if (!paramContainerCopy) {
-          // we create the param for kt_activation_keys
           const addParameterButton = document.querySelector('#parameters .btn-primary');
           addParameterButton.click();
           const directionOfAddedItems = addParameterButton.getAttribute('direction');
@@ -128,7 +160,6 @@ const ActivationKeysSearch = () => {
         const destroyInput = paramContainerCopy.querySelector("input[name*='[_destroy]']");
         if (destroyInput) destroyInput.value = 0;
       } else if (paramContainerCopy) {
-        // we remove the param by setting destroy to 1
         const destroyInput = paramContainerCopy.querySelector("input[name*='[_destroy]']");
         if (destroyInput) destroyInput.value = 1;
       }
@@ -136,15 +167,22 @@ const ActivationKeysSearch = () => {
     ktSetParam();
   }, [getParamContainer, selectedKeys]);
 
-  if (!(selectedEnvId && selectedContentViewId)) {
+  if (organizationIds.length === 0) {
     return (
       <EmptyState>
-        <EmptyStateHeader titleText={<>{__('Please select a lifecycle environment and content view to view activation keys.')}</>} headingLevel="h4" />
+        <EmptyStateHeader
+          titleText={
+            <>{__('Please select an organization to view activation keys.')}</>
+          }
+          headingLevel="h4"
+        />
       </EmptyState>
     );
   }
 
-  const onSelect = (event, selection) => {
+  const multiOrg = organizationIds.length > 1;
+
+  const onSelect = (_event, selection) => {
     setIsOpen(false);
     if (selectedKeys.includes(selection)) {
       setSelectedKeys(prevState => prevState.filter(item => item !== selection));
@@ -152,6 +190,7 @@ const ActivationKeysSearch = () => {
       setSelectedKeys(prevState => [...prevState, selection]);
     }
   };
+
   const isEmptyResults = activationKeys.length === 0;
   return (
     <div>
@@ -169,13 +208,16 @@ const ActivationKeysSearch = () => {
             isDisabled={isLoading || isEmptyResults}
             placeholderText={
               isEmptyResults
-                ? __('The selected lifecycle environment contains no activation keys')
+                ? __('No activation keys available')
                 : null
             }
           >
-            {activationKeys.map(({ id, name }) => (
-              <SelectOption key={id} value={name} />
-            ))}
+            {activationKeys.map(({ id, name, organization }) => {
+              const label = multiOrg ? `${name} — ${organization?.name}` : name;
+              return (
+                <SelectOption key={id} value={label} />
+              );
+            })}
           </Select>
         </FormGroup>
         <Alert title={__('Activation Key information')} variant="info" ouiaId="ak-info">
