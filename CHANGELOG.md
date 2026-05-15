@@ -1,3 +1,21 @@
+# 4.20.1 (2026-05-15)
+
+## Bug Fixes
+
+### Bootable Containers
+ * Sanitize order input bootc_images ([#39306](https://projects.theforeman.org/issues/39306), [4431dd73](https://github.com/Katello/katello.git/commit/4431dd73516f04f945265161a7d4702c644cad96))
+
+### Subscriptions
+ * Using "Custom CDN" configuration with alternate Red Hat CDN URLs cause certificate errors ([#39303](https://projects.theforeman.org/issues/39303))
+
+### Hosts
+ * Applicable/Installable toggle is hidden for hosts assigned to rolling content views ([#39282](https://projects.theforeman.org/issues/39282), [9b461920](https://github.com/Katello/katello.git/commit/9b461920c6ab2bac47e84b3e9ac3c089651d9845))
+ * Unable to save host configuration due to missing variant_repos method ([#39258](https://projects.theforeman.org/issues/39258), [58682ecc](https://github.com/Katello/katello.git/commit/58682eccd6f06b75db180f3c199f295088e41839))
+ * Host links from Packages Details page open Legacy UI instead of New UI ([#39147](https://projects.theforeman.org/issues/39147), [639726f6](https://github.com/Katello/katello.git/commit/639726f63c7146e231c5788b028acd5b2f79ddb6))
+
+### Container
+ * Repository update ID parameter in hammer command in docker repos is failing. ([#39186](https://projects.theforeman.org/issues/39186), [184a8ec1](https://github.com/Katello/katello.git/commit/184a8ec198d323e6e51481297871eadeddc112c1))
+
 # 4.20.0 (2026-03-11)
 
 ## Features
