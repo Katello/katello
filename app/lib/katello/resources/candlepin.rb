@@ -102,7 +102,7 @@ module Katello
               method: :delete,
               path: join_path(resource_path, 'content_overrides'),
               headers: default_headers,
-              payload: attrs_to_delete.to_json
+              payload: attrs_to_delete.to_json,
             )
           end
           ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result.body))
