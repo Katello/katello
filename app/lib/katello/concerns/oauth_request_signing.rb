@@ -10,12 +10,12 @@ module Katello
         post: Net::HTTP::Post,
         put: Net::HTTP::Put,
         patch: Net::HTTP::Patch,
-        delete: Net::HTTP::Delete
-      }
+        delete: Net::HTTP::Delete,
+      }.freeze
 
       class_methods do
         def sign_request(req, url, method)
-          raise "#{name}: OAuth consumer_key and consumer_secret required" unless self.consumer_key && self.consumer_secret
+          fail "#{name}: OAuth consumer_key and consumer_secret required" unless self.consumer_key && self.consumer_secret
           req.headers['Authorization'] = build_oauth_header(url, method)
         end
 
