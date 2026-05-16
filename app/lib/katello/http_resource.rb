@@ -69,9 +69,9 @@ module Katello
           logger.error "Error parsing the body: " << error.backtrace.join("\n")
           if %w(404 500 502 503 504).member? resp.status.to_s
             logger.error "Remote server status code " << resp.status.to_s
-            raise HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
+            fail HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
           else
-            raise NetworkException, [resp.status.to_s, resp.body].reject { |s| s.blank? }.join(' ')
+            fail NetworkException, [resp.status.to_s, resp.body].reject { |s| s.blank? }.join(' ')
           end
         end
         fail HttpError, {:message => message, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
@@ -98,14 +98,14 @@ module Katello
         process ? process_response(response) : response
       rescue Faraday::ConnectionFailed
         service = path.split("/").second
-        raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+        fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
       rescue Faraday::Error => e
         raise_faraday_exception e, path, method.upcase
       end
 
       def raise_faraday_exception(e, a_path, http_method)
         msg = "#{name}: #{e.message} (#{http_method} #{a_path})"
-        raise HttpError, { message: msg, service_code: '', code: e.response&.dig(:status).to_s, response_body: e.response&.dig(:body) }
+        fail HttpError, { message: msg, service_code: '', code: e.response&.dig(:status).to_s, response_body: e.response&.dig(:body) }
       end
 
       def join_path(*args)
