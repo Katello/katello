@@ -11,8 +11,8 @@ module Katello
 
           def ping
             response = issue_request(method: :head, path: path, headers: default_headers, process: false)
-            raise ::Katello::Errors::UpstreamConsumerGone if [401, 410].include?(response.status)
-            raise ::Katello::Errors::UpstreamConsumerNotFound if response.status == 404
+            fail ::Katello::Errors::UpstreamConsumerGone if [401, 410].include?(response.status)
+            fail ::Katello::Errors::UpstreamConsumerNotFound if response.status == 404
             response
           end
 
@@ -22,16 +22,16 @@ module Katello
             full_path = build_path(path, params: params, includes: includes)
             JSON.parse(super(full_path, headers: self.default_headers).body)
           rescue HttpResource::HttpError => e
-            raise ::Katello::Errors::UpstreamConsumerGone if e.code == '410'
-            raise e
+            fail ::Katello::Errors::UpstreamConsumerGone if e.code == '410'
+            fail e
           end
 
           def remove_entitlement(entitlement_id)
             fail ArgumentError, "No entitlement ID given to remove." if entitlement_id.blank?
             self.delete(join_path(path, "entitlements/#{entitlement_id}"), headers: self.default_headers)
           rescue HttpResource::HttpError => e
-            raise ::Katello::Errors::UpstreamEntitlementGone if e.code == '404'
-            raise e
+            fail ::Katello::Errors::UpstreamEntitlementGone if e.code == '404'
+            fail e
           end
 
           def start_upstream_export(url, client_cert, client_key, ca_file)

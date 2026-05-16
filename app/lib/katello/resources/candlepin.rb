@@ -1,7 +1,7 @@
 module Katello
   module Resources
     module Candlepin
-      TOTAL_COUNT_HEADER = 'x-total-count'
+      TOTAL_COUNT_HEADER = 'x-total-count'.freeze
 
       class CandlepinResource < HttpResource
         include Katello::Concerns::OauthRequestSigning
@@ -80,7 +80,7 @@ module Katello
           array ? ::Katello::Util::Data.array_with_indifferent_access(parsed) : parsed.with_indifferent_access
         end
 
-        def self.update_content_overrides_for(resource_path, id, content_overrides)
+        def self.update_content_overrides_for(resource_path, _id, content_overrides)
           return [] if content_overrides.empty?
 
           attrs_to_delete = []
@@ -253,9 +253,10 @@ module Katello
 
       module PoolResource
         def path(id = nil, owner_label = nil)
-          if owner_label && id
+          case
+          when owner_label && id
             "#{prefix}/owners/#{owner_label}/pools/#{id}"
-          elsif owner_label
+          when owner_label
             "#{prefix}/owners/#{owner_label}/pools/"
           else
             "#{prefix}/pools/#{id}"

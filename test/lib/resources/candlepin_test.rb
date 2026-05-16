@@ -149,12 +149,12 @@ module Katello
       class ContentOverridesEdgeCaseTest < ActiveSupport::TestCase
         def test_consumer_update_content_overrides_empty_array
           result = Consumer.update_content_overrides('test-uuid', [])
-          assert_equal [], result
+          assert_empty result
         end
 
         def test_activation_key_update_content_overrides_empty_array
           result = ActivationKey.update_content_overrides('test-ak-id', [])
-          assert_equal [], result
+          assert_empty result
         end
       end
 
