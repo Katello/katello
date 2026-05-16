@@ -109,6 +109,55 @@ module Katello
         end
       end
 
+      class ConsumerGetUrlTest < ActiveSupport::TestCase
+        def setup
+          SETTINGS.stubs(:dig).returns(nil)
+          SETTINGS[:katello] = { candlepin: { bulk_load_size: 100 } }
+          stub_request(:any, /.*/)
+            .to_return(body: '[]', headers: { 'Content-Type' => 'application/json' })
+        end
+
+        def test_get_with_owner_and_include_only
+          Consumer.get('owner' => 'acme', :include_only => [:uuid], :sort_by => 'uuid')
+          first_request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.first
+          url = first_request.uri.to_s
+          assert_match %r{/candlepin/consumers\?}, url, "URL should start query string with ?"
+          assert_match(/owner=acme/, url)
+          assert_match(/include=uuid/, url)
+          assert_match(/per_page=/, url)
+          refute_match(/consumers&/, url, "Should not have bare & after path")
+        end
+
+        def test_get_with_include_only_and_no_other_params
+          Consumer.get(:include_only => [:uuid])
+          first_request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.first
+          url = first_request.uri.to_s
+          assert_match %r{/candlepin/consumers\?}, url, "URL should start query string with ?"
+          assert_match(/include=uuid/, url)
+          refute_match(/consumers&include/, url, "Should not have bare & before include")
+        end
+
+        def test_get_with_string_param_returns_single_consumer
+          stub_request(:get, /.*/)
+            .to_return(body: { 'uuid' => 'abc-123', 'name' => 'test' }.to_json,
+                       headers: { 'Content-Type' => 'application/json' })
+          result = Consumer.get('abc-123')
+          assert_equal 'abc-123', result['uuid']
+        end
+      end
+
+      class ContentOverridesEdgeCaseTest < ActiveSupport::TestCase
+        def test_consumer_update_content_overrides_empty_array
+          result = Consumer.update_content_overrides('test-uuid', [])
+          assert_equal [], result
+        end
+
+        def test_activation_key_update_content_overrides_empty_array
+          result = ActivationKey.update_content_overrides('test-ak-id', [])
+          assert_equal [], result
+        end
+      end
+
       class ProductTest < ActiveSupport::TestCase
         def setup
         end

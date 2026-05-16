@@ -17,9 +17,13 @@ module Katello
             if params.is_a?(String)
               JSON.parse(super(path(params), headers: self.default_headers).body).with_indifferent_access
             else
-              includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
+              includes = params.key?(:include_only) ? included_list(params.delete(:include_only)) : ""
               fetch_paged do |page_add|
-                response = super(path + hash_to_query(params) + includes + "&#{page_add}", headers: self.default_headers).body
+                query = hash_to_query(params)
+                parts = [includes, page_add].reject(&:blank?)
+                separator = query.empty? ? "?" : "&"
+                full_path = parts.empty? ? path + query : path + query + separator + parts.join("&")
+                response = super(full_path, headers: self.default_headers).body
                 JSON.parse(response).map(&:with_indifferent_access)
               end
             end
@@ -49,7 +53,7 @@ module Katello
             headers = self.default_headers
             headers['content-type'] = 'text/plain'
             response = self.post(url, raw_json, headers: headers)
-            JSON.parse(response).with_indifferent_access
+            JSON.parse(response.body).with_indifferent_access
           end
 
           def hypervisors_heartbeat(owner:, reporter_id:)
@@ -125,6 +129,8 @@ module Katello
           # id : UUID of the consumer
           # content_overrides => Array of entitlement hashes objects
           def update_content_overrides(id, content_overrides)
+            return [] if content_overrides.empty?
+
             attrs_to_delete = []
             attrs_to_update = []
             content_overrides.each do |content_override|
@@ -147,7 +153,7 @@ module Katello
                 payload: attrs_to_delete.to_json
               )
             end
-            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
+            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result.body))
           end
         end
       end
