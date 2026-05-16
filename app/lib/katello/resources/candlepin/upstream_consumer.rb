@@ -17,10 +17,9 @@ module Katello
           end
 
           def get(params)
-            includes = params.key?(:include_only) ? included_list(params.delete(:include_only)) : ""
-            query = hash_to_query(params)
-            separator = query.empty? ? "?" : "&"
-            full_path = includes.empty? ? path + query : path + query + separator + includes
+            params = params.dup
+            includes = params.delete(:include_only) || []
+            full_path = build_path(path, params: params, includes: includes)
             JSON.parse(super(full_path, headers: self.default_headers).body)
           rescue HttpResource::HttpError => e
             raise ::Katello::Errors::UpstreamConsumerGone if e.code == '410'

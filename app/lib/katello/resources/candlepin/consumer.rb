@@ -15,17 +15,22 @@ module Katello
 
           def get(params)
             if params.is_a?(String)
-              JSON.parse(super(path(params), headers: self.default_headers).body).with_indifferent_access
+              parse_json(super(path(params), headers: self.default_headers))
             else
-              includes = params.key?(:include_only) ? included_list(params.delete(:include_only)) : ""
-              fetch_paged do |page_add|
-                query = hash_to_query(params)
-                parts = [includes, page_add].reject(&:blank?)
-                separator = query.empty? ? "?" : "&"
-                full_path = parts.empty? ? path + query : path + query + separator + parts.join("&")
+              params = params.dup
+              includes = params.delete(:include_only) || []
+              page_size = SETTINGS[:katello][:candlepin][:bulk_load_size]
+              page = 0
+              content = []
+              loop do
+                page += 1
+                full_path = build_path(path, params: params, includes: includes, page: page, page_size: page_size)
                 response = super(full_path, headers: self.default_headers).body
-                JSON.parse(response).map(&:with_indifferent_access)
+                data = JSON.parse(response).map(&:with_indifferent_access)
+                content.concat(data)
+                break if data.size < page_size
               end
+              content
             end
           end
 
@@ -129,31 +134,7 @@ module Katello
           # id : UUID of the consumer
           # content_overrides => Array of entitlement hashes objects
           def update_content_overrides(id, content_overrides)
-            return [] if content_overrides.empty?
-
-            attrs_to_delete = []
-            attrs_to_update = []
-            content_overrides.each do |content_override|
-              if content_override[:value]
-                attrs_to_update << content_override
-              else
-                attrs_to_delete << content_override
-              end
-            end
-
-            if attrs_to_update.present?
-              result = Candlepin::CandlepinResource.put(join_path(path(id), 'content_overrides'),
-                                                        attrs_to_update.to_json, headers: self.default_headers)
-            end
-            if attrs_to_delete.present?
-              result = Candlepin::CandlepinResource.issue_request(
-                method: :delete,
-                path: join_path(path(id), 'content_overrides'),
-                headers: self.default_headers,
-                payload: attrs_to_delete.to_json
-              )
-            end
-            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result.body))
+            update_content_overrides_for(path(id), id, content_overrides)
           end
         end
       end
