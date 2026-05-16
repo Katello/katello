@@ -64,6 +64,50 @@ module Katello
           included.map { |value| "include=#{value}" }.join('&')
         end
 
+        def self.build_path(base, params: {}, includes: [], page: nil, page_size: nil)
+          parts = []
+          query = hash_to_query(params)
+          parts << included_list(includes) unless includes.empty?
+          parts << "per_page=#{page_size}&page=#{page}" if page && page_size
+          extra = parts.reject(&:blank?).join('&')
+          return base + query if extra.empty?
+          separator = query.empty? ? '?' : '&'
+          base + query + separator + extra
+        end
+
+        def self.parse_json(response, array: false)
+          parsed = JSON.parse(response.body)
+          array ? ::Katello::Util::Data.array_with_indifferent_access(parsed) : parsed.with_indifferent_access
+        end
+
+        def self.update_content_overrides_for(resource_path, id, content_overrides)
+          return [] if content_overrides.empty?
+
+          attrs_to_delete = []
+          attrs_to_update = []
+          content_overrides.each do |override|
+            if override[:value]
+              attrs_to_update << override
+            else
+              attrs_to_delete << override
+            end
+          end
+
+          if attrs_to_update.present?
+            result = Candlepin::CandlepinResource.put(join_path(resource_path, 'content_overrides'),
+                                                      attrs_to_update.to_json, headers: default_headers)
+          end
+          if attrs_to_delete.present?
+            result = Candlepin::CandlepinResource.issue_request(
+              method: :delete,
+              path: join_path(resource_path, 'content_overrides'),
+              headers: default_headers,
+              payload: attrs_to_delete.to_json
+            )
+          end
+          ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result.body))
+        end
+
         def self.fetch_paged(page_size = -1)
           if page_size == -1
             page_size = SETTINGS[:katello][:candlepin][:bulk_load_size]
