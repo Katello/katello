@@ -17,6 +17,8 @@ module Actions
 
       def propagate_candlepin_errors
         yield
+      rescue ::Katello::Errors::CandlepinError
+        raise
       rescue HttpResource::HttpError => e
         display_message = e.message
         if e.response_body.present?

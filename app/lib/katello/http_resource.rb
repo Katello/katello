@@ -67,12 +67,8 @@ module Katello
           service_code = parsed["code"] if parsed["code"]
         rescue => error
           logger.error "Error parsing the body: " << error.backtrace.join("\n")
-          if %w(404 500 502 503 504).member? resp.status.to_s
-            logger.error "Remote server status code " << resp.status.to_s
-            fail HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
-          else
-            fail NetworkException, [resp.status.to_s, resp.body].reject { |s| s.blank? }.join(' ')
-          end
+          logger.error "Remote server status code " << resp.status.to_s
+          fail HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
         end
         fail HttpError, {:message => message, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
       end

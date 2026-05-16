@@ -73,7 +73,7 @@ class ScenarioSupport
     yield
     true
   rescue HttpResource::HttpError => e
-    raise unless e.code == '404'
+    raise unless e.code.to_s == '404'
     false
   end
 end

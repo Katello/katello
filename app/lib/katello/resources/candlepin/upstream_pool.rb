@@ -13,8 +13,13 @@ module Katello
               params: params,
               process: false
             )
-            raise Katello::Errors::UpstreamConsumerGone if response.status == 410
-            response
+            if response.status.between?(200, 299)
+              response
+            elsif [401, 410].include?(response.status)
+              fail Katello::Errors::UpstreamConsumerGone
+            else
+              process_response(response)
+            end
           end
 
           def path(id = nil, owner_label = nil)

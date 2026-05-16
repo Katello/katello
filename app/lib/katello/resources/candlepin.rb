@@ -17,7 +17,7 @@ module Katello
 
         class << self
           def process_response(response)
-            debug_level = response.status >= 400 ? :error : :debug
+            debug_level = (response.status >= 400) ? :error : :debug
             logger.send(debug_level, "Candlepin request #{response.headers['x-candlepin-request-uuid']} returned with code #{response.status}")
             super
           end
@@ -102,7 +102,7 @@ module Katello
               method: :delete,
               path: join_path(resource_path, 'content_overrides'),
               headers: default_headers,
-              payload: attrs_to_delete.to_json,
+              payload: attrs_to_delete.to_json
             )
           end
           ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result.body))
@@ -151,18 +151,15 @@ module Katello
 
               f.ssl.client_cert = OpenSSL::X509::Certificate.new(client_cert)
               f.ssl.client_key = OpenSSL::PKey::RSA.new(client_key)
-              if ca_file
-                f.ssl.ca_file = ca_file
-                f.ssl.verify = true
-              else
-                f.ssl.verify = false
-              end
+              f.ssl.ca_file = ca_file if ca_file
 
               if proxy&.cacert&.present?
                 cert_store = OpenSSL::X509::Store.new
                 Foreman::Util.add_ca_bundle_to_store(proxy.cacert, cert_store)
                 f.ssl.cert_store = cert_store
               end
+
+              f.ssl.verify = ca_file.present? || proxy&.cacert.present?
 
               f.proxy = self.proxy_uri if self.proxy_uri
 
@@ -212,8 +209,7 @@ module Katello
               response = Katello::Resources::Candlepin::UpstreamConsumer.issue_request(
                 method: :get,
                 path: Katello::Resources::Candlepin::UpstreamConsumer.path,
-                headers: default_headers,
-                process: false
+                headers: default_headers
               )
               JSON.parse(response.body)['owner']['key']
             end
@@ -253,10 +249,9 @@ module Katello
 
       module PoolResource
         def path(id = nil, owner_label = nil)
-          case
-          when owner_label && id
+          if owner_label && id
             "#{prefix}/owners/#{owner_label}/pools/#{id}"
-          when owner_label
+          elsif owner_label
             "#{prefix}/owners/#{owner_label}/pools/"
           else
             "#{prefix}/pools/#{id}"
