@@ -42,6 +42,8 @@ module Katello
           # id : ID of the Activation Key
           # content_overrides => Array of content override hashes
           def update_content_overrides(id, content_overrides)
+            return [] if content_overrides.empty?
+
             attrs_to_delete = []
             attrs_to_update = []
             content_overrides.each do |content_override|
@@ -64,7 +66,7 @@ module Katello
                 payload: attrs_to_delete.to_json
               )
             end
-            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result || '{}'))
+            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result&.body || '{}'))
           end
 
           def path(id = nil, owner_id = nil)

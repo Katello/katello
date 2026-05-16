@@ -59,6 +59,7 @@ module Katello
 
             conn = Faraday.new(url: self.site) do |f|
               f.request :multipart
+              f.options.open_timeout = SETTINGS[:katello][:rest_client_timeout]
               f.options.timeout = SETTINGS[:katello][:rest_client_timeout]
               f.ssl.ca_file = self.ssl_ca_file if self.ssl_ca_file
               f.adapter :net_http_persistent
@@ -77,13 +78,11 @@ module Katello
           end
 
           def destroy_imports(organization_name, wait_until_complete: false)
-            response_json = self.delete(join_path(path(organization_name), 'imports'), headers: self.default_headers)
-            response = JSON.parse(response_json).with_indifferent_access
+            response = JSON.parse(self.delete(join_path(path(organization_name), 'imports'), headers: self.default_headers).body).with_indifferent_access
             if wait_until_complete && response['state'] == 'CREATED'
               while !response['state'].nil? && response['state'] != 'FINISHED' && response['state'] != 'ERROR'
                 path = join_path('candlepin', response['statusPath'][1..])
-                response_json = self.get(path, headers: self.default_headers)
-                response = JSON.parse(response_json).with_indifferent_access
+                response = JSON.parse(self.get(path, headers: self.default_headers).body).with_indifferent_access
               end
             end
 
@@ -91,8 +90,7 @@ module Katello
           end
 
           def imports(organization_name)
-            imports_json = self.get(join_path(path(organization_name), 'imports'), headers: self.default_headers)
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(imports_json)
+            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(self.get(join_path(path(organization_name), 'imports'), headers: self.default_headers).body)
           end
 
           def pools(owner_label, filter = {})

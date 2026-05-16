@@ -15,7 +15,7 @@ module Katello
             url = subscription_path(ENV['REDHAT_RHSM_API_URL']) || subscription_path(upstream['apiUrl']) || API_URL
             response = Resources::Candlepin::UpstreamConsumer.start_upstream_export("#{url}#{path(id)}", upstream['idCert']['cert'],
               upstream['idCert']['key'], nil)
-            job = JSON.parse(response)
+            job = JSON.parse(response.body)
             job.with_indifferent_access
           end
 
