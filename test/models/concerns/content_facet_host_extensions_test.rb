@@ -60,7 +60,7 @@ module Katello
       host.save!
       host.reload.content_facet.reload
 
-      refute_nil host.content_facet.uuid # not reset to nil
+      refute_nil host.subscription_facet.uuid # not reset to nil
       host_cve = host.content_view_environments.first
       assert_equal dev.id, host_cve.environment_id # unchanged
       assert_equal view2.id, host_cve.content_view_id # changed
@@ -73,7 +73,7 @@ module Katello
       host.subscription_facet.expects(:backend_update_needed?).returns(false)
       host.update!(:content_facet_attributes => { :content_source_id => proxy.id })
       host.reload.content_facet.reload
-      refute_nil host.content_facet.uuid # not reset to nil
+      refute_nil host.subscription_facet.uuid # not reset to nil
       assert_equal proxy.id, host.content_facet.content_source_id # changed
     end
 

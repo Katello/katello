@@ -51,7 +51,7 @@ module Katello
     def relevant?(_options = {})
       # traces cannot be reported from hosts lower than el7
       return false if host.operatingsystem.try(:major).to_i.between?(1, 6) || !host.content_facet&.tracer_installed?
-      host.content_facet.try(:uuid).present?
+      host.subscription_facet.try(:uuid).present?
     end
   end
 end

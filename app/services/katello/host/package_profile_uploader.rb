@@ -25,8 +25,8 @@ module Katello
         host = ::Host.find_by(:id => host_id)
         if host.nil?
           Rails.logger.warn("Host with ID %s not found; continuing" % host_id)
-        elsif host.content_facet.nil? || host.content_facet.uuid.nil?
-          Rails.logger.warn("Host with ID %s has no content facet; continuing" % host_id)
+        elsif host.subscription_facet&.uuid.blank?
+          Rails.logger.warn("Host with ID %s has no subscription facet; continuing" % host_id)
         else
           begin
             simple_packages = profile.map { |item| ::Katello::SimplePackage.new(item) }

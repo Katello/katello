@@ -11,7 +11,10 @@ module Katello
         if @host.nil?
           Rails.logger.warn("Host was not specified; skipping")
           return false
-        elsif @host.content_facet.nil? || @host.content_facet.uuid.nil?
+        elsif @host.subscription_facet&.uuid.blank?
+          Rails.logger.warn("Host with ID %s has no subscription facet UUID; skipping" % @host.id)
+          return false
+        elsif @host.content_facet.nil?
           Rails.logger.warn("Host with ID %s has no content facet; skipping" % @host.id)
           return false
         end

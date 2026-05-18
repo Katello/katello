@@ -6,6 +6,12 @@ module Katello
       self.table_name = 'katello_content_facets'
       include Facets::Base
 
+      # Delegate uuid to subscription_facet since UUID is a subscription/consumer concept
+      # The uuid column was removed from content_facets table
+      def uuid
+        host&.subscription_facet&.uuid
+      end
+
       HOST_TOOLS_PACKAGE_NAME = 'katello-host-tools'.freeze
       HOST_TOOLS_TRACER_PACKAGE_NAME = 'katello-host-tools-tracer'.freeze
       SUBSCRIPTION_MANAGER_PACKAGE_NAME = 'subscription-manager'.freeze

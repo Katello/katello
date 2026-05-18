@@ -40,7 +40,7 @@ module Katello
       def readable_docker_catalog(host = nil)
         #If host is identified in the request via certs or IP addr, and the host is registered (uuid != nil), show only
         # available repos in host's LCE scope
-        if host && host&.content_facet&.uuid
+        if host&.subscription_facet&.uuid.present?
           repo_ids = []
           if host&.content_view_environments&.any?
             repo_ids = host.content_view_environments.flat_map do |cve|

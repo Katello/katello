@@ -4,7 +4,7 @@ module Actions
       class RecalculateErrataStatus < Actions::Base
         def run
           ::Host.unscoped.find_each do |host|
-            host.content_facet.update_errata_status if host.content_facet.try(:uuid)
+            host.content_facet&.update_errata_status if host.subscription_facet&.uuid.present?
           rescue StandardError => error
             output[:errors] ||= []
             output[:errors] << (_("Error refreshing status for %s: ") % host.name) + error.message
