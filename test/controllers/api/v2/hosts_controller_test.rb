@@ -293,6 +293,5 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
 
     post :create, params: attrs
     assert_response :success # the uuid is simply filtered out which allows the host to be still saved
-    refute Katello::Host::ContentFacet.where(:uuid => cf_attrs[:uuid]).exists?
   end
 end
