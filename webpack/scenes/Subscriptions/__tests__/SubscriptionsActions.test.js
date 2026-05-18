@@ -1,7 +1,6 @@
 import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import configureMockStore from 'redux-mock-store';
-import { testActionSnapshotWithFixtures } from 'react-redux-test-utils';
 import { mockRequest, mockErrorRequest, mockReset } from '../../../mockRequest';
 import {
   requestSuccessResponse,
@@ -151,7 +150,21 @@ describe('subscription actions', () => {
     it('starts polling the task', async () => {
       await store.dispatch(handleStartTask(getTaskSuccessResponse));
 
-      expect(store.getActions()).toMatchSnapshot();
+      expect(store.getActions()).toEqual([
+        {
+          type: 'STOP_INTERVAL',
+          key: 'SUBSCRIPTIONS_TASK_SEARCH',
+        },
+        {
+          type: 'API_GET',
+          interval: 5000,
+          payload: {
+            key: 'SUBSCRIPTIONS_POLL_TASK',
+            url: `/foreman_tasks/api/tasks/${getTaskSuccessResponse.id}`,
+            handleSuccess: undefined,
+          },
+        },
+      ]);
     });
   });
 
@@ -165,19 +178,67 @@ describe('subscription actions', () => {
 
       await pollStore.dispatch(handleFinishedTask(getTaskSuccessResponse));
 
-      expect(pollStore.getActions()).toMatchSnapshot();
+      const actions = pollStore.getActions();
+
+      expect(actions.map(action => action.type)).toEqual([
+        'STOP_INTERVAL',
+        'toasts/addToast',
+        'SUBSCRIPTIONS_RESET_TASKS',
+        'API_GET',
+        'SUBSCRIPTIONS_REQUEST',
+      ]);
+      expect(actions[0]).toEqual({
+        type: 'STOP_INTERVAL',
+        key: 'SUBSCRIPTIONS_POLL_TASK',
+      });
+      expect(actions[3]).toMatchObject({
+        type: 'API_GET',
+        interval: 5000,
+        payload: {
+          key: 'SUBSCRIPTIONS_TASK_SEARCH',
+          url: '/foreman_tasks/api/tasks',
+          params: {
+            search: expect.stringContaining('organization_id=1 and result=pending'),
+          },
+        },
+      });
     });
   });
 
-  describe('pollTasks', () => testActionSnapshotWithFixtures({
-    'can search tasks': () => store.dispatch(pollTasks()),
-  }));
+  describe('pollTasks', () => {
+    it('can search tasks', async () => {
+      await store.dispatch(pollTasks());
+
+      expect(store.getActions()).toEqual([
+        {
+          type: 'STOP_INTERVAL',
+          key: 'SUBSCRIPTIONS_TASK_SEARCH',
+        },
+        {
+          type: 'API_GET',
+          interval: 5000,
+          payload: {
+            key: 'SUBSCRIPTIONS_TASK_SEARCH',
+            url: '/foreman_tasks/api/tasks',
+            params: {
+              search: expect.stringContaining('organization_id=1 and result=pending'),
+            },
+          },
+        },
+      ]);
+    });
+  });
 
   describe('cancelPollTasks', () => {
     it('cancels the tasks search', async () => {
       await store.dispatch(cancelPollTasks());
 
-      expect(store.getActions()).toMatchSnapshot();
+      expect(store.getActions()).toEqual([
+        {
+          type: 'STOP_INTERVAL',
+          key: 'SUBSCRIPTIONS_TASK_SEARCH',
+        },
+      ]);
     });
 
     it('does nothing if not already polling', async () => {
@@ -185,25 +246,44 @@ describe('subscription actions', () => {
 
       await pollStore.dispatch(cancelPollTasks());
 
-      expect(pollStore.getActions()).toMatchSnapshot();
+      expect(pollStore.getActions()).toEqual([]);
     });
   });
 
-  describe('resetTasks', () => testActionSnapshotWithFixtures({
-    'resets the task state': () => resetTasks(),
-  }));
+  describe('resetTasks', () => {
+    it('resets the task state', async () => {
+      await store.dispatch(resetTasks());
 
-  describe('deleteModal', () => testActionSnapshotWithFixtures({
-    'it should open delete modal': () => openDeleteModal(),
-    'it should close delete modal': () => closeDeleteModal(),
-  }));
+      expect(store.getActions()).toEqual([{ type: 'SUBSCRIPTIONS_RESET_TASKS' }]);
+    });
+  });
 
-  describe('searchQuery', () => testActionSnapshotWithFixtures({
-    'it should update the search-query': () => updateSearchQuery('some-query'),
-  }));
+  describe('deleteModal', () => {
+    it('opens delete modal', () => {
+      expect(openDeleteModal()).toEqual({ type: 'SUBSCRIPTIONS_OPEN_DELETE_MODAL' });
+    });
 
-  describe('deleteButtonDisabled', () => testActionSnapshotWithFixtures({
-    'it should disable the delete button': () => disableDeleteButton(),
-    'it should enable the delete button': () => enableDeleteButton(),
-  }));
+    it('closes delete modal', () => {
+      expect(closeDeleteModal()).toEqual({ type: 'SUBSCRIPTIONS_CLOSE_DELETE_MODAL' });
+    });
+  });
+
+  describe('searchQuery', () => {
+    it('updates the search-query', () => {
+      expect(updateSearchQuery('some-query')).toEqual({
+        type: 'SUBSCRIPTIONS_UPDATE_SEARCH_QUERY',
+        payload: 'some-query',
+      });
+    });
+  });
+
+  describe('deleteButtonDisabled', () => {
+    it('disables the delete button', () => {
+      expect(disableDeleteButton()).toEqual({ type: 'SUBSCRIPTIONS_DISABLE_DELETE_BUTTON' });
+    });
+
+    it('enables the delete button', () => {
+      expect(enableDeleteButton()).toEqual({ type: 'SUBSCRIPTIONS_ENABLE_DELETE_BUTTON' });
+    });
+  });
 });

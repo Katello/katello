@@ -1,33 +1,41 @@
-import { shallow } from 'enzyme';
-import toJson from 'enzyme-to-json';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
 import { subscriptionTypeFormatter } from '../SubscriptionTypeFormatter';
 
 describe('subscriptionTypeFormatter', () => {
-  const data = rowData => ({
-    rowData,
+  const renderFormatter = (rowData) => {
+    const content = (
+      <table>
+        <tbody>
+          <tr>{subscriptionTypeFormatter(null, { rowData })}</tr>
+        </tbody>
+      </table>
+    );
+    return render(content);
+  };
+
+  it('renders physical subscriptions', () => {
+    renderFormatter({ virt_only: false });
+    expect(screen.getByText('Physical')).toBeInTheDocument();
   });
 
-  it('renders physical subscriptions', async () => {
-    const formatter = subscriptionTypeFormatter(null, data({ virt_only: false }));
-
-    expect(toJson(shallow(formatter))).toMatchSnapshot();
+  it('renders temporary subscriptions', () => {
+    renderFormatter({ unmapped_guest: true });
+    expect(screen.getByText('Temporary')).toBeInTheDocument();
   });
 
-  it('renders temporary subscriptions', async () => {
-    const formatter = subscriptionTypeFormatter(null, data({ unmapped_guest: true }));
-
-    expect(toJson(shallow(formatter))).toMatchSnapshot();
+  it('renders virtual subscriptions', () => {
+    renderFormatter({});
+    expect(screen.getByText('Virtual')).toBeInTheDocument();
   });
 
-  it('renders virtual subscriptions', async () => {
-    const formatter = subscriptionTypeFormatter(null, data({}));
+  it('renders link to a host', () => {
+    renderFormatter({ hypervisor: { name: 'host.example.com', id: 83 } });
 
-    expect(toJson(shallow(formatter))).toMatchSnapshot();
-  });
-
-  it('renders link to a host', async () => {
-    const formatter = subscriptionTypeFormatter(null, data({ hypervisor: { name: 'host.example.com', id: 83 } }));
-
-    expect(toJson(shallow(formatter))).toMatchSnapshot();
+    expect(screen.getByText('Guests of')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'host.example.com' })).toHaveAttribute(
+      'href',
+      '/new/hosts/83/',
+    );
   });
 });

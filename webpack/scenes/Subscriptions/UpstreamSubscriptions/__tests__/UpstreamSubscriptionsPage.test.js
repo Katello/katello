@@ -1,29 +1,44 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import toJson from 'enzyme-to-json';
+import { render, screen } from '@testing-library/react';
 import UpstreamSubscriptionsPage from '../UpstreamSubscriptionsPage';
 import { successState } from './upstreamSubscriptions.fixtures';
-import { loadUpstreamSubscriptions, saveUpstreamSubscriptions } from '../UpstreamSubscriptionsActions';
 
-jest.mock('foremanReact/components/BreadcrumbBar');
+const mockTable = jest.fn(() => <div data-testid="upstream-table" />);
+
+jest.mock('foremanReact/components/BreadcrumbBar', () => ({
+  __esModule: true,
+  default: () => <div data-testid="breadcrumbs" />,
+}));
+jest.mock('react-router-bootstrap', () => ({
+  // eslint-disable-next-line react/prop-types
+  LinkContainer: ({ children }) => <div>{children}</div>,
+}));
+jest.mock('../../../../components/pf3Table', () => ({
+  Table: props => mockTable(props),
+}));
 
 describe('upstream subscriptions page', () => {
-  let shallowWrapper;
-  const mockHistory = { push: () => {} };
-  beforeEach(() => {
-    shallowWrapper = shallow(<UpstreamSubscriptionsPage
-      upstreamSubscriptions={successState}
-      loadUpstreamSubscriptions={loadUpstreamSubscriptions}
-      saveUpstreamSubscriptions={saveUpstreamSubscriptions}
-      history={mockHistory}
-    />);
+  const buildProps = () => ({
+    upstreamSubscriptions: successState,
+    loadUpstreamSubscriptions: jest.fn(),
+    saveUpstreamSubscriptions: jest.fn(),
+    history: { push: jest.fn() },
   });
 
-  it('should render', async () => {
-    expect(toJson(shallowWrapper)).toMatchSnapshot();
+  it('loads and renders upstream subscriptions', () => {
+    const props = buildProps();
+    render(<UpstreamSubscriptionsPage {...props} />);
+
+    expect(props.loadUpstreamSubscriptions).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId('breadcrumbs')).toBeInTheDocument();
+    expect(screen.getByText('Submit')).toBeInTheDocument();
+    expect(screen.getByText('Cancel')).toBeInTheDocument();
+    expect(mockTable).toHaveBeenCalled();
+    expect(mockTable.mock.calls[0][0].rows).toHaveLength(successState.results.length);
   });
 
-  it('should validate correct subscription quantities', async () => {
+  it('should validate correct subscription quantities', () => {
+    const page = new UpstreamSubscriptionsPage(buildProps());
     const validPools = [
       { available: 10, updatedQuantity: 5 },
       { available: 10, updatedQuantity: '5' },
@@ -34,12 +49,13 @@ describe('upstream subscriptions page', () => {
     validPools.forEach((pool, i) => {
       // using object with index attribute to print out index on failure,
       // jest doesn't support messages on failure :(
-      const result = shallowWrapper.instance().quantityValidation(pool)[0];
+      const result = page.quantityValidation(pool)[0];
       expect({ index: i, result }).toEqual({ index: i, result: true });
     });
   });
 
-  it('should invalidate incorrect subscription quantities', async () => {
+  it('should invalidate incorrect subscription quantities', () => {
+    const page = new UpstreamSubscriptionsPage(buildProps());
     const invalidPools = [
       { available: 10, updatedQuantity: 11 },
       { available: 10, updatedQuantity: 'foo' },
@@ -59,7 +75,7 @@ describe('upstream subscriptions page', () => {
     invalidPools.forEach((pool, i) => {
       // using object with index attribute to print out index on failure,
       // jest doesn't support messages on failure :(
-      const result = shallowWrapper.instance().quantityValidation(pool)[0];
+      const result = page.quantityValidation(pool)[0];
       expect({ index: i, result }).toEqual({ index: i, result: false });
     });
   });

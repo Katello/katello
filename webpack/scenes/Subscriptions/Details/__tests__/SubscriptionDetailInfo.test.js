@@ -1,16 +1,31 @@
 import React from 'react';
-import TestRenderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 import SubscriptionDetailInfo from '../SubscriptionDetailInfo';
 import { successState } from './subscriptionDetails.fixtures';
 
-describe('subscriptions detail associations page', () => {
-  it('renders correctly', () => {
-    const testRenderer = TestRenderer
-      .create(<SubscriptionDetailInfo subscriptionDetails={successState} />);
-    const testInstance = testRenderer.root;
+jest.mock('react-bootstrap', () => ({
+  // eslint-disable-next-line react/prop-types
+  Table: ({ children }) => <table>{children}</table>,
+}));
 
-    expect(testRenderer.toJSON()).toMatchSnapshot();
-    expect(testInstance.findAllByType('h2')[0].children[0]).toBe('Subscription Info');
-    expect(testInstance.findAllByType('h2')[1].children[0]).toBe('System Purpose');
+describe('subscriptions detail associations page', () => {
+  it('renders subscription and system purpose sections', () => {
+    render(<SubscriptionDetailInfo subscriptionDetails={successState} />);
+
+    expect(screen.getByRole('heading', { name: 'Subscription Info' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'System Purpose' })).toBeInTheDocument();
+    expect(screen.getByText('OpenShift Employee Subscription')).toBeInTheDocument();
+    expect(screen.getByText('Cores: 4')).toBeInTheDocument();
+    expect(screen.getByText('Yes')).toBeInTheDocument();
+    expect(screen.getByText('Self-Support')).toBeInTheDocument();
+    expect(screen.getByText('Test Role')).toBeInTheDocument();
+  });
+
+  it('renders "No" for instance-based when instance multiplier is unset', () => {
+    render(<SubscriptionDetailInfo
+      subscriptionDetails={{ ...successState, instance_multiplier: 0 }}
+    />);
+
+    expect(screen.getByText('No')).toBeInTheDocument();
   });
 });
