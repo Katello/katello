@@ -12,9 +12,13 @@
  * Applicable/Installable toggle is hidden for hosts assigned to rolling content views ([#39282](https://projects.theforeman.org/issues/39282), [9b461920](https://github.com/Katello/katello.git/commit/9b461920c6ab2bac47e84b3e9ac3c089651d9845))
  * Unable to save host configuration due to missing variant_repos method ([#39258](https://projects.theforeman.org/issues/39258), [58682ecc](https://github.com/Katello/katello.git/commit/58682eccd6f06b75db180f3c199f295088e41839))
  * Host links from Packages Details page open Legacy UI instead of New UI ([#39147](https://projects.theforeman.org/issues/39147), [639726f6](https://github.com/Katello/katello.git/commit/639726f63c7146e231c5788b028acd5b2f79ddb6))
+ * bootc information is nullified after Ansible facts upload ([#39135](https://projects.theforeman.org/issues/39135), [94f92be](https://github.com/Katello/katello.git/commit/94f92be175ea4a9c7f2bded06e130944ba76b775))
 
 ### Container
  * Repository update ID parameter in hammer command in docker repos is failing. ([#39186](https://projects.theforeman.org/issues/39186), [184a8ec1](https://github.com/Katello/katello.git/commit/184a8ec198d323e6e51481297871eadeddc112c1))
+
+### Other
+ * Fix typos and scan issues for rubygem-katello ([#39136](https://projects.theforeman.org/issues/39136), [a0a793b](https://github.com/Katello/katello/commit/a0a793b08d4f0a897ee985d79a687ad043f99e57))
 
 # 4.20.0 (2026-03-11)
 
