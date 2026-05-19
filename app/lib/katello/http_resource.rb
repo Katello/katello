@@ -68,7 +68,7 @@ module Katello
         rescue => error
           logger.error "Error parsing the body: " << error.backtrace.join("\n")
           logger.error "Remote server status code " << resp.status.to_s
-          fail HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
+          raise HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
         end
         fail HttpError, {:message => message, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
       end
@@ -94,7 +94,7 @@ module Katello
         process ? process_response(response) : response
       rescue Faraday::ConnectionFailed
         service = path.split("/").second
-        fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+        raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
       rescue Faraday::Error => e
         raise_faraday_exception e, path, method.upcase
       end

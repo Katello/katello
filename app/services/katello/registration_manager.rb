@@ -291,9 +291,10 @@ module Katello
       def candlepin_consumer_destroy(host_uuid)
         ::Katello::Resources::Candlepin::Consumer.destroy(host_uuid)
       rescue HttpResource::HttpError => e
-        if e.code == '404'
+        case e.code
+        when '404'
           Rails.logger.warn(_("Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin") % host_uuid)
-        elsif e.code == '410'
+        when '410'
           Rails.logger.warn(_("Candlepin consumer %s has already been removed") % host_uuid)
         else
           raise
