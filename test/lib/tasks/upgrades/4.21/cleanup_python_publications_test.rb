@@ -63,7 +63,7 @@ module Katello
 
       pub1 = OpenStruct.new(pulp_href: '/pulp/api/v3/publications/python/pypi/already-deleted/')
       publications_api_mock = mock('publications_api')
-      publications_api_mock.expects(:delete).with(pub1.pulp_href).raises(HttpResource::HttpError.new(message: 'Not found', code: '404', service_code: ''))
+      publications_api_mock.expects(:delete).with(pub1.pulp_href).raises(RestClient::NotFound)
       Katello::Pulp3::Api::Core.any_instance.stubs(:publications_list_all).returns([pub1])
       Katello::Pulp3::Api::Core.any_instance.stubs(:publications_api).returns(publications_api_mock)
 
