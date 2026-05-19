@@ -31,12 +31,13 @@ module Actions
               output[:add_response] = ::Katello::Resources::Candlepin::Environment.add_content(input[:cp_environment_id], output[:add_ids])
               break
             rescue HttpResource::HttpError => e
-              if e.code == '409'
+              case e.code
+              when '409'
                 # Candlepin raises a 409 in case it gets a duplicate content id add to an environment.
                 # Refresh the existing ids list and try again.
                 raise e if ((retries += 1) == max_retries)
                 output[:add_ids] = content_ids - existing_ids
-              elsif e.code == '404'
+              when '404'
                 # Set a higher limit for retries just in case the missing content is not being parsed correctly.
                 # If the content is not found after the retries, assume it is gone and continue.
                 raise e if ((retries += 1) == 1_000)

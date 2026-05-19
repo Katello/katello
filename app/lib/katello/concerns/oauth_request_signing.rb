@@ -28,7 +28,7 @@ module Katello
             :request_token_path => "",
             :authorize_path => "",
             :access_token_path => "",
-            :ca_file => self.ssl_ca_file
+            :ca_file => self.ssl_ca_file,
           )
         end
 
