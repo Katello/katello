@@ -13,9 +13,15 @@ class LoadingState extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
+    this.timeoutId = setTimeout(() => {
       this.setState({ render: true });
     }, this.props.timeout);
+  }
+
+  componentWillUnmount() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
   }
 
   render() {
