@@ -155,7 +155,7 @@ module Katello
               f.ssl.client_key = OpenSSL::PKey::RSA.new(client_key)
               f.ssl.ca_file = ca_file if ca_file
 
-              if proxy&.cacert&.present?
+              if proxy&.cacert.present?
                 cert_store = OpenSSL::X509::Store.new
                 Foreman::Util.add_ca_bundle_to_store(proxy.cacert, cert_store)
                 f.ssl.cert_store = cert_store
@@ -193,9 +193,9 @@ module Katello
           end
 
           def site
-            default_port = upstream_api_uri.scheme == 'https' ? 443 : 80
+            default_port = (upstream_api_uri.scheme == 'https') ? 443 : 80
             site = "#{upstream_api_uri.scheme}://#{upstream_api_uri.host}"
-            upstream_api_uri.port == default_port ? site : "#{site}:#{upstream_api_uri.port}"
+            (upstream_api_uri.port == default_port) ? site : "#{site}:#{upstream_api_uri.port}"
           end
 
           def upstream_id_cert
