@@ -46,7 +46,16 @@ module Katello
     end
 
     rescue_from HttpResource::HttpError do |e|
-      Rails.logger.error(pp_exception(e, with_backtrace: false))
+      if e.code.to_i == 404
+        parsed = JSON.parse(e.response_body.to_s) rescue {}
+        if parsed["errors"]&.any? { |error| error["code"] == "BLOB_UNKNOWN" }
+          Rails.logger.info(pp_exception(e, with_backtrace: false))
+        else
+          Rails.logger.error(pp_exception(e, with_backtrace: false))
+        end
+      else
+        Rails.logger.error(pp_exception(e, with_backtrace: false))
+      end
       body = e.response_body.presence || e.message
       if request_from_katello_cli?
         render json: { errors: [body] }, status: e.code

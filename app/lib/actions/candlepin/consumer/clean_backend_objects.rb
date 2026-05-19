@@ -19,18 +19,20 @@ module Actions
             # Set bulk load size for Candlepin operations
             original_candlepin_page_size = SETTINGS[:katello][:candlepin][:bulk_load_size]
             SETTINGS[:katello][:candlepin][:bulk_load_size] = 125
+            begin
+              # Gather data from Candlepin and Katello
+              candlepin_uuids = fetch_candlepin_uuids
+              katello_candlepin_uuids = fetch_katello_candlepin_uuids
 
-            # Gather data from Candlepin and Katello
-            candlepin_uuids = fetch_candlepin_uuids
-            katello_candlepin_uuids = fetch_katello_candlepin_uuids
+              # Find hosts with issues
+              cleanup_hosts_with_nil_facets
+              cleanup_hosts_with_no_subscriptions(candlepin_uuids)
 
-            # Find hosts with issues
-            cleanup_hosts_with_nil_facets
-            cleanup_hosts_with_no_subscriptions(candlepin_uuids)
-
-            # Clean up orphaned Candlepin consumers
-            cleanup_candlepin_orphans(candlepin_uuids, katello_candlepin_uuids)
-            SETTINGS[:katello][:candlepin][:bulk_load_size] = original_candlepin_page_size
+              # Clean up orphaned Candlepin consumers
+              cleanup_candlepin_orphans(candlepin_uuids, katello_candlepin_uuids)
+            ensure
+              SETTINGS[:katello][:candlepin][:bulk_load_size] = original_candlepin_page_size
+            end
           end
         end
 
