@@ -75,8 +75,10 @@ module Katello
           base + query + separator + extra
         end
 
-        def self.parse_json(response, array: false)
-          parsed = JSON.parse(response.body)
+        def self.parse_json(response, array: false, default: nil)
+          body = response&.body
+          body = default if default && body.blank?
+          parsed = JSON.parse(body)
           array ? ::Katello::Util::Data.array_with_indifferent_access(parsed) : parsed.with_indifferent_access
         end
 
@@ -105,7 +107,7 @@ module Katello
               payload: attrs_to_delete.to_json
             )
           end
-          ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result.body))
+          parse_json(result, array: true, default: '[]')
         end
 
         def self.fetch_paged(page_size = -1)
@@ -191,7 +193,9 @@ module Katello
           end
 
           def site
-            "#{upstream_api_uri.scheme}://#{upstream_api_uri.host}"
+            default_port = upstream_api_uri.scheme == 'https' ? 443 : 80
+            site = "#{upstream_api_uri.scheme}://#{upstream_api_uri.host}"
+            upstream_api_uri.port == default_port ? site : "#{site}:#{upstream_api_uri.port}"
           end
 
           def upstream_id_cert

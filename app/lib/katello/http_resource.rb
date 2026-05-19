@@ -68,9 +68,9 @@ module Katello
         rescue => error
           logger.error "Error parsing the body: " << error.backtrace.join("\n")
           logger.error "Remote server status code " << resp.status.to_s
-          raise HttpError, {:message => error.to_s, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
+          raise_http_error(message: resp.body.presence || error.to_s, status_code: status_code, response_body: resp.body, service_code: service_code)
         end
-        fail HttpError, {:message => message, :service_code => service_code, :code => status_code, :response_body => resp.body}, caller
+        raise_http_error(message: message, status_code: status_code, response_body: resp.body, service_code: service_code)
       end
 
       def stringify_headers(headers)
@@ -101,7 +101,25 @@ module Katello
 
       def raise_faraday_exception(e, a_path, http_method)
         msg = "#{name}: #{e.message} (#{http_method} #{a_path})"
-        fail HttpError, { message: msg, service_code: '', code: e.response&.dig(:status).to_s, response_body: e.response&.dig(:body) }
+        status_code = e.response&.dig(:status)
+        if status_code.present?
+          raise_http_error(message: msg, status_code: status_code.to_s, response_body: e.response&.dig(:body))
+        else
+          raise_network_error(msg)
+        end
+      end
+
+      def raise_http_error(message:, status_code:, response_body:, service_code: '')
+        fail HttpError, {
+          message: message,
+          service_code: service_code,
+          code: status_code,
+          response_body: response_body,
+        }
+      end
+
+      def raise_network_error(message)
+        fail NetworkException, message
       end
 
       def join_path(*args)

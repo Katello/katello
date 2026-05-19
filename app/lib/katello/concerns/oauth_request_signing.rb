@@ -15,7 +15,7 @@ module Katello
 
       class_methods do
         def sign_request(req, url, method)
-          fail "#{name}: OAuth consumer_key and consumer_secret required" unless self.consumer_key && self.consumer_secret
+          fail "#{name}: OAuth consumer_key and consumer_secret required" if self.consumer_key.blank? || self.consumer_secret.blank?
           req.headers['Authorization'] = build_oauth_header(url, method)
         end
 
@@ -28,7 +28,7 @@ module Katello
             :request_token_path => "",
             :authorize_path => "",
             :access_token_path => "",
-            :ca_file => self.ssl_ca_file,
+            :ca_file => self.ssl_ca_file
           )
         end
 
