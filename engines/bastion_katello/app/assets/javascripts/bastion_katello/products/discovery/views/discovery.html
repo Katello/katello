@@ -57,6 +57,10 @@
              ng-disabled="discovery.working"
              ng-required="discovery.contentType === 'docker' && discovery.registryType === 'redhat'"
              name="upstreamPassword"/>
+      <h6 translate ng-if="discovery.contentType === 'docker' && discovery.registryType === 'redhat'">
+          Username and password are required for syncing the repository after it is created. Credentials are not validated during discovery.
+      </h6>
+
     </div>
 
     <div bst-form-group ng-show="discovery.contentType === 'docker'"
