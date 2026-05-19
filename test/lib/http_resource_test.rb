@@ -108,6 +108,27 @@ module Katello
       assert_equal '{"displayMessage": "Not found"}', error.response_body
     end
 
+    def test_process_response_plain_text_error_preserves_body
+      response = stub(status: 500, body: 'upstream plain-text failure')
+      error = assert_raises(HttpResource::HttpError) do
+        TestHttpResource.process_response(response)
+      end
+      assert_equal '500', error.code
+      assert_equal 'upstream plain-text failure', error.message
+      assert_equal 'upstream plain-text failure', error.response_body
+    end
+
+    def test_raise_faraday_exception_without_http_response_raises_network_exception
+      error = stub(message: 'execution expired', response: nil)
+
+      network_error = assert_raises(HttpResource::NetworkException) do
+        TestHttpResource.raise_faraday_exception(error, '/path', 'GET')
+      end
+
+      assert_match(/execution expired/, network_error.message)
+      assert_match(%r{\(GET /path\)}, network_error.message)
+    end
+
     private
 
     def stub_request

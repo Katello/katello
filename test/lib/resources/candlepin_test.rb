@@ -69,6 +69,12 @@ module Katello
           assert headers.key?('accept'), "Headers should still include 'accept'"
           assert headers.key?('content-type'), "Headers should still include 'content-type'"
         end
+
+        def test_site_preserves_non_default_port
+          UpstreamCandlepinResource.stubs(:upstream_api_uri).returns(URI.parse('https://cdn.example.com:8443/subscription'))
+
+          assert_equal 'https://cdn.example.com:8443', UpstreamCandlepinResource.site
+        end
       end
 
       class UpstreamConsumerPingTest < ActiveSupport::TestCase
@@ -154,6 +160,15 @@ module Katello
 
         def test_activation_key_update_content_overrides_empty_array
           result = ActivationKey.update_content_overrides('test-ak-id', [])
+          assert_empty result
+        end
+
+        def test_activation_key_update_content_overrides_empty_response_body
+          ActivationKey.stubs(:default_headers).returns({})
+          Candlepin::CandlepinResource.expects(:issue_request).returns(stub(body: ''))
+
+          result = ActivationKey.update_content_overrides('test-ak-id', [{ name: 'repo-1', value: nil }])
+
           assert_empty result
         end
       end
