@@ -210,4 +210,3 @@ describe('Controller: DiscoveryController', function() {
         expect(Task.unregisterSearch).toHaveBeenCalled();
     });
 });
-
