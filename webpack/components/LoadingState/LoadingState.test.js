@@ -40,3 +40,13 @@ test('Loading State renders spinner after timeout when loading', () => {
   expect(getByText('Loading')).toBeInTheDocument();
   expect(queryByText('Loading Complete')).not.toBeInTheDocument();
 });
+
+test('Loading State clears timeout on unmount without warnings', () => {
+  const { unmount } = render(loadingComponent);
+
+  // Unmount before timeout fires - should not cause React warnings
+  unmount();
+
+  // Run timers after unmount - no setState should be called
+  act(() => { jest.runAllTimers(); });
+});
