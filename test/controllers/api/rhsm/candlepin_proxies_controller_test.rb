@@ -520,7 +520,7 @@ module Katello
         assert_response :success
         body = JSON.parse(response.body)
         assert_equal 'disabled', body['status']
-        assert_equal true, body['compliant']
+        assert body['compliant']
         assert_empty body['reasons']
         assert body.key?('date')
       end
@@ -539,7 +539,7 @@ module Katello
         assert_response :success
         body = JSON.parse(response.body)
         assert_equal 'disabled', body['status']
-        assert_equal true, body['compliant']
+        assert body['compliant']
         assert_empty body['reasons']
         assert body.key?('compliantRole')
       end
