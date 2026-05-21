@@ -19,8 +19,6 @@ module Katello
     KATELLO_SUB_MAN_AUTH = [
       'katello/api/rhsm/candlepin_proxies/upload_tracer_profile',
       'katello/api/rhsm/candlepin_proxies/consumer_destroy',
-      'katello/api/rhsm/candlepin_proxies/consumer_compliance',
-      'katello/api/rhsm/candlepin_proxies/consumer_purpose_compliance',
       'katello/api/rhsm/candlepin_proxies/enabled_repos',
       'katello/api/rhsm/candlepin_proxies/checkin',
       'katello/api/rhsm/candlepin_proxies/facts',

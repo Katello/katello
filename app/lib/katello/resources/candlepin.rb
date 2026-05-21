@@ -241,13 +241,13 @@ module Katello
 
       module ConsumerResource
         def path(id = nil)
-          "#{self.prefix}/consumers/#{id}"
+          id ? "#{self.prefix}/consumers/#{id}" : "#{self.prefix}/consumers"
         end
       end
 
       module OwnerResource
         def path(id = nil)
-          "#{self.prefix}/owners/#{id}"
+          id ? "#{self.prefix}/owners/#{id}" : "#{self.prefix}/owners"
         end
       end
 
