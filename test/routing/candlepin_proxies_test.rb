@@ -11,6 +11,10 @@ module Katello
       {controller: @proxies_controller, action: 'list_owners', login: '1'}.must_recognize(method: :get, path: '/rhsm/users/1/owners')
     end
 
+    def test_consumer_compliance
+      {controller: @proxies_controller, action: 'consumer_compliance', id: '1'}.must_recognize(method: :get, path: '/rhsm/consumers/1/compliance')
+    end
+
     def test_consumer_purpose_compliance
       {controller: @proxies_controller, action: 'consumer_purpose_compliance', id: '1'}.must_recognize(method: :get, path: '/rhsm/consumers/1/purpose_compliance')
     end
