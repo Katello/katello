@@ -28,6 +28,8 @@ module Katello
       'katello/api/rhsm/candlepin_proxies/get',
       'katello/api/rhsm/candlepin_proxies/delete',
       'katello/api/rhsm/candlepin_proxies/serials',
+      'katello/api/rhsm/candlepin_proxies/consumer_compliance',
+      'katello/api/rhsm/candlepin_proxies/consumer_purpose_compliance',
     ].freeze
 
     KATELLO_NON_AUTH = [
