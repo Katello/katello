@@ -58,7 +58,7 @@ module Katello
     end
 
     def test_fetch_pools_total_with_header
-      response = stub(body: '[]', headers: {x_total_count: 4}, status: 200)
+      response = stub(body: '[]', headers: {'x-total-count' => 4}, status: 200)
       stub_fetch_pools(response)
 
       pools = UpstreamPool.fetch_pools({})
