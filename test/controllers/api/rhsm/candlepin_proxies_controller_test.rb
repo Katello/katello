@@ -522,6 +522,50 @@ module Katello
       end
     end
 
+    describe "authorize_proxy_routes owner endpoints" do
+      # Tests for fix: can?(:view_organizations) was incorrectly called with self (controller),
+      # causing NoMethodError on allows_taxonomy_filtering? for non-admin users.
+
+      def stub_route_recognition(route_name, route_params = {})
+        mock_route = OpenStruct.new(name: route_name)
+        Katello::Engine.routes.router.stubs(:recognize).returns([mock_route, route_params])
+      end
+
+      before do
+        @controller.stubs(:authenticate).returns(true)
+        User.stubs(:consumer?).returns(false)
+      end
+
+      it "does not raise NoMethodError for user with view_organizations permission" do
+        user = User.find(users(:restricted).id)
+        user.organizations = [@organization]
+        user.save!
+        setup_user_with_permissions(:view_organizations, user)
+        User.current = user
+
+        stub_route_recognition("rhsm_proxy_owner_system_purpose_path")
+
+        result = nil
+        assert_nothing_raised do
+          result = @controller.send(:authorize_proxy_routes)
+        end
+        assert result, "User with view_organizations should be authorized"
+      end
+
+      it "returns false for user without view_organizations permission" do
+        user = User.find(users(:restricted).id)
+        user.organizations = [@organization]
+        user.save!
+        setup_user_with_permissions(:view_hosts, user)
+        User.current = user
+
+        stub_route_recognition("rhsm_proxy_owner_system_purpose_path")
+
+        result = @controller.send(:authorize_proxy_routes)
+        refute result, "User without view_organizations should not be authorized"
+      end
+    end
+
     describe "get content source id" do
       let(:hostname) { "content-source-test-#{SecureRandom.hex(8)}.example.com" }
 
