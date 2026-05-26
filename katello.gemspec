@@ -49,7 +49,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "spidr"
 
   # Pulp dependencies
-  gem.add_dependency "faraday", ">= 2.0.0", "< 3.0.0"
+  gem.add_dependency "faraday", "~> 2.0"
   gem.add_dependency "faraday-net_http_persistent", "~> 2.0"
   gem.add_dependency "faraday-multipart", "~> 1.0"
   gem.add_dependency "pulpcore_client", ">= 3.105.0", "< 3.106.0"
