@@ -211,13 +211,13 @@ module Katello
 
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
-      host = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environments)
+      host, consumer_data = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environments)
 
       host.reload
 
       update_host_registered_through(host, request.headers)
 
-      render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
+      render :json => consumer_data
     end
 
     #api :DELETE, "/consumers/:id", N_("Unregister a consumer")
@@ -239,12 +239,11 @@ module Katello
       additional_set_taxonomy
       activation_keys = find_activation_keys
 
-      host = Katello::RegistrationManager.process_registration(rhsm_params, nil, activation_keys)
+      host, consumer_data = Katello::RegistrationManager.process_registration(rhsm_params, nil, activation_keys)
 
       update_host_registered_through(host, request.headers)
-      host.reload
 
-      render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
+      render :json => consumer_data
     end
 
     #api :GET, "/status", N_("Shows version information")
