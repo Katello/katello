@@ -52,7 +52,7 @@ const ContentOverrideDropdown =
         key={`pf-ContentOverrideDropdown-${repoLabel}`}
         isOpen={isOpen}
         onSelect={onSelect}
-        onOpenChange={openVal => setIsOpen(!openVal)}
+        onOpenChange={setIsOpen}
         toggle={toggleRef => (
           <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen}>
             {currentLabel}
@@ -196,7 +196,7 @@ export const BulkRepositorySetsTable = ({
     <Dropdown
       isOpen={actionToggleOpen}
       onSelect={onSelect}
-      onOpenChange={val => setActionToggleOpen(!val)}
+      onOpenChange={setActionToggleOpen}
       key="content-override-action-dropdown"
       ouiaId="content-override-action-dropdown"
       toggle={toggleRef => (
