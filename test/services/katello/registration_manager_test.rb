@@ -6,7 +6,7 @@ module Katello
       include VCR::TestCase
     end
 
-    class RegistrationManager < RegistrationManagerTestBase
+    class RegistrationManager < RegistrationManagerTestBase # rubocop:disable Metrics/ClassLength
       include FactImporterIsolation
       allow_transactions_for_any_importer
 
@@ -515,7 +515,7 @@ module Katello
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params.merge(:facts => non_critical_facts), [@content_view_environment])
       end
 
-      def test_import_critical_registration_facts_rescue_does_not_fail_registration
+      def test_import_critical_registration_facts_failure_aborts_registration
         new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @org)
         critical_facts = {'distribution.name' => 'RHEL', 'uname.machine' => 'x86_64'}
 
@@ -525,11 +525,12 @@ module Katello
         ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_hypervisor)
         ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_guests)
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
+        ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host).with(new_host).once
+        ::Katello::Resources::Candlepin::CandlepinPing.expects(:clear_cache).never
 
         ::Katello::Host::SubscriptionFacet.expects(:update_facts).raises(StandardError, 'db failure')
-        Rails.logger.expects(:warn).with(regexp_matches(/foobar\.example\.com.*StandardError.*db failure/))
 
-        assert_nothing_raised do
+        assert_raises(StandardError, 'db failure') do
           ::Katello::RegistrationManager.register_host(new_host, rhsm_params.merge(:facts => critical_facts), [@content_view_environment])
         end
       end
@@ -551,7 +552,7 @@ module Katello
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
         end
       end
-    end
+    end # rubocop:enable Metrics/ClassLength
 
     class CheckRegistrationServicesTest < ActiveSupport::TestCase
       def test_delegates_to_candlepin_ping

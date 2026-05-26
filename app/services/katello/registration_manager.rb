@@ -192,25 +192,29 @@ module Katello
 
         consumer_data = nil
         User.as_anonymous_admin do
-          consumer_data = begin
-            create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
+          begin
+            consumer_data = begin
+              create_in_candlepin(host, content_view_environments, consumer_params, activation_keys)
+            rescue StandardError => e
+              # Invalidate the cached Candlepin status immediately so subsequent
+              # registrations fail fast at check_registration_services rather than
+              # proceeding through DB writes only to roll back when CP is down.
+              Katello::Resources::Candlepin::CandlepinPing.clear_cache
+              raise e
+            end
+
+            # Import only the facts needed for OS/architecture detection so that
+            # RhelLifecycleStatus is correct immediately after registration.
+            # The full fact set arrives via PUT /rhsm/consumers/:id (step 6).
+            import_critical_registration_facts(host, consumer_params[:facts])
+
+            finalize_registration(host, consumer_data)
           rescue StandardError => e
-            # Invalidate the cached Candlepin status immediately so subsequent
-            # registrations fail fast at check_registration_services rather than
-            # proceeding through DB writes only to roll back when CP is down.
-            Katello::Resources::Candlepin::CandlepinPing.clear_cache
             # we can't call CP here since something bad already happened. Just clean up our DB as best as we can.
             host.subscription_facet.try(:destroy!)
             new_host ? remove_partially_registered_new_host(host) : remove_host_artifacts(host)
             raise e
           end
-
-          # Import only the facts needed for OS/architecture detection so that
-          # RhelLifecycleStatus is correct immediately after registration.
-          # The full fact set arrives via PUT /rhsm/consumers/:id (step 6).
-          import_critical_registration_facts(host, consumer_params[:facts])
-
-          finalize_registration(host, consumer_data)
         end
 
         consumer_data
@@ -332,13 +336,6 @@ module Katello
         critical = facts&.slice(*REGISTRATION_CRITICAL_FACTS)
         return if critical.blank?
         ::Katello::Host::SubscriptionFacet.update_facts(host, critical, additive: true)
-      rescue StandardError => e
-        # This import is best-effort: Candlepin registration already succeeded and
-        # the full fact set will arrive via PUT /rhsm/consumers/:id (step 6).
-        # Rescuing StandardError (rather than a specific subclass) is intentional —
-        # any failure here is non-fatal, and propagating it would mislead the client
-        # into thinking registration failed when it actually succeeded.
-        Rails.logger.warn("Failed to import critical facts for host #{host.name}: #{e.class}: #{e.message}")
       end
 
       def remove_host_artifacts(host, clear_content_facet: true, preserve_for_provisioning: false)
