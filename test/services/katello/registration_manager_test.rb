@@ -213,8 +213,7 @@ module Katello
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @library.organization).returns(:uuid => 'fake-uuid-from-candlepin')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-candlepin').returns({})
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @library.organization).returns('uuid' => 'fake-uuid-from-candlepin')
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
 
@@ -230,9 +229,8 @@ module Katello
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([cvpe.cp_id], rhsm_params, ["cp_name_baz"], @host_collection.organization).returns(:uuid => 'fake-uuid-from-katello')
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([cvpe.cp_id], rhsm_params, ["cp_name_baz"], @host_collection.organization).returns('uuid' => 'fake-uuid-from-katello')
         Katello::ActivationKey.any_instance.stubs(:cp_name).returns('cp_name_baz')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
@@ -272,8 +270,7 @@ module Katello
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
 
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns(:uuid => 'fake-uuid-from-katello')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns('uuid' => 'fake-uuid-from-katello')
 
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
       end
@@ -407,8 +404,7 @@ module Katello
         # Mock the necessary methods for re-registration
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns(:uuid => 'fake-uuid-from-katello')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns('uuid' => 'fake-uuid-from-katello')
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
