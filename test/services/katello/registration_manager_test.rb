@@ -189,7 +189,6 @@ module Katello
       def test_process_registration_existing_host
         host = FactoryBot.create(:host, :with_content, :organization_id => @org.id)
         @facts = {'network.hostname' => host.name}
-        ::Host::Managed.any_instance.stubs(:refresh_statuses)
 
         ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, [@content_view_environment], [])
 
@@ -218,7 +217,6 @@ module Katello
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
 
-        ::Host::Managed.any_instance.stubs(:refresh_statuses)
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
 
         assert_equal new_host.subscription_facet.uuid, 'fake-uuid-from-candlepin'
@@ -234,7 +232,6 @@ module Katello
         Katello::ActivationKey.any_instance.stubs(:cp_name).returns('cp_name_baz')
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
-        ::Host::Managed.any_instance.stubs(:refresh_statuses)
 
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [cvpe], [@activation_key])
 
@@ -281,11 +278,10 @@ module Katello
         ::Host::Managed.any_instance.expects(:update_candlepin_associations).times(2)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
-        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, unregistering: true, preserve_for_provisioning: true)
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns('uuid' => 'fake-uuid-from-katello')
 
@@ -303,12 +299,14 @@ module Katello
       end
 
       def test_unregister_host
-        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+
+        ::Katello::Registration::HostArtifactCleaner.any_instance.expects(:clean!).with(
+          clear_content_facet: true,
+          preserve_for_provisioning: false
+        )
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Katello::EventQueue.expects(:push_event).never
         ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
       end
 
@@ -324,95 +322,39 @@ module Katello
         ::Katello::RegistrationManager.unregister_host(@host)
       end
 
-      def test_unregister_host_rhsm_facts
-        FactValue.create!(value: 'something', host: @host, fact_name: RhsmFactName.create(name: 'some-fact'))
-
-        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
-
-        assert_empty @host.rhsm_fact_values
-      end
-
-      def test_unregister_host_resets_content_source
-        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
-        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                                    :lifecycle_environment => @library, :organization => @content_view.organization)
-        pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
-        @host.content_facet.update(:content_source_id => pulp3_proxy.id)
-        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-
-        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
-
-        refute_nil @host.content_facet.content_source
-        assert_equal ::SmartProxy.pulp_primary, @host.content_facet.content_source
-      end
-
       def test_unregister_host_clears_build_profile_when_setting_disabled
-        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                     :lifecycle_environment => @library, :organization => @content_view.organization)
-        kickstart_repo = katello_repositories(:fedora_17_x86_64)
-        pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
-        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id, :content_source_id => pulp3_proxy.id)
-        Setting[:retain_build_profile_upon_unregistration] = false
-        refute Setting[:retain_build_profile_upon_unregistration]
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
 
-        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
+        Setting[:retain_build_profile_upon_unregistration] = false
+        ::Katello::Registration::HostArtifactCleaner.any_instance.expects(:clean!).with(
+          preserve_for_provisioning: false,
+          clear_content_facet: true
+        )
 
-        # Verify provisioning information is cleared
-        assert_empty @host.content_facet.content_view_environments
-        assert_nil @host.content_facet.kickstart_repository_id
-        assert_equal ::SmartProxy.pulp_primary, @host.content_facet.content_source
-        # Verify other data is still cleared as expected
-        assert_empty @host.content_facet.bound_repositories
-        assert_empty @host.content_facet.applicable_errata
-        # Reload to clear cached association - subscription_facet is destroyed, so uuid is nil
-        assert_nil @host.reload.subscription_facet&.uuid
+        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
       end
 
       def test_unregister_host_retains_build_profile_when_setting_enabled
-        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                     :lifecycle_environment => @library, :organization => @content_view.organization)
-        kickstart_repo = katello_repositories(:fedora_17_x86_64)
-        pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
-        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id, :content_source_id => pulp3_proxy.id)
-
-        original_cvenvs = @host.content_facet.content_view_environments.dup
-        original_ks_repo_id = @host.content_facet.kickstart_repository_id
-        original_content_source = @host.content_facet.content_source
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
 
         Setting[:retain_build_profile_upon_unregistration] = true
         assert Setting[:retain_build_profile_upon_unregistration]
-
-        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
+        ::Katello::Registration::HostArtifactCleaner.any_instance.expects(:clean!).with(
+          preserve_for_provisioning: true,
+          clear_content_facet: true
+        )
 
         ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
-
-        # Verify provisioning information is retained
-        assert_equal original_cvenvs, @host.content_facet.content_view_environments
-        assert_equal original_ks_repo_id, @host.content_facet.kickstart_repository_id
-        assert_equal original_content_source, @host.content_facet.content_source
-        # Verify other data is still cleared as expected
-        assert_empty @host.content_facet.bound_repositories
-        assert_empty @host.content_facet.applicable_errata
-        # Reload to clear cached association - subscription_facet is destroyed, so uuid is nil
-        assert_nil @host.reload.subscription_facet&.uuid
       end
 
-      def test_re_register_host_preserves_build_profile_regardless_of_setting # rubocop:disable Metrics/AbcSize
-        # Setup existing host with content facet
+      def test_re_register_host_preserves_build_profile_regardless_of_setting
         ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                     :lifecycle_environment => @library, :organization => @content_view.organization)
-        kickstart_repo = katello_repositories(:fedora_17_x86_64)
-        pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
-        @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id, :content_source_id => pulp3_proxy.id)
-
-        # Store original values
-        original_cvenvs = @host.content_facet.content_view_environments.dup
-        original_ks_repo_id = @host.content_facet.kickstart_repository_id
-        original_content_source = @host.content_facet.content_source
 
         # Set the setting to false to verify that re-registration preserves data regardless
         Setting[:retain_build_profile_upon_unregistration] = false
@@ -424,20 +366,14 @@ module Katello
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).returns('uuid' => 'fake-uuid-from-katello')
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
         ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
-        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+
+        ::Katello::Registration::HostArtifactCleaner.any_instance.expects(:clean!).with(
+          preserve_for_provisioning: true,
+          clear_content_facet: true
+        )
 
         # Perform re-registration (this should call unregister_host internally with preserve_for_provisioning: true)
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
-
-        # Verify provisioning information is preserved despite setting being false
-        # This verifies that preserve_for_provisioning: true overrides the setting during re-registration
-        assert_equal original_cvenvs, @host.content_facet.content_view_environments
-        assert_equal original_ks_repo_id, @host.content_facet.kickstart_repository_id
-        assert_equal original_content_source, @host.content_facet.content_source
-        # Verify other data is still cleared as expected during unregistration
-        assert_empty @host.content_facet.bound_repositories
-        assert_empty @host.content_facet.applicable_errata
-        assert_equal 'fake-uuid-from-katello', @host.subscription_facet.uuid
       end
 
       def test_destroy_host_not_found
@@ -457,6 +393,10 @@ module Katello
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
 
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy).never
+        ::Katello::Registration::HostArtifactCleaner.any_instance.expects(:clean!).with(
+          preserve_for_provisioning: false,
+          clear_content_facet: false
+        )
 
         @host.expects(:destroy).never
 
@@ -467,52 +407,51 @@ module Katello
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
 
-        ::Katello::Resources::Candlepin::Consumer.expects(:destroy).raises(Exception)
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy).raises(Katello::Errors::ConnectionRefusedException)
 
-        assert_raises(Exception) do
+        assert_raises(Katello::Errors::ConnectionRefusedException) do
           ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
         end
       end
 
       def test_registration_dead_candlepin
         new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @library.organization)
-
         ::Host.expects(:find).returns(new_host)
         new_host.expects(:destroy)
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @library.organization).raises("uhoh!")
-
-        assert_raises(Exception) do
-          ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
-        end
-      end
-
-      def test_registration_dead_candlepin_clears_cache
-        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @library.organization)
-
-        ::Host.expects(:find).returns(new_host)
-        new_host.stubs(:destroy)
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).raises("uhoh!")
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).raises(Katello::Errors::ConnectionRefusedException)
         ::Katello::Resources::Candlepin::CandlepinPing.expects(:clear_cache).once
 
-        assert_raises(Exception) do
+        assert_raises(Katello::Errors::ConnectionRefusedException) do
           ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [@content_view_environment])
         end
       end
 
       # this case can only happen if candlepin/pulp dies after the host is unregistered, but before it's re-registered.
       def test_registration_existing_host_dead_backend_service
-        ::Host::Managed.any_instance.stubs(:update_candlepin_associations).twice
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
         @host.content_facet.expects(:destroy).never
         @host.expects(:destroy).never
 
-        ::Katello::RegistrationManager.expects(:remove_host_artifacts).twice # once on original unregister, once again after failure during re-reg
+        clean_sequence = sequence('artifact cleanup')
+        # original unregister
+        Katello::Registration::HostArtifactCleaner.any_instance.expects(:clean!).with(
+          clear_content_facet: true,
+          preserve_for_provisioning: true
+        ).in_sequence(clean_sequence)
+
+        # failure during re-reg
+        Katello::Registration::HostArtifactCleaner.any_instance.expects(:clean!).with(
+          clear_content_facet: true,
+          preserve_for_provisioning: false
+        ).in_sequence(clean_sequence)
+
         ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host).never
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).raises("uhoh!")
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], rhsm_params, [], @content_view.organization).raises(Katello::Errors::ConnectionRefusedException)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
 
-        assert_raises(Exception) do
+        assert_raises(Katello::Errors::ConnectionRefusedException) do
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
         end
       end

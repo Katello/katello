@@ -65,7 +65,7 @@ FactoryBot.define do
     trait :with_product do
       with_content_view
 
-      product { FactoryBot.create(:katello_product, :with_provider, organization: organization) }
+      product { association(:katello_product, :with_provider, organization: organization) }
     end
 
     trait :deb do

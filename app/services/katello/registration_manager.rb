@@ -138,10 +138,10 @@ module Katello
         host.subscription_facet.try(:destroy!)
 
         if unregistering
-          remove_host_artifacts(host, preserve_for_provisioning: preserve_for_provisioning)
+          remove_host_artifacts(host, preserve_for_provisioning: preserve_for_provisioning || Setting[:retain_build_profile_upon_unregistration])
         elsif organization_destroy
           host.content_facet.try(:destroy!)
-          remove_host_artifacts(host, clear_content_facet: false, preserve_for_provisioning: preserve_for_provisioning)
+          remove_host_artifacts(host, clear_content_facet: false)
         else
           host.content_facet.try(:destroy!)
           destroy_host_record(host.id)
@@ -316,30 +316,11 @@ module Katello
 
       def remove_host_artifacts(host, clear_content_facet: true, preserve_for_provisioning: false)
         Rails.logger.debug "Host ID: #{host.id}, clear_content_facet: #{clear_content_facet}"
-        if host.content_facet && clear_content_facet
-          host.content_facet.bound_repositories = []
-          host.content_facet.applicable_errata = []
-
-          # Clear or retain provisioning information based on setting
-          unless Setting[:retain_build_profile_upon_unregistration] || preserve_for_provisioning
-            # Clear provisioning information if setting is disabled
-            host.content_facet.content_view_environments = []
-            host.content_facet.kickstart_repository_id = nil
-            host.content_facet.content_source = ::SmartProxy.pulp_primary
-          end
-          # If setting is enabled, keep current values (CVEnvs, kickstart_repository_id, content_source)
-
-          host.content_facet.save!
-          Rails.logger.debug "remove_host_artifacts: marking CVEnvs unchanged to prevent backend update"
-          host.content_facet.mark_cvenvs_unchanged
-          host.content_facet.calculate_and_import_applicability
-        end
-
-        host.get_status(::Katello::ErrataStatus).destroy
-        host.get_status(::Katello::TraceStatus).destroy
-        host.installed_packages.delete_all
-
-        host.rhsm_fact_values.delete_all
+        cleaner = Registration::HostArtifactCleaner.new(host: host)
+        cleaner.clean!(
+          clear_content_facet: clear_content_facet,
+          preserve_for_provisioning: preserve_for_provisioning
+        )
       end
     end
   end

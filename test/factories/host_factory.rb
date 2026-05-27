@@ -11,7 +11,7 @@ FactoryBot.modify do
     end
 
     trait :with_content do
-      association :content_facet, :factory => :content_facet, :strategy => :build
+      association :content_facet, host: @instance, :factory => :content_facet, :strategy => :build
 
       after(:build) do |host, evaluator|
         if host.content_facet

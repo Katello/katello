@@ -249,6 +249,8 @@ module Katello
       end
 
       def backend_update_needed?
+        return false if self.destroyed?
+
         %w(release_version service_level purpose_role purpose_usage).each do |method|
           if self.send("#{method}_changed?")
             Rails.logger.debug("backend_update_needed: subscription facet #{method} changed")

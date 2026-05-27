@@ -38,7 +38,7 @@ module Katello
         content_facet.cvenvs_changed = false if content_facet
         content_facet&.save!
 
-        if subscription_facet
+        if subscription_facet && !subscription_facet.destroyed?
           consumer_params ||= subscription_facet.consumer_attributes
 
           host_uuid = consumer_params.dig(:facts, 'dmi.system.uuid')
@@ -48,7 +48,12 @@ module Katello
             override_value ||= subscription_facet.update_dmi_uuid_override&.value
             consumer_params[:facts]['dmi.system.uuid'] = override_value
           end
-          ::Katello::Resources::Candlepin::Consumer.update(subscription_facet.uuid, consumer_params)
+
+          begin
+            ::Katello::Resources::Candlepin::Consumer.update(subscription_facet.uuid, consumer_params)
+          rescue RestClient::Gone, RestClient::NotFound
+            raise "Unable to update missing or deleted candlepin consumer uuid=#{subscription_facet.uuid} host_id=#{self.id}"
+          end
 
           if consumer_params.try(:[], :facts)
             ::Katello::Host::SubscriptionFacet.update_facts(self, consumer_params[:facts])
