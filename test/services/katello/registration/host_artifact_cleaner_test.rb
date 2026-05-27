@@ -40,7 +40,6 @@ module Katello
         # Verify other data is still cleared as expected
         assert_empty host.content_facet.bound_repositories
         assert_empty host.content_facet.applicable_errata
-        assert_nil host.content_facet.uuid
       end
 
       test "cleans provisioning data" do
@@ -59,7 +58,6 @@ module Katello
         # Verify other data is still cleared as expected
         assert_empty host.content_facet.bound_repositories
         assert_empty host.content_facet.applicable_errata
-        assert_nil host.content_facet.uuid
       end
 
       test "preserves content facet data" do
@@ -75,7 +73,6 @@ module Katello
         refute_nil host.content_facet.kickstart_repository_id
         refute_equal ::SmartProxy.pulp_primary, host.content_facet.content_source
         refute_empty host.content_facet.applicable_errata
-        refute_nil host.content_facet.uuid
         refute_empty host.content_facet.applicable_errata
       end
     end

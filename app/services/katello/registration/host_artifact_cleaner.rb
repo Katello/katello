@@ -11,7 +11,6 @@ module Katello
         if host.content_facet && clear_content_facet
           host.content_facet.bound_repositories = []
           host.content_facet.applicable_errata = []
-          host.content_facet.uuid = nil
 
           unless preserve_for_provisioning
             host.content_facet.content_view_environments = []
