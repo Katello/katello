@@ -489,7 +489,6 @@ module Katello
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns('fake-uuid')
         ::Katello::Resources::Candlepin::Consumer.expects(:create).returns(:uuid => 'fake-uuid')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).returns({})
         ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_hypervisor)
         ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_guests)
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
@@ -505,7 +504,6 @@ module Katello
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns('fake-uuid')
         ::Katello::Resources::Candlepin::Consumer.expects(:create).returns(:uuid => 'fake-uuid')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).returns({})
         ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_hypervisor)
         ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_guests)
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
@@ -521,7 +519,6 @@ module Katello
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns('fake-uuid')
         ::Katello::Resources::Candlepin::Consumer.expects(:create).returns(:uuid => 'fake-uuid')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).returns({})
         ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_hypervisor)
         ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_guests)
         ::Host::Managed.any_instance.stubs(:refresh_statuses)
