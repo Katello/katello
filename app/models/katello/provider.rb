@@ -10,7 +10,6 @@ module Katello
     TYPES = [REDHAT, CUSTOM, ANONYMOUS].freeze
 
     belongs_to :organization, :inverse_of => :providers, :class_name => "Organization"
-    belongs_to :task_status, :inverse_of => :provider
     has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :restrict_with_exception
     has_many :repositories, :through => :products
 
@@ -47,8 +46,7 @@ module Katello
 
     def constraint_redhat_update
       if !new_record? && redhat_provider?
-        allowed_changes = %w(task_status_id)
-        not_allowed_changes = changes.keys - allowed_changes
+        not_allowed_changes = changes.keys
         unless not_allowed_changes.empty?
           errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))
         end
@@ -86,10 +84,6 @@ module Katello
       hash = super(options)
       hash.merge(:sync_state => self.sync_state,
                         :last_sync => self.last_sync)
-    end
-
-    def manifest_task
-      return task_status
     end
 
     def as_json(*args)

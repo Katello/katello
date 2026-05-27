@@ -27,15 +27,12 @@ module Katello
         has_many :contents, :class_name => "Katello::Content", :dependent => :destroy, :inverse_of => :organization
         has_many :content_views, :class_name => "Katello::ContentView", :dependent => :destroy, :inverse_of => :organization
         has_many :content_view_environments, :through => :content_views
-        has_many :task_statuses, :class_name => "Katello::TaskStatus", :dependent => :destroy, :as => :task_owner
         has_many :subscriptions, :class_name => "Katello::Subscription", :dependent => :destroy, :inverse_of => :organization
         has_many :pools, :class_name => "Katello::Pool", :dependent => :destroy, :inverse_of => :organization
         has_many :product_contents, :through => :products
         has_many :repositories, :through => :products
         has_one :cdn_configuration, :class_name => "Katello::CdnConfiguration", :dependent => :destroy, :inverse_of => :organization
         has_many :flatpak_remotes, :class_name => "Katello::FlatpakRemote", :dependent => :destroy, :inverse_of => :organization
-        #older association
-        has_many :org_tasks, :dependent => :destroy, :class_name => "Katello::TaskStatus", :inverse_of => :organization
 
         attr_accessor :statistics
 
@@ -143,10 +140,6 @@ module Katello
 
         def manifest_history
           imports.map { |i| OpenStruct.new(i) }
-        end
-
-        def repo_discovery_task
-          self.task_statuses.where(:task_type => :repo_discovery).order('created_at DESC').first
         end
 
         def associate_default_capsule
