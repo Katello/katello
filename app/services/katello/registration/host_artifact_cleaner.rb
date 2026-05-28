@@ -19,8 +19,8 @@ module Katello
           end
 
           host.content_facet.save!
-          Rails.logger.debug "remove_host_artifacts: marking CVEs unchanged to prevent backend update"
-          host.content_facet.mark_cves_unchanged
+          Rails.logger.debug "remove_host_artifacts: marking CVEnvs unchanged to prevent backend update"
+          host.content_facet.mark_cvenvs_unchanged
           host.content_facet.calculate_and_import_applicability
         end
 

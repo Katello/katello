@@ -26,7 +26,7 @@ module Katello
 
       test "preserves provisioning data" do
         host.content_facet.expects(:calculate_and_import_applicability)
-        host.content_facet.expects(:mark_cves_unchanged)
+        host.content_facet.expects(:mark_cvenvs_unchanged)
         content_facet.expects(:save!)
 
         cleaner = HostArtifactCleaner.new(host: host)
@@ -44,7 +44,7 @@ module Katello
 
       test "cleans provisioning data" do
         host.content_facet.expects(:calculate_and_import_applicability)
-        host.content_facet.expects(:mark_cves_unchanged)
+        host.content_facet.expects(:mark_cvenvs_unchanged)
         content_facet.expects(:save!)
 
         cleaner = HostArtifactCleaner.new(host: host)
@@ -62,7 +62,7 @@ module Katello
 
       test "preserves content facet data" do
         host.content_facet.expects(:calculate_and_import_applicability).never
-        host.content_facet.expects(:mark_cves_unchanged).never
+        host.content_facet.expects(:mark_cvenvs_unchanged).never
         content_facet.expects(:save!).never
 
         cleaner = HostArtifactCleaner.new(host: host)
