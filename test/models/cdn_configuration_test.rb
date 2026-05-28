@@ -33,6 +33,26 @@ module Katello
       end
     end
 
+    def test_redhat_cdn_host
+      config = FactoryBot.build(:katello_cdn_configuration, :custom_cdn)
+
+      ['cdn.redhat.com', 'cdn-eu.redhat.com', 'cdn-us.redhat.com'].each do |host|
+        config.url = "https://#{host}/content"
+        assert config.redhat_cdn_host?, "Expected #{host} to be a Red Hat CDN host"
+      end
+
+      ['satellite.example.redhat.com', 'internal.fqdn.redhat.com'].each do |host|
+        config.url = "https://#{host}/pub/repos"
+        refute config.redhat_cdn_host?, "Expected #{host} NOT to be a Red Hat CDN host"
+      end
+
+      config.url = 'https://cdn.example.com/content'
+      refute config.redhat_cdn_host?
+
+      config.url = 'not a url'
+      refute config.redhat_cdn_host?
+    end
+
     def test_types_updated_correctly
       org = Organization.first
       content_credential = ContentCredential.create!(:name => "CA",
