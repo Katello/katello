@@ -1,42 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
-import { Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { Spinner, Tooltip, Button } from '@patternfly/react-core';
+import { MinusCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 const EnabledRepositoryContent = ({
-  loading, disableTooltipId, disableRepository, canDisable,
-}) => (
-  <Spinner loading={loading} inline>
-    <OverlayTrigger
-      overlay={<Tooltip id={disableTooltipId}>{canDisable ? __('Disable') : __('Cannot be disabled because it is part of a content view')}</Tooltip>}
-      placement="bottom"
-      trigger={['hover', 'focus']}
-      rootClose={false}
-    >
-      <button
-        onClick={disableRepository}
-        style={canDisable ? {
-          backgroundColor: 'initial',
-          border: 'none',
-          color: '#0388ce',
-        } : {
-          backgroundColor: 'initial',
-          border: 'none',
-          color: '#d2d2d2',
-        }
-      }
-        disabled={!canDisable}
+  loading, disableRepository, canDisable,
+}) => {
+  if (loading) {
+    return <Spinner size="md" />;
+  }
+
+  const tooltipContent = canDisable
+    ? __('Disable')
+    : __('Cannot be disabled because it is part of a content view');
+
+  return (
+    <Tooltip content={tooltipContent} position="bottom">
+      <Button
+        variant="plain"
+        onClick={canDisable ? disableRepository : undefined}
+        isAriaDisabled={!canDisable}
+        aria-label={canDisable ? __('Disable') : __('Cannot be disabled')}
+        ouiaId="disable-repository-button"
+        className="disable-repository-button"
       >
-        <i className={cx('fa-2x', 'fa fa-minus-circle')} />
-      </button>
-    </OverlayTrigger>
-  </Spinner>
-);
+        <MinusCircleIcon />
+      </Button>
+    </Tooltip>
+  );
+};
 
 EnabledRepositoryContent.propTypes = {
   loading: PropTypes.bool.isRequired,
-  disableTooltipId: PropTypes.string.isRequired,
   disableRepository: PropTypes.func.isRequired,
   canDisable: PropTypes.bool.isRequired,
 };

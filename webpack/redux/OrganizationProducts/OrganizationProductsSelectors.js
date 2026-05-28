@@ -5,3 +5,6 @@ export const selectOrganizationProductsState = state =>
 
 export const selectOrganizationProducts = state =>
   selectOrganizationProductsState(state).results;
+
+export const selectOrganizationProductsLoading = state =>
+  selectOrganizationProductsState(state).loading;

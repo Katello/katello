@@ -13,13 +13,12 @@ describe('Enabled Repositories Content Component', () => {
 
   describe('rendering', () => {
     test('renders without errors when enabled', () => {
-      const { container } = render(<EnabledRepositoryContent {...getBaseProps()} />);
-      expect(container.firstChild).toBeInTheDocument();
+      const { getByLabelText } = render(<EnabledRepositoryContent {...getBaseProps()} />);
 
-      // For legacy PatternFly v3 button
-      const button = container.querySelector('button');
+      // Verify button is rendered and enabled (aria-disabled="false")
+      const button = getByLabelText('Disable');
       expect(button).toBeInTheDocument();
-      expect(button).not.toBeDisabled();
+      expect(button).toHaveAttribute('aria-disabled', 'false');
     });
 
     test('renders disabled state when canDisable is false', () => {
@@ -27,12 +26,12 @@ describe('Enabled Repositories Content Component', () => {
         ...getBaseProps(),
         canDisable: false,
       };
-      const { container } = render(<EnabledRepositoryContent {...props} />);
+      const { getByLabelText } = render(<EnabledRepositoryContent {...props} />);
 
-      // For legacy PatternFly v3 button
-      const button = container.querySelector('button');
+      // Verify button is rendered and aria-disabled
+      const button = getByLabelText('Cannot be disabled');
       expect(button).toBeInTheDocument();
-      expect(button).toBeDisabled();
+      expect(button).toHaveAttribute('aria-disabled', 'true');
     });
 
     test('renders loading spinner when loading', () => {
@@ -40,16 +39,26 @@ describe('Enabled Repositories Content Component', () => {
         ...getBaseProps(),
         loading: true,
       };
-      const { container } = render(<EnabledRepositoryContent {...props} />);
-      expect(container.firstChild).toBeInTheDocument();
+      const { container, queryByLabelText } = render(<EnabledRepositoryContent {...props} />);
+
+      // Verify spinner is shown (check for pf-v5-c-spinner class)
+      const spinner = container.querySelector('.pf-v5-c-spinner');
+      expect(spinner).toBeInTheDocument();
+
+      // Verify button is not shown
+      expect(queryByLabelText('Disable')).not.toBeInTheDocument();
     });
 
     test('renders minus circle icon', () => {
-      const { container } = render(<EnabledRepositoryContent {...getBaseProps()} />);
+      const { getByLabelText } = render(<EnabledRepositoryContent {...getBaseProps()} />);
 
-      // For legacy PatternFly v3 icon with aria-hidden
-      const icon = container.querySelector('.fa-minus-circle');
-      expect(icon).toBeInTheDocument();
+      // Verify button with icon is rendered
+      const button = getByLabelText('Disable');
+      expect(button).toBeInTheDocument();
+
+      // Verify the button contains an SVG icon
+      const svg = button.querySelector('svg');
+      expect(svg).toBeInTheDocument();
     });
   });
 
@@ -61,12 +70,11 @@ describe('Enabled Repositories Content Component', () => {
         disableRepository: mockCallback,
         canDisable: true,
       };
-      const { container } = render(<EnabledRepositoryContent {...props} />);
+      const { getByLabelText } = render(<EnabledRepositoryContent {...props} />);
 
       expect(mockCallback).not.toHaveBeenCalled();
 
-      // For legacy PatternFly v3 button
-      const button = container.querySelector('button');
+      const button = getByLabelText('Disable');
       fireEvent.click(button);
 
       expect(mockCallback).toHaveBeenCalled();
@@ -79,32 +87,26 @@ describe('Enabled Repositories Content Component', () => {
         disableRepository: mockCallback,
         canDisable: false,
       };
-      const { container } = render(<EnabledRepositoryContent {...props} />);
+      const { getByLabelText } = render(<EnabledRepositoryContent {...props} />);
 
-      // For legacy PatternFly v3 button
-      const button = container.querySelector('button');
+      const button = getByLabelText('Cannot be disabled');
       fireEvent.click(button);
 
       // Button is disabled, so onClick shouldn't fire
       expect(mockCallback).not.toHaveBeenCalled();
     });
 
-    test('does not call disableRepository when loading', () => {
+    test('does not render button when loading', () => {
       const mockCallback = jest.fn();
       const props = {
         ...getBaseProps(),
         disableRepository: mockCallback,
         loading: true,
       };
-      const { container } = render(<EnabledRepositoryContent {...props} />);
+      const { queryByLabelText } = render(<EnabledRepositoryContent {...props} />);
 
-      // For legacy PatternFly v3 - button still exists but Spinner may affect behavior
-      const button = container.querySelector('button');
-      if (button) {
-        fireEvent.click(button);
-      }
-
-      // Component is loading, callback shouldn't be triggered
+      // Button doesn't exist when loading
+      expect(queryByLabelText('Disable')).not.toBeInTheDocument();
       expect(mockCallback).not.toHaveBeenCalled();
     });
   });

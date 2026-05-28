@@ -1,33 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListView, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { Tooltip } from '@patternfly/react-core';
+import {
+  BundleIcon,
+  CodeIcon,
+  FileIcon,
+  BugIcon,
+  FileImageIcon,
+  FutbolIcon,
+  MiddlewareIcon,
+  QuestionIcon,
+} from '@patternfly/react-icons';
+import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 
-import { getTypeIcon } from '../../../services/index';
+const RepositoryTypeIcon = ({ type }) => {
+  const iconMap = {
+    yum: BundleIcon,
+    source_rpm: CodeIcon,
+    file: FileIcon,
+    debug: BugIcon,
+    iso: FileImageIcon,
+    kickstart: FutbolIcon,
+    containerimage: MiddlewareIcon,
+  };
 
-export default class RepositoryTypeIcon extends React.Component {
-  constructor(props) {
-    super(props);
+  const Icon = iconMap[type] || QuestionIcon;
 
-    this.tooltipId = `type-tooltip-${props.id}`;
-  }
-
-  render() {
-    const typeIcon = getTypeIcon(this.props.type);
-
-    return (
-      <OverlayTrigger
-        overlay={<Tooltip id={this.tooltipId}>{this.props.type}</Tooltip>}
-        placement="bottom"
-        trigger={['hover', 'focus']}
-        rootClose={false}
-      >
-        <ListView.Icon name={typeIcon.name} size="sm" type={typeIcon.type} />
-      </OverlayTrigger>
-    );
-  }
-}
+  return (
+    <Tooltip content={type} position="bottom">
+      <Icon aria-label={sprintf(__('%s repository type icon'), type)} size="lg" />
+    </Tooltip>
+  );
+};
 
 RepositoryTypeIcon.propTypes = {
-  id: PropTypes.number.isRequired,
   type: PropTypes.string.isRequired,
 };
+
+export default RepositoryTypeIcon;

@@ -126,20 +126,20 @@ describe('EnabledRepository Component', () => {
     const props = getBaseProps(enabledRepoFixtures[0]); // deletable: true
     const { container } = renderWithRedux(<EnabledRepository {...props} />, getInitialState());
 
-    // For legacy PatternFly v3 button with icon
+    // For PatternFly v5 button with aria-disabled
     const disableButton = container.querySelector('button');
     expect(disableButton).toBeInTheDocument();
-    expect(disableButton).not.toBeDisabled();
+    expect(disableButton).toHaveAttribute('aria-disabled', 'false');
   });
 
   test('renders disabled button when repository cannot be disabled', () => {
     const props = getBaseProps(enabledRepoFixtures[1]); // deletable: false (in content view)
     const { container } = renderWithRedux(<EnabledRepository {...props} />, getInitialState());
 
-    // For legacy PatternFly v3 button with icon
+    // For PatternFly v5 button with aria-disabled
     const disableButton = container.querySelector('button');
     expect(disableButton).toBeInTheDocument();
-    expect(disableButton).toBeDisabled();
+    expect(disableButton).toHaveAttribute('aria-disabled', 'true');
   });
 
   test('disables repository via API when disable button is clicked', async () => {

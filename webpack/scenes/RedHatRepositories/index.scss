@@ -1,137 +1,218 @@
 @import "foremanReact/common/variables";
 
-.row-eq-height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.list-item-with-divider:not(:last-child) {
-  border-bottom: 1px solid $color-pf-black-200;
-}
-
-.list-error-danger {
-  color: $color-pf-red-200;
-}
-
 #redhatRepositoriesPage {
-  .deemphasize {
-    color: lightgray;
+  padding: var(--pf-v5-global--spacer--md);
+
+  // PF5 DataList items divider
+  .list-item-with-divider:not(:last-child) {
+    border-bottom: 1px solid var(--pf-v5-global--BorderColor--100);
   }
+
+  .list-error-danger {
+    color: var(--pf-v5-global--danger-color--100);
+  }
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .deemphasize {
+    color: var(--pf-v5-global--Color--200);
+  }
+
+  .repository-name {
+    font-weight: var(--pf-v5-global--FontWeight--bold);
+  }
+
+  .repository-label {
+    color: var(--pf-v5-global--Color--200);
+  }
+
+  .repository-text-md {
+    font-size: var(--pf-v5-global--FontSize--md);
+  }
+
+  .toolbar-pf-actions {
+    margin-bottom: 0;
+  }
+
   .search-bar-row {
-    min-height: 26px;
-    margin-bottom: 20px;
-
-    .form-group {
-      box-sizing: border-box;
-      width: 50%;
-
-      div:first-child {
-        display: flex;
-        justify-content: space-between;
-        .foreman-search-bar {
-          flex-grow: 1;
-          margin-left: 0.7rem;
-          .pf-v5-c-search-input {
-            width: 100%;
-          }
-        }
-      }
-
-      &:first-child {
-        padding-left: 0;
-      }
-    }
-
-    .dropdown.btn-group {
-      margin-right: 0.6rem;
-    }
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 0.5rem;
 
     &.search-bar-selects-row {
-      width: 50%;
-      .form-group {
-        border: none;
+      > div {
+        flex: 1;
 
         @media (min-width: 1280px) {
           &:first-child {
             min-width: 300px;
           }
+
           &:last-child {
             min-width: 180px;
           }
         }
       }
     }
-  }
 
-  .list-group-item-header .list-view-pf-description,
-  .enabled-repositories-container .list-view-pf-description {
-    width: 100%;
-
-    .list-group-item-heading {
-      white-space: pre-wrap;
+    .search-list-select-container {
+      width: 130px;
     }
-  }
 
-  .list-view-pf-view {
-    background-color: inherit;
+    .search-input-container {
+      flex: 1;
+    }
   }
 
   .recommended-repository-set-icon {
-    color: $color-pf-gold-300;
+    color: var(--pf-v5-global--warning-color--100);
     font-size: 2em;
   }
 
+  .available-repositories-container,
+  .enabled-repositories-container {
+    padding: 1rem;
+
+    .repository-item-row {
+      &:hover {
+        background-color: rgba(0, 123, 186, 0.1);
+      }
+    }
+
+    .repository-cell-content {
+      margin-right: 0;
+    }
+
+    .repository-cell-icon {
+      flex: 0 0 auto;
+      margin-right: 1rem;
+    }
+
+    .repository-set-expanded {
+      border: 1px solid var(--pf-v5-global--BorderColor--100);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      background-color: var(--pf-v5-global--BackgroundColor--100);
+    }
+
+    .repository-toggle-control {
+      margin: 0;
+    }
+
+    .repository-expandable-content {
+      padding-left: 2rem;
+
+      .repository-item-row {
+        padding-left: 1rem;
+      }
+    }
+  }
+
   .available-repositories-container {
-    background-color: $color-pf-white;
-    border-right: $color-pf-black-300 2px solid;
-
-    .available-repositories-header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      padding-top: 20px;
-
-      h2 {
-        margin: 0;
-        margin-right: 40px;
-      }
-    }
-  }
-
-  .content-view-pf-pagination {
-    background-color: $color-pf-white;
-    margin-bottom: 20px;
-  }
-
-  @media (min-width: 1280px) {
-    .toolbar-pf-filter {
-      width: 50%;
-
-      .input-group {
-        width: 400px;
-      }
-    }
+    background-color: var(--pf-v5-global--BackgroundColor--100);
+    border-right: 1px solid var(--pf-v5-global--BorderColor--100);
+    border-top: 1px solid var(--pf-v5-global--BorderColor--100);
   }
 
   .enabled-repositories-container {
-    background-color: $color-pf-black-200;
+    border-top: 1px solid var(--pf-v5-global--BorderColor--100);
+  }
 
-    .pficon.list-view-pf-icon-sm {
-      border-color: $color-pf-green-300;
+  .available-repositories-header,
+  .enabled-repositories-header {
+    margin-bottom: 1rem;
+
+    h2 {
+      margin: 0;
     }
   }
-}
 
-.sticky-pagination {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background-color: white;
-  padding-top: 10px;
-}
+  .available-repositories-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
-.sticky-pagination-grey {
-  background-color: $color-pf-black-200;
+    h2 {
+      margin-right: 40px;
+    }
+  }
+
+  .enabled-repositories-header {
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .help-button-plain {
+    padding: 0.25rem 0 0 0;
+  }
+
+  .ystream-help-button {
+    padding: 0.25rem 0 0 0;
+    margin-left: 0.5rem;
+  }
+
+  .export-csv-button {
+    margin-left: auto;
+  }
+
+  .enable-repository-button,
+  .disable-repository-button {
+    color: var(--pf-v5-global--link--Color);
+
+    &:hover:not(:disabled):not([aria-disabled="true"]) {
+      color: var(--pf-v5-global--link--Color--hover);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      color: var(--pf-v5-global--disabled-color--100);
+    }
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+
+  .repository-icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 2px solid;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+
+  .repository-icon-badge-blue {
+    border-color: var(--pf-v5-global--primary-color--100);
+  }
+
+  .repository-icon-badge-green {
+    border-color: var(--pf-v5-global--success-color--100);
+  }
+
+  .enabled-repositories-container {
+    background-color: var(--pf-v5-global--BackgroundColor--200);
+  }
+
+  .sticky-pagination {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: var(--pf-v5-global--BackgroundColor--100);
+    padding-top: 10px;
+  }
+
+  .sticky-pagination-grey {
+    background-color: var(--pf-v5-global--BackgroundColor--200);
+  }
 }

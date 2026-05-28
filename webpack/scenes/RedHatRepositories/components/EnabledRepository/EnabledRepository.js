@@ -1,89 +1,103 @@
-import React, { Component } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { ListView } from 'patternfly-react';
+import {
+  DataListItem,
+  DataListItemRow,
+  DataListItemCells,
+  DataListCell,
+  DataListAction,
+} from '@patternfly/react-core';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 
 import RepositoryTypeIcon from '../RepositoryTypeIcon';
-
 import EnabledRepositoryContent from './EnabledRepositoryContent';
 
-class EnabledRepository extends Component {
-  constructor(props) {
-    super(props);
-    this.disableTooltipId = `disable-${props.id}`;
-  }
+const EnabledRepository = ({
+  id,
+  contentId,
+  productId,
+  label,
+  name,
+  type,
+  arch,
+  releasever,
+  orphaned,
+  canDisable,
+  loading,
+  search,
+  pagination,
+  setRepositoryDisabled,
+  loadEnabledRepos,
+  disableRepository,
+}) => {
+  const repoForAction = useCallback(() => ({
+    id,
+    contentId,
+    productId,
+    name,
+    type,
+    arch,
+    releasever,
+  }), [id, contentId, productId, name, type, arch, releasever]);
 
-  setDisabled = () => {
-    this.props.setRepositoryDisabled(this.repoForAction());
-  };
-
-  repoForAction = () => {
-    const {
-      id, productId, contentId, arch, releasever, name, type,
-    } = this.props;
-
-    return {
-      id,
-      contentId,
-      productId,
-      name,
-      type,
-      arch,
-      releasever,
-    };
-  };
-
-  reload = () => (
-    this.props.loadEnabledRepos({
-      ...this.props.pagination,
-      search: this.props.search,
+  const reload = useCallback(() => (
+    loadEnabledRepos({
+      ...pagination,
+      search,
     }, true)
-  );
+  ), [loadEnabledRepos, pagination, search]);
 
-  notifyDisabled = () => {
+  const notifyDisabled = useCallback(() => {
     window.tfm.toastNotifications.notify({
-      message: sprintf(__("Repository '%(repoName)s' has been disabled."), { repoName: this.props.name }),
+      message: sprintf(__("Repository '%(repoName)s' has been disabled."), { repoName: name }),
       type: 'success',
     });
-  };
+  }, [name]);
 
-  reloadAndNotify = async (result) => {
+  const reloadAndNotify = useCallback(async (result) => {
     if (result && result.success) {
-      await this.reload();
-      await this.setDisabled();
-      await this.notifyDisabled();
+      await reload();
+      await setRepositoryDisabled(repoForAction());
+      await notifyDisabled();
     }
-  };
+  }, [reload, setRepositoryDisabled, repoForAction, notifyDisabled]);
 
-  disableRepository = async () => {
-    const result = await this.props.disableRepository(this.repoForAction());
-    this.reloadAndNotify(result);
-  };
+  const handleDisableRepository = useCallback(async () => {
+    const result = await disableRepository(repoForAction());
+    await reloadAndNotify(result);
+  }, [disableRepository, repoForAction, reloadAndNotify]);
 
-  render() {
-    const {
-      name, id, type, orphaned, label, canDisable,
-    } = this.props;
+  const heading = `${name} ${orphaned ? __('(Orphaned)') : ''}`;
 
-    return (
-      <ListView.Item
-        key={id}
-        actions={
+  return (
+    <DataListItem key={id} aria-labelledby={`enabled-repo-${id}`}>
+      <DataListItemRow className="repository-item-row">
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell key="icon" className="repository-cell-icon">
+              <div className="repository-icon-badge repository-icon-badge-green">
+                <RepositoryTypeIcon type={type} />
+              </div>
+            </DataListCell>,
+            <DataListCell key="content" className="repository-cell-content">
+              <div id={`enabled-repo-${id}`} className="repository-name">
+                {heading}
+              </div>
+              <div className="repository-label">{label}</div>
+            </DataListCell>,
+          ]}
+        />
+        <DataListAction>
           <EnabledRepositoryContent
-            loading={this.props.loading}
-            disableTooltipId={this.disableTooltipId}
-            disableRepository={this.disableRepository}
+            loading={loading}
+            disableRepository={handleDisableRepository}
             canDisable={canDisable}
           />
-        }
-        leftContent={<RepositoryTypeIcon id={id} type={type} />}
-        heading={`${name} ${orphaned ? __('(Orphaned)') : ''}`}
-        description={label}
-        stacked
-      />
-    );
-  }
-}
+        </DataListAction>
+      </DataListItemRow>
+    </DataListItem>
+  );
+};
 
 EnabledRepository.propTypes = {
   id: PropTypes.number.isRequired,

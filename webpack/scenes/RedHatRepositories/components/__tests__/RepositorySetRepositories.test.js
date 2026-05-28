@@ -60,9 +60,7 @@ describe('RepositorySetRepositories Component', () => {
       expect(getByText('i386 5Workstation')).toBeInTheDocument();
     });
 
-    // querySelector is acceptable here for legacy PatternFly 3 ListView component
-    // which doesn't provide accessible role attributes for list items
-    const listItems = container.querySelectorAll('.list-view-pf-main-info');
+    const listItems = container.querySelectorAll('.list-item-with-divider');
     expect(listItems).toHaveLength(7);
 
     assertNockRequest(scope);

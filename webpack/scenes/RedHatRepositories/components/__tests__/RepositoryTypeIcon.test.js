@@ -5,67 +5,60 @@ import RepositoryTypeIcon from '../RepositoryTypeIcon';
 
 describe('RepositoryTypeIcon component', () => {
   const getBaseProps = () => ({
-    id: 123,
     type: 'unknown-type',
   });
 
   describe('rendering', () => {
     test('renders without errors for unknown type', () => {
-      const { container } = render(<RepositoryTypeIcon {...getBaseProps()} />);
-      expect(container.firstChild).toBeInTheDocument();
+      const { getByLabelText } = render(<RepositoryTypeIcon {...getBaseProps()} />);
 
-      // Verify it renders a question icon for unknown types (legacy PF3 icon)
-      const icon = container.querySelector('.fa-question');
+      // Verify it renders a question icon for unknown types
+      const icon = getByLabelText('unknown-type repository type icon');
       expect(icon).toBeInTheDocument();
     });
 
     test('renders yum repository icon', () => {
       const props = { ...getBaseProps(), type: 'yum' };
-      const { container } = render(<RepositoryTypeIcon {...props} />);
-      expect(container.firstChild).toBeInTheDocument();
+      const { getByLabelText } = render(<RepositoryTypeIcon {...props} />);
 
-      // Verify it renders the PatternFly bundle icon for yum repositories
-      const icon = container.querySelector('.pficon-bundle');
+      // Verify it renders the bundle icon for yum repositories
+      const icon = getByLabelText('yum repository type icon');
       expect(icon).toBeInTheDocument();
     });
 
     test('renders file repository icon', () => {
       const props = { ...getBaseProps(), type: 'file' };
-      const { container } = render(<RepositoryTypeIcon {...props} />);
-      expect(container.firstChild).toBeInTheDocument();
+      const { getByLabelText } = render(<RepositoryTypeIcon {...props} />);
 
       // Verify it renders the file icon for file repositories
-      const icon = container.querySelector('.fa-file');
+      const icon = getByLabelText('file repository type icon');
       expect(icon).toBeInTheDocument();
     });
 
     test('renders debug repository icon', () => {
       const props = { ...getBaseProps(), type: 'debug' };
-      const { container } = render(<RepositoryTypeIcon {...props} />);
-      expect(container.firstChild).toBeInTheDocument();
+      const { getByLabelText } = render(<RepositoryTypeIcon {...props} />);
 
       // Verify it renders the bug icon for debug repositories
-      const icon = container.querySelector('.fa-bug');
+      const icon = getByLabelText('debug repository type icon');
       expect(icon).toBeInTheDocument();
     });
 
     test('renders containerimage repository icon', () => {
       const props = { ...getBaseProps(), type: 'containerimage' };
-      const { container } = render(<RepositoryTypeIcon {...props} />);
-      expect(container.firstChild).toBeInTheDocument();
+      const { getByLabelText } = render(<RepositoryTypeIcon {...props} />);
 
-      // Verify it renders the cube icon for container image repositories
-      const icon = container.querySelector('.fa-cube');
+      // Verify it renders the middleware icon for container image repositories
+      const icon = getByLabelText('containerimage repository type icon');
       expect(icon).toBeInTheDocument();
     });
 
     test('renders kickstart repository icon', () => {
       const props = { ...getBaseProps(), type: 'kickstart' };
-      const { container } = render(<RepositoryTypeIcon {...props} />);
-      expect(container.firstChild).toBeInTheDocument();
+      const { getByLabelText } = render(<RepositoryTypeIcon {...props} />);
 
       // Verify it renders the futbol icon for kickstart repositories
-      const icon = container.querySelector('.fa-futbol-o');
+      const icon = getByLabelText('kickstart repository type icon');
       expect(icon).toBeInTheDocument();
     });
   });

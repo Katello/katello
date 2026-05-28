@@ -5,9 +5,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
-import { Grid, Row, Col } from 'react-bootstrap';
-import { Skeleton, Alert } from '@patternfly/react-core';
-import { Button, FieldLevelHelp } from 'patternfly-react';
+import { Grid, GridItem, Skeleton, Alert, Button, Popover } from '@patternfly/react-core';
+import { InfoCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
 import { LoadingState } from '../../components/LoadingState';
@@ -46,10 +45,10 @@ const RedHatRepositoriesPage = ({
   }
   if (organization.cdn_configuration.type === EXPORT_SYNC) {
     return (
-      <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
+      <div id="redhatRepositoriesPage">
         <h1>{__('Red Hat Repositories')}</h1>
-        <Row className="toolbar-pf">
-          <Col>
+        <Grid hasGutter>
+          <GridItem span={12}>
             <Alert
               ouiaId="repo-sets-alert"
               variant="info"
@@ -57,23 +56,23 @@ const RedHatRepositoriesPage = ({
               isInline
               title={__('CDN configuration is set to Export Sync (disconnected). Repository enablement/disablement is not permitted on this page.')}
             />
-          </Col>
-        </Row>
-      </Grid>
+          </GridItem>
+        </Grid>
+      </div>
     );
   }
 
   return (
-    <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
+    <div id="redhatRepositoriesPage">
       <h1>{__('Red Hat Repositories')}</h1>
-      <Row className="toolbar-pf">
-        <Col sm={12}>
+      <Grid hasGutter>
+        <GridItem md={6}>
           <SearchBar />
-        </Col>
-      </Row>
+        </GridItem>
+      </Grid>
 
-      <Row className="row-eq-height">
-        <Col sm={6} className="available-repositories-container">
+      <Grid>
+        <GridItem md={6} className="available-repositories-container">
           <div className="available-repositories-header">
             <h2>{__('Available Repositories')}</h2>
             <RecommendedRepositorySetsToggler
@@ -93,20 +92,33 @@ const RedHatRepositoriesPage = ({
               },
             )}
           </LoadingState>
-        </Col>
+        </GridItem>
 
-        <Col sm={6} className="enabled-repositories-container">
-          <h2>
-            {__('Enabled Repositories')}
-            <FieldLevelHelp content={__('Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.')} />
-            <Button
-              ouiaid="export-csv-button"
-              className="pull-right"
-              onClick={() => { api.open('/repositories.csv', repoParams); }}
-            >
-              {__('Export as CSV')}
-            </Button>
-          </h2>
+        <GridItem md={6} className="enabled-repositories-container">
+          <div className="enabled-repositories-header">
+            <h2>
+              {__('Enabled Repositories')}
+              <Popover bodyContent={__('Only repositories not published in a content view can be disabled. Published repositories must be deleted from the repository details page.')}>
+                <Button
+                  variant="plain"
+                  aria-label={__('Help')}
+                  ouiaId="enabled-repos-help-button"
+                  className="help-button-plain"
+                >
+                  <InfoCircleIcon />
+                </Button>
+              </Popover>
+              <Button
+                ouiaId="export-csv-button"
+                variant="tertiary"
+                size="sm"
+                onClick={() => { api.open('/repositories.csv', repoParams); }}
+                className="export-csv-button"
+              >
+                {__('Export as CSV')}
+              </Button>
+            </h2>
+          </div>
 
           <LoadingState loading={enabledRepositories.loading} loadingText={__('Loading')}>
             {getEnabledComponent(
@@ -119,9 +131,9 @@ const RedHatRepositoriesPage = ({
               },
             )}
           </LoadingState>
-        </Col>
-      </Row>
-    </Grid>
+        </GridItem>
+      </Grid>
+    </div>
   );
 };
 

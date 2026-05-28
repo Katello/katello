@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Switch, Icon, FieldLevelHelp } from 'patternfly-react';
+import { Switch, Popover, Button } from '@patternfly/react-core';
+import { StarIcon, InfoCircleIcon } from '@patternfly/react-icons';
 
 import './RecommendedRepositorySetsToggler.scss';
 
@@ -19,13 +20,24 @@ const RecommendedRepositorySetsToggler = ({
   return (
     <div className={classes} {...props}>
       <Switch
-        bsSize="mini"
-        value={enabled}
-        onChange={() => onChange(!enabled)}
+        id="recommended-repos-switch"
+        aria-label={__('Recommended repositories toggle')}
+        ouiaId="recommended-repos-switch"
+        isChecked={enabled}
+        onChange={(_event, checked) => onChange(checked)}
       />
-      <Icon type="fa" name="star" />
+      <StarIcon />
       {children}
-      <FieldLevelHelp content={help} />
+      <Popover bodyContent={help}>
+        <Button
+          variant="plain"
+          aria-label={__('Help')}
+          ouiaId="recommended-repos-help-button"
+          className="recommended-repos-help-button"
+        >
+          <InfoCircleIcon />
+        </Button>
+      </Popover>
     </div>
   );
 };

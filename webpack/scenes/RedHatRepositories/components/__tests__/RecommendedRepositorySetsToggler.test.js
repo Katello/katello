@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 
 import RecommendedRepositorySetsToggler from '../RecommendedRepositorySetsToggler';
 
@@ -12,37 +12,39 @@ describe('RecommendedRepositorySetsToggler component', () => {
   describe('rendering', () => {
     test('renders without errors with default props', () => {
       const props = getBaseProps();
-      const { container, getByText } = render(<RecommendedRepositorySetsToggler {...props} />);
+      const { container, getByText, getByLabelText } = render(<RecommendedRepositorySetsToggler
+        {...props}
+      />);
       expect(container.firstChild).toBeInTheDocument();
 
       // Verify default children text appears
       expect(getByText('Recommended Repositories')).toBeInTheDocument();
 
-      // Verify star icon is rendered (legacy PF3 icon)
-      const starIcon = container.querySelector('.fa-star');
+      // Verify star icon SVG is rendered
+      const starIcon = container.querySelector('svg');
       expect(starIcon).toBeInTheDocument();
 
       // Verify Switch component is rendered
-      const switchDiv = container.querySelector('.bootstrap-switch');
-      expect(switchDiv).toBeInTheDocument();
+      const switchElement = getByLabelText('Recommended repositories toggle');
+      expect(switchElement).toBeInTheDocument();
     });
 
     test('renders with enabled state', () => {
       const props = { ...getBaseProps(), enabled: true };
-      const { container } = render(<RecommendedRepositorySetsToggler {...props} />);
+      const { getByLabelText } = render(<RecommendedRepositorySetsToggler {...props} />);
 
-      // Verify Switch is in enabled state by checking for the "on" class
-      const switchContainer = container.querySelector('.bootstrap-switch');
-      expect(switchContainer).toHaveClass('bootstrap-switch-on');
+      // Verify Switch is in enabled state
+      const switchElement = getByLabelText('Recommended repositories toggle');
+      expect(switchElement).toBeChecked();
     });
 
     test('renders with disabled state', () => {
       const props = { ...getBaseProps(), enabled: false };
-      const { container } = render(<RecommendedRepositorySetsToggler {...props} />);
+      const { getByLabelText } = render(<RecommendedRepositorySetsToggler {...props} />);
 
-      // Verify Switch is in disabled state by checking for the "off" class
-      const switchContainer = container.querySelector('.bootstrap-switch');
-      expect(switchContainer).toHaveClass('bootstrap-switch-off');
+      // Verify Switch is in disabled state
+      const switchElement = getByLabelText('Recommended repositories toggle');
+      expect(switchElement).not.toBeChecked();
     });
 
     test('renders with custom children', () => {
@@ -62,22 +64,35 @@ describe('RecommendedRepositorySetsToggler component', () => {
       expect(containerDiv).toHaveClass('custom-class-name');
     });
 
-    test('renders help icon', () => {
+    test('renders help button', () => {
       const props = getBaseProps();
-      const { container } = render(<RecommendedRepositorySetsToggler {...props} />);
+      const { getByLabelText } = render(<RecommendedRepositorySetsToggler {...props} />);
 
-      // Verify FieldLevelHelp icon is rendered (PF component)
-      const helpIcon = container.querySelector('.pficon-info');
-      expect(helpIcon).toBeInTheDocument();
+      // Verify help button is rendered
+      const helpButton = getByLabelText('Help');
+      expect(helpButton).toBeInTheDocument();
     });
 
-    test('renders with custom help text', () => {
-      const props = { ...getBaseProps(), help: 'Custom help text' };
-      const { container } = render(<RecommendedRepositorySetsToggler {...props} />);
+    test('calls onChange when switch is toggled', () => {
+      const mockOnChange = jest.fn();
+      const props = { ...getBaseProps(), onChange: mockOnChange };
+      const { getByLabelText } = render(<RecommendedRepositorySetsToggler {...props} />);
 
-      // Verify help icon is rendered (actual help text is in popover, hard to test)
-      const helpIcon = container.querySelector('.pficon-info');
-      expect(helpIcon).toBeInTheDocument();
+      const switchElement = getByLabelText('Recommended repositories toggle');
+      fireEvent.click(switchElement);
+
+      expect(mockOnChange).toHaveBeenCalledWith(true);
+    });
+
+    test('calls onChange with false when enabled and toggled', () => {
+      const mockOnChange = jest.fn();
+      const props = { ...getBaseProps(), enabled: true, onChange: mockOnChange };
+      const { getByLabelText } = render(<RecommendedRepositorySetsToggler {...props} />);
+
+      const switchElement = getByLabelText('Recommended repositories toggle');
+      fireEvent.click(switchElement);
+
+      expect(mockOnChange).toHaveBeenCalledWith(false);
     });
   });
 });
