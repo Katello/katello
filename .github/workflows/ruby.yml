@@ -26,7 +26,7 @@ jobs:
     uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v0
     with:
       plugin: katello
-      foreman_version: develop # set to the Foreman release branch after branching :)
+      foreman_version: theforeman:pr11004 # Testing against https://github.com/theforeman/foreman/pull/11004
 
   angular:
     name: Angular ${{ matrix.engine }} - NodeJS ${{ matrix.node }}
