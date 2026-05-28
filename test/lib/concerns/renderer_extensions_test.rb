@@ -10,15 +10,19 @@ module Katello
       @host.content_facet.content_source.lifecycle_environments << katello_environments(:library)
       @host.operatingsystem = operatingsystems(:redhat)
       @host.content_facet.kickstart_repository = @repo
-      @host.content_facet.assign_single_environment(
-        content_view: @repo.content_view,
-        lifecycle_environment: katello_environments(:library)
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+        @repo.content_view.id,
+        katello_environments(:library).id
       )
-      @hostgroup = ::Hostgroup.new
+      @host.content_facet.content_view_environments = [cvenv]
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+        @repo.content_view.id,
+        katello_environments(:library).id
+      )
+      @hostgroup = ::Hostgroup.new(:content_view_environment_id => cvenv.id)
       @hostgroup.content_source = smart_proxies(:one)
       @hostgroup.operatingsystem = operatingsystems(:redhat)
       @hostgroup.kickstart_repository = @repo
-      @hostgroup.content_view = @repo.content_view
     end
 
     def test_render_host

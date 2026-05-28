@@ -545,9 +545,9 @@ module Katello
       _org, _content, content_path = library_instance_or_self.relative_path.split("/", 3) if content_path.blank?
       content_path = content_path.sub(%r|^/|, '')
       if self.environment
-        cve = ContentViewEnvironment.where(:environment_id => self.environment,
+        cvenv = ContentViewEnvironment.where(:environment_id => self.environment,
                                            :content_view_id => self.content_view).first
-        "#{organization.label}/#{cve.label}/#{content_path}"
+        "#{organization.label}/#{cvenv.label}/#{content_path}"
       else
         "#{organization.label}/#{ContentView::CONTENT_DIR}/#{self.content_view.label}/#{self.content_view_version.version}/#{content_path}"
       end
@@ -556,11 +556,11 @@ module Katello
     def generate_docker_repo_path
       org = self.organization.label.downcase
       if self.environment
-        cve = ContentViewEnvironment.where(:environment_id => self.environment,
+        cvenv = ContentViewEnvironment.where(:environment_id => self.environment,
                                            :content_view_id => self.content_view).first
         view = self.content_view.label
         product = self.product.label
-        env = cve.label.split('/').first
+        env = cvenv.label.split('/').first
         "#{org}/#{env.downcase}/#{view}/#{product}/#{self.root.label}"
       else
         "#{org}/#{self.content_view.label}/#{self.content_view_version.version}/#{self.root.product.label}/#{self.root.label}"

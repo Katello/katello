@@ -43,12 +43,12 @@ module ::Actions::Katello::Environment
     it 'plans' do
       stub_remote_user
       content_view = stub
-      cve = mock(:content_view => content_view)
+      cvenv = mock(:content_view => content_view)
       action.stubs(:action_subject).with(environment)
-      environment.expects(:content_view_environments).returns([cve])
+      environment.expects(:content_view_environments).returns([cvenv])
       environment.expects(:deletable?).returns(true)
       plan_action(action, environment)
-      assert_action_planned_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planned_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cvenv], :skip_repo_destroy => false, :organization_destroy => false)
     end
   end
 
@@ -61,13 +61,13 @@ module ::Actions::Katello::Environment
     it 'plans' do
       stub_remote_user
       content_view = stub
-      cve = mock(:content_view => content_view)
+      cvenv = mock(:content_view => content_view)
       action.stubs(:action_subject).with(environment)
-      environment.expects(:content_view_environments).returns([cve])
+      environment.expects(:content_view_environments).returns([cvenv])
       environment.expects(:deletable?).returns(true)
       environment.expects(:delete_host_and_hostgroup_associations)
       plan_action(action, environment, :organization_destroy => true)
-      assert_action_planned_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => true)
+      assert_action_planned_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cvenv], :skip_repo_destroy => false, :organization_destroy => true)
     end
   end
 end

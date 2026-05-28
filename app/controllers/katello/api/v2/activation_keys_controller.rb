@@ -24,15 +24,11 @@ module Katello
       param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
       param :purpose_role, String, :desc => N_("Sets the system purpose usage")
 
-      param :environment, Hash, :deprecated => true, :desc => N_("Hash containing the Id of the single lifecycle environment to be associated with the activation key.")
-      param :content_view_id, Integer, :deprecated => true, :desc => N_("Id of the single content view to be associated with the activation key."), :allow_nil => true
-      param :environment_id, Integer, :deprecated => true, :desc => N_("Id of the single lifecycle environment to be associated with the activation key."), :allow_nil => true
       param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels to be associated with the activation key,"\
                                               " in the format of 'lifecycle_environment_label/content_view_label'."\
-                                              " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\
+                                              " Ignored if content_view_environment_ids is specified."\
                                               " Requires allow_multiple_content_views setting to be on.")
       param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids to be associated with the activation key."\
-                                              " Ignored if content_view_id and lifecycle_environment_id are specified."\
                                               " Requires allow_multiple_content_views setting to be on.")
     end
 
@@ -45,11 +41,10 @@ module Katello
     param :name, String, :desc => N_("activation key name to filter by")
     param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels associated with the activation key,"\
                                             " in the format of 'lifecycle_environment_label/content_view_label'."\
-                                            " Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified."\
+                                            " Ignored if content_view_environment_ids is specified."\
                                             " Requires allow_multiple_content_views setting to be on.")
-    param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids associated with the activation key. " \
-                                            "Ignored if content_view_id and lifecycle_environment_id are specified."\
-                                            "Requires allow_multiple_content_views setting to be on.")
+    param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids associated with the activation key."\
+                                            " Requires allow_multiple_content_views setting to be on.")
 
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ActivationKey)
@@ -63,7 +58,7 @@ module Katello
     param_group :activation_key
     def create
       @activation_key = ActivationKey.new(activation_key_params) do |activation_key|
-        activation_key.content_view_environments = @content_view_environments if update_cves?
+        activation_key.content_view_environments = @content_view_environments if update_cvenvs?
         activation_key.organization = @organization
         activation_key.user = current_user
       end
@@ -78,15 +73,8 @@ module Katello
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :name, String, :desc => N_("name"), :required => false
     def update
-      if @content_view_environments.present? || update_cves?
-        if single_assignment? && @content_view_environments.length == 1
-          @activation_key.assign_single_environment(
-            content_view: @content_view_environments.first.content_view,
-            lifecycle_environment: @content_view_environments.first.lifecycle_environment
-          )
-        else
-          @activation_key.update!(content_view_environments: @content_view_environments)
-        end
+      if @content_view_environments.present? || update_cvenvs?
+        @activation_key.update!(content_view_environments: @content_view_environments)
       end
       sync_task(::Actions::Katello::ActivationKey::Update, @activation_key, activation_key_params)
       respond_for_show(:resource => @activation_key)
@@ -230,38 +218,9 @@ module Katello
 
     private
 
-    def find_cve_for_single
-      environment_id = params.dig(:environment, :id) || params[:environment_id]
-      content_view_id = params.dig(:content_view, :id) || params[:content_view_id]
-      if environment_id.blank? || content_view_id.blank?
-        fail HttpErrors::BadRequest, _("Environment ID and content view ID must be provided together")
-      end
-      cve = ::Katello::ContentViewEnvironment.readable.where(environment_id: environment_id,
-                                                             content_view_id: content_view_id).first
-      if cve.blank?
-        fail HttpErrors::NotFound, _("Couldn't find content view environment with content view ID '%{cv}'"\
-                                    " and environment ID '%{env}'") % { cv: content_view_id, env: environment_id }
-      end
-      @content_view_environments = [cve]
-    end
-
-    def params_likely_not_from_angularjs?
-      # AngularJS sends back the activation key's existing API response values.
-      # A side effect of this is that when it sends params[:content_view_environments] or params[:content_view_environment_ids],
-      # it incorrectly sends the nested objects from the rabl response, instead of the required single comma-separated string of CVE labels.
-      # This would cause fetch_content_view_environments to fail.
-      # Therefore, we need a way to (a) detect if the request is from AngularJS, and (b) avoid trying to handle the nested objects as if they were strings.
-      # So we look at params[:multi_content_view_environment]. This is a computed value, not meant to be submitted as part of an update request.
-      # If it's true or false, it's likely AngularJS.
-      # And if the key is omitted, it's likely from Hammer or API, so it's safe to proceed.
-      !params.key?(:multi_content_view_environment)
-    end
-
     def find_content_view_environments
       @content_view_environments = []
-      if (params[:environment_id] || params[:environment]) || (params[:content_view_id] || params[:content_view])
-        find_cve_for_single
-      elsif params_likely_not_from_angularjs? && (params[:content_view_environments] || params[:content_view_environment_ids])
+      if params_likely_not_from_angularjs? && (params[:content_view_environments] || params[:content_view_environment_ids])
         @content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
           labels: params[:content_view_environments],
           ids: params[:content_view_environment_ids],
@@ -270,34 +229,37 @@ module Katello
           handle_errors(labels: params[:content_view_environments],
           ids: params[:content_view_environment_ids])
         end
+        @content_view_environments.each do |cvenv|
+          throw_resource_not_found(name: 'content_view_environment', id: cvenv.id) unless cvenv.readable?
+        end
       end
-      handle_blank_cve_params
+      handle_blank_cvenv_params
       @organization ||= @content_view_environments.first&.organization
     end
 
-    def handle_blank_cve_params
+    def params_likely_not_from_angularjs?
+      # AngularJS sends back the activation key's existing API response as params.
+      # This means content_view_environments arrives as a nested hash instead of
+      # a comma-separated string of labels, which would cause fetch_content_view_environments to fail.
+      # We detect AngularJS by the presence of multi_content_view_environment — a computed
+      # response-only value that a real API client would never submit.
+      !params.key?(:multi_content_view_environment)
+    end
+
+    def handle_blank_cvenv_params
       if params.key?(:environment) && params.key?(:content_view)
-        return # AngularJS sends nested environment and content_view params, but with blank _id values
+        return # AngularJS sends nested environment and content_view params; ignore them
       end
-      # Activation keys do not require CVEs to be associated. So it's possible the user intends to clear them.
-      if params.key?(:environment_id) && params[:environment_id].blank? && params.key?(:content_view_id) && params[:content_view_id].blank?
-        @content_view_environments = []
-      elsif params.key?(:content_view_environments) && params[:content_view_environments].blank?
+      if params.key?(:content_view_environments) && params[:content_view_environments].blank?
         @content_view_environments = []
       elsif params.key?(:content_view_environment_ids) && params[:content_view_environment_ids].blank?
         @content_view_environments = []
       end
     end
 
-    # AngularJS sends :environment and :content_view_id
-    def single_assignment?
-      (params.key?(:environment) || params.key?(:environment_id)) &&
-      (params.key?(:content_view) || params.key?(:content_view_id))
-    end
-
-    def update_cves?
-      single_assignment? ||
-        params.key?(:content_view_environments) || # multi
+    def update_cvenvs?
+      return false unless params_likely_not_from_angularjs?
+      params.key?(:content_view_environments) ||
         params.key?(:content_view_environment_ids)
     end
 
@@ -325,9 +287,7 @@ module Katello
     def permitted_params
       params.require(:activation_key).permit(:name,
                                              :description,
-                                             :environment_id,
                                              :organization_id,
-                                             :content_view_id,
                                              :release_version,
                                              :service_level,
                                              :max_hosts,
@@ -341,8 +301,7 @@ module Katello
     end
 
     def activation_key_params
-      key_params = permitted_params.except(:environment_id, :content_view_id,
-                      :content_view_environments, :content_view_environment_ids)
+      key_params = permitted_params.except(:content_view_environments, :content_view_environment_ids)
 
       unlimited = params[:activation_key].try(:[], :unlimited_hosts)
       max_hosts = params[:activation_key].try(:[], :max_hosts)

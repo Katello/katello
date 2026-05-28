@@ -16,8 +16,8 @@ module Katello
       private
 
       def validate_hostgroup_facets
-        hostgroups_with_no_cve = []
-        hostgroups_with_missing_cve = []
+        hostgroups_with_no_cvenv = []
+        hostgroups_with_missing_cvenv = []
         hostgroups_with_partial_data = []
 
         FakeHostgroupContentFacet.all.each do |hg_facet|
@@ -26,13 +26,13 @@ module Katello
           if partial_data?(hg_facet)
             hostgroups_with_partial_data << hg_facet
           else
-            categorize_facet(hg_facet, hostgroups_with_no_cve, hostgroups_with_missing_cve)
+            categorize_facet(hg_facet, hostgroups_with_no_cvenv, hostgroups_with_missing_cvenv)
           end
         end
 
         {
           partial_data_count: hostgroups_with_partial_data.count,
-          problematic_facets: build_problematic_facets_info(hostgroups_with_no_cve + hostgroups_with_missing_cve),
+          problematic_facets: build_problematic_facets_info(hostgroups_with_no_cvenv + hostgroups_with_missing_cvenv),
         }
       end
 
@@ -40,12 +40,12 @@ module Katello
         hg_facet.content_view_id.blank? || hg_facet.lifecycle_environment_id.blank?
       end
 
-      def categorize_facet(hg_facet, hostgroups_with_no_cve, hostgroups_with_missing_cve)
+      def categorize_facet(hg_facet, hostgroups_with_no_cvenv, hostgroups_with_missing_cvenv)
         if valid_cv_and_lce?(hg_facet)
-          cve = find_content_view_environment(hg_facet)
-          hostgroups_with_no_cve << hg_facet if cve.blank?
+          cvenv = find_content_view_environment(hg_facet)
+          hostgroups_with_no_cvenv << hg_facet if cvenv.blank?
         else
-          hostgroups_with_missing_cve << hg_facet
+          hostgroups_with_missing_cvenv << hg_facet
         end
       end
 

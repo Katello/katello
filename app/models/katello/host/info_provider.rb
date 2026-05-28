@@ -14,9 +14,9 @@ module Katello
             info['parameters']['content_view'] = host.single_content_view.try(:label)
             info['parameters']['content_view_info'] = content_view_info(host.content_view_environments.first)
           end
-          info['parameters']['content_views'] = host.content_view_environments.map do |cve|
-            content_view_info(cve).merge(
-              'lifecycle_environment' => cve.lifecycle_environment.try(:label)
+          info['parameters']['content_views'] = host.content_view_environments.map do |cvenv|
+            content_view_info(cvenv).merge(
+              'lifecycle_environment' => cvenv.lifecycle_environment.try(:label)
             )
           end
         end

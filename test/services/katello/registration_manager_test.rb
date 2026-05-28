@@ -6,6 +6,7 @@ module Katello
       include VCR::TestCase
     end
 
+    # rubocop:disable Metrics/ClassLength
     class RegistrationManager < RegistrationManagerTestBase
       include FactImporterIsolation
       allow_transactions_for_any_importer
@@ -225,7 +226,7 @@ module Katello
 
       def test_registration_activation_key
         new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @host_collection.organization)
-        cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.content_view, :environment_id => @activation_key.environment).first
+        cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.single_content_view, :environment_id => @activation_key.single_lifecycle_environment).first
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
@@ -237,9 +238,9 @@ module Katello
 
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, [cvpe], [@activation_key])
 
-        new_host_cve = new_host.content_facet.content_view_environments.first
-        assert_equal @activation_key.environment, new_host_cve.lifecycle_environment
-        assert_equal @activation_key.content_view, new_host_cve.content_view
+        new_host_cvenv = new_host.content_facet.content_view_environments.first
+        assert_equal @activation_key.single_lifecycle_environment, new_host_cvenv.lifecycle_environment
+        assert_equal @activation_key.single_content_view, new_host_cvenv.content_view
 
         assert_includes new_host.host_collections, @host_collection
       end
@@ -248,7 +249,7 @@ module Katello
         @activation_key.host_collections << @one_host_limit_host_collection
         existing_host = ::Host::Managed.create(:name => 'alreadyhere.example.com', :managed => false, :organization => @one_host_limit_host_collection.organization)
         new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @one_host_limit_host_collection.organization)
-        cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.content_view, :environment_id => @activation_key.environment).first
+        cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.single_content_view, :environment_id => @activation_key.single_lifecycle_environment).first
         @one_host_limit_host_collection.hosts << existing_host
         assert_equal 1, @one_host_limit_host_collection.hosts.count
         assert_equal 1, @one_host_limit_host_collection.max_hosts
@@ -258,6 +259,22 @@ module Katello
         end
 
         refute_includes new_host.host_collections, @host_collection
+      end
+
+      def test_lookup_content_view_environments_single_cvenv_mode
+        Setting['allow_multiple_content_views'] = false
+        result = ::Katello::RegistrationManager.send(:lookup_content_view_environments, [@activation_key])
+        assert_equal 1, result.length
+        assert_equal @activation_key.content_view_environments.first, result.first
+      end
+
+      def test_lookup_content_view_environments_raises_without_cvenvs
+        Setting['allow_multiple_content_views'] = false
+        empty_key = katello_activation_keys(:simple_key)
+        empty_key.stubs(:content_view_environments).returns([])
+        assert_raises(RuntimeError) do
+          ::Katello::RegistrationManager.send(:lookup_content_view_environments, [empty_key])
+        end
       end
 
       def test_registration_existing_host
@@ -281,7 +298,7 @@ module Katello
         ::Katello::RegistrationManager.expects(:create_in_candlepin)
         ::Katello::RegistrationManager.expects(:finalize_registration)
         Rails.logger.expects(:debug).with("Host #{@host.name} has been removed in preparation for reregistration")
-        Rails.logger.expects(:debug).with("ContentFacet: Marking CVEs changed for host #{@host.name}").times(1)
+        Rails.logger.expects(:debug).with("ContentFacet: Marking content view environments changed for host #{@host.name}").times(1)
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
       end
 
@@ -361,7 +378,7 @@ module Katello
         pulp3_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
         @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id, :content_source_id => pulp3_proxy.id)
 
-        original_cves = @host.content_facet.content_view_environments.dup
+        original_cvenvs = @host.content_facet.content_view_environments.dup
         original_ks_repo_id = @host.content_facet.kickstart_repository_id
         original_content_source = @host.content_facet.content_source
 
@@ -373,7 +390,7 @@ module Katello
         ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
 
         # Verify provisioning information is retained
-        assert_equal original_cves, @host.content_facet.content_view_environments
+        assert_equal original_cvenvs, @host.content_facet.content_view_environments
         assert_equal original_ks_repo_id, @host.content_facet.kickstart_repository_id
         assert_equal original_content_source, @host.content_facet.content_source
         # Verify other data is still cleared as expected
@@ -393,7 +410,7 @@ module Katello
         @host.content_facet.update(:kickstart_repository_id => kickstart_repo.id, :content_source_id => pulp3_proxy.id)
 
         # Store original values
-        original_cves = @host.content_facet.content_view_environments.dup
+        original_cvenvs = @host.content_facet.content_view_environments.dup
         original_ks_repo_id = @host.content_facet.kickstart_repository_id
         original_content_source = @host.content_facet.content_source
 
@@ -414,7 +431,7 @@ module Katello
 
         # Verify provisioning information is preserved despite setting being false
         # This verifies that preserve_for_provisioning: true overrides the setting during re-registration
-        assert_equal original_cves, @host.content_facet.content_view_environments
+        assert_equal original_cvenvs, @host.content_facet.content_view_environments
         assert_equal original_ks_repo_id, @host.content_facet.kickstart_repository_id
         assert_equal original_content_source, @host.content_facet.content_source
         # Verify other data is still cleared as expected during unregistration

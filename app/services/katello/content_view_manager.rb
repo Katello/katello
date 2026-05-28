@@ -2,12 +2,12 @@ module Katello
   class ContentViewManager
     def self.add_version_to_environment(content_view_version:, environment:)
       content_view = content_view_version.content_view
-      if (cve = content_view.content_view_environment(environment))
-        content_view_version.content_view_environments << cve
+      if (cvenv = content_view.content_view_environment(environment))
+        content_view_version.content_view_environments << cvenv
       else
-        cve = content_view.add_environment(environment, content_view_version)
+        cvenv = content_view.add_environment(environment, content_view_version)
       end
-      cve
+      cvenv
     end
 
     def self.create_candlepin_environment(content_view_environment:)

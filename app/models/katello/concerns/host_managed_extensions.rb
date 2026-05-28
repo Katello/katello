@@ -7,42 +7,6 @@ module Katello
       include ForemanTasks::Concerns::ActionSubject
 
       module Overrides
-        def check_cve_attributes(attrs)
-          if attrs[:content_facet_attributes]
-            cv_id = attrs[:content_facet_attributes].delete(:content_view_id)
-            lce_id = attrs[:content_facet_attributes].delete(:lifecycle_environment_id)
-            # Running validations on a host will clear out any existing errors, and then
-            # validate all attributes. As we know, running update or save will run validations.
-            # Since we've just removed two attributes that may
-            # have caused an error, we need to save those so we can explicitly validate
-            # them below in add_back_cve_errors.
-            @pending_cve_attrs = { content_view_id: cv_id, lifecycle_environment_id: lce_id }
-            if cv_id && lce_id
-              if content_facet&.multi_content_view_environment?
-                Rails.logger.warn "content_view_id and lifecycle_environment_id cannot be used to reassign multi-environment host '#{name}'. Use content_view_environment_ids instead"
-                @pending_cve_attrs = {}
-                return
-              end
-              cve = content_facet&.assign_single_environment(content_view_id: cv_id, lifecycle_environment_id: lce_id)
-              Rails.logger.warn "Couldn't assign content view environment; host has no content facet" if cve.blank?
-              @pending_cve_attrs = {}
-            end
-            if (cv_id.present? && lce_id.blank?) || (cv_id.blank? && lce_id.present?)
-              errors.add(:base, _("Content view and lifecycle environment must be provided together"))
-            end
-          end
-        end
-
-        def attributes=(attrs)
-          check_cve_attributes(attrs) unless self.content_facet.blank?
-          super
-        end
-
-        def update(attrs)
-          check_cve_attributes(attrs) unless self.content_facet.blank?
-          super
-        end
-
         def validate_media?
           (content_source_id.blank? || (content_facet && content_facet.kickstart_repository.blank?)) && super
         end
@@ -124,8 +88,6 @@ module Katello
         validates :name, format: { with: Net::Validations::HOST_REGEXP, message: _("%{value} can contain only lowercase letters, numbers, dashes and dots.") }
 
         before_validation :correct_kickstart_repository
-        after_validation :add_back_cve_errors
-        after_update :clear_pending_cve_attributes
         before_update :check_host_registration, :if => proc { organization_id_changed? }
 
         after_validation :queue_reset_content_host_status
@@ -155,16 +117,6 @@ module Katello
         scoped_search :relation => :content_views, :on => :id, :complete_value => true, :rename => :content_view_id, :only_explicit => true
 
         smart_proxy_reference :content_facet => [:content_source_id]
-
-        def add_back_cve_errors
-          if @pending_cve_attrs&.[](:content_view_id).present? || @pending_cve_attrs&.[](:lifecycle_environment_id).present?
-            check_cve_attributes({ content_facet_attributes: @pending_cve_attrs })
-          end
-        end
-
-        def clear_pending_cve_attributes
-          @pending_cve_attrs = {}
-        end
 
         apipie :class do
           property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host'

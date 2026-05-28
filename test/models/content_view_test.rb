@@ -131,15 +131,12 @@ module Katello
       host1 = ::Host::Managed.create!(:name => 'foohost.example.com', :managed => false, :organization_id => org.id)
       host2 = ::Host::Managed.create!(:name => 'barhost.example.com', :managed => false, :organization_id => org.id)
 
-      cve1 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env1)
-      cve2 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env2)
+      cv_version = FactoryBot.create(:katello_content_view_version, content_view: cv)
+      cvenv1 = FactoryBot.create(:katello_content_view_environment, content_view_version: cv_version, environment: env1)
+      cvenv2 = FactoryBot.create(:katello_content_view_environment, content_view_version: cv_version, environment: env2)
 
-      content_facet1 = Katello::Host::ContentFacet.create!(content_view_id: cv.id, lifecycle_environment_id: env1.id, host: host1)
-      content_facet2 = Katello::Host::ContentFacet.create!(content_view_id: cv.id, lifecycle_environment_id: env2.id, host: host2)
-
-      Katello::ContentViewEnvironmentContentFacet.create!(content_view_environment: cve1, content_facet: content_facet1)
-      Katello::ContentViewEnvironmentContentFacet.create!(content_view_environment: cve2, content_facet: content_facet1)
-      Katello::ContentViewEnvironmentContentFacet.create!(content_view_environment: cve2, content_facet: content_facet2)
+      Katello::Host::ContentFacet.create!(content_view_environment_ids: [cvenv1.id, cvenv2.id], host: host1)
+      Katello::Host::ContentFacet.create!(content_view_environment_ids: [cvenv2.id], host: host2)
 
       assert_equal 2, cv.hosts.count
     end
@@ -155,12 +152,12 @@ module Katello
       ak1 = Katello::ActivationKey.create!(name: 'activation_key1', organization: org)
       ak2 = Katello::ActivationKey.create!(name: 'activation_key2', organization: org)
 
-      cve1 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env1)
-      cve2 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env2)
+      cvenv1 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env1)
+      cvenv2 = FactoryBot.create(:katello_content_view_environment, content_view: cv, environment: env2)
 
-      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cve1, activation_key: ak1)
-      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cve2, activation_key: ak1)
-      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cve2, activation_key: ak2)
+      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cvenv1, activation_key: ak1)
+      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cvenv2, activation_key: ak1)
+      Katello::ContentViewEnvironmentActivationKey.create!(content_view_environment: cvenv2, activation_key: ak2)
 
       assert_equal 2, cv.activation_keys.count
     end
@@ -690,8 +687,8 @@ module Katello
       refute_equal facet.host.location, other_location
       assert_nothing_raised do
         Location.as_taxonomy(facet.host.organization, other_location) do
-          facet.content_view_environments.each do |cve|
-            cve.content_view.update_host_statuses(cve.lifecycle_environment)
+          facet.content_view_environments.each do |cvenv|
+            cvenv.content_view.update_host_statuses(cvenv.lifecycle_environment)
           end
         end
       end
@@ -706,8 +703,8 @@ module Katello
 
       assert_nothing_raised do
         Location.as_taxonomy(org, other_location) do
-          facet.content_view_environments.each do |cve|
-            cve.content_view.update_host_statuses(cve.lifecycle_environment)
+          facet.content_view_environments.each do |cvenv|
+            cvenv.content_view.update_host_statuses(cvenv.lifecycle_environment)
           end
         end
       end

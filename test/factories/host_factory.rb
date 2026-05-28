@@ -16,10 +16,11 @@ FactoryBot.modify do
       after(:build) do |host, evaluator|
         if host.content_facet
           if evaluator.content_view && evaluator.lifecycle_environment
-            host.content_facet.assign_single_environment(
-              content_view_id: evaluator.content_view.id,
-              lifecycle_environment_id: evaluator.lifecycle_environment.id
+            cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+              evaluator.content_view.id,
+              evaluator.lifecycle_environment.id
             )
+            host.content_facet.content_view_environments = [cvenv]
           end
           host.content_facet.content_source = evaluator.content_source if evaluator.content_source
         end

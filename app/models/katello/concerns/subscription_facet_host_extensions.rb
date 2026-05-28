@@ -35,7 +35,7 @@ module Katello
 
       def update_candlepin_associations(consumer_params = nil)
         Rails.logger.debug "Updating Candlepin associations for host #{name}"
-        content_facet.cves_changed = false if content_facet
+        content_facet.cvenvs_changed = false if content_facet
         content_facet&.save!
 
         if subscription_facet

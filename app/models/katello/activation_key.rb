@@ -49,7 +49,7 @@ module Katello
       end
     end
     validates_with Katello::Validators::GeneratedContentViewValidator
-    validate :check_cves
+    validate :check_cvenvs
 
     scope :with_environments, ->(lifecycle_environments) do
       joins(:content_view_environment_activation_keys => :content_view_environment).
@@ -83,13 +83,13 @@ module Katello
       with_environments(envs)
     end
 
-    def content_view_environments=(new_cves)
-      if new_cves.length > 1 && !Setting['allow_multiple_content_views']
+    def content_view_environments=(new_cvenvs)
+      if new_cvenvs.length > 1 && !Setting['allow_multiple_content_views']
         fail ::Katello::Errors::MultiEnvironmentNotSupportedError,
         _("Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.")
       end
-      super(new_cves)
-      Katello::ContentViewEnvironmentActivationKey.reprioritize_for_activation_key(self, new_cves)
+      super(new_cvenvs)
+      Katello::ContentViewEnvironmentActivationKey.reprioritize_for_activation_key(self, new_cvenvs)
       self.content_view_environments.reload unless self.new_record?
     end
 
@@ -110,53 +110,12 @@ module Katello
       content_view_environments&.first&.content_view
     end
 
-    def content_view
-      single_content_view
-    end
-
-    def environment
-      single_lifecycle_environment
-    end
-
     def single_lifecycle_environment
       if multi_content_view_environment?
         Rails.logger.warn _("Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.") % name
       end
       content_view_environments&.first&.lifecycle_environment
     end
-
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
-    def assign_single_environment(
-      content_view_id: nil, lifecycle_environment_id: nil, environment_id: nil,
-      content_view: nil, lifecycle_environment: nil, environment: nil
-    )
-      lifecycle_environment_id ||= environment_id || lifecycle_environment&.id || environment&.id || self.single_lifecycle_environment&.id
-      content_view_id ||= content_view&.id || self.single_content_view&.id
-
-      unless lifecycle_environment_id
-        fail _("Lifecycle environment must be specified")
-      end
-
-      unless content_view_id
-        fail _("Content view must be specified")
-      end
-
-      content_view_environment = ::Katello::ContentViewEnvironment
-        .where(:content_view_id => content_view_id, :environment_id => lifecycle_environment_id)
-        .first_or_create do |cve|
-        Rails.logger.info("ContentViewEnvironment not found for content view '#{cve.content_view_name}' and environment '#{cve.environment&.name}'; creating a new one.")
-      end
-      fail _("Unable to create ContentViewEnvironment. Check the logs for more information.") if content_view_environment.nil?
-
-      if self.content_view_environments.include?(content_view_environment)
-        Rails.logger.info("Activation key '#{name}' already has the content view environment '#{content_view_environment.content_view_name}' and environment '#{content_view_environment.environment&.name}'.")
-      else
-        self.content_view_environments = [content_view_environment]
-      end
-    end
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
 
     def usage_count
       subscription_facet_activation_keys.count
@@ -167,8 +126,8 @@ module Katello
     end
 
     def available_releases
-      releases = self.content_view_environments.flat_map do |cve|
-        cve.content_view.version(cve.lifecycle_environment).available_releases
+      releases = self.content_view_environments.flat_map do |cvenv|
+        cvenv.content_view.version(cvenv.lifecycle_environment).available_releases
       end
       return self.organization.library.available_releases if releases.blank?
       releases
@@ -212,13 +171,13 @@ module Katello
       true
     end
 
-    def check_cves
-      cves_not_in_org = self.content_view_environments.any? do |cve|
-        cve.content_view.organization != cve.environment.organization ||
-          self.organization != cve.content_view.organization
+    def check_cvenvs
+      cvenvs_not_in_org = self.content_view_environments.any? do |cvenv|
+        cvenv.content_view.organization != cvenv.environment.organization ||
+          self.organization != cvenv.content_view.organization
       end
 
-      errors.add(:base, _("Cannot add content view environments from a different organization")) if cves_not_in_org
+      errors.add(:base, _("Cannot add content view environments from a different organization")) if cvenvs_not_in_org
     end
 
     apipie :class, desc: "A class representing #{model_name.human} object" do

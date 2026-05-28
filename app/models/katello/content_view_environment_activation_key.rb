@@ -8,9 +8,9 @@ module Katello
     validates :content_view_environment_id, presence: true
     validates :activation_key_id, presence: true, unless: :new_record?
 
-    def self.reprioritize_for_activation_key(activation_key, new_cves)
-      new_order = new_cves.map do |cve|
-        activation_key.content_view_environment_activation_keys.find_by(:content_view_environment_id => cve.id)
+    def self.reprioritize_for_activation_key(activation_key, new_cvenvs)
+      new_order = new_cvenvs.map do |cvenv|
+        activation_key.content_view_environment_activation_keys.find_by(:content_view_environment_id => cvenv.id)
       end
       new_order.compact.each_with_index do |cveak, index|
         cveak.update_column(:priority, index)

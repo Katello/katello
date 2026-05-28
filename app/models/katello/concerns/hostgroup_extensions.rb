@@ -29,8 +29,7 @@ module Katello
 
         delegate :content_source_name, to: :content_facet, allow_nil: true
         delegate :content_source_id, :kickstart_repository_id, :content_view_id, :lifecycle_environment_id, :content_view_environment_id, to: :content_facet, allow_nil: true
-        delegate :'content_source_id=', :'kickstart_repository_id=', :'content_view_id=', :'lifecycle_environment_id=', :'content_view_environment_id=', to: :safe_content_facet, allow_nil: true
-        delegate :'content_view=', :'lifecycle_environment=', :'content_view_environment=', to: :safe_content_facet, allow_nil: true
+        delegate :'content_source_id=', :'kickstart_repository_id=', :'content_view_environment_id=', to: :safe_content_facet, allow_nil: true
 
         apipie :class do
           property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host group'
@@ -57,8 +56,8 @@ module Katello
 
       def content_view_environment
         return super if ancestry.nil? || self.content_view_environment_id.present?
-        cve_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
-        Katello::ContentViewEnvironment.find_by(:id => cve_id)
+        cvenv_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
+        Katello::ContentViewEnvironment.find_by(:id => cvenv_id)
       end
 
       def content_view
@@ -86,18 +85,22 @@ module Katello
         inherited_ancestry_attribute(:content_source_id, :content_facet)
       end
 
-      def inherited_content_view_id
-        cv_env_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
-        return nil unless cv_env_id
+      def inherited_content_view_environment_id
+        inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
+      end
 
-        Katello::ContentViewEnvironment.find_by(id: cv_env_id)&.content_view_id
+      def inherited_content_view_id
+        cvenv_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
+        return nil unless cvenv_id
+
+        Katello::ContentViewEnvironment.find_by(id: cvenv_id)&.content_view_id
       end
 
       def inherited_lifecycle_environment_id
-        cv_env_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
-        return nil unless cv_env_id
+        cvenv_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
+        return nil unless cvenv_id
 
-        Katello::ContentViewEnvironment.find_by(id: cv_env_id)&.environment_id
+        Katello::ContentViewEnvironment.find_by(id: cvenv_id)&.environment_id
       end
 
       def inherited_kickstart_repository_id

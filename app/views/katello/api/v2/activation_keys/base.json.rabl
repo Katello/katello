@@ -35,23 +35,6 @@ child :content_view_environments => :content_view_environments do
   end
 end
 
-# single cv/lce for backward compatibility
-node :content_view_id do |ak|
-  ak.single_content_view&.id
-end
-
-node :content_view do |ak|
-  ak.single_content_view&.slice(:id, :name)
-end
-
-node :environment_id do |ak|
-  ak.single_lifecycle_environment&.id
-end
-
-node :environment do |ak|
-  ak.single_lifecycle_environment&.slice(:id, :name)
-end
-
 attributes :usage_count, :user_id, :max_hosts, :system_template_id, :release_version, :purpose_usage, :purpose_role
 
 node :permissions do |activation_key|

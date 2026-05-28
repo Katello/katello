@@ -19,13 +19,11 @@ class HostgroupsControllerTest < ActionController::TestCase
   end
 
   def test_create
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@library_view.id, @library.id)
     post :create, params: {
       :hostgroup => {
         :name => "foobar",
-        :content_facet_attributes => {
-          :content_view_id => @library_view.id,
-          :lifecycle_environment_id => @library.id,
-        },
+        :content_view_environment_id => cvenv.id,
       },
     }
 
@@ -40,18 +38,17 @@ class HostgroupsControllerTest < ActionController::TestCase
     os = Redhat.find_or_create_operating_system(repo)
     arch = Architecture.where(:name => repo.distribution_arch).first_or_create!
     os.architectures << arch unless os.architectures.include?(arch)
+    cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(repo.content_view.id, repo.environment.id)
 
     post :create, params: {
       :hostgroup => {
         :name => "foobar",
         :architecture_id => arch.id,
         :operatingsystem_id => os.id,
-        :content_view_id => repo.content_view.id,
-        :lifecycle_environment_id => repo.environment.id,
+        :content_view_environment_id => cvenv.id,
         :content_source_id => smart_proxy.id,
         :kickstart_repository_id => repo.id,
       },
-
     }
 
     assert_equal 1, ::Hostgroup.unscoped.where(:name => "foobar").count

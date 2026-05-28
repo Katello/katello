@@ -125,15 +125,16 @@ module Katello
     end
 
     def test_create_protected_object
-      #don't have view on LCE or CV
+      cvenv = katello_content_view_environments(:library_view_library)
       denied_perms = [{:name => @create_permission, :search => "name=\"Key A2\""}]
 
       assert_protected_object(:create, [], denied_perms, [@organization]) do
-        post :create, params: { :environment => { :id => @library.id }, :content_view_id => @view.id, :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
+        post :create, params: { :content_view_environment_ids => [cvenv.id], :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
       end
     end
 
     def test_create_protected
+      cvenv = katello_content_view_environments(:library_view_library)
       dev_env_read_permission = {:name => :view_lifecycle_environments, :search => "id=\"#{@library.id}\"" }
       view_read_permission = {:name => :view_content_views, :search => "label=\"#{@view.label}\"" }
 
@@ -141,7 +142,7 @@ module Katello
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
-        post :create, params: { :environment => { :id => @library.id }, :content_view_id => @view.id, :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
+        post :create, params: { :content_view_environment_ids => [cvenv.id], :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
       end
     end
 
@@ -240,12 +241,12 @@ module Katello
     end
 
     def test_create_with_content_view_environments_param
-      cve = katello_content_view_environments(:library_dev_view_library)
-      cve.update(organization: @organization)
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      cvenv.update(organization: @organization)
       content_view_environments = ['published_dev_view_library']
       ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
-        assert_equal content_view_environments, activation_key.content_view_environments.map(&:label), [cve.label]
+        assert_equal content_view_environments, activation_key.content_view_environments.map(&:label), [cvenv.label]
         assert_valid activation_key
       end
 
@@ -259,31 +260,10 @@ module Katello
       assert_template 'katello/api/v2/common/create'
     end
 
-    def test_create_from_angularjs_with_environments_param
-      cve = katello_content_view_environments(:library_default_view_environment)
-      cve.update(organization: @organization)
-      content_view_environments = ['library_default_view_library']
-      ActivationKey.any_instance.expects(:reload)
-      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
-        assert_equal content_view_environments, activation_key.content_view_environments.map(&:label), [cve.label]
-        assert_valid activation_key
-      end
-
-      post :create, params: {
-        :organization_id => @organization.id,
-        :environment => {:id => @library.id},
-        :content_view_id => @acme_view.id,
-        :activation_key => {:name => 'new key'},
-      }
-
-      assert_response :success
-      assert_template 'katello/api/v2/common/create'
-    end
-
     def test_create_with_content_view_environment_ids_param
-      cve = katello_content_view_environments(:library_dev_view_library)
-      cve.update(organization: @organization)
-      content_view_environment_ids = [cve.id]
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      cvenv.update(organization: @organization)
+      content_view_environment_ids = [cvenv.id]
       ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
         assert_equal content_view_environment_ids, activation_key.content_view_environments.map(&:id)
@@ -413,9 +393,9 @@ module Katello
       assert_response :unprocessable_entity
     end
 
-    def test_update_with_cleared_cves
-      cve = katello_content_view_environments(:library_dev_view_library)
-      cve.update(organization: @organization)
+    def test_update_with_cleared_cvenvs
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      cvenv.update(organization: @organization)
       assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
         assert_valid activation_key
       end
@@ -431,9 +411,9 @@ module Katello
       assert_equal 0, @activation_key.content_view_environments.size
     end
 
-    def test_update_with_cleared_cve_ids
-      cve = katello_content_view_environments(:library_dev_view_library)
-      cve.update(organization: @organization)
+    def test_update_with_cleared_cvenv_ids
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      cvenv.update(organization: @organization)
       assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
         assert_valid activation_key
       end
@@ -449,48 +429,44 @@ module Katello
       assert_equal 0, @activation_key.content_view_environments.size
     end
 
-    def test_update_with_cleared_cv_lce_ids
-      cve = katello_content_view_environments(:library_dev_view_library)
-      cve.update(organization: @organization)
-      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
-        assert_valid activation_key
-      end
+    def test_update_from_angularjs_does_not_clear_cvenvs
       assert_operator @activation_key.content_view_environments.size, :>, 0
 
       put :update, params: {
-        :organization_id => @organization.id,
         :id => @activation_key.id,
-        :content_view_id => nil,
-        :environment_id => nil,
+        :organization_id => @organization.id,
+        :multi_content_view_environment => false,
+        :content_view_environments => {"foo" => "bar"},
+        :activation_key => {:name => @activation_key.name},
       }
 
       assert_response :success
-      assert_equal 0, @activation_key.content_view_environments.size
+      @activation_key.reload
+      assert_operator @activation_key.content_view_environments.size, :>, 0
     end
 
-    def test_update_from_angularjs_does_not_clear_cves
-      cve = katello_content_view_environments(:library_dev_view_library)
-      cve.update(organization: @organization)
-      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
-        assert_valid activation_key
-      end
-      assert_operator @activation_key.content_view_environments.size, :>, 0
+    def test_update_from_angularjs_preserves_multi_cvenv
+      original_setting = Setting['allow_multiple_content_views']
+      Setting['allow_multiple_content_views'] = true
+      multi_key = katello_activation_keys(:library_dev_staging_view_key)
+      cvenv2 = katello_content_view_environments(:library_dev_view_library)
+      multi_key.content_view_environments << cvenv2
+      assert_equal 2, multi_key.content_view_environments.size
 
       put :update, params: {
+        :id => multi_key.id,
         :organization_id => @organization.id,
-        :id => @activation_key.id,
-        :content_view_id => nil,
-        :environment_id => nil,
-        :content_view => {
-          :id => @view.id,
-        },
-        :environment => {
-          :id => @library.id,
-        },
+        :multi_content_view_environment => true,
+        :content_view_environments => {"foo" => "bar"},
+        :activation_key => {:name => 'Renamed Multi Key'},
       }
 
       assert_response :success
-      assert_operator @activation_key.content_view_environments.size, :>, 0
+      multi_key.reload
+      assert_equal 'Renamed Multi Key', multi_key.name
+      assert_equal 2, multi_key.content_view_environments.size
+    ensure
+      Setting['allow_multiple_content_views'] = original_setting
     end
 
     def test_update_protected

@@ -224,13 +224,13 @@ module Katello
       version_environments = {}
       content_facets = Katello::Host::ContentFacet.with_non_installable_errata(@errata, @hosts)
 
-      ContentViewEnvironment.for_content_facets(content_facets).each do |cve|
-        version = cve.content_view_version
+      ContentViewEnvironment.for_content_facets(content_facets).each do |cvenv|
+        version = cvenv.content_view_version
         version_environment = version_environments[version] || {:content_view_version => version, :environments => []}
-        version_environment[:environments] << cve.environment unless version_environment[:environments].include?(cve.environment)
+        version_environment[:environments] << cvenv.environment unless version_environment[:environments].include?(cvenv.environment)
         version_environment[:next_version] ||= version.next_incremental_version
         version_environment[:content_host_count] ||= 0
-        version_environment[:content_host_count] += content_facets.with_content_view_environments(cve).count
+        version_environment[:content_host_count] += content_facets.with_content_view_environments(cvenv).count
 
         if version.content_view.composite?
           version_environment[:components] = version.components_needing_errata(@errata)

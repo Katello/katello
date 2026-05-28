@@ -427,13 +427,13 @@ module Katello
     end
 
     def get_content_view_environment(key, value)
-      cve = nil
+      cvenv = nil
       if value
-        cve = ContentViewEnvironment.where(key => value).first
-        fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
-        deny_access unless cve.readable? || User.consumer?
+        cvenv = ContentViewEnvironment.where(key => value).first
+        fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cvenv
+        deny_access unless cvenv.readable? || User.consumer?
       end
-      cve
+      cvenv
     end
 
     def get_content_view_environments(label = nil, organization = nil)

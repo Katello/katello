@@ -27,10 +27,9 @@ module Katello
       end
 
       def content_view_in_env?(facet)
-        env = facet.lifecycle_environment || facet.hostgroup.lifecycle_environment
-        cv = facet.content_view || facet.hostgroup.content_view
-        return true if env.blank? || cv.blank?
-        env.content_views.include?(cv)
+        cvenv = facet.content_view_environment || facet.hostgroup.content_view_environment
+        return false if cvenv.blank?
+        cvenv.environment.content_views.include?(cvenv.content_view)
       end
     end
   end

@@ -68,16 +68,16 @@ module Katello
       @root.organizations = []
       @root.save!
 
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       assert_includes @root.organizations, @library.organization
     end
 
     def test_inherited_lifecycle_environment_with_ancestry
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       assert_equal @library, @child.lifecycle_environment
@@ -85,8 +85,8 @@ module Katello
     end
 
     def test_inherited_content_view_with_ancestry
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       assert_equal @view, @child.content_view
@@ -94,8 +94,8 @@ module Katello
     end
 
     def test_inherited_content_view_with_ancestry_nill
-      @child.content_view = @view
-      @child.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @child.content_view_environment_id = cvenv.id
       @child.save!
 
       assert_equal @view, @child.content_view
@@ -103,8 +103,8 @@ module Katello
     end
 
     def test_inherited_lifecycle_environment_with_ancestry_nil
-      @child.content_view = @view
-      @child.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @child.content_view_environment_id = cvenv.id
       @child.save!
 
       assert_equal @library, @child.lifecycle_environment
@@ -118,16 +118,16 @@ module Katello
                         content_view_version: cv_version,
                         environment: @library)
 
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: content_view.id, environment_id: @library.id)
       host_group = ::Hostgroup.new(:name => 'test_cv_hostgroup',
-                                    :content_view => content_view,
-                                    :lifecycle_environment => @library)
+                                    :content_view_environment_id => cvenv.id)
       assert_valid host_group
       assert_equal content_view, host_group.content_view
     end
 
     def test_update_content_view
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       assert @root.save!
       assert_equal @view, @root.reload.content_view
 
@@ -137,15 +137,15 @@ module Katello
                         content_view_version: new_view_version,
                         environment: @library)
 
-      @root.content_view = new_view
-      @root.lifecycle_environment = @library
+      new_cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: new_view.id, environment_id: @library.id)
+      @root.content_view_environment_id = new_cvenv.id
       assert @root.save!
       assert_equal new_view, @root.reload.content_view
     end
 
     def test_remove_content_view
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
       assert_equal @view, @root.content_view
 
@@ -156,8 +156,8 @@ module Katello
     end
 
     def test_content_view_delegation_to_facet
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       assert_equal @view.id, @root.content_view_id
@@ -170,8 +170,8 @@ module Katello
       child = ::Hostgroup.create!(:name => 'child', :parent => parent)
 
       # Set content view on grandparent
-      grandparent.content_view = @view
-      grandparent.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv.id
       grandparent.save!
 
       # Both parent and child should inherit
@@ -180,8 +180,8 @@ module Katello
     end
 
     def test_content_view_override_in_child
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       different_view = FactoryBot.create(:katello_content_view, organization: @org)
@@ -190,8 +190,8 @@ module Katello
                         content_view_version: different_view_version,
                         environment: @library)
 
-      @child.content_view = different_view
-      @child.lifecycle_environment = @library
+      diff_cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: different_view.id, environment_id: @library.id)
+      @child.content_view_environment_id = diff_cvenv.id
       @child.save!
 
       # Parent has its view, child has overridden view
@@ -211,12 +211,12 @@ module Katello
                         content_view_version: parent_view_version,
                         environment: @library)
 
-      grandparent.content_view = grandparent_view
-      grandparent.lifecycle_environment = @library
+      gp_cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: grandparent_view.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = gp_cvenv.id
       grandparent.save!
 
-      parent.content_view = parent_view
-      parent.lifecycle_environment = @library
+      parent_cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: parent_view.id, environment_id: @library.id)
+      parent.content_view_environment_id = parent_cvenv.id
       parent.save!
 
       # Child should inherit from closest ancestor (parent)
@@ -226,7 +226,7 @@ module Katello
     end
 
     def test_lifecycle_environment_auto_adds_organization
-      # When setting CV and LCE together (required by validation),
+      # When setting content_view_environment_id,
       # the lifecycle_environment triggers add_organization_for_environment callback
       org = @view.organization
 
@@ -234,12 +234,11 @@ module Katello
       @root.organizations = []
       @root.save!
 
-      # Set both CV and LCE together (required by validation)
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
-      # With CVEnv model, setting CV and LCE together triggers add_organization_for_environment
+      # Setting content_view_environment_id triggers add_organization_for_environment
       # So organization WILL be auto-added
       @root.reload
       assert_includes @root.organizations, org
@@ -248,8 +247,8 @@ module Katello
     def test_rhsm_organization_label_from_content_view
       # With CVEnv model, both CV and LCE are always set together
       # This test now verifies the logic returns org label when both are present
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       # Should use lifecycle environment's org (same as content_view org in this case)
@@ -257,8 +256,8 @@ module Katello
     end
 
     def test_rhsm_organization_label_prefers_lifecycle_environment
-      @root.lifecycle_environment = @library
-      @root.content_view = @view
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       # Should use lifecycle environment's org if both are set
@@ -274,14 +273,15 @@ module Katello
       hostgroup = ::Hostgroup.create!(:name => 'no_facet')
       assert_nil hostgroup.content_facet
 
-      # Setting content_view should create facet
-      hostgroup.content_view = @view
+      # Setting content_view_environment_id should create facet via safe_content_facet
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      hostgroup.content_view_environment_id = cvenv.id
       assert_not_nil hostgroup.content_facet
     end
 
     def test_inherited_content_view_id
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       # Child should inherit content_view_id
@@ -289,47 +289,31 @@ module Katello
       assert_nil @child.content_view_id
     end
 
-    def test_content_view_with_lifecycle_environment_validation
-      # With CVE model, validation is implicit - CVE must exist to be assigned
-      # Create a content view that is ONLY published to library, not dev
-      library_only_view = FactoryBot.create(:katello_content_view, organization: @org)
-      library_only_version = FactoryBot.create(:katello_content_view_version, content_view: library_only_view)
-      FactoryBot.create(:katello_content_view_environment,
-                        content_view_version: library_only_version,
-                        environment: @library) # Only in library, not dev
-
-      @root.lifecycle_environment = @dev # dev environment
-      @root.content_view = library_only_view # Only published to library, not dev
-
-      # With ContentViewEnvironmentValidator: should reject CV not published to environment
-      refute @root.valid?, "Should be invalid when CV not published to selected environment"
-      # The validator adds the error to the content_facet's base errors
-      assert @root.content_facet.errors[:base].present?, "Should have validation error on content facet"
-    end
+    # Test removed: CV/LCE mismatch is no longer possible with content_view_environment_id
 
     def test_create_with_lifecycle_environment
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @dev.id)
       host_group = ::Hostgroup.new(:name => 'test_le_hostgroup',
-                                    :content_view => @view,
-                                    :lifecycle_environment => @dev)
+                                    :content_view_environment_id => cvenv.id)
       assert_valid host_group
       assert_equal @dev, host_group.lifecycle_environment
     end
 
     def test_update_lifecycle_environment
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv_lib.id
       assert @root.save!
       assert_equal @library, @root.reload.lifecycle_environment
 
-      @root.content_view = @view
-      @root.lifecycle_environment = @dev
+      cvenv_dev = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @dev.id)
+      @root.content_view_environment_id = cvenv_dev.id
       assert @root.save!
       assert_equal @dev, @root.reload.lifecycle_environment
     end
 
     def test_remove_lifecycle_environment
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
       assert_equal @library, @root.lifecycle_environment
 
@@ -340,8 +324,8 @@ module Katello
     end
 
     def test_lifecycle_environment_delegation_to_facet
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       assert_equal @library.id, @root.lifecycle_environment_id
@@ -354,8 +338,8 @@ module Katello
       child = ::Hostgroup.create!(:name => 'c_le', :parent => parent)
 
       # Set lifecycle environment on grandparent
-      grandparent.content_view = @view
-      grandparent.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv.id
       grandparent.save!
 
       # Both parent and child should inherit
@@ -364,12 +348,12 @@ module Katello
     end
 
     def test_lifecycle_environment_override_in_child
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv_lib.id
       @root.save!
 
-      @child.content_view = @view
-      @child.lifecycle_environment = @dev
+      cvenv_dev = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @dev.id)
+      @child.content_view_environment_id = cvenv_dev.id
       @child.save!
 
       # Parent has its env, child has overridden env
@@ -382,12 +366,12 @@ module Katello
       parent = ::Hostgroup.create!(:name => 'p_le2', :parent => grandparent)
       child = ::Hostgroup.create!(:name => 'c_le2', :parent => parent)
 
-      grandparent.content_view = @view
-      grandparent.lifecycle_environment = @library
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv_lib.id
       grandparent.save!
 
-      parent.content_view = @view
-      parent.lifecycle_environment = @dev
+      cvenv_dev = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @dev.id)
+      parent.content_view_environment_id = cvenv_dev.id
       parent.save!
 
       # Child should inherit from closest ancestor (parent)
@@ -402,8 +386,8 @@ module Katello
     end
 
     def test_inherited_lifecycle_environment_id
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       # Child should inherit lifecycle_environment_id
@@ -415,15 +399,16 @@ module Katello
       hostgroup = ::Hostgroup.create!(:name => 'no_facet_le')
       assert_nil hostgroup.content_facet
 
-      # Setting lifecycle_environment should create facet
-      hostgroup.lifecycle_environment = @library
+      # Setting content_view_environment_id should create facet via safe_content_facet
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      hostgroup.content_view_environment_id = cvenv.id
       assert_not_nil hostgroup.content_facet
     end
 
     def test_rhsm_organization_label_from_lifecycle_environment
       # With CVE model, both CV and LE are always set together
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       assert_equal @library.organization.label, @root.rhsm_organization_label
@@ -436,8 +421,8 @@ module Katello
       @root.organizations = []
       @root.save!
 
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
       @root.save!
 
       # Organization should be added automatically via callback
@@ -448,38 +433,22 @@ module Katello
     def test_lifecycle_environment_with_content_view_same_org
       # CV must be published to LE for validation to pass
       # @view (library_dev_staging_view) IS published to @library
-      @root.lifecycle_environment = @library
-      @root.content_view = @view
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      @root.content_view_environment_id = cvenv.id
 
       assert @root.valid?
       assert @root.save!
     end
 
-    def test_lifecycle_environment_and_content_view_not_published_together
-      # With CVE model, if CV is not published to LE, the CVE doesn't exist
-      # Create a view only published to library
-      library_only_view = FactoryBot.create(:katello_content_view, organization: @org)
-      library_only_version = FactoryBot.create(:katello_content_view_version, content_view: library_only_view)
-      FactoryBot.create(:katello_content_view_environment,
-                        content_view_version: library_only_version,
-                        environment: @library) # Only in library
-
-      @root.lifecycle_environment = @dev # dev environment
-      @root.content_view = library_only_view # Only published to library
-
-      # With ContentViewEnvironmentValidator: should reject CV not published to environment
-      refute @root.valid?, "Should be invalid when CV not published to selected environment"
-      # The validator adds the error to the content_facet's base errors
-      assert @root.content_facet.errors[:base].present?, "Should have validation error on content facet"
-    end
+    # Test removed: CV/LCE mismatch is no longer possible with content_view_environment_id
 
     def test_change_lifecycle_environment_updates_children
       parent = ::Hostgroup.create!(:name => 'parent_le_change')
       child = ::Hostgroup.create!(:name => 'child_le_change', :parent => parent)
       grandchild = ::Hostgroup.create!(:name => 'grandchild_le_change', :parent => child)
 
-      parent.content_view = @view
-      parent.lifecycle_environment = @library
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      parent.content_view_environment_id = cvenv_lib.id
       parent.save!
 
       # All should inherit
@@ -487,8 +456,8 @@ module Katello
       assert_equal @library, grandchild.lifecycle_environment
 
       # Change parent's env
-      parent.content_view = @view
-      parent.lifecycle_environment = @dev
+      cvenv_dev = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @dev.id)
+      parent.content_view_environment_id = cvenv_dev.id
       parent.save!
 
       # Children should now inherit new value
@@ -500,18 +469,18 @@ module Katello
       parent = ::Hostgroup.create!(:name => 'parent_override')
       child = ::Hostgroup.create!(:name => 'child_override', :parent => parent)
 
-      parent.content_view = @view
-      parent.lifecycle_environment = @library
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      parent.content_view_environment_id = cvenv_lib.id
       parent.save!
 
       # Child explicitly sets different env
-      child.content_view = @view
-      child.lifecycle_environment = @dev
+      cvenv_dev = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @dev.id)
+      child.content_view_environment_id = cvenv_dev.id
       child.save!
 
       # Change parent
-      parent.content_view = @view
-      parent.lifecycle_environment = @staging
+      cvenv_staging = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @staging.id)
+      parent.content_view_environment_id = cvenv_staging.id
       parent.save!
 
       # Child should keep its explicit value
@@ -571,8 +540,8 @@ module Katello
       parent = ::Hostgroup.create!(name: 'p_skip', parent: grandparent)
       child = ::Hostgroup.create!(name: 'c_skip', parent: parent)
 
-      grandparent.content_view = @view1
-      grandparent.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv.id
       grandparent.save!
 
       # Parent has no explicit value
@@ -590,8 +559,8 @@ module Katello
       parent = ::Hostgroup.create!(name: 'p_skip_le', parent: grandparent)
       child = ::Hostgroup.create!(name: 'c_skip_le', parent: parent)
 
-      grandparent.content_view = @view1
-      grandparent.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv.id
       grandparent.save!
 
       # Parent has no explicit value
@@ -610,16 +579,16 @@ module Katello
       child3 = ::Hostgroup.create!(name: 'child3', parent: parent)
 
       # Set parent value
-      parent.content_view = @view1
-      parent.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      parent.content_view_environment_id = cvenv.id
       parent.save!
 
       # Child1 inherits
       assert_equal @view1, child1.content_view
 
       # Child2 overrides
-      child2.content_view = @view2
-      child2.lifecycle_environment = @library
+      cvenv2 = Katello::ContentViewEnvironment.find_by!(content_view_id: @view2.id, environment_id: @library.id)
+      child2.content_view_environment_id = cvenv2.id
       child2.save!
 
       # Child3 inherits
@@ -649,13 +618,13 @@ module Katello
       child4 = ::Hostgroup.create!(name: 'c4_branches', parent: parent2)
 
       # Set grandparent
-      grandparent.content_view = @view1
-      grandparent.lifecycle_environment = @library
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv_lib.id
       grandparent.save!
 
       # Override in parent2
-      parent2.content_view = @view1
-      parent2.lifecycle_environment = @dev
+      cvenv_dev = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @dev.id)
+      parent2.content_view_environment_id = cvenv_dev.id
       parent2.save!
 
       # Branch 1 (parent1 and children) should inherit from grandparent
@@ -677,8 +646,8 @@ module Katello
       level4 = ::Hostgroup.create!(name: 'mid_level4', parent: level3)
 
       # Set at top
-      level1.content_view = @view1
-      level1.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      level1.content_view_environment_id = cvenv.id
       level1.save!
 
       # All inherit initially
@@ -687,8 +656,8 @@ module Katello
       assert_equal @view1, level4.content_view
 
       # Override at middle level (level2)
-      level2.content_view = @view2
-      level2.lifecycle_environment = @library
+      cvenv2 = Katello::ContentViewEnvironment.find_by!(content_view_id: @view2.id, environment_id: @library.id)
+      level2.content_view_environment_id = cvenv2.id
       level2.save!
 
       # Level1 unchanged
@@ -708,16 +677,16 @@ module Katello
       parent = ::Hostgroup.create!(name: 'p_gc_override', parent: grandparent)
       grandchild = ::Hostgroup.create!(name: 'gc_gc_override', parent: parent)
 
-      grandparent.content_view = @view1
-      grandparent.lifecycle_environment = @library
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv_lib.id
       grandparent.save!
 
       # Parent inherits
       assert_equal @library, parent.lifecycle_environment
 
       # Grandchild sets different value
-      grandchild.content_view = @view1
-      grandchild.lifecycle_environment = @staging
+      cvenv_staging = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @staging.id)
+      grandchild.content_view_environment_id = cvenv_staging.id
       grandchild.save!
 
       # Verify
@@ -733,13 +702,13 @@ module Katello
       child = ::Hostgroup.create!(name: 'c_mixed', parent: parent)
 
       # Set both on grandparent
-      grandparent.content_view = @view1
-      grandparent.lifecycle_environment = @library
+      cvenv1 = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv1.id
       grandparent.save!
 
-      # Override only CV at parent level (LE stays inherited)
-      parent.content_view = @view2
-      parent.lifecycle_environment = @library
+      # Override CV at parent level (LE stays the same - library)
+      cvenv2 = Katello::ContentViewEnvironment.find_by!(content_view_id: @view2.id, environment_id: @library.id)
+      parent.content_view_environment_id = cvenv2.id
       parent.save!
 
       # Child should inherit both from parent:
@@ -756,12 +725,12 @@ module Katello
       child = ::Hostgroup.create!(name: 'c_remove', parent: parent)
 
       # Set values
-      grandparent.content_view = @view1
-      grandparent.lifecycle_environment = @library
+      cvenv1 = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      grandparent.content_view_environment_id = cvenv1.id
       grandparent.save!
 
-      parent.content_view = @view2
-      parent.lifecycle_environment = @library
+      cvenv2 = Katello::ContentViewEnvironment.find_by!(content_view_id: @view2.id, environment_id: @library.id)
+      parent.content_view_environment_id = cvenv2.id
       parent.save!
 
       # Child inherits from parent
@@ -783,8 +752,8 @@ module Katello
       level3 = ::Hostgroup.create!(name: 'nil_level3', parent: level2)
 
       # Set at level1
-      level1.content_view = @view1
-      level1.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      level1.content_view_environment_id = cvenv.id
       level1.save!
 
       # Explicitly ensure level2 has nil (no facet or nil value)
@@ -812,8 +781,8 @@ module Katello
       b3 = ::Hostgroup.create!(name: 'wide_b3', parent: a2)
 
       # Set at root
-      root.content_view = @view1
-      root.lifecycle_environment = @library
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view1.id, environment_id: @library.id)
+      root.content_view_environment_id = cvenv.id
       root.save!
 
       # All should inherit
@@ -825,8 +794,8 @@ module Katello
       assert_equal @view1, b3.content_view
 
       # Override one branch
-      a2.content_view = @view2
-      a2.lifecycle_environment = @library
+      cvenv2 = Katello::ContentViewEnvironment.find_by!(content_view_id: @view2.id, environment_id: @library.id)
+      a2.content_view_environment_id = cvenv2.id
       a2.save!
 
       # Only a2 and its children should have new value
@@ -864,9 +833,9 @@ module Katello
         architecture: @arch
         )
       facet = Katello::Hostgroup::ContentFacet.create!(hostgroup: hg)
-      facet.content_view = @distro_cv
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @distro_env.id)
+      facet.content_view_environment_id = cvenv.id
       facet.content_source = @content_source
-      facet.lifecycle_environment = @distro_env
       facet.kickstart_repository = @distro
       assert facet.save
       assert_valid facet
@@ -875,13 +844,13 @@ module Katello
 
     def test_set_kickstart_repository
       @os.stubs(:kickstart_repos).returns([@distro])
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @distro_env.id)
       hg = ::Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
         content_source: @content_source,
         architecture: @arch,
-        content_view: @distro_cv,
-        lifecycle_environment: @distro_env,
+        content_view_environment_id: cvenv.id,
         kickstart_repository: @distro)
 
       assert_valid hg
@@ -889,13 +858,13 @@ module Katello
     end
 
     def test_set_installation_medium
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @distro_env.id)
       hg = ::Hostgroup.new(
         name: 'install_media',
         operatingsystem: @os,
         content_source: @content_source,
         architecture: @arch,
-        content_view: @distro_cv,
-        lifecycle_environment: @distro_env,
+        content_view_environment_id: cvenv.id,
         medium: @medium)
 
       assert_valid hg
@@ -904,13 +873,13 @@ module Katello
 
     def test_change_medium_to_kickstart_repository
       @os.stubs(:kickstart_repos).returns([@distro])
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @distro_env.id)
       hg = ::Hostgroup.new(
         name: 'install_media',
         operatingsystem: @os,
         content_source: @content_source,
         architecture: @arch,
-        content_view: @distro_cv,
-        lifecycle_environment: @distro_env,
+        content_view_environment_id: cvenv.id,
         medium: @medium)
 
       assert hg.save
@@ -922,13 +891,13 @@ module Katello
 
     def test_change_kickstart_repository_to_medium
       @os.stubs(:kickstart_repos).returns([@distro])
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @distro_env.id)
       hg = ::Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
         content_source: @content_source,
         architecture: @arch,
-        content_view: @distro_cv,
-        lifecycle_environment: @distro_env,
+        content_view_environment_id: cvenv.id,
         kickstart_repository: @distro)
 
       assert hg.save
@@ -941,18 +910,19 @@ module Katello
     def test_change_lifecycle_environment_mismatched_kickstart
       @os = ::Redhat.create_operating_system("GreatOS1", *@dev_distro.distribution_version.split('.'))
 
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @distro_env.id)
       hg = ::Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
         content_source: @content_source,
         architecture: @arch,
-        content_view: @distro_cv,
-        lifecycle_environment: @distro_env,
+        content_view_environment_id: cvenv.id,
         kickstart_repository: @distro)
 
       # changing the lifecycle environment will trigger
       # code which attempts to reassign the kickstart repo by its label
-      hg.lifecycle_environment = @dev_distro.environment
+      dev_cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @dev_distro.environment.id)
+      hg.content_view_environment_id = dev_cvenv.id
       assert hg.save
       assert_equal hg.kickstart_repository_id, @dev_distro.id
     end
@@ -985,15 +955,11 @@ module Katello
                         content_view_version: @view2_version,
                         environment: @library)
 
-      @hg_with_view1 = ::Hostgroup.create!(name: 'hg_cv1')
-      @hg_with_view1.content_view = @view1
-      @hg_with_view1.lifecycle_environment = @library
-      @hg_with_view1.save!
+      cvenv1 = Katello::ContentViewEnvironment.find_by(content_view_id: @view1.id, environment_id: @library.id)
+      @hg_with_view1 = ::Hostgroup.create!(name: 'hg_cv1', content_view_environment_id: cvenv1.id)
 
-      @hg_with_view2 = ::Hostgroup.create!(name: 'hg_cv2')
-      @hg_with_view2.content_view = @view2
-      @hg_with_view2.lifecycle_environment = @library
-      @hg_with_view2.save!
+      cvenv2 = Katello::ContentViewEnvironment.find_by(content_view_id: @view2.id, environment_id: @library.id)
+      @hg_with_view2 = ::Hostgroup.create!(name: 'hg_cv2', content_view_environment_id: cvenv2.id)
 
       @hg_without_view = ::Hostgroup.create!(name: 'hg_no_cv')
     end
@@ -1038,7 +1004,7 @@ module Katello
       @view = FactoryBot.create(:katello_content_view, organization: @org)
       @view_version = FactoryBot.create(:katello_content_view_version, content_view: @view)
 
-      # Create CVEs for view in each environment
+      # Create content view environments for view in each environment
       FactoryBot.create(:katello_content_view_environment,
                         content_view_version: @view_version,
                         environment: @library)
@@ -1046,15 +1012,11 @@ module Katello
                         content_view_version: @view_version,
                         environment: @dev)
 
-      @hg_with_library = ::Hostgroup.create!(name: 'hg_lib')
-      @hg_with_library.content_view = @view
-      @hg_with_library.lifecycle_environment = @library
-      @hg_with_library.save!
+      cvenv_lib = Katello::ContentViewEnvironment.find_by(content_view_id: @view.id, environment_id: @library.id)
+      @hg_with_library = ::Hostgroup.create!(name: 'hg_lib', content_view_environment_id: cvenv_lib.id)
 
-      @hg_with_dev = ::Hostgroup.create!(name: 'hg_dev')
-      @hg_with_dev.content_view = @view
-      @hg_with_dev.lifecycle_environment = @dev
-      @hg_with_dev.save!
+      cvenv_dev = Katello::ContentViewEnvironment.find_by(content_view_id: @view.id, environment_id: @dev.id)
+      @hg_with_dev = ::Hostgroup.create!(name: 'hg_dev', content_view_environment_id: cvenv_dev.id)
 
       @hg_without_env = ::Hostgroup.create!(name: 'hg_no_env')
     end
@@ -1086,8 +1048,8 @@ module Katello
                         environment: @staging)
 
       parent = ::Hostgroup.create!(name: 'parent_search')
-      parent.content_view = @view
-      parent.lifecycle_environment = @staging
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @staging.id)
+      parent.content_view_environment_id = cvenv.id
       parent.save!
 
       _child = ::Hostgroup.create!(name: 'child_search', parent: parent)
@@ -1155,51 +1117,33 @@ module Katello
                         environment: @library)
     end
 
-    def test_setting_content_view_without_lifecycle_environment_should_fail
+    # Test removed: CV/LCE mismatch is no longer possible with content_view_environment_id
+    # (test_setting_content_view_without_lifecycle_environment_should_fail)
+
+    # Test removed: CV/LCE mismatch is no longer possible with content_view_environment_id
+    # (test_setting_lifecycle_environment_without_content_view_should_fail)
+
+    def test_setting_content_view_environment_should_succeed
       hostgroup = ::Hostgroup.create!(name: 'TestHG')
 
-      # Try to set only CV without LCE
-      hostgroup.content_view_id = @view.id
-      # Don't set lifecycle_environment_id
+      # Set CV and LCE together via content_view_environment_id
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      hostgroup.content_view_environment_id = cvenv.id
 
-      refute hostgroup.valid?, "Hostgroup should be invalid when setting CV without LCE"
-      assert_includes hostgroup.errors.messages.to_s, 'Content view', "Should have validation error about content view"
-    end
-
-    def test_setting_lifecycle_environment_without_content_view_should_fail
-      hostgroup = ::Hostgroup.create!(name: 'TestHG')
-
-      # Try to set only LCE without CV
-      hostgroup.lifecycle_environment_id = @library.id
-      # Don't set content_view_id
-
-      refute hostgroup.valid?, "Hostgroup should be invalid when setting LCE without CV"
-      assert hostgroup.errors.messages.to_s.include?('Content view') || hostgroup.errors.messages.to_s.include?('Lifecycle environment'),
-             "Should have validation error about missing CV or LCE"
-    end
-
-    def test_setting_both_content_view_and_lifecycle_environment_should_succeed
-      hostgroup = ::Hostgroup.create!(name: 'TestHG')
-
-      # Set both CV and LCE together
-      hostgroup.lifecycle_environment_id = @library.id
-      hostgroup.content_view_id = @view.id
-
-      assert hostgroup.valid?, "Hostgroup should be valid when setting both CV and LCE: #{hostgroup.errors.full_messages}"
+      assert hostgroup.valid?, "Hostgroup should be valid when setting content_view_environment_id: #{hostgroup.errors.full_messages}"
       assert hostgroup.save
     end
 
-    def test_removing_both_content_view_and_lifecycle_environment_should_succeed
+    def test_removing_content_view_environment_should_succeed
       hostgroup = ::Hostgroup.create!(name: 'TestHG')
-      hostgroup.lifecycle_environment_id = @library.id
-      hostgroup.content_view_id = @view.id
+      cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      hostgroup.content_view_environment_id = cvenv.id
       hostgroup.save!
 
-      # Remove both together
-      hostgroup.lifecycle_environment_id = nil
-      hostgroup.content_view_id = nil
+      # Remove by clearing the association
+      hostgroup.content_view_environment_id = nil
 
-      assert hostgroup.valid?, "Hostgroup should be valid when removing both CV and LCE: #{hostgroup.errors.full_messages}"
+      assert hostgroup.valid?, "Hostgroup should be valid when removing content_view_environment_id: #{hostgroup.errors.full_messages}"
       assert hostgroup.save
 
       # Verify persistence - reload and check database state
@@ -1209,20 +1153,19 @@ module Katello
       assert_nil hostgroup.content_facet.content_view_environment_id, "ContentViewEnvironment association should be cleared"
     end
 
-    def test_nil_content_view_with_nil_lifecycle_environment_is_valid
+    def test_nil_content_view_environment_is_valid
       hostgroup = ::Hostgroup.create!(name: 'TestHG')
 
-      # Both nil is valid (no content management)
-      hostgroup.lifecycle_environment_id = nil
-      hostgroup.content_view_id = nil
+      # No content_view_environment_id is valid (no content management)
+      hostgroup.content_view_environment_id = nil
 
-      assert hostgroup.valid?, "Hostgroup should be valid with both CV and LCE as nil: #{hostgroup.errors.full_messages}"
+      assert hostgroup.valid?, "Hostgroup should be valid with nil content_view_environment_id: #{hostgroup.errors.full_messages}"
     end
 
-    def test_updating_lifecycle_environment_keeps_content_view_valid
+    def test_updating_content_view_environment_to_different_env
       hostgroup = ::Hostgroup.create!(name: 'TestHG')
-      hostgroup.lifecycle_environment_id = @library.id
-      hostgroup.content_view_id = @view.id
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      hostgroup.content_view_environment_id = cvenv_lib.id
       hostgroup.save!
 
       # Publish view to dev
@@ -1230,17 +1173,18 @@ module Katello
                         content_view_version: @view_version,
                         environment: @dev)
 
-      # Change environment (CV is published to both)
-      hostgroup.lifecycle_environment_id = @dev.id
+      # Change to dev environment (CV is published to both)
+      cvenv_dev = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @dev.id)
+      hostgroup.content_view_environment_id = cvenv_dev.id
 
-      assert hostgroup.valid?, "Hostgroup should be valid when changing LCE to another env where CV is published: #{hostgroup.errors.full_messages}"
+      assert hostgroup.valid?, "Hostgroup should be valid when changing to another CVEnv: #{hostgroup.errors.full_messages}"
       assert hostgroup.save
     end
 
-    def test_child_can_set_partial_cv_lce_when_parent_has_other
+    def test_child_can_set_different_content_view_environment_than_parent
       parent = ::Hostgroup.create!(name: 'ParentHG')
-      parent.lifecycle_environment_id = @library.id
-      parent.content_view_id = @view.id
+      cvenv_lib = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @library.id)
+      parent.content_view_environment_id = cvenv_lib.id
       parent.save!
 
       child = ::Hostgroup.create!(name: 'ChildHG', parent: parent)
@@ -1250,13 +1194,11 @@ module Katello
                         content_view_version: @view_version,
                         environment: @dev)
 
-      # Child must set both CV and LCE explicitly, even when inheriting from parent
-      # Setting only LCE would fail validation because the "both together" rule
-      # checks pending values, not inherited values
-      child.lifecycle_environment_id = @dev.id
-      child.content_view_id = @view.id # Must explicitly set, even though parent has it
+      # Child sets a different content_view_environment_id
+      cvenv_dev = Katello::ContentViewEnvironment.find_by!(content_view_id: @view.id, environment_id: @dev.id)
+      child.content_view_environment_id = cvenv_dev.id
 
-      assert child.valid?, "Child should be valid when setting both CV and LCE explicitly: #{child.errors.full_messages}"
+      assert child.valid?, "Child should be valid when setting its own content_view_environment_id: #{child.errors.full_messages}"
       assert child.save
 
       # Verify the child has explicit CV and LCE values

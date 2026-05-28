@@ -72,10 +72,11 @@ module Katello
         )
 
         def content_facet_ignore_update?(attributes)
+          attrs = attributes.with_indifferent_access
+          cvenv_ids = attrs[:content_view_environment_ids]&.reject(&:blank?)
           self.content_facet.blank? && (
             attributes.values.all?(&:blank?) ||
-            attributes['content_view_id'].blank? ||
-            attributes['lifecycle_environment_id'].blank?
+            cvenv_ids.blank?
           )
         end
 

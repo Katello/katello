@@ -18,8 +18,8 @@ module Actions
             action_subject(env)
 
             concurrence do
-              env.content_view_environments.each do |cve|
-                plan_action(ContentView::Remove, cve.content_view, :content_view_environments => [cve], :skip_repo_destroy => skip_repo_destroy, :organization_destroy => organization_destroy)
+              env.content_view_environments.each do |cvenv|
+                plan_action(ContentView::Remove, cvenv.content_view, :content_view_environments => [cvenv], :skip_repo_destroy => skip_repo_destroy, :organization_destroy => organization_destroy)
               end
             end
 

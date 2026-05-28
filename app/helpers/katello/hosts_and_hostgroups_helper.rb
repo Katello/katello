@@ -70,8 +70,15 @@ module Katello
       return selected_host_group.content_view if selected_host_group.present?
     end
 
-    def fetch_content_view_environment(hostgroup, options = {})
-      return hostgroup.content_facet.content_view_environment if hostgroup.content_facet.present?
+    def fetch_content_view_environment(host_or_hostgroup, options = {})
+      if host_or_hostgroup&.content_facet.present?
+        if host_or_hostgroup.is_a?(::Hostgroup)
+          return host_or_hostgroup.content_facet.content_view_environment if host_or_hostgroup.content_facet.content_view_environment.present?
+        else
+          first_cvenv = host_or_hostgroup.content_facet.content_view_environments.first
+          return first_cvenv if first_cvenv.present?
+        end
+      end
       selected_host_group = options.fetch(:selected_host_group, nil)
       return selected_host_group.content_facet.content_view_environment if selected_host_group&.content_facet.present?
     end
@@ -129,37 +136,29 @@ module Katello
       content_source_id
     end
 
-    def inherited_or_own_facet_attributes(host_or_hostgroup, hostgroup)
-      lifecycle_environment_id = hostgroup.inherited_lifecycle_environment_id
-      content_view_id = hostgroup.inherited_content_view_id
+    def inherited_or_own_cvenv_id(host_or_hostgroup, hostgroup)
+      inherited_cvenv_id = hostgroup.content_facet&.content_view_environment_id
+      inherited_cvenv_id ||= hostgroup.send(:inherited_ancestry_attribute, :content_view_environment_id, :content_facet) if hostgroup.ancestry.present?
+
       case host_or_hostgroup
       when ::Hostgroup
-        if host_or_hostgroup.lifecycle_environment_id && (hostgroup.inherited_lifecycle_environment_id != host_or_hostgroup.lifecycle_environment_id)
-          lifecycle_environment_id = host_or_hostgroup.lifecycle_environment_id
-        end
-        if host_or_hostgroup.content_view_id && (hostgroup.inherited_content_view_id != host_or_hostgroup.content_view_id)
-          content_view_id = host_or_hostgroup.content_view_id
-        end
+        own_cvenv_id = host_or_hostgroup.content_facet&.content_view_environment_id
+        own_cvenv_id && own_cvenv_id != inherited_cvenv_id ? own_cvenv_id : inherited_cvenv_id
       when ::Host::Managed
-        if host_or_hostgroup.single_lifecycle_environment && (hostgroup.inherited_lifecycle_environment_id != host_or_hostgroup.single_lifecycle_environment.id)
-          lifecycle_environment_id = host_or_hostgroup.single_lifecycle_environment.id
-        end
-        if host_or_hostgroup.single_content_view && (hostgroup.inherited_content_view_id != host_or_hostgroup.single_content_view.id)
-          content_view_id = host_or_hostgroup.single_content_view.id
-        end
+        own_cvenv = host_or_hostgroup.content_view_environments.first
+        own_cvenv && own_cvenv.id != inherited_cvenv_id ? own_cvenv.id : inherited_cvenv_id
+      else
+        inherited_cvenv_id
       end
-      [lifecycle_environment_id, content_view_id]
     end
 
     def hostgroup_content_facet(hostgroup, param_host)
-      lifecycle_environment_id, content_view_id = inherited_or_own_facet_attributes(param_host, hostgroup)
+      cvenv_id = inherited_or_own_cvenv_id(param_host, hostgroup)
       content_source_id = inherited_or_own_content_source_id(param_host, hostgroup)
       facet = ::Katello::Host::ContentFacet.new(:content_source_id => content_source_id)
-      if content_view_id && lifecycle_environment_id
-        facet.assign_single_environment(
-          :lifecycle_environment_id => lifecycle_environment_id,
-          :content_view_id => content_view_id
-        )
+      if cvenv_id
+        cvenv = ::Katello::ContentViewEnvironment.find_by(id: cvenv_id)
+        facet.content_view_environments = [cvenv] if cvenv
       end
       facet
     end

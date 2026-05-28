@@ -20,7 +20,8 @@ module Katello
 
   class ContentFacetTest < ContentFacetBase
     def test_create
-      empty_host.content_facet = Katello::Host::ContentFacet.create!(:content_view_id => view.id, :lifecycle_environment_id => library.id, :host => empty_host)
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view.id, library.id)
+      empty_host.content_facet = Katello::Host::ContentFacet.create!(:content_view_environment_ids => [cvenv.id], :host => empty_host)
     end
 
     def test_content_view_version
@@ -102,8 +103,8 @@ module Katello
     end
 
     def test_in_content_view_version_environments
-      facet_cve = content_facet.content_view_environments.reload.first
-      first_cvve = {:content_view_version => facet_cve.content_view.version(facet_cve.lifecycle_environment),
+      facet_cvenv = content_facet.content_view_environments.reload.first
+      first_cvve = {:content_view_version => facet_cvenv.content_view.version(facet_cvenv.lifecycle_environment),
                     :environments => [content_facet.single_lifecycle_environment]}
       second_cvve = {:content_view_version => view.version(library), :environments => [dev]} #dummy set
 
@@ -133,8 +134,9 @@ module Katello
     def test_audit_for_content_facet
       org = taxonomies(:empty_organization)
       host1 = ::Host::Managed.create!(:name => 'foohost.example.com', :managed => false, :organization_id => org.id)
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view.id, library.id)
       content_facet1 = Katello::Host::ContentFacet.create!(
-        :content_view_id => view.id, :lifecycle_environment_id => library.id, :host => host1
+        :content_view_environment_ids => [cvenv.id], :host => host1
       )
 
       recent_audit = Audit.where(auditable_id: content_facet1.id).last
@@ -146,38 +148,38 @@ module Katello
       assert content_facet_rec, "No associated audit record for content_facet"
     end
 
-    def test_all_default_or_rolling_returns_nil_when_no_cves
+    def test_all_default_or_rolling_returns_nil_when_no_cvenvs
       content_facet.content_view_environments = []
       assert_nil content_facet.content_view_environments_all_default_or_rolling?
     end
 
     def test_all_default_or_rolling_returns_false_when_non_rolling_non_library
-      non_rolling_cve = katello_content_view_environments(:library_dev_view_dev)
-      content_facet.content_view_environments = [non_rolling_cve]
+      non_rolling_cvenv = katello_content_view_environments(:library_dev_view_dev)
+      content_facet.content_view_environments = [non_rolling_cvenv]
       refute content_facet.content_view_environments_all_default_or_rolling?
     end
 
     def test_all_default_or_rolling_returns_true_when_first_is_library_with_others
-      library_cve = katello_content_view_environments(:library_default_view_environment)
-      non_rolling_cve = katello_content_view_environments(:library_dev_view_dev)
+      library_cvenv = katello_content_view_environments(:library_default_view_environment)
+      non_rolling_cvenv = katello_content_view_environments(:library_dev_view_dev)
       Setting['allow_multiple_content_views'] = true
-      content_facet.content_view_environments = [library_cve, non_rolling_cve]
+      content_facet.content_view_environments = [library_cvenv, non_rolling_cvenv]
       assert content_facet.content_view_environments_all_default_or_rolling?
     end
 
     def test_all_default_or_rolling_returns_false_when_rolling_first_non_rolling_second
-      rolling_cve = katello_content_view_environments(:rolling_view_library)
-      non_rolling_cve = katello_content_view_environments(:library_dev_view_dev)
+      rolling_cvenv = katello_content_view_environments(:rolling_view_library)
+      non_rolling_cvenv = katello_content_view_environments(:library_dev_view_dev)
       Setting['allow_multiple_content_views'] = true
-      content_facet.content_view_environments = [rolling_cve, non_rolling_cve]
+      content_facet.content_view_environments = [rolling_cvenv, non_rolling_cvenv]
       refute content_facet.content_view_environments_all_default_or_rolling?
     end
 
     def test_all_default_or_rolling_returns_true_when_all_rolling_or_library
-      rolling_cve = katello_content_view_environments(:rolling_view_library)
-      library_cve = katello_content_view_environments(:library_default_view_environment)
+      rolling_cvenv = katello_content_view_environments(:rolling_view_library)
+      library_cvenv = katello_content_view_environments(:library_default_view_environment)
       Setting['allow_multiple_content_views'] = true
-      content_facet.content_view_environments = [rolling_cve, library_cve]
+      content_facet.content_view_environments = [rolling_cvenv, library_cvenv]
       assert content_facet.content_view_environments_all_default_or_rolling?
     end
   end
@@ -491,10 +493,8 @@ module Katello
     end
 
     def test_save_bound_repos_by_paths
-      content_facet.assign_single_environment(
-        content_view: repo.content_view,
-        lifecycle_environment: repo.environment
-      )
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(repo.content_view.id, repo.environment.id)
+      content_facet.content_view_environments = [cvenv]
       assert_empty content_facet.bound_repositories
 
       content_facet.update_repositories_by_paths([
@@ -507,10 +507,8 @@ module Katello
     end
 
     def test_save_bound_repos_by_paths_same_path
-      content_facet.assign_single_environment(
-        content_view: repo.content_view,
-        lifecycle_environment: repo.environment
-      )
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(repo.content_view.id, repo.environment.id)
+      content_facet.content_view_environments = [cvenv]
       content_facet.bound_repositories = [repo]
       ForemanTasks.expects(:async_task).never
 

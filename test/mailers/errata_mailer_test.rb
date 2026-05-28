@@ -55,10 +55,11 @@ module Katello
       view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
       @errata_host.content_facet.bound_repositories = [view_repo]
       @errata_host.stubs(:update_candlepin_associations)
-      @errata_host.content_facet.assign_single_environment(
-        content_view: katello_content_views(:acme_default),
-        lifecycle_environment: katello_environments(:library)
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
+        katello_content_views(:acme_default).id,
+        katello_environments(:library).id
       )
+      @errata_host.content_facet.content_view_environments = [cvenv]
       @errata_host.content_facet.save!
 
       ActionMailer::Base.deliveries = []

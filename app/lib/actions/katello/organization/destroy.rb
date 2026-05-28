@@ -64,8 +64,8 @@ module Actions
           plan_action(Katello::Environment::Destroy, organization.library, :skip_repo_destroy => true, :organization_destroy => true)
         end
 
-        def remove_content_view_environment(cv_env)
-          plan_action(ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => true, :organization_destroy => true)
+        def remove_content_view_environment(cvenv)
+          plan_action(ContentViewEnvironment::Destroy, cvenv, :skip_repo_destroy => true, :organization_destroy => true)
         end
 
         def remove_content_views(organization)
@@ -86,7 +86,7 @@ module Actions
 
         def remove_default_content_view(organization)
           organization.default_content_view.tap do |view|
-            view.content_view_environments.each { |cve| remove_content_view_environment(cve) }
+            view.content_view_environments.each { |cvenv| remove_content_view_environment(cvenv) }
             plan_action(ContentView::Destroy, organization.default_content_view, :check_ready_to_destroy => false, :organization_destroy => true)
           end
         end
