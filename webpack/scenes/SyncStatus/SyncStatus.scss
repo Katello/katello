@@ -1,6 +1,6 @@
 // Sticky toolbar and table header coordination
 // Target the toolbar by its ouiaId with more specific selector
-.pf-v5-c-toolbar.pf-m-sticky[data-ouia-component-id="sync-status-toolbar"] {
+[data-ouia-component-id="sync-status-toolbar"].pf-v5-c-toolbar.pf-m-sticky {
   position: sticky;
   top: 0;
   // Toolbar needs higher z-index than table header (which uses 100) so dropdowns appear above it
@@ -9,7 +9,7 @@
 }
 
 // Target the table by its ouiaId and offset the sticky header
-.pf-v5-c-table[data-ouia-component-id="sync-status-table"] {
+[data-ouia-component-id="sync-status-table"].pf-v5-c-table {
   thead {
     position: sticky;
     top: 70px;
