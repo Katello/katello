@@ -1,5 +1,3 @@
-require 'set'
-
 module Katello
   module Glue::Candlepin::Environment
     def self.included(base)

@@ -1,4 +1,3 @@
-require 'set'
 require 'pulp_file_client'
 
 module Katello
