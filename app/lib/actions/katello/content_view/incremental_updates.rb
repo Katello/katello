@@ -35,6 +35,11 @@ module Actions
                         {:name => version.content_view.name, :version => version.version}
                     end
 
+                    if version.content_view.rolling?
+                      fail _("Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})") %
+                        {:name => version.content_view.name, :version => version.version}
+                    end
+
                     action = plan_action(ContentViewVersion::IncrementalUpdate, version, version_environment[:environments],
                                         :resolve_dependencies => dep_solve, :content => content, :description => description,
                                         :propagated_composite_cv_ids => propagated_composite_cv_ids)
