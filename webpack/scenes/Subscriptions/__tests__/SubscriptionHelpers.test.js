@@ -24,7 +24,12 @@ describe('Subscription helper', () => {
 
     const filteredSubscriptions = filterRHSubscriptions(subscriptions);
 
-    expect(filteredSubscriptions).toMatchSnapshot();
+    expect(filteredSubscriptions).toEqual([
+      {
+        key: 'sub-2',
+        upstream_pool_id: ' ',
+      },
+    ]);
   });
 
   it('should filter redhat subscriptions', () => {
@@ -45,7 +50,7 @@ describe('Subscription helper', () => {
 
     const filteredSubscriptions = filterRHSubscriptions(subscriptions);
 
-    expect(filteredSubscriptions).toMatchSnapshot();
+    expect(filteredSubscriptions).toEqual(subscriptions);
   });
 
   it('should select subscriptions-quantities from api response', () => {

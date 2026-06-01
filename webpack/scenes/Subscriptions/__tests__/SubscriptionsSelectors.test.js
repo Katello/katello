@@ -1,4 +1,3 @@
-import { testSelectorsSnapshotWithFixtures } from 'react-redux-test-utils';
 import {
   selectSubscriptionsState,
   selectSearchQuery,
@@ -21,13 +20,28 @@ const state = {
   },
 };
 
-const fixtures = {
-  'should select the subscriptions state': () => selectSubscriptionsState(state),
-  'should select search-query': () => selectSearchQuery(state),
-  'should select delete-modal-opened': () => selectDeleteModalOpened(state),
-  'should select delete-button-disabled': () => selectDeleteButtonDisabled(state),
-  'should select subscriptions task': () => selectSubscriptionsTask(state),
-  'should select whether we have an upstream connection': () => selectHasUpstreamConnection(state),
-};
+describe('Subscriptions selectors', () => {
+  it('selects the subscriptions state', () => {
+    expect(selectSubscriptionsState(state)).toEqual(state.katello.subscriptions);
+  });
 
-describe('Subscriptions selectors', () => testSelectorsSnapshotWithFixtures(fixtures));
+  it('selects search query', () => {
+    expect(selectSearchQuery(state)).toEqual('some-query');
+  });
+
+  it('selects delete modal state', () => {
+    expect(selectDeleteModalOpened(state)).toBe(false);
+  });
+
+  it('selects delete button disabled flag', () => {
+    expect(selectDeleteButtonDisabled(state)).toBe(true);
+  });
+
+  it('selects current task', () => {
+    expect(selectSubscriptionsTask(state)).toEqual({});
+  });
+
+  it('selects upstream connection flag', () => {
+    expect(selectHasUpstreamConnection(state)).toBe(false);
+  });
+});
