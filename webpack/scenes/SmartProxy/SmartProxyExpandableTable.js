@@ -5,6 +5,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { Thead, Tbody, Th, Tr, Td } from '@patternfly/react-table';
 import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import getSmartProxyContent, { updateSmartProxyContentCounts, repairSmartProxyContent } from './SmartProxyContentActions';
+import useSmartProxyContentRefresh from './useSmartProxyContentRefresh';
 import {
   selectSmartProxyContent,
   selectSmartProxyContentStatus,
@@ -23,6 +24,7 @@ const SmartProxyExpandableTable = ({ smartProxyId, organizationId }) => {
   const expandedTableRows = useSet([]);
   const tableRowIsExpanded = id => expandedTableRows.has(id);
   const dispatch = useDispatch();
+  useSmartProxyContentRefresh({ smartProxyId, organizationId });
   let metadata = {};
   const {
     lifecycle_environments: results, content_counts: contentCounts,
