@@ -5,7 +5,7 @@
 
 import componentRegistry from 'foremanReact/components/componentRegistry';
 import Application from './containers/Application/index';
-import Content from './scenes/SmartProxy/Content';
+import Content from './scenes/SmartProxy/SmartProxyContentWithRefresh';
 import ChangeContentSource from './scenes/Hosts/ChangeContentSource';
 
 import './redux';
