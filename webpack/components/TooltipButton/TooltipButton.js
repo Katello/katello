@@ -1,22 +1,28 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Tooltip, OverlayTrigger } from 'patternfly-react';
+import { Button } from 'patternfly-react';
+import { Tooltip } from '@patternfly/react-core';
 import './TooltipButton.scss';
 
 const TooltipButton = ({
   disabled, title, tooltipText, tooltipId, tooltipPlacement, renderedButton, ...props
 }) => {
+  const triggerRef = useRef(null);
+
   if (!disabled) return renderedButton || (<Button {...props}>{title}</Button>);
   return (
-    <OverlayTrigger
-      placement={tooltipPlacement}
-      delayHide={150}
-      overlay={<Tooltip id={tooltipId}>{tooltipText}</Tooltip>}
-    >
-      <div className="tooltip-button-helper">
+    <>
+      <div className="tooltip-button-helper" ref={triggerRef}>
         {renderedButton || (<Button {...props} disabled>{title}</Button>)}
       </div>
-    </OverlayTrigger>
+      <Tooltip
+        id={tooltipId}
+        content={tooltipText}
+        position={tooltipPlacement}
+        exitDelay={150}
+        triggerRef={triggerRef}
+      />
+    </>
   );
 };
 
