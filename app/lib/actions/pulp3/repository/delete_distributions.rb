@@ -12,8 +12,8 @@ module Actions
         end
 
         def finalize
-          # Only destroy the distribution reference after Pulp task succeeds
-          repo = ::Katello::Repository.find(input[:repository_id])
+          repo = ::Katello::Repository.find_by(id: input[:repository_id])
+          return unless repo
           dist_ref = repo.backend_service(smart_proxy).distribution_reference
           dist_ref&.destroy!
         end
