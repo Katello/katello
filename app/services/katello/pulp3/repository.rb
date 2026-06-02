@@ -445,7 +445,6 @@ module Katello
       def delete_distributions
         if (dist_ref = distribution_reference)
           ignore_404_exception { api.delete_distribution(dist_ref.href) }
-          dist_ref.destroy!
         end
       end
 
