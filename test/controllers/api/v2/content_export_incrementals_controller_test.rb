@@ -169,7 +169,7 @@ module Katello
 
       post :library, params: { organization_id: org.id,
                                from_latest_increment: true }
-      response = JSON.parse(@response.body)['displayMessage']
+      response = JSON.parse(@response.body)['message']
       assert_match(/Unable to find a base content view to use for incremental export. Please run a complete export instead./, response)
       assert_response :bad_request
     end

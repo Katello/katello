@@ -128,7 +128,7 @@ test('failed file upload sends POST with error response', async () => {
   const uploadScope = nockInstance
     .post(uploadPath)
     .reply(422, {
-      displayMessage: 'Invalid GPG key content',
+      message: 'Invalid GPG key content',
       errors: { content: ['is invalid'] },
     });
 

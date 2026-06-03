@@ -56,7 +56,7 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
 
         function error(data) {
             $scope.table.working = true;
-            Notification.setErrorMessage(data.response.displayMessage);
+            Notification.setErrorMessage(data.response.message);
         }
 
         $scope.repository = Repository.get({id: $scope.$stateParams.repositoryId}, function (repository) {

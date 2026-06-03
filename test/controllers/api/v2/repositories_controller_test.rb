@@ -59,7 +59,7 @@ module Katello
       get :index, params: { :organization_id => @organization.id, :content_type => 'cheese' }
 
       assert_response 422
-      response = "{\"displayMessage\":\"Invalid params provided - content_type must be one of ansible_collection,deb,docker,file,ostree,python,yum\"," \
+      response = "{\"message\":\"Invalid params provided - content_type must be one of ansible_collection,deb,docker,file,ostree,python,yum\"," \
         "\"errors\":[\"Invalid params provided - content_type must be one of ansible_collection,deb,docker,file,ostree,python,yum\"]}"
       assert_match response, @response.body
     end
@@ -68,7 +68,7 @@ module Katello
       get :index, params: { :organization_id => @organization.id, :with_content => 'cheese' }
 
       assert_response 422
-      response = "{\"displayMessage\":\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,erratum,file,modulemd,"\
+      response = "{\"message\":\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,erratum,file,modulemd,"\
           "ostree_ref,package_group,python_package,rpm,srpm\",\"errors\":"\
         "[\"Invalid params provided - with_content must be one of ansible_collection,deb,docker_manifest,docker_manifest_list,docker_tag,erratum,file,modulemd,ostree_ref,package_group,python_package,rpm,srpm\"]}"
       assert_match response, @response.body
@@ -780,7 +780,7 @@ module Katello
       put :remove_content, params: { :id => @repository.id, :ids => [@rpm.pulp_id], :content_type => 'cheese' }
 
       assert_response 400
-      assert_match "{\"displayMessage\":\"Content type cheese is incompatible with repositories of type yum\",\"errors\":[\"Content type cheese is incompatible with repositories of type yum\"]}",
+      assert_match "{\"message\":\"Content type cheese is incompatible with repositories of type yum\",\"errors\":[\"Content type cheese is incompatible with repositories of type yum\"]}",
         @response.body
     end
 
@@ -966,7 +966,7 @@ module Katello
       post :upload_content, params: { :id => @repository.id, :content_type => 'cheese' }
 
       assert_response 422
-      response =  "{\"displayMessage\":\"Invalid params provided - content_type must be one of deb,file,ostree_ref,python_package,rpm,srpm\"," \
+      response =  "{\"message\":\"Invalid params provided - content_type must be one of deb,file,ostree_ref,python_package,rpm,srpm\"," \
         "\"errors\":[\"Invalid params provided - content_type must be one of deb,file,ostree_ref,python_package,rpm,srpm\"]}"
       assert_match response, @response.body
     end
@@ -991,8 +991,9 @@ module Katello
       put :import_uploads, params: { id: @repository.id, uploads: uploads }
 
       response = JSON.parse(@response.body)
-      assert response.key?('displayMessage')
-      assert_equal 'Checksum is a required parameter.', response['displayMessage']
+      assert response.key?('message')
+      refute response.key?('displayMessage'), 'Non-RHSM API error responses should use message, not displayMessage'
+      assert_equal 'Checksum is a required parameter.', response['message']
 
       assert_response :bad_request
     end
@@ -1003,8 +1004,8 @@ module Katello
       put :import_uploads, params: { id: @repository.id, uploads: uploads }
 
       response = JSON.parse(@response.body)
-      assert response.key?('displayMessage')
-      assert_equal 'Name is a required parameter.', response['displayMessage']
+      assert response.key?('message')
+      assert_equal 'Name is a required parameter.', response['message']
 
       assert_response :bad_request
     end

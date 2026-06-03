@@ -74,7 +74,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddHostsCon
                 contentNutupane.refresh();
                 $scope.refreshHostCollection();
             }, function (response) {
-                Notification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.message);
                 $scope.isAdding = false;
             });
         };

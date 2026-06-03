@@ -40,7 +40,7 @@ angular.module('Bastion.auth').config(['$httpProvider', '$provide',
                                 // Add unauthorized display message to response
                                 message = translate('You are not authorized to perform this action.');
                                 response.data.errors = [message];
-                                response.data.displayMessage = message;
+                                response.data.message = message;
                             }
 
                             return $q.reject(response);

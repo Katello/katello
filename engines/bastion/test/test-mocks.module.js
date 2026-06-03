@@ -71,7 +71,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', ['$q', function ($q
                 }
 
                 if (this.failed) {
-                    error({ data: {errors: ['error!'], displayMessage: 'error!'}});
+                    error({ data: {errors: ['error!'], message: 'error!'}});
                 } else {
                     success(this);
                 }

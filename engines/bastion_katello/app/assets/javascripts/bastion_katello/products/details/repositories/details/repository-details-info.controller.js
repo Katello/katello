@@ -160,7 +160,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     Notification.setSuccessMessage(translate('Repository Saved.'));
                 }, function (response) {
                     deferred.reject(response);
-                    Notification.setErrorMessage(translate("An error occurred saving the Repository: ") + response.data.displayMessage);
+                    Notification.setErrorMessage(translate("An error occurred saving the Repository: ") + response.data.message);
                 });
 
                 return deferred.promise;
@@ -185,7 +185,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                         Notification.setSuccessMessage(translate('Successfully uploaded content: ') + uploaded);
                         $scope.repository.$get();
                     } else {
-                        error = returnData.displayMessage;
+                        error = (returnData && returnData.message) || returnData || translate('Unknown error');
                         Notification.setErrorMessage(translate('Error during upload: ') + error);
                     }
 

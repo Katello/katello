@@ -99,7 +99,7 @@ module Katello
       assert_response :unprocessable_entity
       results = JSON.parse(response.body)
       error_message = "must be a positive integer value."
-      assert_includes results["displayMessage"], error_message
+      assert_includes results["message"], error_message
     end
 
     def test_nil_max_hosts
@@ -107,7 +107,7 @@ module Katello
       assert_response :unprocessable_entity
       results = JSON.parse(response.body)
       error_message = "must be given a value if this host collection is not unlimited."
-      assert_includes results["displayMessage"], error_message
+      assert_includes results["message"], error_message
     end
 
     test_attributes :pid => '9dc0ad72-58c2-4079-b1ca-2c4373472f0f'

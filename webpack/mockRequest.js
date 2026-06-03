@@ -10,7 +10,7 @@ const methods = {
   DELETE: 'onDelete',
 };
 
-const errorResponse = msg => ({ displayMessage: msg });
+const errorResponse = msg => ({ message: msg });
 
 export const mockRequest = ({
   method = 'GET',

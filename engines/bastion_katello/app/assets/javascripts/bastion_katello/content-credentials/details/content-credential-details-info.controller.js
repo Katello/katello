@@ -31,7 +31,7 @@ angular.module('Bastion.content-credentials').controller('ContentCredentialDetai
                     $scope.uploadStatus = 'success';
                     $scope.contentCredential.$get();
                 } else {
-                    Notification.setErrorMessage(content.displayMessage);
+                    Notification.setErrorMessage(content.message);
                     $scope.uploadStatus = 'error';
                 }
 

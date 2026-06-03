@@ -105,8 +105,8 @@ module Katello
 
       assert_response :success
       body = JSON.parse(response.body)
-      assert_includes body['displayMessage'], 'Updated content view environments'
-      assert_includes body['displayMessage'], '2 hosts'
+      assert_includes body['message'], 'Updated content view environments'
+      assert_includes body['message'], '2 hosts'
 
       # Verify hosts were updated
       @host1.reload
@@ -135,8 +135,8 @@ module Katello
 
       assert_response :success
       body = JSON.parse(response.body)
-      assert_includes body['displayMessage'], 'Updated content view environments'
-      assert_includes body['displayMessage'], '2 hosts'
+      assert_includes body['message'], 'Updated content view environments'
+      assert_includes body['message'], '2 hosts'
 
       # Verify hosts were updated with multiple content view environments
       @host1.reload
@@ -166,9 +166,9 @@ module Katello
       assert_response :success
       body = JSON.parse(response.body)
       # Verify singular form is used for 1 host
-      assert_includes body['displayMessage'], 'Updated content view environments'
-      assert_includes body['displayMessage'], '1 host'
-      refute_includes body['displayMessage'], '1 hosts'
+      assert_includes body['message'], 'Updated content view environments'
+      assert_includes body['message'], '1 host'
+      refute_includes body['message'], '1 hosts'
     end
 
     def test_assign_content_view_environments_missing_params
@@ -179,7 +179,7 @@ module Katello
 
       assert_response :unprocessable_entity
       body = JSON.parse(response.body)
-      assert_includes body['displayMessage'], 'content_view_environments or content_view_environment_ids must be provided'
+      assert_includes body['message'], 'content_view_environments or content_view_environment_ids must be provided'
     end
 
     def test_assign_content_view_environments_invalid_content_view_environment
@@ -191,7 +191,7 @@ module Katello
 
       assert_response :unprocessable_entity
       body = JSON.parse(response.body)
-      assert_includes body['displayMessage'], 'No content view environments found with ids'
+      assert_includes body['message'], 'No content view environments found with ids'
     end
 
     def test_assign_content_view_environments_permissions
@@ -230,7 +230,7 @@ module Katello
       assert_response :success
       body = JSON.parse(response.body)
       # Should process 1 registered host and skip 1 unregistered
-      assert_includes body['displayMessage'], 'Updated content view environments for 1 host'
+      assert_includes body['message'], 'Updated content view environments for 1 host'
       assert_includes body['warningMessage'], 'Skipped 1 unregistered host'
 
       # Verify registered host was updated
@@ -261,7 +261,7 @@ module Katello
       assert_response :success
       body = JSON.parse(response.body)
       # Should process 2 registered hosts and skip 2 unregistered
-      assert_includes body['displayMessage'], 'Updated content view environments for 2 hosts'
+      assert_includes body['message'], 'Updated content view environments for 2 hosts'
       assert_includes body['warningMessage'], 'Skipped 2 unregistered hosts'
 
       # Verify registered hosts were updated
@@ -285,7 +285,7 @@ module Katello
 
       assert_response :success
       body = JSON.parse(response.body)
-      assert_includes body['displayMessage'], 'Updated content view environments'
+      assert_includes body['message'], 'Updated content view environments'
 
       # Verify hosts were updated
       @host1.reload
@@ -616,7 +616,7 @@ module Katello
 
       body = JSON.parse(response.body)
 
-      assert_includes body['displayMessage'], 'Either trace_search or trace_ids must be provided'
+      assert_includes body['message'], 'Either trace_search or trace_ids must be provided'
     end
 
     def test_resolve_traces_permission

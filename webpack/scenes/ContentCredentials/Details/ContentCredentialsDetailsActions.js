@@ -39,8 +39,7 @@ export const updateContentCredential = (credentialId, params) => async (dispatch
     return response;
   } catch (error) {
     // Show error notification
-    const errorMessage = error?.response?.data?.displayMessage ||
-                         error?.response?.data?.message ||
+    const errorMessage = error?.response?.data?.message ||
                          error?.message ||
                          __('Failed to update content credential.');
     dispatch(addToast({

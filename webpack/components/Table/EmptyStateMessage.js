@@ -43,7 +43,7 @@ const EmptyStateMessage = ({
     } else if (error?.response?.status) {
       const { response: { status } } = error;
       emptyStateTitle = status;
-      emptyStateBody = error?.response?.data?.displayMessage || __('Something went wrong! Please check server logs!');
+      emptyStateBody = error?.response?.data?.message || __('Something went wrong! Please check server logs!');
     }
   }
   const defaultSecondaryActionText = searchIsActive ? __('Clear search') : __('Clear filters');

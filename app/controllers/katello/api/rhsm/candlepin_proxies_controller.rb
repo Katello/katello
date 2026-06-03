@@ -42,11 +42,16 @@ module Katello
           if body_json['message'] && body_json['displayMessage'].nil?
             body_json['displayMessage'] = body_json['message']
           end
-          response.body = body_json.to_s
+          response.body = body_json.to_json
         rescue JSON::ParserError
           # Not a json response, leave as-is
         end
       end
+    end
+
+    # subscription-manager expects displayMessage in error responses
+    def error_response_json(display_message, errors)
+      { :displayMessage => display_message, :errors => errors }
     end
 
     rescue_from RestClient::Exception do |e|
@@ -164,7 +169,7 @@ module Katello
       User.as_anonymous_admin do
         @host.import_tracer_profile(params[:traces])
       end
-      render json: { displayMessage: _("Tracer profile uploaded successfully") }
+      render json: { message: _("Tracer profile uploaded successfully") }
     end
 
     def available_releases

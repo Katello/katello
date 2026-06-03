@@ -49,7 +49,7 @@ describe('Controller: NewContentCredentialController', function() {
         spyOn(Notification, "setSuccessMessage");
         spyOn(Notification, 'setErrorMessage');
 
-        $scope.uploadContent({"errors": "....", "displayMessage":"......"});
+        $scope.uploadContent({"errors": "....", "message":"......"});
 
         expect(Notification.setSuccessMessage).not.toHaveBeenCalled();
         expect(Notification.setErrorMessage).toHaveBeenCalled();

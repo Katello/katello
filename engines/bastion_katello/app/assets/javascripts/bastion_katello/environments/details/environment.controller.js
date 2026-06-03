@@ -61,7 +61,7 @@
 
             function error(response) {
                 Notification.setErrorMessage(translate("An error occurred removing the environment: ") +
-                    response.data.displayMessage);
+                    response.data.message);
             }
 
             promise = environment.$delete();

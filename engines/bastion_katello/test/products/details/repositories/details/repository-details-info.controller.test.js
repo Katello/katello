@@ -182,7 +182,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
     it('should set an error message if a file upload status is not success', function() {
         spyOn(Notification, 'setErrorMessage');
-        $scope.uploadContent('<pre>{"displayMessage": "blah"}</pre>', true);
+        $scope.uploadContent('<pre>{"message": "blah"}</pre>', true);
         expect(Notification.setErrorMessage).toHaveBeenCalledWith('Error during upload: blah');
     });
 

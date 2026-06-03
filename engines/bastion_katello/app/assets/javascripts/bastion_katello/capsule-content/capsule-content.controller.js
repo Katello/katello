@@ -25,11 +25,11 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
 
         function processError(response, prependMsg) {
             var msg = '';
-            if (response.data && response.data.displayMessage) {
+            if (response.data && response.data.message) {
                 if (angular.isDefined(prependMsg)) {
                     msg = msg + prependMsg;
                 }
-                msg = msg + response.data.displayMessage;
+                msg = msg + response.data.message;
                 Notification.setErrorMessage(msg);
             }
         }

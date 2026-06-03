@@ -67,7 +67,7 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
         function repoCreateError(response) {
             var currentlyCreating = $scope.currentlyCreating;
             $scope.currentlyCreating = undefined;
-            currentlyCreating.messages = response.data.displayMessage;
+            currentlyCreating.messages = response.data.message;
             currentlyCreating.creating = false;
             currentlyCreating.form.$invalid = true;
         }

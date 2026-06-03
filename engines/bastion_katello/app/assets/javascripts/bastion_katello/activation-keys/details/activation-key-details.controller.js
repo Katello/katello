@@ -50,7 +50,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
                 Notification.setSuccessMessage(translate('Activation Key updated'));
             }, function (response) {
                 deferred.reject(response);
-                Notification.setErrorMessage(translate("An error occurred saving the Activation Key: ") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred saving the Activation Key: ") + response.data.message);
             });
             return deferred.promise;
         };
@@ -64,7 +64,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
                 $scope.transitionTo('activation-keys');
                 Notification.setSuccessMessage(translate('Activation Key removed.'));
             }, function (response) {
-                Notification.setErrorMessage(translate("An error occurred removing the Activation Key: ") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred removing the Activation Key: ") + response.data.message);
             });
         };
 

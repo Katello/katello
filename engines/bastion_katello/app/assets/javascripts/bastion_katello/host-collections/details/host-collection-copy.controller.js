@@ -16,7 +16,7 @@
             HostCollection.copy({id: $scope.$stateParams.hostCollectionId, 'host_collection': {name: newName}}, function (response) {
                 $scope.transitionTo('host-collection.info', {hostCollectionId: response.id});
             }, function (response) {
-                Notification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.message);
             });
         };
         // Labels so breadcrumb strings can be translated

@@ -59,7 +59,7 @@ export const RepositorySetRepositories = ({
     return (
       <Alert
         variant="danger"
-        title={data.error.displayMessage}
+        title={data.error.message}
         ouiaId="repository-set-error-alert"
         isInline
       />
@@ -93,7 +93,7 @@ RepositorySetRepositories.propTypes = {
     loading: PropTypes.bool.isRequired,
     repositories: PropTypes.arrayOf(PropTypes.shape({})),
     error: PropTypes.shape({
-      displayMessage: PropTypes.string,
+      message: PropTypes.string,
     }),
   }).isRequired,
 };

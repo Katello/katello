@@ -12,7 +12,10 @@ import {
   UPDATE_TABLE_FAILURE,
 } from './TableConstants';
 
-const getResponseError = ({ data }) => data && (data.displayMessage || data.error);
+const getResponseError = (response = {}) => {
+  const { data } = response;
+  return data && (data.message || data.error);
+};
 
 export const loadTables = () => async (dispatch) => {
   dispatch({ type: TABLES_REQUEST, params: {} });
