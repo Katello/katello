@@ -178,15 +178,12 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     @controller.expects(:validate_content_view_environment_params).returns([katello_content_view_environments(:library_default_view_environment)])
     @controller.expects(:set_content_view_environments).with([katello_content_view_environments(:library_default_view_environment)])
 
-    post :create, params: {
-      :host => {
-        :name => "contenthost.example.com",
-        :content_facet_attributes => {
-          :content_view_environments => ["Library"],
-        },
-      },
-    }, session: set_session_user
-    # no assertions needed about the response, we're just making sure handle_content_view_environments_for_create is called
+    cf_attrs = {:content_view_id => @content_view.id, :lifecycle_environment_id => @environment.id,
+                :content_view_environments => ["Library"]}
+    attrs = @host.clone.attributes.merge("name" => "contenthost.example.com", "content_facet_attributes" => cf_attrs).compact
+
+    post :create, params: attrs, session: set_session_user
+    assert_response :success
   end
 
   def test_handle_content_view_environments_for_update

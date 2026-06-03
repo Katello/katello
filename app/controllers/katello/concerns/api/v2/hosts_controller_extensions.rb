@@ -49,7 +49,10 @@ module Katello
           # validations should occur before the action so that the request can fail and not render multiple responses
           cves = validate_content_view_environment_params
           yield
-          # the actual assigning needs to wait until the host is created
+          # Skip if the create action didn't persist the host
+          return unless @host&.persisted?
+          # Reload so @host.content_facet reflects what the create action saved
+          @host.reload
           set_content_view_environments(cves)
         end
 
