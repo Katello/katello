@@ -31,7 +31,7 @@ angular.module('Bastion.content-credentials').controller('NewContentCredentialCo
                     $scope.transitionTo('content-credential.info', {contentCredentialId: response.id});
                     Notification.setSuccessMessage(translate('Content Credential %s has been created.').replace('%s', response.name));
                 } else {
-                    Notification.setErrorMessage(translate("An error occurred while creating the Content Credential: ") + response.displayMessage);
+                    Notification.setErrorMessage(translate("An error occurred while creating the Content Credential: ") + response.message);
                     $scope.uploadStatus = 'error';
                 }
 

@@ -245,7 +245,7 @@ test('shows error toast when delete fails', async () => {
   const deleteScope = nockInstance
     .delete(credentialDetailsPath)
     .reply(422, {
-      displayMessage: 'Cannot delete credential in use',
+      message: 'Cannot delete credential in use',
     });
 
   const { getByLabelText, getByText, queryByText } = renderWithRedux(

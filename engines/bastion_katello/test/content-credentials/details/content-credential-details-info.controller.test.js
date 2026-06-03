@@ -52,7 +52,7 @@ describe('Controller: ContentCredentialDetailsInfoController', function() {
         spyOn(Notification, 'setErrorMessage');
 
         spyOn($scope.contentCredential, '$get');
-        $scope.uploadContent({"errors": "....", "displayMessage":"......"});
+        $scope.uploadContent({"errors": "....", "message":"......"});
 
         expect(Notification.setErrorMessage).toHaveBeenCalled();
         expect($scope.contentCredential.$get).not.toHaveBeenCalled();

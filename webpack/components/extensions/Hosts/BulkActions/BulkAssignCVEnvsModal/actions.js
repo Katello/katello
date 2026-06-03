@@ -8,8 +8,8 @@ import { foremanApi } from '../../../../../services/api';
 const BULK_ASSIGN_CVES_KEY = 'BULK_ASSIGN_CONTENT_VIEW_ENVIRONMENTS';
 
 const successToast = (response) => {
-  const { displayMessage, warningMessage } = response.data || {};
-  const successMessage = displayMessage || __('Host content view environments updated.');
+  const { message: responseMessage, warningMessage } = response.data || {};
+  const successMessage = responseMessage || __('Host content view environments updated.');
 
   // Success toast
   store.dispatch(addToast({

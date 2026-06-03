@@ -52,7 +52,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 });
 
                 if (!foundError) {
-                    Notification.setErrorMessage(response.data.displayMessage);
+                    Notification.setErrorMessage(response.data.message);
                 }
             }
 

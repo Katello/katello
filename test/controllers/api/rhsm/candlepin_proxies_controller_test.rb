@@ -135,6 +135,19 @@ module Katello
         assert_equal 'Registering to multiple environments is not enabled.', body['displayMessage']
         assert_response 400
       end
+
+      it "should return displayMessage instead of message for RHSM error responses" do
+        ::Katello::RegistrationManager.expects(:process_registration).never
+
+        post(:consumer_create, params: { :organization_id => 'nonexistent_org', :facts => @facts })
+
+        assert_response :not_found
+        body = JSON.parse(response.body)
+        assert body.key?('displayMessage'), 'RHSM error responses must include displayMessage for subscription-manager compatibility'
+        assert_not_nil body['displayMessage']
+        refute_empty body['displayMessage']
+        refute body.key?('message'), 'RHSM error responses should use displayMessage, not message'
+      end
     end
 
     describe "update enabled_repos" do

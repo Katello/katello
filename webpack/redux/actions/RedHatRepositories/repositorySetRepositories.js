@@ -80,7 +80,7 @@ const loadRepositorySetRepos = (contentId, productId) => async (dispatch) => {
 loadRepositorySetRepos.propTypes = {
   data: PropTypes.shape({
     error: PropTypes.shape({
-      displayMessage: PropTypes.string,
+      message: PropTypes.string,
     }),
   }),
 };

@@ -34,10 +34,9 @@ const getCustomMessage = (actionType, message) => {
 
 export const getResponseErrorMsgs = ({ data, actionType } = {}) => {
   if (data) {
-    const customMessage = getCustomMessage(actionType, data.displayMessage);
+    const customMessage = getCustomMessage(actionType, data.message);
     const messages =
       customMessage ||
-      data.displayMessage ||
       data.message ||
       data.errors ||
       data.error?.message;

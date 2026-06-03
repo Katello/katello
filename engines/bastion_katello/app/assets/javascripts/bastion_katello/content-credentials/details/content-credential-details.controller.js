@@ -33,7 +33,7 @@ angular.module('Bastion.content-credentials').controller('ContentCredentialDetai
 
             }, function (response) {
                 deferred.reject(response);
-                Notification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.message);
             });
 
             return deferred.promise;
@@ -46,7 +46,7 @@ angular.module('Bastion.content-credentials').controller('ContentCredentialDetai
                 $scope.transitionTo('content-credentials');
             }, function (response) {
                 deferred.reject(response);
-                Notification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.message);
             });
             return deferred.promise;
         };

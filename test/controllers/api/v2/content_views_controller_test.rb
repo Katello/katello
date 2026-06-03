@@ -287,7 +287,7 @@ module Katello
       view_version2 = create(:katello_content_view_version, :content_view => view, :major => 9001)
 
       put :update, params: { id: composite.id, content_view: { component_ids: [view_version.id, view_version2.id] } }
-      display_message = JSON.parse(response.body)['displayMessage']
+      display_message = JSON.parse(response.body)['message']
       test_message = "Validation failed: Base Another component already includes content view with ID #{view_version.content_view_id}"
       assert_equal test_message, display_message
     end

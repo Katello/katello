@@ -163,7 +163,7 @@ module Katello
                            "Updated content view environments for %{count} hosts",
                            registered_hosts.count) % { :count => registered_hosts.count }
 
-      response = { :displayMessage => success_message }
+      response = { :message => success_message }
 
       if unregistered_count > 0
         skipped_message = n_("Skipped %{count} unregistered host",

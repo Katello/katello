@@ -16,7 +16,7 @@
             ActivationKey.copy({id: $scope.activationKey.id, 'new_name': newName}, function (response) {
                 $scope.transitionTo('activation-key.info', {activationKeyId: response.id});
             }, function (response) {
-                Notification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.message);
             });
         };
         // Labels so breadcrumb strings can be translated

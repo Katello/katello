@@ -603,8 +603,8 @@ module Katello
       response_body = JSON.parse(@response.body).with_indifferent_access
       assert_response 400
       assert response_body[:errors].count > 0
-      assert_match "not found in the Organization", response_body[:displayMessage]
-      ["croissant", "crepe"].map { |label| assert_includes response_body[:displayMessage], label }
+      assert_match "not found in the Organization", response_body[:message]
+      ["croissant", "crepe"].map { |label| assert_includes response_body[:message], label }
     end
 
     def test_remove_host_collections

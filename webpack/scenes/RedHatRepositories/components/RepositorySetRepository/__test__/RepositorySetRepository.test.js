@@ -277,7 +277,7 @@ describe('RepositorySetRepository Component', () => {
       const enableScope = nockInstance
         .put(enableApiPath)
         .reply(422, {
-          displayMessage: 'Repository cannot be enabled',
+          message: 'Repository cannot be enabled',
           errors: ['Repository already exists'],
         });
 

@@ -86,7 +86,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
                 $scope.table.replaceRow(response);
             }, function (response) {
                 deferred.reject(response);
-                Notification.setErrorMessage(translate("An error occurred saving the Host Collection: ") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred saving the Host Collection: ") + response.data.message);
             });
             return deferred.promise;
         };
@@ -96,7 +96,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
                 $scope.transitionTo('host-collections');
                 Notification.setSuccessMessage(translate('Host Collection removed.'));
             }, function (response) {
-                Notification.setErrorMessage(translate("An error occurred removing the Host Collection: ") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred removing the Host Collection: ") + response.data.message);
             });
         };
 

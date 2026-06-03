@@ -111,7 +111,7 @@ module Katello
 
       assert_response :bad_request
       response_body = JSON.parse(response.body)
-      assert_match(/Product must be specified/, response_body['displayMessage'])
+      assert_match(/Product must be specified/, response_body['message'])
     end
 
     def test_mirror_product_name_organization_missing
@@ -122,7 +122,7 @@ module Katello
 
       assert_response :bad_request
       response_body = JSON.parse(response.body)
-      assert_match(/Organization must be specified when providing product by name/, response_body['displayMessage'])
+      assert_match(/Organization must be specified when providing product by name/, response_body['message'])
     end
 
     def test_mirror_product_id_invalid
@@ -143,7 +143,7 @@ module Katello
 
       assert_response :not_found
       response_body = JSON.parse(response.body)
-      assert_match(/Could not find product/, response_body['displayMessage'])
+      assert_match(/Could not find product/, response_body['message'])
     end
 
     def test_mirror_product_redhat
@@ -155,7 +155,7 @@ module Katello
 
       assert_response :unprocessable_entity
       response_body = JSON.parse(response.body)
-      assert_match(/cannot be mirrored into Red Hat products/, response_body['displayMessage'])
+      assert_match(/cannot be mirrored into Red Hat products/, response_body['message'])
     end
   end
 end

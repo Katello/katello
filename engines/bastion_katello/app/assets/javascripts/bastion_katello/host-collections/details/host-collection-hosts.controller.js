@@ -74,7 +74,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionHostsContro
                 $scope.isRemoving = false;
             }, function (response) {
                 $scope.isRemoving = false;
-                Notification.setErrorMessage(translate("An error occurred removing the content hosts.") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred removing the content hosts.") + response.data.message);
             });
         };
 

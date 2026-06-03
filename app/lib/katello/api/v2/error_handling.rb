@@ -127,17 +127,21 @@ module Katello
           options[:errors] = exception.try(:record).try(:errors) || [exception.message]
 
           logger.error pp_exception(exception) if options[:with_logging]
+          error_json = error_response_json(options[:display_message], options[:errors])
           respond_to do |format|
-            #json has to be displayMessage for older RHEL 5.7 subscription managers
-            format.json { render :json => { :displayMessage => options[:display_message], :errors => options[:errors]}, :status => options[:status] }
+            format.json { render :json => error_json, :status => options[:status] }
             format.all do
               if options[:force_json]
-                render :json => { :displayMessage => options[:display_message], :errors => options[:errors]}, :status => options[:status]
+                render :json => error_json, :status => options[:status]
               else
                 render :plain => options[:text], :status => options[:status]
               end
             end
           end
+        end
+
+        def error_response_json(display_message, errors)
+          { :message => display_message, :errors => errors }
         end
 
         def pp_exception(exception, options = {})
@@ -153,9 +157,10 @@ module Katello
         def format_subsys_exception_hash(exception)
           orig_hash = JSON.parse(exception.response).with_indifferent_access rescue {}
 
-          orig_hash[:displayMessage] = exception.response.to_s.gsub(/^"|"$/, "") if orig_hash[:displayMessage].nil? && exception.respond_to?(:response)
-          orig_hash[:displayMessage] = exception.message if orig_hash[:displayMessage].blank?
-          orig_hash[:errors] = [orig_hash[:displayMessage]] if orig_hash[:errors].nil?
+          orig_hash[:message] = orig_hash.delete(:displayMessage) || orig_hash[:message]
+          orig_hash[:message] = exception.response.to_s.gsub(/^"|"$/, "") if orig_hash[:message].nil? && exception.respond_to?(:response)
+          orig_hash[:message] = exception.message if orig_hash[:message].blank?
+          orig_hash[:errors] = [orig_hash[:message]] if orig_hash[:errors].nil?
           orig_hash
         end
       end

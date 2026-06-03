@@ -61,7 +61,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
 
                 error = function (response) {
                     deferred.reject(response.data.errors);
-                    Notification.setErrorMessage(response.data.displayMessage);
+                    Notification.setErrorMessage(response.data.message);
                     $scope.table.working = false;
                 };
 
