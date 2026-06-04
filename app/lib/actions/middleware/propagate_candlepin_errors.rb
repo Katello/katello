@@ -17,13 +17,15 @@ module Actions
 
       def propagate_candlepin_errors
         yield
-      rescue RestClient::ExceptionWithResponse => e
-        error_class = if e.response.request.url.include?('/candlepin')
-                        ::Katello::Errors::CandlepinError
-                      else
-                        ::Katello::Errors::UpstreamCandlepinError
-                      end
-        raise(error_class.from_exception(e) || e)
+      rescue ::Katello::Errors::CandlepinError
+        raise
+      rescue HttpResource::HttpError => e
+        display_message = e.message
+        if e.response_body.present?
+          parsed = JSON.parse(e.response_body) rescue {}
+          display_message = parsed['displayMessage'] || display_message
+        end
+        raise ::Katello::Errors::CandlepinError, display_message
       end
     end
   end

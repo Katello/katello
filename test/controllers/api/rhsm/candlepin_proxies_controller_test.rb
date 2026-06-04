@@ -408,7 +408,7 @@ module Katello
       end
 
       it "should return Candlepin error when backend is down" do
-        ::Katello::RegistrationManager.expects(:unregister_host).raises(RestClient::ServiceUnavailable.new(nil, 503))
+        ::Katello::RegistrationManager.expects(:unregister_host).raises(HttpResource::HttpError.new(message: 'Service Unavailable', code: '503', service_code: ''))
         delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
         assert_response 503
       end
@@ -496,7 +496,7 @@ module Katello
 
       it "does not cache on Candlepin error" do
         Rails.cache.delete(::Katello::Resources::Candlepin::CandlepinPing::CACHE_KEY)
-        Resources::Candlepin::CandlepinPing.stubs(:ping).raises(RestClient::ServiceUnavailable.new(nil, 503))
+        Resources::Candlepin::CandlepinPing.stubs(:ping).raises(HttpResource::HttpError.new(message: 'Service Unavailable', code: '503', service_code: ''))
 
         2.times do
           get :server_status

@@ -14,9 +14,9 @@ module Katello
             @primary = SmartProxy.pulp_primary
           end
 
-          def test_with_excon
+          def test_with_net_http_persistent
             default = Faraday.default_adapter
-            Faraday.default_adapter = :excon
+            Faraday.default_adapter = :net_http_persistent
 
             assert Katello::Pulp3::Api::Core.new(@primary).tasks_api.list(limit: 1)
           ensure

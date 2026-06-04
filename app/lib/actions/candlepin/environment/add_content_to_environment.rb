@@ -9,7 +9,8 @@ module Actions
 
         def run
           output[:add_response] = ::Katello::Resources::Candlepin::Environment.add_content(input[:view_env_cp_id], [input[:content_id]])
-        rescue RestClient::Conflict
+        rescue HttpResource::HttpError => e
+          raise unless e.code == '409'
           Rails.logger.info("attempted to add content ID #{input[:content_id]} to environment, but content ID already exists.")
         end
       end
