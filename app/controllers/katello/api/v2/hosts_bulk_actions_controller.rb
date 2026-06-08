@@ -226,6 +226,7 @@ module Katello
 
       ContentViewEnvironment.for_content_facets(content_facets).each do |cvenv|
         version = cvenv.content_view_version
+        next if version.content_view.rolling?
         version_environment = version_environments[version] || {:content_view_version => version, :environments => []}
         version_environment[:environments] << cvenv.environment unless version_environment[:environments].include?(cvenv.environment)
         version_environment[:next_version] ||= version.next_incremental_version
