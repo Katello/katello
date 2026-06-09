@@ -2,6 +2,7 @@ module Katello
   # rubocop:disable Metrics/ClassLength
   class Api::Registry::RegistryProxiesController < Api::V2::ApiController
     include Katello::Authentication::ClientAuthentication
+    include Foreman::Controller::SmartProxyAuth
     before_action :disable_strong_params
     before_action :confirm_settings
     skip_before_action :authorize
@@ -104,6 +105,11 @@ module Katello
     end
 
     def registry_authorize
+      if ssl_smart_proxy_with_container_registry?
+        User.current = User.anonymous_admin
+        return true
+      end
+
       @repository = find_readable_repository
       return true if ['GET', 'HEAD'].include?(request.method) && @repository && !require_user_authorization?
 
@@ -511,6 +517,15 @@ module Katello
 
     def ssl_client_authorized?(org_label)
       request.headers['HTTP_SSL_CLIENT_VERIFY'] == "SUCCESS" && request.headers['HTTP_SSL_CLIENT_S_DN'] == "O=#{org_label}"
+    end
+
+    def ssl_smart_proxy_with_container_registry?
+      qualifying_proxies = ::SmartProxy.unscoped
+                                       .with_container_registry_auth_enabled
+
+      return false if qualifying_proxies.empty?
+
+      auth_smart_proxy(qualifying_proxies)
     end
 
     def authorize_repository_read
