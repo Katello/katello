@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Michał Foryt <michal.foryt@gmail.com>, 2026",
@@ -3555,7 +3555,7 @@
         "ID grupy hostów"
       ],
       "Host groups": [
-        ""
+        "Grupa hostów"
       ],
       "Host has not been registered with subscription-manager": [
         ""

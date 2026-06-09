@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Robert Antoni Buj i Gelonch <rbuj@fedoraproject.org>, 2026",
@@ -3555,7 +3555,7 @@
         "Els ID dels grups d'amfitrions"
       ],
       "Host groups": [
-        ""
+        "Grups d'amfitrions"
       ],
       "Host has not been registered with subscription-manager": [
         ""

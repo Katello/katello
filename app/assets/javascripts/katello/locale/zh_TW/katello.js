@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -484,7 +484,7 @@
         ""
       ],
       "Abstract async task": [
-        ""
+        "抽象 async task"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -1453,7 +1453,7 @@
         "容量"
       ],
       "Certificate": [
-        ""
+        "憑證"
       ],
       "Change Content Source": [
         ""
@@ -2680,7 +2680,7 @@
         "已停用"
       ],
       "Discover": [
-        ""
+        "尋找"
       ],
       "Discover Repositories": [
         "尋找軟體庫"
@@ -2932,7 +2932,7 @@
         "勘誤 (RHSA-2012:108) 的勘誤 ID"
       ],
       "Errata mail": [
-        ""
+        "勘誤郵件"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -3232,10 +3232,10 @@
         "篩選在特定複合版本中的元件版本"
       ],
       "Filter...": [
-        ""
+        "篩選器……"
       ],
       "Filtered index content": [
-        ""
+        "已篩選的索引內容"
       ],
       "Filters": [
         "篩選器"
@@ -3343,7 +3343,7 @@
         ""
       ],
       "GPG Key": [
-        ""
+        "GPG 金鑰"
       ],
       "GPG Key URL": [
         "GPG 金鑰的網址"
@@ -3554,7 +3554,7 @@
         "主機群組 ID"
       ],
       "Host groups": [
-        ""
+        "主機群組"
       ],
       "Host has not been registered with subscription-manager": [
         "主機並未使用 subscription-manager 註冊"
@@ -3617,10 +3617,10 @@
         "如何排序結果的順序（比方說 ASC 從下到上）"
       ],
       "Hypervisors": [
-        ""
+        "Hypervisor"
       ],
       "Hypervisors update": [
-        ""
+        "Hypervisor 更新"
       ],
       "ID": [
         "ID"
@@ -4049,16 +4049,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "索引內容"
       ],
       "Index errata": [
-        ""
+        "索引勘誤"
       ],
       "Index module streams": [
         ""
       ],
       "Index package groups": [
-        ""
+        "為套件群組製作索引"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Informable Type 必須是以下 [ %{list} ] 其中之一"
@@ -6561,7 +6561,7 @@
         ""
       ],
       "Reindex subscriptions": [
-        ""
+        "重新索引訂閱服務"
       ],
       "Related composite content views": [
         ""
@@ -7110,7 +7110,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "SSL 客戶端金鑰"
       ],
       "SSL client certificate": [
         ""
@@ -7999,7 +7999,7 @@
         ""
       ],
       "Sync": [
-        ""
+        "同步"
       ],
       "Sync Canceled": [
         "已取消同步"

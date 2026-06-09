@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -1456,7 +1456,7 @@
         "Capacidad"
       ],
       "Certificate": [
-        ""
+        "Certificado"
       ],
       "Change Content Source": [
         ""
@@ -1993,7 +1993,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "Copiar unidades de versión a la biblioteca"
       ],
       "Cores per socket": [
         "Núcleos por socket"
@@ -2683,7 +2683,7 @@
         "Deshabilitado"
       ],
       "Discover": [
-        ""
+        "Descubrir"
       ],
       "Discover Repositories": [
         "Detectar repositorios"
@@ -2935,7 +2935,7 @@
         "ID de errata de la errata (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "Correo de erratas"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -3130,7 +3130,7 @@
         "Buscar erratas instalables para uno o más hosts."
       ],
       "Fetch pxe files": [
-        ""
+        "Buscar archivos pxe"
       ],
       "Fetch traces for one or more hosts": [
         "Buscar rastros para uno o más hosts"
@@ -3235,10 +3235,10 @@
         "Filtrar versiones que sean componentes en la versión de compuesta específica"
       ],
       "Filter...": [
-        ""
+        "Filtrar..."
       ],
       "Filtered index content": [
-        ""
+        "Contenido del índice filtrado"
       ],
       "Filters": [
         "Filtros"
@@ -3346,7 +3346,7 @@
         ""
       ],
       "GPG Key": [
-        ""
+        "llave GPG"
       ],
       "GPG Key URL": [
         "URL de llave GPG"
@@ -3557,7 +3557,7 @@
         "ID de grupos de host"
       ],
       "Host groups": [
-        ""
+        "Grupo del host"
       ],
       "Host has not been registered with subscription-manager": [
         "El host no se ha registrado con subscription-manager."
@@ -3620,10 +3620,10 @@
         "Cómo ordenar los resultados clasificados (p. ej., ASC para orden ascendente)"
       ],
       "Hypervisors": [
-        ""
+        "Hipervisores"
       ],
       "Hypervisors update": [
-        ""
+        "Actualización de hipervisores"
       ],
       "ID": [
         "ID"
@@ -4034,7 +4034,7 @@
         "Actualización incremental incompleta."
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "Actualización gradual de versiones de la vista de contenido"
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Actualización gradual de versiones de la vista de contenido "
@@ -4052,16 +4052,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "Contenido del índice"
       ],
       "Index errata": [
-        ""
+        "Erratas de índice"
       ],
       "Index module streams": [
-        ""
+        "Secuencias del módulo de índice"
       ],
       "Index package groups": [
-        ""
+        "Grupos de paquete del índice"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "El tipo informable debe ser uno de los siguientes [ %{list} ]"
@@ -4158,7 +4158,7 @@
         "Instalando paquete..."
       ],
       "Instance update": [
-        ""
+        "Actualización de instancia"
       ],
       "Instance-based": [
         "Basado en la instancia"
@@ -6564,7 +6564,7 @@
         ""
       ],
       "Reindex subscriptions": [
-        ""
+        "Reindexar suscripciones"
       ],
       "Related composite content views": [
         ""
@@ -7113,7 +7113,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "Clave de cliente SSL"
       ],
       "SSL client certificate": [
         ""
@@ -8002,7 +8002,7 @@
         "Tipos de contenido admitidos"
       ],
       "Sync": [
-        ""
+        "Sincronizar"
       ],
       "Sync Canceled": [
         "Sincronización cancelada"
@@ -8062,7 +8062,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "Cápsula de sincronización"
       ],
       "Sync complete.": [
         "Sincronización completa."
@@ -8953,7 +8953,7 @@
         ""
       ],
       "Update content urls": [
-        ""
+        "Actualizar los URL de contenido"
       ],
       "Update content view environments for host": [
         ""
@@ -8968,10 +8968,10 @@
         ""
       ],
       "Update http proxy": [
-        ""
+        "Actualizar el proxy http"
       ],
       "Update http proxy details": [
-        ""
+        "Actualizar los detalles del proxy http"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Actualizar los paquetes instalados, los repositorios habilitados, el inventario de módulos"
@@ -8989,7 +8989,7 @@
         ""
       ],
       "Update redhat repository": [
-        ""
+        "Actualizar el repositorio de redhat"
       ],
       "Update release version for host": [
         "Actualizar versión de lanzamiento para el host"
@@ -9182,7 +9182,7 @@
         ""
       ],
       "Used as": [
-        ""
+        "Utilizado como"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         ""
@@ -9239,7 +9239,7 @@
         "Verificar SSL"
       ],
       "Verify checksum": [
-        ""
+        "Verificar la suma de comprobación"
       ],
       "Verify checksum for content on smart proxy": [
         ""

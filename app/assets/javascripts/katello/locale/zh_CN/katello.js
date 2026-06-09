@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2026",
+        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
         "Language-Team": "Chinese (China) (https://app.transifex.com/foreman/teams/114/zh_CN/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -483,7 +483,7 @@
         "About 页面"
       ],
       "Abstract async task": [
-        ""
+        "抽象 async 任务"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "禁止访问红帽订阅管理。如果要更改这个设置，请更新内容设置\\\"订阅连接已启用\\\"。"
@@ -1452,7 +1452,7 @@
         "容量"
       ],
       "Certificate": [
-        ""
+        "证书"
       ],
       "Change Content Source": [
         "更改内容源"
@@ -1989,7 +1989,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "将版本单位复制到库"
       ],
       "Cores per socket": [
         "每個插槽的核心數"
@@ -2679,7 +2679,7 @@
         "禁用"
       ],
       "Discover": [
-        ""
+        "发现"
       ],
       "Discover Repositories": [
         "发现软件仓库"
@@ -2931,7 +2931,7 @@
         "勘误的勘误ID（RHSA-2012:108）"
       ],
       "Errata mail": [
-        ""
+        "勘误邮件"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "删除的 UUID 为 %s 的内容方面的勘误状态没有被更新"
@@ -3126,7 +3126,7 @@
         "为一台或多台主机获取可安装的勘误。"
       ],
       "Fetch pxe files": [
-        ""
+        "获取 pxe 文件"
       ],
       "Fetch traces for one or more hosts": [
         "为一个或多个主机获取跟踪"
@@ -3234,7 +3234,7 @@
         ""
       ],
       "Filtered index content": [
-        ""
+        "已过滤的索引内容"
       ],
       "Filters": [
         "过滤器"
@@ -3342,7 +3342,7 @@
         "完全支持"
       ],
       "GPG Key": [
-        ""
+        "GPG 密钥"
       ],
       "GPG Key URL": [
         "GPG 密钥 URL"
@@ -3552,7 +3552,7 @@
         "主机组 ID"
       ],
       "Host groups": [
-        ""
+        "主机组"
       ],
       "Host has not been registered with subscription-manager": [
         "主机没有使用 subscription-manager 注册"
@@ -3615,10 +3615,10 @@
         "如何排序結果的順序（比方說 ASC 從下到上）"
       ],
       "Hypervisors": [
-        ""
+        "Hypervisor"
       ],
       "Hypervisors update": [
-        ""
+        "Hypervisor 更新"
       ],
       "ID": [
         "ID"
@@ -4029,7 +4029,7 @@
         "增量更新不完整。"
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "内容视图版本的增量更新"
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 内容视图版本的增量更新 "
@@ -4047,16 +4047,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "索引內容"
       ],
       "Index errata": [
-        ""
+        "索引勘误"
       ],
       "Index module streams": [
-        ""
+        "索引模块流"
       ],
       "Index package groups": [
-        ""
+        "索引软件包组"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "信息类型需要是 [ %{list} ] 之一"
@@ -4152,7 +4152,7 @@
         "正在安裝套件..."
       ],
       "Instance update": [
-        ""
+        "实例更新"
       ],
       "Instance-based": [
         "基于实例"
@@ -4947,7 +4947,7 @@
         "訊息連線"
       ],
       "Metadata generate": [
-        ""
+        "生成元数据"
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "元数据重新发布会面临\\\"完成镜像\\\"存储库的风险。更改镜像策略并重试。 \\n 或者，使用 'force' 参数在本地重新生成元数据。在下一次同步中，上游存储库的元数据将覆盖 'Complete Mirroring' 存储库的本地元数据。"
@@ -6558,7 +6558,7 @@
         "registry 令牌过期时间"
       ],
       "Reindex subscriptions": [
-        ""
+        "重新索引订阅"
       ],
       "Related composite content views": [
         "相关的复合内容视图"
@@ -6588,7 +6588,7 @@
         "内容主机的发行版本"
       ],
       "Releases/Distributions": [
-        ""
+        "发行版本/发行"
       ],
       "Releasever to disable": [
         "禁用 Releasever"
@@ -7107,7 +7107,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "Pulp 客户端密钥"
       ],
       "SSL client certificate": [
         "SSL 客户端证书"
@@ -7995,7 +7995,7 @@
         "支持的内容类型"
       ],
       "Sync": [
-        ""
+        "同步"
       ],
       "Sync Canceled": [
         "已取消同步"
@@ -8055,7 +8055,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "同步 capsule"
       ],
       "Sync complete.": [
         "完成同步。"
@@ -8082,7 +8082,7 @@
         "同步状态"
       ],
       "Syncable export": [
-        ""
+        "可同步导出"
       ],
       "Synced": [
         "同步的"
@@ -8946,7 +8946,7 @@
         "更新智能代理的内容计数"
       ],
       "Update content urls": [
-        ""
+        "更新内容 url"
       ],
       "Update content view environments for host": [
         "为主机更新内容视图环境"
@@ -8961,10 +8961,10 @@
         "手动更新主机"
       ],
       "Update http proxy": [
-        ""
+        "更新 HTTP 代理"
       ],
       "Update http proxy details": [
-        ""
+        "更新 http 代理详情"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "更新安装的软件包，已启用的仓库，模块清单"
@@ -8982,7 +8982,7 @@
         "通过 Katello 接口更新软件包"
       ],
       "Update redhat repository": [
-        ""
+        "更新 redhat 仓库"
       ],
       "Update release version for host": [
         "为主机更新发行版本"
@@ -9174,7 +9174,7 @@
         "使用容器证书进行容器 registry 身份验证。如果设为 true，容器 registry 证书将安装到主机上"
       ],
       "Used as": [
-        ""
+        "用作"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "用于确定在 pulp3 中并性下载存储库的数量。使用小于20 的值。默认为 10"
@@ -9231,7 +9231,7 @@
         "验证 SSL"
       ],
       "Verify checksum": [
-        ""
+        "验证校验和"
       ],
       "Verify checksum for content on smart proxy": [
         "为智能代理中的内容验证校验和"

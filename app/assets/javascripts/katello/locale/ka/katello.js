@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2026",
@@ -484,7 +484,7 @@
         "გვერდის შესახებ"
       ],
       "Abstract async task": [
-        ""
+        "ასინქრონული ამოცანის აბსტრაქცია"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -778,7 +778,7 @@
         "ალტერნატიული შემცველობის წყარო ჩასწორდა"
       ],
       "Alternate content sources": [
-        ""
+        "შემცველობის ალტერნატიული წყაროები"
       ],
       "Alternate content sources define new locations to download content from at repository or smart proxy sync time.": [
         ""
@@ -1454,7 +1454,7 @@
         "მოცულობა"
       ],
       "Certificate": [
-        ""
+        "სერტიფიკატი"
       ],
       "Change Content Source": [
         "ჰოსტის შემცველობის წყაროს შეცვლა"
@@ -1991,7 +1991,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "ვერსიის ერთეულების ბიბლიოთეკაში კოპირება"
       ],
       "Cores per socket": [
         "ბირთვი თითო სოკეტზე"
@@ -2681,7 +2681,7 @@
         "გამორთულია"
       ],
       "Discover": [
-        ""
+        "აღმოაჩინეთ"
       ],
       "Discover Repositories": [
         "რეპოზიტორიების აღმოჩენა"
@@ -2933,7 +2933,7 @@
         "მორჩენილი პაჩის ID (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "მორჩენილი ელფოსტა"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -3128,7 +3128,7 @@
         "დაყენებადი მორჩენილი პაჩების გამოთხოვა ერთი ან მეტი ჰოსტისთვის."
       ],
       "Fetch pxe files": [
-        ""
+        "PXE ფაილების გამოთხოვა"
       ],
       "Fetch traces for one or more hosts": [
         "ერთი ან მეტი ჰოსტისთვის ტრეისის გამოთხოვა"
@@ -3203,7 +3203,7 @@
         "პროდუქტების სინქრის გეგმის ID-ით გაფილტვრა"
       ],
       "Filter repositories": [
-        ""
+        "რეპოზიტორიების გაფილტვრა"
       ],
       "Filter repositories by content unit type (erratum, docker_tag, etc.). Check the \\\"Indexed?\\\" types here: /katello/api/repositories/repository_types": [
         ""
@@ -3233,10 +3233,10 @@
         "ფილტრის ვერსიები, რომლებიც მითითებულ კომპოზიტის ვერსიაში კომპონენტები არიან"
       ],
       "Filter...": [
-        ""
+        "გაფილტვრა..."
       ],
       "Filtered index content": [
-        ""
+        "გაფილტრული ინდექსის შემცველობა"
       ],
       "Filters": [
         "ფილტრები"
@@ -3344,7 +3344,7 @@
         "სრული მხარდაჭერა"
       ],
       "GPG Key": [
-        ""
+        "GPG გასაღები"
       ],
       "GPG Key URL": [
         "GPG გასაღების URL"
@@ -3555,7 +3555,7 @@
         "ჰოსტის ჯგუფების ID-ები"
       ],
       "Host groups": [
-        ""
+        "ჰოსტის ჯგუფები"
       ],
       "Host has not been registered with subscription-manager": [
         "ჰოსტი subscription-manager-ით არ დარეგისტრირებულა"
@@ -3618,10 +3618,10 @@
         "დახარისხებული შედეგების დალაგების წესი (მაგ: ASC აღმავლისთვის)"
       ],
       "Hypervisors": [
-        ""
+        "ჰაიპერვაიზორები"
       ],
       "Hypervisors update": [
-        ""
+        "ჰაიპერვაიზორის განახლება"
       ],
       "ID": [
         ""
@@ -4032,7 +4032,7 @@
         "ინკრემენტული განახლება მიუწვდომელია."
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "შემცველობის ხედის ვერსიების ინკრემენტული განახლება "
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} შემცველობის ხედის ვერსიის ინკრემენტული განახლება "
@@ -4050,16 +4050,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "შემცველობის ინდექსი"
       ],
       "Index errata": [
-        ""
+        "მორჩენილების ინდექსი"
       ],
       "Index module streams": [
-        ""
+        "მოდულების ნაკადების ინდექსი"
       ],
       "Index package groups": [
-        ""
+        "პაკეტის ჯგუფების ინდექსი"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         ""
@@ -4156,7 +4156,7 @@
         "პაკეტის დაყენება..."
       ],
       "Instance update": [
-        ""
+        "გაშვებული ასლის განახლება"
       ],
       "Instance-based": [
         "გაშვებულ ასლზე-ბაზირებული"
@@ -6562,7 +6562,7 @@
         ""
       ],
       "Reindex subscriptions": [
-        ""
+        "გამოწერების თავიდან ინდექსირება"
       ],
       "Related composite content views": [
         "შესაბამისი კომპოზიტური შემცველობის ხედები"
@@ -6592,7 +6592,7 @@
         "შემცველობის ჰოსტის რელიზის ვერსია"
       ],
       "Releases/Distributions": [
-        ""
+        "რელიზები/დისტრიბუტივები"
       ],
       "Releasever to disable": [
         "გამოსართავი Releasever"
@@ -7111,7 +7111,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "SSL კლიენტის გასაღები"
       ],
       "SSL client certificate": [
         "SSL კლიენტის სერტიფიკატი"
@@ -8000,7 +8000,7 @@
         "შემცველობის მხარდაჭერილი ტიპები"
       ],
       "Sync": [
-        ""
+        "სინქრონიზაცია"
       ],
       "Sync Canceled": [
         "სინქი გაუქმებულია"
@@ -8060,7 +8060,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "სინქრონიზაციის კაპსულა"
       ],
       "Sync complete.": [
         "სინქრონიზაცია დასრულდა."
@@ -8087,7 +8087,7 @@
         "სინქის მდგომარეობა"
       ],
       "Syncable export": [
-        ""
+        "სინქრონიზებადი გატანა"
       ],
       "Synced": [
         "სინქრონიზებულია"
@@ -8951,7 +8951,7 @@
         "შემცველობის რაოდენობების განახლება ჭკვიანი პროქსისთვის"
       ],
       "Update content urls": [
-        ""
+        "შემცველობის URL-ების განახლება"
       ],
       "Update content view environments for host": [
         ""
@@ -8966,10 +8966,10 @@
         "ჰოსტების ხელით განახლება"
       ],
       "Update http proxy": [
-        ""
+        "HTTP პროქსის განახლება"
       ],
       "Update http proxy details": [
-        ""
+        "HTTP პროქსის დეტალების განახლება"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "განაახლეთ დაყენებული პაკეტები, ჩართული რეპოები და მოდულები"
@@ -8987,7 +8987,7 @@
         "პაკეტების განახლება Katello-ის ინტერფეისიდან"
       ],
       "Update redhat repository": [
-        ""
+        "RH-ის რეპოზიტორიის განახლება"
       ],
       "Update release version for host": [
         "ჰოსტის რელიზის ვერსიის განახლება"
@@ -9180,7 +9180,7 @@
         ""
       ],
       "Used as": [
-        ""
+        "გამოიყენება, როგორც"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         ""
@@ -9237,7 +9237,7 @@
         "SSL-ის შემოწმება"
       ],
       "Verify checksum": [
-        ""
+        "საკონტროლო ჯამის შემოწმება"
       ],
       "Verify checksum for content on smart proxy": [
         ""

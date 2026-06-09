@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -484,7 +484,7 @@
         ""
       ],
       "Abstract async task": [
-        ""
+        "Абстрактная асинхронная задача"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -2681,7 +2681,7 @@
         "Отключено"
       ],
       "Discover": [
-        ""
+        "Поиск"
       ],
       "Discover Repositories": [
         "Поиск репозиториев"
@@ -2933,7 +2933,7 @@
         ""
       ],
       "Errata mail": [
-        ""
+        "Почта"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -3233,10 +3233,10 @@
         "Отфильтровать составляющие сложной версии"
       ],
       "Filter...": [
-        ""
+        "Фильтр..."
       ],
       "Filtered index content": [
-        ""
+        "Содержимое фильтруемого индекса"
       ],
       "Filters": [
         "Фильтры"
@@ -3344,7 +3344,7 @@
         ""
       ],
       "GPG Key": [
-        ""
+        "Ключ GPG"
       ],
       "GPG Key URL": [
         "URL ключа GPG"
@@ -3555,7 +3555,7 @@
         "Идентификаторы группы узлов"
       ],
       "Host groups": [
-        ""
+        "Группы узлов"
       ],
       "Host has not been registered with subscription-manager": [
         "Узел не был зарегистрирован в subscription-manager"
@@ -3618,10 +3618,10 @@
         "Порядок сортировки (например, ASC — по возрастанию)"
       ],
       "Hypervisors": [
-        ""
+        "Гипервизоры"
       ],
       "Hypervisors update": [
-        ""
+        "Обновление гипервизоров"
       ],
       "ID": [
         "ID"
@@ -4050,16 +4050,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "Индексировать содержимое"
       ],
       "Index errata": [
-        ""
+        "Индексировать исправления"
       ],
       "Index module streams": [
         ""
       ],
       "Index package groups": [
-        ""
+        "Индексировать группы пакетов"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Тип может принимать значения: [ %{list} ]"
@@ -6562,7 +6562,7 @@
         ""
       ],
       "Reindex subscriptions": [
-        ""
+        "Повторно индексировать подписки"
       ],
       "Related composite content views": [
         ""
@@ -8000,7 +8000,7 @@
         ""
       ],
       "Sync": [
-        ""
+        "Синхронизация"
       ],
       "Sync Canceled": [
         "Синхронизация отменена"

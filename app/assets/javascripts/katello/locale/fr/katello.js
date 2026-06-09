@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -485,7 +485,7 @@
         "Page d'accueil"
       ],
       "Abstract async task": [
-        ""
+        "Tâche async abstraite"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "L'accès à la gestion des abonnements Red Hat est interdit. Si vous souhaitez modifier cette interdiction, veuillez mettre à jour le paramètre de contenu \\\"Connexion aux abonnements activée\\\"."
@@ -1456,7 +1456,7 @@
         "Capacité"
       ],
       "Certificate": [
-        ""
+        "Certificat"
       ],
       "Change Content Source": [
         "Changer la source du contenu"
@@ -1993,7 +1993,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "Copier les unités de version dans la bibliothèque"
       ],
       "Cores per socket": [
         "Cores par socket"
@@ -2683,7 +2683,7 @@
         "Désactivé"
       ],
       "Discover": [
-        ""
+        "Discover"
       ],
       "Discover Repositories": [
         "Découvrir des référentiels"
@@ -2935,7 +2935,7 @@
         "Id de l'erratum (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "Courrier d'errata"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "Les statuts d'errata ne sont pas mis à jour pour la facette de contenu supprimée avec UUID %s"
@@ -3130,7 +3130,7 @@
         "Récupérer les errata installables pour un ou plusieurs hôtes."
       ],
       "Fetch pxe files": [
-        ""
+        "Récupérer les fichiers pxe"
       ],
       "Fetch traces for one or more hosts": [
         "Rechercher traces pour un ou plusieurs hôtes"
@@ -3238,7 +3238,7 @@
         ""
       ],
       "Filtered index content": [
-        ""
+        "Contenu d'index filtré"
       ],
       "Filters": [
         "Filtres"
@@ -3346,7 +3346,7 @@
         "Support total"
       ],
       "GPG Key": [
-        ""
+        "Clé GPG"
       ],
       "GPG Key URL": [
         "ID de la clé GPG"
@@ -3558,7 +3558,7 @@
         "IDs des groupes"
       ],
       "Host groups": [
-        ""
+        "Groupes d'hôtes"
       ],
       "Host has not been registered with subscription-manager": [
         "Cet hôte n'est pas enregistré dans le subscription-manager"
@@ -3621,10 +3621,10 @@
         "Comment classer les résultats triés (ex : ASC for pour croissant)"
       ],
       "Hypervisors": [
-        ""
+        "Hyperviseurs"
       ],
       "Hypervisors update": [
-        ""
+        "Mise à jour des hyperviseurs"
       ],
       "ID": [
         "ID"
@@ -4035,7 +4035,7 @@
         "Mise à jour incrémentielle incomplète."
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "Mise à jour incrémentielle Version(s) d'affichage de contenu"
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Mise à jour incrémentielle de %{content_view_count}Version(s) d'affichage de contenu "
@@ -4053,16 +4053,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "Contenu d'index"
       ],
       "Index errata": [
-        ""
+        "Errata d'index"
       ],
       "Index module streams": [
-        ""
+        "Indexer les flux de module"
       ],
       "Index package groups": [
-        ""
+        "Indexer les groupes de paquets"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Le type Informable doit être l'un parmi [%{list} ]"
@@ -4160,7 +4160,7 @@
         "Installation du paquet..."
       ],
       "Instance update": [
-        ""
+        "Mise à jour de l'instance"
       ],
       "Instance-based": [
         "Basé sur l'instance"
@@ -4955,7 +4955,7 @@
         "Connexion à la messagerie"
       ],
       "Metadata generate": [
-        ""
+        "Générer des métadonnées"
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "La republication des métadonnées est risquée sur les référentiels « Complete Mirroring ». Modifiez la politique de mise en miroir et réessayez. Vous pouvez également utiliser le paramètre « force » pour régénérer les métadonnées localement. Lors de la prochaine synchronisation, les métadonnées du référentiel en amont écraseront les métadonnées locales des référentiels « Complete Mirroring »."
@@ -6566,7 +6566,7 @@
         "Durée d'expiration du jeton d'enregistrement"
       ],
       "Reindex subscriptions": [
-        ""
+        "Ré-indexer les abonnements"
       ],
       "Related composite content views": [
         "Affichages du contenu composite associé"
@@ -6596,7 +6596,7 @@
         "Version de l'hôte de contenu"
       ],
       "Releases/Distributions": [
-        ""
+        "Sorties/Distributions"
       ],
       "Releasever to disable": [
         "Releasever à désactiver"
@@ -7115,7 +7115,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "Clé client Pulp"
       ],
       "SSL client certificate": [
         "Certificat client SSL"
@@ -8005,7 +8005,7 @@
         "Types de contenu pris en charge"
       ],
       "Sync": [
-        ""
+        "Sync"
       ],
       "Sync Canceled": [
         "Sync Annulée"
@@ -8065,7 +8065,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "Sync capsule"
       ],
       "Sync complete.": [
         "Sync Terminée."
@@ -8092,7 +8092,7 @@
         "État de synchronisation"
       ],
       "Syncable export": [
-        ""
+        "Exportation synchronisable"
       ],
       "Synced": [
         "Synchronisé"
@@ -8956,7 +8956,7 @@
         "Mettre à jour le nombre de contenus pour le proxy intelligent"
       ],
       "Update content urls": [
-        ""
+        "Mettre à jour les urls de contenu"
       ],
       "Update content view environments for host": [
         "Mettre à jour les environnements d'affichage de contenu pour l'hôte"
@@ -8971,10 +8971,10 @@
         "Mettre à jour les hôtes manuellement"
       ],
       "Update http proxy": [
-        ""
+        "Mettre à jour proxy http"
       ],
       "Update http proxy details": [
-        ""
+        "Mise à jour des détails du proxy http"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Mise à jour des packages installés, activation des repos, inventaire des modules"
@@ -8992,7 +8992,7 @@
         "Mise à jour du paquet via l'interface Katello"
       ],
       "Update redhat repository": [
-        ""
+        "Mettre à jour le référentiel de données Red Hat"
       ],
       "Update release version for host": [
         "Mettre à jour la version de publication pour l'hôte"
@@ -9186,7 +9186,7 @@
         "Utiliser des certificats de conteneur pour l'authentification du registre de conteneurs. Si cette option est définie sur « true », les certificats du registre de conteneurs seront installés sur l'hôte."
       ],
       "Used as": [
-        ""
+        "Utilisé comme"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "Utilisé pour déterminer la simultanéité de téléchargement du référentiel dans la pulp3. Valeur d'utilisation inférieure à 20. Valeur par défaut de 10"
@@ -9243,7 +9243,7 @@
         "Vérifier SSL"
       ],
       "Verify checksum": [
-        ""
+        "Vérifier la somme de contrôle"
       ],
       "Verify checksum for content on smart proxy": [
         "Vérifier la somme de contrôle du contenu sur le proxy intelligent"

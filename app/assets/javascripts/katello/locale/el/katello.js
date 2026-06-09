@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Efstathios Iosifidis <eiosifidis@gmail.com>, 2026",
@@ -901,7 +901,7 @@
         "Αρχιτεκτονική(-ες)"
       ],
       "Architectures": [
-        ""
+        "Αρχιτεκτονικές"
       ],
       "Are you sure you want to delete %(entitlementCount)s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
         ""
@@ -1454,7 +1454,7 @@
         "Χωρητικότητα"
       ],
       "Certificate": [
-        ""
+        "Πιστοποιητικό"
       ],
       "Change Content Source": [
         ""
@@ -3344,7 +3344,7 @@
         ""
       ],
       "GPG Key": [
-        ""
+        "Κλειδί GPG"
       ],
       "GPG Key URL": [
         ""
@@ -4050,7 +4050,7 @@
         ""
       ],
       "Index content": [
-        ""
+        "Περιεχόμενο ευρετηρίου"
       ],
       "Index errata": [
         ""
@@ -8000,7 +8000,7 @@
         ""
       ],
       "Sync": [
-        ""
+        "Συγχρονισμός"
       ],
       "Sync Canceled": [
         ""
@@ -9180,7 +9180,7 @@
         ""
       ],
       "Used as": [
-        ""
+        "Χρήση ως"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         ""
