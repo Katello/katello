@@ -2,6 +2,7 @@ module Katello
   # rubocop:disable Metrics/ClassLength
   class Api::Registry::RegistryProxiesController < Api::V2::ApiController
     include Katello::Authentication::ClientAuthentication
+    include Foreman::Controller::SmartProxyAuth
     before_action :disable_strong_params
     before_action :confirm_settings
     skip_before_action :authorize
@@ -10,6 +11,7 @@ module Katello
     before_action :static_index_authorize, only: [:static_index]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list, :check_blob, :pull_blob]
     before_action :container_push_prop_validation, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
+    before_action :authorize_smart_proxy_push_organization, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     before_action :create_container_repo_if_needed, only: [:start_upload_blob, :upload_blob, :finish_upload_blob, :push_manifest]
     skip_before_action :check_media_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
                                                  :push_manifest]
@@ -104,6 +106,19 @@ module Katello
     end
 
     def registry_authorize
+      if container_registry_smart_proxy_authenticated?
+        # A smart proxy's SSL client certificate isn't tied to any Foreman user
+        # account, but the repository lookups below (find_readable_repository,
+        # find_writable_repository) go through Katello's permission-scoped queries
+        # (e.g. Product.authorized(_as)), which require a User.current with real
+        # permissions to return anything. anonymous_admin provides that. Access is
+        # not left unrestricted, though: authorize_smart_proxy_repository still
+        # limits which repositories are visible to the organizations assigned to
+        # the detected proxy (see smart_proxy_authenticated?/@detected_proxy).
+        User.current = User.anonymous_admin
+        return true
+      end
+
       @repository = find_readable_repository
       return true if ['GET', 'HEAD'].include?(request.method) && @repository && !require_user_authorization?
 
@@ -483,7 +498,8 @@ module Katello
     end
 
     def find_writable_repository
-      Repository.docker_type.syncable.find_by_container_repository_name(params[:repository])
+      repository = Repository.docker_type.syncable.find_by_container_repository_name(params[:repository])
+      authorize_smart_proxy_repository(repository)
     end
 
     def authorize_repository_write
@@ -498,7 +514,37 @@ module Katello
       if require_user_authorization?(repository)
         repository = Repository.readable_docker_catalog(@host).find_by(container_repository_name: params[:repository])
       end
-      repository
+      authorize_smart_proxy_repository(repository)
+    end
+
+    def authorize_smart_proxy_repository(repository)
+      # if this request was not authorized via a container-registry-enabled smart
+      # proxy, leave the repository lookup untouched (normal auth path applies)
+      return repository unless container_registry_smart_proxy_authenticated?
+
+      # guard against nil repository
+      return nil if repository.nil?
+
+      # allow access to the repository if the smart proxy is assigned to the repository's organization
+      return repository if @detected_proxy.organizations.include?(repository.organization)
+
+      nil
+    end
+
+    # Push actions (start_upload_blob, upload_blob, finish_upload_blob, push_manifest)
+    # never go through find_writable_repository/authorize_smart_proxy_repository:
+    # @organization/@product are resolved directly from the push URL by
+    # container_push_prop_validation. Without this check, a smart proxy authorized
+    # for one organization could push to (and auto-create repositories in) any
+    # other organization's product, since registry_authorize already elevated
+    # User.current to anonymous_admin. This mirrors authorize_smart_proxy_repository's
+    # org-scoping, but against @organization instead of a resolved repository, and
+    # runs before repository creation and before the request is forwarded to Pulp.
+    def authorize_smart_proxy_push_organization
+      return true unless container_registry_smart_proxy_authenticated?
+      return true if @detected_proxy.organizations.include?(@organization)
+
+      item_not_found(@organization&.label)
     end
 
     def require_user_authorization?(repository = @repository)
@@ -511,6 +557,32 @@ module Katello
 
     def ssl_client_authorized?(org_label)
       request.headers['HTTP_SSL_CLIENT_VERIFY'] == "SUCCESS" && request.headers['HTTP_SSL_CLIENT_S_DN'] == "O=#{org_label}"
+    end
+
+    # Authenticates the request's SSL client certificate against every smart proxy,
+    # regardless of container registry opt-in. On success, Foreman's auth_smart_proxy
+    # sets @detected_proxy to the matching SmartProxy.
+    def authenticate_smart_proxy_certificate
+      auth_smart_proxy
+    end
+
+    # Whether this request has been authenticated as a specific smart proxy.
+    def smart_proxy_authenticated?
+      @detected_proxy.present?
+    end
+
+    # True only when the request authenticates as a smart proxy AND that proxy has
+    # explicitly opted in via container_registry_auth_enabled. Authentication and
+    # authorization are deliberately kept as two separate, explicit steps here.
+    # Memoized: both registry_authorize and authorize_smart_proxy_repository need
+    # this same decision within a single request, and authentication must only
+    # run once.
+    def container_registry_smart_proxy_authenticated?
+      return @container_registry_smart_proxy_authenticated if defined?(@container_registry_smart_proxy_authenticated)
+
+      authenticate_smart_proxy_certificate
+      @container_registry_smart_proxy_authenticated =
+        smart_proxy_authenticated? && @detected_proxy.container_registry_auth_enabled?
     end
 
     def authorize_repository_read
