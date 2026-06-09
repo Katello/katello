@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
+        "Last-Translator": "pdolinic, 2026",
         "Language-Team": "German (https://app.transifex.com/foreman/teams/114/de/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -484,7 +484,7 @@
         "Über die Seite"
       ],
       "Abstract async task": [
-        ""
+        "Übersicht asynchrone Aufgabe"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -1454,7 +1454,7 @@
         "Kapazität"
       ],
       "Certificate": [
-        ""
+        "Zertifikat"
       ],
       "Change Content Source": [
         ""
@@ -1991,7 +1991,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "Versionseinheiten in Bibliothek kopieren"
       ],
       "Cores per socket": [
         "Kerne pro Socket"
@@ -2681,7 +2681,7 @@
         "Deaktiviert"
       ],
       "Discover": [
-        ""
+        "Suchen"
       ],
       "Discover Repositories": [
         "Repositorys suchen"
@@ -2933,7 +2933,7 @@
         "Errata-ID des Erratums (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "Errata-E-Mail"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -3128,7 +3128,7 @@
         "Rufen Sie installierbare Errata für einen oder mehrere Hosts ab."
       ],
       "Fetch pxe files": [
-        ""
+        "pxe-Dateien abrufen"
       ],
       "Fetch traces for one or more hosts": [
         "Abrufen von Traces für einen oder mehrere Hosts"
@@ -3233,10 +3233,10 @@
         "Versionen filtern, die Komponenten in der angegebenen Verbundversion sind"
       ],
       "Filter...": [
-        ""
+        "Filtern …"
       ],
       "Filtered index content": [
-        ""
+        "Indexinhalt gefiltert"
       ],
       "Filters": [
         "Filter"
@@ -3344,7 +3344,7 @@
         ""
       ],
       "GPG Key": [
-        ""
+        "GPG-Schlüssel"
       ],
       "GPG Key URL": [
         "GPG-Schlüssel-URL"
@@ -3555,7 +3555,7 @@
         "Hostgruppen-IDs"
       ],
       "Host groups": [
-        ""
+        "Hostgruppen"
       ],
       "Host has not been registered with subscription-manager": [
         "Wurde nicht im Subskriptionsmanager registriert"
@@ -3618,10 +3618,10 @@
         "Reihenfolge der sortierten Ergebnisse (z. B. ASC für aufsteigend)"
       ],
       "Hypervisors": [
-        ""
+        "Hypervisoren"
       ],
       "Hypervisors update": [
-        ""
+        "Hypervisoren aktualisieren"
       ],
       "ID": [
         "Kennung"
@@ -4032,7 +4032,7 @@
         "Inkrementelle Aktualisierung unvollständig."
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "Inkrementelle Aktualisierung der Inhaltsansichtsversion(en)"
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Inkrementelles Update von %{content_view_count} Content View-Version(en)"
@@ -4050,16 +4050,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "Inhalt indizieren"
       ],
       "Index errata": [
-        ""
+        "Errata indizieren"
       ],
       "Index module streams": [
-        ""
+        "Modulströme indexieren"
       ],
       "Index package groups": [
-        ""
+        "Paketgruppen indizieren"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Relevante Typen sind folgende [ %{list} ]"
@@ -4156,7 +4156,7 @@
         "Paket wird installiert …"
       ],
       "Instance update": [
-        ""
+        "Instanz-Update"
       ],
       "Instance-based": [
         "Instanzbasiert"
@@ -6562,7 +6562,7 @@
         ""
       ],
       "Reindex subscriptions": [
-        ""
+        "Subskriptionen neu indizieren"
       ],
       "Related composite content views": [
         ""
@@ -7111,7 +7111,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "SSL-Clientschlüssel"
       ],
       "SSL client certificate": [
         ""
@@ -8000,7 +8000,7 @@
         "Unterstützte Inhaltstypen"
       ],
       "Sync": [
-        ""
+        "Synchronisieren"
       ],
       "Sync Canceled": [
         "Synchronisation abgebrochen"
@@ -8060,7 +8060,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "Kapsel synchronisieren"
       ],
       "Sync complete.": [
         "Synchronisation abgeschlossen."
@@ -8951,7 +8951,7 @@
         ""
       ],
       "Update content urls": [
-        ""
+        "Inhalts-URLs aktualisieren"
       ],
       "Update content view environments for host": [
         ""
@@ -8966,10 +8966,10 @@
         ""
       ],
       "Update http proxy": [
-        ""
+        "HTTP-Proxy aktualisieren"
       ],
       "Update http proxy details": [
-        ""
+        "HTTP-Proxy-Details aktualisieren"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Aktualisiere installierte Packete, aktivierte Repositories und Modul-Inventare"
@@ -8987,7 +8987,7 @@
         ""
       ],
       "Update redhat repository": [
-        ""
+        "Redhat-Repository aktualisieren"
       ],
       "Update release version for host": [
         "Release-Version für Host aktualisieren"
@@ -9180,7 +9180,7 @@
         ""
       ],
       "Used as": [
-        ""
+        "Benutzt als"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "Wird verwendet, um die Download-Gleichzeitigkeit des Repositorys in pulp3 zu bestimmen. Verwenden Sie einen Wert von weniger als 20. Standardmäßig auf 10"
@@ -9237,7 +9237,7 @@
         "SSL überprüfen"
       ],
       "Verify checksum": [
-        ""
+        "Prüfsumme überprüfen"
       ],
       "Verify checksum for content on smart proxy": [
         ""

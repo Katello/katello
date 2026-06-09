@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -484,7 +484,7 @@
         ""
       ],
       "Abstract async task": [
-        ""
+        "Evento asinc astratto"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -2682,7 +2682,7 @@
         "Disabilitato"
       ],
       "Discover": [
-        ""
+        "Trova"
       ],
       "Discover Repositories": [
         "Trova repositori"
@@ -2934,7 +2934,7 @@
         "id errata dell'erratum (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "Posta per l'Errata"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -3234,7 +3234,7 @@
         "Filtra versioni componenti nella versione composita specificata"
       ],
       "Filter...": [
-        ""
+        "Filtro..."
       ],
       "Filtered index content": [
         ""
@@ -3345,7 +3345,7 @@
         ""
       ],
       "GPG Key": [
-        ""
+        "Chiave GPG"
       ],
       "GPG Key URL": [
         "URL chiave GPG"
@@ -3556,7 +3556,7 @@
         "ID gruppo di host"
       ],
       "Host groups": [
-        ""
+        "Gruppi di host"
       ],
       "Host has not been registered with subscription-manager": [
         ""
@@ -4054,7 +4054,7 @@
         ""
       ],
       "Index errata": [
-        ""
+        "Indice errata"
       ],
       "Index module streams": [
         ""
@@ -8001,7 +8001,7 @@
         ""
       ],
       "Sync": [
-        ""
+        "Sinc"
       ],
       "Sync Canceled": [
         "Sincronizzazione cancellata"

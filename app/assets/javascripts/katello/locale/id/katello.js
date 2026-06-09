@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Andika Triwidada <andika@gmail.com>, 2026",
@@ -901,7 +901,7 @@
         ""
       ],
       "Architectures": [
-        ""
+        "Arsitektur"
       ],
       "Are you sure you want to delete %(entitlementCount)s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
         ""
@@ -1454,7 +1454,7 @@
         "Kapasitas"
       ],
       "Certificate": [
-        ""
+        "Sertifikat"
       ],
       "Change Content Source": [
         ""

@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Arledrian <hvuzgr@gmail.com>, 2025",
+        "Last-Translator": "Markus Bucher <bucher@atix.de>, 2026",
         "Language-Team": "German (Germany) (https://app.transifex.com/foreman/teams/114/de_DE/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -2678,7 +2678,7 @@
         ""
       ],
       "Disabled": [
-        ""
+        "Deaktiviert"
       ],
       "Discover": [
         ""
@@ -2831,7 +2831,7 @@
         ""
       ],
       "Enabled": [
-        ""
+        "Aktiviert"
       ],
       "Enabled Repositories": [
         ""

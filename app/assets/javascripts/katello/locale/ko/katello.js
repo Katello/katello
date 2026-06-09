@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
+        "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026",
         "Language-Team": "Korean (https://app.transifex.com/foreman/teams/114/ko/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -483,7 +483,7 @@
         "정보 페이지"
       ],
       "Abstract async task": [
-        ""
+        "비동기 작업 개요"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "Red Hat Subscription Management에 대한 액세스가 금지되어 있습니다. 이를 변경하려면 콘텐츠 설정 '서브스크립션 연결 활성화됨'을 업데이트하세요."
@@ -1452,7 +1452,7 @@
         "용량 "
       ],
       "Certificate": [
-        ""
+        "인증서"
       ],
       "Change Content Source": [
         "콘텐츠 소스 변경"
@@ -1989,7 +1989,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "버전 단위를 라이브러리에 복사"
       ],
       "Cores per socket": [
         "소켓당 코어 수 "
@@ -2679,7 +2679,7 @@
         "사용 안함"
       ],
       "Discover": [
-        ""
+        "검색"
       ],
       "Discover Repositories": [
         "리포지터리 검색 "
@@ -2931,7 +2931,7 @@
         "에라타의 에라타 ID (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "에라타 메일"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "UUID %s가 있는 삭제된 콘텐츠 패싯에 대한 에라타 상태가 업데이트되지 않음 "
@@ -3126,7 +3126,7 @@
         "하나 이상의 호스트에 대한 설치 가능한 오류를 가져옵니다."
       ],
       "Fetch pxe files": [
-        ""
+        "pxe 파일 가져오기"
       ],
       "Fetch traces for one or more hosts": [
         "하나 이상의 호스트에 대한 추적을 가져옵니다."
@@ -3231,10 +3231,10 @@
         "지정된 복합 버전에 있는 구성 요소인 버전을 필터링 "
       ],
       "Filter...": [
-        ""
+        "필터..."
       ],
       "Filtered index content": [
-        ""
+        "필터링된 인덱스 컨텐츠"
       ],
       "Filters": [
         "필터 "
@@ -3342,7 +3342,7 @@
         "전체 지원"
       ],
       "GPG Key": [
-        ""
+        "GPG 키 "
       ],
       "GPG Key URL": [
         "GPG 키 URL"
@@ -3552,7 +3552,7 @@
         "호스트 그룹 ID"
       ],
       "Host groups": [
-        ""
+        "호스트 그룹 "
       ],
       "Host has not been registered with subscription-manager": [
         "호스트가 subscription-manager에 등록되지 않았습니다."
@@ -3615,10 +3615,10 @@
         "정렬된 결고를 정렬하는 방법 (예: 오름차순의 ASC) "
       ],
       "Hypervisors": [
-        ""
+        "하이퍼바이저"
       ],
       "Hypervisors update": [
-        ""
+        "하이퍼바이저 업데이트"
       ],
       "ID": [
         "ID"
@@ -4029,7 +4029,7 @@
         "증분 업데이트가 완료되지 않았습니다. "
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "콘텐츠 보기 버전의 증분 업데이트 "
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 콘텐츠 뷰 버전의 증분 업데이트"
@@ -4047,16 +4047,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "컨텐츠 인덱싱"
       ],
       "Index errata": [
-        ""
+        "에라타 인덱스"
       ],
       "Index module streams": [
-        ""
+        "인덱스 모듈 스트림"
       ],
       "Index package groups": [
-        ""
+        "패키지 그룹 인덱싱"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "정보 유형은 다음 중 하나이어야 합니다 [ %{list} ]"
@@ -4152,7 +4152,7 @@
         "패키지 설치 중..."
       ],
       "Instance update": [
-        ""
+        "인스턴스 업데이트"
       ],
       "Instance-based": [
         "인스턴스 기반 "
@@ -4947,7 +4947,7 @@
         "메시징 연결"
       ],
       "Metadata generate": [
-        ""
+        "메타데이터 생성"
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "'완전 미러링' 리포지터리에서 메타데이터 재게시는 위험합니다. 미러링 정책을 변경하고 다시 시도하세요. 또는 '강제' 매개변수를 사용하여 로컬에서 메타데이터를 재생성하세요. 다음 동기화에서 업스트림 리포지터리의 메타데이터는 '완전 미러링' 리포지터리의 로컬 메타데이터를 덮어씁니다."
@@ -6558,7 +6558,7 @@
         "레지스트리 토큰 만료 시간"
       ],
       "Reindex subscriptions": [
-        ""
+        "서브스크립션 다시 인덱싱"
       ],
       "Related composite content views": [
         "관련 복합 콘텐츠 뷰"
@@ -6588,7 +6588,7 @@
         "컨텐츠 호스트의 릴리즈 버전 "
       ],
       "Releases/Distributions": [
-        ""
+        "릴리스/배포판"
       ],
       "Releasever to disable": [
         "비활성화할 Releasever "
@@ -7107,7 +7107,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "SSL 클라이언트 키"
       ],
       "SSL client certificate": [
         "SSL 클라이언트 인증서"
@@ -7995,7 +7995,7 @@
         "지원되는 콘텐츠 유형"
       ],
       "Sync": [
-        ""
+        "동기화 "
       ],
       "Sync Canceled": [
         "동기화 취소 "
@@ -8055,7 +8055,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "캡슐 동기화"
       ],
       "Sync complete.": [
         "동기화가 완료되었습니다. "
@@ -8082,7 +8082,7 @@
         "동기화 상태"
       ],
       "Syncable export": [
-        ""
+        "가능한 동기화 내보내기"
       ],
       "Synced": [
         "동기화됨"
@@ -8946,7 +8946,7 @@
         "스마트 프록시에 대한 콘텐츠 수 업데이트"
       ],
       "Update content urls": [
-        ""
+        "콘텐츠 URL 업데이트"
       ],
       "Update content view environments for host": [
         "호스트에 대한 콘텐츠 뷰 환경 업데이트"
@@ -8961,10 +8961,10 @@
         "호스트를 수동으로 업데이트"
       ],
       "Update http proxy": [
-        ""
+        "http 프록시 업데이트"
       ],
       "Update http proxy details": [
-        ""
+        "http 프록시 세부 정보 업데이트"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "설치된 패키지, 활성화된 리포지토리, 모듈 인벤토리 업데이트"
@@ -8982,7 +8982,7 @@
         "Katello 인터페이스를 통해 패키지 업데이트"
       ],
       "Update redhat repository": [
-        ""
+        "Redhat 리포지토리 업데이트"
       ],
       "Update release version for host": [
         "호스트에 대한 릴리스 버전 업데이트"
@@ -9174,7 +9174,7 @@
         "컨테이너 레지스트리 인증에 컨테이너 인증서를 사용합니다. 이 값을 true로 설정하면 컨테이너 레지스트리 인증서가 호스트에 설치됩니다."
       ],
       "Used as": [
-        ""
+        "로 사용됨"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "pulp3에서 리포지토리의 다운로드 동시성을 결정하는 데 사용됩니다. 20보다 작은 값을 사용합니다. 기본값은 10입니다."
@@ -9231,7 +9231,7 @@
         "SSL 확인 "
       ],
       "Verify checksum": [
-        ""
+        "체크섬 확인"
       ],
       "Verify checksum for content on smart proxy": [
         "스마트 프록시의 콘텐츠에 대한 체크섬 확인"

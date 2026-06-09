@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Pavel Borecki <pavel.borecki@gmail.com>, 2026",
@@ -1456,7 +1456,7 @@
         "Kapacita"
       ],
       "Certificate": [
-        ""
+        "Certifikát"
       ],
       "Change Content Source": [
         ""
@@ -2683,7 +2683,7 @@
         "Vypnuto"
       ],
       "Discover": [
-        ""
+        "Objevit"
       ],
       "Discover Repositories": [
         "Objevit repozitáře"
@@ -3130,7 +3130,7 @@
         ""
       ],
       "Fetch pxe files": [
-        ""
+        "Stáhnout pxe soubory"
       ],
       "Fetch traces for one or more hosts": [
         ""
@@ -3235,7 +3235,7 @@
         ""
       ],
       "Filter...": [
-        ""
+        "Filtrovat…"
       ],
       "Filtered index content": [
         ""
@@ -3346,7 +3346,7 @@
         ""
       ],
       "GPG Key": [
-        ""
+        "GPG klíč"
       ],
       "GPG Key URL": [
         "URL adresa GPG klíče"
@@ -3557,7 +3557,7 @@
         "Identifikátory skupiny strojů"
       ],
       "Host groups": [
-        ""
+        "Skupiny hostitelů"
       ],
       "Host has not been registered with subscription-manager": [
         ""
@@ -3620,10 +3620,10 @@
         ""
       ],
       "Hypervisors": [
-        ""
+        "Hypervizory"
       ],
       "Hypervisors update": [
-        ""
+        "Aktualizace hypervizoru"
       ],
       "ID": [
         "Identifikátor"
@@ -4052,7 +4052,7 @@
         ""
       ],
       "Index content": [
-        ""
+        "Obsah rejstříku"
       ],
       "Index errata": [
         ""
@@ -4158,7 +4158,7 @@
         "Instalace balíčku…"
       ],
       "Instance update": [
-        ""
+        "Aktualizace instance"
       ],
       "Instance-based": [
         ""
@@ -7113,7 +7113,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "SSL klientský klíč"
       ],
       "SSL client certificate": [
         ""
@@ -8002,7 +8002,7 @@
         ""
       ],
       "Sync": [
-        ""
+        "Synchronizovat"
       ],
       "Sync Canceled": [
         "Synchronizace zrušena"
@@ -8953,7 +8953,7 @@
         ""
       ],
       "Update content urls": [
-        ""
+        "Aktualizovat url adresy obsahu"
       ],
       "Update content view environments for host": [
         ""
@@ -8989,7 +8989,7 @@
         ""
       ],
       "Update redhat repository": [
-        ""
+        "Aktualizovat redhat repozitář"
       ],
       "Update release version for host": [
         "Aktualizovat verzi vydání pro stroj"

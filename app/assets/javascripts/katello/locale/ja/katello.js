@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 4.21.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026",
@@ -483,7 +483,7 @@
         "About ページ"
       ],
       "Abstract async task": [
-        ""
+        "非同期タスクの抽象化"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "Red Hat Subscription Management へのアクセスは禁止されています。これを変更するには、コンテンツ設定の 'サブスクリプション接続の有効化' を更新してください。"
@@ -777,7 +777,7 @@
         "代替コンテンツソースが編集されました"
       ],
       "Alternate content sources": [
-        ""
+        "代替コンテンツソース"
       ],
       "Alternate content sources define new locations to download content from at repository or smart proxy sync time.": [
         "別のコンテンツソースは、リポジトリーまたは Smart Proxy を同期する時にコンテンツをダウンロードする新しい場所を定義します。"
@@ -900,7 +900,7 @@
         "アーキテクチャー"
       ],
       "Architectures": [
-        ""
+        "アーキテクチャー"
       ],
       "Are you sure you want to delete %(entitlementCount)s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
         "%(entitlementCount)s 件のサブスクリプションを削除してもよろしいですか? この操作により、サブスクリプションが削除され、マニフェストが更新されます。これらのサブスクリプションを使用するすべてのシステムはサブスクリプションを失い、アップデートやエラータへのアクセスも失われる可能性があります。"
@@ -1452,7 +1452,7 @@
         "容量"
       ],
       "Certificate": [
-        ""
+        "証明書"
       ],
       "Change Content Source": [
         "コンテンツソースの変更"
@@ -1989,7 +1989,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "バージョンユニットのライブラリーへのコピー"
       ],
       "Cores per socket": [
         "1 ソケットあたりのコア数"
@@ -2679,7 +2679,7 @@
         "無効化済み"
       ],
       "Discover": [
-        ""
+        "検出"
       ],
       "Discover Repositories": [
         "リポジトリーの検出"
@@ -2931,7 +2931,7 @@
         "エラータのエラータ ID (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "エラータメール"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "UUID %s を持つ削除済みコンテンツファセットのエラータステータスが更新されませんでした"
@@ -3126,7 +3126,7 @@
         "1 つまたは複数のホストにインストール可能なエラータを取得します。"
       ],
       "Fetch pxe files": [
-        ""
+        "PXE ファイルの取得"
       ],
       "Fetch traces for one or more hosts": [
         "1 台以上のホストのトレースを取得します"
@@ -3231,10 +3231,10 @@
         "指定した複合バージョンに含まれるコンポーネントのバージョンを絞り込む"
       ],
       "Filter...": [
-        ""
+        "フィルタリング..."
       ],
       "Filtered index content": [
-        ""
+        "フィルタリングしたインデックスコンテンツ"
       ],
       "Filters": [
         "フィルター"
@@ -3342,7 +3342,7 @@
         "フルサポート"
       ],
       "GPG Key": [
-        ""
+        "GPG キー"
       ],
       "GPG Key URL": [
         "GPG キー URL"
@@ -3552,7 +3552,7 @@
         "ホストグループ ID"
       ],
       "Host groups": [
-        ""
+        "ホストグループ"
       ],
       "Host has not been registered with subscription-manager": [
         "ホストは subscription-manager で登録されていません"
@@ -3615,10 +3615,10 @@
         "結果のソート順 (例: ascending (昇順) の ASC)"
       ],
       "Hypervisors": [
-        ""
+        "ハイパーバイザー"
       ],
       "Hypervisors update": [
-        ""
+        "ハイパーバイザーの更新"
       ],
       "ID": [
         "ID"
@@ -4029,7 +4029,7 @@
         "増分更新が完了していません。"
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "コンテンツビューバージョンの増分更新 "
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 件のコンテンツビューバージョンの増分更新 "
@@ -4047,16 +4047,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "コンテンツのインデックス作成"
       ],
       "Index errata": [
-        ""
+        "エラータのインデックス作成"
       ],
       "Index module streams": [
-        ""
+        "モジュールストリームのインデックス作成"
       ],
       "Index package groups": [
-        ""
+        "パッケージグループのインデックス作成"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "情報タイプは以下のいずれかでなければなりません [ %{list} ]"
@@ -4152,7 +4152,7 @@
         "パッケージのインストール中..."
       ],
       "Instance update": [
-        ""
+        "インスタンスの更新"
       ],
       "Instance-based": [
         "インスタンスベース"
@@ -4947,7 +4947,7 @@
         "メッセージング接続"
       ],
       "Metadata generate": [
-        ""
+        "メタデータの生成"
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "メタデータの再公開は、'完全ミラーリング' リポジトリーでは危険です。ミラーリングポリシーを変更してから再試行してください。\\nあるいは、'force' パラメーターを使用してメタデータをローカルに再生成してください。次回の同期時に、アップストリームリポジトリーのメタデータによって、'完全ミラーリング' リポジトリーのローカルメタデータが上書きされます。"
@@ -6558,7 +6558,7 @@
         "レジストリートークンの有効期限"
       ],
       "Reindex subscriptions": [
-        ""
+        "サブスクリプションのインデックス再作成"
       ],
       "Related composite content views": [
         "関連する複合コンテンツビュー"
@@ -6588,7 +6588,7 @@
         "コンテンツホストのリリースバージョン"
       ],
       "Releases/Distributions": [
-        ""
+        "リリース/ディストリビューション"
       ],
       "Releasever to disable": [
         "無効にする Releasever"
@@ -7107,7 +7107,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "SSL クライアントキー"
       ],
       "SSL client certificate": [
         "SSL クライアント証明書"
@@ -7995,7 +7995,7 @@
         "サポート対象のコンテンツタイプ"
       ],
       "Sync": [
-        ""
+        "同期"
       ],
       "Sync Canceled": [
         "同期が取り消されました"
@@ -8055,7 +8055,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "Capsule の同期"
       ],
       "Sync complete.": [
         "同期が完了しました。"
@@ -8082,7 +8082,7 @@
         "同期の状態"
       ],
       "Syncable export": [
-        ""
+        "同期可能なエクスポート"
       ],
       "Synced": [
         "同期されています"
@@ -8946,7 +8946,7 @@
         "Smart Proxy のコンテンツ数を更新します"
       ],
       "Update content urls": [
-        ""
+        "コンテンツ url の更新"
       ],
       "Update content view environments for host": [
         "ホストのコンテンツビュー環境の更新"
@@ -8961,10 +8961,10 @@
         "ホストの手動更新"
       ],
       "Update http proxy": [
-        ""
+        "http プロキシーの更新"
       ],
       "Update http proxy details": [
-        ""
+        "HTTP プロキシーの詳細更新"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "インストール済みパッケージ、有効なリポジトリー、モジュールインベントリーの更新"
@@ -8982,7 +8982,7 @@
         "Katello インターフェイスでのパッケージの更新"
       ],
       "Update redhat repository": [
-        ""
+        "redhat リポジトリーの更新"
       ],
       "Update release version for host": [
         "ホストのリリースバージョンの更新"
@@ -9174,7 +9174,7 @@
         "コンテナーレジストリーの認証にコンテナー証明書を使用します。true に設定すると、コンテナーレジストリー証明書がホストにインストールされます"
       ],
       "Used as": [
-        ""
+        "以下として使用: "
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "pulp3 のリポジトリーの同時ダウンロード数を判断するのに使用します。値は 20 未満を使用してください。デフォルト値は 10 です"
@@ -9231,7 +9231,7 @@
         "SSL の確認"
       ],
       "Verify checksum": [
-        ""
+        "チェックサムの確認"
       ],
       "Verify checksum for content on smart proxy": [
         "Smart Proxy 上のコンテンツのチェックサムを確認する"
