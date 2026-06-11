@@ -1,1 +1,1 @@
-developer_docs/quick_reference.md
+AGENTS.md
