@@ -49,7 +49,10 @@ module Katello
           self.medium = nil
         end
 
-        if content_facet&.kickstart_repository_id && !matching_kickstart_repository?(content_facet) && (equivalent = equivalent_kickstart_repository)
+        equivalent = equivalent_kickstart_repository
+        should_recalculate = operatingsystem_id_changed? || !matching_kickstart_repository?(content_facet)
+        if content_facet&.kickstart_repository_id && should_recalculate && equivalent &&
+           equivalent[:id] != content_facet.kickstart_repository_id
           self.content_facet.kickstart_repository_id = equivalent[:id]
         end
       end
@@ -132,7 +135,16 @@ module Katello
                       content_facet.kickstart_repository &&
                       operatingsystem.respond_to?(:kickstart_repos)
         ks_repos = operatingsystem.kickstart_repos(self, content_facet: content_facet)
-        ks_repos.find { |repo| repo[:name] == content_facet.kickstart_repository.label }
+        return if ks_repos.blank?
+
+        if operatingsystem_id_changed? && (release_match = equivalent_kickstart_repository_for_release(ks_repos))
+          return release_match
+        end
+
+        by_label = ks_repos.find { |repo| repo[:name] == content_facet.kickstart_repository.label }
+        return by_label if by_label
+
+        equivalent_kickstart_repository_for_variant(ks_repos)
       end
 
       def matching_kickstart_repository?(content_facet)
@@ -146,6 +158,41 @@ module Katello
       end
 
       private
+
+      def equivalent_kickstart_repository_for_release(ks_repos)
+        return if operatingsystem.release.blank?
+
+        repos_by_id = indexed_kickstart_repositories(ks_repos)
+        release_matches = ks_repos.select do |repo|
+          repos_by_id[repo[:id]]&.distribution_version == operatingsystem.release
+        end
+        return if release_matches.blank?
+
+        equivalent_kickstart_repository_for_variant(release_matches, repos_by_id) || release_matches.first
+      end
+
+      def equivalent_kickstart_repository_for_variant(ks_repos, repos_by_id = indexed_kickstart_repositories(ks_repos))
+        current_repo = content_facet&.kickstart_repository
+        return if current_repo.blank?
+
+        if current_repo.distribution_variant.present?
+          same_variant = ks_repos.find do |repo|
+            repos_by_id[repo[:id]]&.distribution_variant == current_repo.distribution_variant
+          end
+          return same_variant if same_variant
+        end
+
+        if current_repo.product_id.present?
+          same_product = ks_repos.find do |repo|
+            repos_by_id[repo[:id]]&.product_id == current_repo.product_id
+          end
+          return same_product if same_product
+        end
+      end
+
+      def indexed_kickstart_repositories(ks_repos)
+        Katello::Repository.where(id: ks_repos.map { |repo| repo[:id] }).index_by(&:id)
+      end
 
       def inherited_ancestry_attribute(attribute, facet)
         value = self.send(facet)&.send(attribute)
