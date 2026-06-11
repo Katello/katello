@@ -272,6 +272,36 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     assert_equal id, kickstart_repository_id(@host)
   end
 
+  test "must keep child hostgroup kickstart repository inherited by default" do
+    id = 100
+    option = mock
+    option.expects(:id).returns(id).at_least_once
+
+    parent = ::Hostgroup.create!(name: 'kickstart_parent')
+    @hostgroup.parent = parent
+    @hostgroup.content_facet.kickstart_repository_id = nil
+    @hostgroup.medium_id = nil
+
+    expects(:kickstart_repository_options).with(@hostgroup, {}).returns([option])
+    assert_nil kickstart_repository_id(@hostgroup)
+  end
+
+  test "must keep child hostgroup media selection on synced content when inheriting kickstart repository" do
+    parent = ::Hostgroup.create!(name: 'kickstart_parent_media_selection')
+    parent.build_content_facet(
+      content_view_environment: @cvenv,
+      content_source: @content_source,
+      kickstart_repository_id: @repo_with_distro.id
+    )
+    parent.save!
+
+    @hostgroup.parent = parent
+    @hostgroup.content_facet.kickstart_repository_id = nil
+    @hostgroup.medium_id = nil
+
+    refute(use_install_media(@hostgroup))
+  end
+
   test "must handle nil hosts or host groups" do
     expects(:kickstart_repository_options).with(nil, {}).returns([])
     assert_nil kickstart_repository_id(nil)
