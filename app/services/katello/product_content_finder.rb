@@ -1,3 +1,5 @@
+require 'set'
+
 module Katello
   class ProductContentFinder
     attr_accessor :match_environment, :consumable

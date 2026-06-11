@@ -1,5 +1,3 @@
-require 'set'
-
 module Katello
   module Concerns::PulpDatabaseUnit
     extend ActiveSupport::Concern

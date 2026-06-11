@@ -2,7 +2,6 @@ require 'test_helper'
 require 'factory_bot_rails'
 require "webmock/minitest"
 require 'mocha/minitest'
-require 'set'
 require 'robottelo/reporter/attributes'
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
