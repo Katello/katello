@@ -93,23 +93,20 @@ module Katello
     param :id, :number, :desc => N_("Id of the host collection"), :required => true
     param :host_ids, Array, :desc => N_("Array of host ids")
     def add_hosts
-      host_ids = params[:host_ids].map(&:to_i)
+      host_ids, found_host_ids, editable_host_ids = requested_host_membership_ids
 
-      @hosts = ::Host::Managed.where(id: host_ids)
-      @editable_hosts = @hosts.authorized(:edit_hosts)
-
-      already_added_host_ids = @host_collection.host_ids & host_ids
-      unfound_host_ids = host_ids - @hosts.pluck(:id)
-
-      @host_collection.host_ids = (@host_collection.host_ids +
-                                   @editable_hosts.pluck(:id)).uniq
-      @host_collection.save!
+      membership_update = @host_collection.add_host_ids!(
+        :requested_host_ids => found_host_ids,
+        :authorized_host_ids => editable_host_ids
+      )
+      already_added_host_ids = membership_update[:requested_existing_host_ids]
+      unfound_host_ids = host_ids - found_host_ids
 
       messages = format_bulk_action_messages(
           :success    => _("Successfully added %s Host(s)."),
           :error      => _("You were not allowed to add %s"),
-          :models     => @hosts.pluck(:id) - already_added_host_ids,
-          :authorized => @editable_hosts.pluck(:id) - already_added_host_ids
+          :models     => found_host_ids - already_added_host_ids,
+          :authorized => membership_update[:updated_host_ids]
       )
 
       already_added_host_ids.each do |host_id|
@@ -128,22 +125,20 @@ module Katello
     param :id, :number, :desc => N_("Id of the host collection"), :required => true
     param :host_ids, Array, :desc => N_("Array of host ids")
     def remove_hosts
-      host_ids = params[:host_ids].map(&:to_i)
+      host_ids, found_host_ids, editable_host_ids = requested_host_membership_ids
 
-      @hosts = ::Host::Managed.where(id: host_ids)
-      @editable_hosts = @hosts.authorized(:edit_hosts)
-
-      already_removed_host_ids = @hosts.pluck(:id) - @host_collection.host_ids
-      unfound_host_ids = host_ids - @hosts.pluck(:id)
-
-      @host_collection.host_ids -= @editable_hosts.pluck(:id)
-      @host_collection.save!
+      membership_update = @host_collection.remove_host_ids!(
+        :requested_host_ids => found_host_ids,
+        :authorized_host_ids => editable_host_ids
+      )
+      already_removed_host_ids = found_host_ids - membership_update[:requested_existing_host_ids]
+      unfound_host_ids = host_ids - found_host_ids
 
       messages = format_bulk_action_messages(
           :success    => _("Successfully removed %s Host(s)."),
           :error      => _("You were not allowed to sync %s"),
-          :models     => @hosts.pluck(:id) - already_removed_host_ids,
-          :authorized => @editable_hosts.pluck(:id) - already_removed_host_ids
+          :models     => found_host_ids - already_removed_host_ids,
+          :authorized => membership_update[:updated_host_ids]
       )
 
       already_removed_host_ids.each do |host_id|
@@ -200,6 +195,13 @@ module Katello
         result[:unlimited_hosts] = false
       end
       result
+    end
+
+    def requested_host_membership_ids
+      host_ids = params[:host_ids].map(&:to_i)
+      @hosts = ::Host::Managed.where(id: host_ids)
+      @editable_hosts = @hosts.authorized(:edit_hosts)
+      [host_ids, @hosts.pluck(:id), @editable_hosts.pluck(:id)]
     end
 
     def find_editable_host
