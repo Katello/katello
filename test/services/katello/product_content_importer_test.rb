@@ -9,6 +9,7 @@ module Katello
         "content" => {
           "id" => "4010",
           "type" => "file",
+          "label" => "foo-content-label",
           "name" => "foo",
           "contentUrl" => "/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso",
         },
@@ -27,9 +28,11 @@ module Katello
       assert_equal 1, @fedora.product_contents.count
       refute @fedora.reload.product_contents.first.enabled
       assert_equal 'foo', @fedora.contents.first.name
+      assert_equal 'foo-content-label', @fedora.contents.first.label
 
       @product_content.first['enabled'] = true
       @product_content.first['content']['name'] = 'bar'
+      @product_content.first['content']['label'] = 'bar-content-label'
 
       @service = ProductContentImporter.new
       @service.add_product_content(@fedora, @product_content)
@@ -40,6 +43,7 @@ module Katello
       assert_equal 1, @fedora.product_contents.count
       assert @fedora.reload.product_contents.first.enabled
       assert_equal 'bar', @fedora.contents.first.name
+      assert_equal 'bar-content-label', @fedora.contents.first.label
     end
 
     def test_import_missing_prod_content
