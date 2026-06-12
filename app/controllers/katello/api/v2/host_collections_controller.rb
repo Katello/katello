@@ -198,7 +198,7 @@ module Katello
     end
 
     def requested_host_membership_ids
-      host_ids = params[:host_ids].map(&:to_i)
+      host_ids = Array(params[:host_ids]).map(&:to_i)
       @hosts = ::Host::Managed.where(id: host_ids)
       @editable_hosts = @hosts.authorized(:edit_hosts)
       [host_ids, @hosts.pluck(:id), @editable_hosts.pluck(:id)]

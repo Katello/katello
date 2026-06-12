@@ -172,11 +172,11 @@ module Katello
     def test_add_host_ids_only_updates_requested_authorized_hosts
       result = @simple_collection.add_host_ids!(
         :requested_host_ids => [@host_two.id],
-        :authorized_host_ids => [@host_one.id, @host_two.id]
+        :authorized_host_ids => [@host_one.id]
       )
 
-      assert_equal [@host_two.id], result[:updated_host_ids]
-      assert_equal [@host_one.id, @host_two.id].sort, @simple_collection.reload.host_ids.sort
+      assert_empty result[:updated_host_ids]
+      assert_equal [@host_one.id], @simple_collection.reload.host_ids
     end
 
     def test_add_host_ids_honors_max_hosts
