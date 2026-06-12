@@ -77,14 +77,11 @@ module ::Actions::Katello::ContentViewVersion
     def setup_proxy
       proxy = SmartProxy.pulp_primary
       SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
-      SmartProxy.any_instance.stubs(:pulp_primary!).returns(proxy)
-      proxy.smart_proxy_features.where(:feature_id => Feature.find_by(:name => SmartProxy::PULP_FEATURE)).delete_all
     end
 
     before do
       setup_proxy
       Katello::Product.any_instance.stubs(cdn_resource: cdn_resource)
-      SmartProxy.any_instance.stubs(:ping_pulp).returns({})
       SmartProxy.any_instance.stubs(:ping_pulp3).returns({})
       SmartProxy.any_instance.stubs(:pulp3_configuration).returns(nil)
       ::Katello::Pulp3::Repository.any_instance.stubs(:create_remote).returns(nil)

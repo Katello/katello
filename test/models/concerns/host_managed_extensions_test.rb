@@ -121,8 +121,7 @@ module Katello
     end
 
     def test_smart_proxy_ids_with_katello
-      content_source = FactoryBot.create(:smart_proxy,
-                                          :features => [Feature.where(:name => "Pulp Node").first_or_create])
+      content_source = FactoryBot.create(:smart_proxy, :pulp_mirror)
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
       @foreman_host.content_facet.content_source = content_source
       assert_includes @foreman_host.smart_proxy_ids, @foreman_host.content_source_id
