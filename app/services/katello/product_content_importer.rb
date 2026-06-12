@@ -162,6 +162,9 @@ module Katello
       new_name = prod_content_json[:content][:name]
       attrs_to_update[:name] = new_name if content.name != new_name
 
+      new_label = prod_content_json[:content][:label]
+      attrs_to_update[:label] = new_label if content.label != new_label
+
       new_url = prod_content_json[:content][:contentUrl]
       if content.content_url != new_url
         if content.can_update_to_url?(new_url)
