@@ -1,5 +1,3 @@
-require 'set'
-
 module Actions
   module Katello
     module Repository

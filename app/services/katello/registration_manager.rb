@@ -1,3 +1,5 @@
+require 'set'
+
 module Katello
   class RegistrationManager
     class << self

@@ -312,21 +312,6 @@ To create an angular object from translated .po files run:
 grunt i18n:compile
 ```
 
-## Releasing Bastion ##
-
-In order to release a new version of Bastion, the following is required:
-
- 1. Update the version in `lib/bastion/version.rb`
- 1. Commit the changes
- 1. `git tag <version>`
- 1. `gem build bastion.gemspec`
- 1. `gem push bastion-<version>.gem`
- 1. `git push origin <version>`
- 1. `git push origin master`
-
-In addition to the above the previous Bastion release in Redmine should be closed and a new release created with the
-version used above.
-
 ## Contributing ##
 
 We welcome contributions, please see the Bastion [developer guide](https://github.com/Katello/katello.org/blob/master/docs/developer_guide/bastion/index.md).
