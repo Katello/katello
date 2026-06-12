@@ -1055,12 +1055,11 @@ module Katello
     end
 
     def deb_content_url_options
-      return '' unless version_href
+      return '' if version_href.blank?
 
       backend_service = self.backend_service(SmartProxy.pulp_primary)
-      components = backend_service.pulp_components.join(',')
-      distributions = backend_service.pulp_distributions.join(',')
-      "/?comp=#{components}&rel=#{distributions}"
+      distributions, components = backend_service.pulp_distributions_and_components
+      "/?comp=#{components.join(',')}&rel=#{distributions.join(',')}"
     end
 
     def sync_status
