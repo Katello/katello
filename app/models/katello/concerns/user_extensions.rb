@@ -6,6 +6,7 @@ module Katello
       included do
         has_many :activation_keys, :dependent => :nullify, :class_name => "Katello::ActivationKey"
         has_many :subscription_facets, :dependent => :nullify, :class_name => "Katello::Host::SubscriptionFacet"
+        has_many :errata_applications, :dependent => :nullify, :class_name => "Katello::ErrataApplication", :inverse_of => :user
 
         def self.remote_user
           SETTINGS[:katello][:pulp][:default_login]

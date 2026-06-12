@@ -13,5 +13,6 @@ UpgradeTask.define_tasks(:katello) do
     {:name => 'katello:upgrades:4.19:enable_structured_apt_for_deb', :long_running => true, :skip_failure => true},
     {:name => 'katello:upgrades:4.21:import_pools'},
     {:name => 'katello:upgrades:4.21:cleanup_python_publications'},
+    {:name => 'katello:upgrades:4.21:populate_errata_applications', :long_running => true, :skip_failure => true},
   ]
 end
