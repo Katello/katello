@@ -49,6 +49,14 @@ module Actions
                 end
               end
             end
+
+            repos.select { |repo| smart_proxy.pulp3_support?(repo) }.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|
+              concurrence do
+                repo_batch.each do |repo|
+                  plan_action(Actions::Pulp3::CapsuleContent::RefreshDistribution, repo, smart_proxy)
+                end
+              end
+            end
           end
         end
         # rubocop:enable Metrics/MethodLength
