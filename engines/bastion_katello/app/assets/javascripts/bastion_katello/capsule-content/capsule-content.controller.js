@@ -16,12 +16,22 @@
  *   Provides the functionality for the capsule-content page.
  */
 angular.module('Bastion.capsule-content').controller('CapsuleContentController',
-    ['$scope', '$urlMatcherFactory', '$location', 'translate', 'CapsuleContent', 'AggregateTask', 'CurrentOrganization', 'syncState', 'Notification',
-    function ($scope, $urlMatcherFactory, $location, translate, CapsuleContent, AggregateTask, CurrentOrganization, syncState, Notification) {
+    ['$scope', '$urlMatcherFactory', '$location', '$window', 'translate', 'CapsuleContent', 'AggregateTask', 'CurrentOrganization', 'syncState', 'Notification',
+    function ($scope, $urlMatcherFactory, $location, $window, translate, CapsuleContent, AggregateTask, CurrentOrganization, syncState, Notification) {
 
-        var refreshSyncStatus;
-        var urlMatcher = $urlMatcherFactory.compile("/smart_proxies/:capsuleId");
-        var capsuleId = urlMatcher.exec($location.path()).capsuleId;
+        var refreshSyncStatus,
+            urlMatcher = $urlMatcherFactory.compile("/smart_proxies/:capsuleId"),
+            capsuleId = urlMatcher.exec($location.path()).capsuleId;
+
+        function notifyCapsuleContentSyncStarted(task) {
+            $window.dispatchEvent(new CustomEvent('katello:capsuleContentSyncStarted', {
+                detail: { taskId: task && task.id }
+            }));
+        }
+
+        function notifyCapsuleContentSyncChanged() {
+            $window.dispatchEvent(new CustomEvent('katello:capsuleContentSyncChanged'));
+        }
 
         function processError(response, prependMsg) {
             var msg = '';
@@ -63,7 +73,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         function taskUpdated() {
             if (!angular.isUndefined($scope.syncTask.result) && $scope.syncTask.result !== 'pending') {
                 $scope.syncTask.unregisterAll();
-                refreshSyncStatus();
+                refreshSyncStatus(true);
             }
         }
 
@@ -78,7 +88,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             return AggregateTask.new(taskIds, taskUpdated);
         }
 
-        refreshSyncStatus = function () {
+        refreshSyncStatus = function (notifyReact) {
             var params = {
                 id: capsuleId
             };
@@ -127,6 +137,9 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                     }
                 }
                 $scope.syncState.set(stateFromTask(activeOrFailedTask));
+                if (notifyReact) {
+                    notifyCapsuleContentSyncChanged();
+                }
             }, function (response) {
                 $scope.syncStatus = {
                     'active_sync_tasks': [],
@@ -141,7 +154,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         $scope.smartProxyId = capsuleId;
         $scope.expandEnvironments = {};
 
-        refreshSyncStatus();
+        refreshSyncStatus(false);
 
         $scope.$on('$destroy', function () {
             if ($scope.syncTask) {
@@ -157,6 +170,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                 $scope.syncState.set(syncState.RECLAIM_SPACE_TRIGGERED);
 
                 CapsuleContent.reclaimSpace({id: capsuleId}).$promise.then(function (task) {
+                    notifyCapsuleContentSyncStarted(task);
                     $scope.syncStatus['active_sync_tasks'].push(task);
                     $scope.syncTask = aggregateTasks($scope.syncStatus['active_sync_tasks']);
                     $scope.syncState.set(syncState.RECLAIMING_SPACE);
@@ -173,6 +187,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                 $scope.syncState.set(syncState.SYNC_TRIGGERED);
 
                 CapsuleContent.sync({id: capsuleId, 'skip_metadata_check': skipMetadataCheck}).$promise.then(function (task) {
+                    notifyCapsuleContentSyncStarted(task);
                     $scope.syncStatus['active_sync_tasks'].push(task);
                     $scope.syncTask = aggregateTasks($scope.syncStatus['active_sync_tasks']);
                     $scope.syncState.set(syncState.SYNCING);
