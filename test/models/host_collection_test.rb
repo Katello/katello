@@ -147,6 +147,56 @@ module Katello
       end
     end
 
+    def test_add_host_ids_adds_only_missing_hosts
+      result = @simple_collection.add_host_ids!(
+        :requested_host_ids => [@host_one.id, @host_two.id],
+        :authorized_host_ids => [@host_one.id, @host_two.id]
+      )
+
+      assert_equal [@host_one.id], result[:requested_existing_host_ids]
+      assert_equal [@host_two.id], result[:updated_host_ids]
+      assert_equal [@host_one.id, @host_two.id].sort, @simple_collection.reload.host_ids.sort
+    end
+
+    def test_remove_host_ids_removes_only_existing_hosts
+      result = @simple_collection.remove_host_ids!(
+        :requested_host_ids => [@host_one.id, @host_two.id],
+        :authorized_host_ids => [@host_one.id, @host_two.id]
+      )
+
+      assert_equal [@host_one.id], result[:requested_existing_host_ids]
+      assert_equal [@host_one.id], result[:updated_host_ids]
+      assert_empty @simple_collection.reload.host_ids
+    end
+
+    def test_add_host_ids_only_updates_requested_authorized_hosts
+      result = @simple_collection.add_host_ids!(
+        :requested_host_ids => [@host_two.id],
+        :authorized_host_ids => [@host_one.id]
+      )
+
+      assert_empty result[:updated_host_ids]
+      assert_equal [@host_one.id], @simple_collection.reload.host_ids
+    end
+
+    def test_add_host_ids_honors_max_hosts
+      limited_collection = katello_host_collections(:one_host_limit_host_collection)
+      limited_collection.add_host_ids!(
+        :requested_host_ids => [@host_one.id],
+        :authorized_host_ids => [@host_one.id]
+      )
+
+      error = assert_raises(ActiveRecord::RecordInvalid) do
+        limited_collection.add_host_ids!(
+          :requested_host_ids => [@host_two.id],
+          :authorized_host_ids => [@host_two.id]
+        )
+      end
+
+      assert_includes error.record.errors[:base], limited_collection.max_hosts_exceeded_message
+      assert_equal [@host_one.id], limited_collection.reload.host_ids
+    end
+
     def test_audit_on_host_collection_creation
       new_host_collection = HostCollection.new(
         :name => "Test Audit Host Collection ",
