@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
@@ -9,6 +9,8 @@ import {
 import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { CONTENT_CREDENTIAL_GPG_TYPE } from './ContentCredentialConstants';
 import { orgId } from '../../services/api';
+import CreateContentCredentialModal from './Create';
+import DeleteContentCredentialModal from './Delete/DeleteContentCredentialModal';
 
 const formatContentType = (contentType) => {
   if (contentType === CONTENT_CREDENTIAL_GPG_TYPE) return __('GPG Key');
@@ -33,6 +35,10 @@ const getACSCount = credential =>
   (credential.ssl_key_alternate_content_sources?.length || 0);
 
 const ContentCredentialsPage = () => {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [credentialToDelete, setCredentialToDelete] = useState(null);
+
   const apiOptions = {
     key: 'CONTENT_CREDENTIALS',
   };
@@ -47,6 +53,7 @@ const ContentCredentialsPage = () => {
 
   const defaultParams = {
     search: urlSearchQuery,
+    include_permissions: true,
   };
   if (urlPage) defaultParams.page = Number(urlPage);
   if (urlPerPage) defaultParams.per_page = Number(urlPerPage);
@@ -62,11 +69,33 @@ const ContentCredentialsPage = () => {
     setAPIOptions: apiResponse.setAPIOptions,
   });
 
+  const { can_create: canCreate = false, can_delete: canDelete = false } =
+    apiResponse.response || {};
+
+  const rowKebabItems = credential => [
+    {
+      title: __('Delete'),
+      isDisabled:
+        !canDelete || !credential.permissions?.destroy_content_credentials,
+      onClick: () => {
+        setCredentialToDelete({
+          id: credential.id,
+          name: credential.name,
+        });
+        setIsDeleteModalOpen(true);
+      },
+    },
+  ];
+
   const columns = {
     name: {
       title: __('Name'),
       isSorted: true,
-      wrapper: rowData => <Link to={`/labs/content_credentials/${rowData.id}`}>{rowData.name}</Link>,
+      wrapper: rowData => (
+        <Link to={`/labs/content_credentials/${rowData.id}`}>
+          {rowData.name}
+        </Link>
+      ),
     },
     organization: {
       title: __('Organization'),
@@ -90,26 +119,46 @@ const ContentCredentialsPage = () => {
     },
   };
 
+  const refreshTable = () => {
+    apiResponse.setAPIOptions({ ...apiOptions, params: defaultParams });
+  };
+
   return (
-    <TableIndexPage
-      apiUrl={apiUrl}
-      apiOptions={apiOptions}
-      header={__('Content Credentials')}
-      columns={columns}
-      creatable={false}
-      customSearchProps={{
-        autocomplete: {
-          url: `${apiUrl}/auto_complete_search`,
-          apiParams: { organization_id: orgId() },
-        },
-        controller: 'katello_content_credentials',
-        bookmarks: {
-          url: '/api/bookmarks',
-          canCreate: true,
-        },
-      }}
-      ouiaId="content-credentials-table"
-    />
+    <>
+      <TableIndexPage
+        apiUrl={apiUrl}
+        apiOptions={apiOptions}
+        header={__('Content Credentials')}
+        columns={columns}
+        creatable={canCreate}
+        customCreateAction={() => () => setIsCreateModalOpen(true)}
+        rowKebabItems={rowKebabItems}
+        customSearchProps={{
+          autocomplete: {
+            url: `${apiUrl}/auto_complete_search`,
+            apiParams: { organization_id: orgId() },
+          },
+          controller: 'katello_content_credentials',
+          bookmarks: {
+            url: '/api/bookmarks',
+            canCreate: true,
+          },
+        }}
+        ouiaId="content-credentials-table"
+      />
+      <CreateContentCredentialModal
+        show={isCreateModalOpen}
+        setIsOpen={setIsCreateModalOpen}
+        refreshTable={refreshTable}
+      />
+      <DeleteContentCredentialModal
+        isModalOpen={isDeleteModalOpen}
+        handleModalToggle={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
+        credentialId={credentialToDelete?.id}
+        credentialName={credentialToDelete?.name}
+        refreshTable={refreshTable}
+      />
+    </>
   );
 };
 
