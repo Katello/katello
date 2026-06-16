@@ -32,15 +32,14 @@ module Katello
       # NOTE: max_hosts_check and max_hosts_no_exceeded use size() instead of count() because
       # the host list exists as an array rather than a DB query when run as a validation.
       host_count = hosts.size
-      if !unlimited_hosts && (host_count > 0 && (host_count.to_i > max_hosts.to_i)) && max_hosts_changed?
+      if !unlimited_hosts && host_count > 0 && (host_count.to_i > max_hosts.to_i) && max_hosts_changed?
         errors.add :max_host, N_("may not be less than the number of hosts associated with the host collection.")
       end
     end
 
     def max_hosts_not_exceeded
       if !unlimited_hosts && (hosts.size.to_i > max_hosts.to_i)
-        errors.add :base, N_("You cannot have more than #{max_hosts} host(s) associated with host collection #{name}." %
-                              {:max_hosts => max_hosts, :name => name})
+        errors.add :base, max_hosts_exceeded_message
       end
     end
 
@@ -75,6 +74,36 @@ module Katello
       Rails.cache.fetch("#{cache_key}/total_hosts", expires_in: 1.minute, force: !cached) do
         hosts.count
       end
+    end
+
+    def add_host_ids!(requested_host_ids:, authorized_host_ids:)
+      update_host_membership(requested_host_ids, authorized_host_ids) do |existing_host_ids, allowed_host_ids|
+        host_ids_to_add = allowed_host_ids - existing_host_ids
+        ensure_capacity_for!(host_ids_to_add.length)
+        create_host_collection_hosts(host_ids_to_add)
+
+        {
+          :updated_host_ids => host_ids_to_add,
+          :requested_existing_host_ids => existing_host_ids,
+        }
+      end
+    end
+
+    def remove_host_ids!(requested_host_ids:, authorized_host_ids:)
+      update_host_membership(requested_host_ids, authorized_host_ids) do |existing_host_ids, allowed_host_ids|
+        host_ids_to_remove = existing_host_ids & allowed_host_ids
+        destroy_host_collection_hosts(host_ids_to_remove)
+
+        {
+          :updated_host_ids => host_ids_to_remove,
+          :requested_existing_host_ids => existing_host_ids,
+        }
+      end
+    end
+
+    def max_hosts_exceeded_message
+      _("You cannot have more than %{max_hosts} host(s) associated with host collection %{host_collection}.") %
+        { :max_hosts => max_hosts, :host_collection => name }
     end
 
     # Retrieve the list of accessible host collections in the organization specified, returning
@@ -113,6 +142,73 @@ module Katello
 
     def self.humanize_class_name(_name = nil)
       _("Host Collections")
+    end
+
+    private
+
+    def update_host_membership(requested_host_ids, authorized_host_ids)
+      normalized_requested_host_ids = normalize_host_ids(requested_host_ids)
+      normalized_authorized_host_ids = normalize_host_ids(authorized_host_ids)
+      allowed_host_ids = normalized_requested_host_ids & normalized_authorized_host_ids
+
+      return empty_membership_result if normalized_requested_host_ids.empty?
+
+      with_lock do
+        existing_host_ids = host_collection_hosts.where(:host_id => normalized_requested_host_ids).pluck(:host_id)
+        result = yield(existing_host_ids, allowed_host_ids)
+
+        clear_membership_cache if result[:updated_host_ids].any?
+
+        result
+      end
+    end
+
+    def empty_membership_result
+      {
+        :updated_host_ids => [],
+        :requested_existing_host_ids => [],
+      }
+    end
+
+    def normalize_host_ids(host_ids)
+      Array(host_ids).map(&:to_i).uniq
+    end
+
+    def ensure_capacity_for!(additional_host_count)
+      return if additional_host_count.zero? || unlimited_hosts
+
+      if host_collection_hosts.count + additional_host_count > max_hosts
+        errors.add(:base, max_hosts_exceeded_message)
+        fail ActiveRecord::RecordInvalid, self
+      end
+    end
+
+    def create_host_collection_hosts(host_ids)
+      return if host_ids.empty?
+
+      timestamp = Time.current
+      HostCollectionHosts.insert_all(
+        host_ids.map do |host_id|
+          {
+            :host_collection_id => id,
+            :host_id => host_id,
+            :created_at => timestamp,
+            :updated_at => timestamp,
+          }
+        end
+      )
+    end
+
+    def destroy_host_collection_hosts(host_ids)
+      return if host_ids.empty?
+
+      host_collection_hosts.where(:host_id => host_ids).delete_all
+    end
+
+    def clear_membership_cache
+      association(:host_collection_hosts).reset
+      association(:hosts).reset
+      Rails.cache.delete("#{cache_key}/total_hosts")
     end
 
     apipie :class, desc: "A class representing #{model_name.human} object" do

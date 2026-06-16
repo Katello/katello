@@ -53,7 +53,10 @@ module Katello
       put :bulk_add_host_collections, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :host_collection_ids => [@host_collection1.id, @host_collection2.id] }
 
       assert_response :success
+      results = JSON.parse(response.body)
       assert_equal 2, @host1.host_collections.count
+      assert_includes results['displayMessages'], "Added 1 host(s) to host collection #{@host_collection1.name}."
+      assert_includes results['displayMessages'], "Added 2 host(s) to host collection #{@host_collection2.name}."
     end
 
     def test_remove_host_collection
@@ -61,7 +64,10 @@ module Katello
       put :bulk_remove_host_collections, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :host_collection_ids => [@host_collection1.id, @host_collection2.id] }
 
       assert_response :success
+      results = JSON.parse(response.body)
       assert_equal 0, @host1.host_collections.count
+      assert_includes results['displayMessages'], "Removed 1 host(s) from host collection #{@host_collection1.name}."
+      assert_includes results['displayMessages'], "Removed 0 host(s) from host collection #{@host_collection2.name}."
     end
 
     def test_destroy_hosts
