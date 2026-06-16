@@ -16,11 +16,10 @@ html .pagination-pf-pagesize.btn-group {
 
 // don't use this class if you need a dropdown menu to extend outside the table cell
 .neat-table-cells {
-
   td,
   th {
     overflow: auto;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
@@ -29,12 +28,12 @@ html .pagination-pf-pagesize.btn-group {
   td {
     max-width: 200px;
     overflow: unset;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
 // override foreman's .editable styles, that are conflicting with the patternfly ones
-.pf-table-inline-edit {
+#subscriptions-page .pf-table-inline-edit {
   .editable {
     background: none;
   }
@@ -79,7 +78,7 @@ html .pagination-pf-pagesize.btn-group {
 }
 
 .gap-16 {
-  grid-gap: 16px;
+  gap: 16px;
 }
 
 .margin-bottom-24 {
@@ -101,12 +100,10 @@ html .pagination-pf-pagesize.btn-group {
 // needed to ensure correct spacing between buttons and the button
 // container
 .toolbar-pf .form-group {
-
   .btn,
   .btn-group,
   .btn-container,
   .tooltip-button-helper {
-
     +.btn,
     +.btn-group,
     +.btn-container,
@@ -121,7 +118,8 @@ html .pagination-pf-pagesize.btn-group {
   outline: none;
 }
 
-// Modal sizing fix
+// Modal sizing fix — intentional global override for sidebar offset
+// stylelint-disable-next-line foreman/no-root-pf-overrides
 .pf-v5-l-bullseye .pf-v5-c-modal-box {
   margin-top: 76px;
   max-height: calc(100vh - 76px);
@@ -146,7 +144,6 @@ html .pagination-pf-pagesize.btn-group {
 }
 
 @keyframes hideme {
-
   0%,
   70% {
     opacity: 1;
