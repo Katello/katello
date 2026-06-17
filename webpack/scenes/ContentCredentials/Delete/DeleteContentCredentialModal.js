@@ -35,7 +35,7 @@ const DeleteContentCredentialModal = ({
 
   return (
     <Modal
-      ouiaId="content-credential-delete-modal"
+      ouiaId="delete-content-credential-modal"
       variant={ModalVariant.small}
       title={[
         <Flex key="delete-modal-header">
@@ -43,7 +43,7 @@ const DeleteContentCredentialModal = ({
             <ExclamationTriangleIcon />
           </Icon>
           <Title
-            ouiaId="content-credential-delete-header"
+            ouiaId="delete-content-credential-title"
             key="delete-content-credential-title"
             headingLevel="h5"
             size="2xl"
@@ -56,7 +56,7 @@ const DeleteContentCredentialModal = ({
       onClose={handleModalToggle}
       actions={[
         <Button
-          ouiaId="delete-button"
+          ouiaId="delete-content-credential-delete-button"
           key="delete"
           variant="danger"
           isDisabled={!credentialId}
@@ -65,7 +65,7 @@ const DeleteContentCredentialModal = ({
           {__('Delete')}
         </Button>,
         <Button
-          ouiaId="cancel-button"
+          ouiaId="delete-content-credential-cancel-button"
           key="cancel"
           variant="link"
           onClick={handleModalToggle}
