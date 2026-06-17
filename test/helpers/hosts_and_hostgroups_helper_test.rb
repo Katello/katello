@@ -273,9 +273,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
   end
 
   test "must keep child hostgroup kickstart repository inherited by default" do
-    id = 100
     option = mock
-    option.expects(:id).returns(id).at_least_once
 
     parent = ::Hostgroup.create!(name: 'kickstart_parent')
     @hostgroup.parent = parent
@@ -287,13 +285,13 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
   end
 
   test "must keep child hostgroup media selection on synced content when inheriting kickstart repository" do
-    parent = ::Hostgroup.create!(name: 'kickstart_parent_media_selection')
-    parent.build_content_facet(
-      content_view_environment: @cvenv,
-      content_source: @content_source,
-      kickstart_repository_id: @repo_with_distro.id
+    parent = ::Hostgroup.create!(
+      name: 'kickstart_parent_media_selection',
+      operatingsystem: @os,
+      architecture: @arch
     )
-    parent.save!
+    parent_facet = Katello::Hostgroup::ContentFacet.create!(hostgroup: parent)
+    parent_facet.update_columns(kickstart_repository_id: @repo_with_distro.id)
 
     @hostgroup.parent = parent
     @hostgroup.content_facet.kickstart_repository_id = nil

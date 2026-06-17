@@ -957,15 +957,13 @@ module Katello
           { id: major_minor_repo.id, name: 'major_minor_repo' },
         ]
       )
-
-      Katello::Repository.stubs(:where).with(id: [@distro.id, alternate_repo.id, preferred_repo.id, major_minor_repo.id]).returns(
-        [
-          @distro,
-          alternate_repo,
-          preferred_repo,
-          major_minor_repo,
-        ]
-      )
+      repos_by_id = {
+        @distro.id => @distro,
+        alternate_repo.id => alternate_repo,
+        preferred_repo.id => preferred_repo,
+        major_minor_repo.id => major_minor_repo,
+      }
+      parent.stubs(:indexed_kickstart_repositories).returns(repos_by_id)
 
       parent.operatingsystem = new_os
       assert parent.save
@@ -1002,12 +1000,12 @@ module Katello
           { id: preferred_repo.id, name: 'preferred_repo' },
         ]
       )
-      Katello::Repository.stubs(:where).with(id: [@distro.id, preferred_repo.id]).returns(
-        [
-          @distro,
-          preferred_repo,
-        ]
-      )
+      repos_by_id = {
+        @distro.id => @distro,
+        preferred_repo.id => preferred_repo,
+      }
+      parent.stubs(:indexed_kickstart_repositories).returns(repos_by_id)
+      child.stubs(:indexed_kickstart_repositories).returns(repos_by_id)
 
       parent.operatingsystem = new_os
       assert parent.save
@@ -1042,12 +1040,11 @@ module Katello
           { id: preferred_repo.id, name: 'Red_Hat_Enterprise_Linux_2_for_x86_64_-_BaseOS_Kickstart_2_2' },
         ]
       )
-      Katello::Repository.stubs(:where).with(id: [@distro.id, preferred_repo.id]).returns(
-        [
-          @distro,
-          preferred_repo,
-        ]
-      )
+      repos_by_id = {
+        @distro.id => @distro,
+        preferred_repo.id => preferred_repo,
+      }
+      parent.stubs(:indexed_kickstart_repositories).returns(repos_by_id)
 
       parent.operatingsystem = new_os
       assert parent.save

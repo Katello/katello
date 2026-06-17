@@ -128,7 +128,7 @@ module Katello
         ks_repos = operatingsystem.kickstart_repos(self, content_facet: effective_content_facet_for_kickstart(content_facet))
         return if ks_repos.blank?
 
-        if operatingsystem_id_changed?
+        if operatingsystem_changed_for_recalculation? || kickstart_repository_release_mismatch?
           release_match = equivalent_kickstart_repository_for_release(ks_repos)
           return release_match if release_match
 
@@ -169,8 +169,30 @@ module Katello
       end
 
       def should_recalculate_kickstart_repository?
-        content_facet&.kickstart_repository_id &&
-          (operatingsystem_id_changed? || !matching_kickstart_repository?(content_facet))
+        return false unless content_facet&.kickstart_repository_id
+        return true if operatingsystem_changed_for_recalculation?
+        return true if kickstart_repository_release_mismatch?
+        return true unless matching_kickstart_repository?(content_facet)
+
+        # Child hostgroups with inherited kickstart context can become stale when
+        # parent CVE/content source/OS changes while the stale repo ID remains listed.
+        ancestry.present? &&
+          (content_facet.content_view_environment_id.blank? || content_facet.content_source_id.blank?)
+      end
+
+      def operatingsystem_changed_for_recalculation?
+        changed_by_legacy_api = respond_to?(:operatingsystem_id_changed?) && operatingsystem_id_changed?
+        changed_by_dirty_tracking = respond_to?(:will_save_change_to_operatingsystem_id?) &&
+                                    will_save_change_to_operatingsystem_id?
+        changed_by_legacy_api || changed_by_dirty_tracking
+      end
+
+      def kickstart_repository_release_mismatch?
+        repo_release = content_facet&.kickstart_repository&.distribution_version
+        target_release = preferred_os_release_values.first
+        return false if repo_release.blank? || target_release.blank?
+
+        !(repo_release == target_release || repo_release.start_with?("#{target_release}."))
       end
 
       def equivalent_kickstart_repository_for_release(ks_repos)
