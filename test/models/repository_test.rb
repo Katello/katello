@@ -568,6 +568,33 @@ module Katello
       assert_includes @fedora_17_x86_64.clones, @fedora_17_x86_64_dev
     end
 
+    def test_latest_dynflow_sync_delegates_to_library_instance
+      library_repo = @fedora_17_x86_64
+      clone_repo = @fedora_17_x86_64_dev
+      sync_task = ForemanTasks::Task::DynflowTask.create!(
+        :label => ::Actions::Katello::Repository::Sync.name,
+        :state => 'stopped',
+        :type => 'ForemanTasks::Task::DynflowTask',
+        :result => 'success',
+        :started_at => 2.days.ago,
+        :ended_at => 1.day.ago
+      )
+      ForemanTasks::Link.link!(library_repo, sync_task)
+
+      assert_equal sync_task, library_repo.latest_dynflow_sync
+      assert_equal sync_task, clone_repo.latest_dynflow_sync
+    end
+
+    def test_latest_sync_audit_delegates_to_library_instance
+      library_repo = @fedora_17_x86_64
+      clone_repo = @fedora_17_x86_64_dev
+
+      library_repo.audit_sync
+
+      assert_not_nil library_repo.latest_sync_audit
+      assert_equal library_repo.latest_sync_audit, clone_repo.latest_sync_audit
+    end
+
     def test_group
       assert_includes @fedora_17_x86_64.group, @fedora_17_x86_64_dev
       assert_includes @fedora_17_x86_64.group, @fedora_17_x86_64

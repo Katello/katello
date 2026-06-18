@@ -660,7 +660,7 @@ module Katello
     end
 
     def latest_sync_audit
-      self.audits.where(:action => AUDIT_SYNC_ACTION).order(:created_at).last
+      library_instance_or_self.audits.where(:action => AUDIT_SYNC_ACTION).order(:created_at).last
     end
 
     def cancel_dynflow_sync
@@ -676,8 +676,9 @@ module Katello
     end
 
     def latest_dynflow_sync
+      sync_repo = library_instance_or_self
       @latest_dynflow_sync ||= ForemanTasks::Task::DynflowTask.where(:label => ::Actions::Katello::Repository::Sync.name).
-                                for_resource(self).order(:started_at).last
+                                for_resource(sync_repo).order(:started_at).last
     end
 
     def blocking_task
