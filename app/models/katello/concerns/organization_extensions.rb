@@ -21,6 +21,7 @@ module Katello
         # has_many :environments is already defined in Foreman taxonomy.rb
         has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :restrict_with_exception, :inverse_of => :organization
         has_one :library, lambda { where(:library => true) }, :class_name => "Katello::KTEnvironment", :dependent => :destroy
+        before_destroy :nullify_acs_ssl_credentials
         has_many :gpg_keys, :class_name => "Katello::ContentCredential", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
         has_many :host_collections, :class_name => "Katello::HostCollection", :dependent => :destroy, :inverse_of => :organization
@@ -152,6 +153,14 @@ module Katello
             default_proxy.organizations << self
             default_proxy.save
           end
+        end
+
+        def nullify_acs_ssl_credentials
+          cc_ids = gpg_keys.pluck(:id)
+          return if cc_ids.empty?
+          Katello::AlternateContentSource.where(ssl_ca_cert_id: cc_ids).update_all(ssl_ca_cert_id: nil)
+          Katello::AlternateContentSource.where(ssl_client_cert_id: cc_ids).update_all(ssl_client_cert_id: nil)
+          Katello::AlternateContentSource.where(ssl_client_key_id: cc_ids).update_all(ssl_client_key_id: nil)
         end
 
         def validate_destroy(current_org)
