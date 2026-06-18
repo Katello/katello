@@ -22,5 +22,25 @@ module Katello
       @org.expects(:imports).returns([{'foo' => 'bar' }, {'foo' => 'bar'}])
       assert_equal 'bar', @org.manifest_history[0].foo
     end
+
+    def test_nullify_acs_ssl_credentials_clears_acs_references_before_destroy
+      cc_ids = @org.gpg_keys.pluck(:id)
+
+      assert Katello::AlternateContentSource.where(ssl_ca_cert_id: cc_ids).exists?,
+             "expected ACS fixtures to reference the org's content credentials"
+
+      @org.nullify_acs_ssl_credentials
+
+      assert_empty Katello::AlternateContentSource.where(ssl_ca_cert_id: cc_ids)
+      assert_empty Katello::AlternateContentSource.where(ssl_client_cert_id: cc_ids)
+      assert_empty Katello::AlternateContentSource.where(ssl_client_key_id: cc_ids)
+    end
+
+    def test_nullify_acs_ssl_credentials_is_noop_without_gpg_keys
+      org_without_ccs = get_organization(:organization2)
+      org_without_ccs.gpg_keys.delete_all
+
+      assert_nothing_raised { org_without_ccs.nullify_acs_ssl_credentials }
+    end
   end
 end
