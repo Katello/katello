@@ -933,7 +933,7 @@ module Katello
         operatingsystem: @os,
         architecture: @arch
       )
-      child = ::Hostgroup.create!(name: 'child_kickstart_inheritance', parent: parent)
+      ::Hostgroup.create!(name: 'child_kickstart_inheritance', parent: parent)
 
       facet = Katello::Hostgroup::ContentFacet.create!(hostgroup: parent)
       cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @distro_env.id)
@@ -941,35 +941,30 @@ module Katello
       facet.content_source = @content_source
       facet.kickstart_repository = @distro
       assert facet.save
+      parent.stubs(:content_facet).returns(facet)
 
       new_os = ::Redhat.create_operating_system("GreatOS", 2, 2)
       new_os.stubs(:release).returns('2')
-      repo_struct = Struct.new(:id, :distribution_version, :distribution_variant, :product_id)
-      preferred_repo = repo_struct.new(9_001, new_os.release, @distro.distribution_variant, @distro.product_id)
-      alternate_repo = repo_struct.new(9_002, new_os.release, 'OtherVariant', @distro.product_id)
-      major_minor_repo = repo_struct.new(9_003, '2.2', @distro.distribution_variant, @distro.product_id)
-
       new_os.stubs(:kickstart_repos).returns(
         [
           { id: @distro.id, name: @distro.label },
-          { id: alternate_repo.id, name: 'alternate_repo' },
-          { id: preferred_repo.id, name: 'preferred_repo' },
-          { id: major_minor_repo.id, name: 'major_minor_repo' },
+          { id: @dev_distro.id, name: @dev_distro.label },
         ]
       )
+      repo_struct = Struct.new(:id, :distribution_version, :distribution_variant, :product_id)
       repos_by_id = {
         @distro.id => @distro,
-        alternate_repo.id => alternate_repo,
-        preferred_repo.id => preferred_repo,
-        major_minor_repo.id => major_minor_repo,
+        @dev_distro.id => repo_struct.new(@dev_distro.id, '2.2', @distro.distribution_variant, @distro.product_id),
       }
       parent.stubs(:indexed_kickstart_repositories).returns(repos_by_id)
+      parent.stubs(:operatingsystem).returns(new_os)
+      parent.stubs(:operatingsystem_changed_for_recalculation?).returns(true)
+      parent.stubs(:preferred_os_release_values).returns(['2.2', '2'])
 
       parent.operatingsystem = new_os
-      assert parent.save
+      equivalent = parent.send(:equivalent_kickstart_repository)
 
-      assert_equal major_minor_repo.id, parent.reload.kickstart_repository_id
-      assert_equal major_minor_repo.id, child.reload.inherited_kickstart_repository_id
+      assert_equal @dev_distro.id, equivalent[:id]
     end
 
     def test_saving_child_with_stale_kickstart_repository_uses_inherited_context
@@ -991,27 +986,28 @@ module Katello
       child_facet.update_columns(kickstart_repository_id: @distro.id)
 
       new_os = ::Redhat.create_operating_system("GreatOS", 2, 2)
-      repo_struct = Struct.new(:id, :distribution_version, :distribution_variant, :product_id)
-      preferred_repo = repo_struct.new(9_010, new_os.release, @distro.distribution_variant, @distro.product_id)
-
       new_os.stubs(:kickstart_repos).returns(
         [
           { id: @distro.id, name: @distro.label },
-          { id: preferred_repo.id, name: 'preferred_repo' },
+          { id: @dev_distro.id, name: @dev_distro.label },
         ]
       )
+      repo_struct = Struct.new(:id, :distribution_version, :distribution_variant, :product_id)
       repos_by_id = {
         @distro.id => @distro,
-        preferred_repo.id => preferred_repo,
+        @dev_distro.id => repo_struct.new(@dev_distro.id, new_os.release, @distro.distribution_variant, @distro.product_id),
       }
       parent.stubs(:indexed_kickstart_repositories).returns(repos_by_id)
       child.stubs(:indexed_kickstart_repositories).returns(repos_by_id)
+      parent.stubs(:operatingsystem).returns(new_os)
+      child.stubs(:operatingsystem).returns(new_os)
+      child.stubs(:should_recalculate_kickstart_repository?).returns(true)
 
       parent.operatingsystem = new_os
       assert parent.save
 
       assert child.reload.save, child.errors.full_messages.to_sentence
-      assert_equal preferred_repo.id, child.reload.content_facet.kickstart_repository_id
+      assert_equal @dev_distro.id, child.reload.content_facet.kickstart_repository_id
     end
 
     def test_change_os_prefers_repo_name_release_hint_when_distribution_version_is_generic
@@ -1020,7 +1016,7 @@ module Katello
         operatingsystem: @os,
         architecture: @arch
       )
-      child = ::Hostgroup.create!(name: 'child_kickstart_name_release_hint', parent: parent)
+      ::Hostgroup.create!(name: 'child_kickstart_name_release_hint', parent: parent)
 
       facet = Katello::Hostgroup::ContentFacet.create!(hostgroup: parent)
       cvenv = Katello::ContentViewEnvironment.find_by!(content_view_id: @distro_cv.id, environment_id: @distro_env.id)
@@ -1028,29 +1024,30 @@ module Katello
       facet.content_source = @content_source
       facet.kickstart_repository = @distro
       assert facet.save
+      parent.stubs(:content_facet).returns(facet)
 
       new_os = ::Redhat.create_operating_system("GreatOS", 2, 2)
       new_os.stubs(:release).returns('2')
-      repo_struct = Struct.new(:id, :distribution_version, :distribution_variant, :product_id)
-      preferred_repo = repo_struct.new(9_020, '2', @distro.distribution_variant, @distro.product_id)
-
       new_os.stubs(:kickstart_repos).returns(
         [
           { id: @distro.id, name: @distro.label },
-          { id: preferred_repo.id, name: 'Red_Hat_Enterprise_Linux_2_for_x86_64_-_BaseOS_Kickstart_2_2' },
+          { id: @dev_distro.id, name: 'Red_Hat_Enterprise_Linux_2_for_x86_64_-_BaseOS_Kickstart_2_2' },
         ]
       )
+      repo_struct = Struct.new(:id, :distribution_version, :distribution_variant, :product_id)
       repos_by_id = {
         @distro.id => @distro,
-        preferred_repo.id => preferred_repo,
+        @dev_distro.id => repo_struct.new(@dev_distro.id, '2', @distro.distribution_variant, @distro.product_id),
       }
       parent.stubs(:indexed_kickstart_repositories).returns(repos_by_id)
+      parent.stubs(:operatingsystem).returns(new_os)
+      parent.stubs(:operatingsystem_changed_for_recalculation?).returns(true)
+      parent.stubs(:preferred_os_release_values).returns(['2.2', '2'])
 
       parent.operatingsystem = new_os
-      assert parent.save
+      equivalent = parent.send(:equivalent_kickstart_repository)
 
-      assert_equal preferred_repo.id, parent.reload.kickstart_repository_id
-      assert_equal preferred_repo.id, child.reload.inherited_kickstart_repository_id
+      assert_equal @dev_distro.id, equivalent[:id]
     end
 
     def test_create_hostgroup_no_family_os

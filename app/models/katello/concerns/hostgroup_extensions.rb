@@ -123,7 +123,7 @@ module Katello
 
       def equivalent_kickstart_repository
         return unless operatingsystem &&
-                      content_facet.kickstart_repository &&
+                      content_facet&.kickstart_repository &&
                       operatingsystem.respond_to?(:kickstart_repos)
         ks_repos = operatingsystem.kickstart_repos(self, content_facet: effective_content_facet_for_kickstart(content_facet))
         return if ks_repos.blank?
