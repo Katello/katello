@@ -128,5 +128,47 @@ module Katello
         delete :destroy, params: { :id => "1", :repository_id => @repo.id }
       end
     end
+
+    def test_create_upload_cannot_access_unauthorized_repository
+      unauthorized_repo = Repository.find(katello_repositories(:uln_ovm2_2_1_1_i386_patch).id)
+      product = @repo.product
+
+      login_user(User.find(users(:restricted).id))
+      setup_current_user_with_permissions(
+        { :name => :edit_products, :search => "name=\"#{product.name}\"" },
+        organizations: [get_organization]
+      )
+
+      post :create, params: { :repository_id => unauthorized_repo.id, :size => 100 }
+      assert_response :not_found
+    end
+
+    def test_update_cannot_access_unauthorized_repository
+      unauthorized_repo = Repository.find(katello_repositories(:uln_ovm2_2_1_1_i386_patch).id)
+      product = @repo.product
+
+      login_user(User.find(users(:restricted).id))
+      setup_current_user_with_permissions(
+        { :name => :edit_products, :search => "name=\"#{product.name}\"" },
+        organizations: [get_organization]
+      )
+
+      put :update, params: { :id => "1", :offset => "0", :content => "/tmp/file.rpm", :repository_id => unauthorized_repo.id }
+      assert_response :not_found
+    end
+
+    def test_destroy_cannot_access_unauthorized_repository
+      unauthorized_repo = Repository.find(katello_repositories(:uln_ovm2_2_1_1_i386_patch).id)
+      product = @repo.product
+
+      login_user(User.find(users(:restricted).id))
+      setup_current_user_with_permissions(
+        { :name => :edit_products, :search => "name=\"#{product.name}\"" },
+        organizations: [get_organization]
+      )
+
+      delete :destroy, params: { :id => "1", :repository_id => unauthorized_repo.id }
+      assert_response :not_found
+    end
   end
 end
