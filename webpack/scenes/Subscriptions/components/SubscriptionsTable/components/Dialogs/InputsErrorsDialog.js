@@ -1,19 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { MessageDialog } from 'patternfly-react';
+import { Modal, ModalVariant, Button } from '@patternfly/react-core';
 
 const InputsErrorsDialog = ({
   show, showErrorDialog,
 }) => (
-  <MessageDialog
-    show={show}
+  <Modal
+    ouiaId="inputs-errors-modal"
     title={__('Editing Entitlements')}
-    secondaryContent={__('Some of your inputs contain errors. Please update them and save your changes again.')}
-    primaryAction={() => showErrorDialog(false)}
-    onHide={() => showErrorDialog(false)}
-    primaryActionButtonContent="Ok"
-  />);
+    isOpen={show}
+    variant={ModalVariant.small}
+    onClose={() => showErrorDialog(false)}
+    actions={[
+      <Button
+        ouiaId="inputs-errors-ok-button"
+        key="ok"
+        variant="primary"
+        onClick={() => showErrorDialog(false)}
+      >
+        {__('Ok')}
+      </Button>,
+    ]}
+  >
+    {__('Some of your inputs contain errors. Please update them and save your changes again.')}
+  </Modal>
+);
 
 InputsErrorsDialog.propTypes = {
   show: PropTypes.bool.isRequired,

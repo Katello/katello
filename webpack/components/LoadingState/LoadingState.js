@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Spinner } from 'patternfly-react';
+import { Spinner } from '@patternfly/react-core';
 import './LoadingState.scss';
 
 class LoadingState extends Component {
@@ -28,7 +28,7 @@ class LoadingState extends Component {
     const { loading, loadingText, children } = this.props;
     const spinner = (
       <div className="loading-state">
-        <Spinner loading={loading} size="lg" />
+        <Spinner size="lg" />
         <p>{loadingText}</p>
       </div>);
 

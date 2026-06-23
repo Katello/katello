@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { ListGroup, ListGroupItem } from 'patternfly-react';
+import { List, ListItem } from '@patternfly/react-core';
 import './SubscriptionDetails.scss';
 
 const SubscriptionDetailProducts = ({ subscriptionDetails }) => (
   <div>
     <h2>{__('Provided Products')}</h2>
-    <ListGroup className="scrolld-list">
+    <List className="scrolld-list" isPlain>
       {subscriptionDetails.provided_products &&
         subscriptionDetails.provided_products.map(prod => (
-          <ListGroupItem key={prod.id}> {prod.name} </ListGroupItem>
+          <ListItem key={prod.id}>{prod.name}</ListItem>
         ))}
-    </ListGroup>
+    </List>
   </div>
 );
 

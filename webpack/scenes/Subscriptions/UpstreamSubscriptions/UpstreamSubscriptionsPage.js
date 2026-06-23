@@ -1,32 +1,48 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
-import { translate as __ } from 'foremanReact/common/I18n';
+import { translate as __, sprintf } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, GridItem, Button } from '@patternfly/react-core';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
-import { Button } from 'patternfly-react';
 import { stringIsPositiveNumber } from 'foremanReact/common/helpers';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { LoadingState } from '../../../components/LoadingState';
 import { Table } from '../../../components/pf3Table';
 import { columns } from './UpstreamSubscriptionsTableSchema';
 
-class UpstreamSubscriptionsPage extends Component {
-  constructor(props) {
-    super(props);
+// Validates subscription quantity input
+export const quantityValidation = (pool) => {
+  const origQuantity = pool.updatedQuantity;
+  if (origQuantity && stringIsPositiveNumber(origQuantity)) {
+    const parsedQuantity = parseInt(origQuantity, 10);
+    const aboveZeroMsg = [false, __('Please enter a positive number above zero')];
 
-    this.state = {
-      selectedRows: [],
-    };
+    if (parsedQuantity.toString().length > 10) return [false, __('Please limit number to 10 digits')];
+    if (!pool.available) return [false, __('No pools available')];
+    // handling unlimited subscriptions, they show as -1
+    if (pool.available === -1) return parsedQuantity ? [true, ''] : aboveZeroMsg;
+    if (parsedQuantity > pool.available) return [false, sprintf(__('Quantity must not be above %s'), pool.available)];
+    if (parsedQuantity <= 0) return aboveZeroMsg;
+  } else {
+    return [false, __('Please enter digits only')];
   }
+  return [true, ''];
+};
 
-  componentDidMount() {
-    this.loadData();
-  }
+const UpstreamSubscriptionsPage = ({
+  loadUpstreamSubscriptions,
+  saveUpstreamSubscriptions,
+  upstreamSubscriptions,
+  history,
+}) => {
+  const [selectedRows, setSelectedRows] = useState([]);
 
-  onChange = (value, rowData) => {
-    const { selectedRows } = this.state;
+  useEffect(() => {
+    loadUpstreamSubscriptions();
+  }, [loadUpstreamSubscriptions]);
+
+  const onChange = useCallback((value, rowData) => {
     const pool = {
       ...rowData,
       id: rowData.id,
@@ -34,72 +50,52 @@ class UpstreamSubscriptionsPage extends Component {
       selected: true,
     };
 
-    const match = this.poolInSelectedRows(pool);
-    const index = _.indexOf(selectedRows, match);
+    setSelectedRows((prevSelectedRows) => {
+      const newSelectedRows = [...prevSelectedRows];
+      const match = _.find(newSelectedRows, foundPool => pool.id === foundPool.id);
+      const index = _.indexOf(newSelectedRows, match);
 
-    if (value) {
-      if (match) {
-        selectedRows.splice(index, 1, pool);
-      } else {
-        selectedRows.push(pool);
+      if (value) {
+        if (match) {
+          newSelectedRows.splice(index, 1, pool);
+        } else {
+          newSelectedRows.push(pool);
+        }
+      } else if (match) {
+        newSelectedRows.splice(index, 1);
       }
-    } else if (match) {
-      selectedRows.splice(index, 1);
-    }
 
-    this.setState({ selectedRows });
-  };
+      return newSelectedRows;
+    });
+  }, []);
 
-  // eslint-disable-next-line class-methods-use-this
-  quantityValidation(pool) {
-    const origQuantity = pool.updatedQuantity;
-    if (origQuantity && stringIsPositiveNumber(origQuantity)) {
-      const parsedQuantity = parseInt(origQuantity, 10);
-      const aboveZeroMsg = [false, __('Please enter a positive number above zero')];
+  const poolInSelectedRows = useCallback(pool => _.find(
+    selectedRows,
+    foundPool => pool.id === foundPool.id,
+  ), [selectedRows]);
 
-      if (parsedQuantity.toString().length > 10) return [false, __('Please limit number to 10 digits')];
-      if (!pool.available) return [false, __('No pools available')];
-      // handling unlimited subscriptions, they show as -1
-      if (pool.available === -1) return parsedQuantity ? [true, ''] : aboveZeroMsg;
-      if (parsedQuantity > pool.available) return [false, __(`Quantity must not be above ${pool.available}`)];
-      if (parsedQuantity <= 0) return aboveZeroMsg;
-    } else {
-      return [false, __('Please enter digits only')];
-    }
-    return [true, ''];
-  }
-
-  poolInSelectedRows(pool) {
-    const { selectedRows } = this.state;
-
-    return _.find(
-      selectedRows,
-      foundPool => pool.id === foundPool.id,
-    );
-  }
-
-  quantityValidationInput = (pool) => {
+  const quantityValidationInput = useCallback((pool) => {
     if (!pool || pool.updatedQuantity === undefined) return null;
-    if (this.quantityValidation(pool)[0]) {
+    if (quantityValidation(pool)[0]) {
       return 'success';
     }
     return 'error';
-  };
+  }, []);
 
-  validateSelectedRows = () => Array.isArray(this.state.selectedRows) &&
-    this.state.selectedRows.length &&
-    this.state.selectedRows.every(pool => this.quantityValidation(pool)[0]);
+  const validateSelectedRows = useCallback(() => Array.isArray(selectedRows) &&
+    selectedRows.length &&
+    selectedRows.every(pool => quantityValidation(pool)[0]), [selectedRows]);
 
-  saveUpstreamSubscriptions = async () => {
+  const handleSaveUpstreamSubscriptions = useCallback(async () => {
     const updatedPools = _.map(
-      this.state.selectedRows,
+      selectedRows,
       pool => ({ ...pool, quantity: parseInt(pool.updatedQuantity, 10) }),
     );
 
     const updatedSubscriptions = { pools: updatedPools };
 
-    await this.props.saveUpstreamSubscriptions(updatedSubscriptions);
-    const { task } = this.props.upstreamSubscriptions;
+    const action = await saveUpstreamSubscriptions(updatedSubscriptions);
+    const task = action?.response;
 
     // TODO: could probably factor this out into a task response component
     if (task) {
@@ -113,152 +109,122 @@ class UpstreamSubscriptionsPage extends Component {
       );
 
       window.tfm.toastNotifications.notify({ message, type: 'success' });
-      this.props.history.push('/subscriptions');
+      history.push('/subscriptions');
     }
+  }, [selectedRows, saveUpstreamSubscriptions, history]);
+
+  const getSubscriptionActions = () => {
+    if (upstreamSubscriptions.results.length > 0) {
+      return (
+        <Grid hasGutter style={{ marginTop: '10px' }}>
+          <GridItem span={12}>
+            <Button
+              ouiaId="upstream-subscriptions-submit-button"
+              style={{ marginRight: '5px' }}
+              variant="primary"
+              type="submit"
+              isDisabled={upstreamSubscriptions.loading || !validateSelectedRows()}
+              onClick={handleSaveUpstreamSubscriptions}
+            >
+              {__('Submit')}
+            </Button>
+
+            <LinkContainer to="/subscriptions">
+              <Button ouiaId="upstream-subscriptions-cancel-button" variant="secondary">
+                {__('Cancel')}
+              </Button>
+            </LinkContainer>
+          </GridItem>
+        </Grid>
+      );
+    }
+
+    return null;
   };
 
-  loadData() {
-    this.props.loadUpstreamSubscriptions();
-  }
+  const onPaginationChange = useCallback((pagination) => {
+    loadUpstreamSubscriptions({
+      ...pagination,
+    });
+  }, [loadUpstreamSubscriptions]);
 
-  render() {
-    const { upstreamSubscriptions } = this.props;
+  const getSelectedUpstreamSubscriptions = useCallback(() => {
+    const newUpstreamSubscriptions = [];
 
-    const getSubscriptionActions = () => {
-      let actions = '';
+    upstreamSubscriptions.results.forEach((sub) => {
+      let row = poolInSelectedRows(sub);
 
-      if (upstreamSubscriptions.results.length > 0) {
-        actions = (
-          <Row>
-            <Col sm={12}>
-              <Button
-                style={{ marginTop: '10px', marginRight: '5px' }}
-                bsStyle="primary"
-                type="submit"
-                disabled={upstreamSubscriptions.loading ||
-                  !this.validateSelectedRows()}
-                onClick={this.saveUpstreamSubscriptions}
-              >
-                {__('Submit')}
-              </Button>
-
-              <LinkContainer to="/subscriptions" style={{ marginTop: '10px' }}>
-                <Button>
-                  {__('Cancel')}
-                </Button>
-              </LinkContainer>
-            </Col>
-          </Row>
-        );
+      if (row) {
+        row = { ...row, selected: true };
+      } else {
+        const foundRow = upstreamSubscriptions.results.find(foundSub => sub.id === foundSub.id);
+        row = { ...foundRow, selected: false };
       }
 
-      return actions;
-    };
-
-    const onPaginationChange = (pagination) => {
-      this.props.loadUpstreamSubscriptions({
-        ...pagination,
-      });
-    };
-
-    const getSelectedUpstreamSubscriptions = () => {
-      const newUpstreamSubscriptions = [];
-
-      upstreamSubscriptions.results.forEach((sub) => {
-        let row = this.poolInSelectedRows(sub);
-
-        if (row) {
-          row = { ...row, selected: true };
-        } else {
-          const foundRow = upstreamSubscriptions.results.find(foundSub => sub.id === foundSub.id);
-          row = { ...foundRow, selected: false };
-        }
-
-        newUpstreamSubscriptions.push(row);
-      });
-
-      return newUpstreamSubscriptions;
-    };
-
-    const emptyStateData = () => ({
-      header: __('There are no Manifests to display'),
-      description: __('Manifests allow you to find, access, synchronize, and download content ' +
-        'from upstream Red Hat repositories for use in Red Hat Satellite.'),
-      action: {
-        title: __('Import a Manifest to Begin'),
-        url: '/subscriptions',
-      },
+      newUpstreamSubscriptions.push(row);
     });
 
-    const checkAllRowsSelected = () =>
-      upstreamSubscriptions.results.length === this.state.selectedRows.length;
+    return newUpstreamSubscriptions;
+  }, [upstreamSubscriptions.results, poolInSelectedRows]);
 
-    const selectionController = {
-      allRowsSelected: () => checkAllRowsSelected(),
-      selectAllRows: () => {
-        if (checkAllRowsSelected()) {
-          this.setState({ selectedRows: [] });
-        } else {
-          this.setState({ selectedRows: [...upstreamSubscriptions.results] });
-        }
-      },
-      selectRow: ({ rowData }) => {
-        let { selectedRows } = this.state;
-        if (selectedRows.find(r => r.id === rowData.id)) {
-          selectedRows = selectedRows.filter(e => e.id !== rowData.id);
-        } else {
-          selectedRows.push(rowData);
-        }
+  const emptyStateData = () => ({
+    header: __('There are no Manifests to display'),
+    description: __('Manifests allow you to find, access, synchronize, and download content ' +
+      'from upstream Red Hat repositories for use in Red Hat Satellite.'),
+    action: {
+      title: __('Import a Manifest to Begin'),
+      url: '/subscriptions',
+    },
+  });
 
-        this.setState({ selectedRows });
-      },
-      isSelected: ({ rowData }) => (
-        this.state.selectedRows.find(r => r.id === rowData.id) !== undefined
-      ),
-    };
+  const componentRef = {
+    onChange,
+    quantityValidation,
+    quantityValidationInput,
+    saveUpstreamSubscriptions: handleSaveUpstreamSubscriptions,
+  };
 
-    const tableColumns = columns(this, selectionController);
-    const rows = getSelectedUpstreamSubscriptions();
+  const tableColumns = columns(componentRef);
+  const rows = getSelectedUpstreamSubscriptions();
 
-    return (
-      <Grid bsClass="container-fluid">
-        {!upstreamSubscriptions.loading &&
-        <div style={{ marginBottom: '10px' }}>
-          <BreadcrumbsBar
-            isLoadingResources={upstreamSubscriptions.loading}
-            breadcrumbItems={[
-              {
-                caption: __('Subscriptions'),
-                url: '/subscriptions/',
-              },
-              {
-                caption: String(__('Add Subscriptions')),
-              },
-            ]}
-          />
-        </div>
-        }
+  return (
+    <div className="container-fluid">
+      {!upstreamSubscriptions.loading &&
+      <div style={{ marginBottom: '10px' }}>
+        <BreadcrumbsBar
+          isLoadingResources={upstreamSubscriptions.loading}
+          breadcrumbItems={[
+            {
+              caption: __('Subscriptions'),
+              url: '/subscriptions/',
+            },
+            {
+              caption: String(__('Add Subscriptions')),
+            },
+          ]}
+        />
+      </div>
+      }
 
-        <LoadingState loading={upstreamSubscriptions.loading} loadingText={__('Loading')}>
-          <Row>
-            <Col sm={12}>
-              <Table
-                ouiaId="upstream-subscriptions-table"
-                rows={rows}
-                columns={tableColumns}
-                emptyState={emptyStateData()}
-                itemCount={upstreamSubscriptions.itemCount}
-                pagination={upstreamSubscriptions.pagination}
-                onPaginationChange={onPaginationChange}
-              />
-            </Col>
-          </Row>
-          {getSubscriptionActions()}
-        </LoadingState>
-      </Grid>
-    );
-  }
-}
+      <LoadingState loading={upstreamSubscriptions.loading} loadingText={__('Loading')}>
+        <Grid hasGutter>
+          <GridItem span={12}>
+            <Table
+              ouiaId="upstream-subscriptions-table"
+              rows={rows}
+              columns={tableColumns}
+              emptyState={emptyStateData()}
+              itemCount={upstreamSubscriptions.itemCount}
+              pagination={upstreamSubscriptions.pagination}
+              onPaginationChange={onPaginationChange}
+            />
+          </GridItem>
+        </Grid>
+        {getSubscriptionActions()}
+      </LoadingState>
+    </div>
+  );
+};
 
 UpstreamSubscriptionsPage.propTypes = {
   loadUpstreamSubscriptions: PropTypes.func.isRequired,
