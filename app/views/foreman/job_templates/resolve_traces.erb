@@ -16,6 +16,7 @@ template_inputs:
 commands = @host.traces_helpers(search: input('Traces search query'))
 reboot = commands.delete('reboot')
 -%>
+PATH="$PATH:/usr/bin:/usr/sbin:/bin:/sbin"
 <% if reboot -%>
 shutdown -r +1
 <% else -%>
