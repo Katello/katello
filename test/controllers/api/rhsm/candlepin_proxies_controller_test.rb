@@ -648,8 +648,8 @@ module Katello
         end
         proxy_get_expectation.returns(proxy_response)
 
-        get :get, params: { :organization_id => @organization.label },
-            env: { 'PATH_INFO' => "/rhsm/owners/#{@organization.label}/system_purpose" }
+        @request.stubs(:fullpath).returns("/rhsm/owners/#{@organization.label}/system_purpose")
+        get :get, params: { :organization_id => @organization.label }
 
         assert_response :success
         assert_equal @organization.label, JSON.parse(response.body).dig('owner', 'key')

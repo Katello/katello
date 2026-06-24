@@ -31,7 +31,7 @@ module Katello
     before_action :check_media_type, :except => :async_hypervisors_update
 
     prepend_before_action :convert_owner_to_organization_id, :except => [:hypervisors_update, :async_hypervisors_update], :if => lambda { params.key?(:owner) }
-    prepend_before_action :convert_organization_label_to_id, :only => [:rhsm_index, :consumer_activate, :consumer_create, :get, :post, :put, :delete], :if => lambda { params.key?(:organization_id) }
+    prepend_before_action :convert_organization_label_to_id, :only => [:rhsm_index, :consumer_activate, :consumer_create, :get], :if => lambda { params.key?(:organization_id) }
 
     def repackage_message
       yield
@@ -382,6 +382,8 @@ module Katello
     end
 
     def convert_organization_label_to_id
+      # owner callback can set organization_id to a numeric Foreman org ID;
+      # skip label lookup in that case.
       return if params[:organization_id].to_s.match?(/\A\d+\z/)
 
       params[:organization_id] = find_organization.id
