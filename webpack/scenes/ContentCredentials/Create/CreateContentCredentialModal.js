@@ -28,7 +28,7 @@ const CreateContentCredentialModal = ({ show, setIsOpen, refreshTable }) => {
       actions={[
         <Button
           key="create"
-          ouiaId="create-content-credential-create-button"
+          ouiaId="create-button"
           variant="primary"
           onClick={handleSave}
           isDisabled={formState.submitDisabled}
@@ -38,7 +38,7 @@ const CreateContentCredentialModal = ({ show, setIsOpen, refreshTable }) => {
         </Button>,
         <Button
           key="cancel"
-          ouiaId="create-content-credential-cancel-button"
+          ouiaId="cancel-button"
           variant="link"
           onClick={handleClose}
         >

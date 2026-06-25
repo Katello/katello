@@ -499,6 +499,56 @@ module Katello
         end
       end
 
+      def test_import_critical_registration_facts_imports_critical_subset
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @org)
+        critical_facts = {'distribution.name' => 'RHEL', 'distribution.version' => '9.2', 'uname.machine' => 'x86_64'}
+        all_facts = critical_facts.merge('network.hostname' => 'foobar.example.com')
+
+        ::Katello::RegistrationManager.expects(:get_uuid).returns('fake-uuid')
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).returns({'uuid' => 'fake-uuid'}.with_indifferent_access)
+        ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_hypervisor)
+        ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_guests)
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+
+        ::Katello::Host::SubscriptionFacet.expects(:update_facts).with(new_host, critical_facts, additive: true)
+
+        ::Katello::RegistrationManager.register_host(new_host, rhsm_params.merge(:facts => all_facts), [@content_view_environment])
+      end
+
+      def test_import_critical_registration_facts_skips_when_no_critical_facts_present
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @org)
+        non_critical_facts = {'network.hostname' => 'foobar.example.com'}
+
+        ::Katello::RegistrationManager.expects(:get_uuid).returns('fake-uuid')
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).returns({'uuid' => 'fake-uuid'}.with_indifferent_access)
+        ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_hypervisor)
+        ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_guests)
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+
+        ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
+
+        ::Katello::RegistrationManager.register_host(new_host, rhsm_params.merge(:facts => non_critical_facts), [@content_view_environment])
+      end
+
+      def test_import_critical_registration_facts_failure_aborts_registration
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @org)
+        critical_facts = {'distribution.name' => 'RHEL', 'uname.machine' => 'x86_64'}
+
+        ::Katello::RegistrationManager.expects(:get_uuid).returns('fake-uuid')
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).returns({'uuid' => 'fake-uuid'}.with_indifferent_access)
+        ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_hypervisor)
+        ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_guests)
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+        ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host).with(new_host).once
+        ::Katello::Resources::Candlepin::CandlepinPing.expects(:clear_cache).never
+
+        ::Katello::Host::SubscriptionFacet.expects(:update_facts).raises(StandardError, 'db failure')
+
+        assert_raises(StandardError, 'db failure') do
+          ::Katello::RegistrationManager.register_host(new_host, rhsm_params.merge(:facts => critical_facts), [@content_view_environment])
+        end
+      end
+
       # this case can only happen if candlepin/pulp dies after the host is unregistered, but before it's re-registered.
       def test_registration_existing_host_dead_backend_service
         ::Host::Managed.any_instance.stubs(:update_candlepin_associations).twice
@@ -516,7 +566,7 @@ module Katello
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
         end
       end
-    end
+    end # rubocop:enable Metrics/ClassLength
 
     class CheckRegistrationServicesTest < ActiveSupport::TestCase
       def test_delegates_to_candlepin_ping
