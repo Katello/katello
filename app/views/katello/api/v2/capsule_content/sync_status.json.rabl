@@ -50,7 +50,7 @@ child @lifecycle_environments => :lifecycle_environments do
     attributes
   end
 
-  if @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE) || @capsule.has_feature?(SmartProxy::PULP3_FEATURE)
+  if @capsule.has_feature?(SmartProxy::PULP3_FEATURE)
     node :counts do |env|
       {
         :content_views => env.content_views.non_default.count,
