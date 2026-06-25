@@ -382,11 +382,11 @@ module Katello
     end
 
     def convert_organization_label_to_id
-      # owner callback can set organization_id to a numeric Foreman org ID;
-      # skip label lookup in that case.
-      return if params[:organization_id].to_s.match?(/\A\d+\z/)
-
       params[:organization_id] = find_organization.id
+    rescue HttpErrors::NotFound
+      # If label lookup fails and organization_id is numeric, keep it as a
+      # Foreman org ID set by earlier callbacks.
+      raise unless params[:organization_id].to_s.match?(/\A\d+\z/)
     end
 
     def convert_owner_to_organization_id

@@ -544,9 +544,20 @@ module Katello
         assert_equal @organization.id, request_params[:organization_id]
       end
 
+      it "converts numeric organization label to id when label exists" do
+        request_params = ActionController::Parameters.new(:organization_id => "123")
+        @controller.stubs(:params).returns(request_params)
+        @controller.stubs(:find_organization).returns(mock('organization', id: 9999))
+
+        @controller.send(:convert_organization_label_to_id)
+
+        assert_equal 9999, request_params[:organization_id]
+      end
+
       it "keeps numeric organization_id unchanged" do
         request_params = ActionController::Parameters.new(:organization_id => @organization.id.to_s)
         @controller.stubs(:params).returns(request_params)
+        @controller.stubs(:find_organization).raises(HttpErrors::NotFound.new("Couldn't find Organization '#{@organization.id}'."))
 
         @controller.send(:convert_organization_label_to_id)
 
@@ -631,13 +642,14 @@ module Katello
         User.current = user
 
         stub_route_recognition("rhsm_proxy_owner_system_purpose_path")
-        @controller.expects(:find_organization).once.returns(@organization)
+        @controller.stubs(:find_organization).returns(@organization)
 
         proxy_response = mock('proxy_response')
         proxy_response.stubs(:code).returns(200)
         proxy_response.stubs(:as_json).returns(
           { 'owner' => { 'key' => @organization.label }, 'systemPurposeAttributes' => {} }
         )
+        proxy_response.stubs(:gsub).with(any_parameters).returns('{}')
 
         proxy_get_expectation = Resources::Candlepin::Proxy.expects(:get)
         proxy_get_expectation.with do |request_path, extra_headers|
@@ -648,7 +660,9 @@ module Katello
         end
         proxy_get_expectation.returns(proxy_response)
 
-        @request.stubs(:fullpath).returns("/rhsm/owners/#{@organization.label}/system_purpose")
+        @controller.stubs(:proxy_request_path) do
+          @controller.instance_variable_set(:@request_path, "/owners/#{@organization.label}/system_purpose")
+        end
         get :get, params: { :organization_id => @organization.label }
 
         assert_response :success
