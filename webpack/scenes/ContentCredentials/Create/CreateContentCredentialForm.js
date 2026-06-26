@@ -113,7 +113,7 @@ const CreateContentCredentialForm = ({ setModalOpen, setFormState, refreshTable 
     <Form>
       <FormGroup label={__('Name')} isRequired fieldId="name">
         <TextInput
-          ouiaId="create-content-credential-name-input"
+          ouiaId="name-input"
           isRequired
           type="text"
           id="name"
@@ -127,7 +127,7 @@ const CreateContentCredentialForm = ({ setModalOpen, setFormState, refreshTable 
 
       <FormGroup label={__('Type')} isRequired fieldId="content_type">
         <FormSelect
-          ouiaId="create-content-credential-content-type-select"
+          ouiaId="content-type-select"
           value={contentType}
           onChange={(_event, value) => setContentType(value)}
           id="content_type"
@@ -174,7 +174,7 @@ const CreateContentCredentialForm = ({ setModalOpen, setFormState, refreshTable 
               icon={<FileUploadIcon />}
               isDisabled={saving}
               onClick={() => fileInputRef.current?.click()}
-              ouiaId="create-content-credential-upload-file-button"
+              ouiaId="upload-file-button"
             >
               {file ? file.name : __('Choose file')}
             </Button>
