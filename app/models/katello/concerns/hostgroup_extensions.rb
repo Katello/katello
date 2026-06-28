@@ -39,10 +39,14 @@ module Katello
       end
 
       def correct_kickstart_repository
-        reconcile_medium_and_kickstart_repository
-        return unless should_recalculate_kickstart_repository?
+        ensure_single_installation_source
+        return unless content_facet&.kickstart_repository_id
 
-        equivalent = equivalent_kickstart_repository
+        effective_content_facet = content_facet_with_inheritance(content_facet)
+        ks_repos = operatingsystem_kickstart_repos(effective_content_facet)
+        return unless kickstart_repository_stale?(ks_repos: ks_repos, effective_content_facet: effective_content_facet)
+
+        equivalent = equivalent_kickstart_repository(ks_repos: ks_repos, effective_content_facet: effective_content_facet)
         return if equivalent.blank? || equivalent[:id] == content_facet.kickstart_repository_id
 
         self.content_facet.kickstart_repository_id = equivalent[:id]
@@ -121,34 +125,36 @@ module Katello
         end
       end
 
-      def equivalent_kickstart_repository
+      def equivalent_kickstart_repository(ks_repos: nil, effective_content_facet: nil)
         return unless operatingsystem &&
                       content_facet&.kickstart_repository &&
                       operatingsystem.respond_to?(:kickstart_repos)
-        ks_repos = operatingsystem.kickstart_repos(self, content_facet: effective_content_facet_for_kickstart(content_facet))
+        effective_content_facet ||= content_facet_with_inheritance(content_facet)
+        ks_repos ||= operatingsystem_kickstart_repos(effective_content_facet)
         return if ks_repos.blank?
 
-        if operatingsystem_changed_for_recalculation? || kickstart_repository_release_mismatch?
-          release_match = equivalent_kickstart_repository_for_release(ks_repos)
+        if operatingsystem_id_changing? || kickstart_repository_incompatible_with_os?
+          release_match = find_kickstart_repository_by_release(ks_repos)
           return release_match if release_match
 
           # When the OS changes and we cannot detect a strict release match,
           # prefer non-label heuristics to avoid sticking to a stale repo label.
-          return equivalent_kickstart_repository_for_variant(ks_repos)
+          return find_best_matching_kickstart_repository(ks_repos)
         end
 
         by_label = ks_repos.find { |repo| repo[:name] == content_facet.kickstart_repository.label }
         return by_label if by_label
 
-        equivalent_kickstart_repository_for_variant(ks_repos)
+        find_best_matching_kickstart_repository(ks_repos)
       end
 
-      def matching_kickstart_repository?(content_facet)
+      def matching_kickstart_repository?(content_facet, ks_repos: nil, effective_content_facet: nil)
         return true unless operatingsystem
 
         if operatingsystem.respond_to? :kickstart_repos
-          effective_content_facet = effective_content_facet_for_kickstart(content_facet)
-          operatingsystem.kickstart_repos(self, content_facet: effective_content_facet).any? do |repo|
+          effective_content_facet ||= content_facet_with_inheritance(content_facet)
+          ks_repos ||= operatingsystem_kickstart_repos(effective_content_facet)
+          ks_repos.any? do |repo|
             repo[:id] == (content_facet&.kickstart_repository_id || content_facet&.kickstart_repository&.id)
           end
         end
@@ -156,7 +162,7 @@ module Katello
 
       private
 
-      def reconcile_medium_and_kickstart_repository
+      def ensure_single_installation_source
         # If switched from ks repo to install media:
         if medium_id_changed? && medium && content_facet&.kickstart_repository_id
           # since it's :through association, nullify both the actual data source and delegate
@@ -168,11 +174,15 @@ module Katello
         end
       end
 
-      def should_recalculate_kickstart_repository?
+      def kickstart_repository_stale?(ks_repos: nil, effective_content_facet: nil)
         return false unless content_facet&.kickstart_repository_id
-        return true if operatingsystem_changed_for_recalculation?
-        return true if kickstart_repository_release_mismatch?
-        return true unless matching_kickstart_repository?(content_facet)
+        return true if operatingsystem_id_changing?
+        return true if kickstart_repository_incompatible_with_os?
+        return true unless matching_kickstart_repository?(
+          content_facet,
+          ks_repos: ks_repos,
+          effective_content_facet: effective_content_facet
+        )
 
         # Child hostgroups with inherited kickstart context can become stale when
         # parent CVE/content source/OS changes while the stale repo ID remains listed.
@@ -180,26 +190,27 @@ module Katello
           (content_facet.content_view_environment_id.blank? || content_facet.content_source_id.blank?)
       end
 
-      def operatingsystem_changed_for_recalculation?
-        changed_by_legacy_api = respond_to?(:operatingsystem_id_changed?) && operatingsystem_id_changed?
-        changed_by_dirty_tracking = respond_to?(:will_save_change_to_operatingsystem_id?) &&
-                                    will_save_change_to_operatingsystem_id?
-        changed_by_legacy_api || changed_by_dirty_tracking
+      def operatingsystem_id_changing?
+        if respond_to?(:will_save_change_to_operatingsystem_id?)
+          will_save_change_to_operatingsystem_id?
+        else
+          respond_to?(:operatingsystem_id_changed?) && operatingsystem_id_changed?
+        end
       end
 
-      def kickstart_repository_release_mismatch?
+      def kickstart_repository_incompatible_with_os?
         repo_release = content_facet&.kickstart_repository&.distribution_version
-        target_release = preferred_os_release_values.first
+        target_release = os_version_matching_order.first
         return false if repo_release.blank? || target_release.blank?
 
         !(repo_release == target_release || repo_release.start_with?("#{target_release}."))
       end
 
-      def equivalent_kickstart_repository_for_release(ks_repos)
+      def find_kickstart_repository_by_release(ks_repos)
         repos_by_id = indexed_kickstart_repositories(ks_repos)
         release_matches = nil
 
-        preferred_os_release_values.each do |os_release|
+        os_version_matching_order.each do |os_release|
           matches = ks_repos.select do |repo|
             repo_release = repos_by_id[repo[:id]]&.distribution_version
             repo_release == os_release || repo_release&.start_with?("#{os_release}.")
@@ -207,7 +218,7 @@ module Katello
 
           # Some repos keep generic distribution_version values across minor releases.
           # In those cases, use the repository label/name as a release hint.
-          matches = ks_repos.select { |repo| repository_name_matches_release?(repo[:name], os_release) } if matches.blank?
+          matches = ks_repos.select { |repo| repository_name_contains_release?(repo[:name], os_release) } if matches.blank?
           next if matches.blank?
 
           release_matches = matches
@@ -215,10 +226,10 @@ module Katello
         end
         return if release_matches.blank?
 
-        equivalent_kickstart_repository_for_variant(release_matches, repos_by_id) || release_matches.first
+        find_best_matching_kickstart_repository(release_matches, repos_by_id) || release_matches.first
       end
 
-      def equivalent_kickstart_repository_for_variant(ks_repos, repos_by_id = indexed_kickstart_repositories(ks_repos))
+      def find_best_matching_kickstart_repository(ks_repos, repos_by_id = indexed_kickstart_repositories(ks_repos))
         current_repo = content_facet&.kickstart_repository
         return if current_repo.blank?
 
@@ -241,7 +252,13 @@ module Katello
         Katello::Repository.where(id: ks_repos.map { |repo| repo[:id] }).index_by(&:id)
       end
 
-      def effective_content_facet_for_kickstart(facet)
+      def operatingsystem_kickstart_repos(effective_content_facet)
+        return [] unless operatingsystem.respond_to?(:kickstart_repos)
+
+        operatingsystem.kickstart_repos(self, content_facet: effective_content_facet)
+      end
+
+      def content_facet_with_inheritance(facet)
         return facet if ancestry.blank? || facet.blank?
 
         inherited_cvenv_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
@@ -254,7 +271,7 @@ module Katello
         end
       end
 
-      def preferred_os_release_values
+      def os_version_matching_order
         releases = []
         major = operatingsystem&.major.to_s.presence
         minor = operatingsystem&.minor.to_s.presence
@@ -263,7 +280,7 @@ module Katello
         releases.uniq
       end
 
-      def repository_name_matches_release?(repository_name, os_release)
+      def repository_name_contains_release?(repository_name, os_release)
         return false if repository_name.blank? || os_release.blank?
 
         normalized_name = repository_name.to_s.downcase

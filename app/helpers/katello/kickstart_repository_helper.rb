@@ -15,9 +15,18 @@ module Katello
 
     def kickstart_repository_id(host, options = {})
       host_ks_repo_id = host_hostgroup_kickstart_repository_id(host)
+      selected_host_group = options.fetch(:selected_host_group, nil)
+
+      # if the kickstart repo id is set in the host use that
+      return host_ks_repo_id if host_ks_repo_id.present?
+
+      # Child hostgroups should remain on true inheritance unless explicitly overridden.
+      if host.is_a?(::Hostgroup) && host.parent_id.present?
+        return nil
+      end
+
       ks_repo_options = kickstart_repository_options(host, options)
       # if the kickstart repo id is set in the selected_hostgroup use that
-      selected_host_group = options.fetch(:selected_host_group, nil)
       if selected_host_group.try(:kickstart_repository_id).present?
         ks_repo_ids = ks_repo_options.map(&:id)
 
@@ -28,14 +37,6 @@ module Katello
         else
           return ks_repo_options.first.try(:id)
         end
-      end
-
-      # if the kickstart repo id is set in the host use that
-      return host_ks_repo_id if host_ks_repo_id.present?
-
-      # Child hostgroups should remain on true inheritance unless explicitly overridden.
-      if host.is_a?(::Hostgroup) && host.parent_id.present?
-        return nil
       end
 
       if selected_host_group.try(:medium_id).blank? && host.try(:medium_id).blank?

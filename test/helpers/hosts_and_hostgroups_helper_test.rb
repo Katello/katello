@@ -273,14 +273,12 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
   end
 
   test "must keep child hostgroup kickstart repository inherited by default" do
-    option = mock
-
     parent = ::Hostgroup.create!(name: 'kickstart_parent')
     @hostgroup.parent = parent
     @hostgroup.content_facet.kickstart_repository_id = nil
     @hostgroup.medium_id = nil
 
-    expects(:kickstart_repository_options).with(@hostgroup, {}).returns([option])
+    expects(:kickstart_repository_options).never
     assert_nil kickstart_repository_id(@hostgroup)
   end
 
