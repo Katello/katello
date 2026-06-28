@@ -384,9 +384,18 @@ module Katello
     def convert_organization_label_to_id
       params[:organization_id] = find_organization.id
     rescue HttpErrors::NotFound
-      # If label lookup fails and organization_id is numeric, keep it as a
+      # If label lookup fails and organization_id is numeric, treat it as a
       # Foreman org ID set by earlier callbacks.
-      raise unless params[:organization_id].to_s.match?(/\A\d+\z/)
+      organization_id = params[:organization_id].to_s
+      raise unless organization_id.match?(/\A\d+\z/)
+
+      organization = Organization.find_by(:id => organization_id)
+      raise unless organization
+
+      if User.current && !User.consumer? && !User.current.allowed_organizations.include?(organization)
+        message = _("User '%{user}' does not belong to Organization '%{organization}'.")
+        raise HttpErrors::NotFound, message % {:user => current_user.login, :organization => organization_id}
+      end
     end
 
     def convert_owner_to_organization_id

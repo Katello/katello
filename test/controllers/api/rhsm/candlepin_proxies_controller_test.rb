@@ -563,6 +563,21 @@ module Katello
 
         assert_equal @organization.id.to_s, request_params[:organization_id]
       end
+
+      it "raises for unauthorized numeric organization_id" do
+        user = User.find(users(:restricted).id)
+        user.organizations = []
+        user.save!
+        User.current = user
+
+        request_params = ActionController::Parameters.new(:organization_id => @organization.id.to_s)
+        @controller.stubs(:params).returns(request_params)
+        @controller.stubs(:find_organization).raises(HttpErrors::NotFound.new("Couldn't find Organization '#{@organization.id}'."))
+
+        assert_raises(HttpErrors::NotFound) do
+          @controller.send(:convert_organization_label_to_id)
+        end
+      end
     end
 
     describe "authorize_proxy_routes owner endpoints" do
@@ -651,18 +666,18 @@ module Katello
         )
         proxy_response.stubs(:gsub).with(any_parameters).returns('{}')
 
+        expected_path = "/owners/#{@organization.label}/system_purpose"
+        @controller.instance_variable_set(:@request_path, expected_path)
+        @controller.stubs(:proxy_request_path)
+
         proxy_get_expectation = Resources::Candlepin::Proxy.expects(:get)
         proxy_get_expectation.with do |request_path, extra_headers|
-          assert_match(%r{\A/owners/#{@organization.label}/system_purpose}, request_path)
+          assert_equal expected_path, request_path
           refute_includes(request_path, 'owner=')
           assert_empty(extra_headers)
           true
         end
         proxy_get_expectation.returns(proxy_response)
-
-        @controller.stubs(:proxy_request_path) do
-          @controller.instance_variable_set(:@request_path, "/owners/#{@organization.label}/system_purpose")
-        end
         get :get, params: { :organization_id => @organization.label }
 
         assert_response :success
