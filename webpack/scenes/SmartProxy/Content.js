@@ -1,10 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SmartProxyExpandableTable from './SmartProxyExpandableTable';
+import useSmartProxyContentRefresh from './useSmartProxyContentRefresh';
 
-const Content = ({ smartProxyId, organizationId }) => (
-  <SmartProxyExpandableTable smartProxyId={smartProxyId} organizationId={organizationId} />
-);
+const Content = ({ smartProxyId, organizationId }) => {
+  useSmartProxyContentRefresh({ smartProxyId, organizationId });
+
+  return (
+    <SmartProxyExpandableTable smartProxyId={smartProxyId} organizationId={organizationId} />
+  );
+};
 
 Content.propTypes = {
   smartProxyId: PropTypes.oneOfType([

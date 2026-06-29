@@ -16,12 +16,21 @@
  *   Provides the functionality for the capsule-content page.
  */
 angular.module('Bastion.capsule-content').controller('CapsuleContentController',
-    ['$scope', '$urlMatcherFactory', '$location', 'translate', 'CapsuleContent', 'AggregateTask', 'CurrentOrganization', 'syncState', 'Notification',
-    function ($scope, $urlMatcherFactory, $location, translate, CapsuleContent, AggregateTask, CurrentOrganization, syncState, Notification) {
+    ['$scope', '$urlMatcherFactory', '$location', '$window', 'translate', 'CapsuleContent', 'AggregateTask', 'CurrentOrganization', 'syncState', 'Notification',
+    function ($scope, $urlMatcherFactory, $location, $window, translate, CapsuleContent, AggregateTask, CurrentOrganization, syncState, Notification) {
 
         var refreshSyncStatus;
         var urlMatcher = $urlMatcherFactory.compile("/smart_proxies/:capsuleId");
         var capsuleId = urlMatcher.exec($location.path()).capsuleId;
+
+        // Event name must match SMART_PROXY_CONTENT_TASK_EVENT in SmartProxyContentConstants.js
+        function notifyCapsuleContentTask(task) {
+            if (task && task.id) {
+                $window.dispatchEvent(new CustomEvent('katello:capsuleContentTask', {
+                    detail: { taskId: task.id }
+                }));
+            }
+        }
 
         function processError(response, prependMsg) {
             var msg = '';
@@ -61,7 +70,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         }
 
         function taskUpdated() {
-            if (!angular.isUndefined($scope.syncTask.result) && $scope.syncTask.result !== 'pending') {
+            if (!angular.isUndefined($scope.syncTask.result) && !isTaskInProgress($scope.syncTask)) {
                 $scope.syncTask.unregisterAll();
                 refreshSyncStatus();
             }
@@ -173,6 +182,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                 $scope.syncState.set(syncState.SYNC_TRIGGERED);
 
                 CapsuleContent.sync({id: capsuleId, 'skip_metadata_check': skipMetadataCheck}).$promise.then(function (task) {
+                    notifyCapsuleContentTask(task);
                     $scope.syncStatus['active_sync_tasks'].push(task);
                     $scope.syncTask = aggregateTasks($scope.syncStatus['active_sync_tasks']);
                     $scope.syncState.set(syncState.SYNCING);
