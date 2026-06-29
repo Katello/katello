@@ -51,7 +51,8 @@ module Katello
     private
 
     def find_repository
-      @repository = Repository.find(params[:repository_id])
+      @repository = Repository.editable.find_by(id: params[:repository_id])
+      throw_resource_not_found(name: 'repository', id: params[:repository_id]) if @repository.nil?
     end
   end
 end
