@@ -64,10 +64,7 @@ module ::Actions::Katello::CapsuleContent
         assert_equal repo.id, input[:repository_id]
       end
 
-      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
-        assert_equal repo.id, input[:repository_id]
-      end
+      assert_refresh_boundary(tree, [repo.id])
     end
 
     it 'plans correctly for a pulp3 yum repo without the proper plugin' do
@@ -104,10 +101,7 @@ module ::Actions::Katello::CapsuleContent
         assert_equal repo.id, input[:repository_id]
       end
 
-      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
-        assert_equal repo.id, input[:repository_id]
-      end
+      assert_refresh_boundary(tree, [repo.id])
     end
 
     it 'plans correctly for a pulp3 docker repo' do
@@ -121,10 +115,7 @@ module ::Actions::Katello::CapsuleContent
         assert_equal repo.id, input[:repository_id]
       end
 
-      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
-        assert_equal repo.id, input[:repository_id]
-      end
+      assert_refresh_boundary(tree, [repo.id])
     end
 
     it 'plans correctly for a pulp3 ansible collection repo' do
@@ -134,10 +125,7 @@ module ::Actions::Katello::CapsuleContent
       repo = katello_repositories(:pulp3_ansible_collection_1)
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
       assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
-      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
-        assert_equal repo.id, input[:repository_id]
-      end
+      assert_refresh_boundary(tree, [repo.id])
     end
 
     it 'plans correctly for a pulp3 apt repo' do
@@ -164,10 +152,7 @@ module ::Actions::Katello::CapsuleContent
         assert_equal repo.id, input[:repository_id]
       end
 
-      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
-        assert_equal repo.id, input[:repository_id]
-      end
+      assert_refresh_boundary(tree, [repo.id])
     end
 
     it 'plans correctly for a pulp2 apt repo' do
@@ -183,6 +168,7 @@ module ::Actions::Katello::CapsuleContent
                 }
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+      refute_tree_planned(tree, ::Actions::Pulp3::CapsuleContent::RefreshDistribution)
     end
 
     it 'plans correctly for a pulp yum repo' do
@@ -220,6 +206,7 @@ module ::Actions::Katello::CapsuleContent
       with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(dev_environment)
       repos_in_dev = Katello::Repository.in_environment(dev_environment).pluck(:pulp_id)
+      repo_ids_in_dev = Katello::Repository.in_environment(dev_environment).pluck(:id)
 
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :environment_id => dev_environment.id)
       options = { smart_proxy_id: capsule_content.smart_proxy.id,
@@ -242,14 +229,16 @@ module ::Actions::Katello::CapsuleContent
         assert_includes repos_in_dev, repo.pulp_id
       end
 
+      assert_refresh_boundary(tree, repo_ids_in_dev)
+    end
+
+    def assert_refresh_boundary(tree, expected_repo_ids)
+      planned_repo_ids = []
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
-        repo = Katello::Repository.find(input[:repository_id])
-        assert_includes repos_in_dev, repo.pulp_id
-        repos_in_dev.delete(repo.pulp_id)
+        planned_repo_ids << input[:repository_id]
       end
-
-      assert_empty repos_in_dev
+      assert_equal expected_repo_ids.uniq.sort, planned_repo_ids.sort
     end
 
     it 'fails when trying to sync to the default capsule' do
