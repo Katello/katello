@@ -182,5 +182,17 @@ module Katello
     class InvalidExportFormat < StandardError; end
 
     class InvalidConfiguration < StandardError; end
+
+    class MissingDebDistributionError < StandardError
+      attr_reader :repo_name, :version_href
+
+      def initialize(repo_name, version_href)
+        @repo_name, @version_href = repo_name, version_href
+        message = _(
+          "The Pulp repo version '%{version}' for 'deb' repository '%{name}' must contain at least one distribution!"
+        ) % { name: repo_name, version: version_href }
+        super(message)
+      end
+    end
   end
 end

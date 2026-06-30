@@ -207,12 +207,6 @@ module Katello
         end
       end
 
-      def initialize_empty
-        # Can be used to initialize a newly created library instance repository with some initial content.
-        # Currently only used for deb type repositories!
-        fail NotImplementedError
-      end
-
       def update
         response = api.repositories_api.update(repository_reference.try(:repository_href), create_options)
         # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
