@@ -10,59 +10,51 @@ module Katello
           end
 
           def ping
-            resource.head
-          rescue RestClient::Unauthorized, RestClient::Gone
-            raise ::Katello::Errors::UpstreamConsumerGone
-          rescue RestClient::NotFound
-            raise ::Katello::Errors::UpstreamConsumerNotFound
+            response = issue_request(method: :head, path: path, headers: default_headers, process: false)
+            fail ::Katello::Errors::UpstreamConsumerGone if [401, 410].include?(response.status)
+            fail ::Katello::Errors::UpstreamConsumerNotFound if response.status == 404
+            response
           end
 
-          # Overrides the HttpResource get method to check if the upstream
-          # consumer exists.
           def get(params)
-            includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
-            JSON.parse(super(path + hash_to_query(params) + includes, self.default_headers).body)
-          rescue RestClient::Gone
-            raise ::Katello::Errors::UpstreamConsumerGone
+            params = params.dup
+            includes = params.delete(:include_only) || []
+            full_path = build_path(path, params: params, includes: includes)
+            JSON.parse(super(full_path, headers: self.default_headers).body)
+          rescue HttpResource::HttpError => e
+            raise ::Katello::Errors::UpstreamConsumerGone if e.code == '410'
+            raise e
           end
 
           def remove_entitlement(entitlement_id)
             fail ArgumentError, "No entitlement ID given to remove." if entitlement_id.blank?
-
-            self["entitlements/#{entitlement_id}"].delete
-          rescue RestClient::NotFound
-            raise ::Katello::Errors::UpstreamEntitlementGone
+            self.delete(join_path(path, "entitlements/#{entitlement_id}"), headers: self.default_headers)
+          rescue HttpResource::HttpError => e
+            raise ::Katello::Errors::UpstreamEntitlementGone if e.code == '404'
+            raise e
           end
 
           def start_upstream_export(url, client_cert, client_key, ca_file)
-            logger.debug "Sending GET request to upstream Candlepin: #{url}"
-            resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file).get
-          rescue RestClient::Exception => e
-            raise e
+            conn = resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file)
+            issue_request(method: :get, path: URI.parse(url).request_uri, headers: default_headers, connection: conn, process: false)
           end
 
           alias_method :retrieve_upstream_export, :start_upstream_export
 
           def update(url, client_cert, client_key, ca_file, attributes)
-            logger.debug "Sending PUT request to upstream Candlepin: #{url} #{attributes.to_json}"
-            resource(
-              url: url,
-              client_cert: client_cert,
-              client_key: client_key,
-              ca_file: ca_file).put(
-                attributes.to_json,
-                'accept' => 'application/json',
-                'accept-language' => I18n.locale,
-                'content-type' => 'application/json')
+            conn = resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file)
+            issue_request(method: :put, path: URI.parse(url).request_uri, headers: default_headers, payload: attributes.to_json, connection: conn, process: false)
           end
 
           def regenerate_upstream_identity(url, client_cert, client_key, ca_file)
-            logger.debug "Sending POST request to upstream Candlepin: #{url}"
-            resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file).post(nil)
+            conn = resource(url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file)
+            issue_request(method: :post, path: URI.parse(url).request_uri, headers: default_headers, connection: conn, process: false)
           end
 
           def bind_entitlement(**pool)
-            JSON.parse(self['entitlements'].post(nil, params: pool))
+            entitlements_path = join_path(path, 'entitlements') + hash_to_query(pool)
+            response = self.post(entitlements_path, nil, headers: self.default_headers)
+            JSON.parse(response.body)
           end
         end
       end

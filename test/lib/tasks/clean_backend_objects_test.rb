@@ -120,5 +120,16 @@ module Katello
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
+
+    def test_restores_bulk_load_size_after_failure
+      original_page_size = SETTINGS[:katello][:candlepin][:bulk_load_size]
+      Katello::Resources::Candlepin::Consumer.expects(:all_uuids).raises(StandardError, 'boom')
+
+      assert_raises(StandardError) do
+        Rake.application.invoke_task('katello:clean_backend_objects')
+      end
+
+      assert_equal original_page_size, SETTINGS[:katello][:candlepin][:bulk_load_size]
+    end
   end
 end

@@ -98,6 +98,7 @@ module Actions
           org = ::Organization.find(input[:organization_id])
           org.clear_manifest_expired_notifications
           subject_organization.audit_manifest_action(_('Manifest refreshed'))
+          ::Katello::Resources::Candlepin::UpstreamCandlepinResource.reset_connection!
         end
       end
     end

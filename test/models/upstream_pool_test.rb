@@ -16,7 +16,7 @@ module Katello
         'productId' => :product_id,
         'subscriptionId' => :subscription_id,
       }]
-      @response = stub(to_str: @raw_pool.to_json, headers: {})
+      @response = stub(body: @raw_pool.to_json, headers: {}, status: 200)
     end
 
     def stub_fetch_pools(response, base_params: {}, extra_params: [], included_fields: UpstreamPool.all_fields)
@@ -35,13 +35,12 @@ module Katello
                [:tomato, "salad"],
                [:include, "mayo"]]
 
-      RestClient::ParamsArray.expects(:new).with(input)
-
-      Katello::UpstreamPool.request_params(
+      result = Katello::UpstreamPool.request_params(
         base_params: {bacon: "jam"},
         extra_params: [[:tomato, "sandwich"], [:tomato, "salad"]],
         included_fields: ["mayo"]
       )
+      assert_equal input, result
     end
 
     def test_fetch_pools
@@ -59,7 +58,7 @@ module Katello
     end
 
     def test_fetch_pools_total_with_header
-      response = stub(to_str: '[]', headers: {x_total_count: 4})
+      response = stub(body: '[]', headers: {'x-total-count' => 4}, status: 200)
       stub_fetch_pools(response)
 
       pools = UpstreamPool.fetch_pools({})

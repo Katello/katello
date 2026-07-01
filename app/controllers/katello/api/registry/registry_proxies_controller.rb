@@ -45,6 +45,25 @@ module Katello
       end
     end
 
+    rescue_from HttpResource::HttpError do |e|
+      if e.code.to_i == 404
+        parsed = JSON.parse(e.response_body.to_s) rescue {}
+        if parsed["errors"]&.any? { |error| error["code"] == "BLOB_UNKNOWN" }
+          Rails.logger.info(pp_exception(e, with_backtrace: false))
+        else
+          Rails.logger.error(pp_exception(e, with_backtrace: false))
+        end
+      else
+        Rails.logger.error(pp_exception(e, with_backtrace: false))
+      end
+      body = e.response_body.presence || e.message
+      if request_from_katello_cli?
+        render json: { errors: [body] }, status: e.code
+      else
+        render plain: body, status: e.code
+      end
+    end
+
     def authenticate_cert_request
       if cert_present?
         client_cert = ::Cert::RhsmClient.new(cert_from_request)

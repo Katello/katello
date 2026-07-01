@@ -10,6 +10,7 @@ module Katello
           rescue_from HttpErrors::WrappedError, :with => :rescue_from_wrapped_error
 
           rescue_from RestClient::ExceptionWithResponse, :with => :rescue_from_exception_with_response
+          rescue_from HttpResource::HttpError, :with => :rescue_from_exception_with_response
           rescue_from ActiveRecord::RecordInvalid, :with => :rescue_from_record_invalid
           rescue_from ActiveRecord::RecordNotFound, :with => :rescue_from_record_not_found
 
@@ -57,11 +58,12 @@ module Katello
 
         def rescue_from_exception_with_response(exception)
           logger.error "exception when talking to a remote client: #{exception.message} " << pp_exception(exception)
+          code = exception.respond_to?(:code) ? exception.code.to_i : 0
+          status = (code > 0) ? code : :bad_request
           if request_from_katello_cli?
-            # TODO: why not use http_code from the exception???
-            render :json => format_subsys_exception_hash(exception), :status => :bad_request
+            render :json => format_subsys_exception_hash(exception), :status => status
           else
-            respond_for_exception(exception, :status => :bad_request)
+            respond_for_exception(exception, :status => status)
           end
         end
 
@@ -149,16 +151,26 @@ module Katello
           message = ""
           message << "#{exception.class}: " if options[:with_class]
           message << "#{exception.message}\n"
-          message << "Body: #{exception.http_body}\n" if options[:with_body] && exception.respond_to?(:http_body)
+          body = if exception.respond_to?(:http_body)
+                   exception.http_body
+                 elsif exception.respond_to?(:response_body)
+                   exception.response_body
+                 end
+          message << "Body: #{body}\n" if options[:with_body] && body
           message << exception.backtrace.join("\n") if options[:with_backtrace]
           message
         end
 
         def format_subsys_exception_hash(exception)
-          orig_hash = JSON.parse(exception.response).with_indifferent_access rescue {}
+          raw_body = if exception.respond_to?(:response)
+                       exception.response
+                     elsif exception.respond_to?(:response_body)
+                       exception.response_body
+                     end
+          orig_hash = JSON.parse(raw_body).with_indifferent_access rescue {}
 
           orig_hash[:message] = orig_hash.delete(:displayMessage) || orig_hash[:message]
-          orig_hash[:message] = exception.response.to_s.gsub(/^"|"$/, "") if orig_hash[:message].nil? && exception.respond_to?(:response)
+          orig_hash[:message] = raw_body.to_s.gsub(/^"|"$/, "") if orig_hash[:message].nil? && raw_body
           orig_hash[:message] = exception.message if orig_hash[:message].blank?
           orig_hash[:errors] = [orig_hash[:message]] if orig_hash[:errors].nil?
           orig_hash

@@ -8,9 +8,13 @@ module Katello
           end
 
           def update(entitlement_id, quantity)
-            body = {quantity: quantity}.to_json
-
-            self[entitlement_id].put(body)
+            issue_request(
+              method: :put,
+              path: path(entitlement_id),
+              headers: default_headers,
+              payload: {quantity: quantity}.to_json,
+              process: false
+            )
           end
         end
       end

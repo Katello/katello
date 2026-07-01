@@ -5,10 +5,21 @@ module Katello
         extend PoolResource
 
         class << self
-          def get(*args)
-            resource.get(*args)
-          rescue RestClient::Gone
-            raise Katello::Errors::UpstreamConsumerGone
+          def get(params = [])
+            response = issue_request(
+              method: :get,
+              path: path,
+              headers: default_headers,
+              params: params,
+              process: false
+            )
+            if response.status.between?(200, 299)
+              response
+            elsif [401, 410].include?(response.status)
+              fail Katello::Errors::UpstreamConsumerGone
+            else
+              process_response(response)
+            end
           end
 
           def path(id = nil, owner_label = nil)

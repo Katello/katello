@@ -402,7 +402,7 @@ module Katello
         when :excon
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert_filename
           config.ssl_client_key = ::Cert::Certs.ssl_client_key_filename
-        when :net_http
+        when :net_http, :net_http_persistent
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert
           config.ssl_client_key = ::Cert::Certs.ssl_client_key
         else

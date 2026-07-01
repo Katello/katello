@@ -10,7 +10,7 @@ module Katello
           end
 
           def get(id, params = {})
-            job_json = super(path(id) + hash_to_query(params), self.default_headers).body
+            job_json = super(path(id) + hash_to_query(params), headers: self.default_headers).body
             job = JSON.parse(job_json)
             job.with_indifferent_access
           end
