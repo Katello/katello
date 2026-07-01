@@ -8,6 +8,8 @@ Katello is a plugin for Foreman that orchestrates content distribution and subsc
 - **Edit files in Katello directory** (`/home/vagrant/katello`)
 - **Run commands from Foreman directory** (`/home/vagrant/foreman`)
 - **Never use "CVE" as abbreviation for content view environment** - CVE means "Common Vulnerabilities and Exposures" in security contexts. Use "CVEnv" or spell out "content view environment" instead. In Ruby/ERB code, use `cvenv` for variables (e.g. `cvenv`, `cvenv_id`, `cvenvs`). In JavaScript, use `cvEnv` (e.g. `cvEnv`, `cvEnvId`).
+- **Code changes require a Redmine issue** — commits that modify application code (Ruby, JavaScript, migrations, etc.) must reference a Redmine issue from [projects.theforeman.org](https://projects.theforeman.org). Documentation-only changes (CLAUDE.md, README, comments) do not require one.
+- **Commit message format for code changes**: `Fixes #<redmine_id> - <description>` (bug fixes) or `Refs #<redmine_id> - <description>` (related work). The Redmine issue must exist before committing.
 
 ### Command Quick Reference
 **Development Server:**
