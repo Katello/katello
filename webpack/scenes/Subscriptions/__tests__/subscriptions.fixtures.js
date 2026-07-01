@@ -421,17 +421,17 @@ export const tableColumns = [
   },
   {
     key: 'start_date',
-    label: 'Start Date',
+    label: 'Start date',
     value: true,
   },
   {
     key: 'end_date',
-    label: 'End Date',
+    label: 'End date',
     value: true,
   },
   {
     key: 'virt_who',
-    label: 'Requires Virt-Who',
+    label: 'Requires virt-who',
     value: true,
   },
   {
@@ -446,7 +446,7 @@ export const tableColumns = [
   },
   {
     key: 'product_host_count',
-    label: 'Product Host Count',
+    label: 'Hosts',
     value: true,
   },
 ];

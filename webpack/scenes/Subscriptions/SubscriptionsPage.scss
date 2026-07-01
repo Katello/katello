@@ -1,6 +1,60 @@
 @import 'foremanReact/common/variables';
 
-#subscriptions-page {
+h1[data-ouia-component-id="subscriptions-title"] {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+
+  [data-ouia-component-id="subscriptions-help-button"] {
+    padding-top: var(--pf-v5-global--spacer--xs);
+  }
+}
+
+#subscriptions-toolbar {
+  .subscriptions-filter-group {
+    flex-grow: 0;
+  }
+
+  [data-ouia-component-id="subscriptions-kebab-dropdown"] {
+    padding: var(--pf-v5-global--spacer--xs) 0;
+
+    > button svg {
+      font-size: var(--pf-v5-global--FontSize--xl);
+    }
+
+    li svg {
+      fill: currentcolor;
+      margin-left: var(--pf-v5-global--spacer--sm);
+      font-size: var(--pf-v5-global--FontSize--sm);
+    }
+  }
+
+  .subscriptions-column-selector {
+    margin: 0;
+
+    #column-selector {
+      button {
+        padding-left: var(--pf-v5-global--spacer--md);
+        padding-right: var(--pf-v5-global--spacer--md);
+        color: var(--pf-v5-global--Color--200);
+
+        .columns-selector-text {
+          display: none;
+        }
+
+        svg {
+          font-size: var(--pf-v5-global--FontSize--xl);
+        }
+
+        &:hover {
+          color: var(--pf-v5-global--Color--100);
+        }
+      }
+    }
+  }
+}
+
+#subscriptions-table {
   .editable {
     &.changed {
       font-weight: bold;
@@ -36,18 +90,5 @@
         float: right;
       }
     }
-  }
-
-  .option-tooltip-container {
-    display: inline-block;
-    margin-left: 10px;
-    margin-top: 3px;
-    width: 10px;
-  }
-
-  span.fa.fa-minus::before {
-    content: '\2014';
-    color: gray;
-    font-size: 1em;
   }
 }

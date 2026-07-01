@@ -1,6 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
-import { Icon } from 'patternfly-react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import entitlementsValueFormatter from '../../../../components/pf3Table/formatters/entitlementsValueFormatter.js';
 import { entitlementsInlineEditFormatter } from '../../../../components/pf3Table/formatters/EntitlementsInlineEditFormatter';
@@ -19,6 +18,27 @@ function getEntitlementsFormatter(inlineEditController, canManageSubscriptionAll
   }
   return entitlementsValueFormatter;
 }
+
+// Helper function to format dates consistently
+const formatDate = (dateString) => {
+  if (!dateString) return <td>—</td>;
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return <td>—</td>;
+  return <td>{date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</td>;
+};
+
+// Helper function to format SKU
+const skuFormatter = (value, { rowData }) => {
+  if (!rowData.upstream_pool_id) {
+    return <td>—</td>;
+  }
+  return cellFormatter(value, { rowData });
+};
+
+const textFormatter = (value, additionalData) => {
+  if (!value) return <td>—</td>;
+  return cellFormatter(value, additionalData);
+};
 
 export const createSubscriptionsTableSchema = (
   inlineEditController,
@@ -56,8 +76,7 @@ export const createSubscriptionsTableSchema = (
       formatters: [headerFormatter],
     },
     cell: {
-      formatters: [subscriptionNameFormatter]
-      ,
+      formatters: [subscriptionNameFormatter],
     },
   },
   {
@@ -77,7 +96,7 @@ export const createSubscriptionsTableSchema = (
       formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormatter],
+      formatters: [skuFormatter],
     },
   },
   {
@@ -87,42 +106,43 @@ export const createSubscriptionsTableSchema = (
       formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormatter],
+      formatters: [textFormatter],
     },
-  }, // TODO: use date formatter from tomas' PR
+  },
   {
     property: 'start_date',
     header: {
-      label: __('Start Date'),
+      label: __('Start date'),
       formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormatter],
+      formatters: [(value, { rowData }) => formatDate(rowData.start_date)],
     },
   },
   {
     property: 'end_date',
     header: {
-      label: __('End Date'),
+      label: __('End date'),
       formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormatter],
+      formatters: [(value, { rowData }) => formatDate(rowData.end_date)],
     },
   },
   {
     property: 'virt_who',
     header: {
-      label: __('Requires Virt-Who'),
+      label: __('Requires virt-who'),
       formatters: [headerFormatter],
     },
     cell: {
       formatters: [
-        (value, { rowData }) => (
-          <td>
-            <Icon type="fa" name={rowData.virt_who ? 'check' : 'minus'} />
-          </td>
-        ),
+        (value, { rowData }) => {
+          if (rowData.virt_who === null || rowData.virt_who === undefined) {
+            return <td>—</td>;
+          }
+          return <td>{rowData.virt_who ? __('True') : __('False')}</td>;
+        },
       ],
     },
   },
@@ -139,7 +159,7 @@ export const createSubscriptionsTableSchema = (
   {
     property: 'product_host_count',
     header: {
-      label: __('Product Host Count'),
+      label: __('Hosts'),
       formatters: [headerFormatter],
     },
     cell: {

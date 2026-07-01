@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
-import { MessageDialog } from 'patternfly-react';
+import { Modal, ModalVariant, Button } from '@patternfly/react-core';
 import { buildPools } from '../../SubscriptionsTableHelpers';
 
 const UpdateDialog = ({
@@ -21,27 +21,39 @@ const UpdateDialog = ({
   };
 
   return (
-    <MessageDialog
-      show={show}
+    <Modal
+      ouiaId="update-entitlements-modal"
       title={__('Editing Entitlements')}
-      secondaryContent={
-        // eslint-disable-next-line react/no-danger
-        <p dangerouslySetInnerHTML={{
-          __html: sprintf(
-            __("You're making changes to %(entitlementCount)s entitlement(s)"),
-            {
-              entitlementCount: `<b>${quantityLength}</b>`,
-            },
-          ),
-        }}
-        />
-      }
-      primaryActionButtonContent={__('Save')}
-      primaryAction={confirmEdit}
-      secondaryActionButtonContent={__('Cancel')}
-      secondaryAction={() => showUpdateConfirm(false)}
-      onHide={() => showUpdateConfirm(false)}
-    />);
+      isOpen={show}
+      variant={ModalVariant.small}
+      onClose={() => showUpdateConfirm(false)}
+      actions={[
+        <Button
+          ouiaId="update-entitlements-save-button"
+          key="save"
+          variant="primary"
+          onClick={confirmEdit}
+        >
+          {__('Save')}
+        </Button>,
+        <Button
+          ouiaId="update-entitlements-cancel-button"
+          key="cancel"
+          variant="link"
+          onClick={() => showUpdateConfirm(false)}
+        >
+          {__('Cancel')}
+        </Button>,
+      ]}
+    >
+      <p>
+        {sprintf(
+          __("You're making changes to %s entitlement(s)"),
+          quantityLength,
+        )}
+      </p>
+    </Modal>
+  );
 };
 
 UpdateDialog.propTypes = {

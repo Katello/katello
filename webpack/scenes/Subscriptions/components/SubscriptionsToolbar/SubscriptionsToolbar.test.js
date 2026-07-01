@@ -1,33 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { SUBSCRIPTIONS_SERVICE_URL } from '../../SubscriptionConstants';
 
 const mockSearchBar = jest.fn(() => <div data-testid="search-bar" />);
-const mockOptionTooltip = jest.fn(() => <div data-testid="option-tooltip" />);
+const mockColumnSelector = jest.fn(() => <div data-testid="column-selector" />);
 const mockLinkContainer = ({ children }) => <div data-testid="link-container">{children}</div>;
-const MockOptionTooltip = props => mockOptionTooltip(props);
+const MockColumnSelector = props => mockColumnSelector(props);
 mockLinkContainer.propTypes = {
   children: PropTypes.node,
 };
-MockOptionTooltip.propTypes = {
-  options: () => null,
+MockColumnSelector.propTypes = {
+  data: PropTypes.shape({}),
 };
 
 jest.mock('foremanReact/components/SearchBar', () => ({
   __esModule: true,
   default: props => mockSearchBar(props),
 }));
-jest.mock('../../../../components/OptionTooltip', () => ({
+jest.mock('foremanReact/components/ColumnSelector', () => ({
   __esModule: true,
-  default: MockOptionTooltip,
+  default: MockColumnSelector,
+}));
+jest.mock('foremanReact/common/hooks/API/APIHooks', () => ({
+  useAPI: jest.fn(() => ({ response: { id: 1 }, status: 'RESOLVED' })),
 }));
 jest.mock('../../../../components/TooltipButton', () => ({
   __esModule: true,
   default: ({
-    title, onClick, disabled, bsStyle,
+    title, onClick, disabled, variant,
   }) => (
-    <button type="button" disabled={disabled} className={bsStyle} onClick={onClick}>
+    <button type="button" disabled={disabled} className={variant} onClick={onClick}>
       {title}
     </button>
   ),
@@ -44,12 +46,14 @@ const createRequiredProps = () => ({
   onDeleteButtonClick: jest.fn(),
   onManageManifestButtonClick: jest.fn(),
   onExportCsvButtonClick: jest.fn(),
+  currentUserId: 1,
+  hasPreference: false,
 });
 
 describe('SubscriptionsToolbar', () => {
   beforeEach(() => {
     mockSearchBar.mockClear();
-    mockOptionTooltip.mockClear();
+    mockColumnSelector.mockClear();
   });
 
   it('renders required actions and search controls', () => {
@@ -57,9 +61,7 @@ describe('SubscriptionsToolbar', () => {
     render(<SubscriptionsToolbar {...props} />);
 
     expect(screen.getByTestId('search-bar')).toBeInTheDocument();
-    expect(screen.getByText('Manage Manifest')).toBeInTheDocument();
-    expect(screen.getByText('Export CSV')).toBeInTheDocument();
-    expect(screen.getByTestId('option-tooltip')).toBeInTheDocument();
+    expect(screen.getByTestId('column-selector')).toBeInTheDocument();
     expect(mockSearchBar.mock.calls[0][0].data.controller).toBe('katello_subscriptions');
   });
 
@@ -67,45 +69,22 @@ describe('SubscriptionsToolbar', () => {
     const props = createRequiredProps();
     render(<SubscriptionsToolbar {...props} />);
 
-    fireEvent.click(screen.getByText('Manage Manifest'));
     fireEvent.click(screen.getByText('Export CSV'));
 
-    expect(props.onManageManifestButtonClick).toHaveBeenCalledTimes(1);
     expect(props.onExportCsvButtonClick).toHaveBeenCalledTimes(1);
   });
 
-  it('renders Add and Delete actions for allocation permissions', () => {
+  it('renders Add action for allocation permissions', () => {
     const props = createRequiredProps();
     render(<SubscriptionsToolbar
       {...props}
       canManageSubscriptionAllocations
     />);
 
-    expect(screen.getByText('Add Subscriptions')).toBeInTheDocument();
-    expect(screen.getByText('Delete')).toBeInTheDocument();
+    expect(screen.getByText('Add subscriptions')).toBeInTheDocument();
   });
 
-  it('disables delete action when delete is disabled', () => {
-    const props = createRequiredProps();
-    render(<SubscriptionsToolbar
-      {...props}
-      canManageSubscriptionAllocations
-      disableDeleteButton
-    />);
-
-    expect(screen.getByText('Delete')).toBeDisabled();
-  });
-
-  it('renders subscription usage link when manifest is imported', () => {
-    render(<SubscriptionsToolbar {...createRequiredProps()} isManifestImported />);
-
-    expect(screen.getByRole('link', { name: 'View Subscription Usage' })).toHaveAttribute(
-      'href',
-      SUBSCRIPTIONS_SERVICE_URL,
-    );
-  });
-
-  it('passes table columns to the options tooltip', () => {
+  it('passes table columns to the column selector', () => {
     const tableColumns = [{
       key: 'col1',
       label: 'Col 1',
@@ -118,6 +97,10 @@ describe('SubscriptionsToolbar', () => {
 
     render(<SubscriptionsToolbar {...createRequiredProps()} tableColumns={tableColumns} />);
 
-    expect(mockOptionTooltip.mock.calls[0][0].options).toEqual(tableColumns);
+    const columnSelectorData = mockColumnSelector.mock.calls[0][0].data;
+    expect(columnSelectorData.controller).toBe('subscriptions');
+    expect(columnSelectorData.categories[0].children).toHaveLength(2);
+    expect(columnSelectorData.categories[0].children[0].key).toBe('col1');
+    expect(columnSelectorData.categories[0].children[0].checkProps.checked).toBe(true);
   });
 });

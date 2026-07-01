@@ -10,6 +10,7 @@ import { reducers as organizationProductsReducers } from '../OrganizationProduct
 import { contentViewDetails } from '../../scenes/ContentViews/Details';
 import hostDetails from '../../components/extensions/HostDetails/HostDetailsReducer';
 import searchBar from '../../components/extensions/SearchBar/SearchBarReducer';
+import tables from '../../scenes/Settings';
 
 export default combineReducers({
   organization,
@@ -22,5 +23,6 @@ export default combineReducers({
   contentViewDetails,
   hostDetails,
   searchBar,
+  settings: combineReducers({ tables }),
   ...organizationProductsReducers,
 });

@@ -3,10 +3,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import SubscriptionsPage from '../SubscriptionsPage';
-import { successState, settingsSuccessState, permissionDeniedState } from './subscriptions.fixtures';
+import { successState, permissionDeniedState } from './subscriptions.fixtures';
 import { loadAvailableQuantities, updateQuantity } from '../SubscriptionActions';
 import { pingUpstreamSubscriptions } from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
-import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
 jest.mock('foremanReact/components/PermissionDenied', () => ({
   __esModule: true, default: ({ missingPermissions }) => <div>PermissionDenied: {missingPermissions.join(', ')}</div>,
@@ -21,10 +20,14 @@ jest.mock('../components/SubscriptionsTable', () => ({
 jest.mock('../components/SubscriptionsToolbar', () => ({
   __esModule: true, default: () => <div>SubscriptionsToolbar Mock</div>,
 }));
-
-const loadTables = jest.fn(() => new Promise((resolve) => {
-  resolve();
+jest.mock('foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks', () => ({
+  useCurrentUserTablePreferences: jest.fn(() => ({
+    columns: [],
+    hasPreference: false,
+    currentUserId: 1,
+  })),
 }));
+
 
 const pollTasks = jest.fn();
 const handleStartTask = jest.fn();
@@ -38,7 +41,6 @@ afterEach(() => {
   handleFinishedTask.mockClear();
   mockLoadSubscriptions.mockClear();
   mockLoadTableColumns.mockClear();
-  loadTables.mockClear();
 });
 
 describe('subscriptions page', () => {
@@ -51,11 +53,7 @@ describe('subscriptions page', () => {
     setModalClosed: noop,
     organization,
     subscriptions: subscriptionState,
-    subscriptionTableSettings: settingsSuccessState,
-    loadTables,
     loadTableColumns: mockLoadTableColumns,
-    createColumns,
-    updateColumns,
     loadSubscriptions: mockLoadSubscriptions,
     loadAvailableQuantities,
     pingUpstreamSubscriptions,
@@ -212,7 +210,6 @@ describe('subscriptions page', () => {
     await waitFor(() => {
       expect(pollTasks).toHaveBeenCalled();
       expect(mockLoadSubscriptions).toHaveBeenCalled();
-      expect(loadTables).toHaveBeenCalled();
       expect(mockLoadTableColumns).toHaveBeenCalled();
     });
   });
