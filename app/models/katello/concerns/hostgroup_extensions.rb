@@ -39,19 +39,17 @@ module Katello
       end
 
       def correct_kickstart_repository
-        # If switched from ks repo to install media:
-        if medium_id_changed? && medium && content_facet&.kickstart_repository_id
-          # since it's :through association, nullify both the actual data source and delegate
-          self.content_facet.kickstart_repository = nil
-          self.kickstart_repository = nil
-        # If switched from install media to ks repo:
-        elsif content_facet&.kickstart_repository && medium
-          self.medium = nil
-        end
+        ensure_single_installation_source
+        return unless content_facet&.kickstart_repository_id
 
-        if content_facet&.kickstart_repository_id && !matching_kickstart_repository?(content_facet) && (equivalent = equivalent_kickstart_repository)
-          self.content_facet.kickstart_repository_id = equivalent[:id]
-        end
+        effective_content_facet = content_facet_with_inheritance(content_facet)
+        ks_repos = operatingsystem_kickstart_repos(effective_content_facet)
+        return unless kickstart_repository_stale?(ks_repos: ks_repos, effective_content_facet: effective_content_facet)
+
+        equivalent = equivalent_kickstart_repository(ks_repos: ks_repos, effective_content_facet: effective_content_facet)
+        return if equivalent.blank? || equivalent[:id] == content_facet.kickstart_repository_id
+
+        self.content_facet.kickstart_repository_id = equivalent[:id]
       end
 
       def content_view_environment
@@ -127,25 +125,172 @@ module Katello
         end
       end
 
-      def equivalent_kickstart_repository
+      def equivalent_kickstart_repository(ks_repos: nil, effective_content_facet: nil)
         return unless operatingsystem &&
-                      content_facet.kickstart_repository &&
+                      content_facet&.kickstart_repository &&
                       operatingsystem.respond_to?(:kickstart_repos)
-        ks_repos = operatingsystem.kickstart_repos(self, content_facet: content_facet)
-        ks_repos.find { |repo| repo[:name] == content_facet.kickstart_repository.label }
+        effective_content_facet ||= content_facet_with_inheritance(content_facet)
+        ks_repos ||= operatingsystem_kickstart_repos(effective_content_facet)
+        return if ks_repos.blank?
+
+        if operatingsystem_id_changing? || kickstart_repository_incompatible_with_os?
+          release_match = find_kickstart_repository_by_release(ks_repos)
+          return release_match if release_match
+
+          # When the OS changes and we cannot detect a strict release match,
+          # prefer non-label heuristics to avoid sticking to a stale repo label.
+          return find_best_matching_kickstart_repository(ks_repos)
+        end
+
+        by_label = ks_repos.find { |repo| repo[:name] == content_facet.kickstart_repository.label }
+        return by_label if by_label
+
+        find_best_matching_kickstart_repository(ks_repos)
       end
 
-      def matching_kickstart_repository?(content_facet)
+      def matching_kickstart_repository?(content_facet, ks_repos: nil, effective_content_facet: nil)
         return true unless operatingsystem
 
         if operatingsystem.respond_to? :kickstart_repos
-          operatingsystem.kickstart_repos(self, content_facet: content_facet).any? do |repo|
+          effective_content_facet ||= content_facet_with_inheritance(content_facet)
+          ks_repos ||= operatingsystem_kickstart_repos(effective_content_facet)
+          ks_repos.any? do |repo|
             repo[:id] == (content_facet&.kickstart_repository_id || content_facet&.kickstart_repository&.id)
           end
         end
       end
 
       private
+
+      def ensure_single_installation_source
+        # If switched from ks repo to install media:
+        if medium_id_changed? && medium && content_facet&.kickstart_repository_id
+          # since it's :through association, nullify both the actual data source and delegate
+          self.content_facet.kickstart_repository = nil
+          self.kickstart_repository = nil
+        # If switched from install media to ks repo:
+        elsif content_facet&.kickstart_repository && medium
+          self.medium = nil
+        end
+      end
+
+      def kickstart_repository_stale?(ks_repos: nil, effective_content_facet: nil)
+        return false unless content_facet&.kickstart_repository_id
+        return true if operatingsystem_id_changing?
+        return true if kickstart_repository_incompatible_with_os?
+        return true unless matching_kickstart_repository?(
+          content_facet,
+          ks_repos: ks_repos,
+          effective_content_facet: effective_content_facet
+        )
+
+        # Child hostgroups with inherited kickstart context can become stale when
+        # parent CVE/content source/OS changes while the stale repo ID remains listed.
+        ancestry.present? &&
+          (content_facet.content_view_environment_id.blank? || content_facet.content_source_id.blank?)
+      end
+
+      def operatingsystem_id_changing?
+        if respond_to?(:will_save_change_to_operatingsystem_id?)
+          will_save_change_to_operatingsystem_id?
+        else
+          respond_to?(:operatingsystem_id_changed?) && operatingsystem_id_changed?
+        end
+      end
+
+      def kickstart_repository_incompatible_with_os?
+        repo_release = content_facet&.kickstart_repository&.distribution_version
+        target_release = os_version_matching_order.first
+        return false if repo_release.blank? || target_release.blank?
+
+        !(repo_release == target_release || repo_release.start_with?("#{target_release}."))
+      end
+
+      def find_kickstart_repository_by_release(ks_repos)
+        repos_by_id = indexed_kickstart_repositories(ks_repos)
+        release_matches = nil
+
+        os_version_matching_order.each do |os_release|
+          matches = ks_repos.select do |repo|
+            repo_release = repos_by_id[repo[:id]]&.distribution_version
+            repo_release == os_release || repo_release&.start_with?("#{os_release}.")
+          end
+
+          # Some repos keep generic distribution_version values across minor releases.
+          # In those cases, use the repository label/name as a release hint.
+          matches = ks_repos.select { |repo| repository_name_contains_release?(repo[:name], os_release) } if matches.blank?
+          next if matches.blank?
+
+          release_matches = matches
+          break
+        end
+        return if release_matches.blank?
+
+        find_best_matching_kickstart_repository(release_matches, repos_by_id) || release_matches.first
+      end
+
+      def find_best_matching_kickstart_repository(ks_repos, repos_by_id = indexed_kickstart_repositories(ks_repos))
+        current_repo = content_facet&.kickstart_repository
+        return if current_repo.blank?
+
+        if current_repo.distribution_variant.present?
+          same_variant = ks_repos.find do |repo|
+            repos_by_id[repo[:id]]&.distribution_variant == current_repo.distribution_variant
+          end
+          return same_variant if same_variant
+        end
+
+        if current_repo.product_id.present?
+          same_product = ks_repos.find do |repo|
+            repos_by_id[repo[:id]]&.product_id == current_repo.product_id
+          end
+          return same_product if same_product
+        end
+      end
+
+      def indexed_kickstart_repositories(ks_repos)
+        Katello::Repository.where(id: ks_repos.map { |repo| repo[:id] }).index_by(&:id)
+      end
+
+      def operatingsystem_kickstart_repos(effective_content_facet)
+        return [] unless operatingsystem.respond_to?(:kickstart_repos)
+
+        operatingsystem.kickstart_repos(self, content_facet: effective_content_facet)
+      end
+
+      def content_facet_with_inheritance(facet)
+        return facet if ancestry.blank? || facet.blank?
+
+        inherited_cvenv_id = inherited_ancestry_attribute(:content_view_environment_id, :content_facet)
+        inherited_content_source_id = inherited_ancestry_attribute(:content_source_id, :content_facet)
+        return facet if inherited_cvenv_id.blank? && inherited_content_source_id.blank?
+
+        facet.dup.tap do |effective_facet|
+          effective_facet.content_view_environment_id ||= inherited_cvenv_id
+          effective_facet.content_source_id ||= inherited_content_source_id
+        end
+      end
+
+      def os_version_matching_order
+        releases = []
+        major = operatingsystem&.major.to_s.presence
+        minor = operatingsystem&.minor.to_s.presence
+        releases << "#{major}.#{minor}" if major && minor
+        releases << operatingsystem.release if operatingsystem&.release.present?
+        releases.uniq
+      end
+
+      def repository_name_contains_release?(repository_name, os_release)
+        return false if repository_name.blank? || os_release.blank?
+
+        normalized_name = repository_name.to_s.downcase
+        release_tokens = [
+          os_release,
+          os_release.tr('.', '_'),
+          os_release.tr('.', '-'),
+        ].map(&:downcase).uniq
+        release_tokens.any? { |token| normalized_name.include?(token) }
+      end
 
       def inherited_ancestry_attribute(attribute, facet)
         value = self.send(facet)&.send(attribute)
