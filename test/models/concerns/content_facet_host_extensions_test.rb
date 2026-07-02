@@ -35,20 +35,23 @@ module Katello
 
     def test_action_triggered_on_facet_cvenv_update
       host.reload
-      host.expects(:update_candlepin_associations).twice
+      # Only called once from before_update callback, not from setter (SAT-36519 fix)
+      host.expects(:update_candlepin_associations).once
       cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view.id, dev.id)
       host.content_facet.content_view_environments = [cvenv]
       host.save!
 
       host.reload
-      host.expects(:update_candlepin_associations).twice
+      # Only called once from before_update callback, not from setter (SAT-36519 fix)
+      host.expects(:update_candlepin_associations).once
       cvenv2 = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view2.id, dev.id)
       host.content_facet.content_view_environments = [cvenv2]
       host.save!
     end
 
     def test_content_facet_cvenv_update
-      host.expects(:update_candlepin_associations).twice
+      # Only called once from before_update callback, not from setter (SAT-36519 fix)
+      host.expects(:update_candlepin_associations).once
       cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view2.id, dev.id)
       host.content_facet.content_view_environments = [cvenv]
       host.save!

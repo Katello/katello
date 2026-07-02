@@ -278,7 +278,8 @@ module Katello
       end
 
       def test_registration_existing_host
-        ::Host::Managed.any_instance.expects(:update_candlepin_associations).times(2)
+        # Only called once from before_update callback, not from setter (SAT-36519 fix)
+        ::Host::Managed.any_instance.expects(:update_candlepin_associations).times(1)
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
@@ -293,7 +294,9 @@ module Katello
       end
 
       def test_force_registration_existing_host
-        ::Host::Managed.any_instance.expects(:update_candlepin_associations).times(1)
+        # When unregister_host raises RestClient::Gone, the consumer is already gone from Candlepin
+        # so update_candlepin_associations should NOT be called (there's nothing to update)
+        ::Host::Managed.any_instance.expects(:update_candlepin_associations).never
         ::Katello::RegistrationManager.expects(:unregister_host).raises(RestClient::Gone)
         ::Katello::RegistrationManager.expects(:create_in_candlepin)
         ::Katello::RegistrationManager.expects(:finalize_registration)
@@ -551,7 +554,8 @@ module Katello
 
       # this case can only happen if candlepin/pulp dies after the host is unregistered, but before it's re-registered.
       def test_registration_existing_host_dead_backend_service
-        ::Host::Managed.any_instance.stubs(:update_candlepin_associations).twice
+        # Only called once from before_update callback, not from setter (SAT-36519 fix)
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations).once
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
         @host.content_facet.expects(:destroy).never

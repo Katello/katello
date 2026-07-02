@@ -152,7 +152,10 @@ module Katello
         super(new_cvenvs)
         Katello::ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(self, new_cvenvs)
         self.content_view_environments.reload unless self.new_record?
-        self.host&.update_candlepin_associations unless self.host&.new_record?
+        # Mark as changed to ensure the before_update callback triggers Candlepin update.
+        # Don't call update_candlepin_associations directly - the callback handles it and
+        # prevents duplicate requests when called during host.save!
+        self.cvenvs_changed = true unless self.new_record?
       end
 
       def content_view_environment_labels

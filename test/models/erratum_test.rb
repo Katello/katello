@@ -163,7 +163,6 @@ module Katello
     def setup
       super
       @host = hosts(:one)
-      @host.expects(:update_candlepin_associations)
       cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
         katello_content_views(:library_dev_view).id,
         katello_environments(:library).id
@@ -222,7 +221,6 @@ module Katello
       @repo = katello_repositories(:rhel_6_x86_64)
       @security = katello_errata(:security)
       @host = hosts(:one)
-      @host.expects(:update_candlepin_associations)
       cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
         katello_content_views(:library_dev_view).id,
         katello_environments(:library).id
