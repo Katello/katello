@@ -71,17 +71,17 @@ export const SUBSCRIPTION_TABLE_COLUMNS = [
   },
   {
     key: 'start_date',
-    label: __('Start Date'),
+    label: __('Start date'),
     value: false,
   },
   {
     key: 'end_date',
-    label: __('End Date'),
+    label: __('End date'),
     value: false,
   },
   {
     key: 'virt_who',
-    label: __('Requires Virt-Who'),
+    label: __('Requires virt-who'),
     value: false,
   },
   {
@@ -96,7 +96,7 @@ export const SUBSCRIPTION_TABLE_COLUMNS = [
   },
   {
     key: 'product_host_count',
-    label: __('Product Host Count'),
+    label: __('Hosts'),
     value: false,
   },
 ];

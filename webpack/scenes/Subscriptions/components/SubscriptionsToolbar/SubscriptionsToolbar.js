@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Form, FormGroup, Button } from 'patternfly-react';
+import {
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+  Button,
+  ToolbarGroup,
+  Dropdown,
+  DropdownList,
+  DropdownItem,
+  Divider,
+  MenuToggle,
+  Tooltip,
+} from '@patternfly/react-core';
+import { EllipsisVIcon, ExternalLinkAltIcon, ExportIcon } from '@patternfly/react-icons';
 import { LinkContainer } from 'react-router-bootstrap';
 import { noop } from 'foremanReact/common/helpers';
 import SearchBar from 'foremanReact/components/SearchBar';
 import { getControllerSearchProps } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { SUBSCRIPTIONS_SERVICE_URL } from '../../SubscriptionConstants';
-
+import ColumnSelector from 'foremanReact/components/ColumnSelector';
 import TooltipButton from '../../../../components/TooltipButton';
-import OptionTooltip from '../../../../components/OptionTooltip';
+import { SUBSCRIPTIONS_SERVICE_URL } from '../../SubscriptionConstants';
 
 const SubscriptionsToolbar = ({
   canManageSubscriptionAllocations,
@@ -25,29 +37,58 @@ const SubscriptionsToolbar = ({
   onManageManifestButtonClick,
   onExportCsvButtonClick,
   tableColumns,
-  toolTipOnChange,
-  toolTipOnclose,
   isManifestImported,
-}) => (
-  <Row className="toolbar-pf table-view-pf-toolbar-external">
-    <Col sm={12}>
-      <Form className="toolbar-pf-actions">
-        <FormGroup className="toolbar-pf-filter">
-          <SearchBar
-            data={{
-              ...getControllerSearchProps('/katello/api/v2/subscriptions', 'searchBar-katello_subscriptions', true, autocompleteQueryParams),
-              controller: 'katello_subscriptions',
-            }}
-            onSearch={onSearch}
-            onSearchChange={updateSearchQuery}
-          />
-        </FormGroup>
-        <div className="option-tooltip-container">
-          <OptionTooltip options={tableColumns} icon="fa-columns" id="subscriptionTableTooltip" onChange={toolTipOnChange} onClose={toolTipOnclose} />
-        </div>
-        <div className="toolbar-pf-action-right">
-          <FormGroup>
-            {canManageSubscriptionAllocations &&
+  currentUserId,
+  hasPreference,
+}) => {
+  const [isKebabOpen, setIsKebabOpen] = useState(false);
+
+  const onKebabToggle = () => setIsKebabOpen(!isKebabOpen);
+  const onKebabSelect = () => setIsKebabOpen(false);
+
+  // Transform tableColumns to ColumnSelector format
+  const columnSelectorData = {
+    url: currentUserId ? `/api/v2/users/${currentUserId}/table_preferences` : null,
+    controller: 'subscriptions',
+    categories: [
+      {
+        name: __('General'),
+        key: 'general',
+        defaultExpanded: true,
+        checkProps: {
+          checked: false,
+        },
+        children: tableColumns.map(col => ({
+          name: col.label,
+          key: col.key,
+          checkProps: {
+            checked: col.value,
+            disabled: col.key === 'id' ? true : null,
+          },
+        })),
+      },
+    ],
+    hasPreference,
+  };
+
+  return (
+    <Toolbar id="subscriptions-toolbar" ouiaId="subscriptions-toolbar">
+      <ToolbarContent>
+        <ToolbarGroup variant="filter-group" className="subscriptions-filter-group">
+          <ToolbarItem variant="search-filter">
+            <SearchBar
+              data={{
+                ...getControllerSearchProps('/katello/api/v2/subscriptions', 'searchBar-katello_subscriptions', true, autocompleteQueryParams),
+                controller: 'katello_subscriptions',
+              }}
+              onSearch={onSearch}
+              onSearchChange={updateSearchQuery}
+            />
+          </ToolbarItem>
+        </ToolbarGroup>
+        <ToolbarGroup>
+          {canManageSubscriptionAllocations &&
+            <ToolbarItem>
               <LinkContainer
                 to="/subscriptions/add"
                 disabled={disableManifestActions || disableAddButton}
@@ -56,52 +97,105 @@ const SubscriptionsToolbar = ({
                   tooltipId="add-subscriptions-button-tooltip"
                   tooltipText={disableManifestReason}
                   tooltipPlacement="top"
-                  title={__('Add Subscriptions')}
+                  title={__('Add subscriptions')}
                   disabled={disableManifestActions}
-                  bsStyle="primary"
+                  variant="primary"
                 />
               </LinkContainer>
-            }
+            </ToolbarItem>
+          }
 
-            {isManifestImported &&
-              <a
-                href={SUBSCRIPTIONS_SERVICE_URL}
-                className="btn btn-default"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {__('View Subscription Usage')}
-              </a>
-            }
-
-            <Button onClick={onManageManifestButtonClick}>
-              {__('Manage Manifest')}
-            </Button>
-
-            <Button onClick={onExportCsvButtonClick}>
+          <ToolbarItem>
+            <Button ouiaId="export-csv-button" onClick={onExportCsvButtonClick} variant="secondary" icon={<ExportIcon />}>
               {__('Export CSV')}
             </Button>
-            {canManageSubscriptionAllocations &&
+          </ToolbarItem>
 
-              <TooltipButton
-                bsStyle="danger"
-                onClick={onDeleteButtonClick}
-                tooltipId="delete-subscriptions-button-tooltip"
-                tooltipText={disableDeleteReason}
-                tooltipPlacement="top"
-                title={__('Delete')}
-                disabled={disableManifestActions || disableDeleteButton}
-              />
-            }
-          </FormGroup>
-        </div>
-      </Form>
-    </Col>
-  </Row>
-);
+          <ToolbarItem className="subscriptions-column-selector">
+            <ColumnSelector data={columnSelectorData} />
+          </ToolbarItem>
+
+          {/* Kebab menu for overflow actions */}
+          <ToolbarItem>
+            <Dropdown
+              ouiaId="subscriptions-kebab-dropdown"
+              onSelect={onKebabSelect}
+              toggle={toggleRef => (
+                <MenuToggle
+                  ref={toggleRef}
+                  aria-label={__('Actions')}
+                  variant="plain"
+                  onClick={onKebabToggle}
+                  isExpanded={isKebabOpen}
+                >
+                  <EllipsisVIcon size="md" />
+                </MenuToggle>
+              )}
+              isOpen={isKebabOpen}
+              onOpenChange={isOpen => setIsKebabOpen(isOpen)}
+            >
+              <DropdownList>
+                <DropdownItem
+                  ouiaId="manage-manifest-dropdown-item"
+                  key="manage-manifest"
+                  onClick={() => {
+                    onManageManifestButtonClick();
+                    onKebabSelect();
+                  }}
+                >
+                  {__('Manage manifest')}
+                </DropdownItem>
+                {isManifestImported && (
+                  <DropdownItem
+                    ouiaId="view-usage-dropdown-item"
+                    key="view-usage"
+                    onClick={() => window.open(SUBSCRIPTIONS_SERVICE_URL, '_blank', 'noopener,noreferrer')}
+                  >
+                    {__('View subscription usage')} <ExternalLinkAltIcon />
+                  </DropdownItem>
+                )}
+                {canManageSubscriptionAllocations && (
+                  <>
+                    <Divider key="divider" />
+                    {disableDeleteButton ? (
+                      <Tooltip content={disableDeleteReason} key="delete">
+                        <DropdownItem
+                          ouiaId="delete-dropdown-item"
+                          onClick={e => e.preventDefault()}
+                          isAriaDisabled
+                        >
+                          {__('Delete')}
+                        </DropdownItem>
+                      </Tooltip>
+                    ) : (
+                      <DropdownItem
+                        ouiaId="delete-dropdown-item"
+                        key="delete"
+                        onClick={() => {
+                          onDeleteButtonClick();
+                          onKebabSelect();
+                        }}
+                      >
+                        {__('Delete')}
+                      </DropdownItem>
+                    )}
+                  </>
+                )}
+              </DropdownList>
+            </Dropdown>
+          </ToolbarItem>
+        </ToolbarGroup>
+      </ToolbarContent>
+    </Toolbar>
+  );
+};
 
 SubscriptionsToolbar.propTypes = {
-  tableColumns: OptionTooltip.propTypes.options,
+  tableColumns: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.string,
+    label: PropTypes.string,
+    value: PropTypes.bool,
+  })),
   canManageSubscriptionAllocations: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
   disableManifestReason: PropTypes.string,
@@ -114,9 +208,9 @@ SubscriptionsToolbar.propTypes = {
   onDeleteButtonClick: PropTypes.func,
   onManageManifestButtonClick: PropTypes.func,
   onExportCsvButtonClick: PropTypes.func,
-  toolTipOnChange: PropTypes.func,
-  toolTipOnclose: PropTypes.func,
   isManifestImported: PropTypes.bool,
+  currentUserId: PropTypes.number,
+  hasPreference: PropTypes.bool,
 };
 
 SubscriptionsToolbar.defaultProps = {
@@ -133,9 +227,9 @@ SubscriptionsToolbar.defaultProps = {
   onDeleteButtonClick: noop,
   onManageManifestButtonClick: noop,
   onExportCsvButtonClick: noop,
-  toolTipOnChange: noop,
-  toolTipOnclose: noop,
   isManifestImported: false,
+  currentUserId: undefined,
+  hasPreference: false,
 };
 
 export default SubscriptionsToolbar;

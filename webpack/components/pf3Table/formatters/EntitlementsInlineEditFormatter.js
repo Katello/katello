@@ -1,7 +1,8 @@
 import React from 'react';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { KEYCODES } from 'foremanReact/common/keyCodes';
-import { Table, FormControl, FormGroup, HelpBlock, Spinner } from 'patternfly-react';
+import { Table, FormControl, FormGroup, HelpBlock } from 'patternfly-react';
+import { Spinner } from '@patternfly/react-core';
 import { validateQuantity } from '../../../scenes/Subscriptions/SubscriptionValidations';
 import { getEntitlementsDisplayValue } from '../../../scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableHelpers';
 
@@ -62,7 +63,9 @@ const renderEdit = (hasChanged, onChange, value, additionalData) => {
     // The same issue prevents from correct switching inputs on TAB.
     // See the reactabular code for details:
     // https://github.com/reactabular/reactabular/blob/master/packages/reactabular-table/src/body-row.js#L58
-    <Spinner loading={!upstreamAvailableLoaded} size="xs">
+    !upstreamAvailableLoaded ? (
+      <Spinner size="sm" />
+    ) : (
       <FormGroup
         validationState={validation.state}
       >
@@ -80,7 +83,7 @@ const renderEdit = (hasChanged, onChange, value, additionalData) => {
           </div>
         </HelpBlock>
       </FormGroup>
-    </Spinner>
+    )
   );
 
   return (

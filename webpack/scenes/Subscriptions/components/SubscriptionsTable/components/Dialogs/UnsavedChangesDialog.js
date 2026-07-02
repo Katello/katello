@@ -1,21 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { MessageDialog } from 'patternfly-react';
+import { Modal, ModalVariant, Button } from '@patternfly/react-core';
 
 const UnsavedChangesDialog = ({
   show, cancelEdit, showCancelConfirm,
 }) => (
-  <MessageDialog
-    show={show}
+  <Modal
+    ouiaId="unsaved-changes-modal"
     title={__('Editing Entitlements')}
-    secondaryContent={__('You have unsaved changes. Do you want to exit without saving your changes?')}
-    primaryActionButtonContent={__('Exit')}
-    primaryAction={cancelEdit}
-    secondaryActionButtonContent={__('Cancel')}
-    secondaryAction={() => showCancelConfirm(false)}
-    onHide={() => showCancelConfirm(false)}
-  />);
+    isOpen={show}
+    variant={ModalVariant.small}
+    onClose={() => showCancelConfirm(false)}
+    actions={[
+      <Button
+        ouiaId="unsaved-changes-exit-button"
+        key="exit"
+        variant="primary"
+        onClick={cancelEdit}
+      >
+        {__('Exit')}
+      </Button>,
+      <Button
+        ouiaId="unsaved-changes-cancel-button"
+        key="cancel"
+        variant="link"
+        onClick={() => showCancelConfirm(false)}
+      >
+        {__('Cancel')}
+      </Button>,
+    ]}
+  >
+    {__('You have unsaved changes. Do you want to exit without saving your changes?')}
+  </Modal>
+);
 
 UnsavedChangesDialog.propTypes = {
   show: PropTypes.bool.isRequired,

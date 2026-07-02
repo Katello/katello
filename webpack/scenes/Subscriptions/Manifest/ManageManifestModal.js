@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Col, Row, Tabs, Tab, FormControl, ControlLabel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { Button, Spinner } from 'patternfly-react';
-import { Alert, Modal, ModalVariant } from '@patternfly/react-core';
+import { Alert, Modal, ModalVariant, Spinner, Button } from '@patternfly/react-core';
 import { propsToCamelCase, getDocsURL } from 'foremanReact/common/helpers';
 import Slot from 'foremanReact/components/common/Slot';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -139,7 +138,8 @@ class ManageManifestModal extends Component {
         variant={ModalVariant.small}
         actions={[
           <Button
-            bsStyle="primary"
+            ouiaId="manage-manifest-close-button"
+            variant="primary"
             key="close-modal"
             onClick={this.props.closeModal}
           >
@@ -226,7 +226,7 @@ class ManageManifestModal extends Component {
                           }
                         </Col>
                         <Col sm={7} className="manifest-actions">
-                          <Spinner loading={actionInProgress} />
+                          {actionInProgress && <Spinner size="md" />}
                           {canImportManifest &&
                           <FormControl
                             id="usmaFile"
@@ -245,6 +245,7 @@ class ManageManifestModal extends Component {
                               tooltipText={disabledReason}
                               tooltipPlacement="top"
                               title={__('Refresh')}
+                              variant="tertiary"
                               disabled={!isManifestImported ||
                                     actionInProgress || disableManifestActions}
                             />
@@ -253,7 +254,7 @@ class ManageManifestModal extends Component {
                             <React.Fragment>
                               <TooltipButton
                                 disabled={!isManifestImported || actionInProgress}
-                                bsStyle="danger"
+                                variant="danger"
                                 onClick={() => this.setState({ isDeleteManifestModalOpen: true })}
                                 title={__('Delete')}
                                 tooltipId="delete-manifest-button-tooltip"
@@ -273,12 +274,13 @@ class ManageManifestModal extends Component {
                             key={DELETE_MANIFEST_MODAL_ID}
                             variant={ModalVariant.small}
                             actions={[
-                              <Button bsStyle="default" key="cancel-btn" onClick={() => this.setState({ isDeleteManifestModalOpen: false })}>
+                              <Button ouiaId="delete-manifest-cancel-button" variant="link" key="cancel-btn" onClick={() => this.setState({ isDeleteManifestModalOpen: false })}>
                                 {__('Cancel')}
                               </Button>,
                               <Button
+                                ouiaId="delete-manifest-confirm-button"
                                 key="delete-btn"
-                                bsStyle="danger"
+                                variant="danger"
                                 onClick={this.deleteManifest}
                               >
                                 {__('Delete')}
