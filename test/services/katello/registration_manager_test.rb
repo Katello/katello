@@ -31,6 +31,7 @@ module Katello
 
       after do
         Setting[:retain_build_profile_upon_unregistration] = false
+        Setting['allow_multiple_content_views'] = true
       end
 
       let(:rhsm_params) { {:name => 'foobar.example.com', :facts => @facts, :type => 'system'} }
@@ -243,6 +244,28 @@ module Katello
         assert_equal @activation_key.single_content_view, new_host_cvenv.content_view
 
         assert_includes new_host.host_collections, @host_collection
+      end
+
+      def test_registration_sets_priorities_for_new_content_facet_with_multiple_cvenvs
+        Setting['allow_multiple_content_views'] = true
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @library.organization)
+        cvenvs = [
+          katello_content_view_environments(:library_dev_view_dev),
+          katello_content_view_environments(:library_dev_staging_view_dev),
+        ]
+
+        ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(cvenvs.map(&:cp_id), rhsm_params, [], @library.organization).returns('uuid' => 'fake-uuid-from-candlepin')
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+
+        ::Katello::RegistrationManager.register_host(new_host, rhsm_params, cvenvs)
+
+        priorities = new_host.content_facet.content_view_environment_content_facets.
+          reorder(:priority).
+          pluck(:content_view_environment_id, :priority)
+        assert_equal [[cvenvs[0].id, 0], [cvenvs[1].id, 1]], priorities
       end
 
       def test_registration_with_host_collection_max_hosts_exceeded
