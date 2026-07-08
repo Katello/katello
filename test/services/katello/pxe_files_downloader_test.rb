@@ -12,7 +12,7 @@ module Katello
       )
       repository.organization.expects(:debug_cert).returns(
         cert: generate_certificate,
-        key: OpenSSL::PKey::RSA.generate(2048))
+        key: OpenSSL::PKey::RSA.generate(2048).to_pem)
       downloader = PxeFilesDownloader.new(repository, capsule)
 
       downloader.expects(:fetch).twice

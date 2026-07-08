@@ -10,7 +10,7 @@ module Actions
             resource.validate!
             keypair = resource.debug_certificate
             cdn_configuration.ssl_cert = OpenSSL::X509::Certificate.new(keypair)
-            cdn_configuration.ssl_key = OpenSSL::PKey::RSA.new(keypair)
+            cdn_configuration.ssl_key = OpenSSL::PKey.read(keypair)
 
             cdn_configuration.save!
           end
