@@ -16,7 +16,7 @@ module Katello
 
       ueber_cert = ::Cert::Certs.ueber_cert(repository.organization)
       cert = OpenSSL::X509::Certificate.new(ueber_cert[:cert])
-      key = OpenSSL::PKey::RSA.new(ueber_cert[:key])
+      key = OpenSSL::PKey.read(ueber_cert[:key])
 
       os.boot_file_sources(medium_provider).values.map do |source_pxe_file|
         fetch(source_pxe_file, cert, key)

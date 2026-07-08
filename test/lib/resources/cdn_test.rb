@@ -22,7 +22,7 @@ class CdnResourceTest < ActiveSupport::TestCase
     product.expects(:certificate).once.returns('')
     product.expects(:key).once.returns('')
     OpenSSL::X509::Certificate.expects(:new).once.returns('mock cert')
-    OpenSSL::PKey::RSA.expects(:new).once.returns('mock key')
+    OpenSSL::PKey.expects(:read).once.returns('mock key')
     cdn_resource = Katello::Resources::CDN::CdnResource.create(product: product, cdn_configuration: organization.cdn_configuration)
     cdn_resource_options = cdn_resource.instance_variable_get(:@options)
     assert_equal Katello::Resources::CDN::CdnResource.ca_file, cdn_resource_options[:ssl_ca_file]
@@ -58,7 +58,7 @@ class CdnResourceTest < ActiveSupport::TestCase
     product.expects(:certificate).once.returns('')
     product.expects(:key).once.returns('')
     OpenSSL::X509::Certificate.expects(:new).once.returns('mock cert')
-    OpenSSL::PKey::RSA.expects(:new).once.returns('mock key')
+    OpenSSL::PKey.expects(:read).once.returns('mock key')
     cdn_resource = Katello::Resources::CDN::CdnResource.create(product: product, cdn_configuration: organization.cdn_configuration)
     cdn_resource_options = cdn_resource.instance_variable_get(:@options)
     assert_equal 'mock cert', cdn_resource_options[:ssl_client_cert]

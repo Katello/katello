@@ -41,7 +41,7 @@ module Katello
           UpstreamCandlepinResource.stubs(:proxy).returns(proxy)
           Foreman::Util.expects(:add_ca_bundle_to_store).never
           OpenSSL::X509::Certificate.expects(:new)
-          OpenSSL::PKey::RSA.expects(:new)
+          OpenSSL::PKey.expects(:read)
           UpstreamCandlepinResource.resource(url: "http://www.foo.com", client_cert: "", client_key: "")
         end
 

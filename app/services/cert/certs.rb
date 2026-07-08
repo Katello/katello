@@ -21,7 +21,7 @@ module Cert
     end
 
     def self.ssl_client_key
-      @ssl_client_key ||= OpenSSL::PKey::RSA.new(File.read(ssl_client_key_filename))
+      @ssl_client_key ||= OpenSSL::PKey.read(File.read(ssl_client_key_filename))
     end
 
     def self.ssl_client_key_filename

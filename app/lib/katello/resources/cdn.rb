@@ -56,7 +56,7 @@ module Katello
           options = {}
           if cdn_configuration.redhat_cdn?
             options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
-            options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
+            options[:ssl_client_key] = OpenSSL::PKey.read(product.key)
             options[:ssl_ca_file] = self.ca_file
             self.new(cdn_configuration.url, options)
           elsif cdn_configuration.custom_cdn?
@@ -67,7 +67,7 @@ module Katello
             end
             if cdn_configuration.custom_cdn_auth_enabled? || cdn_configuration.redhat_cdn_host?
               options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
-              options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
+              options[:ssl_client_key] = OpenSSL::PKey.read(product.key)
             end
             self.new(cdn_configuration.url, options)
           else
