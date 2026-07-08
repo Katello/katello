@@ -318,8 +318,12 @@ module Katello
 
       def populate_content_facet(host, content_view_environments)
         content_facet = host.content_facet || ::Katello::Host::ContentFacet.new(:host => host)
+        new_content_facet = content_facet.new_record?
         content_facet.content_view_environments = content_view_environments
         content_facet.save!
+        if new_content_facet
+          Katello::ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(content_facet, content_view_environments)
+        end
         content_facet
       end
 
