@@ -122,7 +122,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_set_content_view_environments_with_valid_content_view_environs_param
-    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+    # Updating content_view_environments sets cvenvs_changed=true, which makes backend_update_needed? return true,
+    # which triggers the update_candlepin_associations callback
     ::Host::Managed.any_instance.expects(:update_candlepin_associations)
     host = FactoryBot.create(:host, :with_content, :with_subscription,
                               :content_view => @content_view, :lifecycle_environment => @environment)
@@ -137,7 +138,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_set_content_view_environments_with_valid_ids_param
-    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+    # Updating content_view_environments sets cvenvs_changed=true, which makes backend_update_needed? return true,
+    # which triggers the update_candlepin_associations callback
     ::Host::Managed.any_instance.expects(:update_candlepin_associations)
     host = FactoryBot.create(:host, :with_content, :with_subscription,
                               :content_view => @content_view, :lifecycle_environment => @environment)
