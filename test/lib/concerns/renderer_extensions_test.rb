@@ -6,7 +6,6 @@ module Katello
       @repo = katello_repositories(:rhel_6_x86_64)
       @host = hosts(:one)
       @host.content_facet.content_source = smart_proxies(:one)
-      @host.expects(:update_candlepin_associations)
       @host.content_facet.content_source.lifecycle_environments << katello_environments(:library)
       @host.operatingsystem = operatingsystems(:redhat)
       @host.content_facet.kickstart_repository = @repo

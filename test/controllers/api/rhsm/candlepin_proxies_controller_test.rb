@@ -135,6 +135,41 @@ module Katello
         assert_equal 'Registering to multiple environments is not enabled.', body['displayMessage']
         assert_response 400
       end
+
+      it "should return Candlepin validation error when name is invalid" do
+        # SAT-36519: Test that Candlepin validation errors (400) are returned correctly,
+        # not masked by 404 from spurious PUT requests during error cleanup
+        error_body = '{"displayMessage":"System name cannot begin with # character"}'
+        cp_response = stub(code: 400, body: error_body)
+        ::Katello::RegistrationManager.expects(:process_registration).raises(
+          RestClient::BadRequest.new(cp_response, 400)
+        )
+
+        post(:consumer_create,
+             params: {
+               :organization_id => @content_view_environment.content_view.organization.label,
+               :environment_id => @content_view_environment.cp_id,
+               :name => '#invalidname',
+               :facts => @facts,
+             })
+
+        body = JSON.parse(response.body)
+        assert_includes body['displayMessage'], 'System name cannot begin with # character'
+        assert_response 400
+      end
+
+      it "should return displayMessage instead of message for RHSM error responses" do
+        ::Katello::RegistrationManager.expects(:process_registration).never
+
+        post(:consumer_create, params: { :organization_id => 'nonexistent_org', :facts => @facts })
+
+        assert_response :not_found
+        body = JSON.parse(response.body)
+        assert body.key?('displayMessage'), 'RHSM error responses must include displayMessage for subscription-manager compatibility'
+        assert_not_nil body['displayMessage']
+        refute_empty body['displayMessage']
+        refute body.key?('message'), 'RHSM error responses should use displayMessage, not message'
+      end
     end
 
     describe "update enabled_repos" do
