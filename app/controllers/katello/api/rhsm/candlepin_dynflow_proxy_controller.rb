@@ -44,20 +44,20 @@ module Katello
       uuid ||= params[:id]
       facet = Katello::Host::SubscriptionFacet.where(:uuid => uuid).first
       if facet.nil?
-        # check with candlepin if consumer is Gone, raises RestClient::Gone
+        # check with candlepin if consumer is Gone, raises HttpError
         User.as_anonymous_admin { Resources::Candlepin::Consumer.get(uuid) }
         fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % uuid
       end
       @host = facet.host
     end
 
-    rescue_from RestClient::Exception do |e|
+    rescue_from HttpResource::HttpError do |e|
       Rails.logger.error(pp_exception(e, with_backtrace: false))
-      Rails.logger.error(e.backtrace.detect { |line| line.match("katello.*controller") })
+      body = e.response_body.presence || e.message
       if request_from_katello_cli?
-        render :json => { :errors => [e.http_body] }, :status => e.http_code
+        render :json => { :errors => [body] }, :status => e.code
       else
-        render :plain => e.http_body, :status => e.http_code
+        render :plain => body, :status => e.code
       end
     end
 

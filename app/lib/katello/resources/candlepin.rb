@@ -1,9 +1,11 @@
 module Katello
   module Resources
     module Candlepin
-      TOTAL_COUNT_HEADER = :x_total_count # as parsed by rest_client
+      TOTAL_COUNT_HEADER = 'x-total-count'.freeze
 
       class CandlepinResource < HttpResource
+        include Katello::Concerns::OauthRequestSigning
+
         cfg = SETTINGS[:katello][:candlepin]
         url = cfg[:url]
         uri = URI.parse(url)
@@ -15,15 +17,13 @@ module Katello
 
         class << self
           def process_response(response)
-            debug_level = response.code >= 400 ? :error : :debug
-            logger.send(debug_level, "Candlepin request #{response.headers[:x_candlepin_request_uuid]} returned with code #{response.code}")
+            debug_level = (response.status >= 400) ? :error : :debug
+            logger.send(debug_level, "Candlepin request #{response.headers['x-candlepin-request-uuid']} returned with code #{response.status}")
             super
           end
 
-          def raise_rest_client_exception(error, path, http_method)
-            # this differentiates between Tomcat returning a 404 (candlepin is down or not deployed)
-            # vs a 404 from Candlepin itself
-            unless error&.response&.headers&.dig(:x_version)
+          def raise_faraday_exception(error, path, http_method)
+            unless error.response && error.response[:headers]&.key?('x-version')
               fail ::Katello::Errors::CandlepinNotRunning
             end
 
@@ -64,6 +64,52 @@ module Katello
           included.map { |value| "include=#{value}" }.join('&')
         end
 
+        def self.build_path(base, params: {}, includes: [], page: nil, page_size: nil)
+          parts = []
+          query = hash_to_query(params)
+          parts << included_list(includes) unless includes.empty?
+          parts << "per_page=#{page_size}&page=#{page}" if page && page_size
+          extra = parts.reject(&:blank?).join('&')
+          return base + query if extra.empty?
+          separator = query.empty? ? '?' : '&'
+          base + query + separator + extra
+        end
+
+        def self.parse_json(response, array: false, default: nil)
+          body = response&.body
+          body = default if default && body.blank?
+          parsed = JSON.parse(body)
+          array ? ::Katello::Util::Data.array_with_indifferent_access(parsed) : parsed.with_indifferent_access
+        end
+
+        def self.update_content_overrides_for(resource_path, _id, content_overrides)
+          return [] if content_overrides.empty?
+
+          attrs_to_delete = []
+          attrs_to_update = []
+          content_overrides.each do |override|
+            if override[:value]
+              attrs_to_update << override
+            else
+              attrs_to_delete << override
+            end
+          end
+
+          if attrs_to_update.present?
+            result = Candlepin::CandlepinResource.put(join_path(resource_path, 'content_overrides'),
+                                                      attrs_to_update.to_json, headers: default_headers)
+          end
+          if attrs_to_delete.present?
+            result = Candlepin::CandlepinResource.issue_request(
+              method: :delete,
+              path: join_path(resource_path, 'content_overrides'),
+              headers: default_headers,
+              payload: attrs_to_delete.to_json
+            )
+          end
+          parse_json(result, array: true, default: '[]')
+        end
+
         def self.fetch_paged(page_size = -1)
           if page_size == -1
             page_size = SETTINGS[:katello][:candlepin][:bulk_load_size]
@@ -86,42 +132,52 @@ module Katello
         self.prefix = '/subscription'
 
         class << self
-          delegate :[], to: :json_resource
+          def sign_request(_req, _url, _method)
+          end
 
           def default_headers(uuid = nil)
             super(uuid).except('cp-user', 'cp-consumer')
           end
 
-          def resource(options = {}, url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
-            cert_store = OpenSSL::X509::Store.new
-            cert_store.add_file(ca_file) if ca_file
+          # Creates a new Faraday connection with client cert auth for upstream
+          # Candlepin (Red Hat CDN). Use for calls with custom URL/certs (export,
+          # update, regenerate). For default upstream calls, use faraday_connection
+          # which memoizes the connection for reuse.
+          def resource(url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
+            timeout = Setting[:manifest_refresh_timeout]
 
-            if proxy&.cacert&.present?
-              Foreman::Util.add_ca_bundle_to_store(proxy.cacert, cert_store)
+            Faraday.new(url: url) do |f|
+              f.options.open_timeout = timeout
+              f.options.timeout = timeout
+              f.headers = self.default_headers
+
+              f.ssl.client_cert = OpenSSL::X509::Certificate.new(client_cert)
+              f.ssl.client_key = OpenSSL::PKey::RSA.new(client_key)
+              f.ssl.ca_file = ca_file if ca_file
+
+              if proxy&.cacert.present?
+                cert_store = OpenSSL::X509::Store.new
+                Foreman::Util.add_ca_bundle_to_store(proxy.cacert, cert_store)
+                f.ssl.cert_store = cert_store
+              end
+
+              f.ssl.verify = ca_file.present? || proxy&.cacert.present?
+
+              f.proxy = self.proxy_uri if self.proxy_uri
+
+              f.adapter :net_http_persistent
             end
-            RestClient::Resource.new(url,
-                                     :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
-                                     :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
-                                     :ssl_cert_store => cert_store,
-                                     :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE,
-                                     :open_timeout => Setting[:manifest_refresh_timeout],
-                                     :timeout => Setting[:manifest_refresh_timeout],
-                                     :proxy => self.proxy_uri,
-                                     **options
-                                    )
           end
 
-          def json_resource(options = {}, url: self.site + self.path, client_cert: self.client_cert, client_key: self.client_key, ca_file: nil)
-            options.deep_merge!(headers: self.default_headers)
-            resource(options, url: url, client_cert: client_cert, client_key: client_key, ca_file: ca_file)
+          def faraday_connection(_path = '')
+            org_id = Organization.current&.id
+            @faraday_connections ||= {}
+            @faraday_connections[org_id] ||= resource(url: self.site + self.path, client_cert: client_cert, client_key: client_key, ca_file: nil)
           end
 
-          def rest_client(_http_type = nil, method = :get, path = self.path)
-            # No oauth upstream
-            self.consumer_secret = nil
-            self.consumer_key = nil
-
-            resource({ http_method: method }, url: self.site + path, client_cert: client_cert, client_key: client_key, ca_file: nil)
+          def reset_connection!
+            @faraday_connections = nil
+            @upstream_owner_ids = nil
           end
 
           def client_cert
@@ -137,7 +193,9 @@ module Katello
           end
 
           def site
-            "#{upstream_api_uri.scheme}://#{upstream_api_uri.host}"
+            default_port = (upstream_api_uri.scheme == 'https') ? 443 : 80
+            site = "#{upstream_api_uri.scheme}://#{upstream_api_uri.host}"
+            (upstream_api_uri.port == default_port) ? site : "#{site}:#{upstream_api_uri.port}"
           end
 
           def upstream_id_cert
@@ -149,10 +207,16 @@ module Katello
           end
 
           def upstream_owner_id
-            JSON.parse(Katello::Resources::Candlepin::UpstreamConsumer.resource.get.body)['owner']['key']
-          rescue RestClient::Exception => e
-            Rails.logger.error "Unable to find upstream owner for consumer"
-            raise e
+            org_id = Organization.current&.id
+            @upstream_owner_ids ||= {}
+            @upstream_owner_ids[org_id] ||= begin
+              response = Katello::Resources::Candlepin::UpstreamConsumer.issue_request(
+                method: :get,
+                path: Katello::Resources::Candlepin::UpstreamConsumer.path,
+                headers: default_headers
+              )
+              JSON.parse(response.body)['owner']['key']
+            end
           end
 
           def upstream_consumer_id
@@ -177,13 +241,13 @@ module Katello
 
       module ConsumerResource
         def path(id = nil)
-          "#{self.prefix}/consumers/#{id}"
+          id ? "#{self.prefix}/consumers/#{id}" : "#{self.prefix}/consumers"
         end
       end
 
       module OwnerResource
         def path(id = nil)
-          "#{self.prefix}/owners/#{id}"
+          id ? "#{self.prefix}/owners/#{id}" : "#{self.prefix}/owners"
         end
       end
 

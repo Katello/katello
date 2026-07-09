@@ -44,6 +44,7 @@ module Actions
 
         def finalize
           subject_organization.audit_manifest_action(_('Manifest deleted'))
+          ::Katello::Resources::Candlepin::UpstreamCandlepinResource.reset_connection!
         end
       end
     end

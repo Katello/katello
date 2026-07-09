@@ -56,11 +56,20 @@ module Katello
 
     rescue_from RestClient::Exception do |e|
       Rails.logger.error(pp_exception(e, with_backtrace: false))
-      Rails.logger.error(e.backtrace.detect { |line| line.match("katello.*controller") })
       if request_from_katello_cli?
         render :json => { :errors => [e.http_body] }, :status => e.http_code
       else
         render :plain => e.http_body, :status => e.http_code
+      end
+    end
+
+    rescue_from HttpResource::HttpError do |e|
+      Rails.logger.error(pp_exception(e, with_backtrace: false))
+      body = e.response_body.presence || e.message
+      if request_from_katello_cli?
+        render :json => { :errors => [body] }, :status => e.code
+      else
+        render :plain => body, :status => e.code
       end
     end
 
@@ -85,26 +94,26 @@ module Katello
       end
 
       r = Resources::Candlepin::Proxy.get(@request_path, extra_headers)
-      logger.debug filter_sensitive_data(r)
-      render :json => r, :status => r.code
+      logger.debug filter_sensitive_data(r.body)
+      render :json => r.body, :status => r.status
     end
 
     def delete
       r = Resources::Candlepin::Proxy.delete(@request_path, @request_body.read)
-      logger.debug filter_sensitive_data(r)
-      render :json => r
+      logger.debug filter_sensitive_data(r.body)
+      render :json => r.body, :status => r.status
     end
 
     def post
       r = Resources::Candlepin::Proxy.post(@request_path, @request_body.read)
-      logger.debug filter_sensitive_data(r)
-      render :json => r
+      logger.debug filter_sensitive_data(r.body)
+      render :json => r.body, :status => r.status
     end
 
     def put
       r = Resources::Candlepin::Proxy.put(@request_path, @request_body.read)
-      logger.debug filter_sensitive_data(r)
-      render :json => r
+      logger.debug filter_sensitive_data(r.body)
+      render :json => r.body, :status => r.status
     end
 
     #api :GET, "/consumers/:id", N_("Show a system")
@@ -321,7 +330,7 @@ module Katello
       uuid ||= params[:id]
       facet = Katello::Host::SubscriptionFacet.where(:uuid => uuid).first
       if facet.nil?
-        # check with candlepin if consumer is Gone, raises RestClient::Gone
+        # check with candlepin if consumer is Gone, raises HttpError
         User.as_anonymous_admin { Resources::Candlepin::Consumer.get(uuid) }
       end
       @host = ::Host::Managed.unscoped.find(facet.host_id)

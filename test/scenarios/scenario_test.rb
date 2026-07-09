@@ -40,10 +40,11 @@ module Scenarios
     def test_update_org_service_level
       # Without any choices, should not be able to set a service level
       assert_nil @org.service_level
-      e = assert_raises(RestClient::BadRequest) do
+      e = assert_raises(HttpResource::HttpError) do
         @org.service_level = 'Premium'
       end
-      refute_nil JSON.parse(e.response)['displayMessage']
+      assert_equal '400', e.code
+      refute_nil JSON.parse(e.response_body)['displayMessage']
       assert_nil @org.service_level
 
       # Should be able to set clear the default

@@ -21,10 +21,10 @@ class ScenarioSupport
   def import_manifest(owner_label, path_to_file)
     filename = path_to_file.split('/').last
     record("import_manifest_#{filename}", match_requests_on: [:method, :path, :params]) do
-      path = "/candlepin/owners/#{owner_label}/imports/async?force=SIGNATURE_CONFLICT&force=MANIFEST_SAME"
-      client = ::Katello::Resources::Candlepin::CandlepinResource.rest_client(Net::HTTP::Post, :post, path)
-      body = {:import => File.new(path_to_file, 'rb')}
-      client.post body, {:accept => :json}.merge(User.cp_oauth_header)
+      ::Katello::Resources::Candlepin::Owner.import(
+        owner_label, path_to_file,
+        force: 'SIGNATURE_CONFLICT'
+      )
     end
   end
 
@@ -72,7 +72,8 @@ class ScenarioSupport
   def exists?
     yield
     true
-  rescue RestClient::ResourceNotFound
+  rescue HttpResource::HttpError => e
+    raise unless e.code.to_s == '404'
     false
   end
 end
