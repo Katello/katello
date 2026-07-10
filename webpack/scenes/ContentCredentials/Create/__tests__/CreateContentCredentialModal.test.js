@@ -131,7 +131,7 @@ describe('CreateContentCredentialModal', () => {
 
     await patientlyWaitFor(() => {
       assertNockRequest(scope);
-      expect(mockPush).toHaveBeenCalledWith('/labs/content_credentials');
+      expect(mockPush).toHaveBeenCalledWith('/content_credentials');
     });
   });
 
@@ -166,7 +166,7 @@ describe('CreateContentCredentialModal', () => {
 
     await patientlyWaitFor(() => {
       assertNockRequest(scope);
-      expect(mockPush).toHaveBeenCalledWith('/labs/content_credentials');
+      expect(mockPush).toHaveBeenCalledWith('/content_credentials');
     });
   });
 

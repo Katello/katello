@@ -103,11 +103,11 @@ export const links = [
     exact: false,
   },
   {
-    path: 'labs/content_credentials',
+    path: 'content_credentials',
     component: WithOrganization(withHeader(ContentCredentials, { title: __('Content Credentials') })),
   },
   {
-    path: 'labs/content_credentials/:id([0-9]+)',
+    path: 'content_credentials/:id([0-9]+)',
     component: WithOrganization(withHeader(ContentCredentialsDetails, { title: __('Content Credential Details') })),
     exact: false,
   },

@@ -47,7 +47,7 @@ const CreateContentCredentialForm = ({ setModalOpen, setFormState, refreshTable 
       setSaving(false);
       setModalOpen(false);
       refreshTable();
-      history.push('/labs/content_credentials');
+      history.push('/content_credentials');
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }

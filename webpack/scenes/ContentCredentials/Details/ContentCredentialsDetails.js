@@ -24,10 +24,9 @@ import {
 import { STATUS } from 'foremanReact/constants';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { addToast } from 'foremanReact/components/ToastsList';
-import { getResponseErrorMsgs } from '../../../utils/helpers';
 
 import { getContentCredentialDetails } from './ContentCredentialsDetailsActions';
+import { deleteContentCredential } from '../ContentCredentialActions';
 import Loading from '../../../components/Loading';
 import DetailsTab from './DetailsTab';
 import ProductsTab from './ProductsTab';
@@ -41,7 +40,6 @@ import {
 import RoutedTabs from '../../../components/RoutedTabs';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import { CONTENT_CREDENTIAL_GPG_TYPE } from '../ContentCredentialConstants';
-import api, { orgId } from '../../../services/api';
 
 const ContentCredentialsDetails = () => {
   const { id } = useParams();
@@ -66,23 +64,11 @@ const ContentCredentialsDetails = () => {
     isMountedRef.current = false;
   }, []);
 
-  const handleDelete = async () => {
-    try {
-      await api.delete(`/content_credentials/${credentialId}`, {}, {
-        organization_id: orgId(),
-      });
-      history.push('/labs/content_credentials');
-    } catch (deleteError) {
-      const [errorMessage] = getResponseErrorMsgs(deleteError.response)
-        .filter(Boolean);
-      dispatch(addToast({
-        type: 'danger',
-        message: errorMessage || __('Failed to delete content credential. Please try again.'),
-      }));
-    }
-    if (isMountedRef.current) {
-      setDeleting(false);
-    }
+  const handleDelete = () => {
+    dispatch(deleteContentCredential(credentialId, () => {
+      history.push('/content_credentials');
+    }));
+    setDeleting(false);
   };
 
   if (status === STATUS.PENDING) return (<Loading />);
@@ -140,7 +126,7 @@ const ContentCredentialsDetails = () => {
       <Grid>
         <Grid className="margin-16-24">
           <Breadcrumb ouiaId="content-credential-breadcrumb" className="margin-bottom-24">
-            <BreadcrumbItem to="/labs/content_credentials">
+            <BreadcrumbItem to="/content_credentials">
               {__('Content Credentials')}
             </BreadcrumbItem>
             <BreadcrumbItem isActive>{name}</BreadcrumbItem>

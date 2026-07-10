@@ -144,7 +144,7 @@ describe('DeleteContentCredentialModal', () => {
       assertNockRequest(scope);
       expect(handleModalToggle).toHaveBeenCalled();
       expect(refreshTable).toHaveBeenCalled();
-      expect(mockPush).toHaveBeenCalledWith('/labs/content_credentials');
+      expect(mockPush).toHaveBeenCalledWith('/content_credentials');
     });
   });
 

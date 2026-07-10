@@ -28,7 +28,7 @@ const DeleteContentCredentialModal = ({
     if (!credentialId) return;
     dispatch(deleteContentCredential(credentialId, () => {
       refreshTable();
-      history.push('/labs/content_credentials');
+      history.push('/content_credentials');
     }));
     handleModalToggle();
   };
