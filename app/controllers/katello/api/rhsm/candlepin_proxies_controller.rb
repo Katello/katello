@@ -390,12 +390,17 @@ module Katello
       raise unless organization_id.match?(/\A\d+\z/)
 
       organization = Organization.find_by(:id => organization_id)
-      raise unless organization
+      unless organization
+        message = _("Couldn't find Organization with id '%s'.")
+        raise HttpErrors::NotFound, message % organization_id
+      end
 
       if User.current && !User.consumer? && !User.current.allowed_organizations.include?(organization)
         message = _("User '%{user}' does not belong to Organization '%{organization}'.")
         raise HttpErrors::NotFound, message % {:user => current_user.login, :organization => organization_id}
       end
+
+      params[:organization_id] = organization.id.to_s
     end
 
     def convert_owner_to_organization_id

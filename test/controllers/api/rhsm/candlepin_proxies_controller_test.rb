@@ -578,6 +578,18 @@ module Katello
           @controller.send(:convert_organization_label_to_id)
         end
       end
+
+      it "raises not found with id message when numeric organization_id does not exist" do
+        request_params = ActionController::Parameters.new(:organization_id => "999999")
+        @controller.stubs(:params).returns(request_params)
+        @controller.stubs(:find_organization).raises(HttpErrors::NotFound.new("Couldn't find Organization '999999'."))
+
+        error = assert_raises(HttpErrors::NotFound) do
+          @controller.send(:convert_organization_label_to_id)
+        end
+
+        assert_match(/Couldn't find Organization with id '999999'\./, error.message)
+      end
     end
 
     describe "authorize_proxy_routes owner endpoints" do
