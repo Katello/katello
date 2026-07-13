@@ -31,7 +31,7 @@ module Katello
     before_action :check_media_type, :except => :async_hypervisors_update
 
     prepend_before_action :convert_owner_to_organization_id, :except => [:hypervisors_update, :async_hypervisors_update], :if => lambda { params.key?(:owner) }
-    prepend_before_action :convert_organization_label_to_id, :only => [:rhsm_index, :consumer_activate, :consumer_create], :if => lambda { params.key?(:organization_id) }
+    prepend_before_action :convert_organization_label_to_id, :only => [:rhsm_index, :consumer_activate, :consumer_create, :get], :if => lambda { params.key?(:organization_id) }
 
     def repackage_message
       yield
@@ -383,6 +383,24 @@ module Katello
 
     def convert_organization_label_to_id
       params[:organization_id] = find_organization.id
+    rescue HttpErrors::NotFound
+      # If label lookup fails and organization_id is numeric, treat it as a
+      # Foreman org ID set by earlier callbacks.
+      organization_id = params[:organization_id].to_s
+      raise unless organization_id.match?(/\A\d+\z/)
+
+      organization = Organization.find_by(:id => organization_id)
+      unless organization
+        message = _("Couldn't find Organization with id '%s'.")
+        raise HttpErrors::NotFound, message % organization_id
+      end
+
+      if User.current && !User.consumer? && !User.current.allowed_organizations.include?(organization)
+        message = _("User '%{user}' does not belong to Organization '%{organization}'.")
+        raise HttpErrors::NotFound, message % {:user => current_user.login, :organization => organization_id}
+      end
+
+      params[:organization_id] = organization.id.to_s
     end
 
     def convert_owner_to_organization_id

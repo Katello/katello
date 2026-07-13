@@ -556,6 +556,63 @@ module Katello
         assert_equal 'foreman.example.com', @controller.get_parent_host(nil_host)
       end
     end
+    describe "convert_organization_label_to_id" do
+      it "converts organization label to id" do
+        request_params = ActionController::Parameters.new(:organization_id => @organization.label)
+        @controller.stubs(:params).returns(request_params)
+
+        @controller.send(:convert_organization_label_to_id)
+
+        assert_equal @organization.id, request_params[:organization_id]
+      end
+
+      it "converts numeric organization label to id when label exists" do
+        request_params = ActionController::Parameters.new(:organization_id => "123")
+        @controller.stubs(:params).returns(request_params)
+        @controller.stubs(:find_organization).returns(mock('organization', id: 9999))
+
+        @controller.send(:convert_organization_label_to_id)
+
+        assert_equal 9999, request_params[:organization_id]
+      end
+
+      it "keeps numeric organization_id unchanged" do
+        request_params = ActionController::Parameters.new(:organization_id => @organization.id.to_s)
+        @controller.stubs(:params).returns(request_params)
+        @controller.stubs(:find_organization).raises(HttpErrors::NotFound.new("Couldn't find Organization '#{@organization.id}'."))
+
+        @controller.send(:convert_organization_label_to_id)
+
+        assert_equal @organization.id.to_s, request_params[:organization_id]
+      end
+
+      it "raises for unauthorized numeric organization_id" do
+        user = User.find(users(:restricted).id)
+        user.organizations = []
+        user.save!
+        User.current = user
+
+        request_params = ActionController::Parameters.new(:organization_id => @organization.id.to_s)
+        @controller.stubs(:params).returns(request_params)
+        @controller.stubs(:find_organization).raises(HttpErrors::NotFound.new("Couldn't find Organization '#{@organization.id}'."))
+
+        assert_raises(HttpErrors::NotFound) do
+          @controller.send(:convert_organization_label_to_id)
+        end
+      end
+
+      it "raises not found with id message when numeric organization_id does not exist" do
+        request_params = ActionController::Parameters.new(:organization_id => "999999")
+        @controller.stubs(:params).returns(request_params)
+        @controller.stubs(:find_organization).raises(HttpErrors::NotFound.new("Couldn't find Organization '999999'."))
+
+        error = assert_raises(HttpErrors::NotFound) do
+          @controller.send(:convert_organization_label_to_id)
+        end
+
+        assert_match(/Couldn't find Organization with id '999999'\./, error.message)
+      end
+    end
 
     describe "authorize_proxy_routes owner endpoints" do
       # Tests for fix: can?(:view_organizations) was incorrectly called with self (controller),
@@ -598,6 +655,67 @@ module Katello
 
         result = @controller.send(:authorize_proxy_routes)
         refute result, "User without view_organizations should not be authorized"
+      end
+
+      it "authorizes owner pools route for user with view_organizations when consumer param is absent" do
+        user = User.find(users(:restricted).id)
+        user.organizations = [@organization]
+        user.save!
+        setup_user_with_permissions(:view_organizations, user)
+        User.current = user
+
+        stub_route_recognition("rhsm_proxy_owner_pools_path")
+
+        result = @controller.send(:authorize_proxy_routes)
+        assert result, "User with view_organizations should be authorized for owner pools route"
+      end
+
+      it "returns false for owner pools route when user lacks view_organizations and consumer param is absent" do
+        user = User.find(users(:restricted).id)
+        user.organizations = [@organization]
+        user.save!
+        setup_user_with_permissions(:view_hosts, user)
+        User.current = user
+
+        stub_route_recognition("rhsm_proxy_owner_pools_path")
+
+        result = @controller.send(:authorize_proxy_routes)
+        refute result, "User without view_organizations should not be authorized for owner pools route"
+      end
+
+      it "serves system_purpose without requiring owner query param" do
+        user = User.find(users(:restricted).id)
+        user.organizations = [@organization]
+        user.save!
+        setup_user_with_permissions(:view_organizations, user)
+        User.current = user
+
+        stub_route_recognition("rhsm_proxy_owner_system_purpose_path")
+        @controller.stubs(:find_organization).returns(@organization)
+
+        proxy_response = mock('proxy_response')
+        proxy_response.stubs(:code).returns(200)
+        proxy_response.stubs(:as_json).returns(
+          { 'owner' => { 'key' => @organization.label }, 'systemPurposeAttributes' => {} }
+        )
+        proxy_response.stubs(:gsub).with(any_parameters).returns('{}')
+
+        expected_path = "/owners/#{@organization.label}/system_purpose"
+        @controller.instance_variable_set(:@request_path, expected_path)
+        @controller.stubs(:proxy_request_path)
+
+        proxy_get_expectation = Resources::Candlepin::Proxy.expects(:get)
+        proxy_get_expectation.with do |request_path, extra_headers|
+          assert_equal expected_path, request_path
+          refute_includes(request_path, 'owner=')
+          assert_empty(extra_headers)
+          true
+        end
+        proxy_get_expectation.returns(proxy_response)
+        get :get, params: { :organization_id => @organization.label }
+
+        assert_response :success
+        assert_equal @organization.label, JSON.parse(response.body).dig('owner', 'key')
       end
     end
 
