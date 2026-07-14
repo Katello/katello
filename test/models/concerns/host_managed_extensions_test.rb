@@ -250,6 +250,13 @@ module Katello
       assert subscription_facet.backend_update_needed?
     end
 
+    def test_backend_update_needed_facet_destroyed
+      host = FactoryBot.build_stubbed(:host, :with_subscription)
+      host.subscription_facet.expects(:destroyed?).returns(true)
+
+      refute host.subscription_facet.backend_update_needed?
+    end
+
     def test_host_update_with_overridden_dmi_uuid
       ::Setting[:host_dmi_uuid_duplicates] = ['duplicate-dmi-uuid']
       params = {facts: {'dmi.system.uuid' => 'duplicate-dmi-uuid'}}.with_indifferent_access
