@@ -92,7 +92,7 @@ const ContentCredentialsPage = () => {
       title: __('Name'),
       isSorted: true,
       wrapper: rowData => (
-        <Link to={`/labs/content_credentials/${rowData.id}`}>
+        <Link to={`/content_credentials/${rowData.id}`}>
           {rowData.name}
         </Link>
       ),

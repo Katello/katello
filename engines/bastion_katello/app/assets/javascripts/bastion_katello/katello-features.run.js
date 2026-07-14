@@ -13,13 +13,7 @@
             'products.new.form',
             'products.discovery',
             'products.discovery.scan',
-            'products.discovery.create',
-            'content-credentials',
-            'content-credentials.new',
-            'content-credential.info',
-            'content-credential.products',
-            'content-credential.acs',
-            'content-credential.repositories'
+            'products.discovery.create'
         ];
 
         FeatureFlag.addStates('custom_products', customProducts);

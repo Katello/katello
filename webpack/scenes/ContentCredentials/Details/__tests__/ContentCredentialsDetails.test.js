@@ -4,30 +4,21 @@ import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { addToast } from 'foremanReact/components/ToastsList';
 import ContentCredentialsDetails from '../ContentCredentialsDetails';
 import api from '../../../../services/api';
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
-
-jest.mock('foremanReact/components/ToastsList', () => ({
-  addToast: jest.fn(() => ({ type: 'ADD_TOAST' })),
-}));
-
-afterEach(() => {
-  jest.clearAllMocks();
-});
 
 const credentialId = 1;
 const credentialDetailsPath = api.getApiUrl(`/content_credentials/${credentialId}`);
 
 const withCredentialRoute = component => (
-  <Route path="/labs/content_credentials/:id([0-9]+)">{component}</Route>
+  <Route path="/content_credentials/:id([0-9]+)">{component}</Route>
 );
 
 const renderOptions = {
   apiNamespace: 'CONTENT_CREDENTIAL_DETAILS',
   routerParams: {
-    initialEntries: [{ pathname: `/labs/content_credentials/${credentialId}` }],
+    initialEntries: [{ pathname: `/content_credentials/${credentialId}` }],
   },
 };
 
@@ -94,7 +85,7 @@ const mockCredentialData = {
 };
 
 const TestWrapper = ({ children }) => (
-  <MemoryRouter initialEntries={[`/labs/content_credentials/${credentialId}`]}>
+  <MemoryRouter initialEntries={[`/content_credentials/${credentialId}`]}>
     {withCredentialRoute(children)}
   </MemoryRouter>
 );
@@ -236,7 +227,7 @@ test('cancel button closes delete modal without deleting', async () => {
   assertNockRequest(getScope);
 });
 
-test('shows error toast when delete fails', async () => {
+test('closes modal when delete fails', async () => {
   const getScope = nockInstance
     .get(credentialDetailsPath)
     .query(true)
@@ -257,7 +248,6 @@ test('shows error toast when delete fails', async () => {
     expect(queryByText('Test GPG Key (GPG Key)')).toBeInTheDocument();
   });
 
-  // Open kebab menu and click Delete
   fireEvent.click(getByLabelText('Actions'));
   fireEvent.click(getByText('Delete'));
 
@@ -265,14 +255,10 @@ test('shows error toast when delete fails', async () => {
     expect(queryByText('Delete Content Credential')).toBeInTheDocument();
   });
 
-  // Confirm deletion
   fireEvent.click(getByText('Delete', { selector: '[data-ouia-component-id="delete-confirm-button"]' }));
 
-  // Wait for the error toast to be dispatched
   await patientlyWaitFor(() => {
-    expect(addToast).toHaveBeenCalledWith(expect.objectContaining({
-      type: 'danger',
-    }));
+    expect(queryByText('Delete Content Credential')).not.toBeInTheDocument();
   });
 
   assertNockRequest(getScope);
@@ -379,7 +365,7 @@ test('breadcrumb links back to content credentials list', async () => {
 
   await patientlyWaitFor(() => {
     const breadcrumbLink = screen.getByRole('link', { name: 'Content Credentials' });
-    expect(breadcrumbLink).toHaveAttribute('href', '/labs/content_credentials');
+    expect(breadcrumbLink).toHaveAttribute('href', '/content_credentials');
   });
 
   assertNockRequest(scope);

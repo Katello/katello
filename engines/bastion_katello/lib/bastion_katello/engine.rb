@@ -17,7 +17,6 @@ module BastionKatello
         :stylesheet => 'bastion_katello/bastion_katello',
         :pages => %w(
           activation_keys
-          content_credentials
           debs
           docker_tags
           files
