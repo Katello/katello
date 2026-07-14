@@ -22,7 +22,7 @@ module Actions
         # rubocop:disable Metrics/CyclomaticComplexity
         # rubocop:disable Metrics/PerceivedComplexity
         def plan(old_version, environments, options = {})
-          dep_solve = options.fetch(:resolve_dependencies, true)
+          dep_solve = options.fetch(:resolve_dependencies, false)
           description = options.fetch(:description, '')
           content = options.fetch(:content, {})
           new_components = options.fetch(:new_components, [])

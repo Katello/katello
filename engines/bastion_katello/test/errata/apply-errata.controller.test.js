@@ -183,7 +183,7 @@ describe('Controller: ApplyErrataController', function() {
                         'content_view_version_id': 1,
                         'environment_ids': [2]
                     }],
-                    'resolve_dependencies': true
+                    'resolve_dependencies': false
                 };
 
                 $scope.updates = [{
@@ -239,7 +239,7 @@ describe('Controller: ApplyErrataController', function() {
                         'content_view_version_id': 5,
                         'environment_ids': []
                     }],
-                    'resolve_dependencies': true
+                    'resolve_dependencies': false
                 };
 
                 $scope.updates = [{
@@ -283,7 +283,7 @@ describe('Controller: ApplyErrataController', function() {
                         'content_view_version_id': 5,
                         'environment_ids': [99]
                     }],
-                    'resolve_dependencies': true
+                    'resolve_dependencies': false
                 };
 
                 $scope.updates = [{

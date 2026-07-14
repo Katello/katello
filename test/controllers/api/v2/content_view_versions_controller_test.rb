@@ -295,6 +295,18 @@ module Katello
       assert_response :success
     end
 
+    def test_incremental_update_default_dep_solving
+      version = @library_dev_staging_view.versions.first
+      errata_id = Katello::Erratum.first.pulp_id
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
+                [{:content_view_version => version, :environments => [@beta]}], [],
+                {'errata_ids' => [errata_id]}, false, [], nil).returns({})
+
+      put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}], :add_content => {:errata_ids => [errata_id]} }
+
+      assert_response :success
+    end
+
     def test_incremental_update_protected
       version = @library_dev_staging_view.versions.first
       errata_id = Katello::Erratum.first.pulp_id
