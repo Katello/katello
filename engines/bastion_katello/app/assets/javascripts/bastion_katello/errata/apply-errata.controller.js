@@ -41,6 +41,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             }
 
             $scope.applyingErrata = false;
+            $scope.depSolve = false;
 
             // Labels so breadcrumb strings can be translated
             $scope.label = translate('Apply');
@@ -80,7 +81,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 };
 
                 params['content_view_version_environments'] = [];
-                params['resolve_dependencies'] = !$scope.noDepSolve;
+                params['resolve_dependencies'] = $scope.depSolve;
 
                 //get a list of unique content view version ids with their environments
                 angular.forEach($scope.updates, function (update) {
