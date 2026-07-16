@@ -8,7 +8,6 @@ import { Popover, Title, Button } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
-import PageLayout from 'foremanReact/routes/common/PageLayout/PageLayout';
 import { useCurrentUserTablePreferences } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
@@ -195,6 +194,7 @@ const SubscriptionsPage = ({
 
   const tableColumns = Immutable.asMutable(subscriptions.tableColumns, { deep: true });
   const onSearch = (search) => {
+    updateSearchQuery(search);
     loadSubscriptions({ search });
   };
 
@@ -268,6 +268,7 @@ const SubscriptionsPage = ({
       disableAddButton={disableManifestActions}
       autocompleteQueryParams={{ organization_id: currentOrg }}
       updateSearchQuery={updateSearchQuery}
+      searchQuery={searchQuery}
       onDeleteButtonClick={openDeleteModal}
       onSearch={onSearch}
       onManageManifestButtonClick={() => setIsManageManifestModalOpen(true)}
@@ -294,37 +295,32 @@ const SubscriptionsPage = ({
         closeModal={() => setIsManageManifestModalOpen(false)}
       />
 
-      <PageLayout
-        searchable={false}
-        header={__('Subscriptions')}
-        customHeader={customHeader}
-        customToolbar={customToolbar}
-      >
-        <div id="subscriptions-table" className="modal-container">
-          <SubscriptionsTable
-            canManageSubscriptionAllocations={canManageSubscriptionAllocations}
-            loadSubscriptions={loadSubscriptions}
-            tableColumns={columns}
-            updateQuantity={updateQuantity}
-            emptyState={emptyStateData}
-            subscriptions={subscriptions}
-            subscriptionDeleteModalOpen={deleteModalOpened}
-            onSubscriptionDeleteModalClose={closeDeleteModal}
-            onDeleteSubscriptions={onDeleteSubscriptions}
-            toggleDeleteButton={toggleDeleteButton}
-            task={task}
-            selectedRows={selectedRows}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            selectionEnabled={!disableManifestActions}
-          />
-          <ModalProgressBar
-            show={!!task}
-            container={document.getElementById('subscriptions-table')}
-            title={task ? task.humanized.action : null}
-            progress={task ? Math.round(task.progress * 100) : 0}
-          />
-        </div>
-      </PageLayout>
+      <div id="subscriptions-table" className="modal-container">
+        <SubscriptionsTable
+          canManageSubscriptionAllocations={canManageSubscriptionAllocations}
+          loadSubscriptions={loadSubscriptions}
+          tableColumns={columns}
+          updateQuantity={updateQuantity}
+          emptyState={emptyStateData}
+          subscriptions={subscriptions}
+          subscriptionDeleteModalOpen={deleteModalOpened}
+          onSubscriptionDeleteModalClose={closeDeleteModal}
+          onDeleteSubscriptions={onDeleteSubscriptions}
+          toggleDeleteButton={toggleDeleteButton}
+          task={task}
+          selectedRows={selectedRows}
+          onSelectedRowsChange={handleSelectedRowsChange}
+          selectionEnabled={!disableManifestActions}
+          customHeader={customHeader}
+          customToolbar={customToolbar}
+        />
+        <ModalProgressBar
+          show={!!task}
+          container={document.getElementById('subscriptions-table')}
+          title={task ? task.humanized.action : null}
+          progress={task ? Math.round(task.progress * 100) : 0}
+        />
+      </div>
     </>
   );
 };

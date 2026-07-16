@@ -114,6 +114,8 @@ class SubscriptionsTable extends Component {
       tableColumns,
       loadSubscriptions,
       selectionEnabled,
+      customHeader,
+      customToolbar,
     } = this.props;
     const { groupedSubscriptions, rows, editing } = this.state;
 
@@ -126,6 +128,8 @@ class SubscriptionsTable extends Component {
       subscriptions,
       selectionEnabled,
       tableColumns,
+      customHeader,
+      customToolbar,
       toggleSubscriptionGroup: this.toggleSubscriptionGroup,
       inlineEditController: this.getInlineEditController(),
       selectionController: this.getSelectionController(),
@@ -296,10 +300,14 @@ SubscriptionsTable.propTypes = {
   selectedRows: PropTypes.instanceOf(Array).isRequired,
   onSelectedRowsChange: PropTypes.func.isRequired,
   selectionEnabled: PropTypes.bool,
+  customHeader: PropTypes.node,
+  customToolbar: PropTypes.node,
 };
 
 SubscriptionsTable.defaultProps = {
   selectionEnabled: false,
+  customHeader: undefined,
+  customToolbar: undefined,
 };
 
 export default SubscriptionsTable;
