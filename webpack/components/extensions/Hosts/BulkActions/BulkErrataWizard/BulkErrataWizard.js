@@ -54,7 +54,7 @@ export const useErrataHostsBulkSelect = ({ initialSelectedHosts, modalIsOpen }) 
 export const ERRATA_URL = `${katelloApi.getApiUrl('/errata')}?per_page=7&include_permissions=true&errata_restrict_installable=true`;
 
 const BulkErrataWizard = ({ isOpen: modalOpen, closeModal }) => {
-  const { selectedCount: initialSelectedHostCount, fetchBulkParams }
+  const { selectedCount: initialSelectedHostCount, fetchBulkParams, refreshTableData }
     = useContext(ForemanActionsBarContext);
 
   const [shouldValidateStep2, setShouldValidateStep2] = useState(false);
@@ -112,6 +112,7 @@ const BulkErrataWizard = ({ isOpen: modalOpen, closeModal }) => {
     selectedRexOption,
     setSelectedRexOption,
     closeModal,
+    refreshTableData,
     errataBulkSelect,
     errataResults,
     errataMetadata,

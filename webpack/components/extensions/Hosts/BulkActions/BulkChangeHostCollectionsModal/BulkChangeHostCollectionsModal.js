@@ -22,12 +22,7 @@ import { ExclamationTriangleIcon, PlusCircleIcon } from '@patternfly/react-icons
 import { addToast } from 'foremanReact/components/ToastsList';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-import { foremanUrl, noop } from 'foremanReact/common/helpers';
-import { APIActions } from 'foremanReact/redux/API';
-import {
-  HOSTS_API_PATH,
-  API_REQUEST_KEY,
-} from 'foremanReact/routes/Hosts/constants';
+import { noop } from 'foremanReact/common/helpers';
 import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import { useTableIndexAPIResponse, useSetParamsAndApiAndSearch } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
 import { useBulkSelect } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
@@ -46,6 +41,7 @@ const BulkChangeHostCollectionsModal = ({
   closeModal,
   fetchBulkParams,
   selectedCount: selectedHostsCount,
+  refreshTableData,
 }) => {
   const dispatch = useDispatch();
   const [addRadioChecked, setAddRadioChecked] = useState(true);
@@ -165,10 +161,7 @@ const BulkChangeHostCollectionsModal = ({
       : __('Host collections updated');
 
     dispatch(addToast({ type: 'success', message }));
-    dispatch(APIActions.get({
-      key: API_REQUEST_KEY,
-      url: foremanUrl(HOSTS_API_PATH),
-    }));
+    refreshTableData();
     handleModalClose();
   };
 
@@ -417,6 +410,7 @@ BulkChangeHostCollectionsModal.propTypes = {
   closeModal: PropTypes.func,
   fetchBulkParams: PropTypes.func,
   selectedCount: PropTypes.number,
+  refreshTableData: PropTypes.func,
 };
 
 BulkChangeHostCollectionsModal.defaultProps = {
@@ -424,6 +418,7 @@ BulkChangeHostCollectionsModal.defaultProps = {
   closeModal: () => {},
   fetchBulkParams: () => '',
   selectedCount: 0,
+  refreshTableData: () => {},
 };
 
 export default BulkChangeHostCollectionsModal;

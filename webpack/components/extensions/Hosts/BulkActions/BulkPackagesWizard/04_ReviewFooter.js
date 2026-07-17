@@ -19,6 +19,7 @@ export const BulkPackagesReviewFooter = () => {
     setFinishButtonLoading,
     selectedRexOption,
     closeModal,
+    refreshTableData,
     packagesBulkSelect: {
       fetchBulkParams: getPackagesBulkParams,
       selectedCount: packagesSelectedCount,
@@ -94,6 +95,7 @@ export const BulkPackagesReviewFooter = () => {
     if (selectedAction === REMOVE) {
       triggerBulkPackageRemove();
     }
+    refreshTableData();
     closeModal();
   };
 

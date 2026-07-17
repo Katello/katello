@@ -232,6 +232,7 @@ test('Handles API failure gracefully when releases endpoint fails', async () => 
 
 test('Submitting multiple changed fields triggers correct API calls', async () => {
   const closeModal = jest.fn();
+  const refreshTableData = jest.fn();
   const releasesScope = nockInstance
     .get(orgReleases)
     .reply(200, mockOrgReleases);
@@ -251,6 +252,7 @@ test('Submitting multiple changed fields triggers correct API calls', async () =
       selectedCount={5}
       fetchBulkParams={() => 'id ^ (1,2,3,4,5)'}
       orgId={1}
+      refreshTableData={refreshTableData}
     />
   );
   const { getAllByRole, getByLabelText } = renderWithRedux(jsx, renderOptions());
@@ -291,7 +293,10 @@ test('Submitting multiple changed fields triggers correct API calls', async () =
     assertNockRequest(releasesScope);
     assertNockRequest(systemPurposeScope);
     assertNockRequest(releaseVersionScope);
-    expect(closeModal).toHaveBeenCalled();
+    expect(refreshTableData).toHaveBeenCalledTimes(1);
+    expect(closeModal).toHaveBeenCalledTimes(1);
+    expect(refreshTableData.mock.invocationCallOrder[0])
+      .toBeLessThan(closeModal.mock.invocationCallOrder[0]);
   });
 });
 
