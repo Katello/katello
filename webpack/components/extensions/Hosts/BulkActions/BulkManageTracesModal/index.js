@@ -7,7 +7,7 @@ import BulkManageTracesModal from './BulkManageTracesModal';
 const BulkManageTracesModalScene = () => {
   const orgId = useForemanOrganization()?.id;
   const contextValue = useContext(ForemanActionsBarContext);
-  const { selectedCount, fetchBulkParams } = contextValue || {};
+  const { selectedCount, fetchBulkParams, refreshTableData } = contextValue || {};
   const { isOpen, close: closeModal } = useBulkModalOpen('bulk-manage-traces-modal');
 
   if (!orgId) return null;
@@ -25,6 +25,7 @@ const BulkManageTracesModalScene = () => {
       isOpen={isOpen}
       closeModal={closeModal}
       orgId={orgId}
+      refreshTableData={refreshTableData}
     />
   );
 };

@@ -6,7 +6,7 @@ import BulkAssignCVEnvsModal from './BulkAssignCVEnvsModal';
 
 const BulkAssignCVEnvsModalScene = () => {
   const orgId = useForemanOrganization()?.id;
-  const { selectedCount, fetchBulkParams } = useContext(ForemanActionsBarContext);
+  const { selectedCount, fetchBulkParams, refreshTableData } = useContext(ForemanActionsBarContext);
   const { isOpen, close: closeModal } = useBulkModalOpen('bulk-assign-cves-modal');
   const foremanContext = useForemanContext();
   const allowMultipleContentViews =
@@ -24,6 +24,7 @@ const BulkAssignCVEnvsModalScene = () => {
       closeModal={closeModal}
       orgId={orgId}
       allowMultipleContentViews={allowMultipleContentViews}
+      refreshTableData={refreshTableData}
     />
   );
 };

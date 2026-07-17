@@ -77,7 +77,7 @@ const BulkPackagesWizard = () => {
 
   const [selectedAction, setSelectedAction] = useState(UPGRADE_ALL);
 
-  const { selectedCount: initialSelectedHostCount, fetchBulkParams }
+  const { selectedCount: initialSelectedHostCount, fetchBulkParams, refreshTableData }
     = useContext(ForemanActionsBarContext);
 
   const [shouldValidateStep2, setShouldValidateStep2] = useState(false);
@@ -158,6 +158,7 @@ const BulkPackagesWizard = () => {
     selectedRexOption,
     setSelectedRexOption,
     closeModal,
+    refreshTableData,
     packagesBulkSelect,
     packagesResults,
     packagesMetadata,
