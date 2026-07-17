@@ -6,9 +6,6 @@ import { Modal, Button, TextContent, Text, TextVariants } from '@patternfly/reac
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-import { foremanUrl } from 'foremanReact/common/helpers';
-import { APIActions } from 'foremanReact/redux/API';
-import { HOSTS_API_PATH, API_REQUEST_KEY } from 'foremanReact/routes/Hosts/constants';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
 import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import { ENVIRONMENT_PATHS_KEY } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathConstants';
@@ -28,6 +25,7 @@ const BulkAssignCVEnvsModal = ({
   orgId,
   fetchBulkParams,
   allowMultipleContentViews,
+  refreshTableData,
 }) => {
   const [assignments, setAssignments] = useState([]);
   const dispatch = useDispatch();
@@ -42,11 +40,7 @@ const BulkAssignCVEnvsModal = ({
   };
 
   const handleSuccess = () => {
-    // Refresh the hosts table to show updated content view environments
-    dispatch(APIActions.get({
-      key: API_REQUEST_KEY,
-      url: foremanUrl(HOSTS_API_PATH),
-    }));
+    refreshTableData();
     handleModalClose();
   };
 
@@ -178,12 +172,14 @@ BulkAssignCVEnvsModal.propTypes = {
   orgId: PropTypes.number.isRequired,
   fetchBulkParams: PropTypes.func.isRequired,
   allowMultipleContentViews: PropTypes.bool,
+  refreshTableData: PropTypes.func,
 };
 
 BulkAssignCVEnvsModal.defaultProps = {
   isOpen: false,
   closeModal: () => {},
   allowMultipleContentViews: true,
+  refreshTableData: () => {},
 };
 
 export default BulkAssignCVEnvsModal;

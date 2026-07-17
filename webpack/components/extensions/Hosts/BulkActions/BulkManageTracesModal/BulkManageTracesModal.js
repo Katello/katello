@@ -73,6 +73,7 @@ const BulkManageTracesModal = ({
   selectedCount: hostsSelectedCount,
   orgId,
   fetchBulkParams,
+  refreshTableData,
 }) => {
   const dispatch = useDispatch();
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
@@ -193,6 +194,7 @@ const BulkManageTracesModal = ({
         },
       },
     }));
+    refreshTableData();
     handleModalClose();
   };
 
@@ -410,11 +412,13 @@ BulkManageTracesModal.propTypes = {
   selectedCount: PropTypes.number.isRequired,
   orgId: PropTypes.number.isRequired,
   fetchBulkParams: PropTypes.func.isRequired,
+  refreshTableData: PropTypes.func,
 };
 
 BulkManageTracesModal.defaultProps = {
   isOpen: false,
   closeModal: () => {},
+  refreshTableData: () => {},
 };
 
 export default BulkManageTracesModal;
