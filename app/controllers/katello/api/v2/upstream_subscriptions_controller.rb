@@ -24,14 +24,13 @@ module Katello
     def index
       index_params = upstream_pool_params
       pools = UpstreamPool.fetch_pools(index_params)
-      page = index_params[:page] || 1
 
       collection = scoped_search_results(
         query: pools[:pools],
         subtotal: pools[:subtotal],
         total: pools[:total],
-        page: page,
-        per_page: index_params[:per_page])
+        page: metadata_page,
+        per_page: metadata_per_page)
       respond(collection: collection)
     end
 

@@ -65,6 +65,19 @@ module Katello
       pools = UpstreamPool.fetch_pools({})
 
       assert_equal 4, pools[:total]
+      assert_equal 4, pools[:subtotal]
+    end
+
+    def test_fetch_pools_subtotal_reflects_filtered_total_not_page_size
+      raw_pools = Array.new(20) { @raw_pool.first.dup }
+      response = stub(to_str: raw_pools.to_json, headers: {x_total_count: 47})
+      stub_fetch_pools(response, base_params: { per_page: 20 })
+
+      pools = UpstreamPool.fetch_pools({ per_page: 20 })
+
+      assert_equal 20, pools[:pools].count
+      assert_equal 47, pools[:total]
+      assert_equal 47, pools[:subtotal]
     end
 
     def test_fetch_pools_with_pool_ids
