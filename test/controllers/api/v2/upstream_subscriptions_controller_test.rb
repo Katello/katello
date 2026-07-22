@@ -23,10 +23,15 @@ module Katello
 
     def test_index
       params = { page: '3', per_page: '7', organization_id: @organization.id }
-      UpstreamPool.expects(:fetch_pools).with({ 'page' => '3', 'per_page' => '7' }).returns(pools: [{}], total: nil)
+      UpstreamPool.expects(:fetch_pools).with({ 'page' => '3', 'per_page' => '7' }).returns(pools: [{}], total: 1, subtotal: 1)
       get :index, params: params
 
       assert_response :success
+      body = JSON.parse(response.body)
+      assert_equal 3, body['page']
+      assert_equal 7, body['per_page']
+      assert_equal 1, body['subtotal']
+      assert_equal 1, body['total']
     end
 
     def test_index_full_result

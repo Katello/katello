@@ -17,14 +17,14 @@ module Katello
         pools = response_to_pools(upstream_response, pool_id_map: pool_id_map)
         total = upstream_response.headers[total_count_header] || pools.count
 
-        respond(pools, total)
+        respond(pools, total.to_i)
       end
 
       def respond(pools, total)
         {
           pools: pools,
           total: total,
-          subtotal: pools.count,
+          subtotal: total,
         }
       end
 
