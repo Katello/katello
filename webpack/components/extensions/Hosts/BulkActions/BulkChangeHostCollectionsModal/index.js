@@ -52,7 +52,7 @@ BulkChangeHostCollectionsMenuItem.defaultProps = {
 // This component renders only the modal (for the _all-hosts-modals slot)
 const BulkChangeHostCollectionsModalScene = () => {
   const orgId = useForemanOrganization()?.id;
-  const { selectedCount, fetchBulkParams } = useContext(ForemanActionsBarContext);
+  const { selectedCount, fetchBulkParams, refreshTableData } = useContext(ForemanActionsBarContext);
   const { isOpen, close: closeModal } = useBulkModalOpen('bulk-change-host-collections-modal');
 
   if (!orgId) return null;
@@ -64,6 +64,7 @@ const BulkChangeHostCollectionsModalScene = () => {
       selectedCount={selectedCount}
       isOpen={isOpen}
       closeModal={closeModal}
+      refreshTableData={refreshTableData}
     />
   );
 };

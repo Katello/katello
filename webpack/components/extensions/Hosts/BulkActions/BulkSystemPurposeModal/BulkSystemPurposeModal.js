@@ -43,6 +43,7 @@ const BulkSystemPurposeModal = ({
   selectedCount,
   orgId,
   fetchBulkParams,
+  refreshTableData,
 }) => {
   const [selectedRole, setSelectedRole] = useState(NO_CHANGE);
   const [selectedUsage, setSelectedUsage] = useState(NO_CHANGE);
@@ -121,6 +122,7 @@ const BulkSystemPurposeModal = ({
       !releaseVersionDispatched || releaseVersionStatus !== STATUS.PENDING;
 
     if (sysPurposeComplete && releaseVersionComplete) {
+      refreshTableData();
       handleModalClose();
     }
   }, [
@@ -130,6 +132,7 @@ const BulkSystemPurposeModal = ({
     sysPurposeStatus,
     releaseVersionStatus,
     handleModalClose,
+    refreshTableData,
   ]);
 
   const roleOptions = buildSystemPurposeOptions(
@@ -348,10 +351,12 @@ BulkSystemPurposeModal.propTypes = {
   selectedCount: PropTypes.number.isRequired,
   orgId: PropTypes.number.isRequired,
   fetchBulkParams: PropTypes.func.isRequired,
+  refreshTableData: PropTypes.func,
 };
 
 BulkSystemPurposeModal.defaultProps = {
   isOpen: false,
+  refreshTableData: () => {},
 };
 
 export default BulkSystemPurposeModal;
