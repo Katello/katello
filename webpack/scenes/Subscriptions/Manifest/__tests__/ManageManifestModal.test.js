@@ -12,16 +12,18 @@ jest.mock('foremanReact/components/common/EmptyState', () => ({
   default: props => JSON.stringify(props),
 }));
 
+jest.mock('foremanReact/components/Loading', () => ({
+  __esModule: true,
+  default: () => <div>Loading</div>,
+}));
+
 jest.mock('../CdnConfigurationTab', () => ({
   __esModule: true,
   default: () => <div>CDN configuration</div>,
 }));
 
-jest.mock('../../../components/LoadingState', () => ({
-  LoadingState: ({ loading, children }) => (loading ? <div>Loading</div> : children),
-}));
-
 const defaultProps = {
+  isOpen: true,
   loadManifestHistory: jest.fn(),
   getContentCredentials: jest.fn(),
   loadOrganization: jest.fn(),
@@ -47,6 +49,9 @@ describe('ManageManifestModal', () => {
     render(
       <ManageManifestModal
         {...defaultProps}
+        canImportManifest={false}
+        canDeleteManifest={false}
+        canEditOrganizations={false}
         manifestHistory={{ loading: true, results: [] }}
       />
     );
@@ -55,7 +60,14 @@ describe('ManageManifestModal', () => {
   });
 
   it('shows empty state when manifest history is empty', () => {
-    render(<ManageManifestModal {...defaultProps} />);
+    render(
+      <ManageManifestModal
+        {...defaultProps}
+        canImportManifest={false}
+        canDeleteManifest={false}
+        canEditOrganizations={false}
+      />
+    );
 
     expect(screen.getByText(/There is no manifest history to display/)).toBeInTheDocument();
   });
@@ -64,6 +76,9 @@ describe('ManageManifestModal', () => {
     render(
       <ManageManifestModal
         {...defaultProps}
+        canImportManifest={false}
+        canDeleteManifest={false}
+        canEditOrganizations={false}
         manifestHistory={{
           loading: false,
           results: [
