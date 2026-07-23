@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2026",
@@ -150,113 +150,14 @@
       "%s is unreachable. %s": [
         "%s მიუწვდომელია. %s"
       ],
+      "%s repository type icon": [
+        ""
+      ],
       "%s was not found!": [
         ""
       ],
-      "%{errata} (%{total} other errata)": [
-        "%{errata} (%{total} სხვა მორჩენილი პაჩი)"
-      ],
-      "%{errata} (%{total} other errata) install canceled": [
-        "%{errata} (%{total} სხვა მორჩენილი პაჩი) დაყენება გაუქმდა"
-      ],
-      "%{errata} (%{total} other errata) install failed": [
-        "%{errata} (%{total} სხვა მორჩენილი პაჩი) დაყენების შეცდომა"
-      ],
-      "%{errata} (%{total} other errata) install timed out": [
-        "%{errata} (%{total} სხვა მორჩენილი პაჩი) დაყენების ვადა გავიდა"
-      ],
-      "%{errata} (%{total} other errata) installed": [
-        "%{errata} (%{total} სხვა მორჩენილი პაჩი) დაყენებულია"
-      ],
-      "%{errata} erratum install canceled": [
-        "%{errata} მორჩენილი პაჩის დაყენება გაუქმდა"
-      ],
-      "%{errata} erratum install failed": [
-        "%{errata} მორჩენილი პაჩის დაყენების შეცდომა"
-      ],
-      "%{errata} erratum install timed out": [
-        "%{errata} მორგენილი პაჩის დაყენების ვადა გავიდა"
-      ],
-      "%{errata} erratum installed": [
-        "%{errata}  მორჩენილი პაჩი დაყენებულია"
-      ],
       "%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.": [
         ""
-      ],
-      "%{group} (%{total} other package groups)": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი)"
-      ],
-      "%{group} (%{total} other package groups) install canceled": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) დაყენება გაუქმდა"
-      ],
-      "%{group} (%{total} other package groups) install failed": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) დაყენების შეცდომა"
-      ],
-      "%{group} (%{total} other package groups) install timed out": [
-        "%{group} (%{total} პაკეტის სხვა ჯგუფი) დაყენების ვადა გავიდა"
-      ],
-      "%{group} (%{total} other package groups) installed": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) დაყენებულია"
-      ],
-      "%{group} (%{total} other package groups) remove canceled": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) წაშლა გაუქმდა"
-      ],
-      "%{group} (%{total} other package groups) remove failed": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) წაშლის შეცდომა"
-      ],
-      "%{group} (%{total} other package groups) remove timed out": [
-        "%{group} (%{total} პაკეტის სხვა ჯგუფი) წაშლის ვადა გავიდა"
-      ],
-      "%{group} (%{total} other package groups) removed": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) წაშლა გაუქმდა"
-      ],
-      "%{group} (%{total} other package groups) update canceled": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) განახლება გაუქმდა"
-      ],
-      "%{group} (%{total} other package groups) update failed": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) განახლების შეცდომა"
-      ],
-      "%{group} (%{total} other package groups) update timed out": [
-        "%{group} (%{total} პაკეტის სხვა ჯგუფი) განახლება ვადა გავიდა"
-      ],
-      "%{group} (%{total} other package groups) updated": [
-        "%{group} (%{total} პაკეტების სხვა ჯგუფი) განახლდა"
-      ],
-      "%{group} package group install canceled": [
-        "%{group} პაკეტის ჯგუფის დაყენება გაუქმდა"
-      ],
-      "%{group} package group install failed": [
-        "%{group} პაკეტის ჯგუფის დაყენების შეცდომა"
-      ],
-      "%{group} package group install timed out": [
-        "%{group} პაკეტის ჯგუფის დაყენების ვადა გავიდა"
-      ],
-      "%{group} package group installed": [
-        "%{group} პაკეტის ჯგუფი დაყენებულია"
-      ],
-      "%{group} package group remove canceled": [
-        "%{group} პაკეტის ჯგუფის წაშლა გაუქმდა"
-      ],
-      "%{group} package group remove failed": [
-        "%{group} პაკეტის ჯგუფის წაშლის შეცდომა"
-      ],
-      "%{group} package group remove timed out": [
-        "%{group} პაკეტის ჯგუფის წაშლის ვადა გავიდა"
-      ],
-      "%{group} package group removed": [
-        "%{group} პაკეტის ჯგუფი წაიშალა"
-      ],
-      "%{group} package group update canceled": [
-        "%{group} პაკეტის ჯგუფის განახლება გაუქმდა"
-      ],
-      "%{group} package group update failed": [
-        "%{group} პაკეტის ჯგუფის განახლების შეცდომა"
-      ],
-      "%{group} package group update timed out": [
-        "%{group} პაკეტის ჯგუფის განახლების ვადა გავიდა"
-      ],
-      "%{group} package group updated": [
-        "%{group} პაკეტის ჯგუფი განახლდა"
       ],
       "%{label} failed": [
         "%{label} ჩავარდა"
@@ -266,75 +167,6 @@
       ],
       "%{name} has no %{type} repositories with upstream URLs to add to the alternate content source.": [
         ""
-      ],
-      "%{package} (%{total} other packages)": [
-        "%{package} (%{total} სხვა პაკეტი)"
-      ],
-      "%{package} (%{total} other packages) install canceled": [
-        "%{package} (%{total} სხვა პაკეტი) დაყენება გაუქმდა"
-      ],
-      "%{package} (%{total} other packages) install failed": [
-        "%{package} (%{total} სხვა პაკეტი) დაყენების შეცდომა"
-      ],
-      "%{package} (%{total} other packages) install timed out": [
-        "%{package} (%{total} სხვა პაკეტი) დაყენების დრო გავიდა"
-      ],
-      "%{package} (%{total} other packages) installed": [
-        "%{package} (%{total} სხვა პაკეტი) დაყენებულია"
-      ],
-      "%{package} (%{total} other packages) remove canceled": [
-        "%{package} (%{total} სხვა პაკეტი) წაშლა გაუქმდა"
-      ],
-      "%{package} (%{total} other packages) remove failed": [
-        "%{package} (%{total} სხვა პაკეტი) წაშლის შეცდომა"
-      ],
-      "%{package} (%{total} other packages) remove timed out": [
-        "%{package} (%{total} სხვა პაკეტი) წაშლის ვადა გავიდა"
-      ],
-      "%{package} (%{total} other packages) removed": [
-        "%{package} (%{total} სხვა პაკეტი) წაშლილია"
-      ],
-      "%{package} (%{total} other packages) update canceled": [
-        "%{package} (%{total} სხვა პაკეტი) განახლება გაუქმდა"
-      ],
-      "%{package} (%{total} other packages) update failed": [
-        "%{package} (%{total} სხვა პაკეტი) განახლების შეცდომა"
-      ],
-      "%{package} (%{total} other packages) update timed out": [
-        "%{package} (%{total} სხვა პაკეტი) განახლების ვადა გავიდა"
-      ],
-      "%{package} (%{total} other packages) updated": [
-        "%{package} (%{total} სხვა პაკეტი) განახლდა"
-      ],
-      "%{package} package install canceled": [
-        "%{package} -ის დაყენება გაუქმდა"
-      ],
-      "%{package} package install timed out": [
-        "%{package} პაკეტის დაყენების ვადა გავიდა"
-      ],
-      "%{package} package remove canceled": [
-        "%{package} პაკეტის წაშლა გაუქმდა"
-      ],
-      "%{package} package remove failed": [
-        "%{package} პაკეტის წაშლის შეცდომა"
-      ],
-      "%{package} package remove timed out": [
-        "%{package} პაკეტის წაშლის ვადა გავიდა"
-      ],
-      "%{package} package removed": [
-        "%{package} პაკეტი წაიშალა"
-      ],
-      "%{package} package update canceled": [
-        "%{package} პაკეტის განახლება გაუქმდა"
-      ],
-      "%{package} package update failed": [
-        "%{package} პაკეტის განახლების შეცდომა"
-      ],
-      "%{package} package update timed out": [
-        "%{package} პაკეტის განახლების ვადა გავიდა"
-      ],
-      "%{package} package updated": [
-        "%{package} პაკეტი განახლდა"
       ],
       "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
         ""
@@ -484,7 +316,7 @@
         "გვერდის შესახებ"
       ],
       "Abstract async task": [
-        ""
+        "ასინქრონული ამოცანის აბსტრაქცია"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -778,7 +610,7 @@
         "ალტერნატიული შემცველობის წყარო ჩასწორდა"
       ],
       "Alternate content sources": [
-        ""
+        "შემცველობის ალტერნატიული წყაროები"
       ],
       "Alternate content sources define new locations to download content from at repository or smart proxy sync time.": [
         ""
@@ -903,7 +735,7 @@
       "Architectures": [
         ""
       ],
-      "Are you sure you want to delete %(entitlementCount)s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
+      "Are you sure you want to delete %s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
         ""
       ],
       "Are you sure you want to delete the manifest?": [
@@ -933,13 +765,13 @@
       "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Array of content view environment ids to be associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids to be associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
       "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
@@ -1070,6 +902,9 @@
         ""
       ],
       "Available image digest": [
+        ""
+      ],
+      "Available repository sets": [
         ""
       ],
       "Available schema versions": [
@@ -1255,14 +1090,14 @@
       "Candlepin": [
         "Candlepin"
       ],
-      "Candlepin Event": [
-        "Candlepin -ის მოვლენა"
-      ],
       "Candlepin ID of pool to add": [
         "დასამატებელი პულის Candlepin-ის ID"
       ],
       "Candlepin consumer %s has already been removed": [
         "Candlepin-ის მომხმარებელი %s უკვე წაშლილია"
+      ],
+      "Candlepin consumer registration response is missing a uuid": [
+        ""
       ],
       "Candlepin is not running properly": [
         "Candlepin -ი სწორად არ მუშაობს"
@@ -1312,7 +1147,7 @@
       "Cannot add rolling content view to composite content view": [
         ""
       ],
-      "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.": [
+      "Cannot assign content view environment %{env}/%{cv}: The content view has either not been published or has not been promoted to that lifecycle environment.": [
         ""
       ],
       "Cannot associate a Red Hat provider with a custom product": [
@@ -1320,6 +1155,9 @@
       ],
       "Cannot associate a component to a non composite content view": [
         "კომპონენტის არაკომპოზიტურ შემცველობის ხედთან ასოცირება შეუძლებელია"
+      ],
+      "Cannot be disabled": [
+        ""
       ],
       "Cannot be disabled because it is part of a content view": [
         ""
@@ -1390,6 +1228,9 @@
       "Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}": [
         ""
       ],
+      "Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})": [
+        ""
+      ],
       "Cannot promote environment out of sequence. Use force to bypass restriction.": [
         ""
       ],
@@ -1454,7 +1295,7 @@
         "მოცულობა"
       ],
       "Certificate": [
-        ""
+        "სერტიფიკატი"
       ],
       "Change Content Source": [
         "ჰოსტის შემცველობის წყაროს შეცვლა"
@@ -1528,6 +1369,9 @@
       "Clear search": [
         "ძიების გასუფთავება"
       ],
+      "Clear_Errata_Applications": [
+        ""
+      ],
       "Click here to go to the tasks page for the task.": [
         "ამ ამოცანისთვის ამოცანების გვერდზე გადასასვლელად დააწკაპუნეთ."
       ],
@@ -1552,13 +1396,13 @@
       "Collapse all": [
         ""
       ],
-      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
       "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
@@ -1774,6 +1618,15 @@
       "Content credential": [
         "შემცველობის ავტორიზაციის დეტალები"
       ],
+      "Content credential %s created": [
+        ""
+      ],
+      "Content credential %s will be deleted.": [
+        ""
+      ],
+      "Content credential deleted": [
+        ""
+      ],
       "Content credential file uploaded successfully.": [
         ""
       ],
@@ -1864,12 +1717,6 @@
       "Content view and environment not set for registration.": [
         "შემცველობის ხედი და გარემო რეგისტრაციისთვის დაყენებული არაა."
       ],
-      "Content view and lifecycle environment must be provided together": [
-        ""
-      ],
-      "Content view and lifecycle environment must both be set, or both be empty": [
-        ""
-      ],
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
         ""
       ],
@@ -1896,9 +1743,6 @@
       ],
       "Content view label": [
         "შემცველობის ხედის ჭდე"
-      ],
-      "Content view must be specified": [
-        "შემცველობის ხედის მითითება აუცილებელია"
       ],
       "Content view name": [
         "შემცველობის ხედის სახელი"
@@ -1991,7 +1835,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "ვერსიის ერთეულების ბიბლიოთეკაში კოპირება"
       ],
       "Cores per socket": [
         "ბირთვი თითო სოკეტზე"
@@ -2065,6 +1909,9 @@
       "Couldn't find Organization '%s'.": [
         "ორგანიზაცია არ არსებობს: '%s'."
       ],
+      "Couldn't find Organization with id '%s'.": [
+        ""
+      ],
       "Couldn't find activation key '%s'": [
         "აქტივაციის გასაღების (%s) პოვნა შეუძლებელია"
       ],
@@ -2082,9 +1929,6 @@
       ],
       "Couldn't find content host environment '%s'": [
         "შემცველობის ჰოსტი გარემოთი %s არ არსებობს"
-      ],
-      "Couldn't find content view environment with content view ID '%{cv}' and environment ID '%{env}'": [
-        ""
       ],
       "Couldn't find content view version '%s'": [
         "შემცველობის ხედის ვერსია არ არსებობს: %s"
@@ -2205,6 +2049,9 @@
       ],
       "Create an upload request": [
         "ატვირთვის მოთხოვნის შექმნა"
+      ],
+      "Create content credential": [
+        ""
       ],
       "Create content credentials with the generated SSL certificate and key.": [
         ""
@@ -2500,6 +2347,9 @@
       "Delete an upload request": [
         "ატვირთვის მოთხოვნის წაშლა"
       ],
+      "Delete content credential?": [
+        ""
+      ],
       "Delete content view": [
         "შემცველობის ხედის წაშლა"
       ],
@@ -2656,6 +2506,9 @@
       "Details": [
         "დეტალები"
       ],
+      "Details for %s": [
+        ""
+      ],
       "Determining settings for ${truncate(name)}": [
         ""
       ],
@@ -2681,7 +2534,7 @@
         "გამორთულია"
       ],
       "Discover": [
-        ""
+        "აღმოაჩინეთ"
       ],
       "Discover Repositories": [
         "რეპოზიტორიების აღმოჩენა"
@@ -2836,6 +2689,9 @@
       "Enabled Repositories": [
         "ჩართული რეპოზიტორიები"
       ],
+      "Enabled repositories": [
+        ""
+      ],
       "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
         ""
       ],
@@ -2881,9 +2737,6 @@
       "Environment ID": [
         "გარემოს ID"
       ],
-      "Environment ID and content view ID must be provided together": [
-        ""
-      ],
       "Environment IDs": [
         "გარემოების ID-ები"
       ],
@@ -2917,12 +2770,6 @@
       "Errata ID": [
         "მორჩენილი შეცდომის ID"
       ],
-      "Errata Install": [
-        "მორჩენილი პაჩის დაყენება"
-      ],
-      "Errata Install scheduled by %s": [
-        "მორჩენილი პაჩის დაყენება შესრულების რიგშია %s -ის მიერ"
-      ],
       "Errata and package information will be updated at the next host check-in or package action.": [
         ""
       ],
@@ -2933,7 +2780,7 @@
         "მორჩენილი პაჩის ID (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "მორჩენილი ელფოსტა"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2952,18 +2799,6 @@
       ],
       "Erratum": [
         "შემორჩენილი პაჩი"
-      ],
-      "Erratum Install Canceled": [
-        "მორჩენილი პაჩის დაყენება გაუქმდა"
-      ],
-      "Erratum Install Complete": [
-        "მორჩენილი პაჩის დაყენება დასრულდა"
-      ],
-      "Erratum Install Failed": [
-        "მორჩენილი პაჩის დაყენების შეცდომა"
-      ],
-      "Erratum Install Timed Out": [
-        "მორგენილი პაჩის დაყენების ვადა გავიდა"
       ],
       "Error": [
         "შეცდომა"
@@ -3082,9 +2917,6 @@
       "Failed to delete %{host}: %{errors}": [
         "წაშლის შეცდომა %{host}: %{errors}"
       ],
-      "Failed to delete content credential. Please try again.": [
-        ""
-      ],
       "Failed to delete latest content view version of Content View '%{subject}'.": [
         ""
       ],
@@ -3118,6 +2950,9 @@
       "Fails if any of the repositories belonging to this version are unexportable. False by default.": [
         ""
       ],
+      "False": [
+        ""
+      ],
       "Fetch applicable errata for one or more hosts.": [
         "შესატყვისი მორჩენილი პაჩების გამოთხოვა ერთი ან მეტი ჰოსტისთვის."
       ],
@@ -3128,7 +2963,7 @@
         "დაყენებადი მორჩენილი პაჩების გამოთხოვა ერთი ან მეტი ჰოსტისთვის."
       ],
       "Fetch pxe files": [
-        ""
+        "PXE ფაილების გამოთხოვა"
       ],
       "Fetch traces for one or more hosts": [
         "ერთი ან მეტი ჰოსტისთვის ტრეისის გამოთხოვა"
@@ -3203,7 +3038,7 @@
         "პროდუქტების სინქრის გეგმის ID-ით გაფილტვრა"
       ],
       "Filter repositories": [
-        ""
+        "რეპოზიტორიების გაფილტვრა"
       ],
       "Filter repositories by content unit type (erratum, docker_tag, etc.). Check the \\\"Indexed?\\\" types here: /katello/api/repositories/repository_types": [
         ""
@@ -3233,10 +3068,10 @@
         "ფილტრის ვერსიები, რომლებიც მითითებულ კომპოზიტის ვერსიაში კომპონენტები არიან"
       ],
       "Filter...": [
-        ""
+        "გაფილტვრა..."
       ],
       "Filtered index content": [
-        ""
+        "გაფილტრული ინდექსის შემცველობა"
       ],
       "Filters": [
         "ფილტრები"
@@ -3344,10 +3179,13 @@
         "სრული მხარდაჭერა"
       ],
       "GPG Key": [
-        ""
+        "GPG გასაღები"
       ],
       "GPG Key URL": [
         "GPG გასაღების URL"
+      ],
+      "General": [
+        ""
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
@@ -3439,9 +3277,6 @@
       ],
       "Has to be > 0": [
         "უნდა იყოს > 0"
-      ],
-      "Hash containing the Id of the single lifecycle environment to be associated with the activation key.": [
-        ""
       ],
       "Help": [
         "დახმარება"
@@ -3555,7 +3390,7 @@
         "ჰოსტის ჯგუფების ID-ები"
       ],
       "Host groups": [
-        ""
+        "ჰოსტის ჯგუფები"
       ],
       "Host has not been registered with subscription-manager": [
         "ჰოსტი subscription-manager-ით არ დარეგისტრირებულა"
@@ -3618,10 +3453,10 @@
         "დახარისხებული შედეგების დალაგების წესი (მაგ: ASC აღმავლისთვის)"
       ],
       "Hypervisors": [
-        ""
+        "ჰაიპერვაიზორები"
       ],
       "Hypervisors update": [
-        ""
+        "ჰაიპერვაიზორის განახლება"
       ],
       "ID": [
         ""
@@ -3758,18 +3593,6 @@
       "Id of the repository to limit verifying checksum on": [
         ""
       ],
-      "Id of the single content view to be associated with the activation key.": [
-        ""
-      ],
-      "Id of the single content view to be associated with the host. Ignored for multi-environment hosts.": [
-        ""
-      ],
-      "Id of the single lifecycle environment to be associated with the activation key.": [
-        ""
-      ],
-      "Id of the single lifecycle environment to be associated with the host. Ignored for multi-environment hosts.": [
-        ""
-      ],
       "Id of the smart proxy": [
         "ჭკვიანი პროქსის ID"
       ],
@@ -3848,7 +3671,7 @@
       "If true, return custom repository sets along with redhat repos. Will be ignored if repository_type is supplied.": [
         ""
       ],
-      "If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to true": [
+      "If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to false": [
         ""
       ],
       "If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment": [
@@ -4032,7 +3855,7 @@
         "ინკრემენტული განახლება მიუწვდომელია."
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "შემცველობის ხედის ვერსიების ინკრემენტული განახლება "
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} შემცველობის ხედის ვერსიის ინკრემენტული განახლება "
@@ -4050,16 +3873,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "შემცველობის ინდექსი"
       ],
       "Index errata": [
-        ""
+        "მორჩენილების ინდექსი"
       ],
       "Index module streams": [
-        ""
+        "მოდულების ნაკადების ინდექსი"
       ],
       "Index package groups": [
-        ""
+        "პაკეტის ჯგუფების ინდექსი"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         ""
@@ -4071,9 +3894,6 @@
         ""
       ],
       "Inherit parent (%s)": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4146,17 +3966,8 @@
       "Installed version": [
         "დაყენებული ვერსია"
       ],
-      "Installing Erratum...": [
-        "მორჩენილი პაჩის დაყენება..."
-      ],
-      "Installing Package Group...": [
-        "პაკეტების ჯგუფის დაყენება..."
-      ],
-      "Installing Package...": [
-        "პაკეტის დაყენება..."
-      ],
       "Instance update": [
-        ""
+        "გაშვებული ასლის განახლება"
       ],
       "Instance-based": [
         "გაშვებულ ასლზე-ბაზირებული"
@@ -4503,12 +4314,6 @@
       "Lifecycle environment '%{env}' cannot be used with content view '%{view}'": [
         ""
       ],
-      "Lifecycle environment ID": [
-        "სიცოცხლის ციკლის გარემოს ID"
-      ],
-      "Lifecycle environment must be specified": [
-        "ცხოვრების ციკლის გარემოების მითითება აუცილებელია"
-      ],
       "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made.": [
         ""
       ],
@@ -4840,6 +4645,9 @@
         ""
       ],
       "Manage errata": [
+        ""
+      ],
+      "Manage manifest": [
         ""
       ],
       "Manage packages": [
@@ -5196,6 +5004,9 @@
       "No action required": [
         "არაფრის გაკეთება საჭირო არაა"
       ],
+      "No activation keys available": [
+        ""
+      ],
       "No alternate content sources match your filter criteria.": [
         ""
       ],
@@ -5424,9 +5235,6 @@
       "No module streams to add yet.": [
         "დასამატებელი მოდულის ნაკადები ჯერ აღწერილი არაა."
       ],
-      "No new packages installed": [
-        "ახალი პაკეტები არ დაყენებულა"
-      ],
       "No package groups yet": [
         "პაკეტების ჯგუფების გარეშე"
       ],
@@ -5438,12 +5246,6 @@
       ],
       "No packages available to install on this host. Please check the host's assigned content view environments.": [
         ""
-      ],
-      "No packages removed": [
-        "პაკეტები არ წაშლილა"
-      ],
-      "No packages updated": [
-        "პაკეტები არ განახლებულა"
       ],
       "No pool IDs were provided.": [
         "პულის ID-ები მოწოდებული არაა."
@@ -5511,6 +5313,9 @@
       "No repository sets to show.": [
         "საჩვენებელი რეპოზიტორიის სეტების გარეშე."
       ],
+      "No results found": [
+        ""
+      ],
       "No rules yet": [
         "წესების გარეშე"
       ],
@@ -5549,9 +5354,6 @@
       ],
       "Non-security errata installable": [
         "დაყენებადი არა-უსაფრთხოების მორჩენილი პაჩები"
-      ],
-      "Non-system event": [
-        "არასისტემური მოვლენა"
       ],
       "None": [
         "არცერტი"
@@ -5621,6 +5423,9 @@
       ],
       "OSTree refs": [
         "OSTree მიბმები"
+      ],
+      "Ok": [
+        ""
       ],
       "On Demand": [
         "საჭიროებისამებრ"
@@ -5766,86 +5571,8 @@
       "Package Group": [
         "პაკეტების ჯგუფი"
       ],
-      "Package Group Install": [
-        "პაკეტის ჯგუფის დაყენება"
-      ],
-      "Package Group Install Canceled": [
-        "პაკეტის ჯგუფის დაყენება გაუქმდა"
-      ],
-      "Package Group Install Complete": [
-        "პაკეტის ჯგუფის დაყენება დასრულდა"
-      ],
-      "Package Group Install Failed": [
-        "პაკეტის ჯგუფის დაყენების შეცდომა"
-      ],
-      "Package Group Install Timed Out": [
-        "პაკეტების დაყენების ვადა გავიდა"
-      ],
-      "Package Group Install scheduled by %s": [
-        "პაკეტის ჯგუფის დაყენება შესრულების რიგშია %s -ის მიერ"
-      ],
-      "Package Group Remove": [
-        "პაკეტების ჯგუფის წაშლა"
-      ],
-      "Package Group Remove Canceled": [
-        "პაკეტის ჯგუფის წაშლა გაუქმდა"
-      ],
-      "Package Group Remove Complete": [
-        "პაკეტების ჯგუფის წაშლა დასრულდა"
-      ],
-      "Package Group Remove Failed": [
-        "პაკეტის ჯგუფის წაშლის შეცდომა"
-      ],
-      "Package Group Remove Timed Out": [
-        "პაკეტის ჯგუფის წაშლის ვადა გავიდა"
-      ],
-      "Package Group Remove scheduled by %s": [
-        "პაკეტის ჯგუფის წაშლა შესრულების რიგშია %s-ის მიერ"
-      ],
-      "Package Group Update": [
-        "პაკეტების ჯგუფის განახლება"
-      ],
-      "Package Group Update scheduled by %s": [
-        "პაკეტის ჯგუფის განახლება შესრულების რიგშია %s-ის მიერ"
-      ],
       "Package Groups": [
         "პაკეტის ჯგუფები"
-      ],
-      "Package Install": [
-        "პაკეტის დაყენება"
-      ],
-      "Package Install Canceled": [
-        "პაკეტების დაყენება გაუქმდა"
-      ],
-      "Package Install Complete": [
-        "პაკეტები დაყენება დასრულებულია"
-      ],
-      "Package Install Failed": [
-        "პაკეტის ინსტალაციის შეცდომა"
-      ],
-      "Package Install Timed Out": [
-        "პაკეტების დაყენების ვადა გავიდა"
-      ],
-      "Package Install scheduled by %s": [
-        "პაკეტის დაყენება შესრულების რიგშია %s -ის მიერ"
-      ],
-      "Package Remove": [
-        "პაკეტის წაშლა"
-      ],
-      "Package Remove Canceled": [
-        "პაკეტის წაშლა გაუქმდა"
-      ],
-      "Package Remove Complete": [
-        "პაკეტის წაშლა დასრულდა"
-      ],
-      "Package Remove Failed": [
-        "პაკეტის წაშლის შეცდომა"
-      ],
-      "Package Remove Timed Out": [
-        "პაკეტის წაშლის ვადა გავიდა"
-      ],
-      "Package Remove scheduled by %s": [
-        "პაკეტის წაშლა შესრულების რიგშია %s-ის მიერ"
       ],
       "Package Type": [
         "პაკეტის ტიპი"
@@ -5853,47 +5580,11 @@
       "Package Types": [
         "პაკეტის ტიპები"
       ],
-      "Package Update": [
-        "პაკეტის განახლება"
-      ],
-      "Package Update Canceled": [
-        "პაკეტის განახლება გაუქმდა"
-      ],
-      "Package Update Complete": [
-        "პაკეტების განახლება დასრულდა"
-      ],
-      "Package Update Failed": [
-        "პაკეტების განახლების შეცდომა"
-      ],
-      "Package Update Timed Out": [
-        "პაკეტის განახლების ვადა გავდა"
-      ],
-      "Package Update scheduled by %s": [
-        "პაკეტის განახლება შესრულების რიგშია %s-ის მიერ"
-      ],
-      "Package group update canceled": [
-        "პაკეტის ჯგუფის განახლება გაუქმდა"
-      ],
-      "Package group update complete": [
-        "პაკეტების ჯგუფის განახლება დასრულდა"
-      ],
-      "Package group update failed": [
-        "პაკეტის ჯგუფის განახლების შეცდომა"
-      ],
-      "Package group update timed out": [
-        "პაკეტის ჯგუფის განახლების ვადა გავიდა"
-      ],
       "Package groups": [
         "პაკეტის ჯგუფები"
       ],
       "Package identifiers to filter content by": [
         "შემცველობის გაფილტვრა პაკეტის იდენტიფიკატორით"
-      ],
-      "Package install failed: \\\"%{package}\\\"": [
-        "პაკეტის ინსტალაციის შეცდომა: \\\"%{package}\\\""
-      ],
-      "Package installation: \\\"%{package}\\\" ": [
-        "პაკეტის ინსტალაცია: \\\"%{package}\\\" "
       ],
       "Package mode": [
         ""
@@ -5942,6 +5633,9 @@
       ],
       "Password to access URL": [
         "URL-სთან წვდომის პაროლი"
+      ],
+      "Paste contents of public key or certificate": [
+        ""
       ],
       "Path": [
         "მისამართი"
@@ -6027,13 +5721,13 @@
       "Please select a lifecycle environment and a content view to move this activation key.": [
         ""
       ],
-      "Please select a lifecycle environment and content view to view activation keys.": [
-        ""
-      ],
       "Please select an architecture before assigning a kickstart repository": [
         ""
       ],
       "Please select an operating system before assigning a kickstart repository": [
+        ""
+      ],
+      "Please select an organization to view activation keys.": [
         ""
       ],
       "Please select one from the list below and you will be redirected.": [
@@ -6324,8 +6018,8 @@
       "Quantity": [
         "რაოდენობა"
       ],
-      "Quantity must not be above ${pool.available}": [
-        "რაოდენობა ${pool.available}-ზე მაღლა უნდა იყოს"
+      "Quantity must not be above %s": [
+        ""
       ],
       "Quantity of entitlements to bind": [
         ""
@@ -6425,6 +6119,9 @@
       ],
       "Recommended Repositories": [
         "რეკომდენდებული რეპოზიტორიები"
+      ],
+      "Recommended repositories toggle": [
+        ""
       ],
       "Red Hat": [
         "Red Hat"
@@ -6562,7 +6259,7 @@
         ""
       ],
       "Reindex subscriptions": [
-        ""
+        "გამოწერების თავიდან ინდექსირება"
       ],
       "Related composite content views": [
         "შესაბამისი კომპოზიტური შემცველობის ხედები"
@@ -6592,7 +6289,7 @@
         "შემცველობის ჰოსტის რელიზის ვერსია"
       ],
       "Releases/Distributions": [
-        ""
+        "რელიზები/დისტრიბუტივები"
       ],
       "Releasever to disable": [
         "გამოსართავი Releasever"
@@ -6707,12 +6404,6 @@
       ],
       "Removed components from content view": [
         "კომპონენტები შემცველობის ხედიდან წაიშალა"
-      ],
-      "Removing Package Group...": [
-        "პაკეტების ჯგუფის წაშლა..."
-      ],
-      "Removing Package...": [
-        "პაკეტის წაშლა..."
       ],
       "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}": [
         ""
@@ -6878,6 +6569,9 @@
       ],
       "Requires Virt-Who": [
         "ესაჭიროება Virt-Who"
+      ],
+      "Requires virt-who": [
+        ""
       ],
       "Reset": [
         "საწყისი პარამეტრები"
@@ -7111,7 +6805,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "SSL კლიენტის გასაღები"
       ],
       "SSL client certificate": [
         "SSL კლიენტის სერტიფიკატი"
@@ -7229,9 +6923,6 @@
       ],
       "Select Organization": [
         "აირჩიეთ ორგანიზაცია"
-      ],
-      "Select Value": [
-        "აირჩიეთ მნიშვნელობა"
       ],
       "Select a CA certificate": [
         "აირჩიეთ CA სერტიფიკატი"
@@ -7954,8 +7645,8 @@
       "Subscriptions have been saved and are being updated. ": [
         "გამოწერები შენახულია და მიმდინარეობს მათი განახლება. "
       ],
-      "Subscriptions service": [
-        "გამოწერის სერვისი"
+      "Subscriptions information": [
+        ""
       ],
       "Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}].": [
         ""
@@ -8000,7 +7691,7 @@
         "შემცველობის მხარდაჭერილი ტიპები"
       ],
       "Sync": [
-        ""
+        "სინქრონიზაცია"
       ],
       "Sync Canceled": [
         "სინქი გაუქმებულია"
@@ -8060,7 +7751,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "სინქრონიზაციის კაპსულა"
       ],
       "Sync complete.": [
         "სინქრონიზაცია დასრულდა."
@@ -8087,7 +7778,7 @@
         "სინქის მდგომარეობა"
       ],
       "Syncable export": [
-        ""
+        "სინქრონიზებადი გატანა"
       ],
       "Synced": [
         "სინქრონიზებულია"
@@ -8194,6 +7885,15 @@
       "The Alternate Content Source type": [
         "შემცველობის ალტერნატიული წყაროს ტიპი"
       ],
+      "The Foreman Client DEB repository is available in the host's content view environment(s). ": [
+        ""
+      ],
+      "The Foreman Client DEB repository is enabled and synced. ": [
+        ""
+      ],
+      "The Foreman Client DEB repository set is enabled for the host. ": [
+        ""
+      ],
       "The Foreman Client repository is available in the host's content view environment(s). ": [
         ""
       ],
@@ -8204,6 +7904,9 @@
         "Foreman-ის კლიენტის რეპოზიტორია დასინქრონებულია. "
       ],
       "The Foreman Client repository set is enabled for the host. ": [
+        ""
+      ],
+      "The Pulp repo version '%{version}' for 'deb' repository '%{name}' must contain at least one distribution!": [
         ""
       ],
       "The URL to receive a session token from, e.g. used with Automation Hub.": [
@@ -8350,9 +8053,6 @@
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
         ""
       ],
-      "The selected lifecycle environment contains no activation keys": [
-        ""
-      ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
         ""
       ],
@@ -8412,9 +8112,6 @@
       ],
       "There is no such HTTP proxy": [
         "ასეთი HTTP პროქსი არ არსებობს"
-      ],
-      "There is nothing to see here": [
-        "აქ სანახავი არაფერია"
       ],
       "There is {numberOfActivationKeys} activation key that needs to be reassigned.": [
         ""
@@ -8527,7 +8224,7 @@
       "This is not a linked repository": [
         "ბმულ რეპოზიტორიას არ წარმოადგენს"
       ],
-      "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
+      "This page shows subscriptions available from this organization's subscription manifest alongside this organization's locally-hosted products. Learn more about subscriptions and entitlement management with the {subscriptionsService}.": [
         ""
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
@@ -8677,6 +8374,9 @@
       "Transient": [
         ""
       ],
+      "True": [
+        ""
+      ],
       "Try changing your search criteria.": [
         "სცადეთ შეცვალოთ ძებნის მოთხოვნები."
       ],
@@ -8751,9 +8451,6 @@
       ],
       "Unable to connect. Got: %s": [
         "შეერთების შეცდომა. პასუხი: %s"
-      ],
-      "Unable to create ContentViewEnvironment. Check the logs for more information.": [
-        ""
       ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         "ალტერნატიული შემცველობის წყაროს წაშლა შეუძლებელია. ან წაშლის წვდომა არ გაგაჩნიათ, ან ალტერნატიული შემცველობის წყაროები არ არსებობენ."
@@ -8951,7 +8648,7 @@
         "შემცველობის რაოდენობების განახლება ჭკვიანი პროქსისთვის"
       ],
       "Update content urls": [
-        ""
+        "შემცველობის URL-ების განახლება"
       ],
       "Update content view environments for host": [
         ""
@@ -8966,10 +8663,10 @@
         "ჰოსტების ხელით განახლება"
       ],
       "Update http proxy": [
-        ""
+        "HTTP პროქსის განახლება"
       ],
       "Update http proxy details": [
-        ""
+        "HTTP პროქსის დეტალების განახლება"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "განაახლეთ დაყენებული პაკეტები, ჩართული რეპოები და მოდულები"
@@ -8987,7 +8684,7 @@
         "პაკეტების განახლება Katello-ის ინტერფეისიდან"
       ],
       "Update redhat repository": [
-        ""
+        "RH-ის რეპოზიტორიის განახლება"
       ],
       "Update release version for host": [
         "ჰოსტის რელიზის ვერსიის განახლება"
@@ -9050,17 +8747,11 @@
       "Updates available: Repositories and/or filters have changed.": [
         "ხელმისაწვდომია განახლებები: რეპოზიტორიები ან/და ფილტრები შეიცვალა."
       ],
-      "Updating Package...": [
-        "პაკეტის განახლება..."
-      ],
       "Updating System Purpose for host": [
         "ჰოსტის სისტემური დანიშნულების განახლება"
       ],
       "Updating System Purpose for host %s": [
         "სისტემური დანიშნულების განახლება ჰოსტისთვის %s"
-      ],
-      "Updating package group...": [
-        "პაკეტების ჯგუფის განახლება..."
       ],
       "Updating repository authentication configuration": [
         "რეპოზიტორიის ავთენტიკაციის კონფიგურაციის განახლება"
@@ -9109,6 +8800,9 @@
       ],
       "Upload package / repos profile": [
         "პაკეტის / რეპოზიტორიის პროფილის ატვირთვა"
+      ],
+      "Upload public key or certificate file": [
+        ""
       ],
       "Upload request id": [
         "ატვირთვის მოთხოვნის ID"
@@ -9180,7 +8874,7 @@
         ""
       ],
       "Used as": [
-        ""
+        "გამოიყენება, როგორც"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         ""
@@ -9237,7 +8931,7 @@
         "SSL-ის შემოწმება"
       ],
       "Verify checksum": [
-        ""
+        "საკონტროლო ჯამის შემოწმება"
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -9308,9 +9002,6 @@
       "View Filters": [
         "ფილტრების ნახვა"
       ],
-      "View Subscription Usage": [
-        "გამოწერების გამოყენების ნახვა"
-      ],
       "View a report of the affected hosts": [
         "მოყოლილი ჰოსტების ანგარიშის ნახვა"
       ],
@@ -9344,7 +9035,13 @@
       "View matching content": [
         "შესატყვისი შემცველობის ნახვა"
       ],
+      "View products": [
+        ""
+      ],
       "View pullable paths": [
+        ""
+      ],
+      "View subscription usage": [
         ""
       ],
       "View sync status": [
@@ -9425,9 +9122,6 @@
       "Wrong content type submitted.": [
         "გადაცემული შემცველობის ტიპი არასწორია."
       ],
-      "Yay empty state": [
-        "ძლივს, ცარიელი"
-      ],
       "Yes": [
         "დიახ"
       ],
@@ -9440,7 +9134,7 @@
       "You can check sync status for repositories only in the library lifecycle environment.'": [
         ""
       ],
-      "You cannot have more than %{max_hosts} host(s) associated with host collection '%{host_collection}'.": [
+      "You cannot have more than %{max_hosts} host(s) associated with host collection %{host_collection}.": [
         ""
       ],
       "You cannot set an organization's parent. This feature is disabled.": [
@@ -9494,8 +9188,8 @@
       "You were not allowed to sync %s": [
         "%s-ის სინქის უფლება არ გაქვთ"
       ],
-      "You're making changes to %(entitlementCount)s entitlement(s)": [
-        "შეგაქვთ ცვლილებები ელემენტში %(entitlementCount)s entitlement(s)"
+      "You're making changes to %s entitlement(s)": [
+        ""
       ],
       "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.": [
         ""
@@ -9589,15 +9283,6 @@
       ],
       "all environments": [
         "ყველა გარემო"
-      ],
-      "all packages": [
-        "ყველა პაკეტი"
-      ],
-      "all packages update": [
-        "ყველა პაკეტის განახლება"
-      ],
-      "all packages update failed": [
-        "ყველა პაკეტის განახლების შეცდომა"
       ],
       "allow unauthenticed pull of container images": [
         "კონტეინერის ასლების არაავთენტიფიცირებული პულის დაშვება"
@@ -9749,17 +9434,8 @@
       "content view identifier of the component who's latest version is desired": [
         "შემცველობის ხედის იდენტიფიკატორი კომპონენტისთვის, რომლის უახლესი ვერსიაც სასურველია"
       ],
-      "content view node publish": [
-        "შემცველობის ხედის კვანძის გამოქვეყნება"
-      ],
       "content view numeric identifier": [
         "შემცველობის ხედის რიცხვობრივი იდენტიფიკატორი"
-      ],
-      "content view publish": [
-        "შემცველობის ხედის გამოქვეყნება"
-      ],
-      "content view refresh": [
-        "შემცველობის ხედის განახლება"
       ],
       "content view to reassign orphaned activation keys to": [
         "მიტოვებული აქტივაციის გასაღებების თავიდან მისამაგრებელი შემცველობის ხედები"
@@ -9965,26 +9641,8 @@
       "installed": [
         ""
       ],
-      "installing errata...": [
-        "მორჩენილი პაჩის დაყენება..."
-      ],
-      "installing erratum...": [
-        "მორჩენილი პაჩის დაყენება..."
-      ],
       "installing or updating packages": [
         "პაკეტების დაყენება ან განახლება"
-      ],
-      "installing package group...": [
-        "პაკეტების ჯგუფის დაყენება..."
-      ],
-      "installing package groups...": [
-        "პაკეტების ჯგუფის დაყენება..."
-      ],
-      "installing package...": [
-        "პაკეტის დაყენება..."
-      ],
-      "installing packages...": [
-        "პაკეტების დაყენება..."
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         ""
@@ -10206,18 +9864,6 @@
       "register_hostname_fact set for %s, but no fact found, or was localhost.": [
         ""
       ],
-      "removing package group...": [
-        "პაკეტების ჯგუფის წაშლა..."
-      ],
-      "removing package groups...": [
-        "პაკეტების ჯგუფის წაშლა..."
-      ],
-      "removing package...": [
-        "პაკეტის წაშლა..."
-      ],
-      "removing packages...": [
-        "პაკეტის წაშლა..."
-      ],
       "replace": [
         ""
       ],
@@ -10284,6 +9930,9 @@
       "start datetime of synchronization": [
         "სინქრონიზაციის დასაწყისის თარითი და დრო"
       ],
+      "subscriptions service": [
+        ""
+      ],
       "sync plan description": [
         "სინქის გეგმის აღწერა"
       ],
@@ -10337,18 +9986,6 @@
       ],
       "updated": [
         ""
-      ],
-      "updating package group...": [
-        "პაკეტების ჯგუფის განახლება..."
-      ],
-      "updating package groups...": [
-        "პაკეტების ჯგუფის განახლება..."
-      ],
-      "updating package...": [
-        "პაკეტის განახლება..."
-      ],
-      "updating packages...": [
-        "პაკეტების განახლება..."
       ],
       "upstream Foreman server": [
         "\\\"Foreman\\\"-ის აღმავალი სერვერი"

@@ -20,14 +20,6 @@ msgstr ""
 msgid "-- select an interval --"
 msgstr "-- 选择间隔 --"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/subscription-start-date.directive.js
-msgid "(future)"
-msgstr "（未来）"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid "{{ 'Add Selected' | translate }}"
-msgstr "{{ 'Add Selected' | translate }}"
-
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 msgid "{{ contentCredential.name }}"
 msgstr "{{ contentCredential.name }}"
@@ -184,7 +176,6 @@ msgid ""
 msgstr "*这些标记的内容视图版本来自复合内容视图。它们的需要更新的组件在下面列出。"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/activationKeyConsumed.filter.js
-#: app/assets/javascripts/bastion_katello/subscriptions/subscriptionConsumed.filter.js
 msgid "%(consumed)s out of %(quantity)s"
 msgstr "%(consumed)s（共%(quantity)s）"
 
@@ -333,11 +324,6 @@ msgid ""
 "href=\"/foreman_tasks/tasks/{{ task.id }}\">click for more details</a>"
 msgstr "同步已在后台启动，<a href=\"/foreman_tasks/tasks/{{ task.id }}\">点击查看详情</a>"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Account"
-msgstr "帐号"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "Action Type"
 msgstr "操作类型"
@@ -373,7 +359,6 @@ msgid "Active Tasks"
 msgstr "活跃的任务"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Add"
@@ -399,21 +384,11 @@ msgstr "添加新环境"
 msgid "Add Products"
 msgstr "添加产品"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Add Selected"
 msgstr "添加所选"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-add-subscriptions.controller.js
-msgid "Add Subscriptions"
-msgstr "添加订阅"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid "Add Subscriptions for Activation Key:"
-msgstr "为激活码添加订阅："
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 msgid "Add To"
@@ -501,10 +476,6 @@ msgstr "删除环境时发生错误："
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-details.controller.js
 msgid "An error occurred removing the Host Collection:"
 msgstr "删除主机集合时发生错误："
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "An error occurred removing the subscriptions."
-msgstr "删除订阅时发生错误。"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "An error occurred saving the Activation Key:"
@@ -821,11 +792,6 @@ msgstr "关联"
 msgid "At least one Errata needs to be selected to Apply."
 msgstr "至少需要选择一个勘误才能应用。"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Attached"
-msgstr "已附加"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Auth Token"
@@ -839,24 +805,6 @@ msgstr "验证网址"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 msgid "Author"
 msgstr "作者"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-Attach"
-msgstr "自动附加"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-attach available subscriptions to all selected hosts."
-msgstr "自动附加所有所选主机的可用订阅。"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-attach uses all available subscriptions, not a selected subset."
-msgstr "auto-attach 使用所有可用的订阅，而不是所选子集。"
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Automatic"
-msgstr "自动"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 msgid "Available Module Streams"
@@ -1142,10 +1090,6 @@ msgstr "内容凭证"
 msgid "Content Host Bulk Content"
 msgstr "内容主机批量内容"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Content Host Bulk Subscriptions"
-msgstr "内容主机批量订阅"
-
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
@@ -1254,11 +1198,6 @@ msgstr "包含此文件的内容视图"
 msgid "Context"
 msgstr "上下文"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Contract"
-msgstr "合同"
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
 msgid "Copy Activation Key"
 msgstr "复制激活码"
@@ -1341,10 +1280,6 @@ msgstr "关键"
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 msgid "Cron Logic"
 msgstr "Cron 逻辑"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-msgid "Current Subscriptions for Activation Key:"
-msgstr "当前的激活码订阅："
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 msgid "Custom"
@@ -1577,7 +1512,6 @@ msgstr "Docker 标签"
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 msgid "Done"
 msgstr "完成"
@@ -1709,11 +1643,6 @@ msgstr "排除标签"
 msgid "Existing Product"
 msgstr "现有产品"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Expires"
-msgstr "过期"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Family"
 msgstr "系列"
@@ -1823,10 +1752,6 @@ msgid ""
 "Group package actions are being deprecated, and will be removed in a future "
 "version."
 msgstr "组软件包操作已被弃用，并将在以后的版本中删除。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Guests of"
-msgstr "的客户"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "Homepage"
@@ -2119,12 +2044,7 @@ msgstr "列出主机"
 msgid "List Products"
 msgstr "列出产品"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "List Subscriptions"
-msgstr "列出订阅"
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "List/Remove"
@@ -2388,7 +2308,6 @@ msgstr "下一个同步"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "No"
 msgstr "否"
 
@@ -2476,10 +2395,6 @@ msgstr "此资源不存在任何任务。"
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid "None"
 msgstr "没有"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Not Applicable"
-msgstr "不适用"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "Not started"
@@ -2672,10 +2587,6 @@ msgid ""
 "configured for Remote Execution."
 msgstr "执行主机软件包操作被禁用，因为没有为远程执行配置 Katello。"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Physical"
-msgstr "物理"
-
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
 msgid "Please enter cron below"
 msgstr "请在下面输入 cron"
@@ -2796,14 +2707,6 @@ msgstr "发布的仓库信息"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Publishing Settings"
 msgstr "发布设置"
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-msgid "Quantity"
-msgstr "数量"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Quantity (To Add)"
-msgstr "数量（要添加的）"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Reboot Suggested?"
@@ -2970,8 +2873,6 @@ msgid_plural "Remove {{ table.numSelected }} repositories?"
 msgstr[0] "删除仓库？"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Remove Selected"
@@ -3311,14 +3212,6 @@ msgstr "服务等级 (SLA)："
 msgid "Severity"
 msgstr "严重性"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
-msgid "Show All"
-msgstr "显示所有"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
-msgid "Show all Repository Sets in Organization"
-msgstr "显示组织中的所有仓库集"
-
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Size"
 msgstr "大小"
@@ -3341,6 +3234,14 @@ msgstr "智能代理当前正在同步到您的位置..."
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy is synchronized"
 msgstr "智能代理已同步"
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Smart proxy sync failed"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Smart proxy sync finished with warning"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Solution"
@@ -3417,11 +3318,6 @@ msgstr "起始于"
 msgid "Starting"
 msgstr "开始"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Starts"
-msgstr "开始"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "State"
 msgstr "状态"
@@ -3437,41 +3333,13 @@ msgstr "状态"
 msgid "Stream"
 msgstr "流"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Subscription Details"
-msgstr "订阅详情"
-
-#: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
-msgid "Subscription Management"
-msgstr "订阅管理"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
-msgid "Subscription Status"
-msgstr "订阅状态"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
-msgid "Subscriptions"
-msgstr "订阅"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Subscriptions for Activation Key:"
-msgstr "激活码订阅："
-
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "Success!"
 msgstr "成功！"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-add-subscriptions.controller.js
-msgid "Successfully added %s subscriptions."
-msgstr "已成功新增 %s 个订阅。"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Successfully removed %s items."
 msgstr "成功删除 %s 个项。"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "Successfully removed %s subscriptions."
-msgstr "成功删除 %s 个订阅。"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Successfully removed 1 item."
@@ -3485,11 +3353,6 @@ msgstr "成功上传的内容："
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Summary"
 msgstr "摘要"
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Support Level"
-msgstr "支持级别"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync.html
@@ -3620,10 +3483,6 @@ msgstr "任务详情"
 #: app/assets/javascripts/bastion_katello/products/details/product-repositories.controller.js
 msgid "Tasks"
 msgstr "任务"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Temporary"
-msgstr "临时"
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 msgid ""
@@ -3798,12 +3657,6 @@ msgid ""
 " finish before applying existing updates."
 msgstr "当前正在执行一个增量更新任务。在应用现有更新之前，此更新必须完成。"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid ""
-"This action will affect only those Content Hosts that require a change.\n"
-"        If the Content Host does not have the selected Subscription no action will take place."
-msgstr "此操作将仅影响那些需要更改的内容主机。如果内容主机没有所选的订阅，则不会执行任何操作。"
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
 msgid "This activation key is not associated with any content hosts."
 msgstr "此激活码没有与任何内容主机关联。"
@@ -3855,13 +3708,11 @@ msgid ""
 " views"
 msgstr "打开 Setting > Content > Allow 在发布的内容视图中删除仓库"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
 #: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
 #: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-errata.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -4117,10 +3968,6 @@ msgstr "查看仓库的容器镜像清单列表："
 msgid "View Docker Tags for Repository:"
 msgstr "查看仓库的 Docker 标签："
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Virtual"
-msgstr "虚拟"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details-reclaim-space-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories-reclaim-space-modal.html
 msgid ""
@@ -4142,19 +3989,6 @@ msgid ""
 msgstr ""
 "每周 {{ product.sync_plan.sync_date | date:'EEEE' }}在 {{ "
 "product.sync_plan.sync_date | date:'mediumTime' }}（服务器时间）"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid ""
-"When Auto Attach is disabled, registering systems will be attached to all "
-"associated subscriptions."
-msgstr "禁用“自动附加”后，注册系统将附加到所有关联的订阅中。"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid ""
-"When Auto Attach is enabled, registering systems will be attached to all "
-"associated custom products and only associated Red Hat subscriptions "
-"required to satisfy the system's installed products."
-msgstr "启用自动附加后，注册系统将附加到所有相关自定义产品中，且只有相关的红帽订阅以满足系统安装的产品。"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -4191,7 +4025,6 @@ msgstr "工作"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "Yes"
 msgstr "是"
 
@@ -4297,18 +4130,6 @@ msgid ""
 "Credential."
 msgstr "您目前没有与此内容证书关联的任何产品。"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid ""
-"You currently don't have any Products to subscribe to, you can add Products "
-"after selecting 'Products' under 'Content' in the main menu"
-msgstr "您目前没有要订阅的产品，可以在主菜单中的“内容”下选择“产品”后添加产品"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid ""
-"You currently don't have any Products to subscribe to. You can add Products "
-"after selecting 'Products' under 'Content' in the main menu."
-msgstr "您目前没有要订阅的任何产品。您可以在主菜单中的“内容”下选择“产品”后添加产品。"
-
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid ""
 "You currently don't have any Products<span bst-feature-"
@@ -4328,12 +4149,6 @@ msgid ""
 "You currently don't have any Repositories included in this Product, you can "
 "add Repositories using the button on the right."
 msgstr "您目前没有此产品中包含的任何仓库，您可以使用右侧的按钮添加仓库。"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-msgid ""
-"You currently don't have any Subscriptions associated with this Activation "
-"Key, you can add Subscriptions after selecting the 'Add' tab."
-msgstr "您目前没有与此激活码关联的任何订阅，可以在选择“添加”标签后添加订阅。"
 
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
 msgid ""
@@ -4418,7 +4233,6 @@ msgstr "您的搜索返回了零个模块流。"
 msgid "Your search returned zero Packages."
 msgstr "您的搜索返回了零个软件包。"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid "Your search returned zero Products."
 msgstr "您的搜索返回了零个产品。"
@@ -4442,11 +4256,6 @@ msgstr "您的搜索返回了零个仓库集。"
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Your search returned zero results."
 msgstr "您的搜索返回了零个结果。"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Your search returned zero Subscriptions."
-msgstr "您的搜索返回了零个订阅。"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html

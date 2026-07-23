@@ -15,14 +15,6 @@ msgstr ""
 msgid "-- select an interval --"
 msgstr "-- აირჩიეთ ინერვალი --"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/subscription-start-date.directive.js
-msgid "(future)"
-msgstr "(მომავალი)"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid "{{ 'Add Selected' | translate }}"
-msgstr "{{ 'მონიშნულის დამატება' | translate }}"
-
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 msgid "{{ contentCredential.name }}"
 msgstr "{{ contentCredential.name }}"
@@ -184,7 +176,6 @@ msgid ""
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/activationKeyConsumed.filter.js
-#: app/assets/javascripts/bastion_katello/subscriptions/subscriptionConsumed.filter.js
 msgid "%(consumed)s out of %(quantity)s"
 msgstr "%(consumed)s %(quantity)s-დან"
 
@@ -338,11 +329,6 @@ msgid ""
 "href=\"/foreman_tasks/tasks/{{ task.id }}\">click for more details</a>"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Account"
-msgstr "ანგარიში"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "Action Type"
 msgstr "ქმედების ტიპი"
@@ -378,7 +364,6 @@ msgid "Active Tasks"
 msgstr "აქტიური ამოცანები"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Add"
@@ -404,21 +389,11 @@ msgstr "ახალი გარემოს დამატება"
 msgid "Add Products"
 msgstr "დაამატეთ პროდუქტები"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Add Selected"
 msgstr "მონიშნულის დამატება"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-add-subscriptions.controller.js
-msgid "Add Subscriptions"
-msgstr "გამოწერების დამატება"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid "Add Subscriptions for Activation Key:"
-msgstr "გამოწერების დამატება აქტივაციის გასაღებისთვის:"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 msgid "Add To"
@@ -507,10 +482,6 @@ msgstr "შეცდომა გარემოს წაშლისას:"
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-details.controller.js
 msgid "An error occurred removing the Host Collection:"
 msgstr "შეცდომა ჰოსტის კოლექციის წაშლისას:"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "An error occurred removing the subscriptions."
-msgstr "შეცდომა გამოწერის წაშლისას."
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "An error occurred saving the Activation Key:"
@@ -868,11 +839,6 @@ msgstr "ასოცირებები"
 msgid "At least one Errata needs to be selected to Apply."
 msgstr "გადასატარებლად სულ ცოტა ერთი მორჩენილი პაჩია საჭირო."
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Attached"
-msgstr "მიმაგრებული"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Auth Token"
@@ -886,26 +852,6 @@ msgstr "ავთენტიკაციის URL"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 msgid "Author"
 msgstr "ავტორი"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-Attach"
-msgstr "ავტომატური მიბმა"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-attach available subscriptions to all selected hosts."
-msgstr "ხელმისაწვდომი გამოწერების ავტომიმაგრება ყველა მონიშნული ჰოსტისთვის."
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-attach uses all available subscriptions, not a selected subset."
-msgstr ""
-"ავტომიმაგრება იყენებს ყველა ხელმისაწვდომ გამოწერას და არა, მხოლოდ, "
-"მონიშნულებს."
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Automatic"
-msgstr "ავტომატური"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 msgid "Available Module Streams"
@@ -1193,10 +1139,6 @@ msgstr "შემცველობის ავტორიზაცის დ�
 msgid "Content Host Bulk Content"
 msgstr "შემცველობის ჰოსტი მრავალი შემცველობა"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Content Host Bulk Subscriptions"
-msgstr "შემცველობის ჰოსტის მრავალი გამოწერა"
-
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
@@ -1303,11 +1245,6 @@ msgstr "შემცველობის ხედები, რომელე
 msgid "Context"
 msgstr "კონტექსტი"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Contract"
-msgstr "კონტრაქტი"
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
 msgid "Copy Activation Key"
 msgstr "აქტივაციის გასაღების კოპირება"
@@ -1390,10 +1327,6 @@ msgstr "კრიტიკული"
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 msgid "Cron Logic"
 msgstr "Cron-ის ლოგიკა"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-msgid "Current Subscriptions for Activation Key:"
-msgstr "შემცველობის გამოწერები აქტივაციის გასაღებისთვის:"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 msgid "Custom"
@@ -1629,7 +1562,6 @@ msgstr "Docker-ის ჭდეები"
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 msgid "Done"
 msgstr "დასრულებულია"
@@ -1761,11 +1693,6 @@ msgstr "ჭდეების გამორიცხვა"
 msgid "Existing Product"
 msgstr "არსებული პროდუქტი"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Expires"
-msgstr "იწურება"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Family"
 msgstr "ოჯახი"
@@ -1873,10 +1800,6 @@ msgid ""
 "Group package actions are being deprecated, and will be removed in a future "
 "version."
 msgstr ""
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Guests of"
-msgstr "სტუმარი"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "Homepage"
@@ -2165,12 +2088,7 @@ msgstr "ჰოსტების სია"
 msgid "List Products"
 msgstr "პროდუქტების სია"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "List Subscriptions"
-msgstr "გამოწერების სია"
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "List/Remove"
@@ -2434,7 +2352,6 @@ msgstr "შემდეგი სინქი"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "No"
 msgstr "არა"
 
@@ -2522,10 +2439,6 @@ msgstr "ამ რესურსისთვის ამოცანები 
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid "None"
 msgstr "არაფერი"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Not Applicable"
-msgstr "არ განეკუთვნება"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "Not started"
@@ -2719,10 +2632,6 @@ msgid ""
 "configured for Remote Execution."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Physical"
-msgstr "ფიზიკური"
-
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
 msgid "Please enter cron below"
 msgstr "ქვემოთ შეიყვანეთ Cron-ის სტრიქონი"
@@ -2843,14 +2752,6 @@ msgstr "რეპოზიტორიის ინფორმაცია გ�
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Publishing Settings"
 msgstr "გამოცემის მორგება"
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-msgid "Quantity"
-msgstr "რაოდენობა"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Quantity (To Add)"
-msgstr "რაოდენობა (დასამატებელი)"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Reboot Suggested?"
@@ -3023,8 +2924,6 @@ msgstr[0] "წავშალო {{ table.numSelected }} რეპოზიტ�
 msgstr[1] "წავშალო {{ table.numSelected }} რეპოზიტორია?"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Remove Selected"
@@ -3363,14 +3262,6 @@ msgstr "სერვისის დონე (SLA):"
 msgid "Severity"
 msgstr "სიმძიმე"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
-msgid "Show All"
-msgstr "ყველას ჩვენება"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
-msgid "Show all Repository Sets in Organization"
-msgstr "ორგანიზაციაში რეპოზიტორიის ყველა სეტის ჩვენება"
-
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Size"
 msgstr "ზომა"
@@ -3393,6 +3284,14 @@ msgstr "ჭკვიანი პროქსი ამჟამად თქვ
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy is synchronized"
 msgstr "ჭკვიანი პროქსი სინქრონიზებულია"
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Smart proxy sync failed"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Smart proxy sync finished with warning"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Solution"
@@ -3469,11 +3368,6 @@ msgstr "დაწყების დრო"
 msgid "Starting"
 msgstr "გაშვება"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Starts"
-msgstr "საწყისი"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "State"
 msgstr "State"
@@ -3489,41 +3383,13 @@ msgstr "სტატუსი"
 msgid "Stream"
 msgstr "ნაკადი"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Subscription Details"
-msgstr "გამოწერის დეტალები"
-
-#: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
-msgid "Subscription Management"
-msgstr "გამოწერის მართვა"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
-msgid "Subscription Status"
-msgstr "გამოწერის სტატუსი"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
-msgid "Subscriptions"
-msgstr "გამოწერები"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Subscriptions for Activation Key:"
-msgstr "გამოწერები აქტივაციის გასაღებისთვის:"
-
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "Success!"
 msgstr "წარმატება!"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-add-subscriptions.controller.js
-msgid "Successfully added %s subscriptions."
-msgstr "%s გამოწერა წარმატებით ჩაემატა."
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Successfully removed %s items."
 msgstr "%s ელემენტი წარმატებით წაიშალა."
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "Successfully removed %s subscriptions."
-msgstr "%s გამოწერა წარმატებით წაიშალა."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Successfully removed 1 item."
@@ -3537,11 +3403,6 @@ msgstr "წარმატებით ატვირთული შემც�
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Summary"
 msgstr "შეჯამება"
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Support Level"
-msgstr "მხარდაჭერის დონე"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync.html
@@ -3672,10 +3533,6 @@ msgstr "ამოცანის დეტალები"
 #: app/assets/javascripts/bastion_katello/products/details/product-repositories.controller.js
 msgid "Tasks"
 msgstr "Tasks"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Temporary"
-msgstr "დროებითი"
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 msgid ""
@@ -3828,12 +3685,6 @@ msgid ""
 " finish before applying existing updates."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid ""
-"This action will affect only those Content Hosts that require a change.\n"
-"        If the Content Host does not have the selected Subscription no action will take place."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
 msgid "This activation key is not associated with any content hosts."
 msgstr ""
@@ -3883,13 +3734,11 @@ msgid ""
 " views"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
 #: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
 #: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-errata.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -4141,10 +3990,6 @@ msgstr "კონტეინერის დისკის ასლის მ
 msgid "View Docker Tags for Repository:"
 msgstr "Docker-ის ჭდეების ნახვა რეპოზიტორიისთვის:"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Virtual"
-msgstr "ვირტუალური"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details-reclaim-space-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories-reclaim-space-modal.html
 msgid ""
@@ -4162,19 +4007,6 @@ msgstr "კვირაში ერთხელ"
 msgid ""
 "Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ "
 "product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid ""
-"When Auto Attach is disabled, registering systems will be attached to all "
-"associated subscriptions."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid ""
-"When Auto Attach is enabled, registering systems will be attached to all "
-"associated custom products and only associated Red Hat subscriptions "
-"required to satisfy the system's installed products."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -4206,7 +4038,6 @@ msgstr "მუშაობს"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "Yes"
 msgstr "დიახ"
 
@@ -4317,18 +4148,6 @@ msgid ""
 "Credential."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid ""
-"You currently don't have any Products to subscribe to, you can add Products "
-"after selecting 'Products' under 'Content' in the main menu"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid ""
-"You currently don't have any Products to subscribe to. You can add Products "
-"after selecting 'Products' under 'Content' in the main menu."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid ""
 "You currently don't have any Products<span bst-feature-"
@@ -4346,12 +4165,6 @@ msgstr ""
 msgid ""
 "You currently don't have any Repositories included in this Product, you can "
 "add Repositories using the button on the right."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-msgid ""
-"You currently don't have any Subscriptions associated with this Activation "
-"Key, you can add Subscriptions after selecting the 'Add' tab."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
@@ -4440,7 +4253,6 @@ msgstr "თქვენმა ძებნამ 0 მოდულის ნა�
 msgid "Your search returned zero Packages."
 msgstr "თქვენმა ძებნამ 0 პაკეტი დააბრუნა."
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid "Your search returned zero Products."
 msgstr "თქვენმა ძებნამ 0 პროდუქტი დააბრუნა."
@@ -4464,11 +4276,6 @@ msgstr "თქვენმა ძებნამ 0 რეპოზიტორ�
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Your search returned zero results."
 msgstr "თქვენმა ძებნამ 0 შედეგი დააბრუნა."
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Your search returned zero Subscriptions."
-msgstr "თქვენმა ძებნამ 0 გამოწერა დააბრუნა."
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
