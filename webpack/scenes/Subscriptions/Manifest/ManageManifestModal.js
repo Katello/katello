@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import { Grid, Col, Row, Tabs, Tab, FormControl, ControlLabel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Alert, Modal, ModalVariant, Spinner, Button } from '@patternfly/react-core';
+import { Table, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { propsToCamelCase, getDocsURL } from 'foremanReact/common/helpers';
 import Slot from 'foremanReact/components/common/Slot';
+import EmptyState from 'foremanReact/components/common/EmptyState';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
 import { LoadingState } from '../../../components/LoadingState';
-import { Table } from '../../../components/pf3Table';
-
-
-import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
 import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../ContentCredentials/ContentCredentialConstants';
@@ -67,6 +65,51 @@ class ManageManifestModal extends Component {
     return __('This is disabled because no manifest exists');
   };
 
+  renderManifestHistoryContent = () => {
+    const { manifestHistory } = this.props;
+
+    if (manifestHistory.results.length === 0) {
+      return (
+        <EmptyState
+          header={__('There is no manifest history to display.')}
+          description={__('Import a manifest using the Manifest tab above.')}
+          documentation={{
+            label: __('Learn more about adding subscription manifests in '),
+            buttonLabel: __('the documentation.'),
+            url: getDocsURL('Managing_Content', 'Managing_Red_Hat_Subscriptions_content-management'),
+          }}
+        />
+      );
+    }
+
+    return (
+      <Table
+        ouiaId="manifest-history-table"
+        aria-label={__('Manifest history table')}
+      >
+        <Thead>
+          <Tr ouiaId="manifest-history-header-row">
+            <Th>{__('Status')}</Th>
+            <Th>{__('Message')}</Th>
+            <Th>{__('Timestamp')}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {manifestHistory.results.map(record => (
+            <Tr
+              key={`${record.created}-${record.statusMessage}`}
+              ouiaId={`manifest-history-row-${record.created}`}
+            >
+              <Td>{record.status}</Td>
+              <Td>{record.statusMessage}</Td>
+              <Td>{record.created}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    );
+  };
+
   render() {
     const {
       manifestHistory,
@@ -93,16 +136,6 @@ class ManageManifestModal extends Component {
     const showCdnConfigurationTab = canEditOrganizations;
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
     const showManifestTab = (canEditOrganizations || showSubscriptionManifest);
-
-    const emptyStateData = () => ({
-      header: __('There is no manifest history to display.'),
-      description: __('Import a manifest using the Manifest tab above.'),
-      documentation: {
-        label: __('Learn more about adding subscription manifests in '),
-        buttonLabel: __('the documentation.'),
-        url: getDocsURL('Managing_Content', 'Managing_Red_Hat_Subscriptions_content-management'),
-      },
-    });
 
     const getManifestName = () => {
       let name = __('No manifest imported');
@@ -302,11 +335,7 @@ class ManageManifestModal extends Component {
             title={__('Manifest History')}
           >
             <LoadingState loading={manifestHistory.loading} loadingText={__('Loading')}>
-              <Table
-                rows={manifestHistory.results}
-                columns={columns}
-                emptyState={emptyStateData()}
-              />
+              {this.renderManifestHistoryContent()}
             </LoadingState>
           </Tab>
           {showCdnConfigurationTab &&
