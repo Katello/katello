@@ -40,7 +40,7 @@ module Katello
       host = ::Host::Managed.find_by(id: host_id)
       return nil unless host
 
-      errata_string_ids = extract_errata_ids_from_task(task)
+      errata_string_ids = extract_errata_ids_from_task(task, host: host)
       return nil if errata_string_ids.blank?
 
       # Reload task to get the latest result status
@@ -91,7 +91,8 @@ module Katello
 
     # Extract errata IDs from task
     # @param task [ForemanTasks::Task] The task to extract from
-    def self.extract_errata_ids_from_task(task)
+    # @param host [Host::Managed] The host (used for package update errata resolution)
+    def self.extract_errata_ids_from_task(task, host: nil)
       if dynflow_initialized?
         begin
           input = task.input
@@ -104,6 +105,10 @@ module Katello
             # Check job_features to decide extraction method
             if input['job_features']&.include?('katello_errata_install_by_search')
               return extract_from_script(task)
+            end
+
+            if package_update_job?(input['job_features'])
+              return extract_errata_for_package_update(task, host)
             end
           end
         rescue StandardError
@@ -135,17 +140,7 @@ module Katello
     end
 
     def self.extract_from_template_input(task)
-      # Search-based template (katello_errata_install_by_search) stores search query in template input,
-      # not errata IDs. Only list-based template (katello_errata_install) stores comma-separated IDs.
-      # This method should only be called for list-based templates when Dynflow is not available.
-
-      value = ::TemplateInvocationInputValue
-        .joins(:template_input)
-        .where(template_invocation_id: task.template_invocation.id)
-        .where("template_inputs.name = ?", 'errata')
-        .first&.value
-
-      parse_comma_separated_errata_ids(value)
+      parse_comma_separated_errata_ids(template_input_value(task, 'errata'))
     end
 
     def self.parse_comma_separated_errata_ids(value)
@@ -153,6 +148,59 @@ module Katello
       value.split(',').map(&:strip).reject(&:blank?)
     end
     private_class_method :parse_comma_separated_errata_ids
+
+    PACKAGE_UPDATE_FEATURES = %w[
+      katello_package_update
+      katello_packages_update_by_search
+      katello_package_update_by_search
+    ].freeze
+
+    def self.package_update_job?(features)
+      return false unless features
+      (features & PACKAGE_UPDATE_FEATURES).any?
+    end
+    private_class_method :package_update_job?
+
+    def self.extract_errata_for_package_update(task, host)
+      return [] unless host&.content_facet
+
+      package_names = extract_package_names_from_task(task, host)
+      errata_scope = ::Katello::Erratum.installable_for_hosts([host])
+
+      if package_names.present?
+        errata_scope.joins(:packages)
+          .where(katello_erratum_packages: { name: package_names })
+          .distinct.pluck(:errata_id)
+      else
+        errata_scope.pluck(:errata_id)
+      end
+    end
+    private_class_method :extract_errata_for_package_update
+
+    def self.extract_package_names_from_task(task, host)
+      return [] unless task.template_invocation
+
+      value = template_input_value(task, 'package')
+      if value.present?
+        return value.split(/[\s,]+/).map(&:strip).reject(&:blank?)
+      end
+
+      search = template_input_value(task, 'Packages search query')
+      return [] if search.blank?
+      return [] unless host
+
+      host.installed_packages.search_for(search).distinct.pluck(:name)
+    end
+    private_class_method :extract_package_names_from_task
+
+    def self.template_input_value(task, input_name)
+      ::TemplateInvocationInputValue
+        .joins(:template_input)
+        .where(template_invocation_id: task.template_invocation.id)
+        .where("template_inputs.name = ?", input_name)
+        .first&.value
+    end
+    private_class_method :template_input_value
 
     # Determine application status from task and action
     def self.determine_status(task, action)
