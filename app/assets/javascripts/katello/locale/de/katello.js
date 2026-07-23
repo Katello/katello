@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
+        "Last-Translator": "pdolinic, 2026",
         "Language-Team": "German (https://app.transifex.com/foreman/teams/114/de/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -150,113 +150,14 @@
       "%s is unreachable. %s": [
         "%s ist unerreichbar. %s"
       ],
+      "%s repository type icon": [
+        ""
+      ],
       "%s was not found!": [
         "%s konnte nicht gefunden werden!"
       ],
-      "%{errata} (%{total} other errata)": [
-        "%{errata} (%{total} weitere Errata)"
-      ],
-      "%{errata} (%{total} other errata) install canceled": [
-        "%{errata} (%{total} weitere Errata) Installation abgebrochen"
-      ],
-      "%{errata} (%{total} other errata) install failed": [
-        "%{errata} (%{total} weitere Errata) Installation fehlgeschlagen"
-      ],
-      "%{errata} (%{total} other errata) install timed out": [
-        "Zeitüberschreitung bei Installation von %{errata} (%{total} weitere Errata)"
-      ],
-      "%{errata} (%{total} other errata) installed": [
-        "%{errata} (%{total} weitere Errata) installiert"
-      ],
-      "%{errata} erratum install canceled": [
-        "%{errata} Erratum-Installation abgebrochen"
-      ],
-      "%{errata} erratum install failed": [
-        "%{errata} Erratum-Installation fehlgeschlagen"
-      ],
-      "%{errata} erratum install timed out": [
-        "Zeitüberschreitung bei Installation von %{errata} Erratum"
-      ],
-      "%{errata} erratum installed": [
-        "%{errata} Erratum installiert"
-      ],
       "%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.": [
         "%{expiring_subs} Abonnements in %{subject} laufen in weniger als %{days} Tagen ab. Bitte erneuern Sie sie, bevor sie ablaufen, um sicherzustellen, dass Ihre Hosts weiterhin Inhalte erhalten."
-      ],
-      "%{group} (%{total} other package groups)": [
-        "%{group} (%{total} weitere Paketgruppen)"
-      ],
-      "%{group} (%{total} other package groups) install canceled": [
-        "%{group} (%{total} weitere Paketgruppen) Installation abgebrochen"
-      ],
-      "%{group} (%{total} other package groups) install failed": [
-        "%{group} (%{total} weitere Paketgruppen) Installation fehlgeschlagen"
-      ],
-      "%{group} (%{total} other package groups) install timed out": [
-        "Zeitüberschreitung bei Installation von %{group} (%{total} weitere Paketgruppen)"
-      ],
-      "%{group} (%{total} other package groups) installed": [
-        "%{group} (%{total} weitere Paketgruppen) installiert"
-      ],
-      "%{group} (%{total} other package groups) remove canceled": [
-        "%{group} (%{total} weitere Paketgruppen) Entfernen abgebrochen"
-      ],
-      "%{group} (%{total} other package groups) remove failed": [
-        "%{group} (%{total} weitere Paketgruppen) Entfernen fehlgeschlagen"
-      ],
-      "%{group} (%{total} other package groups) remove timed out": [
-        "Zeitüberschreitung bei Entfernung von %{group} (%{total} weitere Paketgruppen)"
-      ],
-      "%{group} (%{total} other package groups) removed": [
-        "%{group} (%{total} weitere Paketgruppen) entfernt"
-      ],
-      "%{group} (%{total} other package groups) update canceled": [
-        "%{group} (%{total} weitere Paketgruppen) Aktualisierung abgebrochen"
-      ],
-      "%{group} (%{total} other package groups) update failed": [
-        "%{group} (%{total} weitere Paketgruppen) Aktualisierung fehlgeschlagen"
-      ],
-      "%{group} (%{total} other package groups) update timed out": [
-        "Zeitüberschreitung bei Aktualisierung von %{group} (%{total} weitere Paketgruppen)"
-      ],
-      "%{group} (%{total} other package groups) updated": [
-        "%{group} (%{total} weitere Paketgruppen) aktualisiert"
-      ],
-      "%{group} package group install canceled": [
-        "%{group} Paketgruppeninstallation abgebrochen"
-      ],
-      "%{group} package group install failed": [
-        "%{group} Paketgruppeninstallation fehlgeschlagen"
-      ],
-      "%{group} package group install timed out": [
-        "Zeitüberschreitung bei Installation von %{group} Paketgruppe"
-      ],
-      "%{group} package group installed": [
-        "%{group} Paketgruppe installiert"
-      ],
-      "%{group} package group remove canceled": [
-        "%{group} Paketgruppenentfernung abgebrochen"
-      ],
-      "%{group} package group remove failed": [
-        "%{group} Paketgruppenentfernung fehlgeschlagen"
-      ],
-      "%{group} package group remove timed out": [
-        "Zeitüberschreitung bei Entfernung von %{group} Paketgruppe"
-      ],
-      "%{group} package group removed": [
-        "%{group} Paketgruppe entfernt"
-      ],
-      "%{group} package group update canceled": [
-        "%{group} Paketgruppenaktualisierung abgebrochen"
-      ],
-      "%{group} package group update failed": [
-        "%{group} Paketgruppenaktualisierung fehlgeschlagen"
-      ],
-      "%{group} package group update timed out": [
-        "Zeitüberschreitung bei Aktualisierung von %{group} Paketgruppe"
-      ],
-      "%{group} package group updated": [
-        "%{group} Paketgruppe aktualisiert"
       ],
       "%{label} failed": [
         ""
@@ -266,75 +167,6 @@
       ],
       "%{name} has no %{type} repositories with upstream URLs to add to the alternate content source.": [
         ""
-      ],
-      "%{package} (%{total} other packages)": [
-        "%{package} (%{total} weitere Pakete)"
-      ],
-      "%{package} (%{total} other packages) install canceled": [
-        "%{package} (%{total} weitere Pakete) Installation abgebrochen"
-      ],
-      "%{package} (%{total} other packages) install failed": [
-        "%{package} (%{total} weitere Pakete) Installation fehlgeschlagen"
-      ],
-      "%{package} (%{total} other packages) install timed out": [
-        "Zeitüberschreitung bei Installation von %{package} (%{total} weitere Pakete) Installation"
-      ],
-      "%{package} (%{total} other packages) installed": [
-        "%{package} (%{total} weitere Pakete) installiert"
-      ],
-      "%{package} (%{total} other packages) remove canceled": [
-        "%{package} (%{total} weitere Pakete) Entfernen abgebrochen"
-      ],
-      "%{package} (%{total} other packages) remove failed": [
-        "%{package} (%{total} weitere Pakete) Entfernen fehlgeschlagen"
-      ],
-      "%{package} (%{total} other packages) remove timed out": [
-        "Zeitüberschreitung bei Entfernung von %{package} (%{total} weitere Pakete)"
-      ],
-      "%{package} (%{total} other packages) removed": [
-        "%{package} (%{total} weitere Pakete) entfernt"
-      ],
-      "%{package} (%{total} other packages) update canceled": [
-        "%{package} (%{total} weitere Pakete) Aktualisierung abgebrochen"
-      ],
-      "%{package} (%{total} other packages) update failed": [
-        "%{package} (%{total} weitere Pakete) Aktualisierung fehlgeschlagen"
-      ],
-      "%{package} (%{total} other packages) update timed out": [
-        "Zeitüberschreitung bei Aktualisierung von %{package} (%{total} weitere Pakete)"
-      ],
-      "%{package} (%{total} other packages) updated": [
-        "%{package} (%{total} weitere Pakete) aktualisiert"
-      ],
-      "%{package} package install canceled": [
-        "%{package} Paketinstallation abgebrochen"
-      ],
-      "%{package} package install timed out": [
-        "Zeitüberschreitung bei Installation von %{package} Paket"
-      ],
-      "%{package} package remove canceled": [
-        "%{package} Paketentfernung abgebrochen"
-      ],
-      "%{package} package remove failed": [
-        "%{package} Paketentfernung fehlgeschlagen"
-      ],
-      "%{package} package remove timed out": [
-        "Zeitüberschreitung bei Entfernung von %{package} Paket"
-      ],
-      "%{package} package removed": [
-        "%{package} Paket entfernt"
-      ],
-      "%{package} package update canceled": [
-        "%{package} Paketaktualisierung abgebrochen"
-      ],
-      "%{package} package update failed": [
-        "%{package} Paketaktualisierung fehlgeschlagen"
-      ],
-      "%{package} package update timed out": [
-        "Zeitüberschreitung bei Aktualisierung von %{package} Paket"
-      ],
-      "%{package} package updated": [
-        "%{package} Paket aktualisiert"
       ],
       "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
         ""
@@ -484,7 +316,7 @@
         "Über die Seite"
       ],
       "Abstract async task": [
-        ""
+        "Übersicht asynchrone Aufgabe"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -903,7 +735,7 @@
       "Architectures": [
         ""
       ],
-      "Are you sure you want to delete %(entitlementCount)s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
+      "Are you sure you want to delete %s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
         ""
       ],
       "Are you sure you want to delete the manifest?": [
@@ -933,13 +765,13 @@
       "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Array of content view environment ids to be associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids to be associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
       "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
@@ -1070,6 +902,9 @@
         ""
       ],
       "Available image digest": [
+        ""
+      ],
+      "Available repository sets": [
         ""
       ],
       "Available schema versions": [
@@ -1255,14 +1090,14 @@
       "Candlepin": [
         ""
       ],
-      "Candlepin Event": [
-        "Candlepin-Ereignis"
-      ],
       "Candlepin ID of pool to add": [
         "Candlepin-ID des hinzuzufügenden Pools"
       ],
       "Candlepin consumer %s has already been removed": [
         "Candlepin-Verbraucher %s wurde bereits entfernt"
+      ],
+      "Candlepin consumer registration response is missing a uuid": [
+        ""
       ],
       "Candlepin is not running properly": [
         "Candlepin läuft nicht richtig"
@@ -1312,7 +1147,7 @@
       "Cannot add rolling content view to composite content view": [
         ""
       ],
-      "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.": [
+      "Cannot assign content view environment %{env}/%{cv}: The content view has either not been published or has not been promoted to that lifecycle environment.": [
         ""
       ],
       "Cannot associate a Red Hat provider with a custom product": [
@@ -1320,6 +1155,9 @@
       ],
       "Cannot associate a component to a non composite content view": [
         "Eine Komponente kann nicht mit einer nicht zusammengesetzten Inhaltsansicht verknüpft werden"
+      ],
+      "Cannot be disabled": [
+        ""
       ],
       "Cannot be disabled because it is part of a content view": [
         ""
@@ -1390,6 +1228,9 @@
       "Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}": [
         ""
       ],
+      "Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})": [
+        ""
+      ],
       "Cannot promote environment out of sequence. Use force to bypass restriction.": [
         "Umgebung kann nicht in anderer Reihenfolge übertragen werden. Erzwingen Sie die Übertragung, um diese Einschränkung zu umgehen"
       ],
@@ -1454,7 +1295,7 @@
         "Kapazität"
       ],
       "Certificate": [
-        ""
+        "Zertifikat"
       ],
       "Change Content Source": [
         ""
@@ -1528,6 +1369,9 @@
       "Clear search": [
         ""
       ],
+      "Clear_Errata_Applications": [
+        ""
+      ],
       "Click here to go to the tasks page for the task.": [
         "Klicken Sie hier, um zur Aufgabenseite für die Aufgabe zu gelangen."
       ],
@@ -1552,13 +1396,13 @@
       "Collapse all": [
         ""
       ],
-      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
       "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
@@ -1774,6 +1618,15 @@
       "Content credential": [
         ""
       ],
+      "Content credential %s created": [
+        ""
+      ],
+      "Content credential %s will be deleted.": [
+        ""
+      ],
+      "Content credential deleted": [
+        ""
+      ],
       "Content credential file uploaded successfully.": [
         ""
       ],
@@ -1864,12 +1717,6 @@
       "Content view and environment not set for registration.": [
         ""
       ],
-      "Content view and lifecycle environment must be provided together": [
-        ""
-      ],
-      "Content view and lifecycle environment must both be set, or both be empty": [
-        ""
-      ],
       "Content view does not need a publish since there are no audited changes since the last publish. Pass check_needs_publish parameter as false if you don't want to check if content view needs a publish.": [
         ""
       ],
@@ -1896,9 +1743,6 @@
       ],
       "Content view label": [
         "Kennung der Inhaltsansicht"
-      ],
-      "Content view must be specified": [
-        ""
       ],
       "Content view name": [
         ""
@@ -1991,7 +1835,7 @@
         ""
       ],
       "Copy version units to library": [
-        ""
+        "Versionseinheiten in Bibliothek kopieren"
       ],
       "Cores per socket": [
         "Kerne pro Socket"
@@ -2065,6 +1909,9 @@
       "Couldn't find Organization '%s'.": [
         "Organisation \\\"%s\\\" konnte nicht gefunden werden."
       ],
+      "Couldn't find Organization with id '%s'.": [
+        ""
+      ],
       "Couldn't find activation key '%s'": [
         "Aktivierungsschlüssel \\\"%s\\\" konnte nicht gefunden werden"
       ],
@@ -2082,9 +1929,6 @@
       ],
       "Couldn't find content host environment '%s'": [
         "Inhaltshostumgebung \\\"%s\\\" konnte nicht gefunden werden."
-      ],
-      "Couldn't find content view environment with content view ID '%{cv}' and environment ID '%{env}'": [
-        ""
       ],
       "Couldn't find content view version '%s'": [
         "Inhaltsansichtsversion \\\"%s\\\" konnte nicht gefunden werden."
@@ -2205,6 +2049,9 @@
       ],
       "Create an upload request": [
         "Upload-Anforderung erstellen"
+      ],
+      "Create content credential": [
+        ""
       ],
       "Create content credentials with the generated SSL certificate and key.": [
         ""
@@ -2500,6 +2347,9 @@
       "Delete an upload request": [
         "Upload-Anforderung löschen"
       ],
+      "Delete content credential?": [
+        ""
+      ],
       "Delete content view": [
         ""
       ],
@@ -2656,6 +2506,9 @@
       "Details": [
         "Details"
       ],
+      "Details for %s": [
+        ""
+      ],
       "Determining settings for ${truncate(name)}": [
         ""
       ],
@@ -2681,7 +2534,7 @@
         "Deaktiviert"
       ],
       "Discover": [
-        ""
+        "Suchen"
       ],
       "Discover Repositories": [
         "Repositorys suchen"
@@ -2836,6 +2689,9 @@
       "Enabled Repositories": [
         "Aktivierte Repositorys"
       ],
+      "Enabled repositories": [
+        ""
+      ],
       "Enabling Tracer requires installing the katello-host-tools-tracer package on the host.": [
         ""
       ],
@@ -2881,9 +2737,6 @@
       "Environment ID": [
         ""
       ],
-      "Environment ID and content view ID must be provided together": [
-        "Kennung der Umgebung und der Inhaltsansicht müssen gemeinsam angegeben werden"
-      ],
       "Environment IDs": [
         "Umgebungs-IDs"
       ],
@@ -2917,12 +2770,6 @@
       "Errata ID": [
         "Errata-ID"
       ],
-      "Errata Install": [
-        "Errata-Installation"
-      ],
-      "Errata Install scheduled by %s": [
-        "Errata-Installation eingeplant durch %s"
-      ],
       "Errata and package information will be updated at the next host check-in or package action.": [
         ""
       ],
@@ -2933,7 +2780,7 @@
         "Errata-ID des Erratums (RHSA-2012:108)"
       ],
       "Errata mail": [
-        ""
+        "Errata-E-Mail"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2952,18 +2799,6 @@
       ],
       "Erratum": [
         "Erratum"
-      ],
-      "Erratum Install Canceled": [
-        "Erratum-Installation abgebrochen"
-      ],
-      "Erratum Install Complete": [
-        "Erratum-Installation abgeschlossen"
-      ],
-      "Erratum Install Failed": [
-        "Erratum-Installation fehlgeschlagen"
-      ],
-      "Erratum Install Timed Out": [
-        "Zeitüberschreitung bei Erratum-Installation"
       ],
       "Error": [
         "Fehler"
@@ -3082,9 +2917,6 @@
       "Failed to delete %{host}: %{errors}": [
         "Fehler beim Löschen von %{host}: %{errors}"
       ],
-      "Failed to delete content credential. Please try again.": [
-        ""
-      ],
       "Failed to delete latest content view version of Content View '%{subject}'.": [
         ""
       ],
@@ -3118,6 +2950,9 @@
       "Fails if any of the repositories belonging to this version are unexportable. False by default.": [
         "Schlage fehl falls irgendwelche Repositories die zu dieser Version gehören unexportierbar sind. Der Default ist auf False eingestellt."
       ],
+      "False": [
+        ""
+      ],
       "Fetch applicable errata for one or more hosts.": [
         "Rufen Sie anwendbare Errata für einen oder mehrere Hosts ab."
       ],
@@ -3128,7 +2963,7 @@
         "Rufen Sie installierbare Errata für einen oder mehrere Hosts ab."
       ],
       "Fetch pxe files": [
-        ""
+        "pxe-Dateien abrufen"
       ],
       "Fetch traces for one or more hosts": [
         "Abrufen von Traces für einen oder mehrere Hosts"
@@ -3233,10 +3068,10 @@
         "Versionen filtern, die Komponenten in der angegebenen Verbundversion sind"
       ],
       "Filter...": [
-        ""
+        "Filtern …"
       ],
       "Filtered index content": [
-        ""
+        "Indexinhalt gefiltert"
       ],
       "Filters": [
         "Filter"
@@ -3344,10 +3179,13 @@
         ""
       ],
       "GPG Key": [
-        ""
+        "GPG-Schlüssel"
       ],
       "GPG Key URL": [
         "GPG-Schlüssel-URL"
+      ],
+      "General": [
+        ""
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
@@ -3439,9 +3277,6 @@
       ],
       "Has to be > 0": [
         "Muss > 0 . sein"
-      ],
-      "Hash containing the Id of the single lifecycle environment to be associated with the activation key.": [
-        ""
       ],
       "Help": [
         ""
@@ -3555,7 +3390,7 @@
         "Hostgruppen-IDs"
       ],
       "Host groups": [
-        ""
+        "Hostgruppen"
       ],
       "Host has not been registered with subscription-manager": [
         "Wurde nicht im Subskriptionsmanager registriert"
@@ -3618,10 +3453,10 @@
         "Reihenfolge der sortierten Ergebnisse (z. B. ASC für aufsteigend)"
       ],
       "Hypervisors": [
-        ""
+        "Hypervisoren"
       ],
       "Hypervisors update": [
-        ""
+        "Hypervisoren aktualisieren"
       ],
       "ID": [
         "Kennung"
@@ -3758,18 +3593,6 @@
       "Id of the repository to limit verifying checksum on": [
         ""
       ],
-      "Id of the single content view to be associated with the activation key.": [
-        ""
-      ],
-      "Id of the single content view to be associated with the host. Ignored for multi-environment hosts.": [
-        ""
-      ],
-      "Id of the single lifecycle environment to be associated with the activation key.": [
-        ""
-      ],
-      "Id of the single lifecycle environment to be associated with the host. Ignored for multi-environment hosts.": [
-        ""
-      ],
       "Id of the smart proxy": [
         "ID des Smart Proxy"
       ],
@@ -3848,8 +3671,8 @@
       "If true, return custom repository sets along with redhat repos. Will be ignored if repository_type is supplied.": [
         ""
       ],
-      "If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to true": [
-        "Wenn true, werden beim Hinzufügen der angegebenen Errata oder Pakete auch alle benötigten Abhängigkeiten kopiert. Defaults auf wahr"
+      "If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to false": [
+        ""
       ],
       "If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment": [
         "Bei true wird eine neue zusammengesetzte Version mit einer beliebigen angegebenen content_view_version_id veröffentlicht, die in eine Lebenszyklusumgebung hochgestuft wurde"
@@ -4032,7 +3855,7 @@
         "Inkrementelle Aktualisierung unvollständig."
       ],
       "Incremental Update of  Content View Version(s) ": [
-        ""
+        "Inkrementelle Aktualisierung der Inhaltsansichtsversion(en)"
       ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Inkrementelles Update von %{content_view_count} Content View-Version(en)"
@@ -4050,16 +3873,16 @@
         ""
       ],
       "Index content": [
-        ""
+        "Inhalt indizieren"
       ],
       "Index errata": [
-        ""
+        "Errata indizieren"
       ],
       "Index module streams": [
-        ""
+        "Modulströme indexieren"
       ],
       "Index package groups": [
-        ""
+        "Paketgruppen indizieren"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Relevante Typen sind folgende [ %{list} ]"
@@ -4071,9 +3894,6 @@
         ""
       ],
       "Inherit parent (%s)": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4146,17 +3966,8 @@
       "Installed version": [
         "Installierte Version"
       ],
-      "Installing Erratum...": [
-        "Erratum wird installiert …"
-      ],
-      "Installing Package Group...": [
-        "Paketgruppe wird installiert …"
-      ],
-      "Installing Package...": [
-        "Paket wird installiert …"
-      ],
       "Instance update": [
-        ""
+        "Instanz-Update"
       ],
       "Instance-based": [
         "Instanzbasiert"
@@ -4503,12 +4314,6 @@
       "Lifecycle environment '%{env}' cannot be used with content view '%{view}'": [
         ""
       ],
-      "Lifecycle environment ID": [
-        "ID der Lebenszyklusumgebung"
-      ],
-      "Lifecycle environment must be specified": [
-        ""
-      ],
       "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made.": [
         "Die Lebenszyklusumgebung wurde nicht an den Smart Proxy angehängt; daher wurden keine Änderungen vorgenommen."
       ],
@@ -4840,6 +4645,9 @@
         "Inhalte verwalten"
       ],
       "Manage errata": [
+        ""
+      ],
+      "Manage manifest": [
         ""
       ],
       "Manage packages": [
@@ -5196,6 +5004,9 @@
       "No action required": [
         "Keine Aktion erforderlich"
       ],
+      "No activation keys available": [
+        ""
+      ],
       "No alternate content sources match your filter criteria.": [
         ""
       ],
@@ -5424,9 +5235,6 @@
       "No module streams to add yet.": [
         ""
       ],
-      "No new packages installed": [
-        "Keine neuen Pakete installiert"
-      ],
       "No package groups yet": [
         ""
       ],
@@ -5438,12 +5246,6 @@
       ],
       "No packages available to install on this host. Please check the host's assigned content view environments.": [
         ""
-      ],
-      "No packages removed": [
-        "Keine Pakete entfernt"
-      ],
-      "No packages updated": [
-        "Keine Pakete aktualisiert"
       ],
       "No pool IDs were provided.": [
         "Es wurden keine Pool-IDs bereitgestellt."
@@ -5511,6 +5313,9 @@
       "No repository sets to show.": [
         ""
       ],
+      "No results found": [
+        ""
+      ],
       "No rules yet": [
         ""
       ],
@@ -5549,9 +5354,6 @@
       ],
       "Non-security errata installable": [
         "Nicht sicherheitsrelevante Errata installierbar"
-      ],
-      "Non-system event": [
-        "Nicht-Systemereignis"
       ],
       "None": [
         "Keine"
@@ -5620,6 +5422,9 @@
         ""
       ],
       "OSTree refs": [
+        ""
+      ],
+      "Ok": [
         ""
       ],
       "On Demand": [
@@ -5766,86 +5571,8 @@
       "Package Group": [
         "Paketgruppe"
       ],
-      "Package Group Install": [
-        "Paketgruppeninstallation"
-      ],
-      "Package Group Install Canceled": [
-        "Paketgruppeninstallation abgebrochen"
-      ],
-      "Package Group Install Complete": [
-        "Paketgruppeninstallation abgeschlossen"
-      ],
-      "Package Group Install Failed": [
-        "Paketgruppeninstallation fehlgeschlagen"
-      ],
-      "Package Group Install Timed Out": [
-        "Zeitüberschreitung bei Paketgruppeninstallation"
-      ],
-      "Package Group Install scheduled by %s": [
-        "Paketgruppeninstallation eingeplant durch %s"
-      ],
-      "Package Group Remove": [
-        "Paketgruppenentfernung"
-      ],
-      "Package Group Remove Canceled": [
-        "Entfernen von Paketgruppe abgebrochen"
-      ],
-      "Package Group Remove Complete": [
-        "Paketgruppenentfernung abgeschlossen"
-      ],
-      "Package Group Remove Failed": [
-        "Paketgruppenentfernung fehlgeschlagen"
-      ],
-      "Package Group Remove Timed Out": [
-        "Zeitüberschreitung bei Paketgruppenentfernung"
-      ],
-      "Package Group Remove scheduled by %s": [
-        "Paketgruppenentfernung eingeplant durch %s"
-      ],
-      "Package Group Update": [
-        "Paketgruppenaktualisierung"
-      ],
-      "Package Group Update scheduled by %s": [
-        "Paketgruppenaktualisierung eingeplant durch %s"
-      ],
       "Package Groups": [
         "Paketgruppen"
-      ],
-      "Package Install": [
-        "Paketinstallation"
-      ],
-      "Package Install Canceled": [
-        "Paketinstallation abgebrochen"
-      ],
-      "Package Install Complete": [
-        "Paketinstallation abgeschlossen"
-      ],
-      "Package Install Failed": [
-        "Paketinstallation fehlgeschlagen"
-      ],
-      "Package Install Timed Out": [
-        "Zeitüberschreitung bei Paketinstallation"
-      ],
-      "Package Install scheduled by %s": [
-        "Paketinstallation eingeplant durch %s"
-      ],
-      "Package Remove": [
-        "Paketentfernung"
-      ],
-      "Package Remove Canceled": [
-        "Entfernen von Paket abgebrochen"
-      ],
-      "Package Remove Complete": [
-        "Paketentfernung abgeschlossen"
-      ],
-      "Package Remove Failed": [
-        "Paketentfernung fehlgeschlagen"
-      ],
-      "Package Remove Timed Out": [
-        "Zeitüberschreitung bei Paketentfernung"
-      ],
-      "Package Remove scheduled by %s": [
-        "Paketentfernung eingeplant durch %s"
       ],
       "Package Type": [
         ""
@@ -5853,47 +5580,11 @@
       "Package Types": [
         ""
       ],
-      "Package Update": [
-        "Paketaktualisierung"
-      ],
-      "Package Update Canceled": [
-        "Paketaktualisierung abgebrochen"
-      ],
-      "Package Update Complete": [
-        "Paketaktualisierung abgeschlossen"
-      ],
-      "Package Update Failed": [
-        "Paketaktualisierung fehlgeschlagen"
-      ],
-      "Package Update Timed Out": [
-        "Zeitüberschreitung bei Paketaktualisierung"
-      ],
-      "Package Update scheduled by %s": [
-        "Paketaktualisierung eingeplant durch %s"
-      ],
-      "Package group update canceled": [
-        "Paketgruppenaktualisierung abgebrochen"
-      ],
-      "Package group update complete": [
-        "Paketgruppenaktualisierung abgeschlossen"
-      ],
-      "Package group update failed": [
-        "Paketgruppenaktualisierung fehlgeschlagen"
-      ],
-      "Package group update timed out": [
-        "Zeitüberschreitung bei Paketgruppenaktualisierung"
-      ],
       "Package groups": [
         "Paketgruppen"
       ],
       "Package identifiers to filter content by": [
         "Paketkennungen zum Filtern von Inhalten nach"
-      ],
-      "Package install failed: \\\"%{package}\\\"": [
-        "Paketinstallation fehlgeschlagen: \\\"%{package}\\\""
-      ],
-      "Package installation: \\\"%{package}\\\" ": [
-        "Paketinstallation: \\\"%{package}\\\" "
       ],
       "Package mode": [
         ""
@@ -5942,6 +5633,9 @@
       ],
       "Password to access URL": [
         "Passwort für den Zugriff auf die URL"
+      ],
+      "Paste contents of public key or certificate": [
+        ""
       ],
       "Path": [
         "Pfad"
@@ -6027,14 +5721,14 @@
       "Please select a lifecycle environment and a content view to move this activation key.": [
         ""
       ],
-      "Please select a lifecycle environment and content view to view activation keys.": [
-        ""
-      ],
       "Please select an architecture before assigning a kickstart repository": [
         "Bitte wählen Sie eine Architektur aus, bevor Sie ein Kickstart-Repository zuweisen"
       ],
       "Please select an operating system before assigning a kickstart repository": [
         "Bitte wählen Sie ein Betriebssystem aus, bevor Sie ein Kickstart-Repository zuweisen"
+      ],
+      "Please select an organization to view activation keys.": [
+        ""
       ],
       "Please select one from the list below and you will be redirected.": [
         "Bitte wählen Sie aus der Liste unten, Sie werden anschließend weitergeleitet."
@@ -6324,8 +6018,8 @@
       "Quantity": [
         "Anzahl"
       ],
-      "Quantity must not be above ${pool.available}": [
-        "Die Menge darf nicht über ${pool.available} liegen."
+      "Quantity must not be above %s": [
+        ""
       ],
       "Quantity of entitlements to bind": [
         "Anzahl der zu bindenden Berechtigungen"
@@ -6425,6 +6119,9 @@
       ],
       "Recommended Repositories": [
         "Empfohlene Repositorys"
+      ],
+      "Recommended repositories toggle": [
+        ""
       ],
       "Red Hat": [
         ""
@@ -6562,7 +6259,7 @@
         ""
       ],
       "Reindex subscriptions": [
-        ""
+        "Subskriptionen neu indizieren"
       ],
       "Related composite content views": [
         ""
@@ -6707,12 +6404,6 @@
       ],
       "Removed components from content view": [
         "Komponenten aus der Inhaltsansicht entfernt"
-      ],
-      "Removing Package Group...": [
-        "Paketgruppe wird entfernt …"
-      ],
-      "Removing Package...": [
-        "Paket wird entfernt …"
       ],
       "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}": [
         ""
@@ -6878,6 +6569,9 @@
       ],
       "Requires Virt-Who": [
         "Benötigt Virt-Who"
+      ],
+      "Requires virt-who": [
+        ""
       ],
       "Reset": [
         "Zurücksetzen"
@@ -7111,7 +6805,7 @@
         ""
       ],
       "SSL Client Key": [
-        ""
+        "SSL-Clientschlüssel"
       ],
       "SSL client certificate": [
         ""
@@ -7229,9 +6923,6 @@
       ],
       "Select Organization": [
         "Organisation auswählen"
-      ],
-      "Select Value": [
-        "Wähle Wert"
       ],
       "Select a CA certificate": [
         ""
@@ -7954,7 +7645,7 @@
       "Subscriptions have been saved and are being updated. ": [
         "Abonnements wurden gespeichert und werden aktualisiert."
       ],
-      "Subscriptions service": [
+      "Subscriptions information": [
         ""
       ],
       "Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}].": [
@@ -8000,7 +7691,7 @@
         "Unterstützte Inhaltstypen"
       ],
       "Sync": [
-        ""
+        "Synchronisieren"
       ],
       "Sync Canceled": [
         "Synchronisation abgebrochen"
@@ -8060,7 +7751,7 @@
         ""
       ],
       "Sync capsule": [
-        ""
+        "Kapsel synchronisieren"
       ],
       "Sync complete.": [
         "Synchronisation abgeschlossen."
@@ -8194,6 +7885,15 @@
       "The Alternate Content Source type": [
         "Der Typ der alternativen Inhaltsquelle"
       ],
+      "The Foreman Client DEB repository is available in the host's content view environment(s). ": [
+        ""
+      ],
+      "The Foreman Client DEB repository is enabled and synced. ": [
+        ""
+      ],
+      "The Foreman Client DEB repository set is enabled for the host. ": [
+        ""
+      ],
       "The Foreman Client repository is available in the host's content view environment(s). ": [
         ""
       ],
@@ -8204,6 +7904,9 @@
         ""
       ],
       "The Foreman Client repository set is enabled for the host. ": [
+        ""
+      ],
+      "The Pulp repo version '%{version}' for 'deb' repository '%{name}' must contain at least one distribution!": [
         ""
       ],
       "The URL to receive a session token from, e.g. used with Automation Hub.": [
@@ -8350,9 +8053,6 @@
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
         ""
       ],
-      "The selected lifecycle environment contains no activation keys": [
-        ""
-      ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
         ""
       ],
@@ -8412,9 +8112,6 @@
       ],
       "There is no such HTTP proxy": [
         "Es gibt keinen solchen HTTP-Proxy"
-      ],
-      "There is nothing to see here": [
-        "Hier gibt es nichts zu sehen"
       ],
       "There is {numberOfActivationKeys} activation key that needs to be reassigned.": [
         ""
@@ -8527,7 +8224,7 @@
       "This is not a linked repository": [
         "Dies ist kein verlinktes Repository"
       ],
-      "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
+      "This page shows subscriptions available from this organization's subscription manifest alongside this organization's locally-hosted products. Learn more about subscriptions and entitlement management with the {subscriptionsService}.": [
         ""
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
@@ -8677,6 +8374,9 @@
       "Transient": [
         ""
       ],
+      "True": [
+        ""
+      ],
       "Try changing your search criteria.": [
         ""
       ],
@@ -8751,9 +8451,6 @@
       ],
       "Unable to connect. Got: %s": [
         "Verbindung fehlgeschlagen: %s"
-      ],
-      "Unable to create ContentViewEnvironment. Check the logs for more information.": [
-        ""
       ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         ""
@@ -8951,7 +8648,7 @@
         ""
       ],
       "Update content urls": [
-        ""
+        "Inhalts-URLs aktualisieren"
       ],
       "Update content view environments for host": [
         ""
@@ -8966,10 +8663,10 @@
         ""
       ],
       "Update http proxy": [
-        ""
+        "HTTP-Proxy aktualisieren"
       ],
       "Update http proxy details": [
-        ""
+        "HTTP-Proxy-Details aktualisieren"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Aktualisiere installierte Packete, aktivierte Repositories und Modul-Inventare"
@@ -8987,7 +8684,7 @@
         ""
       ],
       "Update redhat repository": [
-        ""
+        "Redhat-Repository aktualisieren"
       ],
       "Update release version for host": [
         "Release-Version für Host aktualisieren"
@@ -9050,17 +8747,11 @@
       "Updates available: Repositories and/or filters have changed.": [
         ""
       ],
-      "Updating Package...": [
-        "Paket wird aktualisiert …"
-      ],
       "Updating System Purpose for host": [
         "Aktualisieren des Systemzwecks für den Host"
       ],
       "Updating System Purpose for host %s": [
         "Aktualisieren des Systemzwecks für den Host %s"
-      ],
-      "Updating package group...": [
-        "Paketgruppe wird aktualisiert …"
       ],
       "Updating repository authentication configuration": [
         "Aktualisieren der Repository-Authentifizierungskonfiguration"
@@ -9108,6 +8799,9 @@
         ""
       ],
       "Upload package / repos profile": [
+        ""
+      ],
+      "Upload public key or certificate file": [
         ""
       ],
       "Upload request id": [
@@ -9180,7 +8874,7 @@
         ""
       ],
       "Used as": [
-        ""
+        "Benutzt als"
       ],
       "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10": [
         "Wird verwendet, um die Download-Gleichzeitigkeit des Repositorys in pulp3 zu bestimmen. Verwenden Sie einen Wert von weniger als 20. Standardmäßig auf 10"
@@ -9237,7 +8931,7 @@
         "SSL überprüfen"
       ],
       "Verify checksum": [
-        ""
+        "Prüfsumme überprüfen"
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -9308,9 +9002,6 @@
       "View Filters": [
         ""
       ],
-      "View Subscription Usage": [
-        ""
-      ],
       "View a report of the affected hosts": [
         "Sehen Sie sich einen Bericht der betroffenen Hosts an"
       ],
@@ -9344,7 +9035,13 @@
       "View matching content": [
         ""
       ],
+      "View products": [
+        ""
+      ],
       "View pullable paths": [
+        ""
+      ],
+      "View subscription usage": [
         ""
       ],
       "View sync status": [
@@ -9425,9 +9122,6 @@
       "Wrong content type submitted.": [
         "Falscher Inhaltstyp übermittelt."
       ],
-      "Yay empty state": [
-        "Yay leerer Zustand"
-      ],
       "Yes": [
         "Ja"
       ],
@@ -9440,8 +9134,8 @@
       "You can check sync status for repositories only in the library lifecycle environment.'": [
         "Sie können den Synchronisationsstatus für Repositorys nur in der Library-Lebenszyklusumgebung prüfen."
       ],
-      "You cannot have more than %{max_hosts} host(s) associated with host collection '%{host_collection}'.": [
-        "Sie können nicht mehr als %{max_hosts} Host(s) mit der Hostsammlung  '%{host_collection}' verknüpfen."
+      "You cannot have more than %{max_hosts} host(s) associated with host collection %{host_collection}.": [
+        ""
       ],
       "You cannot set an organization's parent. This feature is disabled.": [
         "Sie können keine übergeordnete Organisation für diese Organisation festlegen. Diese Funktion ist deaktiviert."
@@ -9494,8 +9188,8 @@
       "You were not allowed to sync %s": [
         "Sie haben keine Berechtigung, %s zu synchronisieren"
       ],
-      "You're making changes to %(entitlementCount)s entitlement(s)": [
-        "Sie nehmen Änderungen an %(entitlementCount)sBerechtigungen vor"
+      "You're making changes to %s entitlement(s)": [
+        ""
       ],
       "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.": [
         ""
@@ -9589,15 +9283,6 @@
       ],
       "all environments": [
         ""
-      ],
-      "all packages": [
-        "alle Pakete"
-      ],
-      "all packages update": [
-        "Aktualisierung aller Pakete"
-      ],
-      "all packages update failed": [
-        "Aktualisierung aller Pakete fehlgeschlagen"
       ],
       "allow unauthenticed pull of container images": [
         "nicht authentifiziertes Ziehen von Container-Images zulassen"
@@ -9749,17 +9434,8 @@
       "content view identifier of the component who's latest version is desired": [
         "Kontent-View-Identifizierer des Komponenten dessen neuste Version verlangt wird"
       ],
-      "content view node publish": [
-        "Veröffentlichung der Inhaltsansichtsknoten"
-      ],
       "content view numeric identifier": [
         "Numerische ID der Inhaltsansicht"
-      ],
-      "content view publish": [
-        "Veröffentlichung der Inhaltsansicht"
-      ],
-      "content view refresh": [
-        "Aktualisierung der Inhaltsansicht"
       ],
       "content view to reassign orphaned activation keys to": [
         "Inhaltsansicht, der verwaiste Aktivierungsschlüssel zugewiesen werden"
@@ -9965,26 +9641,8 @@
       "installed": [
         ""
       ],
-      "installing errata...": [
-        "Errata werden installiert …"
-      ],
-      "installing erratum...": [
-        "Erratum wird installiert …"
-      ],
       "installing or updating packages": [
         ""
-      ],
-      "installing package group...": [
-        "Paketgruppe wird installiert …"
-      ],
-      "installing package groups...": [
-        "Paketgruppen werden installiert …"
-      ],
-      "installing package...": [
-        "Paket wird installiert …"
-      ],
-      "installing packages...": [
-        "Pakete werden installiert …"
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         "interpretiert das angegebene Objekt so, dass nur Repositorys zurückgegeben werden, die dem angegebenen Objekt zugeordnet werden können. Nur 'content_view' und 'content_view_version' werden unterstützt."
@@ -10206,18 +9864,6 @@
       "register_hostname_fact set for %s, but no fact found, or was localhost.": [
         "register_hostname_fact auf %s gesetzt, aber kein Fakt gefunden oder war localhost."
       ],
-      "removing package group...": [
-        "Paketgruppe wird entfernt …"
-      ],
-      "removing package groups...": [
-        "Paketgruppen werden entfernt …"
-      ],
-      "removing package...": [
-        "Paket wird entfernt …"
-      ],
-      "removing packages...": [
-        "Pakete werden entfernt …"
-      ],
       "replace": [
         ""
       ],
@@ -10284,6 +9930,9 @@
       "start datetime of synchronization": [
         "Startdatum und -zeit der Synchronisation"
       ],
+      "subscriptions service": [
+        ""
+      ],
       "sync plan description": [
         "Beschreibung des Synchronisationsplans"
       ],
@@ -10337,18 +9986,6 @@
       ],
       "updated": [
         ""
-      ],
-      "updating package group...": [
-        "Paketgruppe wird aktualisiert …"
-      ],
-      "updating package groups...": [
-        "Paketgruppen werden aktualisiert …"
-      ],
-      "updating package...": [
-        "Paket wird aktualisiert …"
-      ],
-      "updating packages...": [
-        "Pakete werden aktualisiert …"
       ],
       "upstream Foreman server": [
         ""
