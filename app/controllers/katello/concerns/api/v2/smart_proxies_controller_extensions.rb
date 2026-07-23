@@ -9,6 +9,7 @@ module Katello
             param :download_policy, String, :required => false, :desc => N_('Download Policy of the capsule, must be one of %s') %
                 SmartProxy::DOWNLOAD_POLICIES.join(', ')
             param :http_proxy_id, Integer, :required => false, :desc => N_('Id of the HTTP proxy to use with alternate content sources')
+            param :container_registry_auth_enabled, :bool, :required => false, :desc => N_('Allow this smart proxy to authenticate to the container registry using its SSL client certificate')
           end
         end
       end
