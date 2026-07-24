@@ -15,7 +15,13 @@ jest.mock('../Manifest/', () => ({
   __esModule: true, default: () => <div>ManageManifestModal Mock</div>,
 }));
 jest.mock('../components/SubscriptionsTable', () => ({
-  SubscriptionsTable: () => <div>SubscriptionsTable Mock</div>,
+  SubscriptionsTable: ({ customHeader, customToolbar }) => (
+    <div>
+      {customHeader}
+      {customToolbar}
+      <div>SubscriptionsTable Mock</div>
+    </div>
+  ),
 }));
 jest.mock('../components/SubscriptionsToolbar', () => ({
   __esModule: true, default: () => <div>SubscriptionsToolbar Mock</div>,

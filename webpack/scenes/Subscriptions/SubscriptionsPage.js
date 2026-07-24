@@ -17,6 +17,7 @@ import api, { orgId } from '../../services/api';
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
 import { SUBSCRIPTION_TABLE_DEFAULT_COLUMNS, SUBSCRIPTIONS_SERVICE_DOC_URL } from './SubscriptionConstants';
+import { createSubscriptionsColumns } from './SubscriptionsColumns';
 import './SubscriptionsPage.scss';
 
 const SubscriptionsPage = ({
@@ -208,7 +209,8 @@ const SubscriptionsPage = ({
     (rowsSelected ? enableDeleteButton() : disableDeleteButton());
 
   const csvParams = createSubscriptionParams({ search: searchQuery });
-  const columns = subscriptions.selectedTableColumns;
+  const selectedColumnKeys = subscriptions.selectedTableColumns;
+  const columns = createSubscriptionsColumns();
   const emptyStateData = isManifestImported
     ? {
       header: __('There are no Subscriptions to display'),
@@ -299,7 +301,8 @@ const SubscriptionsPage = ({
         <SubscriptionsTable
           canManageSubscriptionAllocations={canManageSubscriptionAllocations}
           loadSubscriptions={loadSubscriptions}
-          tableColumns={columns}
+          tableColumns={selectedColumnKeys}
+          columns={columns}
           updateQuantity={updateQuantity}
           emptyState={emptyStateData}
           subscriptions={subscriptions}
