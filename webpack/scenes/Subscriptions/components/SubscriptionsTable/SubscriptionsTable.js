@@ -12,6 +12,7 @@ const SubscriptionsTable = ({
   subscriptions,
   emptyState,
   tableColumns,
+  columns,
   loadSubscriptions,
   updateQuantity,
   selectionEnabled,
@@ -195,6 +196,7 @@ const SubscriptionsTable = ({
         subscriptions={subscriptions}
         selectionEnabled={selectionEnabled}
         tableColumns={tableColumns}
+        columns={columns}
         customHeader={customHeader}
         customToolbar={customToolbar}
         toggleSubscriptionGroup={toggleSubscriptionGroup}
@@ -231,6 +233,10 @@ const SubscriptionsTable = ({
 
 SubscriptionsTable.propTypes = {
   tableColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
+  columns: PropTypes.objectOf(PropTypes.shape({
+    title: PropTypes.node,
+    wrapper: PropTypes.func,
+  })).isRequired,
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
   emptyState: PropTypes.shape({}).isRequired,

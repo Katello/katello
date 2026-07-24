@@ -11,6 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { AngleDownIcon, AngleRightIcon } from '@patternfly/react-icons';
 import { Tr, Td } from '@patternfly/react-table';
+import { useHistory } from 'react-router-dom';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import { Table as TableIndexTable } from 'foremanReact/components/PF4/TableIndexPage/Table/Table';
 import {
@@ -23,42 +24,10 @@ import { noop } from 'foremanReact/common/helpers';
 import { KEYCODES } from 'foremanReact/common/keyCodes';
 import EmptyState from 'foremanReact/components/common/EmptyState';
 import classNames from 'classnames';
-import { createSubscriptionsTableSchema } from '../SubscriptionsTableSchema';
 import { validateQuantity } from '../../../SubscriptionValidations';
 import { getEntitlementsDisplayValue } from '../SubscriptionsTableHelpers';
-import { useHistory } from 'react-router-dom';
 
 const SUBSCRIPTIONS_API_URL = '/katello/api/v2/subscriptions';
-
-const schemaCellToTd = (cell, column) => {
-  if (React.isValidElement(cell) && cell.type === 'td') {
-    const { children, className, ...tdProps } = cell.props;
-    return (
-      <Td
-        key={column.property}
-        dataLabel={column.header?.label}
-        className={className}
-        {...tdProps}
-      >
-        {children}
-      </Td>
-    );
-  }
-
-  if (React.isValidElement(cell)) {
-    return (
-      <Td key={column.property} dataLabel={column.header?.label}>
-        {cell}
-      </Td>
-    );
-  }
-
-  return (
-    <Td key={column.property} dataLabel={column.header?.label}>
-      {cell}
-    </Td>
-  );
-};
 
 const renderEntitlementsCell = (rowData, rowIndex, inlineEditController) => {
   const additionalData = { rowData, rowIndex };
@@ -138,18 +107,20 @@ const renderEntitlementsCell = (rowData, rowIndex, inlineEditController) => {
 };
 
 const renderSubscriptionRows = ({
-  columnsDefinition,
+  columnKeys,
+  columns,
   rows,
   bodyMessage,
   groupingController,
   selectionController,
   selectionEnabled,
   inlineEditController,
+  showSelectColumn,
 }) => {
   if (bodyMessage) {
     return (
       <Tr ouiaId="subscriptions-table-body-message">
-        <Td colSpan={columnsDefinition.length}>{bodyMessage}</Td>
+        <Td colSpan={columnKeys.length}>{bodyMessage}</Td>
       </Tr>
     );
   }
@@ -168,8 +139,8 @@ const renderSubscriptionRows = ({
           'open-grouped-row': !groupingController.isCollapsed(additionalData),
         })}
       >
-        {columnsDefinition.map((column) => {
-          if (column.property === 'select') {
+        {columnKeys.map((key) => {
+          if (key === 'select') {
             return (
               <Td key="select" dataLabel={__('Select all rows')}>
                 {shouldShowCollapse && (
@@ -202,17 +173,18 @@ const renderSubscriptionRows = ({
             );
           }
 
-          if (column.property === 'quantity') {
+          if (key === 'quantity') {
             return renderEntitlementsCell(rowData, rowIndex, inlineEditController);
           }
 
-          const value = rowData[column.property];
-          let cell = value;
-          column.cell?.formatters?.forEach((formatter) => {
-            cell = formatter(cell, additionalData);
-          });
+          const column = columns[key];
+          const content = column?.wrapper ? column.wrapper(rowData) : rowData[key];
 
-          return schemaCellToTd(cell, column);
+          return (
+            <Td key={key} dataLabel={column?.title}>
+              {content}
+            </Td>
+          );
         })}
       </Tr>
     );
@@ -222,6 +194,7 @@ const renderSubscriptionRows = ({
 const Table = ({
   emptyState,
   tableColumns,
+  columns,
   subscriptions,
   loadSubscriptions,
   selectionController,
@@ -248,43 +221,37 @@ const Table = ({
   };
 
   const collapsibleGroup =
-    Object.values(groupedSubscriptions).some(v => v.subscriptions.length > 1);
+    Object.values(groupedSubscriptions || {}).some(v => v.subscriptions.length > 1);
 
-  const alwaysDisplayColumns = [];
+  const showSelectColumn = selectionEnabled || collapsibleGroup;
 
-  if (selectionEnabled || collapsibleGroup) {
-    alwaysDisplayColumns.push('select');
-  }
+  const visibleColumns = useMemo(() => {
+    const nextColumns = {};
 
-  const columnsDefinition = createSubscriptionsTableSchema(
-    inlineEditController,
-    selectionController,
-    groupingController,
-    selectionEnabled,
-  ).filter(column => tableColumns.includes(column.property) ||
-    alwaysDisplayColumns.includes(column.property));
+    if (showSelectColumn) {
+      nextColumns.select = {
+        title: (
+          <Checkbox
+            id="selectAll"
+            aria-label={__('Select all rows')}
+            isChecked={selectionController.allRowsSelected()}
+            onChange={() => selectionController.selectAllRows()}
+            isDisabled={!selectionEnabled}
+          />
+        ),
+      };
+    }
 
-  const columns = useMemo(
-    () => columnsDefinition.reduce((acc, column) => {
-      if (column.property === 'select') {
-        acc.select = {
-          title: (
-            <Checkbox
-              id="selectAll"
-              aria-label={__('Select all rows')}
-              isChecked={selectionController.allRowsSelected()}
-              onChange={() => selectionController.selectAllRows()}
-              isDisabled={!selectionEnabled}
-            />
-          ),
-        };
-        return acc;
+    Object.keys(columns).forEach((key) => {
+      if (tableColumns.includes(key)) {
+        nextColumns[key] = columns[key];
       }
-      acc[column.property] = { title: column.header?.label || column.property };
-      return acc;
-    }, {}),
-    [columnsDefinition, selectionController, selectionEnabled],
-  );
+    });
+
+    return nextColumns;
+  }, [columns, tableColumns, showSelectColumn, selectionController, selectionEnabled]);
+
+  const columnKeys = useMemo(() => Object.keys(visibleColumns), [visibleColumns]);
 
   const setAPIOptions = useCallback((options) => {
     if (options?.params) {
@@ -362,7 +329,7 @@ const Table = ({
       apiUrl={SUBSCRIPTIONS_API_URL}
       customCreateAction={() => () => history.push(SUBSCRIPTIONS_API_URL)}
       apiOptions={apiOptions}
-      columns={columns}
+      columns={visibleColumns}
       replacementResponse={response}
       searchable={false}
       creatable={false}
@@ -373,7 +340,7 @@ const Table = ({
       ouiaId="subscriptions-table"
     >
       <TableIndexTable
-        columns={columns}
+        columns={visibleColumns}
         results={rows}
         params={{
           ...params,
@@ -389,13 +356,15 @@ const Table = ({
         ouiaId="subscriptions-table"
       >
         {renderSubscriptionRows({
-          columnsDefinition,
+          columnKeys,
+          columns: visibleColumns,
           rows,
           bodyMessage,
           groupingController,
           selectionController,
           selectionEnabled,
           inlineEditController,
+          showSelectColumn,
         })}
       </TableIndexTable>
     </TableIndexPage>
@@ -405,6 +374,10 @@ const Table = ({
 Table.propTypes = {
   emptyState: PropTypes.shape({}).isRequired,
   tableColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
+  columns: PropTypes.objectOf(PropTypes.shape({
+    title: PropTypes.node,
+    wrapper: PropTypes.func,
+  })).isRequired,
   subscriptions: PropTypes.shape({
     searchIsActive: PropTypes.bool,
     itemCount: PropTypes.number,
@@ -421,7 +394,7 @@ Table.propTypes = {
     onCancel: PropTypes.func,
     onConfirm: PropTypes.func,
   }).isRequired,
-  groupedSubscriptions: PropTypes.shape({}).isRequired,
+  groupedSubscriptions: PropTypes.shape({}),
   editing: PropTypes.bool.isRequired,
   rows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectionEnabled: PropTypes.bool.isRequired,
@@ -432,6 +405,7 @@ Table.propTypes = {
 Table.defaultProps = {
   customHeader: undefined,
   customToolbar: undefined,
+  groupedSubscriptions: {},
 };
 
 export default Table;

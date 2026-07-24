@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import SubscriptionsTable from '../SubscriptionsTable';
+import { createSubscriptionsColumns } from '../../../SubscriptionsColumns';
 import { successState, loadingState, emptyState, groupedSubscriptions } from '../../../__tests__/subscriptions.fixtures';
 
 const mockLoadingState = jest.fn(({ children }) => <div>{children}</div>);
@@ -26,6 +27,7 @@ describe('subscriptions table', () => {
     subscriptions: successState,
     loadSubscriptions: jest.fn(),
     tableColumns,
+    columns: createSubscriptionsColumns(),
     updateQuantity: jest.fn(),
     subscriptionDeleteModalOpen: false,
     onDeleteSubscriptions: jest.fn(),
