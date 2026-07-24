@@ -1,116 +1,293 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import UpstreamSubscriptionsPage, { quantityValidation } from '../UpstreamSubscriptionsPage';
-import { successState } from './upstreamSubscriptions.fixtures';
+import userEvent from '@testing-library/user-event';
+import { screen } from '@testing-library/react';
+import { Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
+import { rtlHelpers } from 'foremanReact/common/rtlTestHelpers';
+import { STATUS } from 'foremanReact/constants';
+import { patientlyWaitFor } from 'react-testing-lib-wrapper';
+import UpstreamSubscriptionsPage from '../UpstreamSubscriptionsPage';
+import api from '../../../../services/api';
+import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
+import {
+  emptyListResponse,
+  requestSuccessResponse,
+  taskSuccessResponse,
+} from './upstreamSubscriptions.fixtures';
+import {
+  UPSTREAM_SUBSCRIPTIONS_KEY,
+} from '../UpstreamSubscriptionsConstants';
 
-const mockTable = jest.fn(() => <div data-testid="upstream-table" />);
+// Katello's global EmptyState mock renders props as JSON instead of real UI.
+// Use the Foreman DefaultEmptyState here so empty-state tests assert user-visible content.
+jest.mock('foremanReact/components/common/EmptyState', () =>
+  jest.requireActual('foremanReact/components/common/EmptyState/DefaultEmptyState'));
 
-jest.mock('foremanReact/components/BreadcrumbBar', () => ({
-  __esModule: true,
-  default: () => <div data-testid="breadcrumbs" />,
-}));
-jest.mock('react-router-bootstrap', () => ({
-  // eslint-disable-next-line react/prop-types
-  LinkContainer: ({ children }) => <div>{children}</div>,
-}));
-jest.mock('../../../../components/pf3Table', () => ({
-  Table: props => mockTable(props),
-}));
-jest.mock('../../../../components/LoadingState', () => ({
-  // eslint-disable-next-line react/prop-types
-  LoadingState: ({ children, loading }) =>
-    (loading ? <div>Loading...</div> : <div>{children}</div>),
-}));
+const { renderWithStore } = rtlHelpers;
+
+const upstreamSubscriptionsPath = api.getApiUrl('/organizations/1/upstream_subscriptions');
+
+const renderUpstreamSubscriptionsPage = (history = createMemoryHistory({ initialEntries: ['/'] })) => ({
+  history,
+  ...renderWithStore(
+    <Router history={history}>
+      <UpstreamSubscriptionsPage />
+    </Router>,
+    {
+      API: {
+        [UPSTREAM_SUBSCRIPTIONS_KEY]: { response: {}, status: STATUS.PENDING },
+      },
+    },
+  ),
+});
+
+const mockListRequest = (response = requestSuccessResponse) => {
+  nockInstance
+    .get(upstreamSubscriptionsPath)
+    .query(true)
+    .reply(200, response)
+    .persist();
+};
+
+const waitForSubscriptionsTable = async () => {
+  await patientlyWaitFor(() => {
+    expect(screen.getByText(requestSuccessResponse.results[0].product_name)).toBeInTheDocument();
+  });
+};
 
 describe('upstream subscriptions page', () => {
-  const buildProps = () => ({
-    upstreamSubscriptions: successState,
-    loadUpstreamSubscriptions: jest.fn(),
-    saveUpstreamSubscriptions: jest.fn(),
-    history: { push: jest.fn() },
-  });
-
   beforeEach(() => {
-    mockTable.mockClear();
+    window.tfm = {
+      toastNotifications: {
+        notify: jest.fn(),
+      },
+    };
   });
 
-  it('loads and renders upstream subscriptions', () => {
-    const props = buildProps();
-    render(<UpstreamSubscriptionsPage {...props} />);
+  it('loads and renders upstream subscriptions', async () => {
+    mockListRequest();
 
-    expect(props.loadUpstreamSubscriptions).toHaveBeenCalledTimes(1);
-    expect(screen.getByTestId('breadcrumbs')).toBeInTheDocument();
-    expect(screen.getByText('Submit')).toBeInTheDocument();
-    expect(screen.getByText('Cancel')).toBeInTheDocument();
-    expect(mockTable).toHaveBeenCalled();
-    expect(mockTable.mock.calls[0][0].rows).toHaveLength(successState.results.length);
+    renderUpstreamSubscriptionsPage();
+    await waitForSubscriptionsTable();
+
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument();
+    expect(screen.getByLabelText('toggle action dropdown')).toBeInTheDocument();
+    expect(screen.getByText('Subscriptions')).toBeInTheDocument();
+    expect(screen.getAllByText('Add Subscriptions').length).toBeGreaterThan(0);
   });
 
-  it('disables submit button when no rows are selected', () => {
-    const props = buildProps();
-    render(<UpstreamSubscriptionsPage {...props} />);
+  it('disables submit button when no rows are selected', async () => {
+    mockListRequest();
 
-    const submitButton = screen.getByText('Submit');
-    expect(submitButton).toBeDisabled();
+    renderUpstreamSubscriptionsPage();
+    await waitForSubscriptionsTable();
+
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
   });
 
-  it('renders action buttons with correct OUIA IDs', () => {
-    const props = buildProps();
-    render(<UpstreamSubscriptionsPage {...props} />);
+  it('enables submit button when a valid quantity is entered', async () => {
+    mockListRequest();
 
-    const submitButton = screen.getByRole('button', { name: 'Submit' });
-    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
+    renderUpstreamSubscriptionsPage();
+    await waitForSubscriptionsTable();
 
-    expect(submitButton).toBeInTheDocument();
-    expect(submitButton).toHaveAttribute('data-ouia-component-id', 'upstream-subscriptions-submit-button');
-    expect(cancelButton).toBeInTheDocument();
-    expect(cancelButton).toHaveAttribute('data-ouia-component-id', 'upstream-subscriptions-cancel-button');
+    await userEvent.type(screen.getAllByLabelText('Number to Allocate')[0], '5');
+
+    await patientlyWaitFor(() => {
+      expect(screen.getByRole('button', { name: 'Submit' })).toBeEnabled();
+    });
   });
 
-  describe('quantity validation', () => {
-    it('should validate correct subscription quantities', () => {
-      const validPools = [
-        { available: 10, updatedQuantity: 5 },
-        { available: 10, updatedQuantity: '5' },
-        { available: 10, updatedQuantity: '10' },
-        { available: 10, updatedQuantity: '1' },
-        { available: -1, updatedQuantity: '1000' },
-      ];
-      validPools.forEach((pool, i) => {
-        const result = quantityValidation(pool)[0];
-        expect({ index: i, result }).toEqual({ index: i, result: true });
+  it('shows inline validation error for an invalid quantity', async () => {
+    mockListRequest();
+
+    renderUpstreamSubscriptionsPage();
+    await waitForSubscriptionsTable();
+
+    await userEvent.type(screen.getAllByLabelText('Number to Allocate')[0], '101');
+
+    await patientlyWaitFor(() => {
+      expect(screen.getByText('Quantity must not be above 100')).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+  });
+
+  it('does not submit when Enter is pressed with an invalid quantity', async () => {
+    mockListRequest();
+
+    const postScope = nockInstance
+      .post(upstreamSubscriptionsPath)
+      .reply(200, taskSuccessResponse);
+
+    renderUpstreamSubscriptionsPage();
+    await waitForSubscriptionsTable();
+
+    const quantityInput = screen.getAllByLabelText('Number to Allocate')[0];
+    await userEvent.type(quantityInput, '101{Enter}');
+
+    await patientlyWaitFor(() => {
+      expect(screen.getByText('Quantity must not be above 100')).toBeInTheDocument();
+    });
+
+    expect(postScope.isDone()).toBe(false);
+  });
+
+  it('shows table error state when list request fails', async () => {
+    nockInstance
+      .get(upstreamSubscriptionsPath)
+      .query(true)
+      .reply(422, { error: { message: 'Unable to load upstream subscriptions' } })
+      .persist();
+
+    renderUpstreamSubscriptionsPage();
+
+    await patientlyWaitFor(() => {
+      expect(screen.getByText('Unable to load upstream subscriptions')).toBeInTheDocument();
+    });
+
+    expect(screen.queryByRole('heading', { level: 5, name: 'There are no Manifests to display' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
+  });
+
+  it('shows the custom empty state when there are no subscriptions', async () => {
+    mockListRequest(emptyListResponse);
+
+    renderUpstreamSubscriptionsPage();
+
+    await patientlyWaitFor(() => {
+      expect(screen.getByRole('heading', { level: 5, name: 'There are no Manifests to display' })).toBeInTheDocument();
+      expect(screen.getByText('Import a Manifest to Begin')).toBeInTheDocument();
+    });
+
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('toggle action dropdown')).not.toBeInTheDocument();
+  });
+
+  it('navigates to subscriptions when cancel is clicked', async () => {
+    mockListRequest();
+    const history = createMemoryHistory({ initialEntries: ['/subscriptions/add'] });
+
+    renderUpstreamSubscriptionsPage(history);
+    await waitForSubscriptionsTable();
+
+    await userEvent.click(screen.getByLabelText('toggle action dropdown'));
+    await userEvent.click(screen.getByText('Cancel'));
+
+    expect(history.location.pathname).toBe('/subscriptions');
+  });
+
+  it('submits selected quantities and shows success toast', async () => {
+    mockListRequest();
+    const history = createMemoryHistory({ initialEntries: ['/subscriptions/add'] });
+
+    const postScope = nockInstance
+      .post(upstreamSubscriptionsPath, {
+        pools: [{ id: requestSuccessResponse.results[0].id, quantity: 5 }],
+      })
+      .reply(200, taskSuccessResponse);
+
+    renderUpstreamSubscriptionsPage(history);
+    await waitForSubscriptionsTable();
+
+    await userEvent.type(screen.getAllByLabelText('Number to Allocate')[0], '5');
+    await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await patientlyWaitFor(() => {
+      expect(window.tfm.toastNotifications.notify)
+        .toHaveBeenCalledWith(expect.objectContaining({ type: 'success' }));
+      expect(history.location.pathname).toBe('/subscriptions');
+    });
+
+    assertNockRequest(postScope);
+  });
+
+  it('submits quantities for multiple selected rows', async () => {
+    mockListRequest();
+    const history = createMemoryHistory({ initialEntries: ['/subscriptions/add'] });
+    let postedBody;
+
+    const postScope = nockInstance
+      .post(upstreamSubscriptionsPath, (body) => {
+        postedBody = body;
+        return true;
+      })
+      .reply(200, taskSuccessResponse);
+
+    renderUpstreamSubscriptionsPage(history);
+    await waitForSubscriptionsTable();
+
+    const quantityInputs = screen.getAllByLabelText('Number to Allocate');
+    await userEvent.type(quantityInputs[0], '5');
+    await userEvent.type(screen.getAllByLabelText('Number to Allocate')[1], '8');
+
+    await patientlyWaitFor(() => {
+      expect(screen.getAllByLabelText('Number to Allocate')[1]).toHaveValue('8');
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await patientlyWaitFor(() => {
+      expect(postedBody).toEqual({
+        pools: [
+          { id: requestSuccessResponse.results[0].id, quantity: 5 },
+          { id: requestSuccessResponse.results[1].id, quantity: 8 },
+        ],
       });
+      expect(history.location.pathname).toBe('/subscriptions');
     });
 
-    it('should invalidate incorrect subscription quantities', () => {
-      const invalidPools = [
-        { available: 10, updatedQuantity: 11 },
-        { available: 10, updatedQuantity: 'foo' },
-        { available: 10, updatedQuantity: 0 },
-        { available: 10, updatedQuantity: '0' },
-        { available: 10, updatedQuantity: '11' },
-        { available: 10, updatedQuantity: '2.0' },
-        { available: 10, updatedQuantity: '2/3' },
-        { available: -1, updatedQuantity: '-1' },
-        { available: -1, updatedQuantity: '0' },
-        { available: -1, updatedQuantity: 'foo' },
-        { available: -1, updatedQuantity: '2/3' },
-        { available: -1, updatedQuantity: '2.0' },
-        { available: -1, updatedQuantity: '99999999999' },
-      ];
+    assertNockRequest(postScope);
+  });
 
-      invalidPools.forEach((pool, i) => {
-        const result = quantityValidation(pool)[0];
-        expect({ index: i, result }).toEqual({ index: i, result: false });
-      });
+  it('disables submit button while save is in progress', async () => {
+    mockListRequest();
+
+    const postScope = nockInstance
+      .post(upstreamSubscriptionsPath, {
+        pools: [{ id: requestSuccessResponse.results[0].id, quantity: 5 }],
+      })
+      .delay(500)
+      .reply(200, taskSuccessResponse);
+
+    renderUpstreamSubscriptionsPage();
+    await waitForSubscriptionsTable();
+
+    await userEvent.type(screen.getAllByLabelText('Number to Allocate')[0], '5');
+
+    await patientlyWaitFor(() => {
+      expect(screen.getByRole('button', { name: 'Submit' })).toBeEnabled();
     });
 
-    it('should return appropriate error messages', () => {
-      expect(quantityValidation({ available: 10, updatedQuantity: 'foo' })[1]).toBe('Please enter digits only');
-      expect(quantityValidation({ available: 10, updatedQuantity: '0' })[1]).toBe('Please enter a positive number above zero');
-      expect(quantityValidation({ available: 10, updatedQuantity: '11' })[1]).toBe('Quantity must not be above 10');
-      expect(quantityValidation({ available: 10, updatedQuantity: '99999999999' })[1]).toBe('Please limit number to 10 digits');
+    await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+
+    await patientlyWaitFor(() => {
+      expect(postScope.isDone()).toBe(true);
     });
+  });
+
+  it('shows error toast when save fails', async () => {
+    mockListRequest();
+    const history = createMemoryHistory({ initialEntries: ['/subscriptions/add'] });
+
+    const postScope = nockInstance
+      .post(upstreamSubscriptionsPath)
+      .reply(422, { error: { message: 'Unable to save subscriptions' } });
+
+    const { store } = renderUpstreamSubscriptionsPage(history);
+    await waitForSubscriptionsTable();
+
+    await userEvent.type(screen.getAllByLabelText('Number to Allocate')[0], '5');
+    await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await patientlyWaitFor(() => {
+      const toasts = Object.values(store.getState().toasts);
+      expect(toasts.some(({ type }) => type === 'danger')).toBe(true);
+    });
+
+    expect(history.location.pathname).toBe('/subscriptions/add');
+    assertNockRequest(postScope);
   });
 });

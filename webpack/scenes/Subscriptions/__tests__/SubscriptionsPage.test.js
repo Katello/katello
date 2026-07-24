@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils';
 import SubscriptionsPage from '../SubscriptionsPage';
 import { successState, permissionDeniedState } from './subscriptions.fixtures';
 import { loadAvailableQuantities, updateQuantity } from '../SubscriptionActions';
-import { pingUpstreamSubscriptions } from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
+import pingUpstreamSubscriptions from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
 
 jest.mock('foremanReact/components/PermissionDenied', () => ({
   __esModule: true, default: ({ missingPermissions }) => <div>PermissionDenied: {missingPermissions.join(', ')}</div>,

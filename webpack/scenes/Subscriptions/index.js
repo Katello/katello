@@ -16,7 +16,7 @@ import {
 } from './SubscriptionsSelectors';
 import { selectIsPollingTask } from '../Tasks/TaskSelectors';
 import { selectOrganizationState, selectIsManifestImported } from '../Organizations/OrganizationSelectors';
-import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
+import pingUpstreamSubscriptions from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
 import reducer from './SubscriptionReducer';
 import { SUBSCRIPTIONS } from './SubscriptionConstants';
 import SubscriptionsPage from './SubscriptionsPage';
