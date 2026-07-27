@@ -43,13 +43,14 @@ module Katello
 
           def test_append_proxy_cacert_with_nil_ca_cert
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            proxy_cacert = File.read("#{Katello::Engine.root}/test/fixtures/certs/real-ca.crt").strip
             http_proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',
                               :username => 'admin',
                               :password => 'password',
-                              :cacert => "proxy cert")
+                              :cacert => proxy_cacert)
             ::Katello::RootRepository.any_instance.stubs(:http_proxy).returns(http_proxy)
             options = service.append_proxy_cacert(ca_cert: nil)
-            assert_equal "proxy cert", options[:ca_cert]
+            assert_equal proxy_cacert, options[:ca_cert]
           end
 
           def test_append_proxy_cacert
