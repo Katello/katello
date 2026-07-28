@@ -1,31 +1,40 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
-import { translate as __ } from 'foremanReact/common/I18n';
-import { LoadingState } from '../../../../components/LoadingState';
 import { recordsValid } from '../../SubscriptionValidations';
 import { buildTableRows, groupSubscriptionsByProductId } from './SubscriptionsTableHelpers';
 import Table from './components/Table';
 import Dialogs from './components/Dialogs';
 
 const SubscriptionsTable = ({
-  subscriptions,
   emptyState,
   tableColumns,
   columns,
-  loadSubscriptions,
   updateQuantity,
   selectionEnabled,
   customHeader,
   customToolbar,
+  searchQuery,
+  organizationId,
+  availableQuantities,
   selectedRows,
   onSelectedRowsChange,
   toggleDeleteButton,
   subscriptionDeleteModalOpen,
   onDeleteSubscriptions,
   onSubscriptionDeleteModalClose,
+  onApiResponse,
+  onRefreshReady,
 }) => {
-  const [rows, setRows] = useState(undefined);
+  const [subscriptions, setSubscriptions] = useState({
+    results: [],
+    loading: false,
+    availableQuantities: null,
+    itemCount: 0,
+    pagination: { page: 1, perPage: 20 },
+    searchIsActive: false,
+  });
+  const [rows, setRows] = useState([]);
   const [groupedSubscriptions, setGroupedSubscriptions] = useState(undefined);
   const [syncedSubscriptions, setSyncedSubscriptions] = useState(undefined);
   const [updatedQuantity, setUpdatedQuantity] = useState({});
@@ -33,6 +42,26 @@ const SubscriptionsTable = ({
   const [showUpdateConfirmDialog, setShowUpdateConfirmDialog] = useState(false);
   const [showCancelConfirmDialog, setShowCancelConfirmDialog] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
+
+  const handleApiResponse = useCallback((apiData) => {
+    const nextSubscriptions = {
+      results: apiData.results || [],
+      loading: apiData.loading,
+      availableQuantities: apiData.availableQuantities,
+      itemCount: apiData.itemCount,
+      pagination: {
+        page: apiData.page,
+        perPage: apiData.perPage,
+      },
+      searchIsActive: apiData.searchIsActive,
+      missingPermissions: apiData.missingPermissions,
+      activePermissions: apiData.activePermissions,
+    };
+    setSubscriptions(nextSubscriptions);
+    if (onApiResponse) {
+      onApiResponse(apiData);
+    }
+  }, [onApiResponse]);
 
   // Replaces getDerivedStateFromProps: sync rows when subscriptions prop changes
   if (
@@ -185,15 +214,16 @@ const SubscriptionsTable = ({
   ]);
 
   return (
-    <LoadingState loading={subscriptions.loading} loadingText={__('Loading')}>
+    <>
       <Table
         ouiaId="subscriptions-table"
         emptyState={emptyState}
         editing={editing}
         groupedSubscriptions={groupedSubscriptions}
-        loadSubscriptions={loadSubscriptions}
         rows={rows}
-        subscriptions={subscriptions}
+        searchQuery={searchQuery}
+        organizationId={organizationId}
+        availableQuantities={availableQuantities}
         selectionEnabled={selectionEnabled}
         tableColumns={tableColumns}
         columns={columns}
@@ -202,6 +232,8 @@ const SubscriptionsTable = ({
         toggleSubscriptionGroup={toggleSubscriptionGroup}
         inlineEditController={inlineEditController}
         selectionController={selectionController}
+        onApiResponse={handleApiResponse}
+        onRefreshReady={onRefreshReady}
       />
       <Dialogs
         updateDialog={{
@@ -227,7 +259,7 @@ const SubscriptionsTable = ({
           onDeleteSubscriptions,
         }}
       />
-    </LoadingState>
+    </>
   );
 };
 
@@ -237,16 +269,11 @@ SubscriptionsTable.propTypes = {
     title: PropTypes.node,
     wrapper: PropTypes.func,
   })).isRequired,
-  loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
   emptyState: PropTypes.shape({}).isRequired,
-  subscriptions: PropTypes.shape({
-    loading: PropTypes.bool,
-    availableQuantities: PropTypes.shape({}),
-    // Disabling rule as existing code failed due to an eslint-plugin-react update
-    // eslint-disable-next-line react/forbid-prop-types
-    results: PropTypes.array,
-  }).isRequired,
+  searchQuery: PropTypes.string,
+  organizationId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  availableQuantities: PropTypes.shape({}),
   subscriptionDeleteModalOpen: PropTypes.bool.isRequired,
   onDeleteSubscriptions: PropTypes.func.isRequired,
   onSubscriptionDeleteModalClose: PropTypes.func.isRequired,
@@ -256,12 +283,19 @@ SubscriptionsTable.propTypes = {
   selectionEnabled: PropTypes.bool,
   customHeader: PropTypes.node,
   customToolbar: PropTypes.node,
+  onApiResponse: PropTypes.func,
+  onRefreshReady: PropTypes.func,
 };
 
 SubscriptionsTable.defaultProps = {
+  searchQuery: '',
+  organizationId: undefined,
+  availableQuantities: null,
   selectionEnabled: false,
   customHeader: undefined,
   customToolbar: undefined,
+  onApiResponse: undefined,
+  onRefreshReady: undefined,
 };
 
 export default SubscriptionsTable;

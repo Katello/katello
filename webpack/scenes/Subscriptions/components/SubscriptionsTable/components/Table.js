@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -24,6 +24,8 @@ import { noop } from 'foremanReact/common/helpers';
 import { KEYCODES } from 'foremanReact/common/keyCodes';
 import EmptyState from 'foremanReact/components/common/EmptyState';
 import classNames from 'classnames';
+import { orgId } from '../../../../../services/api';
+import { SUBSCRIPTIONS_TABLE_KEY } from '../../../SubscriptionConstants';
 import { validateQuantity } from '../../../SubscriptionValidations';
 import { getEntitlementsDisplayValue } from '../SubscriptionsTableHelpers';
 
@@ -115,7 +117,6 @@ const renderSubscriptionRows = ({
   selectionController,
   selectionEnabled,
   inlineEditController,
-  showSelectColumn,
 }) => {
   if (bodyMessage) {
     return (
@@ -145,6 +146,7 @@ const renderSubscriptionRows = ({
               <Td key="select" dataLabel={__('Select all rows')}>
                 {shouldShowCollapse && (
                   <Button
+                    ouiaId={`collapse-subscription-group-${rowData.id ?? rowIndex}`}
                     variant="plain"
                     className="collapse-subscription-group-button"
                     onClick={() => groupingController.toggle(additionalData)}
@@ -162,6 +164,7 @@ const renderSubscriptionRows = ({
                 )}
                 {!isGenericRow && (
                   <Checkbox
+                    ouiaId={`select-subscription-row-${rowData.id ?? rowIndex}`}
                     id={`select${rowIndex}`}
                     isChecked={selectionController.isSelected(additionalData)}
                     onChange={() => selectionController.selectRow(additionalData)}
@@ -191,12 +194,34 @@ const renderSubscriptionRows = ({
   });
 };
 
+const extractMissingPermissions = (status, response) => {
+  if (status !== STATUS.ERROR) {
+    return undefined;
+  }
+
+  const error = response;
+  const explicitMissingPermissions =
+    error?.response?.data?.errors?.[0]?.missing_permissions ||
+    error?.response?.data?.missing_permissions;
+  const statusCode = error?.response?.status;
+  const errorMessages = error?.response?.data?.displayMessage
+    ? [error.response.data.displayMessage]
+    : (error?.response?.data?.errors || []);
+
+  let missingPermissions = explicitMissingPermissions;
+  if (!missingPermissions && (statusCode === 403 || statusCode === 404)) {
+    missingPermissions = errorMessages.length > 0 ? errorMessages : ['view_subscriptions'];
+  }
+  return missingPermissions;
+};
+
 const Table = ({
   emptyState,
   tableColumns,
   columns,
-  subscriptions,
-  loadSubscriptions,
+  searchQuery,
+  organizationId,
+  availableQuantities,
   selectionController,
   inlineEditController,
   rows,
@@ -206,17 +231,95 @@ const Table = ({
   toggleSubscriptionGroup,
   customHeader,
   customToolbar,
+  onApiResponse,
+  onRefreshReady,
 }) => {
-  const allSubscriptionResults = subscriptions.results;
   const history = useHistory();
+  const lastNotifiedRef = useRef(null);
+
+  const persistentParams = useMemo(() => ({
+    organization_id: organizationId || orgId(),
+    ...(searchQuery ? { search: searchQuery } : {}),
+  }), [organizationId, searchQuery]);
+
+  const defaultParams = useMemo(() => ({
+    page: 1,
+    per_page: 20,
+    ...persistentParams,
+  }), [persistentParams]);
+
+  const apiOptions = useMemo(() => ({ key: SUBSCRIPTIONS_TABLE_KEY }), []);
+
+  const originalResponse = useTableIndexAPIResponse({
+    apiUrl: SUBSCRIPTIONS_API_URL,
+    apiOptions,
+    defaultParams,
+  });
+
+  const {
+    response: apiResponse = {},
+    status = STATUS.PENDING,
+    setAPIOptions,
+  } = originalResponse;
+
+  const wrappedSetAPIOptions = useCallback((options) => {
+    setAPIOptions({
+      ...options,
+      params: {
+        ...persistentParams,
+        ...options?.params,
+      },
+    });
+  }, [setAPIOptions, persistentParams]);
+
+  // Refetch when org or search changes
+  useEffect(() => {
+    wrappedSetAPIOptions({ ...apiOptions, params: defaultParams });
+  }, [searchQuery, organizationId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (onRefreshReady) {
+      onRefreshReady(() => wrappedSetAPIOptions({ ...apiOptions, params: defaultParams }));
+    }
+  }, [onRefreshReady, wrappedSetAPIOptions, apiOptions, defaultParams]);
+
+  useEffect(() => {
+    if (!onApiResponse) {
+      return;
+    }
+    const notifyKey = `${status}:${apiResponse?.page}:${apiResponse?.subtotal}:${(apiResponse?.results || []).length}`;
+    if (lastNotifiedRef.current === notifyKey) {
+      return;
+    }
+    lastNotifiedRef.current = notifyKey;
+
+    const missingPermissions = extractMissingPermissions(status, apiResponse);
+    onApiResponse({
+      results: apiResponse.results || [],
+      page: Number(apiResponse.page) || 1,
+      perPage: Number(apiResponse.per_page) || 20,
+      itemCount: Number(apiResponse.subtotal) || 0,
+      loading: status === STATUS.PENDING,
+      searchIsActive: !!searchQuery,
+      availableQuantities,
+      missingPermissions,
+      activePermissions: {
+        can_import_manifest: apiResponse.can_import_manifest,
+        can_delete_manifest: apiResponse.can_delete_manifest,
+        can_manage_subscription_allocations: apiResponse.can_manage_subscription_allocations,
+        can_edit_organizations: apiResponse.can_edit_organizations,
+      },
+    });
+  }, [apiResponse, status, searchQuery, availableQuantities, onApiResponse]);
+
   let bodyMessage;
-  if (allSubscriptionResults.length === 0 && subscriptions.searchIsActive) {
+  if ((apiResponse.results || []).length === 0 && searchQuery) {
     bodyMessage = __('No subscriptions match your search criteria.');
   }
 
   const groupingController = {
     isCollapseable: ({ rowData }) => rowData.collapsible,
-    isCollapsed: ({ rowData }) => !groupedSubscriptions[rowData.product_id].open,
+    isCollapsed: ({ rowData }) => !groupedSubscriptions[rowData.product_id]?.open,
     toggle: ({ rowData }) => toggleSubscriptionGroup(rowData.product_id),
   };
 
@@ -232,6 +335,7 @@ const Table = ({
       nextColumns.select = {
         title: (
           <Checkbox
+            ouiaId="select-all-subscriptions"
             id="selectAll"
             aria-label={__('Select all rows')}
             isChecked={selectionController.allRowsSelected()}
@@ -253,30 +357,18 @@ const Table = ({
 
   const columnKeys = useMemo(() => Object.keys(visibleColumns), [visibleColumns]);
 
-  const setAPIOptions = useCallback((options) => {
-    if (options?.params) {
-      loadSubscriptions(options.params);
-    }
-  }, [loadSubscriptions]);
-
   const replacementResponse = useMemo(() => ({
     response: {
       results: rows,
-      subtotal: subscriptions.itemCount,
+      subtotal: apiResponse.subtotal,
       // TableIndexPage shows top pagination when total > 0; keep only bottom pagination
       total: 0,
-      page: subscriptions.pagination?.page || 1,
-      per_page: subscriptions.pagination?.perPage || subscriptions.pagination?.per_page || 20,
+      page: apiResponse.page || 1,
+      per_page: apiResponse.per_page || 20,
     },
-    status: subscriptions.loading ? STATUS.PENDING : STATUS.RESOLVED,
-    setAPIOptions,
-  }), [rows, subscriptions, setAPIOptions]);
-
-  const apiOptions = useMemo(() => ({ key: 'SUBSCRIPTIONS_TABLE' }), []);
-  const defaultParams = useMemo(() => ({
-    page: subscriptions.pagination?.page || 1,
-    per_page: subscriptions.pagination?.perPage || subscriptions.pagination?.per_page || 20,
-  }), [subscriptions.pagination]);
+    status: status === STATUS.PENDING ? STATUS.PENDING : STATUS.RESOLVED,
+    setAPIOptions: wrappedSetAPIOptions,
+  }), [rows, apiResponse, status, wrappedSetAPIOptions]);
 
   const response = useTableIndexAPIResponse({
     replacementResponse,
@@ -298,6 +390,7 @@ const Table = ({
     defaultParams: {
       page: page || defaultParams.page,
       per_page: perPage || defaultParams.per_page,
+      ...persistentParams,
     },
     apiOptions,
     setAPIOptions: setAPIOptionsFromResponse,
@@ -305,16 +398,25 @@ const Table = ({
   });
 
   const showCustomEmptyState = rows.length === 0 && !bodyMessage && emptyState;
+  const isPending = status === STATUS.PENDING;
 
   const customToolbarItems = editing ? (
     <>
       <ToolbarItem>
-        <Button variant="primary" onClick={inlineEditController.onConfirm}>
+        <Button
+          ouiaId="confirm-subscription-edit-button"
+          variant="primary"
+          onClick={inlineEditController.onConfirm}
+        >
           {__('Confirm')}
         </Button>
       </ToolbarItem>
       <ToolbarItem>
-        <Button variant="link" onClick={inlineEditController.onCancel}>
+        <Button
+          ouiaId="cancel-subscription-edit-button"
+          variant="link"
+          onClick={inlineEditController.onCancel}
+        >
           {__('Cancel')}
         </Button>
       </ToolbarItem>
@@ -348,10 +450,10 @@ const Table = ({
           perPage: perPage || params.per_page,
         }}
         setParams={setParamsAndAPI}
-        itemCount={subtotal ?? subscriptions.itemCount}
+        itemCount={subtotal ?? apiResponse.subtotal}
         refreshData={noop}
         url={SUBSCRIPTIONS_API_URL}
-        isPending={subscriptions.loading}
+        isPending={isPending}
         isEmbedded
         ouiaId="subscriptions-table"
       >
@@ -364,7 +466,6 @@ const Table = ({
           selectionController,
           selectionEnabled,
           inlineEditController,
-          showSelectColumn,
         })}
       </TableIndexTable>
     </TableIndexPage>
@@ -378,18 +479,16 @@ Table.propTypes = {
     title: PropTypes.node,
     wrapper: PropTypes.func,
   })).isRequired,
-  subscriptions: PropTypes.shape({
-    searchIsActive: PropTypes.bool,
-    itemCount: PropTypes.number,
-    loading: PropTypes.bool,
-    pagination: PropTypes.shape({}),
-    // Disabling rule as existing code failed due to an eslint-plugin-react update
-    // eslint-disable-next-line react/forbid-prop-types
-    results: PropTypes.array,
-  }).isRequired,
-  loadSubscriptions: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string,
+  organizationId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  availableQuantities: PropTypes.shape({}),
   toggleSubscriptionGroup: PropTypes.func.isRequired,
-  selectionController: PropTypes.shape({}).isRequired,
+  selectionController: PropTypes.shape({
+    allRowsSelected: PropTypes.func,
+    selectAllRows: PropTypes.func,
+    isSelected: PropTypes.func,
+    selectRow: PropTypes.func,
+  }).isRequired,
   inlineEditController: PropTypes.shape({
     onCancel: PropTypes.func,
     onConfirm: PropTypes.func,
@@ -400,12 +499,19 @@ Table.propTypes = {
   selectionEnabled: PropTypes.bool.isRequired,
   customHeader: PropTypes.node,
   customToolbar: PropTypes.node,
+  onApiResponse: PropTypes.func,
+  onRefreshReady: PropTypes.func,
 };
 
 Table.defaultProps = {
+  searchQuery: '',
+  organizationId: undefined,
+  availableQuantities: null,
   customHeader: undefined,
   customToolbar: undefined,
   groupedSubscriptions: {},
+  onApiResponse: undefined,
+  onRefreshReady: undefined,
 };
 
 export default Table;
