@@ -1,5 +1,3 @@
-@import 'foremanReact/common/variables';
-
 h1[data-ouia-component-id="subscriptions-title"] {
   margin: 0;
   display: flex;
@@ -65,40 +63,15 @@ h1[data-ouia-component-id="subscriptions-title"] {
 }
 
 #subscriptions-table {
-  .editable {
-    &.changed {
-      font-weight: bold;
-    }
+  .editable.changed {
+    font-weight: var(--pf-v5-global--FontWeight--bold);
   }
 
-  .pf-table-inline-edit {
-    tbody {
-      .form-group {
-        margin-bottom: 0;
-      }
+  tr.open-grouped-row {
+    background-color: var(--pf-v5-global--BackgroundColor--200);
 
-      tr.open-grouped-row {
-        background-color: $table-bg-hover;
-
-        td {
-          border-bottom-color: $table-border-hover;
-        }
-      }
-    }
-
-    .table-view-pf-select {
-      width: 50px;
-
-      .collapse-subscription-group-button {
-        margin-top: 4px;
-        cursor: pointer;
-        float: left;
-        font-weight: bold;
-      }
-
-      input[type='checkbox'] {
-        float: right;
-      }
+    td {
+      border-bottom-color: var(--pf-v5-global--BorderColor--100);
     }
   }
 }
