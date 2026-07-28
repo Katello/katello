@@ -1,6 +1,12 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import _ from 'lodash';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  ToolbarGroup,
+  ToolbarItem,
+  Button,
+  Spinner,
+} from '@patternfly/react-core';
 import { Tr, Td } from '@patternfly/react-table';
 import { useHistory } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -14,20 +20,16 @@ import DefaultEmptyState from 'foremanReact/components/common/EmptyState/Default
 import api, { orgId } from '../../../services/api';
 import {
   UPSTREAM_SUBSCRIPTIONS_KEY,
+  SAVE_UPSTREAM_SUBSCRIPTIONS_KEY,
 } from './UpstreamSubscriptionsConstants';
 import useUpstreamSubscriptionsColumns from './hooks/useUpstreamSubscriptionsColumns';
-import useSaveUpstreamSubscriptions from './hooks/useSaveUpstreamSubscriptions';
+import { saveUpstreamSubscriptions } from './UpstreamSubscriptionsActions';
 import quantityValidation from './upstreamSubscriptionsHelpers';
 import './UpstreamSubscriptions.scss';
-import {
-  ToolbarGroup,
-  ToolbarItem,
-  Button,
-  Spinner,
-} from '@patternfly/react-core';
 
 const UpstreamSubscriptionsPage = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [selectedRows, setSelectedRows] = useState([]);
 
   const apiUrl = `${api.getApiUrl(`/organizations/${orgId()}/upstream_subscriptions`)}?attachable=true`;
@@ -36,8 +38,10 @@ const UpstreamSubscriptionsPage = () => {
     selectAPIResponse(state, UPSTREAM_SUBSCRIPTIONS_KEY);
   const apiResponse = useSelector(upstreamSubscriptionsSelector) || {};
   const status = useSelector(state => selectAPIStatus(state, UPSTREAM_SUBSCRIPTIONS_KEY));
+  const saveStatus = useSelector(state => selectAPIStatus(state, SAVE_UPSTREAM_SUBSCRIPTIONS_KEY));
   const { results = [], message: errorMessage } = apiResponse;
   const isLoading = status === STATUS.PENDING;
+  const isSaving = saveStatus === STATUS.PENDING;
 
   const onChange = useCallback((value, rowData) => {
     const pool = {
@@ -98,18 +102,18 @@ const UpstreamSubscriptionsPage = () => {
     selectedRows.every(pool => quantityValidation(pool)[0])
   ), [selectedRows]);
 
-  const { saveUpstreamSubscriptions, isSaving } = useSaveUpstreamSubscriptions({
-    selectedRows,
-    history,
-  });
-
   const handleSaveUpstreamSubscriptions = useCallback(() => {
     if (!validateSelectedRows()) {
       return;
     }
 
-    saveUpstreamSubscriptions();
-  }, [validateSelectedRows, saveUpstreamSubscriptions]);
+    const pools = _.map(
+      selectedRows,
+      pool => ({ id: pool.id, quantity: parseInt(pool.updatedQuantity, 10) }),
+    );
+
+    dispatch(saveUpstreamSubscriptions({ pools }, () => history.push('/subscriptions')));
+  }, [dispatch, selectedRows, history, validateSelectedRows]);
 
   const columns = useUpstreamSubscriptionsColumns({
     getRowDataWithQuantity,
