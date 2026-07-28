@@ -1,7 +1,7 @@
 import { translate as __ } from 'foremanReact/common/I18n';
 import Repos from '../../scenes/RedHatRepositories';
 import Subscriptions from '../../scenes/Subscriptions';
-import UpstreamSubscriptions from '../../scenes/Subscriptions/UpstreamSubscriptions/index';
+import UpstreamSubscriptionsPage from '../../scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage';
 import SubscriptionDetails from '../../scenes/Subscriptions/Details';
 import ActivationKeyDetails from '../../scenes/ActivationKeys/Details/ActivationKeyDetails';
 import SetOrganization from '../../components/SelectOrg/SetOrganization';
@@ -36,7 +36,7 @@ export const links = [
   },
   {
     path: 'subscriptions/add',
-    component: WithOrganization(withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') })),
+    component: WithOrganization(withHeader(UpstreamSubscriptionsPage, { title: __('Add Subscriptions') })),
   },
   {
     path: 'labs/activation_keys/:id',

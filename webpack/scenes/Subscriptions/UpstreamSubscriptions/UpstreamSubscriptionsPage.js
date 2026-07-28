@@ -20,8 +20,6 @@ import useSaveUpstreamSubscriptions from './hooks/useSaveUpstreamSubscriptions';
 import quantityValidation from './upstreamSubscriptionsHelpers';
 import './UpstreamSubscriptions.scss';
 
-const upstreamSubscriptionsApiOptions = { key: UPSTREAM_SUBSCRIPTIONS_KEY };
-
 const UpstreamSubscriptionsPage = () => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = useState([]);
@@ -161,7 +159,7 @@ const UpstreamSubscriptionsPage = () => {
   return (
     <TableIndexPage
       apiUrl={apiUrl}
-      apiOptions={upstreamSubscriptionsApiOptions}
+      apiOptions={{ key: UPSTREAM_SUBSCRIPTIONS_KEY }}
       searchable={false}
       creatable={false}
       ouiaId="upstream-subscriptions-table"

@@ -1,14 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
+import { useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { useAPI } from 'foremanReact/common/hooks/API/APIHooks';
+import { addToast } from 'foremanReact/components/ToastsList';
 import { STATUS } from 'foremanReact/constants';
 import api, { orgId } from '../../../../services/api';
 import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { SAVE_UPSTREAM_SUBSCRIPTIONS_KEY } from '../UpstreamSubscriptionsConstants';
 
 const useSaveUpstreamSubscriptions = ({ selectedRows, history }) => {
+  const dispatch = useDispatch();
   const [saveParams, setSaveParams] = useState(null);
 
   const saveUrl = api.getApiUrl(`/organizations/${orgId()}/upstream_subscriptions`);
@@ -36,9 +39,9 @@ const useSaveUpstreamSubscriptions = ({ selectedRows, history }) => {
       </span>
     );
 
-    window.tfm.toastNotifications.notify({ message, type: 'success' });
+    dispatch(addToast({ type: 'success', message }));
     history.push('/subscriptions');
-  }, [history]);
+  }, [dispatch, history]);
 
   const prevSaveStatusRef = useRef(saveStatus);
 

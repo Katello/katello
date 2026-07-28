@@ -56,14 +56,6 @@ const waitForSubscriptionsTable = async () => {
 };
 
 describe('upstream subscriptions page', () => {
-  beforeEach(() => {
-    window.tfm = {
-      toastNotifications: {
-        notify: jest.fn(),
-      },
-    };
-  });
-
   it('loads and renders upstream subscriptions', async () => {
     mockListRequest();
 
@@ -187,15 +179,15 @@ describe('upstream subscriptions page', () => {
       })
       .reply(200, taskSuccessResponse);
 
-    renderUpstreamSubscriptionsPage(history);
+    const { store } = renderUpstreamSubscriptionsPage(history);
     await waitForSubscriptionsTable();
 
     await userEvent.type(screen.getAllByLabelText('Number to Allocate')[0], '5');
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
     await patientlyWaitFor(() => {
-      expect(window.tfm.toastNotifications.notify)
-        .toHaveBeenCalledWith(expect.objectContaining({ type: 'success' }));
+      const toasts = Object.values(store.getState().toasts);
+      expect(toasts.some(({ type }) => type === 'success')).toBe(true);
       expect(history.location.pathname).toBe('/subscriptions');
     });
 

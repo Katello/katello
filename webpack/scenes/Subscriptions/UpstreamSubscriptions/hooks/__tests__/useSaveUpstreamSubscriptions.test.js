@@ -43,14 +43,6 @@ describe('useSaveUpstreamSubscriptions', () => {
     },
   ];
 
-  beforeEach(() => {
-    window.tfm = {
-      toastNotifications: {
-        notify: jest.fn(),
-      },
-    };
-  });
-
   it('posts all selected pool quantities in the request body', async () => {
     const history = { push: jest.fn() };
     let postedBody;
