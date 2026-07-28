@@ -63,7 +63,7 @@ describe('upstream subscriptions page', () => {
     await waitForSubscriptionsTable();
 
     expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument();
-    expect(screen.getByLabelText('toggle action dropdown')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
     expect(screen.getByText('Subscriptions')).toBeInTheDocument();
     expect(screen.getAllByText('Add Subscriptions').length).toBeGreaterThan(0);
   });
@@ -153,7 +153,7 @@ describe('upstream subscriptions page', () => {
     });
 
     expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
-    expect(screen.queryByLabelText('toggle action dropdown')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Cancel' })).not.toBeInTheDocument();
   });
 
   it('navigates to subscriptions when cancel is clicked', async () => {
@@ -163,8 +163,7 @@ describe('upstream subscriptions page', () => {
     renderUpstreamSubscriptionsPage(history);
     await waitForSubscriptionsTable();
 
-    await userEvent.click(screen.getByLabelText('toggle action dropdown'));
-    await userEvent.click(screen.getByText('Cancel'));
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
     expect(history.location.pathname).toBe('/subscriptions');
   });

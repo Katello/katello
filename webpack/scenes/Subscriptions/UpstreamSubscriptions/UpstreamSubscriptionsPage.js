@@ -19,6 +19,12 @@ import useUpstreamSubscriptionsColumns from './hooks/useUpstreamSubscriptionsCol
 import useSaveUpstreamSubscriptions from './hooks/useSaveUpstreamSubscriptions';
 import quantityValidation from './upstreamSubscriptionsHelpers';
 import './UpstreamSubscriptions.scss';
+import {
+  ToolbarGroup,
+  ToolbarItem,
+  Button,
+  Spinner,
+} from '@patternfly/react-core';
 
 const UpstreamSubscriptionsPage = () => {
   const history = useHistory();
@@ -113,24 +119,31 @@ const UpstreamSubscriptionsPage = () => {
     handleSaveUpstreamSubscriptions,
   });
 
-  const customActionButtons = useMemo(() => (
-    results.length > 0 ? [
-      {
-        title: __('Submit'),
-        ouiaId: 'upstream-subscriptions-submit-button',
-        action: {
-          onClick: handleSaveUpstreamSubscriptions,
-          isDisabled: isLoading || isSaving || !validateSelectedRows(),
-        },
-      },
-      {
-        title: __('Cancel'),
-        ouiaId: 'upstream-subscriptions-cancel-button',
-        action: {
-          onClick: () => history.push('/subscriptions'),
-        },
-      },
-    ] : []
+  const customToolbarItems = useMemo(() => (
+    results.length > 0 ? (
+      <ToolbarGroup align={{ default: 'alignLeft' }}>
+        <ToolbarItem>
+          <Button
+            ouiaId="upstream-subscriptions-submit-button"
+            variant="primary"
+            onClick={handleSaveUpstreamSubscriptions}
+            isDisabled={isLoading || isSaving || !validateSelectedRows()}
+          >
+            {__('Submit')}
+          </Button>
+        </ToolbarItem>
+        <ToolbarItem>
+          <Button
+            ouiaId="upstream-subscriptions-cancel-button"
+            variant="secondary"
+            onClick={() => history.push('/subscriptions')}
+          >
+            {__('Cancel')}
+          </Button>
+        </ToolbarItem>
+        {isLoading && <Spinner size="lg" />}
+      </ToolbarGroup>
+    ) : null
   ), [
     results.length,
     isLoading,
@@ -175,7 +188,7 @@ const UpstreamSubscriptionsPage = () => {
         ],
       }}
       columns={columns}
-      customActionButtons={customActionButtons}
+      customToolbarItems={customToolbarItems}
       customEmptyState={customEmptyState}
     />
   );
