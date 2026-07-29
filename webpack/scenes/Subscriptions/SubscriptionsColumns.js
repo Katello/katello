@@ -49,8 +49,12 @@ export const createSubscriptionsColumns = () => ({
   },
   product_id: {
     title: __('SKU'),
-    wrapper: ({ product_id: productId, upstream_pool_id: upstreamPoolId }) =>
-      (upstreamPoolId ? productId : '—'),
+    wrapper: ({
+      product_id: productId,
+      upstream_pool_id: upstreamPoolId,
+      local_pool_ids: localPoolIds,
+    }) =>
+      ((upstreamPoolId || localPoolIds?.length) ? productId : '—'),
   },
   contract_number: {
     title: __('Contract'),

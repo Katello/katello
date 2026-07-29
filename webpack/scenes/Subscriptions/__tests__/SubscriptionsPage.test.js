@@ -22,7 +22,10 @@ jest.mock('foremanReact/components/PermissionDenied', () => ({
     <div>{`PermissionDenied: ${missingPermissions.join(', ')}`}</div>
   ),
 }));
-jest.mock('foremanReact/components/ForemanModal', () => (<div>ForemanModal Mock</div>));
+jest.mock('foremanReact/components/ForemanModal', () => ({
+  __esModule: true,
+  default: () => <div>ForemanModal Mock</div>,
+}));
 jest.mock('../Manifest/', () => ({
   __esModule: true, default: () => <div>ManageManifestModal Mock</div>,
 }));
