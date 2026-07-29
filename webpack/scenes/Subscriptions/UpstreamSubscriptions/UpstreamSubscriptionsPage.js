@@ -157,7 +157,7 @@ const UpstreamSubscriptionsPage = () => {
     history,
   ]);
 
-  const customEmptyState = !isLoading && results.length === 0 && !errorMessage ? (
+  const customEmptyState = status === STATUS.RESOLVED && results.length === 0 && !errorMessage ? (
     <Tr ouiaId="table-empty">
       <Td colSpan={100}>
         <DefaultEmptyState
