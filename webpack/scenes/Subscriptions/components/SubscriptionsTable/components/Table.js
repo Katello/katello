@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import {
   Button,
   Checkbox,
-  FormControl,
   FormGroup,
-  HelpBlock,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
   Spinner,
+  TextInput,
   ToolbarItem,
 } from '@patternfly/react-core';
 import { AngleDownIcon, AngleRightIcon } from '@patternfly/react-icons';
@@ -21,7 +23,6 @@ import {
 import { translate as __, sprintf } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
-import { KEYCODES } from 'foremanReact/common/keyCodes';
 import EmptyState from 'foremanReact/components/common/EmptyState';
 import classNames from 'classnames';
 import { orgId } from '../../../../../services/api';
@@ -59,18 +60,24 @@ const renderEntitlementsCell = (rowData, rowIndex, inlineEditController) => {
     const formGroup = !upstreamAvailableLoaded ? (
       <Spinner size="sm" />
     ) : (
-      <FormGroup validationState={validation.state}>
-        <FormControl
+      <FormGroup>
+        <TextInput
           type="text"
           defaultValue={value}
+          validated={validation.state}
           onBlur={e => onChange(e.target.value, additionalData)}
+          ouiaId={`edit-entitlements-${rowData.id ?? rowIndex}`}
         />
-        <HelpBlock>
-          {maxMessage}
-          <div className="validationMessages">
-            {validation.message}
-          </div>
-        </HelpBlock>
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem variant={validation.state}>
+              {maxMessage}
+              <div className="validationMessages">
+                {validation.message}
+              </div>
+            </HelperTextItem>
+          </HelperText>
+        </FormHelperText>
       </FormGroup>
     );
 
@@ -92,13 +99,15 @@ const renderEntitlementsCell = (rowData, rowIndex, inlineEditController) => {
       {editable ? (
         <div
           onClick={() => onActivate(additionalData)}
-          onKeyPress={(e) => {
-            if (e.keyCode === KEYCODES.ENTER) {
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
               onActivate(additionalData);
             }
           }}
           className="input"
-          role="textbox"
+          role="button"
+          aria-label={__('Edit entitlements')}
           tabIndex={0}
         >
           {displayValue}
@@ -143,7 +152,7 @@ const renderSubscriptionRows = ({
         {columnKeys.map((key) => {
           if (key === 'select') {
             return (
-              <Td key="select" dataLabel={__('Select all rows')}>
+              <Td key="select" dataLabel={__('Select row')}>
                 {shouldShowCollapse && (
                   <Button
                     ouiaId={`collapse-subscription-group-${rowData.id ?? rowIndex}`}
@@ -287,7 +296,8 @@ const Table = ({
     if (!onApiResponse) {
       return;
     }
-    const notifyKey = `${status}:${apiResponse?.page}:${apiResponse?.subtotal}:${(apiResponse?.results || []).length}`;
+    const quantitiesKey = JSON.stringify(availableQuantities);
+    const notifyKey = `${status}:${apiResponse?.page}:${apiResponse?.subtotal}:${(apiResponse?.results || []).length}:${quantitiesKey}`;
     if (lastNotifiedRef.current === notifyKey) {
       return;
     }

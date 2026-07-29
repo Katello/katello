@@ -73,7 +73,7 @@ const SubscriptionsPage = () => {
   const [task, setTask] = useState(null);
   const [hasUpstreamConnection, setHasUpstreamConnection] = useState(false);
   const [availableQuantities, setAvailableQuantities] = useState(null);
-  const [availableQuantitiesLoaded, setAvailableQuantitiesLoaded] = useState(false);
+  const [loadedQuantityPoolIds, setLoadedQuantityPoolIds] = useState('');
   const [activePermissions, setActivePermissions] = useState({});
   const [missingPermissions, setMissingPermissions] = useState(undefined);
   const [subscriptionResults, setSubscriptionResults] = useState([]);
@@ -84,6 +84,9 @@ const SubscriptionsPage = () => {
   const prevPropsRef = useRef({});
   const finishedTaskIdsRef = useRef(new Set());
   const startedTaskIdRef = useRef(null);
+  const subscriptionsTableRef = useRef(null);
+  const quantitiesRequestTokenRef = useRef(0);
+  const quantitiesInFlightPoolIdsRef = useRef('');
 
   const {
     columns: userColumns,
@@ -258,7 +261,7 @@ const SubscriptionsPage = () => {
             setHasUpstreamConnection(false);
           }
           setTask(null);
-          setAvailableQuantitiesLoaded(false);
+          setLoadedQuantityPoolIds('');
         }
       } else if (startedTaskIdRef.current !== String(task.id)) {
         startedTaskIdRef.current = String(task.id);
@@ -285,9 +288,13 @@ const SubscriptionsPage = () => {
       dispatch(cancelPollTasks());
       dispatch(pollTasks());
       refreshSubscriptions();
+      setHasUpstreamConnection(false);
+      setAvailableQuantities(null);
+      setLoadedQuantityPoolIds('');
+      quantitiesRequestTokenRef.current += 1;
+      quantitiesInFlightPoolIdsRef.current = '';
       if (isManifestImported) {
         doPingUpstream();
-        setAvailableQuantitiesLoaded(false);
       }
     }
 
@@ -296,19 +303,37 @@ const SubscriptionsPage = () => {
 
   // Handle available quantities loading
   useEffect(() => {
-    if (hasUpstreamConnection && subscriptionResults.length > 0) {
-      const poolIds = filterRHSubscriptions(subscriptionResults).map(subs => subs.id);
-      if (poolIds.length > 0 && !availableQuantitiesLoaded) {
-        dispatch(loadAvailableQuantities({ poolIds }, (response) => {
-          setAvailableQuantities(selectSubscriptionsQuantitiesFromResponse(response.data));
-        }));
-        setAvailableQuantitiesLoaded(true);
-      }
+    if (!hasUpstreamConnection || subscriptionResults.length === 0) {
+      quantitiesRequestTokenRef.current += 1;
+      quantitiesInFlightPoolIdsRef.current = '';
+      return;
     }
+
+    const poolIds = filterRHSubscriptions(subscriptionResults).map(subs => subs.id);
+    const poolIdsKey = [...poolIds].sort().join(',');
+    if (
+      poolIds.length === 0 ||
+      poolIdsKey === loadedQuantityPoolIds ||
+      poolIdsKey === quantitiesInFlightPoolIdsRef.current
+    ) {
+      return;
+    }
+
+    quantitiesRequestTokenRef.current += 1;
+    const requestToken = quantitiesRequestTokenRef.current;
+    quantitiesInFlightPoolIdsRef.current = poolIdsKey;
+    dispatch(loadAvailableQuantities({ poolIds }, (response) => {
+      if (requestToken !== quantitiesRequestTokenRef.current) {
+        return;
+      }
+      quantitiesInFlightPoolIdsRef.current = '';
+      setAvailableQuantities(selectSubscriptionsQuantitiesFromResponse(response.data));
+      setLoadedQuantityPoolIds(poolIdsKey);
+    }));
   }, [
     hasUpstreamConnection,
     subscriptionResults,
-    availableQuantitiesLoaded,
+    loadedQuantityPoolIds,
     dispatch,
   ]);
 
@@ -438,7 +463,7 @@ const SubscriptionsPage = () => {
         closeModal={() => setIsManageManifestModalOpen(false)}
       />
 
-      <div id="subscriptions-table" className="modal-container">
+      <div id="subscriptions-table" className="modal-container" ref={subscriptionsTableRef}>
         <SubscriptionsTable
           canManageSubscriptionAllocations={canManageSubscriptionAllocations}
           tableColumns={selectedColumnKeys}
@@ -462,8 +487,8 @@ const SubscriptionsPage = () => {
         />
         <ModalProgressBar
           show={!!task}
-          container={document.getElementById('subscriptions-table')}
-          title={task ? task.humanized.action : null}
+          container={subscriptionsTableRef.current}
+          title={task ? (task.humanized?.action ?? null) : null}
           progress={task ? Math.round(task.progress * 100) : 0}
         />
       </div>
