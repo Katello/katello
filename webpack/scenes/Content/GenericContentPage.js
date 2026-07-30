@@ -70,8 +70,8 @@ const GenericContentPage = () => {
   }
 
   return (
-    <Grid>
-      <GridItem span={12} className="margin-24">
+    <Grid className="katello-page-section">
+      <GridItem span={12} className="katello-page-header">
         <TextContent>
           <Text ouiaId="page-text" component={TextVariants.h1}>{__(`${selectedContentType}`)}</Text>
         </TextContent>

@@ -33,6 +33,7 @@ const ContentTable = ({
       ouiaId="content-table"
       key={selectedContentType}
       variant={TableVariant.compact}
+      isStriped
       autocompleteEndpoint={`/katello/api/v2/${contentTypes[selectedContentType][1]}`}
       bookmarkController="katello_generic_content_units"
       emptyContentTitle={__(`You currently don't have any ${selectedContentType}.`)}
