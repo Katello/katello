@@ -34,15 +34,7 @@ const MANIFEST_TAB = 1;
 const HISTORY_TAB = 2;
 const CDN_TAB = 3;
 
-const getDefaultTabKey = ({
-  canImportManifest,
-  canDeleteManifest,
-  canEditOrganizations,
-}) => {
-  const showSubscriptionManifest = canImportManifest || canDeleteManifest;
-  const showManifestTab = canEditOrganizations || showSubscriptionManifest;
-  return showManifestTab ? MANIFEST_TAB : HISTORY_TAB;
-};
+const getDefaultTabKey = showManifestTab => (showManifestTab ? MANIFEST_TAB : HISTORY_TAB);
 
 const ManifestHistoryContent = ({ manifestHistory }) => {
   if (manifestHistory.results.length === 0) {
@@ -72,10 +64,10 @@ const ManifestHistoryContent = ({ manifestHistory }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {manifestHistory.results.map(record => (
+        {manifestHistory.results.map((record, index) => (
           <Tr
-            key={`${record.created}-${record.statusMessage}`}
-            ouiaId={`manifest-history-row-${record.created}`}
+            key={`${record.created}-${record.statusMessage}-${index}`}
+            ouiaId={`manifest-history-row-${index}`}
           >
             <Td>{record.status}</Td>
             <Td>{record.statusMessage}</Td>
@@ -114,12 +106,11 @@ const ManageManifestModal = ({
   manifestHistory,
   contentCredentials,
 }) => {
+  const showSubscriptionManifest = canImportManifest || canDeleteManifest;
+  const showManifestTab = canEditOrganizations || showSubscriptionManifest;
+
   const [isDeleteManifestModalOpen, setIsDeleteManifestModalOpen] = useState(false);
-  const [activeTabKey, setActiveTabKey] = useState(() => getDefaultTabKey({
-    canImportManifest,
-    canDeleteManifest,
-    canEditOrganizations,
-  }));
+  const [activeTabKey, setActiveTabKey] = useState(() => getDefaultTabKey(showManifestTab));
 
   const manifestTabRef = useRef(null);
   const historyTabRef = useRef(null);
@@ -166,8 +157,6 @@ const ManageManifestModal = ({
 
   const actionInProgress = (taskInProgress || manifestActionStarted);
   const showCdnConfigurationTab = canEditOrganizations;
-  const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
-  const showManifestTab = (canEditOrganizations || showSubscriptionManifest);
 
   const getManifestName = () => {
     let name = __('No manifest imported');
