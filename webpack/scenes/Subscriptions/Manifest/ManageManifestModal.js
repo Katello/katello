@@ -161,7 +161,6 @@ const ManageManifestModal = ({
               actionInProgress={actionInProgress}
               disableManifestActions={disableManifestActions}
               disabledReason={disabledReason}
-              taskInProgress={taskInProgress}
               upload={upload}
               refresh={refresh}
               delete={deleteManifestAction}

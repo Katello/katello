@@ -50,7 +50,11 @@ const ManifestHistoryContent = ({ manifestHistory }) => {
 
 ManifestHistoryContent.propTypes = {
   manifestHistory: PropTypes.shape({
-    results: PropTypes.arrayOf(PropTypes.shape({})),
+    results: PropTypes.arrayOf(PropTypes.shape({
+      status: PropTypes.string,
+      statusMessage: PropTypes.string,
+      created: PropTypes.string,
+    })),
   }).isRequired,
 };
 

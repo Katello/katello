@@ -52,7 +52,6 @@ const ManifestTabContent = ({
   actionInProgress,
   disableManifestActions,
   disabledReason,
-  taskInProgress,
   upload,
   refresh,
   delete: deleteManifestAction,
@@ -60,7 +59,7 @@ const ManifestTabContent = ({
   const [isDeleteManifestModalOpen, setIsDeleteManifestModalOpen] = useState(false);
 
   const disabledTooltipText = () => {
-    if (taskInProgress) {
+    if (actionInProgress) {
       return __('This is disabled because a manifest task is in progress');
     }
     return __('This is disabled because no manifest exists');
@@ -162,7 +161,10 @@ const ManifestTabContent = ({
                 type="file"
                 accept=".zip"
                 disabled={actionInProgress}
-                onChange={e => uploadManifest(e.target.files)}
+                onChange={(e) => {
+                  uploadManifest(e.target.files);
+                  e.target.value = null;
+                }}
               />
             }
             <div id="manifest-actions-row">
@@ -248,7 +250,6 @@ ManifestTabContent.propTypes = {
   actionInProgress: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
   disabledReason: PropTypes.string,
-  taskInProgress: PropTypes.bool.isRequired,
   upload: PropTypes.func.isRequired,
   refresh: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
