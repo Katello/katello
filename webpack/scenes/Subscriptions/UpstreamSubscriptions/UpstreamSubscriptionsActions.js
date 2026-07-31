@@ -14,24 +14,17 @@ import {
   PING_UPSTREAM_SUBSCRIPTIONS_FAILURE,
 } from './UpstreamSubscriptionsConstants';
 
-export const pingUpstreamSubscriptions = ({ handleSuccess, handleError } = {}) =>
-  async (dispatch) => {
-    try {
-      const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions/ping`);
-      if (handleSuccess) {
-        handleSuccess(data);
-      }
-      return dispatch({
-        type: PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      if (handleError) {
-        handleError(error);
-      }
-      return dispatch(apiError(PING_UPSTREAM_SUBSCRIPTIONS_FAILURE, error));
-    }
-  };
+export const pingUpstreamSubscriptions = () => async (dispatch) => {
+  try {
+    const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions/ping`);
+    return dispatch({
+      type: PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(PING_UPSTREAM_SUBSCRIPTIONS_FAILURE, error));
+  }
+};
 
 export const loadUpstreamSubscriptions = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: UPSTREAM_SUBSCRIPTIONS_REQUEST });

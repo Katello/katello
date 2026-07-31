@@ -81,8 +81,11 @@ const SubscriptionsToolbar = ({
 
   return (
     <Toolbar id="subscriptions-toolbar" ouiaId="subscriptions-toolbar">
-      <ToolbarContent>
-        <ToolbarGroup variant="filter-group" className="subscriptions-filter-group">
+      <ToolbarContent className="subscriptions-toolbar-content">
+        <ToolbarGroup
+          variant="filter-group"
+          className="subscriptions-filter-group"
+        >
           <ToolbarItem variant="search-filter">
             <SearchBar
               data={{
@@ -99,7 +102,7 @@ const SubscriptionsToolbar = ({
             />
           </ToolbarItem>
         </ToolbarGroup>
-        <ToolbarGroup>
+        <ToolbarGroup variant="button-group">
           {canManageSubscriptionAllocations &&
             <ToolbarItem>
               <LinkContainer

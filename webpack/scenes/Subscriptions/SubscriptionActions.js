@@ -9,7 +9,6 @@ import {
   UPDATE_QUANTITY_KEY,
   DELETE_SUBSCRIPTIONS_KEY,
   BLOCKING_FOREMAN_TASK_TYPES,
-  MANIFEST_DELETE_TASK_LABEL,
 } from './SubscriptionConstants';
 import {
   startPollingTask,
@@ -21,7 +20,6 @@ import {
 } from '../Tasks/TaskActions';
 import { selectIsPollingTasks, selectIsPollingTask } from '../Tasks/TaskSelectors';
 import { bulkSearchKey } from '../Tasks/helpers';
-import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
 
 const quantitiesErrorToast = (error) => {
   const messages = getResponseErrorMsgs({
@@ -60,6 +58,14 @@ export const pollTasks = () => (dispatch, getState) => {
   if (selectIsPollingTasks(getState(), SUBSCRIPTIONS)) {
     return undefined;
   }
+  // Clear stale bulk-search payload so empty results from a prior visit cannot
+  // cancel this session before the first fresh response arrives (e.g. after
+  // redirecting from Add Subscriptions while a bind-entitlements task is pending).
+  dispatch({
+    type: `${bulkSearchKey(SUBSCRIPTIONS)}_UPDATE`,
+    key: bulkSearchKey(SUBSCRIPTIONS),
+    payload: {},
+  });
   return dispatch(startPollingTasks(SUBSCRIPTIONS, {
     organization_id: orgId(),
     result: 'pending',
@@ -67,7 +73,7 @@ export const pollTasks = () => (dispatch, getState) => {
   }));
 };
 
-export const handleFinishedTask = (task, refreshSubscriptions, pingHandlers = {}) =>
+export const handleFinishedTask = (task, refreshSubscriptions) =>
   (dispatch) => {
     dispatch(stopPollingTask(SUBSCRIPTIONS));
     dispatch(clearPollTaskData(SUBSCRIPTIONS));
@@ -83,10 +89,6 @@ export const handleFinishedTask = (task, refreshSubscriptions, pingHandlers = {}
     dispatch(pollTasks());
     if (refreshSubscriptions) {
       refreshSubscriptions();
-    }
-
-    if (task.label !== MANIFEST_DELETE_TASK_LABEL) {
-      dispatch(pingUpstreamSubscriptions(pingHandlers));
     }
   };
 
@@ -105,7 +107,7 @@ export const updateQuantity = (quantities = {}, handleSuccess) => put({
   url: api.getApiUrl(`/organizations/${orgId()}/upstream_subscriptions`),
   params: { pools: quantities },
   handleSuccess,
-  errorToast: error => getResponseErrorMsgs(error.response),
+  errorToast: quantitiesErrorToast,
 });
 
 // Foreman APIActions.delete does not send a body; pass pool_ids as query params.
@@ -119,6 +121,6 @@ export const deleteSubscriptions = (poolIds, handleSuccess) => {
     key: DELETE_SUBSCRIPTIONS_KEY,
     url: api.getApiUrl(`/organizations/${orgId()}/upstream_subscriptions?${query}`),
     handleSuccess,
-    errorToast: error => getResponseErrorMsgs(error.response),
+    errorToast: quantitiesErrorToast,
   });
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -37,6 +37,9 @@ import { selectOrganizationState, selectIsManifestImported } from '../Organizati
 import { selectIsPollingTask, selectIsPollingTasks } from '../Tasks/TaskSelectors';
 import { bulkSearchKey, pollTaskKey } from '../Tasks/helpers';
 import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
+import {
+  PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
+} from './UpstreamSubscriptions/UpstreamSubscriptionsConstants';
 import {
   uploadManifest,
   deleteManifest,
@@ -84,7 +87,6 @@ const SubscriptionsPage = () => {
   const prevPropsRef = useRef({});
   const finishedTaskIdsRef = useRef(new Set());
   const startedTaskIdRef = useRef(null);
-  const subscriptionsTableRef = useRef(null);
   const quantitiesRequestTokenRef = useRef(0);
   const quantitiesInFlightPoolIdsRef = useRef('');
 
@@ -147,20 +149,10 @@ const SubscriptionsPage = () => {
     refreshSubscriptionsRef.current = refreshFn;
   }, []);
 
-  const handlePingSuccess = useCallback(() => {
-    setHasUpstreamConnection(true);
-  }, []);
-
-  const handlePingError = useCallback(() => {
-    setHasUpstreamConnection(false);
-  }, []);
-
-  const doPingUpstream = useCallback(() => {
-    dispatch(pingUpstreamSubscriptions({
-      handleSuccess: handlePingSuccess,
-      handleError: handlePingError,
-    }));
-  }, [dispatch, handlePingSuccess, handlePingError]);
+  const doPingUpstream = useCallback(async () => {
+    const action = await dispatch(pingUpstreamSubscriptions());
+    setHasUpstreamConnection(action?.type === PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS);
+  }, [dispatch]);
 
   const getDisabledReason = useCallback((deleteButton) => {
     let disabledReason = null;
@@ -188,10 +180,14 @@ const SubscriptionsPage = () => {
     setMissingPermissions(apiData.missingPermissions);
   }, []);
 
-  // Stop task polling on unmount
-  useEffect(() => () => {
-    dispatch(cancelPollTasks());
-    dispatch(stopPollingTask(SUBSCRIPTIONS));
+  // Start watching for pending subscription tasks on mount (e.g. bind entitlements
+  // after redirect from Add Subscriptions). Stop on unmount.
+  useEffect(() => {
+    dispatch(pollTasks());
+    return () => {
+      dispatch(cancelPollTasks());
+      dispatch(stopPollingTask(SUBSCRIPTIONS));
+    };
   }, [dispatch]);
 
   // Watch bulk-search results: adopt a pending task, or stop when idle.
@@ -253,12 +249,11 @@ const SubscriptionsPage = () => {
           const finishedTask = task;
           finishedTaskIdsRef.current.add(String(finishedTask.id));
           startedTaskIdRef.current = null;
-          dispatch(handleFinishedTask(finishedTask, refreshSubscriptions, {
-            handleSuccess: handlePingSuccess,
-            handleError: handlePingError,
-          }));
+          dispatch(handleFinishedTask(finishedTask, refreshSubscriptions));
           if (finishedTask.label === MANIFEST_DELETE_TASK_LABEL) {
             setHasUpstreamConnection(false);
+          } else {
+            doPingUpstream();
           }
           setTask(null);
           setLoadedQuantityPoolIds('');
@@ -274,7 +269,7 @@ const SubscriptionsPage = () => {
       isTaskPending: isTaskPending && !isTaskStopped,
     };
   }, [task, isPollingTask, isTaskPending, isTaskStopped, dispatch, refreshSubscriptions,
-    handlePingSuccess, handlePingError]);
+    doPingUpstream]);
 
   // Handle organization changes
   const organizationId = organization?.id;
@@ -338,6 +333,7 @@ const SubscriptionsPage = () => {
   ]);
 
   const currentOrg = orgId();
+  const columns = useMemo(() => createSubscriptionsColumns(), []);
 
   if (organization?.error && !organization.loading) {
     const statusCode = organization.error.response?.status;
@@ -376,7 +372,6 @@ const SubscriptionsPage = () => {
     setDeleteButtonDisabled(!rowsSelected);
 
   const csvParams = createSubscriptionParams({ search: searchQuery });
-  const columns = createSubscriptionsColumns();
   const emptyStateData = isManifestImported
     ? {
       header: __('There are no Subscriptions to display'),
@@ -463,7 +458,7 @@ const SubscriptionsPage = () => {
         closeModal={() => setIsManageManifestModalOpen(false)}
       />
 
-      <div id="subscriptions-table" className="modal-container" ref={subscriptionsTableRef}>
+      <div id="subscriptions-table">
         <SubscriptionsTable
           canManageSubscriptionAllocations={canManageSubscriptionAllocations}
           tableColumns={selectedColumnKeys}
@@ -487,7 +482,6 @@ const SubscriptionsPage = () => {
         />
         <ModalProgressBar
           show={!!task}
-          container={subscriptionsTableRef.current}
           title={task ? (task.humanized?.action ?? null) : null}
           progress={task ? Math.round(task.progress * 100) : 0}
         />

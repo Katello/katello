@@ -131,6 +131,9 @@ const SubscriptionsTable = ({
     if (editedValue !== undefined) {
       const originalRows = subscriptions.results;
       const index = findIndex(originalRows, row => (row.id === rowData.id));
+      if (index < 0) {
+        return false;
+      }
       const currentValue = originalRows[index].quantity;
 
       return (`${editedValue}` !== `${currentValue}`);
