@@ -1,89 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
 import {
-  Alert,
   Button,
-  Divider,
-  Grid,
-  GridItem,
   Modal,
   ModalVariant,
-  Spinner,
   Tab,
   Tabs,
   TabContent,
   TabTitleText,
-  Title,
 } from '@patternfly/react-core';
-import { Table, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
-import { propsToCamelCase, getDocsURL } from 'foremanReact/common/helpers';
-import Slot from 'foremanReact/components/common/Slot';
-import EmptyState from 'foremanReact/components/common/EmptyState';
+import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import Loading from 'foremanReact/components/Loading';
-import TooltipButton from '../../../components/TooltipButton';
-import DeleteManifestModalText from './DeleteManifestModalText';
-import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
+import { MANAGE_MANIFEST_MODAL_ID } from './ManifestConstants';
+import {
+  MANIFEST_TAB,
+  HISTORY_TAB,
+  CDN_TAB,
+  getDefaultTabKey,
+} from './ManageManifestModalConstants';
 import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../ContentCredentials/ContentCredentialConstants';
-import CdnConfigurationForm from './CdnConfigurationTab';
+import ManifestHistoryContent from './ManifestHistoryContent';
+import ManifestTabContent from './ManifestTabContent';
+import CdnTabContent from './CdnTabContent';
 
 import './ManageManifestModal.scss';
-
-const MANIFEST_TAB = 1;
-const HISTORY_TAB = 2;
-const CDN_TAB = 3;
-
-const getDefaultTabKey = showManifestTab => (showManifestTab ? MANIFEST_TAB : HISTORY_TAB);
-
-const ManifestHistoryContent = ({ manifestHistory }) => {
-  if (manifestHistory.results.length === 0) {
-    return (
-      <EmptyState
-        header={__('There is no manifest history to display.')}
-        description={__('Import a manifest using the Manifest tab above.')}
-        documentation={{
-          label: __('Learn more about adding subscription manifests in '),
-          buttonLabel: __('the documentation.'),
-          url: getDocsURL('Managing_Content', 'Managing_Red_Hat_Subscriptions_content-management'),
-        }}
-      />
-    );
-  }
-
-  return (
-    <Table
-      ouiaId="manifest-history-table"
-      aria-label={__('Manifest history table')}
-    >
-      <Thead>
-        <Tr ouiaId="manifest-history-header-row">
-          <Th>{__('Status')}</Th>
-          <Th>{__('Message')}</Th>
-          <Th>{__('Timestamp')}</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {manifestHistory.results.map((record, index) => (
-          <Tr
-            key={`${record.created}-${record.statusMessage}-${index}`}
-            ouiaId={`manifest-history-row-${index}`}
-          >
-            <Td>{record.status}</Td>
-            <Td>{record.statusMessage}</Td>
-            <Td>{record.created}</Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
-  );
-};
-
-ManifestHistoryContent.propTypes = {
-  manifestHistory: PropTypes.shape({
-    results: PropTypes.arrayOf(PropTypes.shape({})),
-  }).isRequired,
-};
 
 const ManageManifestModal = ({
   isOpen,
@@ -109,7 +50,6 @@ const ManageManifestModal = ({
   const showSubscriptionManifest = canImportManifest || canDeleteManifest;
   const showManifestTab = canEditOrganizations || showSubscriptionManifest;
 
-  const [isDeleteManifestModalOpen, setIsDeleteManifestModalOpen] = useState(false);
   const [activeTabKey, setActiveTabKey] = useState(() => getDefaultTabKey(showManifestTab));
 
   const manifestTabRef = useRef(null);
@@ -135,19 +75,6 @@ const ManageManifestModal = ({
     prevTaskInProgress.current = taskInProgress;
   }, [taskInProgress, closeModal, loadOrganization, loadManifestHistory]);
 
-  const disabledTooltipText = () => {
-    if (taskInProgress) {
-      return __('This is disabled because a manifest task is in progress');
-    }
-    return __('This is disabled because no manifest exists');
-  };
-
-  const uploadManifest = (fileList) => {
-    if (fileList.length > 0) {
-      upload(fileList[0]);
-    }
-  };
-
   const {
     manifestExpiringSoon,
     manifestExpired,
@@ -157,201 +84,6 @@ const ManageManifestModal = ({
 
   const actionInProgress = (taskInProgress || manifestActionStarted);
   const showCdnConfigurationTab = canEditOrganizations;
-
-  const getManifestName = () => {
-    let name = __('No manifest imported');
-
-    if (
-      organization.owner_details &&
-      organization.owner_details.upstreamConsumer
-    ) {
-      const link = [
-        'https://',
-        organization.owner_details.upstreamConsumer.webUrl,
-        organization.owner_details.upstreamConsumer.uuid,
-      ].join('/');
-
-      name = (
-        <a href={link}>{organization.owner_details.upstreamConsumer.name}</a>
-      );
-    }
-
-    return name;
-  };
-
-  const manifestExpiredMessage = manifestExpirationDate
-    ? __('Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.')
-    : __('Your manifest has expired. To continue using Red Hat content, import a new manifest.');
-
-  const manifestTabContent = (
-    <>
-      {showSubscriptionManifest &&
-        <Grid hasGutter>
-          <GridItem span={12}>
-            <Title headingLevel="h3" size="lg" ouiaId="subscription-manifest-title">
-              {__('Subscription Manifest')}
-            </Title>
-          </GridItem>
-          {manifestExpiringSoon &&
-            <GridItem span={12}>
-              <Alert
-                ouiaId="manifest-expiring-soon-alert"
-                variant="warning"
-                title={__('Manifest expiring soon')}
-              >
-                <FormattedMessage
-                  defaultMessage={__('Your manifest will expire in {daysMessage}. To extend the expiration date, refresh your manifest. Or, if your Foreman is disconnected, import a new manifest.')}
-                  values={{
-                    daysMessage: (
-                      <FormattedMessage
-                        defaultMessage="{daysRemaining, plural, one {{singular}} other {# {plural}}}"
-                        values={{
-                          daysRemaining: manifestExpireDaysRemaining,
-                          singular: __('day'),
-                          plural: __('days'),
-                        }}
-                        id="manage-manifest-expire-days-i18n"
-                      />
-                    ),
-                  }}
-                  id="manage-manifest-expire-i18n"
-                />
-              </Alert>
-            </GridItem>
-          }
-          {manifestExpired && isManifestImported &&
-            <GridItem span={12}>
-              <Alert
-                ouiaId="manifest-expired-alert"
-                variant="danger"
-                title={__('Manifest expired')}
-              >
-                <FormattedMessage
-                  defaultMessage={manifestExpiredMessage}
-                  values={{
-                    expirationDate: new Date(manifestExpirationDate).toDateString(),
-                  }}
-                  id="manage-manifest-expired-i18n"
-                />
-              </Alert>
-            </GridItem>
-          }
-          <GridItem span={12}>
-            <Divider />
-          </GridItem>
-          <GridItem span={5}>
-            <strong>{__('Manifest')}</strong>
-          </GridItem>
-          <GridItem span={7}>
-            {getManifestName()}
-          </GridItem>
-          {isManifestImported && Boolean(manifestExpirationDate) &&
-            <>
-              <GridItem span={5} />
-              <GridItem span={7} ouiaId="manifest-expiration-date">
-                {manifestExpired ? __('Expired ') : __('Expires ')}
-                {new Date(manifestExpirationDate).toDateString()}
-              </GridItem>
-            </>
-          }
-          <GridItem span={5}>
-            {canImportManifest &&
-              <label htmlFor="usmaFile">{__('Import new manifest')}</label>
-            }
-          </GridItem>
-          <GridItem span={7} className="manifest-actions">
-            {actionInProgress &&
-              <Spinner size="md" aria-label={__('Loading')} ouiaId="manifest-action-spinner" />
-            }
-            {canImportManifest &&
-              <input
-                id="usmaFile"
-                type="file"
-                accept=".zip"
-                disabled={actionInProgress}
-                onChange={e => uploadManifest(e.target.files)}
-              />
-            }
-            <div id="manifest-actions-row">
-              {canImportManifest &&
-                <TooltipButton
-                  onClick={refresh}
-                  tooltipId="refresh-manifest-button-tooltip"
-                  tooltipText={disabledReason}
-                  tooltipPlacement="top"
-                  title={__('Refresh')}
-                  variant="tertiary"
-                  disabled={!isManifestImported ||
-                    actionInProgress || disableManifestActions}
-                />
-              }
-              {canDeleteManifest &&
-                <TooltipButton
-                  variant="danger"
-                  disabled={!isManifestImported || actionInProgress}
-                  onClick={() => setIsDeleteManifestModalOpen(true)}
-                  title={__('Delete')}
-                  tooltipId="delete-manifest-button-tooltip"
-                  tooltipText={disabledTooltipText()}
-                  tooltipPlacement="top"
-                />
-              }
-            </div>
-            <Modal
-              isOpen={isDeleteManifestModalOpen}
-              onClose={() => setIsDeleteManifestModalOpen(false)}
-              title={__('Confirm delete manifest')}
-              id={DELETE_MANIFEST_MODAL_ID}
-              ouiaId={DELETE_MANIFEST_MODAL_ID}
-              key={DELETE_MANIFEST_MODAL_ID}
-              variant={ModalVariant.small}
-              actions={[
-                <Button
-                  key="cancel-btn"
-                  variant="link"
-                  ouiaId="delete-manifest-cancel-button"
-                  onClick={() => setIsDeleteManifestModalOpen(false)}
-                >
-                  {__('Cancel')}
-                </Button>,
-                <Button
-                  key="delete-btn"
-                  variant="danger"
-                  ouiaId="delete-manifest-confirm-button"
-                  onClick={deleteManifestAction}
-                >
-                  {__('Delete')}
-                </Button>,
-              ]}
-            >
-              <DeleteManifestModalText />
-            </Modal>
-          </GridItem>
-        </Grid>
-      }
-      <Slot id="katello-manage-manifest-form" multi />
-    </>
-  );
-
-  const cdnTabContent = (
-    <Grid hasGutter>
-      <GridItem span={12}>
-        <Title headingLevel="h3" size="lg" ouiaId="cdn-configuration-title">
-          {__('CDN Configuration for Red Hat Content')}
-        </Title>
-      </GridItem>
-      <GridItem span={12}>
-        <Divider />
-      </GridItem>
-      <GridItem span={12}>
-        <CdnConfigurationForm
-          cdnConfiguration={organization.cdn_configuration}
-          contentCredentials={contentCredentials}
-          onUpdate={() => loadOrganization()}
-        />
-      </GridItem>
-    </Grid>
-  );
 
   return (
     <Modal
@@ -416,7 +148,24 @@ const ManageManifestModal = ({
             ouiaId="manifest-history-tabs-pane-manifest"
             hidden={activeTabKey !== MANIFEST_TAB}
           >
-            {manifestTabContent}
+            <ManifestTabContent
+              showSubscriptionManifest={showSubscriptionManifest}
+              organization={organization}
+              manifestExpiringSoon={manifestExpiringSoon}
+              manifestExpired={manifestExpired}
+              manifestExpirationDate={manifestExpirationDate}
+              manifestExpireDaysRemaining={manifestExpireDaysRemaining}
+              isManifestImported={isManifestImported}
+              canImportManifest={canImportManifest}
+              canDeleteManifest={canDeleteManifest}
+              actionInProgress={actionInProgress}
+              disableManifestActions={disableManifestActions}
+              disabledReason={disabledReason}
+              taskInProgress={taskInProgress}
+              upload={upload}
+              refresh={refresh}
+              delete={deleteManifestAction}
+            />
           </TabContent>
         }
         <TabContent
@@ -439,7 +188,11 @@ const ManageManifestModal = ({
             ouiaId="manifest-history-tabs-pane-cdn"
             hidden={activeTabKey !== CDN_TAB}
           >
-            {cdnTabContent}
+            <CdnTabContent
+              cdnConfiguration={organization.cdn_configuration}
+              contentCredentials={contentCredentials}
+              onUpdate={() => loadOrganization()}
+            />
           </TabContent>
         }
       </div>
