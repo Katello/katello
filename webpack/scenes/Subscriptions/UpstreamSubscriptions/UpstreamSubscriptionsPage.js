@@ -131,7 +131,7 @@ const UpstreamSubscriptionsPage = () => {
             ouiaId="upstream-subscriptions-submit-button"
             variant="primary"
             onClick={handleSaveUpstreamSubscriptions}
-            isDisabled={isLoading || isSaving || !validateSelectedRows()}
+            isDisabled={isLoading || !validateSelectedRows()}
           >
             {__('Submit')}
           </Button>
@@ -141,6 +141,7 @@ const UpstreamSubscriptionsPage = () => {
             ouiaId="upstream-subscriptions-cancel-button"
             variant="secondary"
             onClick={() => history.push('/subscriptions')}
+            isDisabled={isLoading}
           >
             {__('Cancel')}
           </Button>
@@ -151,7 +152,6 @@ const UpstreamSubscriptionsPage = () => {
   ), [
     results.length,
     isLoading,
-    isSaving,
     validateSelectedRows,
     handleSaveUpstreamSubscriptions,
     history,
@@ -191,10 +191,27 @@ const UpstreamSubscriptionsPage = () => {
           },
         ],
       }}
+      replacementResponse={isSaving ? {
+        response: {
+          results: [],
+          total: 0,
+          page: 1,
+          per_page: 10,
+        },
+      } : undefined}
       columns={columns}
       customToolbarItems={customToolbarItems}
       customEmptyState={customEmptyState}
-    />
+    >
+      {isSaving && (
+        <div className="upstream-subscriptions-saving-container">
+          <DefaultEmptyState
+            header={__('Saving...')}
+            description={__('Saving subscriptions quantities...')}
+          />
+        </div>
+      )}
+    </TableIndexPage>
   );
 };
 

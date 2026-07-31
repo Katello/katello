@@ -5,6 +5,7 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { rtlHelpers } from 'foremanReact/common/rtlTestHelpers';
 import { STATUS } from 'foremanReact/constants';
+import { APIActions } from 'foremanReact/redux/API';
 import { patientlyWaitFor } from 'react-testing-lib-wrapper';
 import UpstreamSubscriptionsPage from '../UpstreamSubscriptionsPage';
 import api from '../../../../services/api';
@@ -56,6 +57,10 @@ const waitForSubscriptionsTable = async () => {
 };
 
 describe('upstream subscriptions page', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('loads and renders upstream subscriptions', async () => {
     mockListRequest();
 
@@ -139,6 +144,28 @@ describe('upstream subscriptions page', () => {
     });
 
     expect(screen.queryByRole('heading', { level: 5, name: 'There are no Manifests to display' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
+  });
+
+  it('does not show the custom empty state when the API response has failed without a message', () => {
+    jest.spyOn(APIActions, 'get').mockReturnValue({ type: 'MOCK_NO_API' });
+
+    renderWithStore(
+      <Router history={createMemoryHistory({ initialEntries: ['/'] })}>
+        <UpstreamSubscriptionsPage />
+      </Router>,
+      {
+        API: {
+          [UPSTREAM_SUBSCRIPTIONS_KEY]: {
+            response: { results: [] },
+            status: STATUS.ERROR,
+          },
+        },
+      },
+    );
+
+    expect(screen.queryByRole('heading', { level: 5, name: 'There are no Manifests to display' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Import a Manifest to Begin')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
   });
 
@@ -231,7 +258,7 @@ describe('upstream subscriptions page', () => {
     assertNockRequest(postScope);
   });
 
-  it('disables submit button while save is in progress', async () => {
+  it('shows saving state while save is in progress', async () => {
     mockListRequest();
 
     const postScope = nockInstance
@@ -245,14 +272,10 @@ describe('upstream subscriptions page', () => {
     await waitForSubscriptionsTable();
 
     await userEvent.type(screen.getAllByLabelText('Number to Allocate')[0], '5');
-
-    await patientlyWaitFor(() => {
-      expect(screen.getByRole('button', { name: 'Submit' })).toBeEnabled();
-    });
-
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+    expect(screen.getByRole('heading', { level: 5, name: 'Saving...' })).toBeInTheDocument();
+    expect(screen.queryByText(requestSuccessResponse.results[0].product_name)).not.toBeInTheDocument();
 
     await patientlyWaitFor(() => {
       expect(postScope.isDone()).toBe(true);
