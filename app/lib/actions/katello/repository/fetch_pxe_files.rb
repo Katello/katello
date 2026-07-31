@@ -14,7 +14,7 @@ module Actions
           capsule = if input[:capsule_id].present?
                       SmartProxy.unscoped.find(input[:capsule_id])
                     else
-                      SmartProxy.default_capsule!
+                      SmartProxy.pulp_primary!
                     end
 
           downloader = ::Katello::PxeFilesDownloader.new(repository, capsule)

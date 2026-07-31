@@ -24,7 +24,6 @@ Foreman::Application.routes.draw do
   resources :smart_proxies, :only => [] do
     member do
       get :pulp_storage
-      get :pulp_status
     end
   end
 
