@@ -11,6 +11,7 @@ h1[data-ouia-component-id="subscriptions-title"] {
 #subscriptions-toolbar {
   .subscriptions-filter-group {
     flex-grow: 0;
+    margin-inline-end: var(--pf-v5-global--spacer--md);
   }
 
   [data-ouia-component-id="subscriptions-kebab-dropdown"] {
@@ -57,7 +58,12 @@ h1[data-ouia-component-id="subscriptions-title"] {
   padding-left: var(--pf-v5-global--spacer--lg);
   padding-right: var(--pf-v5-global--spacer--lg);
 
-  .pf-v5-c-toolbar__group:first-child {
+  .subscriptions-toolbar-content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .subscriptions-filter-group {
     width: auto;
   }
 }
@@ -65,6 +71,27 @@ h1[data-ouia-component-id="subscriptions-title"] {
 #subscriptions-table {
   .editable.changed {
     font-weight: var(--pf-v5-global--FontWeight--bold);
+  }
+
+  .subscriptions-table-select {
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .subscriptions-table-select-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--pf-v5-global--spacer--sm);
+    min-height: var(--pf-v5-global--FontSize--xl);
+  }
+
+  .collapse-subscription-group-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
   }
 
   tr.open-grouped-row {

@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { translate as __ } from 'foremanReact/common/I18n';
+import { translate as __, sprintf } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { getEntitlementsDisplayValue } from './components/SubscriptionsTable/SubscriptionsTableHelpers';
 
-const formatDate = (dateString) => {
-  if (!dateString || dateString === 'NA') return '—';
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return '—';
-  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-};
+const subscriptionDate = dateString => (
+  <LongDateTime
+    date={!dateString || dateString === 'NA' ? null : dateString}
+    defaultValue="—"
+  />
+);
 
 const subscriptionName = (rowData) => {
   if (rowData.collapsible) {
@@ -25,11 +26,9 @@ const subscriptionType = (rowData) => {
   if (rowData.hypervisor) {
     const hypervisorLink = urlBuilder(`new/hosts/${rowData.hypervisor.id}`, '');
     return (
-      <span>
-        {__('Guests of')}
-        {' '}
-        <a href={hypervisorLink}>{rowData.hypervisor.name}</a>
-      </span>
+      <a href={hypervisorLink}>
+        {sprintf(__('Guests of %s'), rowData.hypervisor.name)}
+      </a>
     );
   }
   if (rowData.unmapped_guest) {
@@ -62,11 +61,11 @@ export const createSubscriptionsColumns = () => ({
   },
   start_date: {
     title: __('Start date'),
-    wrapper: ({ start_date: startDate }) => formatDate(startDate),
+    wrapper: ({ start_date: startDate }) => subscriptionDate(startDate),
   },
   end_date: {
     title: __('End date'),
-    wrapper: ({ end_date: endDate }) => formatDate(endDate),
+    wrapper: ({ end_date: endDate }) => subscriptionDate(endDate),
   },
   virt_who: {
     title: __('Requires virt-who'),

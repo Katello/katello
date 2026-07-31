@@ -13,7 +13,6 @@ import {
 } from '@patternfly/react-core';
 import { AngleDownIcon, AngleRightIcon } from '@patternfly/react-icons';
 import { Tr, Td } from '@patternfly/react-table';
-import { useHistory } from 'react-router-dom';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import { Table as TableIndexTable } from 'foremanReact/components/PF4/TableIndexPage/Table/Table';
 import {
@@ -24,7 +23,6 @@ import { translate as __, sprintf } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
 import EmptyState from 'foremanReact/components/common/EmptyState';
-import classNames from 'classnames';
 import { orgId } from '../../../../../services/api';
 import { SUBSCRIPTIONS_TABLE_KEY } from '../../../SubscriptionConstants';
 import { validateQuantity } from '../../../SubscriptionValidations';
@@ -145,42 +143,42 @@ const renderSubscriptionRows = ({
       <Tr
         key={rowData.id ?? rowIndex}
         ouiaId={`subscriptions-table-row-${rowData.id ?? rowIndex}`}
-        className={classNames({
-          'open-grouped-row': !groupingController.isCollapsed(additionalData),
-        })}
+        className={!groupingController.isCollapsed(additionalData) ? 'open-grouped-row' : ''}
       >
         {columnKeys.map((key) => {
           if (key === 'select') {
             return (
-              <Td key="select" dataLabel={__('Select row')}>
-                {shouldShowCollapse && (
-                  <Button
-                    ouiaId={`collapse-subscription-group-${rowData.id ?? rowIndex}`}
-                    variant="plain"
-                    className="collapse-subscription-group-button"
-                    onClick={() => groupingController.toggle(additionalData)}
-                    aria-label={
-                      groupingController.isCollapsed(additionalData)
-                        ? __('Expand group')
-                        : __('Collapse group')
-                    }
-                    icon={
-                      groupingController.isCollapsed(additionalData)
-                        ? <AngleRightIcon />
-                        : <AngleDownIcon />
-                    }
-                  />
-                )}
-                {!isGenericRow && (
-                  <Checkbox
-                    ouiaId={`select-subscription-row-${rowData.id ?? rowIndex}`}
-                    id={`select${rowIndex}`}
-                    isChecked={selectionController.isSelected(additionalData)}
-                    onChange={() => selectionController.selectRow(additionalData)}
-                    isDisabled={disabled}
-                    aria-label={__('Select row')}
-                  />
-                )}
+              <Td key="select" dataLabel={__('Select row')} className="subscriptions-table-select">
+                <div className="subscriptions-table-select-cell">
+                  {shouldShowCollapse && (
+                    <Button
+                      ouiaId={`collapse-subscription-group-${rowData.id ?? rowIndex}`}
+                      variant="plain"
+                      className="collapse-subscription-group-button"
+                      onClick={() => groupingController.toggle(additionalData)}
+                      aria-label={
+                        groupingController.isCollapsed(additionalData)
+                          ? __('Expand group')
+                          : __('Collapse group')
+                      }
+                      icon={
+                        groupingController.isCollapsed(additionalData)
+                          ? <AngleRightIcon />
+                          : <AngleDownIcon />
+                      }
+                    />
+                  )}
+                  {!isGenericRow && (
+                    <Checkbox
+                      ouiaId={`select-subscription-row-${rowData.id ?? rowIndex}`}
+                      id={`select${rowIndex}`}
+                      isChecked={selectionController.isSelected(additionalData)}
+                      onChange={() => selectionController.selectRow(additionalData)}
+                      isDisabled={disabled}
+                      aria-label={__('Select row')}
+                    />
+                  )}
+                </div>
               </Td>
             );
           }
@@ -243,7 +241,6 @@ const Table = ({
   onApiResponse,
   onRefreshReady,
 }) => {
-  const history = useHistory();
   const lastNotifiedRef = useRef(null);
 
   const persistentParams = useMemo(() => ({
@@ -344,14 +341,16 @@ const Table = ({
     if (showSelectColumn) {
       nextColumns.select = {
         title: (
-          <Checkbox
-            ouiaId="select-all-subscriptions"
-            id="selectAll"
-            aria-label={__('Select all rows')}
-            isChecked={selectionController.allRowsSelected()}
-            onChange={() => selectionController.selectAllRows()}
-            isDisabled={!selectionEnabled}
-          />
+          <div className="subscriptions-table-select-cell">
+            <Checkbox
+              ouiaId="select-all-subscriptions"
+              id="selectAll"
+              aria-label={__('Select all rows')}
+              isChecked={selectionController.allRowsSelected()}
+              onChange={() => selectionController.selectAllRows()}
+              isDisabled={!selectionEnabled}
+            />
+          </div>
         ),
       };
     }
@@ -439,7 +438,6 @@ const Table = ({
       customHeader={customHeader}
       beforeToolbarComponent={customToolbar}
       apiUrl={SUBSCRIPTIONS_API_URL}
-      customCreateAction={() => () => history.push(SUBSCRIPTIONS_API_URL)}
       apiOptions={apiOptions}
       columns={visibleColumns}
       replacementResponse={response}
