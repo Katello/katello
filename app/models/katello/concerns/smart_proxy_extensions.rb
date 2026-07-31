@@ -31,8 +31,6 @@ module Katello
         before_validation :set_default_download_policy
         after_update :refresh_smart_proxy_sync_histories
 
-        lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_api.extensions.repository.retrieve_all }
-
         # A smart proxy's HTTP proxy is used for all related alternate content sources.
         belongs_to :http_proxy, :inverse_of => :smart_proxies, :class_name => '::HttpProxy'
 
@@ -351,15 +349,6 @@ module Katello
       def container_gateway_users
         usernames = ProxyAPI::ContainerGateway.new(url: self.url).users
         ::User.where(login: usernames['users'])
-      end
-
-      def pulp_url
-        uri = URI.parse(url)
-        "#{uri.scheme}://#{uri.host}/pulp/api/v2/"
-      end
-
-      def pulp_api
-        @pulp_api ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
       end
 
       def pulp3_configuration(config_class)

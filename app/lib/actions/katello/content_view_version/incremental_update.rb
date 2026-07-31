@@ -282,14 +282,7 @@ module Actions
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
 
-          cvv_yum_repos = version.repositories.yum_type
-          unless cvv_yum_repos.empty? || SmartProxy.pulp_primary.pulp3_support?(cvv_yum_repos.first)
-            cvv_yum_repos.each do |repo|
-              SmartProxy.pulp_primary.pulp_api.extensions.send(:module_default).
-                copy(repo.library_instance.pulp_id,
-                repo.pulp_id)
-            end
-          end
+
         end
 
         # given a composite version, and a list of new components, calculate the list of all components for the new version
