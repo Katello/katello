@@ -22,7 +22,7 @@ module ::Actions::Katello::AlternateContentSource
     let(:acs) { katello_alternate_content_sources(:yum_alternate_content_source) }
     let(:simplified_acs) { katello_alternate_content_sources(:yum_simplified_alternate_content_source) }
     let(:proxy) { SmartProxy.pulp_primary }
-    let(:mirror) { @proxy_mirror = FactoryBot.build(:smart_proxy, :pulp_mirror, :url => 'http://fakemirrorpath.com/foo') }
+    let(:mirror) { @proxy_mirror = FactoryBot.create(:smart_proxy, :pulp_mirror, :url => 'http://fakemirrorpath.com/foo') }
     let(:product) { katello_products(:redhat) }
     let(:fedora) { katello_products(:fedora) }
 

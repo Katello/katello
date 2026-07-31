@@ -3,7 +3,6 @@ require 'rest-client'
 
 module Katello
   class PingTest < ActiveSupport::TestCase
-
     def test_ping_with_errors
       exception = assert_raises(StandardError) do
         Katello::Ping.ping!

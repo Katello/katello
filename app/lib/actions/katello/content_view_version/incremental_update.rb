@@ -281,8 +281,6 @@ module Actions
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
-
-
         end
 
         # given a composite version, and a list of new components, calculate the list of all components for the new version

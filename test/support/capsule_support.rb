@@ -16,7 +16,11 @@ module Support
         end
         proxy.organizations = [get_organization]
         proxy.locations = [taxonomies(:location1)]
-        proxy.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:core])
+        spf = proxy.smart_proxy_features.find_by(:feature_id => @pulp3_feature.id)
+        spf.capabilities = [:core]
+        spf.settings ||= {}
+        spf.settings[:mirror] = true
+        spf.save!
       end
     end
 

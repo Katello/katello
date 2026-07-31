@@ -88,10 +88,6 @@ module Katello
           pulp_primary || fail(_("Could not find a smart proxy with pulp feature."))
         end
 
-        def self.default_capsule
-          pulp_primary
-        end
-
         def self.with_environment(environment)
           pulpcore_proxies_with_environment(environment).try(:uniq)
         end

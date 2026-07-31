@@ -20,7 +20,7 @@ FactoryBot.modify do
     end
 
     trait :pulp_mirror do
-      after(:build) do |proxy, _evaluator|
+      after(:create) do |proxy, _evaluator|
         proxy.locations = proxy.organizations = proxy.lifecycle_environments = []
 
         v3_feature = Feature.find_or_create_by(:name => ::SmartProxy::PULP3_FEATURE)
@@ -28,6 +28,7 @@ FactoryBot.modify do
         smart_proxy_feature = proxy.smart_proxy_features.find { |spf| spf.feature_id == v3_feature.id }
         smart_proxy_feature.settings ||= {}
         smart_proxy_feature.settings[:mirror] = true
+        smart_proxy_feature.save!
       end
     end
   end

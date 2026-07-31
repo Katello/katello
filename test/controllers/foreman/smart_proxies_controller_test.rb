@@ -15,16 +15,18 @@ class SmartProxiesControllerTest < ActionController::TestCase
   end
 
   def test_smart_proxy_pulp_storage
-    SmartProxy.any_instance.stubs(:pulp_disk_usage).returns([
-      {
-        'description' => 'Pulp Storage',
-        'total' => 39_603_264,
-        'used' => 30_135_856,
-        'free' => 7_432_652,
-        'percentage' => 76,
-        'label' => 'pulp_dir'
-      }.with_indifferent_access
-    ])
+    SmartProxy.any_instance.stubs(:pulp_disk_usage).returns(
+      [
+        {
+          'description' => 'Pulp Storage',
+          'total' => 39_603_264,
+          'used' => 30_135_856,
+          'free' => 7_432_652,
+          'percentage' => 76,
+          'label' => 'pulp_dir',
+        }.with_indifferent_access,
+      ]
+    )
     get :pulp_storage, params: { :id => @smart_proxy.id }
     assert_response :success
   end

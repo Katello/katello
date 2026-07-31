@@ -84,7 +84,7 @@ module Katello
           OR "#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" != ?), capsule.id)
       end)
 
-    after_create :add_to_default_capsule
+    after_create :add_to_pulp_primary
 
     ERROR_CLASS_NAME = "Environment".freeze
 
@@ -262,7 +262,7 @@ module Katello
       "environment_#{id}_#{item}"
     end
 
-    def add_to_default_capsule
+    def add_to_pulp_primary
       SmartProxy.pulp_primary.try(:add_lifecycle_environment, self)
     end
 

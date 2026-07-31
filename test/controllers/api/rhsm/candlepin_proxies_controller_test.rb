@@ -740,7 +740,7 @@ module Katello
         no_content_hostname = "no-content-#{SecureRandom.hex(8)}.example.com"
         proxy = FactoryBot.create(:smart_proxy, :url => "https://#{no_content_hostname}:9090")
         proxy.smart_proxy_features.where(
-          :feature_id => Feature.where(:name => [SmartProxy::PULP_FEATURE, SmartProxy::PULP_NODE_FEATURE, SmartProxy::PULP3_FEATURE])
+          :feature_id => Feature.where(:name => SmartProxy::PULP3_FEATURE)
         ).destroy_all
         proxy.reload
 
