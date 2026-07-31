@@ -275,7 +275,8 @@ describe('upstream subscriptions page', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
     expect(screen.getByRole('heading', { level: 5, name: 'Saving...' })).toBeInTheDocument();
-    expect(screen.queryByText(requestSuccessResponse.results[0].product_name)).not.toBeInTheDocument();
+    const firstProductName = requestSuccessResponse.results[0].product_name;
+    expect(screen.queryByText(firstProductName)).not.toBeInTheDocument();
 
     await patientlyWaitFor(() => {
       expect(postScope.isDone()).toBe(true);

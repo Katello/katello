@@ -207,7 +207,7 @@ const UpstreamSubscriptionsPage = () => {
         <div className="upstream-subscriptions-saving-container">
           <DefaultEmptyState
             header={__('Saving...')}
-            description={__('Saving subscriptions quantities...')}
+            description={__('Saving subscription quantities...')}
           />
         </div>
       )}
