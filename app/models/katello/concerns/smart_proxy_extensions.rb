@@ -252,18 +252,21 @@ module Katello
       end
 
       def sync_container_gateway
-        return unless has_feature?(::SmartProxy::CONTAINER_GATEWAY_FEATURE)
+        container_gateway_proxy = self_or_colocated_with_feature(::SmartProxy::CONTAINER_GATEWAY_FEATURE)
+        return unless container_gateway_proxy
+
+        cg_url = container_gateway_proxy.url
 
         begin
-          update_container_repo_list
+          update_container_repo_list(container_gateway_url: cg_url)
         rescue StandardError => e
           Rails.logger.error("Failed to update container repository list for #{name}: #{e.message}")
           Rails.logger.debug(e.backtrace.join("\n"))
         end
 
         begin
-          users = container_gateway_users
-          update_user_container_repo_mapping(users) if users.any?
+          users = container_gateway_users(container_gateway_url: cg_url)
+          update_user_container_repo_mapping(users, container_gateway_url: cg_url) if users.any?
         rescue StandardError => e
           Rails.logger.error("Failed to update user container repository mapping for #{name}: #{e.message}")
           Rails.logger.debug(e.backtrace.join("\n"))
@@ -272,8 +275,8 @@ module Katello
         begin
           facets = subscription_facets_for_sync
           if facets.exists?
-            update_container_gateway_hosts(facets)
-            update_host_container_repo_mapping(facets)
+            update_container_gateway_hosts(facets, container_gateway_url: cg_url)
+            update_host_container_repo_mapping(facets, container_gateway_url: cg_url)
           end
         rescue StandardError => e
           Rails.logger.error("Failed to update host container gateway data for #{name}: #{e.message}")
@@ -281,14 +284,14 @@ module Katello
         end
       end
 
-      def update_container_gateway_hosts(facets = nil)
+      def update_container_gateway_hosts(facets = nil, container_gateway_url: self.url)
         facets ||= subscription_facets
         hosts = facets.map do |facet|
           {
             uuid: facet.uuid,
           }
         end
-        ProxyAPI::ContainerGateway.new(url: self.url).update_hosts({ hosts: hosts })
+        ProxyAPI::ContainerGateway.new(url: container_gateway_url).update_hosts({ hosts: hosts })
       rescue StandardError => e
         if e.is_a?(ProxyAPI::ProxyException) && e.wrapped_exception.is_a?(RestClient::NotFound)
           Rails.logger.warn("Capsule #{name} does not support the update_hosts endpoint (likely running an older version). Skipping host updates.")
@@ -298,7 +301,7 @@ module Katello
         end
       end
 
-      def update_container_repo_list
+      def update_container_repo_list(container_gateway_url: self.url)
         # [{ repository: "repoA", auth_required: false }]
         repo_list = []
         ::Katello::SmartProxyHelper.new(self).combined_repos_available_to_capsule.each do |repo|
@@ -307,10 +310,10 @@ module Katello
                            auth_required: !unauthenticated_container_repositories.include?(repo.id) }
           end
         end
-        ::ProxyAPI::ContainerGateway.new(url: self.url).repository_list({ repositories: repo_list })
+        ::ProxyAPI::ContainerGateway.new(url: container_gateway_url).repository_list({ repositories: repo_list })
       end
 
-      def update_user_container_repo_mapping(users)
+      def update_user_container_repo_mapping(users, container_gateway_url: self.url)
         # Example user-repo mapping:
         # { users:
         #   [
@@ -329,16 +332,16 @@ module Katello
           end
           user_repo_map[:users] << { user.login => inner_repo_list }
         end
-        ProxyAPI::ContainerGateway.new(url: self.url).user_repository_mapping(user_repo_map)
+        ProxyAPI::ContainerGateway.new(url: container_gateway_url).user_repository_mapping(user_repo_map)
       end
 
-      def update_host_container_repo_mapping(subscription_facets)
+      def update_host_container_repo_mapping(subscription_facets, container_gateway_url: self.url)
         host_repo_map = { hosts: [] }
         subscription_facets.each do |facet|
           repositories = ::Katello::Repository.readable_docker_catalog(facet.host)
           host_repo_map[:hosts] << { facet.uuid => build_repo_list(repositories) }
         end
-        ProxyAPI::ContainerGateway.new(url: self.url).host_repository_mapping(host_repo_map)
+        ProxyAPI::ContainerGateway.new(url: container_gateway_url).host_repository_mapping(host_repo_map)
       rescue StandardError => e
         if e.is_a?(ProxyAPI::ProxyException) && e.wrapped_exception.is_a?(RestClient::NotFound)
           Rails.logger.warn("Capsule #{name} does not support the host_repository_mapping endpoint (likely running an older version). Skipping host-repository mapping updates.")
@@ -368,8 +371,8 @@ module Katello
         ::Katello::Repository.joins(:environment).where("#{::Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true).select(:id).pluck(:id)
       end
 
-      def container_gateway_users
-        usernames = ProxyAPI::ContainerGateway.new(url: self.url).users
+      def container_gateway_users(container_gateway_url: self.url)
+        usernames = ProxyAPI::ContainerGateway.new(url: container_gateway_url).users
         ::User.where(login: usernames['users'])
       end
 

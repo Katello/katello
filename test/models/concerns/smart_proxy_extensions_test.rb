@@ -591,6 +591,43 @@ module Katello
       capsule_content.smart_proxy.sync_container_gateway
     end
 
+    def test_sync_container_gateway_colocated_proxy
+      environment = katello_environments(:library)
+      pulp_proxy = capsule_content.smart_proxy
+      with_pulp3_features(pulp_proxy)
+      pulp_proxy.add_lifecycle_environment(environment)
+
+      cg_feature = Feature.find_or_create_by(:name => SmartProxy::CONTAINER_GATEWAY_FEATURE)
+      pulp_proxy.smart_proxy_features.where(feature_id: cg_feature.id).destroy_all
+      pulp_proxy.reload
+
+      cg_url = "http://#{pulp_proxy.hostname}:9091"
+      cg_proxy = FactoryBot.create(:smart_proxy, :url => cg_url)
+      cg_proxy.features << cg_feature
+
+      cg_api = mock('container_gateway_api')
+      cg_api.expects(:repository_list).once.returns(true)
+      cg_api.expects(:users).once.returns({ 'users' => [] })
+      ProxyAPI::ContainerGateway.expects(:new).with(url: cg_url).twice.returns(cg_api)
+
+      pulp_proxy.sync_container_gateway
+    end
+
+    def test_sync_container_gateway_no_cg_proxy
+      environment = katello_environments(:library)
+      pulp_proxy = capsule_content.smart_proxy
+      with_pulp3_features(pulp_proxy)
+      pulp_proxy.add_lifecycle_environment(environment)
+
+      cg_feature = Feature.find_or_create_by(:name => SmartProxy::CONTAINER_GATEWAY_FEATURE)
+      pulp_proxy.smart_proxy_features.where(feature_id: cg_feature.id).destroy_all
+      pulp_proxy.reload
+
+      ProxyAPI::ContainerGateway.any_instance.expects(:repository_list).never
+
+      pulp_proxy.sync_container_gateway
+    end
+
     def test_update_host_repositories
       ::Katello::Resources::Candlepin::Consumer.stubs(:update)
       host = FactoryBot.build(:host, :with_content, :with_subscription,
