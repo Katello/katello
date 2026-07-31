@@ -20,7 +20,7 @@ module Katello
       end
 
       def context_urls
-        super.merge(rhsm_url: smart_proxy.rhsm_url, pulp_content_url: smart_proxy.pulp_content_url)
+        super.merge(rhsm_url: pulpcore_proxy.rhsm_url, pulp_content_url: pulpcore_proxy.pulp_content_url)
       end
 
       def default_location
@@ -29,12 +29,17 @@ module Katello
 
       private
 
-      def smart_proxy
-        @smart_proxy ||= begin
+      def pulpcore_proxy
+        @pulpcore_proxy ||= begin
           proxy = params[:url] ? find_smart_proxy : SmartProxy.pulp_primary
 
           fail Foreman::Exception, _('Smart proxy content source not found!') unless proxy
-          fail Foreman::Exception, _('Pulp 3 is not enabled on Smart proxy!') unless proxy.pulp3_enabled?
+
+          unless proxy.pulp3_enabled?
+            proxy = proxy.self_or_colocated_with_feature(SmartProxy::PULP3_FEATURE)
+          end
+
+          fail Foreman::Exception, _('Pulp 3 is not enabled on Smart proxy!') unless proxy&.pulp3_enabled?
 
           proxy
         end
