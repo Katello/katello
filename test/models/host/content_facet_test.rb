@@ -123,6 +123,15 @@ module Katello
       assert_equal 2, content_facet.content_view_environments.length
     end
 
+    def test_content_view_environments_deduplicates
+      Setting['allow_multiple_content_views'] = true
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+      cve1 = katello_content_view_environments(:library_dev_view_dev)
+      cve2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      content_facet.content_view_environments = [cve1, cve2, cve1]
+      assert_equal [cve1, cve2], content_facet.content_view_environments.reload.to_a
+    end
+
     def test_multi_cv_not_enabled
       Setting['allow_multiple_content_views'] = false
       assert_equal 1, content_facet.content_view_environments.length
