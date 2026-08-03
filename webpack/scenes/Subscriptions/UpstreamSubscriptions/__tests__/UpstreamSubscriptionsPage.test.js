@@ -258,6 +258,30 @@ describe('upstream subscriptions page', () => {
     assertNockRequest(postScope);
   });
 
+  it('disables submit and cancel while save is in progress', async () => {
+    mockListRequest();
+
+    const postScope = nockInstance
+      .post(upstreamSubscriptionsPath, {
+        pools: [{ id: requestSuccessResponse.results[0].id, quantity: 5 }],
+      })
+      .delay(500)
+      .reply(200, taskSuccessResponse);
+
+    renderUpstreamSubscriptionsPage();
+    await waitForSubscriptionsTable();
+
+    await userEvent.type(screen.getAllByLabelText('Number to Allocate')[0], '5');
+    await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
+
+    await patientlyWaitFor(() => {
+      expect(postScope.isDone()).toBe(true);
+    });
+  });
+
   it('shows saving state while save is in progress', async () => {
     mockListRequest();
 
@@ -275,8 +299,11 @@ describe('upstream subscriptions page', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
     expect(screen.getByRole('heading', { level: 5, name: 'Saving...' })).toBeInTheDocument();
+    expect(screen.getByText('Saving subscription quantities...')).toBeInTheDocument();
     const firstProductName = requestSuccessResponse.results[0].product_name;
     expect(screen.queryByText(firstProductName)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
 
     await patientlyWaitFor(() => {
       expect(postScope.isDone()).toBe(true);

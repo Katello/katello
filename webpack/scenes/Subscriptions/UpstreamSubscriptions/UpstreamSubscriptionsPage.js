@@ -131,7 +131,7 @@ const UpstreamSubscriptionsPage = () => {
             ouiaId="upstream-subscriptions-submit-button"
             variant="primary"
             onClick={handleSaveUpstreamSubscriptions}
-            isDisabled={isLoading || !validateSelectedRows()}
+            isDisabled={isLoading || isSaving || !validateSelectedRows()}
           >
             {__('Submit')}
           </Button>
@@ -141,7 +141,7 @@ const UpstreamSubscriptionsPage = () => {
             ouiaId="upstream-subscriptions-cancel-button"
             variant="secondary"
             onClick={() => history.push('/subscriptions')}
-            isDisabled={isLoading}
+            isDisabled={isLoading || isSaving}
           >
             {__('Cancel')}
           </Button>
@@ -152,6 +152,7 @@ const UpstreamSubscriptionsPage = () => {
   ), [
     results.length,
     isLoading,
+    isSaving,
     validateSelectedRows,
     handleSaveUpstreamSubscriptions,
     history,
