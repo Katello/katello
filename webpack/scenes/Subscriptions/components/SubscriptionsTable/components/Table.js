@@ -63,7 +63,7 @@ const renderEntitlementsCell = (rowData, rowIndex, inlineEditController) => {
           type="text"
           defaultValue={value}
           validated={validation.state}
-          onBlur={e => onChange(e.target.value, additionalData)}
+          onChange={(_event, newValue) => onChange(newValue, additionalData)}
           ouiaId={`edit-entitlements-${rowData.id ?? rowIndex}`}
         />
         <FormHelperText>
@@ -207,13 +207,17 @@ const extractMissingPermissions = (status, response) => {
   }
 
   const error = response;
+  const errors = error?.response?.data?.errors;
   const explicitMissingPermissions =
-    error?.response?.data?.errors?.[0]?.missing_permissions ||
+    (Array.isArray(errors) && errors[0]?.missing_permissions) ||
     error?.response?.data?.missing_permissions;
   const statusCode = error?.response?.status;
-  const errorMessages = error?.response?.data?.displayMessage
-    ? [error.response.data.displayMessage]
-    : (error?.response?.data?.errors || []);
+  let errorMessages = [];
+  if (error?.response?.data?.displayMessage) {
+    errorMessages = [error.response.data.displayMessage];
+  } else if (Array.isArray(errors)) {
+    errorMessages = errors.filter(e => typeof e === 'string');
+  }
 
   let missingPermissions = explicitMissingPermissions;
   if (!missingPermissions && (statusCode === 403 || statusCode === 404)) {
