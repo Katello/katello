@@ -37,3 +37,15 @@ fedora_one_i686:
 fedora_one_i686_two:
   rpm_id: <%= ActiveRecord::FixtureSet.identify(:one_i686_two) %>
   repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+
+fedora_openssl_epoch0:
+  rpm_id: <%= ActiveRecord::FixtureSet.identify(:openssl_epoch0) %>
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+
+fedora_openssl_epoch1:
+  rpm_id: <%= ActiveRecord::FixtureSet.identify(:openssl_epoch1) %>
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+
+fedora_openssl_epoch1_diff_version:
+  rpm_id: <%= ActiveRecord::FixtureSet.identify(:openssl_epoch1_diff_version) %>
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>

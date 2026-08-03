@@ -10,6 +10,9 @@ module Katello
       @rpm_one_two = katello_rpms(:one_two)
       @rpm_one_i686 = katello_rpms(:one_i686)
       @rpm_one_i686_two = katello_rpms(:one_i686_two)
+      @rpm_openssl_epoch0 = katello_rpms(:openssl_epoch0)
+      @rpm_openssl_epoch1 = katello_rpms(:openssl_epoch1)
+      @rpm_openssl_epoch1_diff_version = katello_rpms(:openssl_epoch1_diff_version)
 
       Rpm.any_instance.stubs(:backend_data).returns({})
     end
@@ -48,28 +51,31 @@ module Katello
 
     def test_search_version_greater_than_or_equal
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('version >= 1.0')
-      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_three, @rpm_two]
+      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_three, @rpm_two,
+                  @rpm_openssl_epoch0, @rpm_openssl_epoch1, @rpm_openssl_epoch1_diff_version]
       # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
       assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
     end
 
     def test_search_version_greater_than
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('version > 1.0')
-      expected = [@rpm_three]
+      expected = [@rpm_three, @rpm_openssl_epoch0, @rpm_openssl_epoch1, @rpm_openssl_epoch1_diff_version]
       # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
       assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
     end
 
     def test_search_version_less_than_or_equal
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('version <= 99')
-      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_three, @rpm_two]
+      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_three, @rpm_two,
+                  @rpm_openssl_epoch0, @rpm_openssl_epoch1, @rpm_openssl_epoch1_diff_version]
       # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
       assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
     end
 
     def test_search_version_less_than
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('version < 99')
-      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_two]
+      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_two,
+                  @rpm_openssl_epoch0, @rpm_openssl_epoch1, @rpm_openssl_epoch1_diff_version]
       # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
       assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
     end
@@ -83,21 +89,24 @@ module Katello
 
     def test_search_release_greater_than
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('release > 1.el7')
-      expected = [@rpm_one_i686_two, @rpm_one_two, @rpm_three]
+      expected = [@rpm_one_i686_two, @rpm_one_two, @rpm_three,
+                  @rpm_openssl_epoch0, @rpm_openssl_epoch1, @rpm_openssl_epoch1_diff_version]
       # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
       assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
     end
 
     def test_search_release_less_than_or_equal
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('release <= 2.el7')
-      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_two]
+      expected = [@rpm_one, @rpm_one_i686, @rpm_one_i686_two, @rpm_one_two, @rpm_two,
+                  @rpm_openssl_epoch0, @rpm_openssl_epoch1, @rpm_openssl_epoch1_diff_version]
       # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
       assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
     end
 
     def test_search_release_less_than
       rpms = Rpm.in_repositories(@repo).non_modular.search_for('release < 2.el7')
-      expected = [@rpm_one, @rpm_one_i686, @rpm_two]
+      expected = [@rpm_one, @rpm_one_i686, @rpm_two,
+                  @rpm_openssl_epoch0, @rpm_openssl_epoch1, @rpm_openssl_epoch1_diff_version]
       # RPMs are sorted by name, but all RPMs here have the same name. So, we need to sort by ID.
       assert_equal expected.sort_by(&:id), rpms.to_a.sort_by(&:id)
     end
