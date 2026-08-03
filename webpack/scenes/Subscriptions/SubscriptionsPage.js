@@ -324,6 +324,11 @@ const SubscriptionsPage = () => {
       quantitiesInFlightPoolIdsRef.current = '';
       setAvailableQuantities(selectSubscriptionsQuantitiesFromResponse(response.data));
       setLoadedQuantityPoolIds(poolIdsKey);
+    }, () => {
+      if (requestToken !== quantitiesRequestTokenRef.current) {
+        return;
+      }
+      quantitiesInFlightPoolIdsRef.current = '';
     }));
   }, [
     hasUpstreamConnection,
@@ -483,7 +488,7 @@ const SubscriptionsPage = () => {
         <ModalProgressBar
           show={!!task}
           title={task ? (task.humanized?.action ?? null) : null}
-          progress={task ? Math.round(task.progress * 100) : 0}
+          progress={task?.progress != null ? Math.round(task.progress * 100) : 0}
         />
       </div>
     </>

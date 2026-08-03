@@ -38,12 +38,13 @@ export const createSubscriptionParams = (extendedParams = {}) => ({
   ...propsToSnakeCase(extendedParams),
 });
 
-export const loadAvailableQuantities = (extendedParams = {}, handleSuccess) => get({
+export const loadAvailableQuantities = (extendedParams = {}, handleSuccess, handleError) => get({
   type: API_OPERATIONS.GET,
   key: SUBSCRIPTIONS_QUANTITIES_KEY,
   url: api.getApiUrl(`/organizations/${orgId()}/upstream_subscriptions`),
   params: propsToSnakeCase(extendedParams),
   handleSuccess,
+  handleError,
   errorToast: quantitiesErrorToast,
 });
 
