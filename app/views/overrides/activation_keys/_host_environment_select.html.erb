@@ -47,6 +47,10 @@
     <% host_cvenv_ids.each do |cvenv_id| %>
       <%= hidden_field_tag 'host[content_facet_attributes][content_view_environment_ids][]', cvenv_id, :id => nil %>
     <% end %>
+
+    <%= field(f, 'content_facet.content_view_environment', {:label => _("Content View Environment")}) do %>
+      <%= select_tag :host_content_view_environment_id, content_view_environment_options(@host, :selected_host_group => @hostgroup || @host&.hostgroup), :class => 'form-control', :disabled => true %>
+    <% end %>
   <% else %>
     <%# On host create, show a CVEnv dropdown %>
     <% host_cv_env_select_id = :host_content_view_environment_id %>
