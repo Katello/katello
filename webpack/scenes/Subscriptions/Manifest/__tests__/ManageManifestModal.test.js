@@ -46,51 +46,45 @@ const defaultProps = {
 
 describe('ManageManifestModal', () => {
   it('shows loading state for manifest history', () => {
-    render(
-      <ManageManifestModal
-        {...defaultProps}
-        canImportManifest={false}
-        canDeleteManifest={false}
-        canEditOrganizations={false}
-        manifestHistory={{ loading: true, results: [] }}
-      />
-    );
+    render(<ManageManifestModal
+      {...defaultProps}
+      canImportManifest={false}
+      canDeleteManifest={false}
+      canEditOrganizations={false}
+      manifestHistory={{ loading: true, results: [] }}
+    />);
 
     expect(screen.getByText('Loading')).toBeInTheDocument();
   });
 
   it('shows empty state when manifest history is empty', () => {
-    render(
-      <ManageManifestModal
-        {...defaultProps}
-        canImportManifest={false}
-        canDeleteManifest={false}
-        canEditOrganizations={false}
-      />
-    );
+    render(<ManageManifestModal
+      {...defaultProps}
+      canImportManifest={false}
+      canDeleteManifest={false}
+      canEditOrganizations={false}
+    />);
 
     expect(screen.getByText(/There is no manifest history to display/)).toBeInTheDocument();
   });
 
   it('renders manifest history table columns and rows', () => {
-    render(
-      <ManageManifestModal
-        {...defaultProps}
-        canImportManifest={false}
-        canDeleteManifest={false}
-        canEditOrganizations={false}
-        manifestHistory={{
-          loading: false,
-          results: [
-            {
-              status: 'success',
-              statusMessage: 'Manifest imported',
-              created: '2024-01-01 12:00:00',
-            },
-          ],
-        }}
-      />
-    );
+    render(<ManageManifestModal
+      {...defaultProps}
+      canImportManifest={false}
+      canDeleteManifest={false}
+      canEditOrganizations={false}
+      manifestHistory={{
+        loading: false,
+        results: [
+          {
+            status: 'success',
+            statusMessage: 'Manifest imported',
+            created: '2024-01-01 12:00:00',
+          },
+        ],
+      }}
+    />);
 
     expect(screen.getByText('Status')).toBeInTheDocument();
     expect(screen.getByText('Message')).toBeInTheDocument();

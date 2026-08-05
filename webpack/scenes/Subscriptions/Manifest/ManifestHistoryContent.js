@@ -35,7 +35,7 @@ const ManifestHistoryContent = ({ manifestHistory }) => {
       <Tbody>
         {manifestHistory.results.map((record, index) => (
           <Tr
-            key={`${record.created}-${record.statusMessage}-${index}`}
+            key={`${record.created}-${record.statusMessage}`}
             ouiaId={`manifest-history-row-${index}`}
           >
             <Td>{record.status}</Td>

@@ -18,7 +18,7 @@ import TooltipButton from '../../../components/TooltipButton';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
 
-const getManifestName = organization => {
+const getManifestName = (organization) => {
   let name = __('No manifest imported');
 
   if (
