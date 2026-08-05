@@ -66,6 +66,7 @@ module Katello
           :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', '),
         }
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE, PULP3_FEATURE) }
+        scope :with_container_registry_auth_enabled, -> { where(:container_registry_auth_enabled => true) }
 
         def self.load_balanced
           proxies = unscoped.with_content # load balancing is only supported for pulp proxies

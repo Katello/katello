@@ -1618,5 +1618,108 @@ module Katello
       end
     end
     #rubocop:enable Metrics/BlockLength
+
+    describe "smart-proxy container registry authentication" do
+      def setup_smart_proxy(hostname)
+        proxy = FactoryBot.build(:smart_proxy)
+        proxy.url = "https://#{hostname}:9090"
+        proxy.container_registry_auth_enabled = true
+        proxy.save!(validate: false)
+        proxy
+      end
+
+      it "allows pull via smart-proxy SSL cert with container_registry capability" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        proxy = setup_smart_proxy('proxy.example.com')
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        @controller.stubs(:auth_smart_proxy).returns(true)
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        # 404 is expected (no Pulp backend in tests) but not 401/403
+        refute_equal 401, response.status
+        refute_equal 403, response.status
+      ensure
+        proxy&.destroy
+      end
+
+      it "rejects SSL cert whose hosts do not match any smart-proxy" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        @controller.stubs(:auth_smart_proxy).returns(false)
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        assert_response :unauthorized
+      end
+
+      it "rejects a matching smart-proxy that lacks the container_registry capability" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        feature = Feature.find_or_create_by!(name: 'Pulpcore')
+        proxy = FactoryBot.build(:smart_proxy)
+        proxy.url = "https://proxy.nocap.example.com:9090"
+        proxy.container_registry_auth_enabled = true
+        proxy.save!(validate: false)
+        spf = proxy.smart_proxy_features.build(feature: feature)
+        spf.capabilities = []
+        spf.save!
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        # auth_smart_proxy is never called because no qualifying proxies exist
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        assert_response :unauthorized
+      ensure
+        proxy&.destroy
+      end
+
+      it "rejects a matching smart-proxy that has not been enabled for container registry auth" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        proxy = FactoryBot.build(:smart_proxy)
+        proxy.url = "https://proxy.disabled.example.com:9090"
+        proxy.container_registry_auth_enabled = false
+        proxy.save!(validate: false)
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        # auth_smart_proxy is never called because no qualifying proxies exist
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        assert_response :unauthorized
+      ensure
+        proxy&.destroy
+      end
+
+      it "rejects request when auth_smart_proxy returns false" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        proxy = setup_smart_proxy('proxy.example.com')
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        @controller.stubs(:auth_smart_proxy).returns(false)
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        assert_response :unauthorized
+      ensure
+        proxy&.destroy
+      end
+    end
   end
 end

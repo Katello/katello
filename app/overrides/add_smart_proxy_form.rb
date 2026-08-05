@@ -17,3 +17,8 @@ Deface::Override.new(:virtual_path => "smart_proxies/_form",
                      :name => "add_smart_proxies_acs_http_proxy",
                      :insert_bottom => '#primary',
                      :partial => 'overrides/smart_proxies/acs_http_proxy')
+
+Deface::Override.new(:virtual_path => "smart_proxies/_form",
+                     :name => "add_smart_proxies_container_registry_auth",
+                     :insert_bottom => '#primary',
+                     :partial => 'overrides/smart_proxies/container_registry_auth')
