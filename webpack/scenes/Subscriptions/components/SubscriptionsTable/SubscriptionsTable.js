@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
+import { filterRHSubscriptions } from '../../SubscriptionHelpers';
 import { recordsValid } from '../../SubscriptionValidations';
 import { buildTableRows, groupSubscriptionsByProductId } from './SubscriptionsTableHelpers';
 import Table from './components/Table';
@@ -63,25 +64,27 @@ const SubscriptionsTable = ({
     }
   }, [onApiResponse]);
 
-  // Replaces getDerivedStateFromProps: sync rows when subscriptions prop changes
-  if (
-    subscriptions !== undefined &&
-    !isEqual(subscriptions, syncedSubscriptions)
-  ) {
-    const nextGroupedSubscriptions = groupSubscriptionsByProductId(
-      subscriptions,
-      groupedSubscriptions,
-    );
-    const nextRows = buildTableRows(
-      nextGroupedSubscriptions,
-      subscriptions.availableQuantities,
-      updatedQuantity,
-    );
+  // Replaces getDerivedStateFromProps: sync rows when subscriptions change
+  useEffect(() => {
+    if (
+      subscriptions !== undefined &&
+      !isEqual(subscriptions, syncedSubscriptions)
+    ) {
+      const nextGroupedSubscriptions = groupSubscriptionsByProductId(
+        subscriptions,
+        groupedSubscriptions,
+      );
+      const nextRows = buildTableRows(
+        nextGroupedSubscriptions,
+        subscriptions.availableQuantities,
+        updatedQuantity,
+      );
 
-    setSyncedSubscriptions(subscriptions);
-    setGroupedSubscriptions(nextGroupedSubscriptions);
-    setRows(nextRows);
-  }
+      setSyncedSubscriptions(subscriptions);
+      setGroupedSubscriptions(nextGroupedSubscriptions);
+      setRows(nextRows);
+    }
+  }, [subscriptions, syncedSubscriptions, groupedSubscriptions, updatedQuantity]);
 
   const enableEditing = useCallback((editingState) => {
     setUpdatedQuantity({});
@@ -181,9 +184,10 @@ const SubscriptionsTable = ({
   ]);
 
   const selectionController = useMemo(() => {
-    const allSubscriptionResults = subscriptions.results;
+    const allSubscriptionResults = filterRHSubscriptions(subscriptions.results || []);
 
     const checkAllRowsSelected = () =>
+      allSubscriptionResults.length > 0 &&
       allSubscriptionResults.length === selectedRows.length;
 
     return {
@@ -193,8 +197,9 @@ const SubscriptionsTable = ({
           onSelectedRowsChange([]);
           toggleDeleteButton(false);
         } else {
-          onSelectedRowsChange(allSubscriptionResults.map(row => row.id));
-          toggleDeleteButton(true);
+          const selectedIds = allSubscriptionResults.map(row => row.id);
+          onSelectedRowsChange(selectedIds);
+          toggleDeleteButton(selectedIds.length > 0);
         }
       },
       selectRow: ({ rowData }) => {

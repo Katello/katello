@@ -344,7 +344,7 @@ const SubscriptionsPage = () => {
     const statusCode = organization.error.response?.status;
 
     if (statusCode === 404 || statusCode === 403) {
-      const errorMessage = 'You do not have permission to view this organization.';
+      const errorMessage = __('You do not have permission to view this organization.');
       return <PermissionDenied missingPermissions={[errorMessage]} />;
     }
   }
