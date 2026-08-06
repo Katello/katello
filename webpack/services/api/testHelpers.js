@@ -12,7 +12,7 @@ export const failureAction = (type, message = 'Request failed with status code 4
 export const toastErrorAction = (message = 'Request failed with status code 422') => (
   {
     payload: {
-      key: 'addToast',
+      key: 'toastError_0',
       toast: {
         key: 'toastError_0',
         message,

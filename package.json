@@ -5,9 +5,9 @@
   "scripts": {
     "storybook": "cross-env NODE_ENV=storybook start-storybook -p 6007",
     "storybook:deploy": "cross-env NODE_ENV=storybook storybook-to-ghpages",
-    "test": "npx jest webpack",
-    "test:watch": "npx jest webpack --watchAll",
-    "test:current": "npx jest webpack --watch",
+    "test": "tfm-test --plugin --config jest.config.js",
+    "test:watch": "tfm-test --plugin --config jest.config.js --watchAll",
+    "test:current": "tfm-test --plugin --config jest.config.js --watch",
     "format": "prettier --single-quote --trailing-comma es5 --write 'webpack/**/*.js'",
     "build": "npm run format && npm run lint",
     "lint": "npx eslint webpack/",
@@ -32,6 +32,7 @@
     "@theforeman/builder": ">= 6.0.0",
     "@theforeman/eslint-plugin-rules": "^12.2.0",
     "@theforeman/find-foreman": "^4.8.0",
+    "@theforeman/test": ">= 15.0.1",
     "axios-mock-adapter": "^1.10.0",
     "eslint": "^6.2.2",
     "eslint-config-airbnb": "^16.0.0",
@@ -42,9 +43,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.4.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "jest": "^24.9.0",
-    "nock": "^12.0.3",
-    "react-test-renderer": "^16.0.0"
+    "nock": "^12.0.3"
   },
   "dependencies": {
     "angular": "1.8.2",
