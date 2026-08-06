@@ -1,5 +1,3 @@
-require 'proxy_api/pulp'
-require 'proxy_api/pulp_node'
 require 'proxy_api/container_gateway'
 
 module Katello
@@ -15,8 +13,6 @@ module Katello
       end
 
       PULP3_FEATURE = "Pulpcore".freeze
-      PULP_FEATURE = "Pulp".freeze
-      PULP_NODE_FEATURE = "Pulp Node".freeze
       CONTAINER_GATEWAY_FEATURE = "Container_Gateway".freeze
 
       DOWNLOAD_INHERIT = 'inherit'.freeze
@@ -34,8 +30,6 @@ module Katello
         before_create :associate_lifecycle_environments
         before_validation :set_default_download_policy
         after_update :refresh_smart_proxy_sync_histories
-
-        lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
         # A smart proxy's HTTP proxy is used for all related alternate content sources.
         belongs_to :http_proxy, :inverse_of => :smart_proxies, :class_name => '::HttpProxy'
@@ -65,7 +59,7 @@ module Katello
           :in => DOWNLOAD_POLICIES,
           :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', '),
         }
-        scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE, PULP3_FEATURE) }
+        scope :with_content, -> { with_features(PULP3_FEATURE) }
 
         def self.load_balanced
           proxies = unscoped.with_content # load balancing is only supported for pulp proxies
@@ -85,10 +79,6 @@ module Katello
         end
 
         def self.pulp_primary
-          unscoped.with_features(PULP_FEATURE).first || non_mirror_pulp3
-        end
-
-        def self.non_mirror_pulp3
           found = unscoped.with_features(PULP3_FEATURE).order(:id).select { |proxy| !proxy.setting(PULP3_FEATURE, 'mirror') }
           Rails.logger.warn("Found multiple smart proxies with mirror set to false.  This is likely not intentional.") if found.count > 1
           found.first
@@ -98,24 +88,8 @@ module Katello
           pulp_primary || fail(_("Could not find a smart proxy with pulp feature."))
         end
 
-        def self.default_capsule
-          pulp_primary
-        end
-
-        def self.default_capsule!
-          pulp_primary!
-        end
-
-        def self.with_environment(environment, include_default = false)
-          (pulp2_proxies_with_environment(environment, include_default) + pulpcore_proxies_with_environment(environment)).try(:uniq)
-        end
-
-        def self.pulp2_proxies_with_environment(environment, include_default = false)
-          features = [PULP_NODE_FEATURE]
-          features << PULP_FEATURE if include_default
-
-          unscoped.with_features(features).joins(:capsule_lifecycle_environments).
-            where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
+        def self.with_environment(environment)
+          pulpcore_proxies_with_environment(environment).try(:uniq)
         end
 
         def self.pulpcore_proxies_with_environment(environment)
@@ -373,15 +347,6 @@ module Katello
         ::User.where(login: usernames['users'])
       end
 
-      def pulp_url
-        uri = URI.parse(url)
-        "#{uri.scheme}://#{uri.host}/pulp/api/v2/"
-      end
-
-      def pulp_api
-        @pulp_api ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
-      end
-
       def pulp3_configuration(config_class)
         config_class.new do |config|
           uri = pulp3_uri!
@@ -502,11 +467,11 @@ module Katello
       end
 
       def pulp_mirror?
-        self.has_feature?(PULP_NODE_FEATURE) || self.setting(SmartProxy::PULP3_FEATURE, 'mirror')
+        self.setting(SmartProxy::PULP3_FEATURE, 'mirror')
       end
 
       def pulp_primary?
-        self.has_feature?(PULP_FEATURE) || self.setting(SmartProxy::PULP3_FEATURE, 'mirror') == false
+        !pulp_mirror?
       end
 
       def supported_pulp_types
@@ -520,10 +485,6 @@ module Katello
 
         supported_types
       end
-
-      #deprecated methods
-      alias_method :pulp_node, :pulp_api
-      alias_method :default_capsule?, :pulp_primary?
 
       def associate_organizations
         self.organizations = Organization.all if self.pulp_primary?
@@ -655,12 +616,6 @@ module Katello
 
       def cancel_sync
         active_sync_tasks.map(&:cancel)
-      end
-
-      def ping_pulp
-        ::Katello::Ping.pulp_without_auth(self.pulp_url)
-      rescue Errno::EHOSTUNREACH, Errno::ECONNREFUSED, RestClient::Exception => error
-        raise ::Katello::Errors::CapsuleCannotBeReached, _("%s is unreachable. %s" % [self.name, error])
       end
 
       def ping_pulp3

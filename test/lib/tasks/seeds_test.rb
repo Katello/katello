@@ -24,11 +24,10 @@ module Katello
     end
 
     class PulpProxyTest < ActiveSupport::TestCase
-      test "Make sure Pulp Proxy features exist" do
+      test "Make sure Pulpcore feature exists" do
         load "#{Katello::Engine.root}/db/seeds.d/104-proxy.rb"
 
-        assert Feature.find_by_name('Pulp').present?
-        assert Feature.find_by_name('Pulp Node').present?
+        assert Feature.find_by_name('Pulpcore').present?
       end
     end
 

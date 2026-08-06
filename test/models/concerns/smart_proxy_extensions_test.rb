@@ -11,7 +11,7 @@ module Katello
       @library = katello_environments(:library)
       @view = katello_content_views(:library_dev_view)
       @proxy = SmartProxy.pulp_primary
-      @proxy_mirror = FactoryBot.build(:smart_proxy, :pulp_mirror, :url => 'http://fakemirrorpath.com/foo')
+      @proxy_mirror = FactoryBot.create(:smart_proxy, :pulp_mirror, :url => 'http://fakemirrorpath.com/foo')
       @http_proxy = http_proxies(:myhttpproxy)
 
       ::SmartProxy.any_instance.stubs(:associate_features)
@@ -147,7 +147,6 @@ module Katello
 
     # rubocop:disable Metrics/AbcSize
     def test_update_global_content_counts
-      @proxy_mirror.features << ::Feature.find_by(name: ::SmartProxy::PULP3_FEATURE)
       yum_repo = setup_yum_repo
       file_repo = setup_file_repo
       ansible_repo = setup_ansible_collection_repo
@@ -256,7 +255,6 @@ module Katello
     # rubocop:enable Metrics/AbcSize
 
     def test_update_environment_content_counts
-      @proxy_mirror.features << ::Feature.find_by(name: ::SmartProxy::PULP3_FEATURE)
       container_repo = setup_container_repo
       repos = [container_repo]
       @proxy.lifecycle_environments << container_repo.environment
@@ -394,8 +392,7 @@ module Katello
     def test_save_with_organization_location
       set_default_location
       @proxy.destroy!
-      @proxy = FactoryBot.build(:smart_proxy, :default_smart_proxy, :url => 'http://fakepath.com/foo')
-      @proxy.save!
+      @proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
       @proxy_mirror.save!
 
       assert @proxy.pulp_primary?

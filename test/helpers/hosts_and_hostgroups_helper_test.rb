@@ -22,7 +22,7 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
     @host.content_facet = content_facet
     @host.organization = taxonomies(:organization1)
     @group = FactoryBot.build(:hostgroup)
-    @smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
+    @smart_proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
   end
 
   def test_accessible_lifecycle_environments
@@ -60,8 +60,8 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
   end
 
   def test_accessible_content_proxies_no_perms
+    FactoryBot.create(:smart_proxy, :with_pulp3)
     User.current = FactoryBot.create(:user)
-    FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
     @host.content_facet.content_source = @smart_proxy
 
     assert_equal [@smart_proxy], accessible_content_proxies(@host)
@@ -352,7 +352,7 @@ class HostAndHostGroupsHelperContentSourceTests < HostsAndHostGroupsHelperTestBa
   test 'options include inherited content source when provided' do
     smart_proxy = FactoryBot.build_stubbed(
       :smart_proxy,
-      :features => [FactoryBot.create(:feature, name: 'Pulp')]
+      :features => [FactoryBot.create(:feature, name: 'Pulpcore')]
     )
     hostgroup = FactoryBot.build_stubbed(
       :hostgroup,
@@ -367,11 +367,11 @@ class HostAndHostGroupsHelperContentSourceTests < HostsAndHostGroupsHelperTestBa
   test 'if host has a content_source already, do not inherit from hostgroup' do
     smart_proxy_hostgroup = FactoryBot.build_stubbed(
       :smart_proxy,
-      :features => [FactoryBot.create(:feature, name: 'Pulp')]
+      :features => [FactoryBot.create(:feature, name: 'Pulpcore')]
     )
     smart_proxy_host = FactoryBot.build_stubbed(
       :smart_proxy,
-      :features => [FactoryBot.create(:feature, name: 'Pulp')]
+      :features => [FactoryBot.create(:feature, name: 'Pulpcore')]
     )
     hostgroup = FactoryBot.build_stubbed(
       :hostgroup,

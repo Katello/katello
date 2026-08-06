@@ -1,10 +1,9 @@
 module Support
   module CapsuleSupport
     def pulp_features
-      @pulp_node_feature ||= Feature.where(name: SmartProxy::PULP_NODE_FEATURE).first_or_create
       @pulp3_feature ||= Feature.where(name: SmartProxy::PULP3_FEATURE).first_or_create
       @container_gateway_feature ||= Feature.where(name: SmartProxy::CONTAINER_GATEWAY_FEATURE).first_or_create
-      [@pulp_node_feature, @pulp3_feature, @container_gateway_feature]
+      [@pulp3_feature, @container_gateway_feature]
     end
 
     def proxy_with_pulp(proxy_resource = nil)
@@ -17,7 +16,11 @@ module Support
         end
         proxy.organizations = [get_organization]
         proxy.locations = [taxonomies(:location1)]
-        proxy.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:core])
+        spf = proxy.smart_proxy_features.find_by(:feature_id => @pulp3_feature.id)
+        spf.capabilities = [:core]
+        spf.settings ||= {}
+        spf.settings[:mirror] = true
+        spf.save!
       end
     end
 

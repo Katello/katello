@@ -6,6 +6,16 @@ module Katello
     class SmartProxyMirrorRepositoryTest < ActiveSupport::TestCase
       include Katello::Pulp3Support
 
+      def setup
+        proxy = smart_proxies(:four)
+        v3_feature = Feature.find_or_create_by(:name => SmartProxy::PULP3_FEATURE)
+        proxy.features << v3_feature unless proxy.features.include?(v3_feature)
+        spf = proxy.smart_proxy_features.find_by(:feature_id => v3_feature.id)
+        spf.settings ||= {}
+        spf.settings[:mirror] = true
+        spf.save!
+      end
+
       def test_delete_orphan_remotes
         proxy = smart_proxies(:four)
         fedora = katello_repositories(:fedora_17_x86_64)

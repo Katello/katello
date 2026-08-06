@@ -43,7 +43,7 @@ module Katello
         scope :not_created_in_katello, -> { where.not(created_in_katello: true) }
         scoped_search :on => :label, :complete_value => :true
 
-        after_create :associate_default_capsule
+        after_create :associate_pulp_primary
         after_create :associate_default_http_proxy
 
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -143,7 +143,7 @@ module Katello
           imports.map { |i| OpenStruct.new(i) }
         end
 
-        def associate_default_capsule
+        def associate_pulp_primary
           smart_proxy = SmartProxy.pulp_primary
           smart_proxy.organizations << self if smart_proxy
         end
