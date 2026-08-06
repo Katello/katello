@@ -11,6 +11,10 @@ import {
   ModalVariant,
   Spinner,
   Title,
+  Flex,
+  FlexItem,
+  Stack,
+  StackItem,
 } from '@patternfly/react-core';
 import Slot from 'foremanReact/components/common/Slot';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -77,14 +81,18 @@ const ManifestTabContent = ({
 
   return (
     <>
-      {showSubscriptionManifest &&
+      {showSubscriptionManifest && (
         <Grid hasGutter>
           <GridItem span={12}>
-            <Title headingLevel="h3" size="lg" ouiaId="subscription-manifest-title">
+            <Title
+              headingLevel="h3"
+              size="lg"
+              ouiaId="subscription-manifest-title"
+            >
               {__('Subscription Manifest')}
             </Title>
           </GridItem>
-          {manifestExpiringSoon &&
+          {manifestExpiringSoon && (
             <GridItem span={12}>
               <Alert
                 ouiaId="manifest-expiring-soon-alert"
@@ -110,8 +118,8 @@ const ManifestTabContent = ({
                 />
               </Alert>
             </GridItem>
-          }
-          {manifestExpired && isManifestImported &&
+          )}
+          {manifestExpired && isManifestImported && (
             <GridItem span={12}>
               <Alert
                 ouiaId="manifest-expired-alert"
@@ -127,17 +135,15 @@ const ManifestTabContent = ({
                 />
               </Alert>
             </GridItem>
-          }
+          )}
           <GridItem span={12}>
             <Divider />
           </GridItem>
           <GridItem span={5}>
             <strong>{__('Manifest')}</strong>
           </GridItem>
-          <GridItem span={7}>
-            {getManifestName(organization)}
-          </GridItem>
-          {isManifestImported && Boolean(manifestExpirationDate) &&
+          <GridItem span={7}>{getManifestName(organization)}</GridItem>
+          {isManifestImported && Boolean(manifestExpirationDate) && (
             <>
               <GridItem span={5} />
               <GridItem span={7} ouiaId="manifest-expiration-date">
@@ -145,53 +151,70 @@ const ManifestTabContent = ({
                 {new Date(manifestExpirationDate).toDateString()}
               </GridItem>
             </>
-          }
+          )}
           <GridItem span={5}>
-            {canImportManifest &&
+            {canImportManifest && (
               <label htmlFor="usmaFile">{__('Import new manifest')}</label>
-            }
+            )}
           </GridItem>
-          <GridItem span={7} className="manifest-actions">
-            {actionInProgress &&
-              <Spinner size="md" aria-label={__('Loading')} ouiaId="manifest-action-spinner" />
-            }
-            {canImportManifest &&
-              <input
-                id="usmaFile"
-                type="file"
-                accept=".zip"
-                disabled={actionInProgress}
-                onChange={(e) => {
-                  uploadManifest(e.target.files);
-                  e.target.value = null;
-                }}
-              />
-            }
-            <div id="manifest-actions-row">
-              {canImportManifest &&
-                <TooltipButton
-                  onClick={refresh}
-                  tooltipId="refresh-manifest-button-tooltip"
-                  tooltipText={disabledReason}
-                  tooltipPlacement="top"
-                  title={__('Refresh')}
-                  variant="tertiary"
-                  disabled={!isManifestImported ||
-                    actionInProgress || disableManifestActions}
-                />
-              }
-              {canDeleteManifest &&
-                <TooltipButton
-                  variant="danger"
-                  disabled={!isManifestImported || actionInProgress}
-                  onClick={() => setIsDeleteManifestModalOpen(true)}
-                  title={__('Delete')}
-                  tooltipId="delete-manifest-button-tooltip"
-                  tooltipText={disabledTooltipText()}
-                  tooltipPlacement="top"
-                />
-              }
-            </div>
+          <GridItem span={7}>
+            <Stack hasGutter>
+              <StackItem>
+                {actionInProgress && (
+                  <Spinner
+                    size="md"
+                    aria-label={__('Loading')}
+                    ouiaId="manifest-action-spinner"
+                  />
+                )}
+                {canImportManifest && (
+                  <input
+                    id="usmaFile"
+                    type="file"
+                    accept=".zip"
+                    disabled={actionInProgress}
+                    onChange={(e) => {
+                      uploadManifest(e.target.files);
+                      e.target.value = null;
+                    }}
+                  />
+                )}
+              </StackItem>
+              <StackItem>
+                <Flex>
+                  <FlexItem>
+                    {canImportManifest && (
+                      <TooltipButton
+                        onClick={refresh}
+                        tooltipId="refresh-manifest-button-tooltip"
+                        tooltipText={disabledReason}
+                        tooltipPlacement="top"
+                        title={__('Refresh')}
+                        variant="tertiary"
+                        disabled={
+                          !isManifestImported ||
+                          actionInProgress ||
+                          disableManifestActions
+                        }
+                      />
+                    )}
+                  </FlexItem>
+                  <FlexItem>
+                    {canDeleteManifest && (
+                      <TooltipButton
+                        variant="danger"
+                        disabled={!isManifestImported || actionInProgress}
+                        onClick={() => setIsDeleteManifestModalOpen(true)}
+                        title={__('Delete')}
+                        tooltipId="delete-manifest-button-tooltip"
+                        tooltipText={disabledTooltipText()}
+                        tooltipPlacement="top"
+                      />
+                    )}
+                  </FlexItem>
+                </Flex>
+              </StackItem>
+            </Stack>
             <Modal
               isOpen={isDeleteManifestModalOpen}
               onClose={() => setIsDeleteManifestModalOpen(false)}
@@ -223,7 +246,7 @@ const ManifestTabContent = ({
             </Modal>
           </GridItem>
         </Grid>
-      }
+      )}
       <Slot id="katello-manage-manifest-form" multi />
     </>
   );

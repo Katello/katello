@@ -24,8 +24,6 @@ import ManifestHistoryContent from './ManifestHistoryContent';
 import ManifestTabContent from './ManifestTabContent';
 import CdnTabContent from './CdnTabContent';
 
-import './ManageManifestModal.scss';
-
 const ManageManifestModal = ({
   isOpen,
   closeModal,
