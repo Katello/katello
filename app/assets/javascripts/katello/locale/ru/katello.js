@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.rc1",
+        "Project-Id-Version": "katello 4.21.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -154,109 +154,109 @@
         ""
       ],
       "%{errata} (%{total} other errata)": [
-        "%{errata} (других исправлений: %{total})"
+        ""
       ],
       "%{errata} (%{total} other errata) install canceled": [
-        "Установка %{errata} отменена (других исправлений: %{total})"
+        ""
       ],
       "%{errata} (%{total} other errata) install failed": [
-        "Не удалось установить %{errata} (других исправлений: %{total})"
+        ""
       ],
       "%{errata} (%{total} other errata) install timed out": [
-        "Время ожидания установки %{errata} истекло (других исправлений: %{total})"
+        ""
       ],
       "%{errata} (%{total} other errata) installed": [
-        "%{errata} установлено (других исправлений: %{total})"
+        ""
       ],
       "%{errata} erratum install canceled": [
-        "Установка %{errata} отменена"
+        ""
       ],
       "%{errata} erratum install failed": [
-        "Не удалось установить %{errata}"
+        ""
       ],
       "%{errata} erratum install timed out": [
-        "Время ожидания установки %{errata} истекло"
+        ""
       ],
       "%{errata} erratum installed": [
-        "Исправление %{errata} установлено"
+        ""
       ],
       "%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.": [
         ""
       ],
       "%{group} (%{total} other package groups)": [
-        "%{group} (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) install canceled": [
-        "Установка %{group} отменена (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) install failed": [
-        "Не удалось установить %{group} (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) install timed out": [
-        "Время ожидания установки %{group} истекло (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) installed": [
-        "Установка %{group} завершена (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) remove canceled": [
-        "Удаление %{group} отменено (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) remove failed": [
-        "Не удалось удалить %{group} (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) remove timed out": [
-        "Время ожидания удаления %{group} истекло (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) removed": [
-        "Удаление %{group} успешно (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) update canceled": [
-        "Обновление %{group} отменено (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) update failed": [
-        "Не удалось обновить %{group} (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) update timed out": [
-        "Время ожидания обновления %{group} истекло (других групп: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) updated": [
-        "Обновление %{group} завершено (других групп: %{total})"
+        ""
       ],
       "%{group} package group install canceled": [
-        "Установка группы %{group} отменена"
+        ""
       ],
       "%{group} package group install failed": [
-        "Не удалось установить группу %{group}"
+        ""
       ],
       "%{group} package group install timed out": [
-        "Время ожидания установки группы %{group} истекло"
+        ""
       ],
       "%{group} package group installed": [
-        "Группа %{group} установлена"
+        ""
       ],
       "%{group} package group remove canceled": [
-        "Удаление группы %{group} отменено"
+        ""
       ],
       "%{group} package group remove failed": [
-        "Не удалось удалить группу %{group} "
+        ""
       ],
       "%{group} package group remove timed out": [
-        "Время ожидания удаления группы %{group} истекло"
+        ""
       ],
       "%{group} package group removed": [
-        "Группа %{group} удалена"
+        ""
       ],
       "%{group} package group update canceled": [
-        "Обновление группы %{group} отменено"
+        ""
       ],
       "%{group} package group update failed": [
-        "Не удалось обновить группу %{group} "
+        ""
       ],
       "%{group} package group update timed out": [
-        "Время ожидания обновления группы %{group} истекло"
+        ""
       ],
       "%{group} package group updated": [
-        "Группа %{group} обновлена"
+        ""
       ],
       "%{label} failed": [
         ""
@@ -268,73 +268,73 @@
         ""
       ],
       "%{package} (%{total} other packages)": [
-        "%{package} (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) install canceled": [
-        "Установка %{package} отменена (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) install failed": [
-        "Не удалось установить %{package} (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) install timed out": [
-        "Время ожидания установки %{package} истекло (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) installed": [
-        "%{package} установлен (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) remove canceled": [
-        "Удаление %{package} отменено (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) remove failed": [
-        "Не удалось удалить %{package} (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) remove timed out": [
-        "Время ожидания удаления %{package} истекло (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) removed": [
-        "%{package} удален (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) update canceled": [
-        "Обновление %{package} отменено (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) update failed": [
-        "Не удалось обновить %{package} (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) update timed out": [
-        "Время ожидания обновления %{package} истекло (других пакетов: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) updated": [
-        "%{package} обновлен (других пакетов: %{total})"
+        ""
       ],
       "%{package} package install canceled": [
-        "Установка %{package} отменена"
+        ""
       ],
       "%{package} package install timed out": [
-        "Время ожидания установки %{package} истекло"
+        ""
       ],
       "%{package} package remove canceled": [
-        "Удаление %{package} отменено"
+        ""
       ],
       "%{package} package remove failed": [
-        "Не удалось удалить %{package}"
+        ""
       ],
       "%{package} package remove timed out": [
-        "Время ожидания удаления %{package} истекло"
+        ""
       ],
       "%{package} package removed": [
-        "%{package} удален"
+        ""
       ],
       "%{package} package update canceled": [
-        "Обновление %{package} отменено"
+        ""
       ],
       "%{package} package update failed": [
-        "Не удалось обновить %{package}"
+        ""
       ],
       "%{package} package update timed out": [
-        "Время ожидания обновления %{package} истекло"
+        ""
       ],
       "%{package} package updated": [
-        "%{package} обновлен"
+        ""
       ],
       "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
         ""
@@ -482,9 +482,6 @@
       ],
       "About page": [
         ""
-      ],
-      "Abstract async task": [
-        "Абстрактная асинхронная задача"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -637,9 +634,6 @@
         ""
       ],
       "Add repositories with package groups to content view to select them here.": [
-        ""
-      ],
-      "Add rolling repo clone": [
         ""
       ],
       "Add rule": [
@@ -1256,12 +1250,15 @@
         ""
       ],
       "Candlepin Event": [
-        "Событие Candlepin"
+        ""
       ],
       "Candlepin ID of pool to add": [
         ""
       ],
       "Candlepin consumer %s has already been removed": [
+        ""
+      ],
+      "Candlepin consumer registration response is missing a uuid": [
         ""
       ],
       "Candlepin is not running properly": [
@@ -1388,6 +1385,9 @@
         "Невозможно выполнить инкрементное обновление для сложного представления (%{name}, версия %{version}"
       ],
       "Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}": [
+        ""
+      ],
+      "Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})": [
         ""
       ],
       "Cannot promote environment out of sequence. Use force to bypass restriction.": [
@@ -1574,9 +1574,6 @@
         ""
       ],
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
-        ""
-      ],
-      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1966,14 +1963,8 @@
       "Copy": [
         ""
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "Копировать ключ активации"
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         ""
@@ -1986,12 +1977,6 @@
       ],
       "Copy to clipboard": [
         "Скопировано в буфер обмена"
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
-        ""
       ],
       "Cores per socket": [
         "Ядер на сокет"
@@ -2212,19 +2197,10 @@
       "Create content view": [
         ""
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
-        ""
-      ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -2232,12 +2208,6 @@
       ],
       "Create organization": [
         "Создать организацию"
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
-        ""
       ],
       "Creation": [
         ""
@@ -2506,31 +2476,10 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "Удалить манифест провайдера Red Hat"
       ],
       "Delete multiple filters from a content view": [
-        ""
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2635,12 +2584,6 @@
       "Destroy an environment in an organization": [
         "Удалить окружение из организации"
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2679,9 +2622,6 @@
       ],
       "Disabled": [
         "Отключено"
-      ],
-      "Discover": [
-        "Поиск"
       ],
       "Discover Repositories": [
         "Поиск репозиториев"
@@ -2890,9 +2830,6 @@
       "Environment cannot be in its own promotion path": [
         "Путь переноса не может быть таким же как исходный путь"
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         ""
       ],
@@ -2918,10 +2855,10 @@
         "Идентификатор"
       ],
       "Errata Install": [
-        "Установка исправлений"
+        ""
       ],
       "Errata Install scheduled by %s": [
-        "Установка назначена: %s"
+        ""
       ],
       "Errata and package information will be updated at the next host check-in or package action.": [
         ""
@@ -2931,9 +2868,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         ""
-      ],
-      "Errata mail": [
-        "Почта"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2954,16 +2888,16 @@
         "Исправление"
       ],
       "Erratum Install Canceled": [
-        "Установка исправления отменена"
+        ""
       ],
       "Erratum Install Complete": [
-        "Исправление установлено"
+        ""
       ],
       "Erratum Install Failed": [
-        "Не удалось установить исправление"
+        ""
       ],
       "Erratum Install Timed Out": [
-        "Время ожидания установки исправления истекло"
+        ""
       ],
       "Error": [
         "Ошибка"
@@ -3127,9 +3061,6 @@
       "Fetch installable errata for one or more hosts.": [
         ""
       ],
-      "Fetch pxe files": [
-        ""
-      ],
       "Fetch traces for one or more hosts": [
         ""
       ],
@@ -3234,9 +3165,6 @@
       ],
       "Filter...": [
         "Фильтр..."
-      ],
-      "Filtered index content": [
-        "Содержимое фильтруемого индекса"
       ],
       "Filters": [
         "Фильтры"
@@ -3363,9 +3291,6 @@
         ""
       ],
       "Generate host applicability": [
-        ""
-      ],
-      "Generate metadata": [
         ""
       ],
       "Generate repository applicability": [
@@ -3616,12 +3541,6 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Порядок сортировки (например, ASC — по возрастанию)"
-      ],
-      "Hypervisors": [
-        "Гипервизоры"
-      ],
-      "Hypervisors update": [
-        "Обновление гипервизоров"
       ],
       "ID": [
         "ID"
@@ -3941,9 +3860,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3951,12 +3867,6 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
-        ""
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -4031,9 +3941,6 @@
       "Incremental Update incomplete.": [
         "Инкрементное обновление не завершено."
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        ""
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         ""
       ],
@@ -4049,18 +3956,6 @@
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
       ],
-      "Index content": [
-        "Индексировать содержимое"
-      ],
-      "Index errata": [
-        "Индексировать исправления"
-      ],
-      "Index module streams": [
-        ""
-      ],
-      "Index package groups": [
-        "Индексировать группы пакетов"
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Тип может принимать значения: [ %{list} ]"
       ],
@@ -4071,9 +3966,6 @@
         ""
       ],
       "Inherit parent (%s)": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4147,15 +4039,12 @@
         ""
       ],
       "Installing Erratum...": [
-        "Установка исправления..."
+        ""
       ],
       "Installing Package Group...": [
-        "Установка группы пакетов..."
+        ""
       ],
       "Installing Package...": [
-        "Установка пакета..."
-      ],
-      "Instance update": [
         ""
       ],
       "Instance-based": [
@@ -4950,9 +4839,6 @@
       "Messaging connection": [
         "Система обмена сообщениями"
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -5023,15 +4909,6 @@
         ""
       ],
       "Multi Content View Environment": [
-        ""
-      ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -5194,6 +5071,9 @@
         ""
       ],
       "No action required": [
+        ""
+      ],
+      "No activation keys available": [
         ""
       ],
       "No alternate content sources match your filter criteria.": [
@@ -5425,7 +5305,7 @@
         ""
       ],
       "No new packages installed": [
-        "Нет новых пакетов"
+        ""
       ],
       "No package groups yet": [
         ""
@@ -5440,10 +5320,10 @@
         ""
       ],
       "No packages removed": [
-        "Удаление пакетов не производилось"
+        ""
       ],
       "No packages updated": [
-        "Пакеты не обновлены"
+        ""
       ],
       "No pool IDs were provided.": [
         ""
@@ -5551,7 +5431,7 @@
         ""
       ],
       "Non-system event": [
-        "Несистемное событие"
+        ""
       ],
       "None": [
         "Нет"
@@ -5767,85 +5647,85 @@
         "Группа пакетов"
       ],
       "Package Group Install": [
-        "Установка группы пакетов"
+        ""
       ],
       "Package Group Install Canceled": [
-        "Установка группы пакетов отменена"
+        ""
       ],
       "Package Group Install Complete": [
-        "Группа пакетов установлена"
+        ""
       ],
       "Package Group Install Failed": [
-        "Не удалось установить группу пакетов"
+        ""
       ],
       "Package Group Install Timed Out": [
-        "Истекло время ожидания установки группы пакетов"
+        ""
       ],
       "Package Group Install scheduled by %s": [
-        "Установку группы пакетов назначил: %s"
+        ""
       ],
       "Package Group Remove": [
-        "Удаление группы пакетов"
+        ""
       ],
       "Package Group Remove Canceled": [
-        "Удаление группы пакетов отменено"
+        ""
       ],
       "Package Group Remove Complete": [
-        "Группа пакетов удалена"
+        ""
       ],
       "Package Group Remove Failed": [
-        "Не удалось удалить группу пакетов"
+        ""
       ],
       "Package Group Remove Timed Out": [
-        "Время ожидания удаления группы пакетов истекло"
+        ""
       ],
       "Package Group Remove scheduled by %s": [
-        "Удаление группы пакетов назначил: %s"
+        ""
       ],
       "Package Group Update": [
-        "Обновление группы пакетов"
+        ""
       ],
       "Package Group Update scheduled by %s": [
-        "Обновление группы пакетов назначил: %s"
+        ""
       ],
       "Package Groups": [
         "Группы пакетов"
       ],
       "Package Install": [
-        "Установка пакета"
+        ""
       ],
       "Package Install Canceled": [
-        "Установка пакета отменена"
+        ""
       ],
       "Package Install Complete": [
-        "Пакет установлен"
+        ""
       ],
       "Package Install Failed": [
-        "Не удалось установить пакет"
+        ""
       ],
       "Package Install Timed Out": [
-        "Время ожидания установки пакета истекло"
+        ""
       ],
       "Package Install scheduled by %s": [
-        "Установку пакета назначил: %s"
+        ""
       ],
       "Package Remove": [
-        "Удаление пакета"
+        ""
       ],
       "Package Remove Canceled": [
-        "Удаление пакета отменено"
+        ""
       ],
       "Package Remove Complete": [
-        "Пакет удалён"
+        ""
       ],
       "Package Remove Failed": [
-        "Не удалось удалить пакет"
+        ""
       ],
       "Package Remove Timed Out": [
-        "Время ожидания удаления пакета истекло"
+        ""
       ],
       "Package Remove scheduled by %s": [
-        "Удаление пакета назначил: %s"
+        ""
       ],
       "Package Type": [
         ""
@@ -5854,34 +5734,34 @@
         ""
       ],
       "Package Update": [
-        "Обновление пакетов"
+        ""
       ],
       "Package Update Canceled": [
-        "Обновление пакета отменено"
+        ""
       ],
       "Package Update Complete": [
-        "Пакеты обновлены"
+        ""
       ],
       "Package Update Failed": [
-        "Не удалось обновить пакет"
+        ""
       ],
       "Package Update Timed Out": [
-        "Время ожидания обновления пакета истекло"
+        ""
       ],
       "Package Update scheduled by %s": [
-        "Обновление пакета назначил: %s"
+        ""
       ],
       "Package group update canceled": [
-        "Обновление группы пакетов отменено"
+        ""
       ],
       "Package group update complete": [
-        "Группа пакетов обновлена."
+        ""
       ],
       "Package group update failed": [
-        "Не удалось обновить группу пакетов"
+        ""
       ],
       "Package group update timed out": [
-        "Время ожидания обновления группы пакетов истекло"
+        ""
       ],
       "Package groups": [
         ""
@@ -6027,13 +5907,13 @@
       "Please select a lifecycle environment and a content view to move this activation key.": [
         ""
       ],
-      "Please select a lifecycle environment and content view to view activation keys.": [
-        ""
-      ],
       "Please select an architecture before assigning a kickstart repository": [
         ""
       ],
       "Please select an operating system before assigning a kickstart repository": [
+        ""
+      ],
+      "Please select an organization to view activation keys.": [
         ""
       ],
       "Please select one from the list below and you will be redirected.": [
@@ -6300,9 +6180,6 @@
       "Pulp task error": [
         "Ошибка задачи Pulp"
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         ""
       ],
@@ -6411,9 +6288,6 @@
       "Reclaim Space": [
         ""
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -6483,9 +6357,6 @@
       "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -6498,13 +6369,7 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -6512,12 +6377,6 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Обновить ранее импортированный манифест провайдера Red Hat"
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         ""
@@ -6560,9 +6419,6 @@
       ],
       "Registry token expiration time": [
         ""
-      ],
-      "Reindex subscriptions": [
-        "Повторно индексировать подписки"
       ],
       "Related composite content views": [
         ""
@@ -6666,9 +6522,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         "Удалить группу пакетов с помощью Katello"
       ],
@@ -6683,15 +6536,6 @@
       ],
       "Remove products from sync plan": [
         "Исключить продукты из плана синхронизации"
-      ],
-      "Remove rolling repo clone": [
-        ""
-      ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Удалить версии и окружения из представления и переназначить системы и ключи"
@@ -6709,18 +6553,15 @@
         ""
       ],
       "Removing Package Group...": [
-        "Удаление группы..."
+        ""
       ],
       "Removing Package...": [
-        "Удаление пакета..."
+        ""
       ],
       "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}": [
         ""
       ],
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
-        ""
-      ],
-      "Repair": [
         ""
       ],
       "Replace content source on the target machine": [
@@ -6741,17 +6582,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "Нельзя использовать репозитории из опубликованных представлений."
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repositories table": [
         ""
@@ -7128,21 +6963,6 @@
       "Save Environments": [
         ""
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         ""
       ],
@@ -7150,12 +6970,6 @@
         ""
       ],
       "Scan a flatpak remote": [
-        ""
-      ],
-      "Scan cdn": [
-        ""
-      ],
-      "Scan remote": [
         ""
       ],
       "Schema version 1": [
@@ -7999,9 +7813,6 @@
       "Supported Content Types": [
         ""
       ],
-      "Sync": [
-        "Синхронизация"
-      ],
       "Sync Canceled": [
         "Синхронизация отменена"
       ],
@@ -8059,9 +7870,6 @@
       "Sync canceled": [
         ""
       ],
-      "Sync capsule": [
-        ""
-      ],
       "Sync complete.": [
         "Успешно."
       ],
@@ -8084,9 +7892,6 @@
         ""
       ],
       "Sync state": [
-        ""
-      ],
-      "Syncable export": [
         ""
       ],
       "Synced": [
@@ -8348,9 +8153,6 @@
         ""
       ],
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
-        ""
-      ],
-      "The selected lifecycle environment contains no activation keys": [
         ""
       ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
@@ -8950,25 +8752,13 @@
       "Update content counts for the smart proxy": [
         ""
       ],
-      "Update content urls": [
-        ""
-      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
-        ""
-      ],
-      "Update http proxy": [
-        ""
-      ],
-      "Update http proxy details": [
         ""
       ],
       "Update installed packages, enabled repos, module inventory": [
@@ -8986,19 +8776,10 @@
       "Update packages via Katello interface": [
         ""
       ],
-      "Update redhat repository": [
-        ""
-      ],
       "Update release version for host": [
         ""
       ],
       "Update release version for host %s": [
-        ""
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
         ""
       ],
       "Update services requiring restart": [
@@ -9051,7 +8832,7 @@
         ""
       ],
       "Updating Package...": [
-        "Обновление пакета..."
+        ""
       ],
       "Updating System Purpose for host": [
         ""
@@ -9060,7 +8841,7 @@
         ""
       ],
       "Updating package group...": [
-        "Обновление группы пакетов..."
+        ""
       ],
       "Updating repository authentication configuration": [
         ""
@@ -9095,12 +8876,6 @@
       "Upload a subscription manifest": [
         "Отправить манифест подписки"
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         "Добавить в"
       ],
@@ -9112,9 +8887,6 @@
       ],
       "Upload request id": [
         "Отправить ID запроса"
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -9235,9 +9007,6 @@
       ],
       "Verify SSL": [
         "Проверить SSL"
-      ],
-      "Verify checksum": [
-        ""
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -9441,7 +9210,7 @@
         "Статус синхронизации можно проверить только в окружении Library."
       ],
       "You cannot have more than %{max_hosts} host(s) associated with host collection '%{host_collection}'.": [
-        "С коллекцией «%{host_collection}» может быть связано не больше %{max_hosts} узла(ов)."
+        ""
       ],
       "You cannot set an organization's parent. This feature is disabled.": [
         "Вы не можете выбрать родителя организации. Эта функциональность отключена."
@@ -9591,13 +9360,13 @@
         ""
       ],
       "all packages": [
-        "все пакеты"
+        ""
       ],
       "all packages update": [
-        "обновление всех пакетов"
+        ""
       ],
       "all packages update failed": [
-        "не удалось обновить все пакеты"
+        ""
       ],
       "allow unauthenticed pull of container images": [
         ""
@@ -9750,16 +9519,16 @@
         ""
       ],
       "content view node publish": [
-        "публикация узла представления"
+        ""
       ],
       "content view numeric identifier": [
         "числовой идентификатор представления"
       ],
       "content view publish": [
-        "публикация представления"
+        ""
       ],
       "content view refresh": [
-        "обновление представления"
+        ""
       ],
       "content view to reassign orphaned activation keys to": [
         "представление, с которым будут связаны потерянные ключи активации"
@@ -9966,25 +9735,25 @@
         ""
       ],
       "installing errata...": [
-        "установка исправлений..."
+        ""
       ],
       "installing erratum...": [
-        "установка исправления..."
+        ""
       ],
       "installing or updating packages": [
         ""
       ],
       "installing package group...": [
-        "установка группы пакетов..."
+        ""
       ],
       "installing package groups...": [
-        "установка групп пакетов..."
+        ""
       ],
       "installing package...": [
-        "установка пакета..."
+        ""
       ],
       "installing packages...": [
-        "установка пакетов..."
+        ""
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         ""
@@ -10207,16 +9976,16 @@
         ""
       ],
       "removing package group...": [
-        "удаление группы пакетов..."
+        ""
       ],
       "removing package groups...": [
-        "удаление групп пакетов..."
+        ""
       ],
       "removing package...": [
-        "удаление пакета..."
+        ""
       ],
       "removing packages...": [
-        "удаление пакетов..."
+        ""
       ],
       "replace": [
         ""
@@ -10339,16 +10108,16 @@
         ""
       ],
       "updating package group...": [
-        "обновление группы пакетов..."
+        ""
       ],
       "updating package groups...": [
-        "обновление групп пакетов..."
+        ""
       ],
       "updating package...": [
-        "обновление пакета..."
+        ""
       ],
       "updating packages...": [
-        "обновление пакетов..."
+        ""
       ],
       "upstream Foreman server": [
         ""
