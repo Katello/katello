@@ -12,6 +12,7 @@ jest.mock('foremanReact/components/ToastsList', () => ({
 
 jest.mock('foremanReact/Root/Context/ForemanContext', () => ({
   useForemanOrganization: () => ({ id: 1, name: 'Test Org' }),
+  useForemanSettings: () => ({ perPage: 20 }),
 }));
 
 const hostCollectionsApiUrl = katelloApi.getApiUrl('/host_collections');

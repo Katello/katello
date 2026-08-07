@@ -8,8 +8,6 @@ import FlatpakRemoteDetails from '../../FlatpakRemoteDetails';
 import FLATPAK_REMOTES_KEY from '../../../FlatpakRemotesConstants';
 import frDetailData from '../../__tests__/flatpakRemoteDetails.fixtures.json';
 
-jest.mock('react-intl', () => ({ addLocaleData: () => { }, FormattedDate: () => 'mocked' }));
-
 const withFRRoute = component => <Route path="/flatpak_remotes/:id([0-9]+)">{component}</Route>;
 
 const renderOptions = {

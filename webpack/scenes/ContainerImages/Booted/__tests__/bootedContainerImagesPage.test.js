@@ -86,8 +86,8 @@ test('BootedContainerImagesPage renders correctly expanded', async (done) => {
 
     // Check that the image host count links appear
     const links = queryAllByRole('link');
-    const stream10Link = links.find(link => link.getAttribute('href') === `/new/hosts?search=bootc_booted_image%20=%20${centos10Image.bootc_booted_image}`);
-    const stream9Link = links.find(link => link.getAttribute('href') === `/new/hosts?search=bootc_booted_image%20=%20${centos9Image.bootc_booted_image}`);
+    const stream10Link = links.find(link => link.getAttribute('href') === `/hosts?search=bootc_booted_image%20=%20${centos10Image.bootc_booted_image}`);
+    const stream9Link = links.find(link => link.getAttribute('href') === `/hosts?search=bootc_booted_image%20=%20${centos9Image.bootc_booted_image}`);
     expect(stream10Link).toBeVisible();
     expect(stream9Link).toBeVisible();
 
@@ -138,8 +138,8 @@ test('BootedContainerImagesPage renders correctly unexpanded', async (done) => {
 
     // Check that the image host count links appear
     const links = queryAllByRole('link');
-    const stream10Link = links.find(link => link.getAttribute('href') === `/new/hosts?search=bootc_booted_image%20=%20${centos10Image.bootc_booted_image}`);
-    const stream9Link = links.find(link => link.getAttribute('href') === `/new/hosts?search=bootc_booted_image%20=%20${centos9Image.bootc_booted_image}`);
+    const stream10Link = links.find(link => link.getAttribute('href') === `/hosts?search=bootc_booted_image%20=%20${centos10Image.bootc_booted_image}`);
+    const stream9Link = links.find(link => link.getAttribute('href') === `/hosts?search=bootc_booted_image%20=%20${centos9Image.bootc_booted_image}`);
     expect(stream10Link).toBeVisible();
     expect(stream9Link).toBeVisible();
 
