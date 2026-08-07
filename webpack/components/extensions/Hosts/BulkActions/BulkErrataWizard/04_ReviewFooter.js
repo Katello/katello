@@ -19,6 +19,7 @@ export const BulkErrataReviewFooter = () => {
     setFinishButtonLoading,
     selectedRexOption,
     closeModal,
+    refreshTableData,
     errataBulkSelect: {
       fetchBulkParams: getErrataBulkParams,
       selectedCount: errataSelectedCount,
@@ -55,6 +56,7 @@ export const BulkErrataReviewFooter = () => {
   const handleFinishButtonClick = () => {
     setFinishButtonLoading(true);
     triggerBulkErrataInstall();
+    refreshTableData();
     closeModal();
   };
 
