@@ -1,5 +1,4 @@
 import 'foremanJSTestSetup';
-import React from 'react';
 import MutationObserver from '@sheerun/mutationobserver-shim';
 
 // jsdom in jest 24 (standalone) lacks MutationObserver; shim needed for @testing-library/dom v7+
@@ -15,5 +14,6 @@ jest.mock('foremanReact/redux', () => {
 // LongDateTime depends on react-intl's formatRelative which rejects out-of-range fixture dates
 jest.mock('foremanReact/components/common/dates/LongDateTime', () => ({
   __esModule: true,
-  default: ({ date, defaultValue }) => React.createElement('span', null, date || defaultValue || ''),
+  // eslint-disable-next-line global-require
+  default: ({ date, defaultValue }) => require('react').createElement('span', null, date || defaultValue || ''),
 }));
