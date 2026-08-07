@@ -1,6 +1,6 @@
 import { translate as __ } from 'foremanReact/common/I18n';
 import Repos from '../../scenes/RedHatRepositories';
-import Subscriptions from '../../scenes/Subscriptions';
+import Subscriptions from '../../scenes/Subscriptions/SubscriptionsPage';
 import UpstreamSubscriptions from '../../scenes/Subscriptions/UpstreamSubscriptions/index';
 import SubscriptionDetails from '../../scenes/Subscriptions/Details';
 import ActivationKeyDetails from '../../scenes/ActivationKeys/Details/ActivationKeyDetails';

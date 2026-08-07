@@ -1,7 +1,7 @@
 import { addToast } from 'foremanReact/components/ToastsList';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { head } from 'lodash';
-import { SUBSCRIPTIONS_QUANTITIES_FAILURE } from '../scenes/Subscriptions/SubscriptionConstants';
+import { SUBSCRIPTIONS_QUANTITIES_KEY } from '../scenes/Subscriptions/SubscriptionConstants';
 
 const getSubscriptionsErrorMessage = (message) => {
   const errorMessageHash = {
@@ -23,7 +23,7 @@ export const getBookmarkErrorMsgs = ({ data: { error } } = {}) => {
 const getCustomMessage = (actionType, message) => {
   let customMessage;
   switch (actionType) {
-  case SUBSCRIPTIONS_QUANTITIES_FAILURE:
+  case SUBSCRIPTIONS_QUANTITIES_KEY:
     customMessage = getSubscriptionsErrorMessage(message);
     break;
   default:

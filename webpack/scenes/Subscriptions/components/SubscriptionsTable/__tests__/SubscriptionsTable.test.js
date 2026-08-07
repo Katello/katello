@@ -1,15 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import SubscriptionsTable from '../SubscriptionsTable';
+import { createSubscriptionsColumns } from '../../../SubscriptionsColumns';
 import { successState, loadingState, emptyState, groupedSubscriptions } from '../../../__tests__/subscriptions.fixtures';
 
-const mockLoadingState = jest.fn(({ children }) => <div>{children}</div>);
 const mockTable = jest.fn(() => <div data-testid="subscriptions-table" />);
 const mockDialogs = jest.fn(() => <div data-testid="subscriptions-dialogs" />);
 
-jest.mock('../../../../../components/LoadingState', () => ({
-  LoadingState: props => mockLoadingState(props),
-}));
 jest.mock('../components/Table', () => props => mockTable(props));
 jest.mock('../components/Dialogs', () => props => mockDialogs(props));
 
@@ -21,11 +18,25 @@ const tableColumns = [
   'end_date',
 ];
 
+const notifyApiResponse = (subscriptions) => {
+  const tableProps = mockTable.mock.calls[mockTable.mock.calls.length - 1][0];
+  act(() => {
+    tableProps.onApiResponse({
+      results: subscriptions.results || [],
+      loading: !!subscriptions.loading,
+      availableQuantities: subscriptions.availableQuantities,
+      itemCount: subscriptions.itemCount || 0,
+      page: subscriptions.pagination?.page || 1,
+      perPage: subscriptions.pagination?.perPage || 20,
+      searchIsActive: !!subscriptions.searchIsActive,
+    });
+  });
+};
+
 describe('subscriptions table', () => {
   const buildProps = (overrides = {}) => ({
-    subscriptions: successState,
-    loadSubscriptions: jest.fn(),
     tableColumns,
+    columns: createSubscriptionsColumns(),
     updateQuantity: jest.fn(),
     subscriptionDeleteModalOpen: false,
     onDeleteSubscriptions: jest.fn(),
@@ -38,28 +49,24 @@ describe('subscriptions table', () => {
   });
 
   beforeEach(() => {
-    mockLoadingState.mockClear();
     mockTable.mockClear();
     mockDialogs.mockClear();
   });
 
   it('renders table and dialogs with computed rows', () => {
     render(<SubscriptionsTable {...buildProps()} />);
+    notifyApiResponse(successState);
 
-    expect(mockLoadingState.mock.calls[0][0]).toMatchObject({
-      loading: false,
-      loadingText: 'Loading',
-    });
-    expect(mockTable.mock.calls[0][0].rows).toHaveLength(successState.results.length);
+    expect(mockTable.mock.calls[mockTable.mock.calls.length - 1][0].rows)
+      .toHaveLength(successState.results.length);
     expect(mockDialogs.mock.calls[0][0].deleteDialog.show).toBe(false);
   });
 
   it('builds grouped subscription rows for shared products', () => {
-    render(<SubscriptionsTable
-      {...buildProps({ subscriptions: groupedSubscriptions, selectionEnabled: true })}
-    />);
+    render(<SubscriptionsTable {...buildProps({ selectionEnabled: true })} />);
+    notifyApiResponse(groupedSubscriptions);
 
-    const tableProps = mockTable.mock.calls[0][0];
+    const tableProps = mockTable.mock.calls[mockTable.mock.calls.length - 1][0];
     expect(tableProps.rows).toHaveLength(1);
     expect(tableProps.rows[0].collapsible).toBe(true);
     expect(tableProps.selectionEnabled).toBe(true);
@@ -68,9 +75,12 @@ describe('subscriptions table', () => {
   it('selects all rows when no rows are selected', () => {
     const props = buildProps({ selectionEnabled: true });
     render(<SubscriptionsTable {...props} />);
+    notifyApiResponse(successState);
 
-    const tableProps = mockTable.mock.calls[0][0];
-    const selectedRowIds = successState.results.map(row => row.id);
+    const tableProps = mockTable.mock.calls[mockTable.mock.calls.length - 1][0];
+    const selectedRowIds = successState.results
+      .filter(row => row.upstream_pool_id)
+      .map(row => row.id);
     tableProps.selectionController.selectAllRows();
 
     expect(props.onSelectedRowsChange).toHaveBeenCalledWith(selectedRowIds);
@@ -78,15 +88,35 @@ describe('subscriptions table', () => {
   });
 
   it('clears all selections when all rows are already selected', () => {
+    const eligibleRowIds = successState.results
+      .filter(row => row.upstream_pool_id)
+      .map(row => row.id);
     const props = buildProps({
       selectionEnabled: true,
-      selectedRows: successState.results.map(row => row.id),
+      selectedRows: eligibleRowIds,
     });
     render(<SubscriptionsTable {...props} />);
+    notifyApiResponse(successState);
 
-    const tableProps = mockTable.mock.calls[0][0];
+    const tableProps = mockTable.mock.calls[mockTable.mock.calls.length - 1][0];
     tableProps.selectionController.selectAllRows();
 
+    expect(props.onSelectedRowsChange).toHaveBeenCalledWith([]);
+    expect(props.toggleDeleteButton).toHaveBeenCalledWith(false);
+  });
+
+  it('does not treat an empty eligible collection as fully selected', () => {
+    const props = buildProps({ selectionEnabled: true });
+    render(<SubscriptionsTable {...props} />);
+    notifyApiResponse({
+      ...successState,
+      results: successState.results.map(({ upstream_pool_id: _id, ...row }) => row),
+    });
+
+    const tableProps = mockTable.mock.calls[mockTable.mock.calls.length - 1][0];
+    expect(tableProps.selectionController.allRowsSelected()).toBe(false);
+
+    tableProps.selectionController.selectAllRows();
     expect(props.onSelectedRowsChange).toHaveBeenCalledWith([]);
     expect(props.toggleDeleteButton).toHaveBeenCalledWith(false);
   });
@@ -94,17 +124,20 @@ describe('subscriptions table', () => {
   it('toggles individual row selection', () => {
     const props = buildProps({ selectionEnabled: true, selectedRows: [3] });
     render(<SubscriptionsTable {...props} />);
+    notifyApiResponse(successState);
 
-    const tableProps = mockTable.mock.calls[0][0];
+    const tableProps = mockTable.mock.calls[mockTable.mock.calls.length - 1][0];
     tableProps.selectionController.selectRow({ rowData: { id: 3 } });
 
     expect(props.onSelectedRowsChange).toHaveBeenCalledWith([]);
     expect(props.toggleDeleteButton).toHaveBeenCalledWith(false);
   });
 
-  it('renders loading state', () => {
-    render(<SubscriptionsTable {...buildProps({ subscriptions: loadingState })} />);
-    expect(mockLoadingState.mock.calls[0][0].loading).toBe(true);
+  it('keeps the table mounted while loading so TableIndexPage can fetch', () => {
+    render(<SubscriptionsTable {...buildProps()} />);
+    expect(mockTable).toHaveBeenCalled();
+    notifyApiResponse(loadingState);
+    expect(mockTable.mock.calls[mockTable.mock.calls.length - 1][0]).toBeTruthy();
   });
 
   it('passes empty state through to the table', () => {
@@ -115,12 +148,13 @@ describe('subscriptions table', () => {
 
     render(<SubscriptionsTable
       {...buildProps({
-        subscriptions: emptyState,
         emptyState: emptyStateData,
         tableColumns: [],
       })}
     />);
+    notifyApiResponse(emptyState);
 
-    expect(mockTable.mock.calls[0][0].emptyState).toEqual(emptyStateData);
+    expect(mockTable.mock.calls[mockTable.mock.calls.length - 1][0].emptyState)
+      .toEqual(emptyStateData);
   });
 });
