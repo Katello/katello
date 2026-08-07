@@ -288,23 +288,24 @@ test('Can move to Finish step and publish CV', async (done) => {
     .post(cvPublishPath, cvPublishParams)
     .reply(202, publishResponseData);
 
-  const { getByText } = renderWithRedux(<PublishContentViewWizard
+  const { getByText, unmount } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
     onClose={() => { }}
   />);
 
   fireEvent.click(getByText('Next'));
-  // Test the review page
   await patientlyWaitFor(() => {
     expect(getByText('Finish')).toBeInTheDocument();
   });
-  fireEvent.click(getByText('Finish'));
+  await act(async () => {
+    fireEvent.click(getByText('Finish'));
+  });
 
   assertNockRequest(scope);
   assertNockRequest(filterScope);
   assertNockRequest(repositoriesScope);
   assertNockRequest(publishScope);
+  unmount();
   done();
-  act(done); // stop listening for nocks
 });
