@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.rc1",
+        "Project-Id-Version": "katello 4.21.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -154,109 +154,109 @@
         ""
       ],
       "%{errata} (%{total} other errata)": [
-        "%{errata}（%{total} 個其它勘誤）"
+        ""
       ],
       "%{errata} (%{total} other errata) install canceled": [
-        "%{errata}（%{total} 個其它勘誤）安裝程序已取消"
+        ""
       ],
       "%{errata} (%{total} other errata) install failed": [
-        "%{errata}（%{total} 個其它勘誤）安裝程序失敗"
+        ""
       ],
       "%{errata} (%{total} other errata) install timed out": [
-        "%{errata}（%{total} 個其它勘誤）安裝逾時"
+        ""
       ],
       "%{errata} (%{total} other errata) installed": [
-        "%{errata}（%{total} 個其它勘誤）已安裝"
+        ""
       ],
       "%{errata} erratum install canceled": [
-        "%{errata} 勘誤安裝已取消"
+        ""
       ],
       "%{errata} erratum install failed": [
-        "%{errata} 勘誤安裝失敗"
+        ""
       ],
       "%{errata} erratum install timed out": [
-        "%{errata} 勘誤安裝逾時"
+        ""
       ],
       "%{errata} erratum installed": [
-        "已安裝 %{errata} 個勘誤"
+        ""
       ],
       "%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.": [
         ""
       ],
       "%{group} (%{total} other package groups)": [
-        "%{group}（%{total} 個其它套件群組）"
+        ""
       ],
       "%{group} (%{total} other package groups) install canceled": [
-        "%{group}（%{total} 個其它套件群組）安裝已取消"
+        ""
       ],
       "%{group} (%{total} other package groups) install failed": [
-        "%{group}（%{total} 個其它套件群組）安裝失敗"
+        ""
       ],
       "%{group} (%{total} other package groups) install timed out": [
-        "%{group}（%{total} 個其它套件群組）安裝逾時"
+        ""
       ],
       "%{group} (%{total} other package groups) installed": [
-        "%{group} （%{total} 個其它套件群組）已安裝"
+        ""
       ],
       "%{group} (%{total} other package groups) remove canceled": [
-        "%{group}（%{total} 個其它套件群組）的移除已取消"
+        ""
       ],
       "%{group} (%{total} other package groups) remove failed": [
-        "%{group}（%{total}  個其它套件群組）移除失敗"
+        ""
       ],
       "%{group} (%{total} other package groups) remove timed out": [
-        "%{group}（%{total}  個其它套件群組) 移除逾時"
+        ""
       ],
       "%{group} (%{total} other package groups) removed": [
-        "%{group}（%{total} 個其它套件群組）已移除"
+        ""
       ],
       "%{group} (%{total} other package groups) update canceled": [
-        "%{group}（%{total} 個其它套件群組）更新已取消"
+        ""
       ],
       "%{group} (%{total} other package groups) update failed": [
-        "%{group}（%{total} 個其它套件群組）更新失敗"
+        ""
       ],
       "%{group} (%{total} other package groups) update timed out": [
-        "%{group}（%{total} 個其它套件群組）更新逾時"
+        ""
       ],
       "%{group} (%{total} other package groups) updated": [
-        "%{group}（%{total} 個其它套件群組）已更新"
+        ""
       ],
       "%{group} package group install canceled": [
-        "%{group} 套件群組安裝已取消"
+        ""
       ],
       "%{group} package group install failed": [
-        "%{group} 套件群組安裝失敗"
+        ""
       ],
       "%{group} package group install timed out": [
-        "%{group} 套件群組安裝逾時"
+        ""
       ],
       "%{group} package group installed": [
-        "%{group} 套件群組已安裝"
+        ""
       ],
       "%{group} package group remove canceled": [
-        "%{group} 套件群組移除程序已取消"
+        ""
       ],
       "%{group} package group remove failed": [
-        "%{group} 套件群組移除失敗"
+        ""
       ],
       "%{group} package group remove timed out": [
-        "%{group} 套件群組移除逾時"
+        ""
       ],
       "%{group} package group removed": [
-        "%{group} 套件群組已移除"
+        ""
       ],
       "%{group} package group update canceled": [
-        "%{group} 套件群組更新已取消"
+        ""
       ],
       "%{group} package group update failed": [
-        "%{group} 套件群組更新失敗"
+        ""
       ],
       "%{group} package group update timed out": [
-        "%{group} 套件群組更新逾時"
+        ""
       ],
       "%{group} package group updated": [
-        "已更新 %{group} 套件群組"
+        ""
       ],
       "%{label} failed": [
         ""
@@ -268,73 +268,73 @@
         ""
       ],
       "%{package} (%{total} other packages)": [
-        "%{package}（%{total} 個其它套件）"
+        ""
       ],
       "%{package} (%{total} other packages) install canceled": [
-        "%{package}（%{total} 個其它套件）安裝程序已取消"
+        ""
       ],
       "%{package} (%{total} other packages) install failed": [
-        "%{package} (%{total} 個其它套件) 安裝失敗"
+        ""
       ],
       "%{package} (%{total} other packages) install timed out": [
-        "%{package}（%{total} 個其它套件）安裝逾時"
+        ""
       ],
       "%{package} (%{total} other packages) installed": [
-        "%{package}（%{total} 個其它套件）已安裝"
+        ""
       ],
       "%{package} (%{total} other packages) remove canceled": [
-        "%{package}（%{total} 個其它套件）移除程序已取消"
+        ""
       ],
       "%{package} (%{total} other packages) remove failed": [
-        "%{package}（%{total} 個其它套件）移除失敗"
+        ""
       ],
       "%{package} (%{total} other packages) remove timed out": [
-        "%{package}（%{total} 個其它套件）移除逾時"
+        ""
       ],
       "%{package} (%{total} other packages) removed": [
-        "%{package}（%{total} 個其它套件）已移除"
+        ""
       ],
       "%{package} (%{total} other packages) update canceled": [
-        "%{package}（%{total} 個其它套件）更新已取消"
+        ""
       ],
       "%{package} (%{total} other packages) update failed": [
-        "%{package}（%{total} 個其它套件）更新失敗"
+        ""
       ],
       "%{package} (%{total} other packages) update timed out": [
-        "%{package}（%{total} 個其它套件）更新逾時"
+        ""
       ],
       "%{package} (%{total} other packages) updated": [
-        "%{package}（%{total} 個其它套件）已更新"
+        ""
       ],
       "%{package} package install canceled": [
-        "%{package} 套件安裝已取消"
+        ""
       ],
       "%{package} package install timed out": [
-        "%{package} 套件安裝逾時"
+        ""
       ],
       "%{package} package remove canceled": [
-        "%{package} 套件移除程序已取消"
+        ""
       ],
       "%{package} package remove failed": [
-        "%{package} 套件移除失敗"
+        ""
       ],
       "%{package} package remove timed out": [
-        "%{package} 套件移除逾時"
+        ""
       ],
       "%{package} package removed": [
-        "%{package} 套件已移除"
+        ""
       ],
       "%{package} package update canceled": [
-        "%{package} 套件更新已取消"
+        ""
       ],
       "%{package} package update failed": [
-        "%{package} 套件更新失敗"
+        ""
       ],
       "%{package} package update timed out": [
-        "%{package} 套件更新逾時"
+        ""
       ],
       "%{package} package updated": [
-        "%{package} 套件已更新"
+        ""
       ],
       "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
         ""
@@ -482,9 +482,6 @@
       ],
       "About page": [
         ""
-      ],
-      "Abstract async task": [
-        "抽象 async task"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -637,9 +634,6 @@
         ""
       ],
       "Add repositories with package groups to content view to select them here.": [
-        ""
-      ],
-      "Add rolling repo clone": [
         ""
       ],
       "Add rule": [
@@ -1255,12 +1249,15 @@
         ""
       ],
       "Candlepin Event": [
-        "Candlepin 事件"
+        ""
       ],
       "Candlepin ID of pool to add": [
         ""
       ],
       "Candlepin consumer %s has already been removed": [
+        ""
+      ],
+      "Candlepin consumer registration response is missing a uuid": [
         ""
       ],
       "Candlepin is not running properly": [
@@ -1387,6 +1384,9 @@
         "無法在一個複合式內容視域版本（%{name} 版本 版本 %{version}）中執行一項遞增的更新"
       ],
       "Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}": [
+        ""
+      ],
+      "Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})": [
         ""
       ],
       "Cannot promote environment out of sequence. Use force to bypass restriction.": [
@@ -1573,9 +1573,6 @@
         ""
       ],
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
-        ""
-      ],
-      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1965,14 +1962,8 @@
       "Copy": [
         ""
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "複製啟動金鑰"
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         ""
@@ -1984,12 +1975,6 @@
         ""
       ],
       "Copy to clipboard": [
-        ""
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
         ""
       ],
       "Cores per socket": [
@@ -2211,19 +2196,10 @@
       "Create content view": [
         ""
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
-        ""
-      ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -2231,12 +2207,6 @@
       ],
       "Create organization": [
         "建立組織"
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
-        ""
       ],
       "Creation": [
         ""
@@ -2505,31 +2475,10 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "從 Red Hat 供應者中刪除清單"
       ],
       "Delete multiple filters from a content view": [
-        ""
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2634,12 +2583,6 @@
       "Destroy an environment in an organization": [
         "銷毀組織中的一個環境"
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2678,9 +2621,6 @@
       ],
       "Disabled": [
         "已停用"
-      ],
-      "Discover": [
-        "尋找"
       ],
       "Discover Repositories": [
         "尋找軟體庫"
@@ -2889,9 +2829,6 @@
       "Environment cannot be in its own promotion path": [
         "環境不能位於自己的推送路徑上"
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         ""
       ],
@@ -2917,10 +2854,10 @@
         "勘誤 ID"
       ],
       "Errata Install": [
-        "安裝勘誤"
+        ""
       ],
       "Errata Install scheduled by %s": [
-        "由 %s 排程安裝勘誤"
+        ""
       ],
       "Errata and package information will be updated at the next host check-in or package action.": [
         ""
@@ -2930,9 +2867,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "勘誤 (RHSA-2012:108) 的勘誤 ID"
-      ],
-      "Errata mail": [
-        "勘誤郵件"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2953,16 +2887,16 @@
         "勘誤"
       ],
       "Erratum Install Canceled": [
-        "勘誤安裝已取消"
+        ""
       ],
       "Erratum Install Complete": [
-        "勘誤安裝完成"
+        ""
       ],
       "Erratum Install Failed": [
-        "勘誤安裝失敗"
+        ""
       ],
       "Erratum Install Timed Out": [
-        "勘誤安裝逾時"
+        ""
       ],
       "Error": [
         "錯誤"
@@ -3126,9 +3060,6 @@
       "Fetch installable errata for one or more hosts.": [
         ""
       ],
-      "Fetch pxe files": [
-        ""
-      ],
       "Fetch traces for one or more hosts": [
         ""
       ],
@@ -3233,9 +3164,6 @@
       ],
       "Filter...": [
         "篩選器……"
-      ],
-      "Filtered index content": [
-        "已篩選的索引內容"
       ],
       "Filters": [
         "篩選器"
@@ -3362,9 +3290,6 @@
         ""
       ],
       "Generate host applicability": [
-        ""
-      ],
-      "Generate metadata": [
         ""
       ],
       "Generate repository applicability": [
@@ -3615,12 +3540,6 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "如何排序結果的順序（比方說 ASC 從下到上）"
-      ],
-      "Hypervisors": [
-        "Hypervisor"
-      ],
-      "Hypervisors update": [
-        "Hypervisor 更新"
       ],
       "ID": [
         "ID"
@@ -3940,9 +3859,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3950,12 +3866,6 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
-        ""
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -4030,9 +3940,6 @@
       "Incremental Update incomplete.": [
         "遞增更新未完成。"
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        ""
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         ""
       ],
@@ -4048,18 +3955,6 @@
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
       ],
-      "Index content": [
-        "索引內容"
-      ],
-      "Index errata": [
-        "索引勘誤"
-      ],
-      "Index module streams": [
-        ""
-      ],
-      "Index package groups": [
-        "為套件群組製作索引"
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Informable Type 必須是以下 [ %{list} ] 其中之一"
       ],
@@ -4070,9 +3965,6 @@
         ""
       ],
       "Inherit parent (%s)": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4146,15 +4038,12 @@
         ""
       ],
       "Installing Erratum...": [
-        "正在安裝勘誤..."
+        ""
       ],
       "Installing Package Group...": [
-        "正在安裝套件群組..."
+        ""
       ],
       "Installing Package...": [
-        "正在安裝套件..."
-      ],
-      "Instance update": [
         ""
       ],
       "Instance-based": [
@@ -4949,9 +4838,6 @@
       "Messaging connection": [
         "訊息連線"
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -5022,15 +4908,6 @@
         ""
       ],
       "Multi Content View Environment": [
-        ""
-      ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -5193,6 +5070,9 @@
         ""
       ],
       "No action required": [
+        ""
+      ],
+      "No activation keys available": [
         ""
       ],
       "No alternate content sources match your filter criteria.": [
@@ -5424,7 +5304,7 @@
         ""
       ],
       "No new packages installed": [
-        "未安裝新的套件"
+        ""
       ],
       "No package groups yet": [
         ""
@@ -5439,10 +5319,10 @@
         ""
       ],
       "No packages removed": [
-        "未移除任何套件"
+        ""
       ],
       "No packages updated": [
-        "未更新任何套件"
+        ""
       ],
       "No pool IDs were provided.": [
         ""
@@ -5550,7 +5430,7 @@
         ""
       ],
       "Non-system event": [
-        "非系統事件"
+        ""
       ],
       "None": [
         "無"
@@ -5766,85 +5646,85 @@
         "套件群組"
       ],
       "Package Group Install": [
-        "套件群組安裝"
+        ""
       ],
       "Package Group Install Canceled": [
-        "套件群組安裝程序已取消"
+        ""
       ],
       "Package Group Install Complete": [
-        "套件群組安裝已完成"
+        ""
       ],
       "Package Group Install Failed": [
-        "套件群組安裝失敗"
+        ""
       ],
       "Package Group Install Timed Out": [
-        "套件群組安裝逾時"
+        ""
       ],
       "Package Group Install scheduled by %s": [
-        "套件群組安裝，由 %s 排程"
+        ""
       ],
       "Package Group Remove": [
-        "套件群組移除"
+        ""
       ],
       "Package Group Remove Canceled": [
-        "套件群組移除程序已取消"
+        ""
       ],
       "Package Group Remove Complete": [
-        "已完成套件群組移除"
+        ""
       ],
       "Package Group Remove Failed": [
-        "套件群組移除失敗"
+        ""
       ],
       "Package Group Remove Timed Out": [
-        "套件群組移除逾時"
+        ""
       ],
       "Package Group Remove scheduled by %s": [
-        "套件群組移除，由 %s 排程"
+        ""
       ],
       "Package Group Update": [
-        "套件群組更新"
+        ""
       ],
       "Package Group Update scheduled by %s": [
-        "套件群組更新，由 %s 排程"
+        ""
       ],
       "Package Groups": [
         "套件群組"
       ],
       "Package Install": [
-        "套件安裝"
+        ""
       ],
       "Package Install Canceled": [
-        "套件安裝程序已取消"
+        ""
       ],
       "Package Install Complete": [
-        "已完成套件安裝"
+        ""
       ],
       "Package Install Failed": [
-        "套件安裝失敗"
+        ""
       ],
       "Package Install Timed Out": [
-        "套件安裝逾時"
+        ""
       ],
       "Package Install scheduled by %s": [
-        "套件安裝，由 %s 排程"
+        ""
       ],
       "Package Remove": [
-        "套件移除"
+        ""
       ],
       "Package Remove Canceled": [
-        "套件移除程序已取消"
+        ""
       ],
       "Package Remove Complete": [
-        "已完成套件移除"
+        ""
       ],
       "Package Remove Failed": [
-        "套件移除失敗"
+        ""
       ],
       "Package Remove Timed Out": [
-        "套件移除逾時"
+        ""
       ],
       "Package Remove scheduled by %s": [
-        "套件移除，由 %s 排程"
+        ""
       ],
       "Package Type": [
         ""
@@ -5853,34 +5733,34 @@
         ""
       ],
       "Package Update": [
-        "套件更新"
+        ""
       ],
       "Package Update Canceled": [
-        "套件更新程序已取消"
+        ""
       ],
       "Package Update Complete": [
-        "已完成套件更新"
+        ""
       ],
       "Package Update Failed": [
-        "套件更新失敗"
+        ""
       ],
       "Package Update Timed Out": [
-        "套件更新逾時"
+        ""
       ],
       "Package Update scheduled by %s": [
-        "套件更新，由 %s 排程"
+        ""
       ],
       "Package group update canceled": [
-        "已取消套件群組更新"
+        ""
       ],
       "Package group update complete": [
-        "已完成套件群組更新"
+        ""
       ],
       "Package group update failed": [
-        "套件群組更新失敗"
+        ""
       ],
       "Package group update timed out": [
-        "套件群組更新逾時"
+        ""
       ],
       "Package groups": [
         "套件群組"
@@ -5889,10 +5769,10 @@
         ""
       ],
       "Package install failed: \\\"%{package}\\\"": [
-        "套件安裝失敗：\\\"%{package}\\\" "
+        ""
       ],
       "Package installation: \\\"%{package}\\\" ": [
-        "安裝套件：\\\"%{package}\\\" "
+        ""
       ],
       "Package mode": [
         ""
@@ -6026,13 +5906,13 @@
       "Please select a lifecycle environment and a content view to move this activation key.": [
         ""
       ],
-      "Please select a lifecycle environment and content view to view activation keys.": [
-        ""
-      ],
       "Please select an architecture before assigning a kickstart repository": [
         ""
       ],
       "Please select an operating system before assigning a kickstart repository": [
+        ""
+      ],
+      "Please select an organization to view activation keys.": [
         ""
       ],
       "Please select one from the list below and you will be redirected.": [
@@ -6299,9 +6179,6 @@
       "Pulp task error": [
         "Pulp 任務錯誤"
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         ""
       ],
@@ -6410,9 +6287,6 @@
       "Reclaim Space": [
         ""
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -6482,9 +6356,6 @@
       "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -6497,13 +6368,7 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -6511,12 +6376,6 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "為 Red Hat 供應者更新之前匯入的清單"
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         ""
@@ -6559,9 +6418,6 @@
       ],
       "Registry token expiration time": [
         ""
-      ],
-      "Reindex subscriptions": [
-        "重新索引訂閱服務"
       ],
       "Related composite content views": [
         ""
@@ -6665,9 +6521,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         "透過 Katello 介面移除套件群組"
       ],
@@ -6682,15 +6535,6 @@
       ],
       "Remove products from sync plan": [
         "從同步計畫中移除產品"
-      ],
-      "Remove rolling repo clone": [
-        ""
-      ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "從內容視域中移除版本且（或）環境，並重新指定系統與金鑰"
@@ -6708,18 +6552,15 @@
         ""
       ],
       "Removing Package Group...": [
-        "正在移除套件群組..."
+        ""
       ],
       "Removing Package...": [
-        "正在移除套件..."
+        ""
       ],
       "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}": [
         ""
       ],
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
-        ""
-      ],
-      "Repair": [
         ""
       ],
       "Replace content source on the target machine": [
@@ -6740,17 +6581,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "不允許來自於已發行之內容視域的軟體庫。"
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repositories table": [
         ""
@@ -7127,21 +6962,6 @@
       "Save Environments": [
         ""
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         ""
       ],
@@ -7149,12 +6969,6 @@
         ""
       ],
       "Scan a flatpak remote": [
-        ""
-      ],
-      "Scan cdn": [
-        ""
-      ],
-      "Scan remote": [
         ""
       ],
       "Schema version 1": [
@@ -7998,9 +7812,6 @@
       "Supported Content Types": [
         ""
       ],
-      "Sync": [
-        "同步"
-      ],
       "Sync Canceled": [
         "已取消同步"
       ],
@@ -8058,9 +7869,6 @@
       "Sync canceled": [
         ""
       ],
-      "Sync capsule": [
-        ""
-      ],
       "Sync complete.": [
         "完成同步。"
       ],
@@ -8083,9 +7891,6 @@
         ""
       ],
       "Sync state": [
-        ""
-      ],
-      "Syncable export": [
         ""
       ],
       "Synced": [
@@ -8347,9 +8152,6 @@
         ""
       ],
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
-        ""
-      ],
-      "The selected lifecycle environment contains no activation keys": [
         ""
       ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
@@ -8949,25 +8751,13 @@
       "Update content counts for the smart proxy": [
         ""
       ],
-      "Update content urls": [
-        ""
-      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
-        ""
-      ],
-      "Update http proxy": [
-        ""
-      ],
-      "Update http proxy details": [
         ""
       ],
       "Update installed packages, enabled repos, module inventory": [
@@ -8985,19 +8775,10 @@
       "Update packages via Katello interface": [
         ""
       ],
-      "Update redhat repository": [
-        ""
-      ],
       "Update release version for host": [
         ""
       ],
       "Update release version for host %s": [
-        ""
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
         ""
       ],
       "Update services requiring restart": [
@@ -9050,7 +8831,7 @@
         ""
       ],
       "Updating Package...": [
-        "正在更新套件……"
+        ""
       ],
       "Updating System Purpose for host": [
         ""
@@ -9059,7 +8840,7 @@
         ""
       ],
       "Updating package group...": [
-        "更新套件群組......"
+        ""
       ],
       "Updating repository authentication configuration": [
         ""
@@ -9094,12 +8875,6 @@
       "Upload a subscription manifest": [
         "上傳訂閱清單"
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         "上傳入"
       ],
@@ -9111,9 +8886,6 @@
       ],
       "Upload request id": [
         "上傳需求 ID"
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -9234,9 +9006,6 @@
       ],
       "Verify SSL": [
         "驗證 SSL"
-      ],
-      "Verify checksum": [
-        ""
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -9440,7 +9209,7 @@
         "您只可以在函示庫生命週期的環境中，檢查軟體庫的同步狀態。"
       ],
       "You cannot have more than %{max_hosts} host(s) associated with host collection '%{host_collection}'.": [
-        "您不能有超過 %{max_hosts} 台內容主機與主機集項目 '%{host_collection}' 相聯。"
+        ""
       ],
       "You cannot set an organization's parent. This feature is disabled.": [
         "您不能設置組織的父組織。這項功能已停用。"
@@ -9590,13 +9359,13 @@
         ""
       ],
       "all packages": [
-        "所有套件"
+        ""
       ],
       "all packages update": [
-        "所有套件更新"
+        ""
       ],
       "all packages update failed": [
-        "所有套件更新皆失敗了"
+        ""
       ],
       "allow unauthenticed pull of container images": [
         ""
@@ -9749,16 +9518,16 @@
         ""
       ],
       "content view node publish": [
-        "公開內容視域節點"
+        ""
       ],
       "content view numeric identifier": [
         "內容視域的數字識別子"
       ],
       "content view publish": [
-        "公開內容視域"
+        ""
       ],
       "content view refresh": [
-        "更新內容視域"
+        ""
       ],
       "content view to reassign orphaned activation keys to": [
         "要重新指定無主啟動金鑰的目標內容視域"
@@ -9965,25 +9734,25 @@
         ""
       ],
       "installing errata...": [
-        "正在安裝勘誤..."
+        ""
       ],
       "installing erratum...": [
-        "正在安裝勘誤..."
+        ""
       ],
       "installing or updating packages": [
         ""
       ],
       "installing package group...": [
-        "正在安裝套件群組..."
+        ""
       ],
       "installing package groups...": [
-        "正在安裝套件群組..."
+        ""
       ],
       "installing package...": [
-        "正在安裝套件..."
+        ""
       ],
       "installing packages...": [
-        "正在安裝套件..."
+        ""
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         ""
@@ -10206,16 +9975,16 @@
         ""
       ],
       "removing package group...": [
-        "正在移除套件群組..."
+        ""
       ],
       "removing package groups...": [
-        "正在移除套件群組..."
+        ""
       ],
       "removing package...": [
-        "正在移除套件..."
+        ""
       ],
       "removing packages...": [
-        "正在移除套件..."
+        ""
       ],
       "replace": [
         ""
@@ -10338,16 +10107,16 @@
         ""
       ],
       "updating package group...": [
-        "正在更新套件群組..."
+        ""
       ],
       "updating package groups...": [
-        "正在更新套件群組..."
+        ""
       ],
       "updating package...": [
-        "正在更新套件..."
+        ""
       ],
       "updating packages...": [
-        "正在更新套件..."
+        ""
       ],
       "upstream Foreman server": [
         ""

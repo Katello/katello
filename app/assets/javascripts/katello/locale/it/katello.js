@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.rc1",
+        "Project-Id-Version": "katello 4.21.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -154,109 +154,109 @@
         ""
       ],
       "%{errata} (%{total} other errata)": [
-        "%{errata} (altri %{total} errata)"
+        ""
       ],
       "%{errata} (%{total} other errata) install canceled": [
-        "%{errata} (altri %{total} errata) installazione cancellata"
+        ""
       ],
       "%{errata} (%{total} other errata) install failed": [
-        "%{errata} (altri %{total} errata) installazione fallita"
+        ""
       ],
       "%{errata} (%{total} other errata) install timed out": [
-        "%{errata} (altri %{total} errata) installazione scaduta"
+        ""
       ],
       "%{errata} (%{total} other errata) installed": [
-        "%{errata} (altri %{total} errata) installati"
+        ""
       ],
       "%{errata} erratum install canceled": [
-        "%{errata} installazione erratum cancellata"
+        ""
       ],
       "%{errata} erratum install failed": [
-        "%{errata} installazione erratum fallita"
+        ""
       ],
       "%{errata} erratum install timed out": [
-        "%{errata} installazione erratum scaduta"
+        ""
       ],
       "%{errata} erratum installed": [
-        "%{errata} erratum installato"
+        ""
       ],
       "%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.": [
         ""
       ],
       "%{group} (%{total} other package groups)": [
-        "%{group} (altri %{total} gruppi di pacchetti)"
+        ""
       ],
       "%{group} (%{total} other package groups) install canceled": [
-        "%{group} (altri %{total} gruppi di pacchetti) installazione cancellata"
+        ""
       ],
       "%{group} (%{total} other package groups) install failed": [
-        "%{group} (altri %{total} gruppi di pacchetti) installazione fallita"
+        ""
       ],
       "%{group} (%{total} other package groups) install timed out": [
-        "%{group} (altri %{total} gruppi di pacchetti) installazione scaduta"
+        ""
       ],
       "%{group} (%{total} other package groups) installed": [
-        "%{group} (altri %{total} gruppi di pacchetti) installato"
+        ""
       ],
       "%{group} (%{total} other package groups) remove canceled": [
-        "%{group} (altri %{total} gruppi di pacchetti) rimozione cancellata"
+        ""
       ],
       "%{group} (%{total} other package groups) remove failed": [
-        "%{group} (altri %{total} gruppi di pacchetti) rimozione fallita"
+        ""
       ],
       "%{group} (%{total} other package groups) remove timed out": [
-        "%{group} (altri %{total} gruppi di pacchetti) rimozione scaduta"
+        ""
       ],
       "%{group} (%{total} other package groups) removed": [
-        "%{group} (altri %{total} gruppi di pacchetti) rimosso"
+        ""
       ],
       "%{group} (%{total} other package groups) update canceled": [
-        "%{group} (altri %{total} gruppi di pacchetti) aggiornamento cancellato"
+        ""
       ],
       "%{group} (%{total} other package groups) update failed": [
-        "%{group} (altri %{total} gruppi di pacchetti) aggiornamento fallito"
+        ""
       ],
       "%{group} (%{total} other package groups) update timed out": [
-        "%{group} (altri %{total} gruppi di pacchetti) aggiornamento scaduto"
+        ""
       ],
       "%{group} (%{total} other package groups) updated": [
-        "%{group} (altri %{total} gruppi di pacchetti) aggiornato"
+        ""
       ],
       "%{group} package group install canceled": [
-        "Installazione gruppo di pacchetti %{group} cancellata"
+        ""
       ],
       "%{group} package group install failed": [
-        "Installazione gruppo di pacchetti %{group} fallita"
+        ""
       ],
       "%{group} package group install timed out": [
-        "Installazione gruppo di pacchetti %{group} scaduta"
+        ""
       ],
       "%{group} package group installed": [
-        "Gruppo di pacchetti %{group} installato"
+        ""
       ],
       "%{group} package group remove canceled": [
-        "Rimozione gruppo di pacchetti %{group} cancellata"
+        ""
       ],
       "%{group} package group remove failed": [
-        "rimozione gruppo di pacchetti %{group} fallita"
+        ""
       ],
       "%{group} package group remove timed out": [
-        "Rimozione gruppo di pacchetti %{group} scaduta"
+        ""
       ],
       "%{group} package group removed": [
-        "Gruppo di pacchetti %{group} rimosso"
+        ""
       ],
       "%{group} package group update canceled": [
-        "Aggiornamento gruppo di pacchetti %{group} cancellato"
+        ""
       ],
       "%{group} package group update failed": [
-        "aggiornamento gruppo di pacchetti %{group} fallito"
+        ""
       ],
       "%{group} package group update timed out": [
-        "aggiornamento gruppo di pacchetti %{group} scaduto"
+        ""
       ],
       "%{group} package group updated": [
-        "Gruppo di pacchetti %{group} aggiornato"
+        ""
       ],
       "%{label} failed": [
         ""
@@ -268,73 +268,73 @@
         ""
       ],
       "%{package} (%{total} other packages)": [
-        "%{package} (altri %{total} pacchetti)"
+        ""
       ],
       "%{package} (%{total} other packages) install canceled": [
-        "%{package} (altri %{total} pacchetti) installazione cancellata"
+        ""
       ],
       "%{package} (%{total} other packages) install failed": [
-        "%{package} (altri %{total} pacchetti) installazione fallita"
+        ""
       ],
       "%{package} (%{total} other packages) install timed out": [
-        "%{package} (altri %{total} pacchetti) installazione scaduta"
+        ""
       ],
       "%{package} (%{total} other packages) installed": [
-        "%{package} (altri %{total} pacchetti) installati"
+        ""
       ],
       "%{package} (%{total} other packages) remove canceled": [
-        "%{package} (altri %{total} pacchetti) rimozione cancellata"
+        ""
       ],
       "%{package} (%{total} other packages) remove failed": [
-        "%{package} (altri %{total} pacchetti) rimozione fallita"
+        ""
       ],
       "%{package} (%{total} other packages) remove timed out": [
-        "%{package} (altri %{total} pacchetti) rimozione scaduta"
+        ""
       ],
       "%{package} (%{total} other packages) removed": [
-        "%{package} (altri %{total} pacchetti) rimossi"
+        ""
       ],
       "%{package} (%{total} other packages) update canceled": [
-        "%{package} (altri %{total} pacchetti) aggiornamento cancellato"
+        ""
       ],
       "%{package} (%{total} other packages) update failed": [
-        "%{package} (altri %{total} pacchetti) aggiornamento fallito"
+        ""
       ],
       "%{package} (%{total} other packages) update timed out": [
-        "%{package} (altri %{total} pacchetti) aggiornamento scaduto"
+        ""
       ],
       "%{package} (%{total} other packages) updated": [
-        "%{package} (altri %{total} pacchetti) aggiornato"
+        ""
       ],
       "%{package} package install canceled": [
-        "Installazione pacchetto %{package} cancellata"
+        ""
       ],
       "%{package} package install timed out": [
-        "Installazione pacchetto %{package} scaduta"
+        ""
       ],
       "%{package} package remove canceled": [
-        "Rimozione pacchetto %{package} cancellata"
+        ""
       ],
       "%{package} package remove failed": [
-        "Rimozione pacchetto %{package} fallita"
+        ""
       ],
       "%{package} package remove timed out": [
-        "Rimozione pacchetto %{package} scaduta"
+        ""
       ],
       "%{package} package removed": [
-        "Pacchetto %{package} rimosso"
+        ""
       ],
       "%{package} package update canceled": [
-        "Aggiornmento pacchetto %{package} cancellato"
+        ""
       ],
       "%{package} package update failed": [
-        "Aggiornamento pacchetto %{package} fallito"
+        ""
       ],
       "%{package} package update timed out": [
-        "Aggiornamento pacchetto %{package} scaduto"
+        ""
       ],
       "%{package} package updated": [
-        "Pacchetto %{package} aggiornato"
+        ""
       ],
       "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
         ""
@@ -482,9 +482,6 @@
       ],
       "About page": [
         ""
-      ],
-      "Abstract async task": [
-        "Evento asinc astratto"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
@@ -637,9 +634,6 @@
         ""
       ],
       "Add repositories with package groups to content view to select them here.": [
-        ""
-      ],
-      "Add rolling repo clone": [
         ""
       ],
       "Add rule": [
@@ -1257,12 +1251,15 @@
         ""
       ],
       "Candlepin Event": [
-        "Evento Candlepin"
+        ""
       ],
       "Candlepin ID of pool to add": [
         ""
       ],
       "Candlepin consumer %s has already been removed": [
+        ""
+      ],
+      "Candlepin consumer registration response is missing a uuid": [
         ""
       ],
       "Candlepin is not running properly": [
@@ -1389,6 +1386,9 @@
         "Impossibile eseguire un aggiornamento incrementale su una versione della Visualizzazione del contenuto composita  (%{name} version version %{version}"
       ],
       "Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}": [
+        ""
+      ],
+      "Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})": [
         ""
       ],
       "Cannot promote environment out of sequence. Use force to bypass restriction.": [
@@ -1575,9 +1575,6 @@
         ""
       ],
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
-        ""
-      ],
-      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1967,14 +1964,8 @@
       "Copy": [
         ""
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "Copia una chiave di attivazione"
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         ""
@@ -1986,12 +1977,6 @@
         ""
       ],
       "Copy to clipboard": [
-        ""
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
         ""
       ],
       "Cores per socket": [
@@ -2213,19 +2198,10 @@
       "Create content view": [
         ""
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
-        ""
-      ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -2233,12 +2209,6 @@
       ],
       "Create organization": [
         "Crea organizzazione"
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
-        ""
       ],
       "Creation": [
         ""
@@ -2507,31 +2477,10 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "Cancella manifesto dal provider Red Hat"
       ],
       "Delete multiple filters from a content view": [
-        ""
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2636,12 +2585,6 @@
       "Destroy an environment in an organization": [
         "Elimina ambiente in una organizzazione"
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2680,9 +2623,6 @@
       ],
       "Disabled": [
         "Disabilitato"
-      ],
-      "Discover": [
-        "Trova"
       ],
       "Discover Repositories": [
         "Trova repositori"
@@ -2891,9 +2831,6 @@
       "Environment cannot be in its own promotion path": [
         "L'ambiente non può trovarsi sul proprio percorso di avanzamento"
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         ""
       ],
@@ -2919,10 +2856,10 @@
         "ID errata"
       ],
       "Errata Install": [
-        "Installazione errata"
+        ""
       ],
       "Errata Install scheduled by %s": [
-        "Installazione errata programmata per il %s"
+        ""
       ],
       "Errata and package information will be updated at the next host check-in or package action.": [
         ""
@@ -2932,9 +2869,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "id errata dell'erratum (RHSA-2012:108)"
-      ],
-      "Errata mail": [
-        "Posta per l'Errata"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2955,16 +2889,16 @@
         "Erratum"
       ],
       "Erratum Install Canceled": [
-        "Installazione erratum cancellata"
+        ""
       ],
       "Erratum Install Complete": [
-        "installazione erratum completata"
+        ""
       ],
       "Erratum Install Failed": [
-        "installazione erratum fallita"
+        ""
       ],
       "Erratum Install Timed Out": [
-        "installazione erratum scaduta"
+        ""
       ],
       "Error": [
         "Errore"
@@ -3128,9 +3062,6 @@
       "Fetch installable errata for one or more hosts.": [
         ""
       ],
-      "Fetch pxe files": [
-        ""
-      ],
       "Fetch traces for one or more hosts": [
         ""
       ],
@@ -3235,9 +3166,6 @@
       ],
       "Filter...": [
         "Filtro..."
-      ],
-      "Filtered index content": [
-        ""
       ],
       "Filters": [
         "Filtri"
@@ -3364,9 +3292,6 @@
         ""
       ],
       "Generate host applicability": [
-        ""
-      ],
-      "Generate metadata": [
         ""
       ],
       "Generate repository applicability": [
@@ -3617,12 +3542,6 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Come ordinare i risultati (es. ASC per ascendente)"
-      ],
-      "Hypervisors": [
-        ""
-      ],
-      "Hypervisors update": [
-        ""
       ],
       "ID": [
         "ID"
@@ -3942,9 +3861,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3952,12 +3868,6 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
-        ""
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -4032,9 +3942,6 @@
       "Incremental Update incomplete.": [
         "Aggiornamento incrementale non completato."
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        ""
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         ""
       ],
@@ -4050,18 +3957,6 @@
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
       ],
-      "Index content": [
-        ""
-      ],
-      "Index errata": [
-        "Indice errata"
-      ],
-      "Index module streams": [
-        ""
-      ],
-      "Index package groups": [
-        ""
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Tipo di informazioni deve essere una delle seguenti [ %{list} ]"
       ],
@@ -4072,9 +3967,6 @@
         ""
       ],
       "Inherit parent (%s)": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4148,15 +4040,12 @@
         ""
       ],
       "Installing Erratum...": [
-        "installazione erratum in corso..."
+        ""
       ],
       "Installing Package Group...": [
-        "installazione gruppo di pacchetti in corso..."
+        ""
       ],
       "Installing Package...": [
-        "installazione pacchetto in corso..."
-      ],
-      "Instance update": [
         ""
       ],
       "Instance-based": [
@@ -4951,9 +4840,6 @@
       "Messaging connection": [
         ""
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -5024,15 +4910,6 @@
         ""
       ],
       "Multi Content View Environment": [
-        ""
-      ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -5195,6 +5072,9 @@
         ""
       ],
       "No action required": [
+        ""
+      ],
+      "No activation keys available": [
         ""
       ],
       "No alternate content sources match your filter criteria.": [
@@ -5426,7 +5306,7 @@
         ""
       ],
       "No new packages installed": [
-        "Nessun nuovo pacchetto installato"
+        ""
       ],
       "No package groups yet": [
         ""
@@ -5441,10 +5321,10 @@
         ""
       ],
       "No packages removed": [
-        "Nessun pacchetto rimosso"
+        ""
       ],
       "No packages updated": [
-        "Nessun pacchetto aggiornato"
+        ""
       ],
       "No pool IDs were provided.": [
         ""
@@ -5552,7 +5432,7 @@
         ""
       ],
       "Non-system event": [
-        "Evento non del sistema"
+        ""
       ],
       "None": [
         "Nessuno"
@@ -5768,85 +5648,85 @@
         "Gruppo di pacchetti"
       ],
       "Package Group Install": [
-        "Installazione gruppi di pacchetti"
+        ""
       ],
       "Package Group Install Canceled": [
-        "Installazione gruppo di pacchetti cancellata"
+        ""
       ],
       "Package Group Install Complete": [
-        "Installazione gruppi di pacchetti completata"
+        ""
       ],
       "Package Group Install Failed": [
-        "Installazione gruppo di pacchetti fallita"
+        ""
       ],
       "Package Group Install Timed Out": [
-        "Installazione gruppo di pacchetti scaduta"
+        ""
       ],
       "Package Group Install scheduled by %s": [
-        "Installazione gruppo di pacchetti programmato per il %s"
+        ""
       ],
       "Package Group Remove": [
-        "Rimozione gruppi di pacchetti"
+        ""
       ],
       "Package Group Remove Canceled": [
-        "Rimozione gruppo di pacchetti cancellata"
+        ""
       ],
       "Package Group Remove Complete": [
-        "Rimozione gruppo di pacchetti completata"
+        ""
       ],
       "Package Group Remove Failed": [
-        "rimozione gruppo di pacchetti fallita"
+        ""
       ],
       "Package Group Remove Timed Out": [
-        "Rimozione gruppo di pacchetti scaduta"
+        ""
       ],
       "Package Group Remove scheduled by %s": [
-        "Rimozione gruppo di pacchetti programmato per il %s"
+        ""
       ],
       "Package Group Update": [
-        "Aggiornamento gruppi di pacchetti"
+        ""
       ],
       "Package Group Update scheduled by %s": [
-        "Aggiornamento gruppo di pacchetti programmato per il %s"
+        ""
       ],
       "Package Groups": [
         "Gruppi di pacchetti"
       ],
       "Package Install": [
-        "Installazione pacchetto"
+        ""
       ],
       "Package Install Canceled": [
-        "Installazione pacchetto cancellata"
+        ""
       ],
       "Package Install Complete": [
-        "Installazione pacchetto completata"
+        ""
       ],
       "Package Install Failed": [
-        "Installazione pacchetto fallita"
+        ""
       ],
       "Package Install Timed Out": [
-        "Installazione pacchetto scaduta"
+        ""
       ],
       "Package Install scheduled by %s": [
-        "Installazione pacchetto programmato per il %s"
+        ""
       ],
       "Package Remove": [
-        "Rimozione pacchetto"
+        ""
       ],
       "Package Remove Canceled": [
-        "Rimozione pacchetto cancellata"
+        ""
       ],
       "Package Remove Complete": [
-        "Rimozione pacchetto completata"
+        ""
       ],
       "Package Remove Failed": [
-        "Rimozione pacchetto fallita"
+        ""
       ],
       "Package Remove Timed Out": [
-        "Rimozione pacchetto scaduta"
+        ""
       ],
       "Package Remove scheduled by %s": [
-        "Rimozione pacchetto programmato per il %s"
+        ""
       ],
       "Package Type": [
         ""
@@ -5855,34 +5735,34 @@
         ""
       ],
       "Package Update": [
-        "Aggiornmento pacchetto"
+        ""
       ],
       "Package Update Canceled": [
-        "Aggiornmento pacchetto cancellato"
+        ""
       ],
       "Package Update Complete": [
-        "Aggiornamento pacchetto completato"
+        ""
       ],
       "Package Update Failed": [
-        "Aggiornamento pacchetto fallito"
+        ""
       ],
       "Package Update Timed Out": [
-        "Aggiornamento pacchetto scaduto"
+        ""
       ],
       "Package Update scheduled by %s": [
-        "Aggiornamento pacchetto programmato per il %s"
+        ""
       ],
       "Package group update canceled": [
-        "Aggiornamento gruppo di pacchetti cancellato"
+        ""
       ],
       "Package group update complete": [
-        "Aggiornamento gruppo di pacchetti completato"
+        ""
       ],
       "Package group update failed": [
-        "Aggiornamento gruppo di pacchetti fallito"
+        ""
       ],
       "Package group update timed out": [
-        "Aggiornamento gruppo di pacchetti scaduto"
+        ""
       ],
       "Package groups": [
         ""
@@ -5891,10 +5771,10 @@
         ""
       ],
       "Package install failed: \\\"%{package}\\\"": [
-        "Installazione pacchetto fallita: \\\"%{package}\\\""
+        ""
       ],
       "Package installation: \\\"%{package}\\\" ": [
-        "Installazione pacchetto: \\\"%{package}\\\" "
+        ""
       ],
       "Package mode": [
         ""
@@ -6028,13 +5908,13 @@
       "Please select a lifecycle environment and a content view to move this activation key.": [
         ""
       ],
-      "Please select a lifecycle environment and content view to view activation keys.": [
-        ""
-      ],
       "Please select an architecture before assigning a kickstart repository": [
         ""
       ],
       "Please select an operating system before assigning a kickstart repository": [
+        ""
+      ],
+      "Please select an organization to view activation keys.": [
         ""
       ],
       "Please select one from the list below and you will be redirected.": [
@@ -6301,9 +6181,6 @@
       "Pulp task error": [
         "Errore attività di Pulp"
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         ""
       ],
@@ -6412,9 +6289,6 @@
       "Reclaim Space": [
         ""
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -6484,9 +6358,6 @@
       "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -6499,13 +6370,7 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -6513,12 +6378,6 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Aggiorna il manifesto precedentemente importato per il provider di Red Hat"
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         ""
@@ -6560,9 +6419,6 @@
         ""
       ],
       "Registry token expiration time": [
-        ""
-      ],
-      "Reindex subscriptions": [
         ""
       ],
       "Related composite content views": [
@@ -6667,9 +6523,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         ""
       ],
@@ -6684,15 +6537,6 @@
       ],
       "Remove products from sync plan": [
         "Rimuovi prodotti dalla programmazione per la sincronizzazione"
-      ],
-      "Remove rolling repo clone": [
-        ""
-      ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Rimuovi le versioni e/o gli ambienti da una visualizzazione del contenuto e riassegna sistemi e chiavi"
@@ -6710,18 +6554,15 @@
         ""
       ],
       "Removing Package Group...": [
-        "Rimozione gruppo di pacchetti in corso..."
+        ""
       ],
       "Removing Package...": [
-        "Rimozione pacchetto in corso..."
+        ""
       ],
       "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}": [
         ""
       ],
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
-        ""
-      ],
-      "Repair": [
         ""
       ],
       "Replace content source on the target machine": [
@@ -6742,17 +6583,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "Non sono permessi i repository delle Visualizzazioni del contenuto pubblicate."
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repositories table": [
         ""
@@ -7129,21 +6964,6 @@
       "Save Environments": [
         ""
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         ""
       ],
@@ -7151,12 +6971,6 @@
         ""
       ],
       "Scan a flatpak remote": [
-        ""
-      ],
-      "Scan cdn": [
-        ""
-      ],
-      "Scan remote": [
         ""
       ],
       "Schema version 1": [
@@ -8000,9 +7814,6 @@
       "Supported Content Types": [
         ""
       ],
-      "Sync": [
-        "Sinc"
-      ],
       "Sync Canceled": [
         "Sincronizzazione cancellata"
       ],
@@ -8060,9 +7871,6 @@
       "Sync canceled": [
         ""
       ],
-      "Sync capsule": [
-        ""
-      ],
       "Sync complete.": [
         "Sincronizzazione completa."
       ],
@@ -8085,9 +7893,6 @@
         ""
       ],
       "Sync state": [
-        ""
-      ],
-      "Syncable export": [
         ""
       ],
       "Synced": [
@@ -8349,9 +8154,6 @@
         ""
       ],
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
-        ""
-      ],
-      "The selected lifecycle environment contains no activation keys": [
         ""
       ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
@@ -8951,25 +8753,13 @@
       "Update content counts for the smart proxy": [
         ""
       ],
-      "Update content urls": [
-        ""
-      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
-        ""
-      ],
-      "Update http proxy": [
-        ""
-      ],
-      "Update http proxy details": [
         ""
       ],
       "Update installed packages, enabled repos, module inventory": [
@@ -8987,19 +8777,10 @@
       "Update packages via Katello interface": [
         ""
       ],
-      "Update redhat repository": [
-        ""
-      ],
       "Update release version for host": [
         ""
       ],
       "Update release version for host %s": [
-        ""
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
         ""
       ],
       "Update services requiring restart": [
@@ -9052,7 +8833,7 @@
         ""
       ],
       "Updating Package...": [
-        "Aggiornamento pacchetto in corso..."
+        ""
       ],
       "Updating System Purpose for host": [
         ""
@@ -9061,7 +8842,7 @@
         ""
       ],
       "Updating package group...": [
-        "Aggiornamento gruppo di pacchetti..."
+        ""
       ],
       "Updating repository authentication configuration": [
         ""
@@ -9096,12 +8877,6 @@
       "Upload a subscription manifest": [
         "Carica un manifesto della sottoscrizione"
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         "Carica in"
       ],
@@ -9113,9 +8888,6 @@
       ],
       "Upload request id": [
         "Carica l'id delle richieste"
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -9236,9 +9008,6 @@
       ],
       "Verify SSL": [
         "Verifica SSL"
-      ],
-      "Verify checksum": [
-        ""
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -9592,13 +9361,13 @@
         ""
       ],
       "all packages": [
-        "tutti i pacchetti"
+        ""
       ],
       "all packages update": [
-        "aggiornamento di tutti i pacchetti"
+        ""
       ],
       "all packages update failed": [
-        "aggiornamento di tutti i pacchetti fallito"
+        ""
       ],
       "allow unauthenticed pull of container images": [
         ""
@@ -9751,16 +9520,16 @@
         ""
       ],
       "content view node publish": [
-        "pubblicazione nodo visualizzazione del contenuto"
+        ""
       ],
       "content view numeric identifier": [
         "indentificatore numerico per la visualizzazione del contenuto"
       ],
       "content view publish": [
-        "pubblicazione visualizzazione del contenuto"
+        ""
       ],
       "content view refresh": [
-        "aggiornamento visualizzazione del contenuto"
+        ""
       ],
       "content view to reassign orphaned activation keys to": [
         "visualizzazione del contenuto al quale riassegnare le chiavi di attivazione orfane"
@@ -9967,25 +9736,25 @@
         ""
       ],
       "installing errata...": [
-        "installazione errata in corso..."
+        ""
       ],
       "installing erratum...": [
-        "installazione erratum in corso..."
+        ""
       ],
       "installing or updating packages": [
         ""
       ],
       "installing package group...": [
-        "installazione gruppo di pacchetti in corso..."
+        ""
       ],
       "installing package groups...": [
-        "installazione gruppi di pacchetti in corso..."
+        ""
       ],
       "installing package...": [
-        "installazione pacchetto in corso..."
+        ""
       ],
       "installing packages...": [
-        "installazione pacchetti in corso..."
+        ""
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         ""
@@ -10208,16 +9977,16 @@
         ""
       ],
       "removing package group...": [
-        "rimozione gruppo di pacchetti in corso..."
+        ""
       ],
       "removing package groups...": [
-        "rimozione gruppi di pacchetti in corso..."
+        ""
       ],
       "removing package...": [
-        "Rimozione pacchetto in corso..."
+        ""
       ],
       "removing packages...": [
-        "Rimozione pacchetti in corso..."
+        ""
       ],
       "replace": [
         ""
@@ -10340,16 +10109,16 @@
         ""
       ],
       "updating package group...": [
-        "aggiornamento gruppo di pacchetti in corso..."
+        ""
       ],
       "updating package groups...": [
-        "aggiornamento gruppi di pacchetti in corso..."
+        ""
       ],
       "updating package...": [
-        "Aggiornamento pacchetto in corso..."
+        ""
       ],
       "updating packages...": [
-        "Aggiornamento pacchetti in corso..."
+        ""
       ],
       "upstream Foreman server": [
         ""

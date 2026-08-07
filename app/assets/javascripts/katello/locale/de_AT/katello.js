@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.rc1",
+        "Project-Id-Version": "katello 4.21.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Language-Team": "German (Austria) (https://app.transifex.com/foreman/teams/114/de_AT/)",
@@ -482,9 +482,6 @@
       "About page": [
         ""
       ],
-      "Abstract async task": [
-        ""
-      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
       ],
@@ -636,9 +633,6 @@
         ""
       ],
       "Add repositories with package groups to content view to select them here.": [
-        ""
-      ],
-      "Add rolling repo clone": [
         ""
       ],
       "Add rule": [
@@ -1263,6 +1257,9 @@
       "Candlepin consumer %s has already been removed": [
         ""
       ],
+      "Candlepin consumer registration response is missing a uuid": [
+        ""
+      ],
       "Candlepin is not running properly": [
         ""
       ],
@@ -1387,6 +1384,9 @@
         ""
       ],
       "Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}": [
+        ""
+      ],
+      "Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})": [
         ""
       ],
       "Cannot promote environment out of sequence. Use force to bypass restriction.": [
@@ -1573,9 +1573,6 @@
         ""
       ],
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
-        ""
-      ],
-      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1965,13 +1962,7 @@
       "Copy": [
         ""
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
-        ""
-      ],
-      "Copy content": [
         ""
       ],
       "Copy content view": [
@@ -1984,12 +1975,6 @@
         ""
       ],
       "Copy to clipboard": [
-        ""
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
         ""
       ],
       "Cores per socket": [
@@ -2211,31 +2196,16 @@
       "Create content view": [
         ""
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
         ""
       ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
-        ""
-      ],
       "Create new activation key": [
         ""
       ],
       "Create organization": [
-        ""
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
         ""
       ],
       "Creation": [
@@ -2505,31 +2475,10 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         ""
       ],
       "Delete multiple filters from a content view": [
-        ""
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2634,12 +2583,6 @@
       "Destroy an environment in an organization": [
         ""
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2677,9 +2620,6 @@
         ""
       ],
       "Disabled": [
-        ""
-      ],
-      "Discover": [
         ""
       ],
       "Discover Repositories": [
@@ -2889,9 +2829,6 @@
       "Environment cannot be in its own promotion path": [
         ""
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         ""
       ],
@@ -2929,9 +2866,6 @@
         ""
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
-        ""
-      ],
-      "Errata mail": [
         ""
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
@@ -3126,9 +3060,6 @@
       "Fetch installable errata for one or more hosts.": [
         ""
       ],
-      "Fetch pxe files": [
-        ""
-      ],
       "Fetch traces for one or more hosts": [
         ""
       ],
@@ -3232,9 +3163,6 @@
         ""
       ],
       "Filter...": [
-        ""
-      ],
-      "Filtered index content": [
         ""
       ],
       "Filters": [
@@ -3362,9 +3290,6 @@
         ""
       ],
       "Generate host applicability": [
-        ""
-      ],
-      "Generate metadata": [
         ""
       ],
       "Generate repository applicability": [
@@ -3614,12 +3539,6 @@
         ""
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
-        ""
-      ],
-      "Hypervisors": [
-        ""
-      ],
-      "Hypervisors update": [
         ""
       ],
       "ID": [
@@ -3940,9 +3859,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3950,12 +3866,6 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
-        ""
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -4030,9 +3940,6 @@
       "Incremental Update incomplete.": [
         ""
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        ""
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         ""
       ],
@@ -4048,18 +3955,6 @@
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
       ],
-      "Index content": [
-        ""
-      ],
-      "Index errata": [
-        ""
-      ],
-      "Index module streams": [
-        ""
-      ],
-      "Index package groups": [
-        ""
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         ""
       ],
@@ -4070,9 +3965,6 @@
         ""
       ],
       "Inherit parent (%s)": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4152,9 +4044,6 @@
         ""
       ],
       "Installing Package...": [
-        ""
-      ],
-      "Instance update": [
         ""
       ],
       "Instance-based": [
@@ -4949,9 +4838,6 @@
       "Messaging connection": [
         ""
       ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -5022,15 +4908,6 @@
         ""
       ],
       "Multi Content View Environment": [
-        ""
-      ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -5193,6 +5070,9 @@
         ""
       ],
       "No action required": [
+        ""
+      ],
+      "No activation keys available": [
         ""
       ],
       "No alternate content sources match your filter criteria.": [
@@ -6026,13 +5906,13 @@
       "Please select a lifecycle environment and a content view to move this activation key.": [
         ""
       ],
-      "Please select a lifecycle environment and content view to view activation keys.": [
-        ""
-      ],
       "Please select an architecture before assigning a kickstart repository": [
         ""
       ],
       "Please select an operating system before assigning a kickstart repository": [
+        ""
+      ],
+      "Please select an organization to view activation keys.": [
         ""
       ],
       "Please select one from the list below and you will be redirected.": [
@@ -6299,9 +6179,6 @@
       "Pulp task error": [
         ""
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         ""
       ],
@@ -6410,9 +6287,6 @@
       "Reclaim Space": [
         ""
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -6482,9 +6356,6 @@
       "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -6497,25 +6368,13 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
         ""
       ],
       "Refresh previously imported manifest for Red Hat provider": [
-        ""
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
         ""
       ],
       "Refresh source": [
@@ -6558,9 +6417,6 @@
         ""
       ],
       "Registry token expiration time": [
-        ""
-      ],
-      "Reindex subscriptions": [
         ""
       ],
       "Related composite content views": [
@@ -6665,9 +6521,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         ""
       ],
@@ -6681,15 +6534,6 @@
         ""
       ],
       "Remove products from sync plan": [
-        ""
-      ],
-      "Remove rolling repo clone": [
-        ""
-      ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
         ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
@@ -6719,9 +6563,6 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         ""
       ],
-      "Repair": [
-        ""
-      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -6740,16 +6581,10 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
-        ""
-      ],
-      "Repositories gpg reset": [
         ""
       ],
       "Repositories table": [
@@ -7127,21 +6962,6 @@
       "Save Environments": [
         ""
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         ""
       ],
@@ -7149,12 +6969,6 @@
         ""
       ],
       "Scan a flatpak remote": [
-        ""
-      ],
-      "Scan cdn": [
-        ""
-      ],
-      "Scan remote": [
         ""
       ],
       "Schema version 1": [
@@ -7998,9 +7812,6 @@
       "Supported Content Types": [
         ""
       ],
-      "Sync": [
-        ""
-      ],
       "Sync Canceled": [
         ""
       ],
@@ -8058,9 +7869,6 @@
       "Sync canceled": [
         ""
       ],
-      "Sync capsule": [
-        ""
-      ],
       "Sync complete.": [
         ""
       ],
@@ -8083,9 +7891,6 @@
         ""
       ],
       "Sync state": [
-        ""
-      ],
-      "Syncable export": [
         ""
       ],
       "Synced": [
@@ -8347,9 +8152,6 @@
         ""
       ],
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
-        ""
-      ],
-      "The selected lifecycle environment contains no activation keys": [
         ""
       ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
@@ -8949,25 +8751,13 @@
       "Update content counts for the smart proxy": [
         ""
       ],
-      "Update content urls": [
-        ""
-      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
-        ""
-      ],
-      "Update http proxy": [
-        ""
-      ],
-      "Update http proxy details": [
         ""
       ],
       "Update installed packages, enabled repos, module inventory": [
@@ -8985,19 +8775,10 @@
       "Update packages via Katello interface": [
         ""
       ],
-      "Update redhat repository": [
-        ""
-      ],
       "Update release version for host": [
         ""
       ],
       "Update release version for host %s": [
-        ""
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
         ""
       ],
       "Update services requiring restart": [
@@ -9094,12 +8875,6 @@
       "Upload a subscription manifest": [
         ""
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         ""
       ],
@@ -9110,9 +8885,6 @@
         ""
       ],
       "Upload request id": [
-        ""
-      ],
-      "Upload tag": [
         ""
       ],
       "Upstream Candlepin": [
@@ -9233,9 +9005,6 @@
         ""
       ],
       "Verify SSL": [
-        ""
-      ],
-      "Verify checksum": [
         ""
       ],
       "Verify checksum for content on smart proxy": [
