@@ -30,18 +30,6 @@ msgstr ""
 msgid "-- select an interval --"
 msgstr "-- Intervall wählen --"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/subscription-start-date.directive.js
-msgid "(future)"
-msgstr "(Zukunft)"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid "{{ 'Add Selected' | translate }}"
-msgstr "{{ 'Add Selected' | translate }}"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-msgid "{{ contentCredential.name }}"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ deb.hosts_applicable_count }} Host(s)"
 msgstr ""
@@ -197,7 +185,6 @@ msgstr ""
 "darunter aufgelistet."
 
 #: app/assets/javascripts/bastion_katello/activation-keys/activationKeyConsumed.filter.js
-#: app/assets/javascripts/bastion_katello/subscriptions/subscriptionConsumed.filter.js
 msgid "%(consumed)s out of %(quantity)s"
 msgstr "%(consumed)s von %(quantity)s"
 
@@ -349,11 +336,6 @@ msgstr ""
 "href=\"/foreman_tasks/tasks/{{ task.id }}\"> Klicke für mehr Einzelheiten "
 "</a>"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Account"
-msgstr "Konto"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "Action Type"
 msgstr "Aktionstyp"
@@ -389,7 +371,6 @@ msgid "Active Tasks"
 msgstr "Aktive Aufgaben"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Add"
@@ -415,21 +396,11 @@ msgstr "Neue Umgebung hinzufügen"
 msgid "Add Products"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Add Selected"
 msgstr "Auswahl hinzufügen"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-add-subscriptions.controller.js
-msgid "Add Subscriptions"
-msgstr "Abonnements hinzufügen"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid "Add Subscriptions for Activation Key:"
-msgstr "Subskriptionen für Aktivierungsschlüssel hinzufügen:"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 msgid "Add To"
@@ -488,16 +459,6 @@ msgstr "Alle Lebenszyklusumgebungen"
 msgid "All Repositories"
 msgstr "Alle Repositorys"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-acs.controller.js
-msgid "Alternate Content Sources"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-msgid "Alternate Content Sources for"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
 msgid "An error occurred initiating the sync:"
 msgstr "An error occurred initiating the sync:"
@@ -517,10 +478,6 @@ msgstr "Fehler beim Entfernen der Umgebung:"
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-details.controller.js
 msgid "An error occurred removing the Host Collection:"
 msgstr "Fehler beim Entfernen der Hostsammlung:"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "An error occurred removing the subscriptions."
-msgstr "Fehler beim Entfernen der Subskriptionen:"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "An error occurred saving the Activation Key:"
@@ -550,10 +507,6 @@ msgstr "Fehler beim Speichern des Synchronisationsplans:"
 msgid "An error occurred updating the sync plan:"
 msgstr ""
 "Beim Aktualisieren des Synchronisierungsplans ist ein Fehler aufgetreten:"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
-msgid "An error occurred while creating the Content Credential:"
-msgstr "Beim Erstellen der Content Credentials ist ein Fehler aufgetreten:"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "An error occurred while creating the Product: %s"
@@ -712,12 +665,6 @@ msgstr ""
 "Sind Sie sicher, dass Sie den Aktivierungsschlüssel \"{{ activationKey.name "
 "}}\" entfernen möchten?"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-msgid ""
-"Are you sure you want to remove Content Credential {{ contentCredential.name"
-" }}?"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
 msgid "Are you sure you want to remove environment {{ environment.name }}?"
 msgstr ""
@@ -863,11 +810,6 @@ msgstr "Zuweisungen"
 msgid "At least one Errata needs to be selected to Apply."
 msgstr "Mindestens ein Erratum muss zum Anwenden ausgewählt werden."
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Attached"
-msgstr "Verknüpft"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Auth Token"
@@ -881,24 +823,6 @@ msgstr "Authentifizierungs-URL"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 msgid "Author"
 msgstr "Autor"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-Attach"
-msgstr "Automatische Verknüpfung"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-attach available subscriptions to all selected hosts."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Auto-attach uses all available subscriptions, not a selected subset."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Automatic"
-msgstr "Automatisch"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 msgid "Available Module Streams"
@@ -1025,10 +949,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
 msgid "Capacity"
 msgstr "Kapazität"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/content-type.filter.js
-msgid "Certificate"
-msgstr "Zertifikat"
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
 msgid "Change assigned Lifecycle Environment or Content View"
@@ -1168,7 +1088,6 @@ msgstr "Container-Image-Registrierung"
 msgid "Container Image Tags"
 msgstr "Container-Image-Tags"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "Content"
 msgstr "Inhalt"
@@ -1177,37 +1096,9 @@ msgstr "Inhalt"
 msgid "Content Counts"
 msgstr "Anzahl der Inhalte"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/content-credentials.controller.js
-msgid "Content Credential"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
-msgid "Content Credential %s has been created."
-msgstr "Inhaltsanmeldeinformationen %s wurde erstellt."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Content Credential Contents *"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
-msgid "Content Credential successfully uploaded"
-msgstr "Inhaltsanmeldedaten erfolgreich hochgeladen"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details.controller.js
-msgid "Content credential updated"
-msgstr "Inhaltsanmeldeinformationen aktualisiert"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid "Content Credentials"
-msgstr "Content-Anmeldeinformationen"
-
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
 msgid "Content Host Bulk Content"
 msgstr "Inhaltshost-Masseninhalt"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Content Host Bulk Subscriptions"
-msgstr "Inhaltshost-Massensubskriptionen"
 
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -1317,11 +1208,6 @@ msgstr "Inhaltsansichten, die diese Datei enthalten"
 msgid "Context"
 msgstr "Kontext"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Contract"
-msgstr "Vertrag"
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
 msgid "Copy Activation Key"
 msgstr "Aktivierungsschlüssel kopieren"
@@ -1346,11 +1232,6 @@ msgstr "Erstellen Sie eine Kopie von {{ hostCollection.name }}"
 #: app/assets/javascripts/bastion_katello/activation-keys/views/activation-keys.html
 msgid "Create Activation Key"
 msgstr "Aktivierungsschlüssel erstellen"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid "Create Content Credential"
-msgstr "Content-Anmeldedaten erstellen"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-copy.controller.js
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-copy.controller.js
@@ -1404,10 +1285,6 @@ msgstr "Kritisch"
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 msgid "Cron Logic"
 msgstr "Cron-Logik"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-msgid "Current Subscriptions for Activation Key:"
-msgstr "Derzeitige Subskriptionen für Aktivierungsschlüssel:"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 msgid "Custom"
@@ -1538,7 +1415,6 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-details.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
@@ -1650,7 +1526,6 @@ msgstr "Docker-Tags"
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 msgid "Done"
 msgstr "Fertig"
@@ -1663,6 +1538,15 @@ msgstr "Richtlinie herunterladen"
 #: app/assets/javascripts/bastion_katello/common/module-stream-actions.service.js
 msgid "Enable"
 msgstr "Aktivieren"
+
+#: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
+msgid ""
+"Enable dependency solving. Significantly increases publishing time. Do not "
+"enable unless package dependency issues are found first. Refer to the <a "
+"href=\"/links/docs/Managing_Content?chapter=dependency-solving-for-content-"
+"views\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a> for "
+"more information."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
@@ -1759,7 +1643,6 @@ msgstr "Errata-Aufgaben"
 msgid "Errata:"
 msgstr "Errata:"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
 msgid "Error during upload:"
 msgstr "Fehler beim Hochladen:"
@@ -1782,11 +1665,6 @@ msgstr ""
 msgid "Existing Product"
 msgstr "Vorhandenes Produkt"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Expires"
-msgstr "Endet"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Family"
 msgstr "Familie"
@@ -1803,10 +1681,6 @@ msgid ""
 msgstr ""
 "Das Entfernen der Datei wurde im Hintergrund eingeleitet. Klicken Sie <a "
 "href=\"{{ taskUrl() }}\">hier</a>, um den Fortschritt zu überwachen."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
-msgid "File too large."
-msgstr "Datei zu groß."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
 msgid "File too large. Please use the CLI instead."
@@ -1849,12 +1723,6 @@ msgstr "Filter"
 msgid "Filter by Environment"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-msgid "Filter..."
-msgstr "Filtern …"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Filters"
 msgstr ""
@@ -1881,13 +1749,11 @@ msgstr "Globaler Standard"
 msgid "Global Default (None)"
 msgstr "Globaler Standard (None)"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 #: app/assets/javascripts/bastion_katello/products/new/views/product-new-form.html
-#: app/assets/javascripts/bastion_katello/content-credentials/content-type.filter.js
 msgid "GPG Key"
 msgstr "GPG-Schlüssel"
 
@@ -1902,10 +1768,6 @@ msgid ""
 msgstr ""
 "Gruppenpaketaktionen sind veraltet und werden in einer zukünftigen Version "
 "entfernt."
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Guests of"
-msgstr "Gäste von"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "Homepage"
@@ -2198,12 +2060,7 @@ msgstr ""
 msgid "List Products"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "List Subscriptions"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "List/Remove"
@@ -2336,11 +2193,6 @@ msgstr "N/A"
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/activation-keys/new/views/activation-key-new.html
 #: app/assets/javascripts/bastion_katello/activation-keys/views/activation-keys.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-content-views.html
@@ -2389,10 +2241,6 @@ msgstr "N/A"
 msgid "Name"
 msgstr "Name"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Name *"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
 "Name of the upstream repository you want to sync. Example: 'quay/busybox' or"
@@ -2413,10 +2261,6 @@ msgstr "Nie synchronisiert"
 #: app/assets/javascripts/bastion_katello/activation-keys/new/new-activation-key.controller.js
 msgid "New Activation Key"
 msgstr "Neuer Aktivierungsschlüssel"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
-msgid "New Content Credential"
-msgstr ""
 
 #: app/assets/javascripts/bastion_katello/environments/views/new-environment.html
 #: app/assets/javascripts/bastion_katello/environments/new-environment.controller.js
@@ -2471,7 +2315,6 @@ msgstr "Nächste Synchronisation"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "No"
 msgstr "Nein"
 
@@ -2562,10 +2405,6 @@ msgstr "Für diese Ressource sind keine Aufgaben vorhanden."
 msgid "None"
 msgstr "Keine"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Not Applicable"
-msgstr "Unzutreffend"
-
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "Not started"
 msgstr "Nicht angefangen"
@@ -2635,10 +2474,6 @@ msgstr "Nur Pakete anzeigen, die für einen oder mehrere Content-Hosts gelten"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
 msgid "Optimized Sync"
 msgstr "Optimierte Synchronisierung"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid "Organization"
-msgstr "Organisation"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
@@ -2750,10 +2585,6 @@ msgstr ""
 "Passwort des Upstream-Repository-Benutzers für die Authentifizierung. Lassen"
 " Sie das Feld leer, wenn das Repository keine Authentifizierung erfordert."
 
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Paste contents of Content Credential"
-msgstr "Inhalte von Content Credentials einfügen"
-
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
 #: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-files.html
@@ -2766,10 +2597,6 @@ msgid ""
 "Performing host package actions is disabled because Katello is not "
 "configured for Remote Execution."
 msgstr ""
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Physical"
-msgstr "Physisch"
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
 msgid "Please enter cron below"
@@ -2801,7 +2628,6 @@ msgstr "Plus 1 weiterer Fehler"
 msgid "Prior Environment"
 msgstr "Vorherige Umgebung"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-info.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-repositories.html
@@ -2858,13 +2684,9 @@ msgstr "Die Produktsynchronisierung wurde im Hintergrund gestartet."
 msgid "Product verify checksum has been initiated in the background."
 msgstr "Die Prüfsumme für die Produktprüfung wurde im Hintergrund initiiert."
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-details.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-products.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "Products"
 msgstr "Produkte"
@@ -2872,10 +2694,6 @@ msgstr "Produkte"
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
 msgid "Products <div>{{ library.counts.products || 0 }}</div>"
 msgstr "Produkte <div>{{ library.counts.products || 0 }}</div>"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-msgid "Products for"
-msgstr "Produkte für"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-dependencies.html
 msgid "Provides"
@@ -2894,14 +2712,6 @@ msgstr "Repository-Informationen veröffentlicht"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Publishing Settings"
 msgstr ""
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-msgid "Quantity"
-msgstr "Anzahl"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Quantity (To Add)"
-msgstr "Menge (zum Hinzufügen)"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Reboot Suggested?"
@@ -2989,14 +2799,6 @@ msgstr "Container-Image-Manifeste entfernen"
 msgid "Remove Content"
 msgstr "Inhalt entfernen"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-msgid "Remove Content Credential"
-msgstr "Inhaltsanmeldeinformationen entfernen"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-msgid "Remove Content Credential {{ contentCredential.name }}"
-msgstr "Inhaltsanmeldeinformationen entfernen {{ contentCredential.name }}"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
 msgid "Remove Content?"
 msgid_plural "Remove {{ table.numSelected }} content units?"
@@ -3074,8 +2876,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "Remove Selected"
@@ -3109,10 +2909,6 @@ msgstr "Repositorys werden entfernt"
 msgid "Repo Discovery"
 msgstr "Repository-Suche"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-details.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum.html
@@ -3120,7 +2916,6 @@ msgstr "Repository-Suche"
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/debs/debs.controller.js
 #: app/assets/javascripts/bastion_katello/debs/details/deb-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/docker-tags/details/docker-tag-repositories.controller.js
@@ -3139,10 +2934,6 @@ msgstr "Repositorys mit Errata {{ errata.errata_id }}"
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 msgid "Repositories containing package {{ package.nvrea }}"
 msgstr "Repositorys, die das Paket {{ package.nvrea }} enthalten"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-msgid "Repositories for"
-msgstr "Repositorys für"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 msgid "Repositories for Deb:"
@@ -3421,24 +3212,9 @@ msgstr "Servicelevel (SLA):"
 msgid "Severity"
 msgstr "Schweregrad"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
-msgid "Show All"
-msgstr "Zeige alles"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
-msgid "Show all Repository Sets in Organization"
-msgstr "Alle Repository-Sets in Organisation anzeigen"
-
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Size"
 msgstr "Größe"
-
-#: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
-msgid ""
-"Skip dependency solving for a significant speed increase. If the update "
-"cannot be applied to the host, delete the incremental content view version "
-"and retry the application with dependency solving turned on."
-msgstr ""
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy currently reclaiming space..."
@@ -3451,6 +3227,14 @@ msgstr "Smart Proxy synchronisiert derzeit mit Ihren Standorten..."
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy is synchronized"
 msgstr "Smart-Proxy wird synchronisiert"
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Smart proxy sync failed"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
+msgid "Smart proxy sync finished with warning"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Solution"
@@ -3487,10 +3271,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/new/views/product-new-form.html
 msgid "SSL CA Cert"
 msgstr "SSL-CA-Zertifikat"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "SSL Certificate"
-msgstr "SSL-Zertifikat"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -3529,11 +3309,6 @@ msgstr "Gestartet am"
 msgid "Starting"
 msgstr "Start"
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Starts"
-msgstr "Beginnt"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "State"
 msgstr "Status"
@@ -3549,41 +3324,13 @@ msgstr "Status"
 msgid "Stream"
 msgstr "Stream"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Subscription Details"
-msgstr "Subskriptionsdetails"
-
-#: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
-msgid "Subscription Management"
-msgstr "Abonnementverwaltung"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
-msgid "Subscription Status"
-msgstr "Subskriptionsstatus"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
-msgid "Subscriptions"
-msgstr "Subskriptionen"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Subscriptions for Activation Key:"
-msgstr "Subskriptionen für Aktivierungsschlüssel:"
-
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "Success!"
 msgstr "Erfolg!"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-add-subscriptions.controller.js
-msgid "Successfully added %s subscriptions."
-msgstr "%s Subskriptionen erfolgreich hinzugefügt."
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Successfully removed %s items."
 msgstr "%s Elemente erfolgreich entfernt."
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-subscriptions.controller.js
-msgid "Successfully removed %s subscriptions."
-msgstr "%s Subskriptionen erfolgreich entfernt."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Successfully removed 1 item."
@@ -3597,11 +3344,6 @@ msgstr "Erfolgreich hochgeladener Inhalt:"
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "Summary"
 msgstr "Zusammenfassung"
-
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Support Level"
-msgstr "Supportlevel"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync.html
@@ -3732,10 +3474,6 @@ msgstr "Aufgabendetails"
 #: app/assets/javascripts/bastion_katello/products/details/product-repositories.controller.js
 msgid "Tasks"
 msgstr "Aufgaben"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Temporary"
-msgstr "Temporär"
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 msgid ""
@@ -3919,14 +3657,6 @@ msgstr ""
 "abgeschlossen sein, bevor vorhandene Aktualisierungen angewendet werden "
 "können."
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid ""
-"This action will affect only those Content Hosts that require a change.\n"
-"        If the Content Host does not have the selected Subscription no action will take place."
-msgstr ""
-"Diese Aktion wirkt sich nur auf die Inhaltshosts aus, die eine Änderung erfordern.\n"
-"Wenn der Content-Host nicht über das ausgewählte Abonnement verfügt, wird keine Aktion ausgeführt."
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
 msgid "This activation key is not associated with any content hosts."
 msgstr ""
@@ -3978,13 +3708,7 @@ msgid ""
 " views"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-errata.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -3997,6 +3721,10 @@ msgstr "Typ"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 msgid "Unauthenticated Pull"
 msgstr "Nicht authentifizierter Pull"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
+msgid "Unknown error"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
@@ -4013,10 +3741,6 @@ msgstr "Unbegrenzte Hosts"
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 msgid "Unprotected"
 msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-credentials/content-type.filter.js
-msgid "Unsupported Type!"
-msgstr "Nicht unterstützter Typ!"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
@@ -4051,14 +3775,9 @@ msgstr "Aufrüstbar"
 msgid "Upgradable For"
 msgstr "Aufrüstbar für"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Upload"
 msgstr "Hochladen"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Upload Content Credential file"
-msgstr "Datei mit Zugangsdaten für Inhalt hochladen"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Upload File"
@@ -4080,7 +3799,6 @@ msgstr ""
 "Requirements.yml-Datei hochladen <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'ansible_collection'\" uib-popover-html=\"requirementPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\">\n"
 "</a>"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Uploading..."
 msgstr "Hochladen …"
@@ -4156,12 +3874,6 @@ msgstr "Nutzungsart:"
 msgid "Use specific HTTP Proxy"
 msgstr "Verwenden Sie einen bestimmten HTTP-Proxy"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-msgid "Used as"
-msgstr "Benutzt als"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks-table.html
 msgid "User"
@@ -4171,6 +3883,12 @@ msgstr "Benutzer"
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Username"
 msgstr "Benutzername"
+
+#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
+msgid ""
+"Username and password are required for syncing the repository after it is "
+"created. Credentials are not validated during discovery."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -4243,10 +3961,6 @@ msgstr "Anzeigen von Container-Image-Manifestlisten für das Repository:"
 msgid "View Docker Tags for Repository:"
 msgstr "Docker-Tags für Repository anzeigen:"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Virtual"
-msgstr "Virtuell"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details-reclaim-space-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories-reclaim-space-modal.html
 msgid ""
@@ -4267,21 +3981,6 @@ msgid ""
 msgstr ""
 "Wöchentlich am {{ product.sync_plan.sync_date | date:'EEEE' }} um {{ "
 "product.sync_plan.sync_date | date:'mediumTime' }} (Serverzeit)"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid ""
-"When Auto Attach is disabled, registering systems will be attached to all "
-"associated subscriptions."
-msgstr ""
-"Wenn die automatische Verknüpfung deaktiviert ist, werden neu registrierte "
-"Systeme mit allen zugewiesenen Subskriptionen verknüpft."
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid ""
-"When Auto Attach is enabled, registering systems will be attached to all "
-"associated custom products and only associated Red Hat subscriptions "
-"required to satisfy the system's installed products."
-msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -4312,7 +4011,6 @@ msgstr "In Arbeit"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
-#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "Yes"
 msgstr "Ja"
 
@@ -4382,23 +4080,9 @@ msgstr ""
 "Sie haben derzeit keine Aktivierungsschlüssel. Sie können über die "
 "Schaltfläche rechts neue Aktivierungsschlüssel hinzufügen."
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-msgid ""
-"You currently don't have any Alternate Content Sources associated with this "
-"Content Credential."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/docker-tags/views/docker-tags.html
 msgid "You currently don't have any Container Image Tags."
 msgstr "Sie haben derzeit keine Container-Image-Tags."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid ""
-"You currently don't have any Content Credential, you can add Content "
-"Credentials using the button on the right."
-msgstr ""
-"Sie haben derzeit keine Inhaltsberechtigungen. Sie können "
-"Inhaltsberechtigungen über die Schaltfläche rechts hinzufügen."
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 msgid ""
@@ -4428,32 +4112,6 @@ msgid ""
 "Content Hosts after selecting the 'Add' tab."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-msgid ""
-"You currently don't have any Products associated with this Content "
-"Credential."
-msgstr ""
-"Sie haben derzeit keine Produkte, die mit diesen Content-Anmeldedaten "
-"verknüpft sind."
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid ""
-"You currently don't have any Products to subscribe to, you can add Products "
-"after selecting 'Products' under 'Content' in the main menu"
-msgstr ""
-"Sie haben derzeit keine Produkte zum Abonnieren. Sie können Produkte "
-"hinzufügen, nachdem Sie im Hauptmenü unter \"Inhalt\" die Option "
-"\"Produkte\" ausgewählt haben"
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
-msgid ""
-"You currently don't have any Products to subscribe to. You can add Products "
-"after selecting 'Products' under 'Content' in the main menu."
-msgstr ""
-"Sie haben derzeit keine Produkte zum Abonnieren. Sie können Produkte "
-"hinzufügen, nachdem Sie im Hauptmenü unter „Content bzw. Inhalt“ die Option "
-"„Products bzw. Produkte“ ausgewählt haben."
-
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid ""
 "You currently don't have any Products<span bst-feature-"
@@ -4463,14 +4121,6 @@ msgstr ""
 "Sie haben derzeit keine Produkte<span bst-feature-flag=\"custom_products\">."
 " Sie können über die Schaltfläche rechts Produkte hinzufügen</span>."
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-msgid ""
-"You currently don't have any Repositories associated with this Content "
-"Credential."
-msgstr ""
-"Sie haben derzeit keine Repositorys, die mit diesen Content-Credentials bzw."
-" Inhaltsanmeldedaten verknüpft sind."
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid ""
 "You currently don't have any Repositories included in this Product, you can "
@@ -4478,15 +4128,6 @@ msgid ""
 msgstr ""
 "In diesem Produkt sind derzeit keine Repositorys enthalten. Sie können über "
 "die Schaltfläche rechts Repositorys hinzufügen."
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-msgid ""
-"You currently don't have any Subscriptions associated with this Activation "
-"Key, you can add Subscriptions after selecting the 'Add' tab."
-msgstr ""
-"Sie haben derzeit keine Abonnements, die mit diesem Aktivierungsschlüssel "
-"verknüpft sind. Sie können Abonnements hinzufügen, nachdem Sie die "
-"Registerkarte \"Add bzw. Hinzufügen\" ausgewählt haben."
 
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
 msgid ""
@@ -4516,10 +4157,6 @@ msgstr "Ihre Suche ergab keine Aktivierungsschlüssel."
 #: app/assets/javascripts/bastion_katello/docker-tags/views/docker-tags.html
 msgid "Your search returned zero Container Image Tags."
 msgstr "Ihre Suche ergab keine Container-Image-Tags."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid "Your search returned zero Content Credential."
-msgstr "Ihre Suche ergab keine Inhaltsanmeldeinformationen."
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-content-hosts.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
@@ -4574,7 +4211,6 @@ msgstr "Ihre Suche ergab keine Modul-Streams."
 msgid "Your search returned zero Packages."
 msgstr "Ihre Suche ergab null Pakete."
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid "Your search returned zero Products."
 msgstr "Ihre Suche ergab null Produkte."
@@ -4598,11 +4234,6 @@ msgstr "Ihre Suche hat keine Repository-Sets zurückgegeben"
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Your search returned zero results."
 msgstr "Ihre Suche ergab keine Ergebnisse."
-
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-msgid "Your search returned zero Subscriptions."
-msgstr "Ihre Suche ergab keine Abonnements."
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
