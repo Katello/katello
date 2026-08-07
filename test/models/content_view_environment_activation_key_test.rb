@@ -26,5 +26,24 @@ module Katello
       assert_equal 1, cve1.priority(@activation_key)
       assert_equal 0, cve2.priority(@activation_key)
     end
+
+    def test_content_view_environments_deduplicates
+      Setting['allow_multiple_content_views'] = true
+      cve1 = katello_content_view_environments(:library_dev_view_dev)
+      cve2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      @activation_key.content_view_environments = [cve1, cve2, cve1]
+      assert_equal [cve1, cve2], @activation_key.content_view_environments.reload.to_a
+    end
+
+    def test_uniqueness_of_content_view_environment_per_activation_key
+      cve = katello_content_view_environments(:library_dev_view_dev)
+      @activation_key.content_view_environments = [cve]
+      duplicate = ContentViewEnvironmentActivationKey.new(
+        activation_key: @activation_key,
+        content_view_environment: cve
+      )
+      refute duplicate.valid?
+      assert_includes duplicate.errors[:content_view_environment_id], "has already been taken for this activation key"
+    end
   end
 end
