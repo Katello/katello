@@ -4,6 +4,18 @@ import MutationObserver from '@sheerun/mutationobserver-shim';
 // jsdom in jest 24 (standalone) lacks MutationObserver; shim needed for @testing-library/dom v7+
 window.MutationObserver = MutationObserver;
 
+// Suppress jsdom "Not implemented" errors (e.g. navigation, localStorage) that are
+// expected in a simulated browser environment and not indicative of real failures.
+const originalConsoleError = console.error; // eslint-disable-line no-console
+// eslint-disable-next-line no-console
+console.error = (message, ...args) => {
+  if (typeof message === 'string' && message.includes('Not implemented')) {
+    return;
+  }
+
+  originalConsoleError.call(console, message, ...args);
+};
+
 // Minimal store for modules importing foremanReact/redux at module scope
 jest.mock('foremanReact/redux', () => {
   const state = { katello: { setOrganization: { currentId: 1 } } };
