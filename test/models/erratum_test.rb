@@ -167,6 +167,7 @@ module Katello
         katello_content_views(:library_dev_view).id,
         katello_environments(:library).id
       )
+      @host.content_facet.content_view_environments = [cvenv]
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
       @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!
@@ -224,6 +225,7 @@ module Katello
         katello_content_views(:library_dev_view).id,
         katello_environments(:library).id
       )
+      @host.content_facet.content_view_environments = [cvenv]
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
       @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!
