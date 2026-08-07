@@ -215,6 +215,36 @@ module Katello
       refute_includes found, other_host
     end
 
+    def test_has_installable_errata
+      errata = katello_errata(:security)
+      host.content_facet.bound_repositories << errata.repositories.first
+
+      assert_includes ::Host.search_for("has installable_errata"), host
+    end
+
+    def test_has_installable_errata_excludes_only_applicable
+      refute_empty content_facet.applicable_errata
+
+      content_facet.bound_repositories = []
+      content_facet.save!
+
+      assert_empty content_facet.installable_errata
+
+      refute_includes ::Host.search_for("has installable_errata"), host
+      assert_includes ::Host.search_for("has applicable_errata"), host
+    end
+
+    def test_not_has_installable_errata
+      refute_empty content_facet.applicable_errata
+
+      content_facet.bound_repositories = []
+      content_facet.save!
+
+      assert_empty content_facet.installable_errata
+
+      assert_includes ::Host.search_for("not has installable_errata"), host
+    end
+
     def test_installable_errata_search
       content_facet.bound_repositories = [Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)]
       content_facet.save!
@@ -330,6 +360,36 @@ module Katello
       refute_includes ::Host.search_for("upgradable_debs = \"#{deb_two.nav}\""), host_one
     end
 
+    def test_has_upgradable_debs
+      assert_includes deb_one.repositories, repo
+      host_one.content_facet.bound_repositories << repo
+
+      assert_includes ::Host.search_for("has upgradable_debs"), host_one
+    end
+
+    def test_has_upgradable_debs_excludes_only_applicable
+      assert_includes deb_one.repositories, repo
+      host_one.content_facet.bound_repositories = []
+      host_one.content_facet.save!
+
+      refute_empty host_one.applicable_debs
+      assert_empty host_one.content_facet.installable_debs
+
+      refute_includes ::Host.search_for("has upgradable_debs"), host_one
+      assert_includes ::Host.search_for("has applicable_debs"), host_one
+    end
+
+    def test_not_has_upgradable_debs
+      assert_includes deb_one.repositories, repo
+      host_one.content_facet.bound_repositories = []
+      host_one.content_facet.save!
+
+      refute_empty host_one.applicable_debs
+      assert_empty host_one.content_facet.installable_debs
+
+      assert_includes ::Host.search_for("not has upgradable_debs"), host_one
+    end
+
     def test_update_applicability_counts
       assert_includes deb_one.repositories, repo
       deb_two.repositories = []
@@ -387,6 +447,36 @@ module Katello
 
       assert_includes ::Host.search_for("upgradable_rpms = #{rpm_one.nvra}"), host_one
       refute_includes ::Host.search_for("upgradable_rpms = #{rpm_two.nvra}"), host_one
+    end
+
+    def test_has_upgradable_rpms
+      assert_includes rpm_one.repositories, repo
+      host_one.content_facet.bound_repositories << repo
+
+      assert_includes ::Host.search_for("has upgradable_rpms"), host_one
+    end
+
+    def test_has_upgradable_rpms_excludes_only_applicable
+      assert_includes rpm_one.repositories, repo
+      host_one.content_facet.bound_repositories = []
+      host_one.content_facet.save!
+
+      refute_empty host_one.applicable_rpms
+      assert_empty host_one.content_facet.installable_rpms
+
+      refute_includes ::Host.search_for("has upgradable_rpms"), host_one
+      assert_includes ::Host.search_for("has applicable_rpms"), host_one
+    end
+
+    def test_not_has_upgradable_rpms
+      assert_includes rpm_one.repositories, repo
+      host_one.content_facet.bound_repositories = []
+      host_one.content_facet.save!
+
+      refute_empty host_one.applicable_rpms
+      assert_empty host_one.content_facet.installable_rpms
+
+      assert_includes ::Host.search_for("not has upgradable_rpms"), host_one
     end
 
     def test_update_applicability_counts

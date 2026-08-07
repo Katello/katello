@@ -45,8 +45,8 @@ module Katello
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata, :only_explicit => true
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata, :only_explicit => true
         scoped_search :relation => :applicable_errata, :on => :issued, :rename => :applicable_errata_issued, :complete_value => true, :only_explicit => true
-        scoped_search :relation => :applicable_debs, :on => :nav, :rename => :applicable_debs, :complete_value => true, :ext_method => :find_by_applicable_debs, :only_explicit => true, :operators => ['=']
-        scoped_search :relation => :applicable_debs, :on => :nav, :rename => :upgradable_debs, :complete_value => true, :ext_method => :find_by_installable_debs, :only_explicit => true, :operators => ['=']
+        scoped_search :relation => :applicable_debs, :on => :name, :rename => :applicable_debs, :complete_value => true, :ext_method => :find_by_applicable_debs, :only_explicit => true, :operators => ['=']
+        scoped_search :relation => :applicable_debs, :on => :name, :rename => :upgradable_debs, :complete_value => true, :ext_method => :find_by_installable_debs, :only_explicit => true, :operators => ['=']
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source
@@ -89,6 +89,11 @@ module Katello
       end
 
       module ClassMethods
+        def build_condition(operator, subquery)
+          sql_in = operator == 'IS NULL' ? 'NOT IN' : 'IN'
+          { :conditions => "#{::Host::Managed.table_name}.id #{sql_in} (#{subquery.to_sql})" }
+        end
+
         def find_by_image_mode(_key, _operator, value)
           # operator is always '='
           state = ::Foreman::Cast.to_bool(value)
@@ -102,18 +107,24 @@ module Katello
         end
 
         def find_by_applicable_errata(_key, operator, value)
+          hosts = ::Host::Managed.joins(:applicable_errata).select(:id)
+          return build_condition(operator, hosts) if value.nil?
           conditions = sanitize_sql_for_conditions(["#{Katello::Erratum.table_name}.errata_id #{operator} ?", value_to_sql(operator, value)])
-          hosts = ::Host::Managed.joins(:applicable_errata).select(:id).where(conditions)
-          { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.to_sql})" }
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.where(conditions).to_sql})" }
         end
 
         def find_by_installable_errata(_key, operator, value)
+          facets = Katello::Host::ContentFacet.joins_installable_errata.select(:host_id)
+          return build_condition(operator, facets) if value.nil?
           conditions = sanitize_sql_for_conditions(["#{Katello::Erratum.table_name}.errata_id #{operator} ?", value_to_sql(operator, value)])
-          facets = Katello::Host::ContentFacet.joins_installable_errata.select(:host_id).where(conditions)
-          { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.to_sql})" }
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.where(conditions).to_sql})" }
         end
 
         def find_by_applicable_debs(_key, operator, value)
+          if value.nil?
+            hosts = ::Host::Managed.joins(:applicable_debs).select(:id)
+            return build_condition(operator, hosts)
+          end
           hosts = find_by_debs(::Host::Managed.joins(:applicable_debs), operator, value)
           if hosts.empty?
             { :conditions => "1=0" }
@@ -123,6 +134,10 @@ module Katello
         end
 
         def find_by_installable_debs(_key, operator, value)
+          if value.nil?
+            facets = Katello::Host::ContentFacet.joins_installable_debs.select(:host_id)
+            return build_condition(operator, facets)
+          end
           facets = find_by_debs(Katello::Host::ContentFacet.joins_installable_debs, operator, value)
           if facets.empty?
             { :conditions => "1=0" }
@@ -132,15 +147,17 @@ module Katello
         end
 
         def find_by_applicable_rpms(_key, operator, value)
+          hosts = ::Host::Managed.joins(:applicable_rpms).select(:id)
+          return build_condition(operator, hosts) if value.nil?
           conditions = sanitize_sql_for_conditions(["#{Katello::Rpm.table_name}.nvra #{operator} ?", value_to_sql(operator, value)])
-          hosts = ::Host::Managed.joins(:applicable_rpms).select(:id).where(conditions)
-          { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.to_sql})" }
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.where(conditions).to_sql})" }
         end
 
         def find_by_installable_rpms(_key, operator, value)
+          facets = Katello::Host::ContentFacet.joins_installable_rpms.select(:host_id)
+          return build_condition(operator, facets) if value.nil?
           conditions = sanitize_sql_for_conditions(["#{Katello::Rpm.table_name}.nvra #{operator} ?", value_to_sql(operator, value)])
-          facets = Katello::Host::ContentFacet.joins_installable_rpms.select(:host_id).where(conditions)
-          { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.to_sql})" }
+          { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.where(conditions).to_sql})" }
         end
 
         def find_by_repository_content_label(_key, operator, value)
