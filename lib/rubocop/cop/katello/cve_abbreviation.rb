@@ -24,7 +24,7 @@ module RuboCop
       class CveAbbreviation < Base
         MSG = '`%<name>s` abbreviates "content view environment" as "cve", which collides with the security ' \
               'meaning of CVE (Common Vulnerabilities and Exposures). Use "cvenv" instead, e.g. `%<suggestion>s`.'
-        CVE_WORD = /\Acve(\d*)(s?)\z/i
+        CVE_WORD = /\Acve(\d*)(s?)([?!]?)\z/i
 
         def on_lvasgn(node)
           check_name(node, node.children.first)
@@ -74,7 +74,7 @@ module RuboCop
 
         def rename_word(word)
           match = CVE_WORD.match(word)
-          match ? "cvenv#{match[1]}#{match[2]}" : word
+          match ? "cvenv#{match[1]}#{match[2]}#{match[3]}" : word
         end
       end
     end

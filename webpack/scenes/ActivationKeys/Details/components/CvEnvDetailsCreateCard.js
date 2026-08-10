@@ -2,10 +2,10 @@ import React, { useRef, useState } from 'react';
 import { DropdownItem } from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanContext, useForemanPermissions } from 'foremanReact/Root/Context/ForemanContext';
-import { CVEDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
+import { CvEnvDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import CreateAKCVModal from './CreateAKCVModal';
 
-export const CVEDetailsCreateCard = () => {
+export const CvEnvDetailsCreateCard = () => {
   const dataNode = useRef(document.getElementById('ak-create-cve-data')).current;
   const [assignments, setAssignments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,7 +42,7 @@ export const CVEDetailsCreateCard = () => {
     }
   };
 
-  // Transform assignments to format for display in CVEDetailsBareCard
+  // Transform assignments to format for display in CvEnvDetailsBareCard
   const displayAssignments = assignments
     .filter(a => a.contentView && a.environment)
     .map(a => ({
@@ -50,7 +50,7 @@ export const CVEDetailsCreateCard = () => {
       lifecycle_environment: a.environment,
     }));
 
-  // Build permissions object for CVEDetailsBareCard
+  // Build permissions object for CvEnvDetailsBareCard
   const permissions = {
     view_lifecycle_environments: userPermissions.has('view_lifecycle_environments'),
     view_content_views: userPermissions.has('view_content_views'),
@@ -79,7 +79,7 @@ export const CVEDetailsCreateCard = () => {
 
   return (
     <>
-      <CVEDetailsBareCard
+      <CvEnvDetailsBareCard
         contentViewEnvironments={displayAssignments}
         permissions={permissions}
         dropdownItems={dropdownItems}
@@ -102,4 +102,4 @@ export const CVEDetailsCreateCard = () => {
   );
 };
 
-export default CVEDetailsCreateCard;
+export default CvEnvDetailsCreateCard;
