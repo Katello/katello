@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0.rc1",
+        "Project-Id-Version": "katello 4.21.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026",
@@ -153,109 +153,109 @@
         "%s が見つかりませんでした!"
       ],
       "%{errata} (%{total} other errata)": [
-        "%{errata} (他のエラータ: %{total})"
+        ""
       ],
       "%{errata} (%{total} other errata) install canceled": [
-        "%{errata} (他のエラータ: %{total}) のインストールが取り消されました"
+        ""
       ],
       "%{errata} (%{total} other errata) install failed": [
-        "%{errata} (他のエラータ: %{total}) のインストールに失敗しました"
+        ""
       ],
       "%{errata} (%{total} other errata) install timed out": [
-        "%{errata} (他のエラータ: %{total}) のインストールがタイムアウトになりました"
+        ""
       ],
       "%{errata} (%{total} other errata) installed": [
-        "%{errata} (他のエラータ: %{total}) がインストールされました"
+        ""
       ],
       "%{errata} erratum install canceled": [
-        "%{errata} エラータのインストールが取り消されました"
+        ""
       ],
       "%{errata} erratum install failed": [
-        "%{errata} エラータのインストールに失敗しました"
+        ""
       ],
       "%{errata} erratum install timed out": [
-        "%{errata} エラータのインストールがタイムアウトになりました"
+        ""
       ],
       "%{errata} erratum installed": [
-        "%{errata} エラータがインストールされました"
+        ""
       ],
       "%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.": [
         "%{subject} の %{expiring_subs} は、%{days} 日未満に有効期限が切れます。ホストがコンテンツを引き続き受信できるように、期限が切れる前に更新してください。"
       ],
       "%{group} (%{total} other package groups)": [
-        "%{group} (他のパッケージ: %{total})"
+        ""
       ],
       "%{group} (%{total} other package groups) install canceled": [
-        "%{group} (他のパッケージ: %{total}) のインストールが取り消されました"
+        ""
       ],
       "%{group} (%{total} other package groups) install failed": [
-        "%{group} (他のパッケージ: %{total}) のインストールに失敗しました"
+        ""
       ],
       "%{group} (%{total} other package groups) install timed out": [
-        "%{group} (他のパッケージ: %{total}) のインストールがタイムアウトになりました"
+        ""
       ],
       "%{group} (%{total} other package groups) installed": [
-        "%{group} (他のパッケージ: %{total}) がインストールされました"
+        ""
       ],
       "%{group} (%{total} other package groups) remove canceled": [
-        "%{group} (他のパッケージ: %{total}) の削除が取り消されました"
+        ""
       ],
       "%{group} (%{total} other package groups) remove failed": [
-        "%{group} (他のパッケージ: %{total}) の削除に失敗しました"
+        ""
       ],
       "%{group} (%{total} other package groups) remove timed out": [
-        "%{group} (他のパッケージ: %{total}) の削除がタイムアウトになりました"
+        ""
       ],
       "%{group} (%{total} other package groups) removed": [
-        "%{group} (他のパッケージ: %{total}) が削除されました"
+        ""
       ],
       "%{group} (%{total} other package groups) update canceled": [
-        "%{group} (他のパッケージ: %{total}) の更新が取り消されました"
+        ""
       ],
       "%{group} (%{total} other package groups) update failed": [
-        "%{group} (他のパッケージ: %{total}) の更新に失敗しました"
+        ""
       ],
       "%{group} (%{total} other package groups) update timed out": [
-        "%{group} (他のパッケージ: %{total}) の更新がタイムアウトになりました"
+        ""
       ],
       "%{group} (%{total} other package groups) updated": [
-        "%{group} (他のパッケージ: %{total}) が更新されました"
+        ""
       ],
       "%{group} package group install canceled": [
-        "%{group} パッケージグループのインストールが取り消されました"
+        ""
       ],
       "%{group} package group install failed": [
-        "%{group} パッケージグループのインストールに失敗しました"
+        ""
       ],
       "%{group} package group install timed out": [
-        "%{group} パッケージグループのインストールがタイムアウトになりました"
+        ""
       ],
       "%{group} package group installed": [
-        "%{group} パッケージグループがインストールされました"
+        ""
       ],
       "%{group} package group remove canceled": [
-        "%{group} パッケージグループの削除が取り消されました"
+        ""
       ],
       "%{group} package group remove failed": [
-        "%{group} パッケージグループの削除が失敗しました"
+        ""
       ],
       "%{group} package group remove timed out": [
-        "%{group} パッケージグループの削除がタイムアウトになりました"
+        ""
       ],
       "%{group} package group removed": [
-        "%{group} パッケージグループの削除"
+        ""
       ],
       "%{group} package group update canceled": [
-        "%{group} パッケージグループの更新が取り消されました"
+        ""
       ],
       "%{group} package group update failed": [
-        "%{group} パッケージグループの更新に失敗しました"
+        ""
       ],
       "%{group} package group update timed out": [
-        "%{group} パッケージグループの更新がタイムアウトになりました"
+        ""
       ],
       "%{group} package group updated": [
-        "%{group} パッケージグループが更新されました"
+        ""
       ],
       "%{label} failed": [
         "%{label} が失敗しました"
@@ -267,73 +267,73 @@
         "%{name} には、代替コンテンツソースに追加するアップストリーム URL が設定された %{type} リポジトリーがありません。"
       ],
       "%{package} (%{total} other packages)": [
-        "%{package} (他のパッケージ: %{total})"
+        ""
       ],
       "%{package} (%{total} other packages) install canceled": [
-        "%{package} (他のパッケージ: %{total}) のインストールが取り消されました"
+        ""
       ],
       "%{package} (%{total} other packages) install failed": [
-        "%{package} (他のパッケージ: %{total}) のインストールに失敗しました"
+        ""
       ],
       "%{package} (%{total} other packages) install timed out": [
-        "%{package} (他のパッケージ: %{total}) のインストールがタイムアウトになりました"
+        ""
       ],
       "%{package} (%{total} other packages) installed": [
-        "%{package} (他のパッケージ: %{total}) がインストールされました"
+        ""
       ],
       "%{package} (%{total} other packages) remove canceled": [
-        "%{package} (他のパッケージ: %{total}) の削除が取り消されました"
+        ""
       ],
       "%{package} (%{total} other packages) remove failed": [
-        "%{package} (他のパッケージ: %{total}) の削除に失敗しました"
+        ""
       ],
       "%{package} (%{total} other packages) remove timed out": [
-        "%{package} (他のパッケージ: %{total}) の削除がタイムアウトになりました"
+        ""
       ],
       "%{package} (%{total} other packages) removed": [
-        "%{package} (他のパッケージ: %{total}) が削除されました"
+        ""
       ],
       "%{package} (%{total} other packages) update canceled": [
-        "%{package} (他のパッケージ: %{total}) の更新が取り消されました"
+        ""
       ],
       "%{package} (%{total} other packages) update failed": [
-        "%{package} (他のパッケージ: %{total}) の更新に失敗しました"
+        ""
       ],
       "%{package} (%{total} other packages) update timed out": [
-        "%{package} (他のパッケージ: %{total}) の更新がタイムアウトになりました"
+        ""
       ],
       "%{package} (%{total} other packages) updated": [
-        "%{package} (他のパッケージ: %{total}) が更新されました"
+        ""
       ],
       "%{package} package install canceled": [
-        "%{package} パッケージのインストールが取り消されました"
+        ""
       ],
       "%{package} package install timed out": [
-        "%{package} パッケージのインストールがタイムアウトになりました"
+        ""
       ],
       "%{package} package remove canceled": [
-        "%{package} パッケージの削除が取り消されました"
+        ""
       ],
       "%{package} package remove failed": [
-        "%{package} パッケージの削除が失敗しました"
+        ""
       ],
       "%{package} package remove timed out": [
-        "%{package} パッケージの削除がタイムアウトになりました"
+        ""
       ],
       "%{package} package removed": [
-        "%{package} パッケージが削除されました"
+        ""
       ],
       "%{package} package update canceled": [
-        "%{package} パッケージの更新が取り消されました"
+        ""
       ],
       "%{package} package update failed": [
-        "%{package} パッケージの更新に失敗しました"
+        ""
       ],
       "%{package} package update timed out": [
-        "%{package} パッケージの更新がタイムアウトになりました"
+        ""
       ],
       "%{package} package updated": [
-        "%{package} パッケージが更新されました。"
+        ""
       ],
       "%{release}: %{number_of_hosts} hosts are approaching end of %{lifecycle} on %{end_date}. Please upgrade them before support expires. Check Report Host - Statuses for detail.": [
         "%{release}: %{number_of_hosts} 個のホストが %{lifecycle} の終了 (%{end_date}) に近づいています。サポートが期限切れになる前にアップグレードしてください。詳細は、ホストのレポート - ステータスを確認してください。"
@@ -481,9 +481,6 @@
       ],
       "About page": [
         "About ページ"
-      ],
-      "Abstract async task": [
-        "非同期タスクの抽象化"
       ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "Red Hat Subscription Management へのアクセスは禁止されています。これを変更するには、コンテンツ設定の 'サブスクリプション接続の有効化' を更新してください。"
@@ -637,9 +634,6 @@
       ],
       "Add repositories with package groups to content view to select them here.": [
         "パッケージグループのあるリポジトリーをコンテンツビューに追加して、ここで選択します。"
-      ],
-      "Add rolling repo clone": [
-        ""
       ],
       "Add rule": [
         "ルールの追加"
@@ -903,7 +897,7 @@
         "アーキテクチャー"
       ],
       "Are you sure you want to delete %(entitlementCount)s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
-        "%(entitlementCount)s 件のサブスクリプションを削除してもよろしいですか? この操作により、サブスクリプションが削除され、マニフェストが更新されます。これらのサブスクリプションを使用するすべてのシステムはサブスクリプションを失い、アップデートやエラータへのアクセスも失われる可能性があります。"
+        ""
       ],
       "Are you sure you want to delete the manifest?": [
         "マニフェストを削除してもよろしいですか?"
@@ -933,13 +927,13 @@
         "ホストに関連付けられるコンテンツビュー環境 ID の配列。allow_multiple_content_views の設定をオンにする必要があります。"
       ],
       "Array of content view environment ids associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified.Requires allow_multiple_content_views setting to be on.": [
-        "ホストに関連付けるコンテンツビュー環境 ID の配列。content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+        ""
       ],
       "Array of content view environment ids to be associated with the activation key. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        "アクティベーションキーに関連付けるコンテンツビュー環境 ID の配列。content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+        ""
       ],
       "Array of content view environment ids to be associated with the host. Ignored if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        "ホストに関連付けるコンテンツビュー環境 ID の配列。content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+        ""
       ],
       "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
@@ -1254,13 +1248,16 @@
         "Candlepin"
       ],
       "Candlepin Event": [
-        "Candlepin イベント"
+        ""
       ],
       "Candlepin ID of pool to add": [
         "追加するプールの Candlepin ID"
       ],
       "Candlepin consumer %s has already been removed": [
         "Candlepin コンシューマー %s はすでに削除されています"
+      ],
+      "Candlepin consumer registration response is missing a uuid": [
+        ""
       ],
       "Candlepin is not running properly": [
         "Candlepin が正しく実行されていません"
@@ -1311,7 +1308,7 @@
         "ローリングコンテンツビューを複合コンテンツビューに追加できません"
       ],
       "Cannot assign content view environment %s: The content view has either not been published or has not been promoted to that lifecycle environment.": [
-        "コンテンツビュー環境を割り当てることができません %s: コンテンツビューが公開されていないか、そのライフサイクル環境にプロモートされていません。"
+        ""
       ],
       "Cannot associate a Red Hat provider with a custom product": [
         "Red Hat プロバイダーをカスタム製品に関連付けることができません"
@@ -1387,6 +1384,9 @@
       ],
       "Cannot perform an incremental update on a Generated Content View Version (%{name} version version %{version}": [
         "生成コンテンツビューバージョン (%{name} バージョン、バージョン %{version}) で増分更新を実行できません"
+      ],
+      "Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})": [
+        ""
       ],
       "Cannot promote environment out of sequence. Use force to bypass restriction.": [
         "順序の正しくない環境をプロモートできません。強制プロモートを使用して制限を無視してください。"
@@ -1551,13 +1551,13 @@
         ""
       ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        "アクティベーションキーに関連付けられたコンテンツビュー環境ラベルのコンマ区切りリスト。形式は 'lifecycle_environment_label/content_view_label' です。content_view_environment_ids が指定されている場合、または content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+        ""
       ],
       "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        "アクティベーションキーに関連付けるコンテンツビュー環境ラベルのコンマ区切りリスト。形式は 'lifecycle_environment_label/content_view_label' です。content_view_environment_ids が指定されている場合、または content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+        ""
       ],
       "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
-        "ホストに関連付けるコンテンツビュー環境ラベルのコンマ区切りリスト。形式は 'lifecycle_environment_label/content_view_label' です。content_view_environment_ids が指定されている場合、または content_view_id と lifecycle_environment_id が指定されている場合は無視されます。allow_multiple_content_views 設定をオンにする必要があります。"
+        ""
       ],
       "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         "ホストに関連付けられるコンテンツビュー環境ラベルのコンマ区切りのリスト ('lifecycle_environment_label/content_view_label' 形式)。content_view_environment_ids が指定されている場合は無視されます。allow_multiple_content_views の設定をオンにする必要があります。"
@@ -1573,9 +1573,6 @@
       ],
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
         "コマンドには、選択された %(selectedCount)s 個の %(selectedWord)s のうち、%(packageCount)s 個が含まれています"
-      ],
-      "Commit upload": [
-        ""
       ],
       "Compare": [
         "比較"
@@ -1863,7 +1860,7 @@
         "コンテンツビューと環境は登録用に設定されていません。"
       ],
       "Content view and lifecycle environment must be provided together": [
-        "コンテンツビューとライフサイクル環境を一緒に指定する必要があります"
+        ""
       ],
       "Content view and lifecycle environment must both be set, or both be empty": [
         ""
@@ -1896,7 +1893,7 @@
         "コンテンツビューラベル"
       ],
       "Content view must be specified": [
-        "コンテンツビューを指定する必要があります。"
+        ""
       ],
       "Content view name": [
         "コンテンツビュー名"
@@ -1964,14 +1961,8 @@
       "Copy": [
         "コピー"
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "アクティベーションキーをコピーします"
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         "コンテンツビューのコピー"
@@ -1984,12 +1975,6 @@
       ],
       "Copy to clipboard": [
         "クリップボードにコピー"
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
-        "バージョンユニットのライブラリーへのコピー"
       ],
       "Cores per socket": [
         "1 ソケットあたりのコア数"
@@ -2082,7 +2067,7 @@
         "コンテンツホストの環境 '%s' が見つかりませんでした"
       ],
       "Couldn't find content view environment with content view ID '%{cv}' and environment ID '%{env}'": [
-        "コンテンツビュー IDが '%{cv}' および環境 ID が '%{env}' のコンテンツビュー環境が見つかりませんでした"
+        ""
       ],
       "Couldn't find content view version '%s'": [
         "コンテンツビューのバージョン '%s' が見つかりませんでした"
@@ -2210,32 +2195,17 @@
       "Create content view": [
         "コンテンツビューの作成"
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         "フィルターの作成"
       ],
       "Create host collection": [
         "ホストコレクションの作成"
       ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
-        ""
-      ],
       "Create new activation key": [
         "新規アクティベーションキーの作成"
       ],
       "Create organization": [
         "組織の作成"
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
-        ""
       ],
       "Creation": [
         "作成"
@@ -2504,32 +2474,11 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         "このリポジトリーが関連付けられた最後のリポジトリーであるコンテンツビューフィルターを削除します。デフォルトは true です。false の場合、そのようなフィルターがコンテンツビュー内のすべてのリポジトリーに適用されます。"
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "Red Hat プロバイダーからマニフェストを削除"
       ],
       "Delete multiple filters from a content view": [
         "コンテンツビューから複数のフィルターを削除します"
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
-        ""
       ],
       "Delete version": [
         "バージョンの削除"
@@ -2633,12 +2582,6 @@
       "Destroy an environment in an organization": [
         "組織の環境を破棄"
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         "1 つ以上の代替コンテンツソースの破棄"
       ],
@@ -2677,9 +2620,6 @@
       ],
       "Disabled": [
         "無効化済み"
-      ],
-      "Discover": [
-        "検出"
       ],
       "Discover Repositories": [
         "リポジトリーの検出"
@@ -2880,16 +2820,13 @@
         "環境 ID"
       ],
       "Environment ID and content view ID must be provided together": [
-        "環境 ID とコンテンツビュー ID を合わせて指定する必要があります"
+        ""
       ],
       "Environment IDs": [
         "環境 ID"
       ],
       "Environment cannot be in its own promotion path": [
         "同じ環境内のプロモートパスに環境を存在させることはできません。"
-      ],
-      "Environment contents refresh": [
-        ""
       ],
       "Environment identifier": [
         "環境 ID"
@@ -2916,10 +2853,10 @@
         "エラータ ID"
       ],
       "Errata Install": [
-        "エラータのインストール"
+        ""
       ],
       "Errata Install scheduled by %s": [
-        "%s によりエラータのインストールがスケジュールされました"
+        ""
       ],
       "Errata and package information will be updated at the next host check-in or package action.": [
         "エラータとパッケージ情報は、次のホストのチェックインまたはパッケージアクションで更新されます。"
@@ -2929,9 +2866,6 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "エラータのエラータ ID (RHSA-2012:108)"
-      ],
-      "Errata mail": [
-        "エラータメール"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "UUID %s を持つ削除済みコンテンツファセットのエラータステータスが更新されませんでした"
@@ -2952,16 +2886,16 @@
         "エラータ"
       ],
       "Erratum Install Canceled": [
-        "エラータのインストールが取り消されました"
+        ""
       ],
       "Erratum Install Complete": [
-        "エラータのインストールが完了しました"
+        ""
       ],
       "Erratum Install Failed": [
-        "エラータのインストールが失敗しました"
+        ""
       ],
       "Erratum Install Timed Out": [
-        "エラータのインストールがタイムアウトになりました"
+        ""
       ],
       "Error": [
         "エラー"
@@ -3125,9 +3059,6 @@
       "Fetch installable errata for one or more hosts.": [
         "1 つまたは複数のホストにインストール可能なエラータを取得します。"
       ],
-      "Fetch pxe files": [
-        "PXE ファイルの取得"
-      ],
       "Fetch traces for one or more hosts": [
         "1 台以上のホストのトレースを取得します"
       ],
@@ -3232,9 +3163,6 @@
       ],
       "Filter...": [
         "フィルタリング..."
-      ],
-      "Filtered index content": [
-        "フィルタリングしたインデックスコンテンツ"
       ],
       "Filters": [
         "フィルター"
@@ -3362,9 +3290,6 @@
       "Generate host applicability": [
         "ホストに適用可能なエラータを生成します"
       ],
-      "Generate metadata": [
-        ""
-      ],
       "Generate repository applicability": [
         "リポジトリーに適用可能なエラータを生成します"
       ],
@@ -3438,7 +3363,7 @@
         "0 より大きい必要があります"
       ],
       "Hash containing the Id of the single lifecycle environment to be associated with the activation key.": [
-        "アクティベーションキーに関連付ける単一のライフサイクル環境の ID を含むハッシュ。"
+        ""
       ],
       "Help": [
         "ヘルプ"
@@ -3614,12 +3539,6 @@
       "How to order the sorted results (e.g. ASC for ascending)": [
         "結果のソート順 (例: ascending (昇順) の ASC)"
       ],
-      "Hypervisors": [
-        "ハイパーバイザー"
-      ],
-      "Hypervisors update": [
-        "ハイパーバイザーの更新"
-      ],
       "ID": [
         "ID"
       ],
@@ -3756,13 +3675,13 @@
         "チェックサムの検証を制限するリポジトリーの ID"
       ],
       "Id of the single content view to be associated with the activation key.": [
-        "アクティベーションキーに関連付ける単一のコンテンツビューの ID。"
+        ""
       ],
       "Id of the single content view to be associated with the host. Ignored for multi-environment hosts.": [
         ""
       ],
       "Id of the single lifecycle environment to be associated with the activation key.": [
-        "アクティベーションキーに関連付ける単一のライフサイクル環境の ID。"
+        ""
       ],
       "Id of the single lifecycle environment to be associated with the host. Ignored for multi-environment hosts.": [
         ""
@@ -3846,7 +3765,7 @@
         "true の場合は、カスタムリポジトリーセットを redhat リポジトリーとともに返します。repository_type が指定されている場合は無視されます。"
       ],
       "If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to true": [
-        "true の場合には、指定されたエラータまたはパッケージを追加すると、必要な依存関係もコピーされます。デフォルトは true です"
+        ""
       ],
       "If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment": [
         "true の場合には、ライフサイクル環境にプロモートされている指定の content_view_version_id を使用して新規の複合バージョンが公開されます"
@@ -3938,9 +3857,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "サブスクリプションマニフェストをインポートして、ホストが Red Hat コンテンツにアクセスできるようにします。"
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         "新しいマニフェストのインポート"
       ],
@@ -3949,12 +3865,6 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "インポートのみのコンテンツビューは直接公開できません。コンテンツは、ビューにインポートしなければ更新されません。"
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
-        ""
       ],
       "Import uploads into a repository": [
         "アップロードのリポジトリーへのインポート"
@@ -4028,9 +3938,6 @@
       "Incremental Update incomplete.": [
         "増分更新が完了していません。"
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        "コンテンツビューバージョンの増分更新 "
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 件のコンテンツビューバージョンの増分更新 "
       ],
@@ -4046,18 +3953,6 @@
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
       ],
-      "Index content": [
-        "コンテンツのインデックス作成"
-      ],
-      "Index errata": [
-        "エラータのインデックス作成"
-      ],
-      "Index module streams": [
-        "モジュールストリームのインデックス作成"
-      ],
-      "Index package groups": [
-        "パッケージグループのインデックス作成"
-      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "情報タイプは以下のいずれかでなければなりません [ %{list} ]"
       ],
@@ -4068,9 +3963,6 @@
         ""
       ],
       "Inherit parent (%s)": [
-        ""
-      ],
-      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4143,16 +4035,13 @@
         "インストールされたバージョン"
       ],
       "Installing Erratum...": [
-        "エラータをインストールしています..."
+        ""
       ],
       "Installing Package Group...": [
-        "パッケージグループをインストールしています..."
+        ""
       ],
       "Installing Package...": [
-        "パッケージのインストール中..."
-      ],
-      "Instance update": [
-        "インスタンスの更新"
+        ""
       ],
       "Instance-based": [
         "インスタンスベース"
@@ -4500,10 +4389,10 @@
         "ライフサイクル環境 '%{env}' は、コンテンツビュー '%{view}' では使用できません"
       ],
       "Lifecycle environment ID": [
-        "ライフサイクル環境 ID"
+        ""
       ],
       "Lifecycle environment must be specified": [
-        "ライフサイクル環境を指定する必要があります。"
+        ""
       ],
       "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made.": [
         "ライフサイクル環境が Smart Proxy に割り当てられていないため、変更は行われませんでした。"
@@ -4946,9 +4835,6 @@
       "Messaging connection": [
         "メッセージング接続"
       ],
-      "Metadata generate": [
-        "メタデータの生成"
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "メタデータの再公開は、'完全ミラーリング' リポジトリーでは危険です。ミラーリングポリシーを変更してから再試行してください。\\nあるいは、'force' パラメーターを使用してメタデータをローカルに再生成してください。次回の同期時に、アップストリームリポジトリーのメタデータによって、'完全ミラーリング' リポジトリーのローカルメタデータが上書きされます。"
       ],
@@ -5020,15 +4906,6 @@
       ],
       "Multi Content View Environment": [
         "マルチコンテンツビュー環境"
-      ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
-        ""
       ],
       "Multi-entitlement": [
         "マルチエンタイトルメント"
@@ -5175,7 +5052,7 @@
         "コンテンツビューがありません"
       ],
       "No Content found": [
-        "コンテンツが見つかりません"
+        ""
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         "Red Hat 製品がありません。%(anchorBegin)s ここ %(anchorEnd)s にマニフェストをインポートして Red Hat コンテンツを受信してください。利用可能なリポジトリーセットがありません。"
@@ -5191,6 +5068,9 @@
       ],
       "No action required": [
         "アクションは必要ありません"
+      ],
+      "No activation keys available": [
+        ""
       ],
       "No alternate content sources match your filter criteria.": [
         ""
@@ -5421,7 +5301,7 @@
         "追加するモジュールストリームがまだありません。"
       ],
       "No new packages installed": [
-        "インストール済みの新規パッケージはありません"
+        ""
       ],
       "No package groups yet": [
         "パッケージグループがまだありません"
@@ -5436,10 +5316,10 @@
         "このホストにインストールできるパッケージがありません。ホストの割り当て済みコンテンツビュー環境を確認してください。"
       ],
       "No packages removed": [
-        "削除済みのパッケージはありません"
+        ""
       ],
       "No packages updated": [
-        "更新済みのパッケージはありません"
+        ""
       ],
       "No pool IDs were provided.": [
         "プール ID は指定されませんでした。"
@@ -5547,7 +5427,7 @@
         "インストール可能なセキュリティー以外のエラータ"
       ],
       "Non-system event": [
-        "システム以外のイベント"
+        ""
       ],
       "None": [
         "なし"
@@ -5763,85 +5643,85 @@
         "パッケージグループ"
       ],
       "Package Group Install": [
-        "パッケージグループのインストール"
+        ""
       ],
       "Package Group Install Canceled": [
-        "パッケージグループのインストールが取り消されました"
+        ""
       ],
       "Package Group Install Complete": [
-        "パッケージグループのインストールが完了しました"
+        ""
       ],
       "Package Group Install Failed": [
-        "パッケージグループのインストールが失敗しました"
+        ""
       ],
       "Package Group Install Timed Out": [
-        "パッケージグループのインストールがタイムアウトになりました"
+        ""
       ],
       "Package Group Install scheduled by %s": [
-        "%s によりパッケージグループのインストールがスケジュールされました"
+        ""
       ],
       "Package Group Remove": [
-        "パッケージグループの削除"
+        ""
       ],
       "Package Group Remove Canceled": [
-        "パッケージグループの削除が取り消されました"
+        ""
       ],
       "Package Group Remove Complete": [
-        "パッケージグループの削除が完了しました"
+        ""
       ],
       "Package Group Remove Failed": [
-        "パッケージグループの削除が失敗しました"
+        ""
       ],
       "Package Group Remove Timed Out": [
-        "パッケージグループの削除がタイムアウトになりました"
+        ""
       ],
       "Package Group Remove scheduled by %s": [
-        "%s によりパッケージグループの削除がスケジュールされました"
+        ""
       ],
       "Package Group Update": [
-        "パッケージグループの更新"
+        ""
       ],
       "Package Group Update scheduled by %s": [
-        "%s によりパッケージグループの更新がスケジュールされました"
+        ""
       ],
       "Package Groups": [
         "パッケージグループ"
       ],
       "Package Install": [
-        "パッケージのインストール"
+        ""
       ],
       "Package Install Canceled": [
-        "パッケージのインストールが取り消されました"
+        ""
       ],
       "Package Install Complete": [
-        "パッケージのインストールが完了しました"
+        ""
       ],
       "Package Install Failed": [
-        "パッケージのインストールが失敗しました"
+        ""
       ],
       "Package Install Timed Out": [
-        "パッケージのインストールがタイムアウトになりました"
+        ""
       ],
       "Package Install scheduled by %s": [
-        "%s によりパッケージのインストールがスケジュールされました"
+        ""
       ],
       "Package Remove": [
-        "パッケージの削除"
+        ""
       ],
       "Package Remove Canceled": [
-        "パッケージの削除が取り消されました"
+        ""
       ],
       "Package Remove Complete": [
-        "パッケージの削除が完了しました"
+        ""
       ],
       "Package Remove Failed": [
-        "パッケージの削除が失敗しました"
+        ""
       ],
       "Package Remove Timed Out": [
-        "パッケージの削除がタイムアウトになりました"
+        ""
       ],
       "Package Remove scheduled by %s": [
-        "%s によりパッケージの削除がスケジュールされました"
+        ""
       ],
       "Package Type": [
         "パッケージタイプ"
@@ -5850,34 +5730,34 @@
         "パッケージタイプ"
       ],
       "Package Update": [
-        "パッケージの更新"
+        ""
       ],
       "Package Update Canceled": [
-        "パッケージの更新が取り消されました"
+        ""
       ],
       "Package Update Complete": [
-        "パッケージの更新が完了しました"
+        ""
       ],
       "Package Update Failed": [
-        "パッケージの更新が失敗しました"
+        ""
       ],
       "Package Update Timed Out": [
-        "パッケージの更新がタイムアウトになりました"
+        ""
       ],
       "Package Update scheduled by %s": [
-        "%s によりパッケージの更新がスケジュールされました"
+        ""
       ],
       "Package group update canceled": [
-        "パッケージグループの更新が取り消されました"
+        ""
       ],
       "Package group update complete": [
-        "パッケージグループの更新が完了しました"
+        ""
       ],
       "Package group update failed": [
-        "パッケージグループの更新が失敗しました"
+        ""
       ],
       "Package group update timed out": [
-        "パッケージグループの更新がタイムアウトになりました"
+        ""
       ],
       "Package groups": [
         "パッケージグループ"
@@ -5886,10 +5766,10 @@
         "コンテンツをフィルタリングするためのパッケージ ID"
       ],
       "Package install failed: \\\"%{package}\\\"": [
-        "パッケージのインストールが失敗しました: \\\"%{package}\\\""
+        ""
       ],
       "Package installation: \\\"%{package}\\\" ": [
-        "パッケージのインストール: \\\"%{package}\\\" "
+        ""
       ],
       "Package mode": [
         "パッケージモード"
@@ -6023,14 +5903,14 @@
       "Please select a lifecycle environment and a content view to move this activation key.": [
         "このアクティベーションキーを移動するには、ライフサイクル環境とコンテンツビューを選択してください。"
       ],
-      "Please select a lifecycle environment and content view to view activation keys.": [
-        "アクティベーションキーを表示するには、ライフサイクル環境とコンテンツビューを選択してください。"
-      ],
       "Please select an architecture before assigning a kickstart repository": [
         "Kickstart リポジトリーを割り当てる前にアーキテクチャーを選択してください"
       ],
       "Please select an operating system before assigning a kickstart repository": [
         "Kickstart リポジトリーを割り当てる前にオペレーティングシステムを選択してください"
+      ],
+      "Please select an organization to view activation keys.": [
+        ""
       ],
       "Please select one from the list below and you will be redirected.": [
         "以下のリストから 1 つ選択してください。リダイレクトされます。"
@@ -6296,9 +6176,6 @@
       "Pulp task error": [
         "Pulp タスクのエラー"
       ],
-      "Purge completed tasks": [
-        ""
-      ],
       "Python Package": [
         "Python パッケージ"
       ],
@@ -6321,7 +6198,7 @@
         "数量"
       ],
       "Quantity must not be above ${pool.available}": [
-        "数量は ${pool.available} を超えてはいけません"
+        ""
       ],
       "Quantity of entitlements to bind": [
         "バインドするエンタイトルメント数"
@@ -6407,9 +6284,6 @@
       "Reclaim Space": [
         "領域の再利用"
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         "オンデマンドリポジトリーからの領域の再利用"
       ],
@@ -6479,9 +6353,6 @@
       "Refresh all alternate content sources": [
         "すべての代替コンテンツソースの更新"
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         "代替コンテンツソースの更新"
       ],
@@ -6494,26 +6365,14 @@
       "Refresh counts": [
         "更新回数"
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
         "エラータの適用可能性の更新"
-      ],
-      "Refresh if needed": [
-        ""
       ],
       "Refresh package applicability": [
         "パッケージの適用可能性の更新"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Red Hat プロバイダーの以前にインポートされたマニフェストを更新"
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         "ソースの更新"
@@ -6556,9 +6415,6 @@
       ],
       "Registry token expiration time": [
         "レジストリートークンの有効期限"
-      ],
-      "Reindex subscriptions": [
-        "サブスクリプションのインデックス再作成"
       ],
       "Related composite content views": [
         "関連する複合コンテンツビュー"
@@ -6662,9 +6518,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "アップストリームマニフェストから 1 つ以上のサブスクリプションを削除します"
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         "Katello インターフェイスでのパッケージグループの削除"
       ],
@@ -6679,15 +6532,6 @@
       ],
       "Remove products from sync plan": [
         "同期プランから製品を削除"
-      ],
-      "Remove rolling repo clone": [
-        ""
-      ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "コンテンツビューからバージョンおよび/または環境を削除し、システムおよびキーを再度割り当てます"
@@ -6705,19 +6549,16 @@
         "コンテンツビューからコンポーネントを削除しました"
       ],
       "Removing Package Group...": [
-        "パッケージグループを削除しています..."
+        ""
       ],
       "Removing Package...": [
-        "パッケージを削除しています..."
+        ""
       ],
       "Removing product %{prod_name} with ID %{prod_id} from ACS %{acs_name} with ID %{acs_id}": [
         "ID が %{acs_id} の ACS %{acs_name} から ID が %{prod_id} の製品 %{prod_name} を削除します"
       ],
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "すべての環境からこのバージョンを削除しても、バージョンは削除されません。バージョンは引き続き以降のプロモーションの対象になります。"
-      ],
-      "Repair": [
-        ""
       ],
       "Replace content source on the target machine": [
         "ターゲットマシン上のコンテンツソースの置き換え"
@@ -6737,17 +6578,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "CDN 設定がエアギャップ (切断) に設定されている間、リポジトリーは有効にできません。"
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "選択したコンテンツビューバージョンに共通のリポジトリーがマージされます。その結果、各コンテンツビューバージョンのすべてのコンテンツが結合された複合コンテンツビューが作成されます。"
       ],
       "Repositories from published Content Views are not allowed.": [
         "公開されたコンテンツビューからのリポジトリーは許可されません。"
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repositories table": [
         ""
@@ -7124,21 +6959,6 @@
       "Save Environments": [
         "環境の保存"
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
         "代替コンテンツソースの保存"
       ],
@@ -7147,12 +6967,6 @@
       ],
       "Scan a flatpak remote": [
         "flatpak リモートをスキャンする"
-      ],
-      "Scan cdn": [
-        ""
-      ],
-      "Scan remote": [
-        ""
       ],
       "Schema version 1": [
         "スキーマバージョン 1"
@@ -7227,7 +7041,7 @@
         "組織の選択"
       ],
       "Select Value": [
-        "値の選択"
+        ""
       ],
       "Select a CA certificate": [
         "CA 証明書の選択"
@@ -7950,7 +7764,7 @@
         "サブスクリプションが保存され、更新されています。 "
       ],
       "Subscriptions service": [
-        "サブスクリプションサービス"
+        ""
       ],
       "Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}].": [
         "置き換える項目が一致しません。コンテンツを更新できません: (%{content})。[%{content_url}] から [%{new_url}]。"
@@ -7993,9 +7807,6 @@
       ],
       "Supported Content Types": [
         "サポート対象のコンテンツタイプ"
-      ],
-      "Sync": [
-        "同期"
       ],
       "Sync Canceled": [
         "同期が取り消されました"
@@ -8054,9 +7865,6 @@
       "Sync canceled": [
         ""
       ],
-      "Sync capsule": [
-        "Capsule の同期"
-      ],
       "Sync complete.": [
         "同期が完了しました。"
       ],
@@ -8080,9 +7888,6 @@
       ],
       "Sync state": [
         "同期の状態"
-      ],
-      "Syncable export": [
-        "同期可能なエクスポート"
       ],
       "Synced": [
         "同期されています"
@@ -8345,9 +8150,6 @@
       "The selected kickstart repository is not part of the assigned content view, lifecycle environment, content source, operating system, and architecture": [
         "選択したキックスタートリポジトリーは、割り当てられたコンテンツビュー、ライフサイクル環境、コンテンツソース、オペレーティングシステム、アーキテクチャーに含まれていません。"
       ],
-      "The selected lifecycle environment contains no activation keys": [
-        "選択したライフサイクル環境にアクティベーションキーが含まれていません"
-      ],
       "The selected/Inherited Content View is not available for this Lifecycle Environment": [
         "このライフサイクル環境では、選択したコンテンツビュー/継承したコンテンツビューは利用できません"
       ],
@@ -8409,7 +8211,7 @@
         "そのような HTTP プロキシーはありません"
       ],
       "There is nothing to see here": [
-        "こちらに表示できるものはありません"
+        ""
       ],
       "There is {numberOfActivationKeys} activation key that needs to be reassigned.": [
         "再割り当てが必要なアクティベーションキーは {numberOfActivationKeys} 個です。"
@@ -8523,7 +8325,7 @@
         "これは、リンクされたリポジトリーではありません"
       ],
       "This page shows the subscriptions available from this organization's subscription manifest. {br} Learn more about your overall subscription usage with the {subscriptionsService}.": [
-        "このページには、この組織のサブスクリプションマニフェストから利用可能なサブスクリプションが表示されます。{br} サブスクリプションの全体的な使用状況の詳細は、{subscriptionsService} を参照してください。"
+        ""
       ],
       "This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.": [
         "このリポジトリーは推奨されていません。使用する前に、 %(anchorBegin)sドキュメント%(anchorEnd)s を追加で参照してください。"
@@ -8748,7 +8550,7 @@
         "接続できません。結果: %s"
       ],
       "Unable to create ContentViewEnvironment. Check the logs for more information.": [
-        "ContentViewEnvironment を作成できません。詳細は、ログを確認してください。"
+        ""
       ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         "代替コンテンツソースを削除できません。削除するパーミッションがないか、代替コンテンツソースが存在しません。"
@@ -8945,26 +8747,14 @@
       "Update content counts for the smart proxy": [
         "Smart Proxy のコンテンツ数を更新します"
       ],
-      "Update content urls": [
-        "コンテンツ url の更新"
-      ],
       "Update content view environments for host": [
         "ホストのコンテンツビュー環境の更新"
       ],
       "Update content view environments for host %s": [
         "ホスト %s のコンテンツビュー環境の更新"
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
         "ホストの手動更新"
-      ],
-      "Update http proxy": [
-        "http プロキシーの更新"
-      ],
-      "Update http proxy details": [
-        "HTTP プロキシーの詳細更新"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "インストール済みパッケージ、有効なリポジトリー、モジュールインベントリーの更新"
@@ -8981,20 +8771,11 @@
       "Update packages via Katello interface": [
         "Katello インターフェイスでのパッケージの更新"
       ],
-      "Update redhat repository": [
-        "redhat リポジトリーの更新"
-      ],
       "Update release version for host": [
         "ホストのリリースバージョンの更新"
       ],
       "Update release version for host %s": [
         "ホスト %s のリリースバージョンの更新"
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
-        ""
       ],
       "Update services requiring restart": [
         "再起動が必要なサービスの更新"
@@ -9045,7 +8826,7 @@
         "更新が利用可能: リポジトリーやフィルターが変更されました。"
       ],
       "Updating Package...": [
-        "パッケージを更新しています..."
+        ""
       ],
       "Updating System Purpose for host": [
         "ホストのシステム目的を更新中"
@@ -9054,7 +8835,7 @@
         "ホスト %s のシステム目的を更新中"
       ],
       "Updating package group...": [
-        "パッケージグループを更新しています..."
+        ""
       ],
       "Updating repository authentication configuration": [
         "リポジトリー認証設定の更新"
@@ -9089,12 +8870,6 @@
       "Upload a subscription manifest": [
         "サブスクリプションマニフェストのアップロード"
       ],
-      "Upload content": [
-        ""
-      ],
-      "Upload file": [
-        ""
-      ],
       "Upload into": [
         "アップロード先"
       ],
@@ -9106,9 +8881,6 @@
       ],
       "Upload request id": [
         "要求 ID のアップロード"
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         "アップストリーム Candlepin"
@@ -9230,9 +9002,6 @@
       "Verify SSL": [
         "SSL の確認"
       ],
-      "Verify checksum": [
-        "チェックサムの確認"
-      ],
       "Verify checksum for content on smart proxy": [
         "Smart Proxy 上のコンテンツのチェックサムを確認する"
       ],
@@ -9303,7 +9072,7 @@
         "フィルターの表示"
       ],
       "View Subscription Usage": [
-        "サブスクリプションの使用状況の表示"
+        ""
       ],
       "View a report of the affected hosts": [
         "影響を受けるホストのレポートの表示"
@@ -9420,7 +9189,7 @@
         "誤ったコンテンツタイプが送信されました。"
       ],
       "Yay empty state": [
-        "Yay 空の状態"
+        ""
       ],
       "Yes": [
         "はい"
@@ -9435,7 +9204,7 @@
         "ライブラリーのライフサイクル環境でのみリポジトリーの同期状態を確認できます。"
       ],
       "You cannot have more than %{max_hosts} host(s) associated with host collection '%{host_collection}'.": [
-        "%{max_hosts} を超えるホストをホストコレクション '%{host_collection}' に関連付けることはできません。\\\""
+        ""
       ],
       "You cannot set an organization's parent. This feature is disabled.": [
         "組織の親を設定することはできません。この機能は無効にされています。"
@@ -9489,7 +9258,7 @@
         "%s を同期できません"
       ],
       "You're making changes to %(entitlementCount)s entitlement(s)": [
-        "%(entitlementCount)s 件のエンタイトルメントに変更を加えています"
+        ""
       ],
       "Your manifest expired on {expirationDate}. To continue using Red Hat content, import a new manifest.": [
         "マニフェストが {expirationDate} に有効期限切れになります。Red Hat コンテンツを引き続き使用するには、新しいマニフェストをインポートしてください。"
@@ -9585,13 +9354,13 @@
         "すべての環境"
       ],
       "all packages": [
-        "すべてのパッケージ"
+        ""
       ],
       "all packages update": [
-        "すべてのパッケージの更新"
+        ""
       ],
       "all packages update failed": [
-        "すべてのパッケージの更新が失敗しました。"
+        ""
       ],
       "allow unauthenticed pull of container images": [
         "コンテナーイメージを認証なしでプルすることを許可します"
@@ -9744,16 +9513,16 @@
         "最新バージョンが必要なコンポーネントのコンテンツビュー ID"
       ],
       "content view node publish": [
-        "コンテンツビューノードの公開"
+        ""
       ],
       "content view numeric identifier": [
         "コンテンツビュー数値 ID"
       ],
       "content view publish": [
-        "コンテンツビューの公開"
+        ""
       ],
       "content view refresh": [
-        "コンテンツビューの更新"
+        ""
       ],
       "content view to reassign orphaned activation keys to": [
         "単独のアクティベーションキーを再度割り当てるコンテンツビュー"
@@ -9960,25 +9729,25 @@
         "インストール"
       ],
       "installing errata...": [
-        "エラータをインストールしています..."
+        ""
       ],
       "installing erratum...": [
-        "エラータをインストールしています..."
+        ""
       ],
       "installing or updating packages": [
         "パッケージをインストール/更新しています"
       ],
       "installing package group...": [
-        "パッケージグループをインストールしています..."
+        ""
       ],
       "installing package groups...": [
-        "パッケージグループをインストールしています..."
+        ""
       ],
       "installing package...": [
-        "パッケージをインストールしています..."
+        ""
       ],
       "installing packages...": [
-        "パッケージをインストールしています..."
+        ""
       ],
       "interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported.": [
         "指定のオブジェクトを解釈して、指定のオブジェクトに関連付け可能なリポジトリーのみを返します。'content_view' と 'content_view_version' のみがサポートされます。"
@@ -10200,16 +9969,16 @@
         "%s に register_hostname_fact が設定されていますが、ファクトが見つからないか、ローカルホストが使用されています。"
       ],
       "removing package group...": [
-        "パッケージグループを削除しています..."
+        ""
       ],
       "removing package groups...": [
-        "パッケージグループを削除しています..."
+        ""
       ],
       "removing package...": [
-        "パッケージを削除しています..."
+        ""
       ],
       "removing packages...": [
-        "パッケージを削除しています..."
+        ""
       ],
       "replace": [
         "置き換え"
@@ -10332,16 +10101,16 @@
         "更新"
       ],
       "updating package group...": [
-        "パッケージグループを更新しています..."
+        ""
       ],
       "updating package groups...": [
-        "パッケージグループを更新しています..."
+        ""
       ],
       "updating package...": [
-        "パッケージを更新しています..."
+        ""
       ],
       "updating packages...": [
-        "パッケージを更新しています..."
+        ""
       ],
       "upstream Foreman server": [
         "アップストリーム Foreman サーバー"
