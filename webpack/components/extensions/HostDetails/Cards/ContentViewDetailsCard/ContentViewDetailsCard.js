@@ -258,7 +258,7 @@ export const ContentViewEnvironmentDetails = ({
   const existingAssignments = contentViewEnvironments.map(env => ({
     contentView: env.content_view,
     environment: env.lifecycle_environment,
-    cvEnvLabel: env.label, // Use the CVE label from the API
+    cvEnvLabel: env.label, // Use the content view environment label from the API
   }));
 
   return (
