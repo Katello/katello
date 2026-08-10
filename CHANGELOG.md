@@ -1,3 +1,21 @@
+# 4.21.1 (2026-08-10)
+
+## Bug Fixes
+
+### Hosts
+ * CVEnvs displayed in wrong order in UI due to CVECF priorities not set during initial host registration ([#39503](https://projects.theforeman.org/issues/39503), [ed8b7e89](https://github.com/Katello/katello.git/commit/ed8b7e896ec09f5de0b03ce0c3d3c81686546ab2))
+ * registering with --name="#poundSign" should throw "System name cannot begin with # character" ([#39493](https://projects.theforeman.org/issues/39493), [def4db08](https://github.com/Katello/katello.git/commit/def4db08f6d57f44da5ee95e7d4f977e2e257455))
+ * shutdown command not found while running resolve traces on SLES16 ([#39441](https://projects.theforeman.org/issues/39441), [49b74d36](https://github.com/Katello/katello.git/commit/49b74d36dc892028254e705cc02592db215474f6))
+
+### Upgrades
+ * Pin foreman-tasks upper bound to < 13.0.0 on KATELLO-4.21 ([#39484](https://projects.theforeman.org/issues/39484))
+
+### Repositories
+ * content_uploads_controller does not filter repository context by "editable" ([#39440](https://projects.theforeman.org/issues/39440), [7e000dfd](https://github.com/Katello/katello.git/commit/7e000dfdbf1fe84b2cb37c415aa114006c1d2b58))
+
+### Content Credentials
+ * Deleting an organization fails when its Content Credentials are referenced by an Alternate Content Source ([#39433](https://projects.theforeman.org/issues/39433), [fccd522d](https://github.com/Katello/katello.git/commit/fccd522dcbcf4d834d391813030e317d2d66f121))
+
 # 4.21.0 (2026-06-09)
 
 ## Features
