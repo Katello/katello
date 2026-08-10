@@ -120,7 +120,7 @@ const CVVersionRemoveReview = () => {
                       />
                     ),
                     envCV: selectedCVE
-                      ?.map(cve => cve.label)
+                      ?.map(cvEnv => cvEnv.label)
                       .join(', '),
                     hostCount: multiCVHostsCount,
                     hostSingular: __('multi-environment host'),
@@ -190,7 +190,7 @@ const CVVersionRemoveReview = () => {
                       />
                     ),
                     envCV: selectedCVE
-                      ?.map(cve => cve.label)
+                      ?.map(cvEnv => cvEnv.label)
                       .join(', '),
                     akCount: multiCVActivationKeysCount,
                     keySingular: __('multi-environment activation key'),

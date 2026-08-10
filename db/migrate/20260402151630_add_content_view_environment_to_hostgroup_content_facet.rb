@@ -38,12 +38,12 @@ class AddContentViewEnvironmentToHostgroupContentFacet < ActiveRecord::Migration
     ::Katello::Hostgroup::ContentFacet.find_each do |hostgroup_facet|
       next unless hostgroup_facet.content_view_environment_id
 
-      cve = ::Katello::ContentViewEnvironment.find_by(id: hostgroup_facet.content_view_environment_id)
-      if cve
+      cvenv = ::Katello::ContentViewEnvironment.find_by(id: hostgroup_facet.content_view_environment_id)
+      if cvenv
         # Use update_columns to bypass model validations and virtual setters
         hostgroup_facet.update_columns(
-          content_view_id: cve.content_view_id,
-          lifecycle_environment_id: cve.environment_id
+          content_view_id: cvenv.content_view_id,
+          lifecycle_environment_id: cvenv.environment_id
         )
       end
     end

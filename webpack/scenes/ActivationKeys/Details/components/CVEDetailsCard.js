@@ -86,10 +86,10 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
   // Transform existing assignments to the format expected by AssignAKCVModal
   // Map from snake_case (API data) to the format the modal expects
   // Include the label from the parent content_view_environment object
-  const existingAssignments = akDetails.content_view_environments?.map(cve => ({
-    contentView: cve.content_view,
-    environment: cve.lifecycle_environment,
-    label: cve.label, // Pre-computed label from backend
+  const existingAssignments = akDetails.content_view_environments?.map(cvEnv => ({
+    contentView: cvEnv.content_view,
+    environment: cvEnv.lifecycle_environment,
+    label: cvEnv.label, // Pre-computed label from backend
   })) || [];
 
   return (

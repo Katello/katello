@@ -7,7 +7,7 @@ Katello is a plugin for Foreman that orchestrates content distribution and subsc
 - **Commands must use `bundle exec` prefix** to ensure correct gem versions
 - **Edit files in Katello directory** (`/home/vagrant/katello`)
 - **Run commands from Foreman directory** (`/home/vagrant/foreman`)
-- **Never use "CVE" as abbreviation for content view environment** - CVE means "Common Vulnerabilities and Exposures" in security contexts. Use "CVEnv" or spell out "content view environment" instead. In Ruby/ERB code, use `cvenv` for variables (e.g. `cvenv`, `cvenv_id`, `cvenvs`). In JavaScript, use `cvEnv` (e.g. `cvEnv`, `cvEnvId`).
+- **Never use "CVE" as abbreviation for content view environment** - CVE means "Common Vulnerabilities and Exposures" in security contexts. Use "CVEnv" or spell out "content view environment" instead. This applies everywhere an identifier could be named after it: Ruby/ERB variables, method/block parameters, and migration/index/column names use `cvenv` (e.g. `cvenv`, `cvenv_id`, `cvenvs`); JavaScript uses `cvEnv` (e.g. `cvEnv`, `cvEnvId`). Note that Katello also has legitimate, unrelated "CVE" usage in errata/security code (`Katello::Erratum#cves`, `cve_id`, `errata_controller.rb`) referring to actual Common Vulnerabilities and Exposures - don't rename those. A rubocop cop (`Katello/CveAbbreviation`, defined in `lib/rubocop/cop/katello/cve_abbreviation.rb`) enforces this for Ruby identifiers, and an ESLint rule (`no-cve-abbreviation`, defined in `webpack/eslint-rules/no-cve-abbreviation.js`) enforces it for JavaScript identifiers - both exclude the known errata/security files.
 
 ### Command Quick Reference
 **Development Server:**

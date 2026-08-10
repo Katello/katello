@@ -132,13 +132,13 @@ const AssignHostCVModal = ({
     // Build array of content view environment labels for all assignments
     // Use the existing CVE label if available (for existing assignments),
     // otherwise construct it from env/cv labels (for new assignments)
-    const cveLabels = assignments.map(buildContentViewEnvironmentLabel).filter(Boolean);
+    const cvEnvLabels = assignments.map(buildContentViewEnvironmentLabel).filter(Boolean);
 
     const requestBody = {
       id: hostId,
       host: {
         content_facet_attributes: {
-          content_view_environments: cveLabels,
+          content_view_environments: cvEnvLabels,
         },
       },
     };

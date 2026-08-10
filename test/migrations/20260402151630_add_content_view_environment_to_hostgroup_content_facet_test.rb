@@ -74,7 +74,7 @@ module Katello
       assert_equal "Custom error", result[:reason]
     end
 
-    def test_build_error_info_with_no_cve
+    def test_build_error_info_with_no_cvenv
       hostgroup_facet = OpenStruct.new(id: 2, hostgroup_id: 20)
       hostgroup = nil
       cv_id = 6
@@ -242,7 +242,7 @@ module Katello
       skip "Integration test - requires database setup"
     end
 
-    def test_migrate_facet_with_nonexistent_cve
+    def test_migrate_facet_with_nonexistent_cvenv
       skip "Integration test - requires database setup"
     end
 
