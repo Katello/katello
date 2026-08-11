@@ -40,7 +40,7 @@ import {
   toastTaskFinished,
 } from '../Tasks/TaskActions';
 import { selectIsPollingTasks } from '../Tasks/TaskSelectors';
-import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
+import pingUpstreamSubscriptions from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{

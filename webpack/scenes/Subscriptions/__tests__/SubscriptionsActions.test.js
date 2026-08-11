@@ -186,6 +186,7 @@ describe('subscription actions', () => {
         'SUBSCRIPTIONS_RESET_TASKS',
         'API_GET',
         'SUBSCRIPTIONS_REQUEST',
+        'API_GET',
       ]);
       expect(actions[0]).toEqual({
         type: 'STOP_INTERVAL',
@@ -200,6 +201,13 @@ describe('subscription actions', () => {
           params: {
             search: expect.stringContaining('organization_id=1 and result=pending'),
           },
+        },
+      });
+      expect(actions[5]).toMatchObject({
+        type: 'API_GET',
+        payload: {
+          key: 'PING_UPSTREAM_SUBSCRIPTIONS',
+          url: '/katello/api/v2/organizations/1/upstream_subscriptions/ping',
         },
       });
     });
