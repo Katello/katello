@@ -1,0 +1,14 @@
+.upstream-subscriptions-quantity-input,
+.upstream-subscriptions-quantity-helper-text {
+  // Fits 10-digit quantities with room for PF validation status icon
+  width: 14ch;
+  max-width: 100%;
+}
+
+.upstream-subscriptions-saving-container {
+  // needed because the default empty state has a margin-top of 100px by default
+  // and because of the gray background color of the rails wrapper, it looks weird
+  .foreman-empty-state {
+    margin-top: 0;
+  }
+}
