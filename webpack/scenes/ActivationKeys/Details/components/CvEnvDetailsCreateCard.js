@@ -59,10 +59,10 @@ export const CvEnvDetailsCreateCard = () => {
   };
 
   // Check if user has permission to assign content view environments
-  const canAssignCVEs = userPermissions.has('create_activation_keys');
+  const canAssignCvEnvs = userPermissions.has('create_activation_keys');
 
   // Create dropdown items for kebab menu if user has permission
-  const dropdownItems = canAssignCVEs ? [
+  const dropdownItems = canAssignCvEnvs ? [
     <DropdownItem
       aria-label="assign-content-view-environments"
       ouiaId="assign-content-view-environments"
@@ -85,10 +85,10 @@ export const CvEnvDetailsCreateCard = () => {
         dropdownItems={dropdownItems}
         isDropdownOpen={isDropdownOpen}
         toggleKebab={toggleKebab}
-        openModal={canAssignCVEs ? openModal : null}
+        openModal={canAssignCvEnvs ? openModal : null}
         allowMultipleContentViews={allowMultipleContentViews}
       />
-      {canAssignCVEs && (
+      {canAssignCvEnvs && (
         <CreateAKCVModal
           isOpen={isModalOpen}
           closeModal={closeModal}
