@@ -25,5 +25,15 @@ module Katello
       assert_equal 1, cve1.priority(@content_facet)
       assert_equal 0, cve2.priority(@content_facet)
     end
+
+    def test_uniqueness_of_content_view_environment_per_content_facet
+      cvenv = @content_facet.content_view_environments.first
+      duplicate = ContentViewEnvironmentContentFacet.new(
+        content_facet: @content_facet,
+        content_view_environment: cvenv
+      )
+      refute duplicate.valid?
+      assert_includes duplicate.errors[:content_view_environment_id], "has already been taken for this host"
+    end
   end
 end

@@ -26,5 +26,41 @@ module Katello
       assert_equal 1, cve1.priority(@activation_key)
       assert_equal 0, cve2.priority(@activation_key)
     end
+
+    def test_content_view_environments_deduplicates
+      Setting['allow_multiple_content_views'] = true
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      @activation_key.content_view_environments = [cvenv1, cvenv2, cvenv1]
+      assert_equal [cvenv1, cvenv2], @activation_key.content_view_environments.reload.to_a
+    end
+
+    def test_content_view_environments_deduplicates_preserves_order
+      Setting['allow_multiple_content_views'] = true
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      # uniq keeps first occurrence, so reversed duplicates keep cvenv2 first
+      @activation_key.content_view_environments = [cvenv2, cvenv1, cvenv2]
+      assert_equal [cvenv2, cvenv1], @activation_key.content_view_environments.reload.to_a
+    end
+
+    def test_content_view_environment_ids_deduplicates
+      Setting['allow_multiple_content_views'] = true
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      @activation_key.content_view_environment_ids = [cvenv1.id, cvenv2.id, cvenv1.id]
+      assert_equal [cvenv1, cvenv2], @activation_key.content_view_environments.reload.to_a
+    end
+
+    def test_uniqueness_of_content_view_environment_per_activation_key
+      cvenv = katello_content_view_environments(:library_dev_view_dev)
+      @activation_key.content_view_environments = [cvenv]
+      duplicate = ContentViewEnvironmentActivationKey.new(
+        activation_key: @activation_key,
+        content_view_environment: cvenv
+      )
+      refute duplicate.valid?
+      assert_includes duplicate.errors[:content_view_environment_id], "has already been taken for this activation key"
+    end
   end
 end
