@@ -94,7 +94,7 @@ module Katello
       hostgroup = OpenStruct.new(name: "Failed HG")
       cv_id = 7
       lce_id = 5
-      cv_env_id = 100 # CVE exists but update failed
+      cv_env_id = 100 # content view environment exists but update failed
 
       result = @migration.send(:build_error_info, hostgroup_facet, hostgroup, cv_id, lce_id, cv_env_id)
 
