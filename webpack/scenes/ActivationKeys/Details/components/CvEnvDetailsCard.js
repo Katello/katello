@@ -89,7 +89,7 @@ export const CvEnvDetailsCard = () => { // used as foreman-react-component, take
   const existingAssignments = akDetails.content_view_environments?.map(cvEnv => ({
     contentView: cvEnv.content_view,
     environment: cvEnv.lifecycle_environment,
-    label: cvEnv.label, // Pre-computed label from backend
+    cvEnvLabel: cvEnv.label, // Pre-computed label from backend
   })) || [];
 
   return (

@@ -192,7 +192,7 @@ AssignAKCVModal.propTypes = {
   existingAssignments: PropTypes.arrayOf(PropTypes.shape({
     contentView: PropTypes.shape({}),
     environment: PropTypes.shape({}),
-    label: PropTypes.string, // Pre-computed label from backend
+    cvEnvLabel: PropTypes.string, // Pre-computed label from backend
   })),
   allowMultipleContentViews: PropTypes.bool,
 };
