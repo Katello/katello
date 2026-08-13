@@ -163,11 +163,11 @@ module Katello
     def setup
       super
       @host = hosts(:one)
-      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
-        katello_content_views(:library_dev_view).id,
-        katello_environments(:library).id
+      cve = Katello::ContentViewEnvironment.find_by!(
+        content_view_id: katello_content_views(:library_dev_view).id,
+        environment_id: katello_environments(:library).id
       )
-      @host.content_facet.content_view_environments = [cvenv]
+      @host.content_facet.content_view_environments = [cve]
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
       @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!
@@ -221,11 +221,11 @@ module Katello
       @repo = katello_repositories(:rhel_6_x86_64)
       @security = katello_errata(:security)
       @host = hosts(:one)
-      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(
-        katello_content_views(:library_dev_view).id,
-        katello_environments(:library).id
+      cve = Katello::ContentViewEnvironment.find_by!(
+        content_view_id: katello_content_views(:library_dev_view).id,
+        environment_id: katello_environments(:library).id
       )
-      @host.content_facet.content_view_environments = [cvenv]
+      @host.content_facet.content_view_environments = [cve]
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
       @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!
