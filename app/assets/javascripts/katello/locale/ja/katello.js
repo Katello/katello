@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026",
@@ -482,6 +482,9 @@
       "About page": [
         "About ページ"
       ],
+      "Abstract async task": [
+        "非同期タスクの抽象化"
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "Red Hat Subscription Management へのアクセスは禁止されています。これを変更するには、コンテンツ設定の 'サブスクリプション接続の有効化' を更新してください。"
       ],
@@ -634,6 +637,9 @@
       ],
       "Add repositories with package groups to content view to select them here.": [
         "パッケージグループのあるリポジトリーをコンテンツビューに追加して、ここで選択します。"
+      ],
+      "Add rolling repo clone": [
+        ""
       ],
       "Add rule": [
         "ルールの追加"
@@ -1574,6 +1580,9 @@
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
         "コマンドには、選択された %(selectedCount)s 個の %(selectedWord)s のうち、%(packageCount)s 個が含まれています"
       ],
+      "Commit upload": [
+        ""
+      ],
       "Compare": [
         "比較"
       ],
@@ -1961,8 +1970,14 @@
       "Copy": [
         "コピー"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "アクティベーションキーをコピーします"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "コンテンツビューのコピー"
@@ -1975,6 +1990,12 @@
       ],
       "Copy to clipboard": [
         "クリップボードにコピー"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        "バージョンユニットのライブラリーへのコピー"
       ],
       "Cores per socket": [
         "1 ソケットあたりのコア数"
@@ -2195,17 +2216,32 @@
       "Create content view": [
         "コンテンツビューの作成"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "フィルターの作成"
       ],
       "Create host collection": [
         "ホストコレクションの作成"
       ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
+        ""
+      ],
       "Create new activation key": [
         "新規アクティベーションキーの作成"
       ],
       "Create organization": [
         "組織の作成"
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
       ],
       "Creation": [
         "作成"
@@ -2474,11 +2510,32 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         "このリポジトリーが関連付けられた最後のリポジトリーであるコンテンツビューフィルターを削除します。デフォルトは true です。false の場合、そのようなフィルターがコンテンツビュー内のすべてのリポジトリーに適用されます。"
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Red Hat プロバイダーからマニフェストを削除"
       ],
       "Delete multiple filters from a content view": [
         "コンテンツビューから複数のフィルターを削除します"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         "バージョンの削除"
@@ -2582,6 +2639,12 @@
       "Destroy an environment in an organization": [
         "組織の環境を破棄"
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         "1 つ以上の代替コンテンツソースの破棄"
       ],
@@ -2620,6 +2683,9 @@
       ],
       "Disabled": [
         "無効化済み"
+      ],
+      "Discover": [
+        "検出"
       ],
       "Discover Repositories": [
         "リポジトリーの検出"
@@ -2828,6 +2894,9 @@
       "Environment cannot be in its own promotion path": [
         "同じ環境内のプロモートパスに環境を存在させることはできません。"
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "環境 ID"
       ],
@@ -2866,6 +2935,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "エラータのエラータ ID (RHSA-2012:108)"
+      ],
+      "Errata mail": [
+        "エラータメール"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "UUID %s を持つ削除済みコンテンツファセットのエラータステータスが更新されませんでした"
@@ -3059,6 +3131,9 @@
       "Fetch installable errata for one or more hosts.": [
         "1 つまたは複数のホストにインストール可能なエラータを取得します。"
       ],
+      "Fetch pxe files": [
+        "PXE ファイルの取得"
+      ],
       "Fetch traces for one or more hosts": [
         "1 台以上のホストのトレースを取得します"
       ],
@@ -3163,6 +3238,9 @@
       ],
       "Filter...": [
         "フィルタリング..."
+      ],
+      "Filtered index content": [
+        "フィルタリングしたインデックスコンテンツ"
       ],
       "Filters": [
         "フィルター"
@@ -3289,6 +3367,9 @@
       ],
       "Generate host applicability": [
         "ホストに適用可能なエラータを生成します"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "リポジトリーに適用可能なエラータを生成します"
@@ -3538,6 +3619,12 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "結果のソート順 (例: ascending (昇順) の ASC)"
+      ],
+      "Hypervisors": [
+        "ハイパーバイザー"
+      ],
+      "Hypervisors update": [
+        "ハイパーバイザーの更新"
       ],
       "ID": [
         "ID"
@@ -3857,6 +3944,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "サブスクリプションマニフェストをインポートして、ホストが Red Hat コンテンツにアクセスできるようにします。"
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         "新しいマニフェストのインポート"
       ],
@@ -3865,6 +3955,12 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "インポートのみのコンテンツビューは直接公開できません。コンテンツは、ビューにインポートしなければ更新されません。"
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "アップロードのリポジトリーへのインポート"
@@ -3938,6 +4034,9 @@
       "Incremental Update incomplete.": [
         "増分更新が完了していません。"
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        "コンテンツビューバージョンの増分更新 "
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "%{content_view_count} 件のコンテンツビューバージョンの増分更新 "
       ],
@@ -3953,6 +4052,18 @@
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
       ],
+      "Index content": [
+        "コンテンツのインデックス作成"
+      ],
+      "Index errata": [
+        "エラータのインデックス作成"
+      ],
+      "Index module streams": [
+        "モジュールストリームのインデックス作成"
+      ],
+      "Index package groups": [
+        "パッケージグループのインデックス作成"
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "情報タイプは以下のいずれかでなければなりません [ %{list} ]"
       ],
@@ -3963,6 +4074,9 @@
         ""
       ],
       "Inherit parent (%s)": [
+        ""
+      ],
+      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4042,6 +4156,9 @@
       ],
       "Installing Package...": [
         ""
+      ],
+      "Instance update": [
+        "インスタンスの更新"
       ],
       "Instance-based": [
         "インスタンスベース"
@@ -4835,6 +4952,9 @@
       "Messaging connection": [
         "メッセージング接続"
       ],
+      "Metadata generate": [
+        "メタデータの生成"
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "メタデータの再公開は、'完全ミラーリング' リポジトリーでは危険です。ミラーリングポリシーを変更してから再試行してください。\\nあるいは、'force' パラメーターを使用してメタデータをローカルに再生成してください。次回の同期時に、アップストリームリポジトリーのメタデータによって、'完全ミラーリング' リポジトリーのローカルメタデータが上書きされます。"
       ],
@@ -4906,6 +5026,15 @@
       ],
       "Multi Content View Environment": [
         "マルチコンテンツビュー環境"
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
+        ""
       ],
       "Multi-entitlement": [
         "マルチエンタイトルメント"
@@ -6176,6 +6305,9 @@
       "Pulp task error": [
         "Pulp タスクのエラー"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         "Python パッケージ"
       ],
@@ -6284,6 +6416,9 @@
       "Reclaim Space": [
         "領域の再利用"
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         "オンデマンドリポジトリーからの領域の再利用"
       ],
@@ -6353,6 +6488,9 @@
       "Refresh all alternate content sources": [
         "すべての代替コンテンツソースの更新"
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         "代替コンテンツソースの更新"
       ],
@@ -6365,14 +6503,26 @@
       "Refresh counts": [
         "更新回数"
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
         "エラータの適用可能性の更新"
+      ],
+      "Refresh if needed": [
+        ""
       ],
       "Refresh package applicability": [
         "パッケージの適用可能性の更新"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Red Hat プロバイダーの以前にインポートされたマニフェストを更新"
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         "ソースの更新"
@@ -6415,6 +6565,9 @@
       ],
       "Registry token expiration time": [
         "レジストリートークンの有効期限"
+      ],
+      "Reindex subscriptions": [
+        "サブスクリプションのインデックス再作成"
       ],
       "Related composite content views": [
         "関連する複合コンテンツビュー"
@@ -6518,6 +6671,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "アップストリームマニフェストから 1 つ以上のサブスクリプションを削除します"
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Katello インターフェイスでのパッケージグループの削除"
       ],
@@ -6532,6 +6688,15 @@
       ],
       "Remove products from sync plan": [
         "同期プランから製品を削除"
+      ],
+      "Remove rolling repo clone": [
+        ""
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "コンテンツビューからバージョンおよび/または環境を削除し、システムおよびキーを再度割り当てます"
@@ -6560,6 +6725,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "すべての環境からこのバージョンを削除しても、バージョンは削除されません。バージョンは引き続き以降のプロモーションの対象になります。"
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         "ターゲットマシン上のコンテンツソースの置き換え"
       ],
@@ -6578,11 +6746,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "CDN 設定がエアギャップ (切断) に設定されている間、リポジトリーは有効にできません。"
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "選択したコンテンツビューバージョンに共通のリポジトリーがマージされます。その結果、各コンテンツビューバージョンのすべてのコンテンツが結合された複合コンテンツビューが作成されます。"
       ],
       "Repositories from published Content Views are not allowed.": [
         "公開されたコンテンツビューからのリポジトリーは許可されません。"
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repositories table": [
         ""
@@ -6959,6 +7133,21 @@
       "Save Environments": [
         "環境の保存"
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "代替コンテンツソースの保存"
       ],
@@ -6967,6 +7156,12 @@
       ],
       "Scan a flatpak remote": [
         "flatpak リモートをスキャンする"
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
+        ""
       ],
       "Schema version 1": [
         "スキーマバージョン 1"
@@ -7808,6 +8003,9 @@
       "Supported Content Types": [
         "サポート対象のコンテンツタイプ"
       ],
+      "Sync": [
+        "同期"
+      ],
       "Sync Canceled": [
         "同期が取り消されました"
       ],
@@ -7865,6 +8063,9 @@
       "Sync canceled": [
         ""
       ],
+      "Sync capsule": [
+        "Capsule の同期"
+      ],
       "Sync complete.": [
         "同期が完了しました。"
       ],
@@ -7888,6 +8089,9 @@
       ],
       "Sync state": [
         "同期の状態"
+      ],
+      "Syncable export": [
+        "同期可能なエクスポート"
       ],
       "Synced": [
         "同期されています"
@@ -8747,14 +8951,26 @@
       "Update content counts for the smart proxy": [
         "Smart Proxy のコンテンツ数を更新します"
       ],
+      "Update content urls": [
+        "コンテンツ url の更新"
+      ],
       "Update content view environments for host": [
         "ホストのコンテンツビュー環境の更新"
       ],
       "Update content view environments for host %s": [
         "ホスト %s のコンテンツビュー環境の更新"
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         "ホストの手動更新"
+      ],
+      "Update http proxy": [
+        "http プロキシーの更新"
+      ],
+      "Update http proxy details": [
+        "HTTP プロキシーの詳細更新"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "インストール済みパッケージ、有効なリポジトリー、モジュールインベントリーの更新"
@@ -8771,11 +8987,20 @@
       "Update packages via Katello interface": [
         "Katello インターフェイスでのパッケージの更新"
       ],
+      "Update redhat repository": [
+        "redhat リポジトリーの更新"
+      ],
       "Update release version for host": [
         "ホストのリリースバージョンの更新"
       ],
       "Update release version for host %s": [
         "ホスト %s のリリースバージョンの更新"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "再起動が必要なサービスの更新"
@@ -8870,6 +9095,12 @@
       "Upload a subscription manifest": [
         "サブスクリプションマニフェストのアップロード"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "アップロード先"
       ],
@@ -8881,6 +9112,9 @@
       ],
       "Upload request id": [
         "要求 ID のアップロード"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "アップストリーム Candlepin"
@@ -9001,6 +9235,9 @@
       ],
       "Verify SSL": [
         "SSL の確認"
+      ],
+      "Verify checksum": [
+        "チェックサムの確認"
       ],
       "Verify checksum for content on smart proxy": [
         "Smart Proxy 上のコンテンツのチェックサムを確認する"

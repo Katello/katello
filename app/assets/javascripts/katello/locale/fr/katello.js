@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Claer <transiblu@claer.hammock.fr>, 2026",
@@ -484,6 +484,9 @@
       "About page": [
         "Page d'accueil"
       ],
+      "Abstract async task": [
+        "Tâche async abstraite"
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         "L'accès à la gestion des abonnements Red Hat est interdit. Si vous souhaitez modifier cette interdiction, veuillez mettre à jour le paramètre de contenu \\\"Connexion aux abonnements activée\\\"."
       ],
@@ -636,6 +639,9 @@
       ],
       "Add repositories with package groups to content view to select them here.": [
         "Ajouter des référentiels avec des groupes de paquets à l’affichage de contenu pour les sélectionner ici."
+      ],
+      "Add rolling repo clone": [
+        ""
       ],
       "Add rule": [
         "Ajouter une règle"
@@ -1578,6 +1584,9 @@
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
         "La commande contient %(packageCount)s parmi %(selectedCount)s sélectionnés %(selectedWord)s"
       ],
+      "Commit upload": [
+        ""
+      ],
       "Compare": [
         "Comparez"
       ],
@@ -1965,8 +1974,14 @@
       "Copy": [
         "Copie"
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "Copier une clé d'activation|"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         "Copier l’affichage de contenu"
@@ -1979,6 +1994,12 @@
       ],
       "Copy to clipboard": [
         "Copier dans le presse-papiers"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        "Copier les unités de version dans la bibliothèque"
       ],
       "Cores per socket": [
         "Cores par socket"
@@ -2199,17 +2220,32 @@
       "Create content view": [
         "Créer Affichage du contenu"
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         "Créer un filtre"
       ],
       "Create host collection": [
         "Créer Collection d'hôtes"
       ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
+        ""
+      ],
       "Create new activation key": [
         "Créer une nouvelle clé d'activation"
       ],
       "Create organization": [
         "Créer une organisation"
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
       ],
       "Creation": [
         "Création"
@@ -2478,11 +2514,32 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         "Supprimez les filtres d'affichage de contenu qui ont ce référentiel comme dernier référentiel associé. La valeur par défaut est vrai. S'ils sont sur faux, ces filtres s'appliqueront désormais à tous les référentiels dans la vue du contenu."
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Supprimer le fichier manifeste du fournisseur Red Hat"
       ],
       "Delete multiple filters from a content view": [
         "Supprimer plusieurs filtres d'affichage de contenu"
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
+        ""
       ],
       "Delete version": [
         "Supprimer la version"
@@ -2586,6 +2643,12 @@
       "Destroy an environment in an organization": [
         "Détruire un environnement dans une organisation"
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         "Détruire une ou plusieurs sources de contenu alternatives"
       ],
@@ -2624,6 +2687,9 @@
       ],
       "Disabled": [
         "Désactivé"
+      ],
+      "Discover": [
+        "Discover"
       ],
       "Discover Repositories": [
         "Découvrir des référentiels"
@@ -2832,6 +2898,9 @@
       "Environment cannot be in its own promotion path": [
         "L'environnement ne peut pas se trouver dans son propre chemin de promotion"
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "Identifiant d'environnement"
       ],
@@ -2870,6 +2939,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "Id de l'erratum (RHSA-2012:108)"
+      ],
+      "Errata mail": [
+        "Courrier d'errata"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         "Les statuts d'errata ne sont pas mis à jour pour la facette de contenu supprimée avec UUID %s"
@@ -3063,6 +3135,9 @@
       "Fetch installable errata for one or more hosts.": [
         "Récupérer les errata installables pour un ou plusieurs hôtes."
       ],
+      "Fetch pxe files": [
+        "Récupérer les fichiers pxe"
+      ],
       "Fetch traces for one or more hosts": [
         "Rechercher traces pour un ou plusieurs hôtes"
       ],
@@ -3167,6 +3242,9 @@
       ],
       "Filter...": [
         ""
+      ],
+      "Filtered index content": [
+        "Contenu d'index filtré"
       ],
       "Filters": [
         "Filtres"
@@ -3295,6 +3373,9 @@
       ],
       "Generate host applicability": [
         "Générer l'applicabilité à l'hôte"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "Générer l'applicabilité du référentiel"
@@ -3544,6 +3625,12 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Comment classer les résultats triés (ex : ASC for pour croissant)"
+      ],
+      "Hypervisors": [
+        "Hyperviseurs"
+      ],
+      "Hypervisors update": [
+        "Mise à jour des hyperviseurs"
       ],
       "ID": [
         "ID"
@@ -3863,6 +3950,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         "Importez un manifeste d'abonnement pour permettre aux hôtes d'accéder au contenu Red Hat."
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         "Importer un nouveau manifeste"
       ],
@@ -3871,6 +3961,12 @@
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
         "Les affichages de contenu importés ne peuvent pas être publiés directement. Le contenu ne peut être mis à jour qu'en l'important dans la vue."
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
+        ""
       ],
       "Import uploads into a repository": [
         "Importer les téléchargements dans un référentiel"
@@ -3944,6 +4040,9 @@
       "Incremental Update incomplete.": [
         "Mise à jour incrémentielle incomplète."
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        "Mise à jour incrémentielle Version(s) d'affichage de contenu"
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Mise à jour incrémentielle de %{content_view_count}Version(s) d'affichage de contenu "
       ],
@@ -3959,6 +4058,18 @@
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
       ],
+      "Index content": [
+        "Contenu d'index"
+      ],
+      "Index errata": [
+        "Errata d'index"
+      ],
+      "Index module streams": [
+        "Indexer les flux de module"
+      ],
+      "Index package groups": [
+        "Indexer les groupes de paquets"
+      ],
       "Informable Type must be one of the following [ %{list} ]": [
         "Le type Informable doit être l'un parmi [%{list} ]"
       ],
@@ -3969,6 +4080,9 @@
         ""
       ],
       "Inherit parent (%s)": [
+        ""
+      ],
+      "Initialize": [
         ""
       ],
       "Initiate a sync of the products attached to the sync plan": [
@@ -4050,6 +4164,9 @@
       ],
       "Installing Package...": [
         ""
+      ],
+      "Instance update": [
+        "Mise à jour de l'instance"
       ],
       "Instance-based": [
         "Basé sur l'instance"
@@ -4843,6 +4960,9 @@
       "Messaging connection": [
         "Connexion à la messagerie"
       ],
+      "Metadata generate": [
+        "Générer des métadonnées"
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "La republication des métadonnées est risquée sur les référentiels « Complete Mirroring ». Modifiez la politique de mise en miroir et réessayez. Vous pouvez également utiliser le paramètre « force » pour régénérer les métadonnées localement. Lors de la prochaine synchronisation, les métadonnées du référentiel en amont écraseront les métadonnées locales des référentiels « Complete Mirroring »."
       ],
@@ -4914,6 +5034,15 @@
       ],
       "Multi Content View Environment": [
         "Environnement d'affichage multi-contenu"
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
+        ""
       ],
       "Multi-entitlement": [
         "Droits d’accès multiples"
@@ -6184,6 +6313,9 @@
       "Pulp task error": [
         "Erreur de tâche pulp"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         "Paquet Python"
       ],
@@ -6292,6 +6424,9 @@
       "Reclaim Space": [
         "Récupération d’espace"
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         "Récupérer l’espace en provenance des référentiels Sur demande"
       ],
@@ -6361,6 +6496,9 @@
       "Refresh all alternate content sources": [
         "Actualiser toutes les sources de contenu alternatives"
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         "Réactualiser les sources de contenu alternatives"
       ],
@@ -6373,14 +6511,26 @@
       "Refresh counts": [
         "Actualiser le nombre"
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
         "Actualiser l'applicabilité des errata"
+      ],
+      "Refresh if needed": [
+        ""
       ],
       "Refresh package applicability": [
         "Actualiser l’applicabilité du package"
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Actualiser le fichier manifeste importé précédemment pour le fournisseur de Red Hat"
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         "Source de rafraîchissement"
@@ -6423,6 +6573,9 @@
       ],
       "Registry token expiration time": [
         "Durée d'expiration du jeton d'enregistrement"
+      ],
+      "Reindex subscriptions": [
+        "Ré-indexer les abonnements"
       ],
       "Related composite content views": [
         "Affichages du contenu composite associé"
@@ -6526,6 +6679,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         "Supprimer un ou plusieurs abonnements d'un manifeste amont"
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Supprimer un groupe de packages via l'interface Katello"
       ],
@@ -6540,6 +6696,15 @@
       ],
       "Remove products from sync plan": [
         "Supprimer les produits du plan de sync"
+      ],
+      "Remove rolling repo clone": [
+        ""
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Supprimer les versions et/ou les environnements de l'affichage de contenu et assigner les systèmes et les clés à nouveau"
@@ -6568,6 +6733,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         "Supprimer cette version de tous les environnement n’aura pas pour effet de supprimer la version. La version sera toujours disponible pour une promotion ultérieure."
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         "Remplacer la source de contenu sur la machine cible"
       ],
@@ -6586,11 +6754,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         "Les référentiels ne sont pas disponibles pour l'activation lorsque la configuration du CDN est définie sur Air-gapped (déconnecté)."
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "Les référentiels communs aux versions d'affichage de contenu sélectionnées fusionneront, ce qui donnera une vue de contenu composite qui est une union de tout le contenu de chacune des versions d'affichage de contenu."
       ],
       "Repositories from published Content Views are not allowed.": [
         "Les référentiels des affichages de contenu publiés ne sont pas autorisés."
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repositories table": [
         ""
@@ -6967,6 +7141,21 @@
       "Save Environments": [
         "Sauvegarder les environnements"
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         "Mise à jour de la source de contenu alternatif..."
       ],
@@ -6975,6 +7164,12 @@
       ],
       "Scan a flatpak remote": [
         "Numériser une télécommande Flatpak"
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
+        ""
       ],
       "Schema version 1": [
         "Schéma Version 1"
@@ -7818,6 +8013,9 @@
       "Supported Content Types": [
         "Types de contenu pris en charge"
       ],
+      "Sync": [
+        "Sync"
+      ],
       "Sync Canceled": [
         "Sync Annulée"
       ],
@@ -7875,6 +8073,9 @@
       "Sync canceled": [
         ""
       ],
+      "Sync capsule": [
+        "Sync capsule"
+      ],
       "Sync complete.": [
         "Sync Terminée."
       ],
@@ -7898,6 +8099,9 @@
       ],
       "Sync state": [
         "État de synchronisation"
+      ],
+      "Syncable export": [
+        "Exportation synchronisable"
       ],
       "Synced": [
         "Synchronisé"
@@ -8757,14 +8961,26 @@
       "Update content counts for the smart proxy": [
         "Mettre à jour le nombre de contenus pour le proxy intelligent"
       ],
+      "Update content urls": [
+        "Mettre à jour les urls de contenu"
+      ],
       "Update content view environments for host": [
         "Mettre à jour les environnements d'affichage de contenu pour l'hôte"
       ],
       "Update content view environments for host %s": [
         "Mettre à jour les environnements d'affichage de contenu pour l'hôte %s"
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         "Mettre à jour les hôtes manuellement"
+      ],
+      "Update http proxy": [
+        "Mettre à jour proxy http"
+      ],
+      "Update http proxy details": [
+        "Mise à jour des détails du proxy http"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Mise à jour des packages installés, activation des repos, inventaire des modules"
@@ -8781,11 +8997,20 @@
       "Update packages via Katello interface": [
         "Mise à jour du paquet via l'interface Katello"
       ],
+      "Update redhat repository": [
+        "Mettre à jour le référentiel de données Red Hat"
+      ],
       "Update release version for host": [
         "Mettre à jour la version de publication pour l'hôte"
       ],
       "Update release version for host %s": [
         "Mettre à jour la version de publication pour l'hôte %s"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "Mise à jour des services nécessitant un redémarrage"
@@ -8882,6 +9107,12 @@
       "Upload a subscription manifest": [
         "Télécharger un fichier manifeste d'abonnement"
       ],
+      "Upload content": [
+        ""
+      ],
+      "Upload file": [
+        ""
+      ],
       "Upload into": [
         "Téléverser vers"
       ],
@@ -8893,6 +9124,9 @@
       ],
       "Upload request id": [
         "Télécharger l'id de requête"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         "Chandelle en amont"
@@ -9013,6 +9247,9 @@
       ],
       "Verify SSL": [
         "Vérifier SSL"
+      ],
+      "Verify checksum": [
+        "Vérifier la somme de contrôle"
       ],
       "Verify checksum for content on smart proxy": [
         "Vérifier la somme de contrôle du contenu sur le proxy intelligent"
