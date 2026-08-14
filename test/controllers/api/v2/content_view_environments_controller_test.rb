@@ -70,10 +70,50 @@ module Katello
       assert_template 'api/v2/content_view_environments/index'
     end
 
+    def test_index_for_hostgroup
+      hostgroup = FactoryBot.create(:hostgroup)
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      hostgroup.organizations = [cvenv.organization]
+      hostgroup.save!
+      Katello::Hostgroup::ContentFacet.create!(
+        :hostgroup => hostgroup,
+        :content_view_environment => cvenv
+      )
+
+      get :index, params: { :hostgroup_id => hostgroup.id }
+
+      assert_response :success
+      assert resp.total > 0
+      assert(resp.results.all? { |result| result.id == cvenv.id })
+      assert_template 'api/v2/content_view_environments/index'
+    end
+
     def test_index_protected
       allowed_perms = [@view_cv_permission, @view_lce_permission]
       assert_protected_action(:index, allowed_perms, @denied_perms, [@organization]) do
         get :index, params: {}
+      end
+    end
+
+    def test_show
+      cve = katello_content_view_environments(:library_dev_view_library)
+      get :show, params: { :id => cve.id }
+
+      assert_response :success
+      assert_equal cve.id, resp.id
+      assert_equal cve.label, resp.label
+      assert_equal cve.hostgroups.pluck(:id).sort, resp.hostgroups.map(&:id).sort
+      assert_equal cve.hostgroups.pluck(:name).sort, resp.hostgroups.map(&:name).sort
+      assert_equal cve.hostgroups.count, resp.hostgroups_count
+      assert_template 'api/v2/content_view_environments/show'
+    end
+
+    def test_show_protected
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      # ContentViewEnvironment.readable requires both CV and LCE view permissions
+      allowed_perms = [[@view_cv_permission, @view_lce_permission]]
+      assert_protected_action(:show, allowed_perms, @denied_perms, [@organization]) do
+        get :show, params: { :id => cvenv.id }
       end
     end
   end
