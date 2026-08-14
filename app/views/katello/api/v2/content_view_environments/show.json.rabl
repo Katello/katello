@@ -31,3 +31,11 @@ end
 node :hosts_count do |cve|
   cve.hosts.count
 end
+
+child :hostgroups => :hostgroups do
+  attributes :id, :name, :title
+end
+
+node :hostgroups_count do |cvenv|
+  cvenv.hostgroups.size
+end
