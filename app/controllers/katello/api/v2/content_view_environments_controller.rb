@@ -1,11 +1,13 @@
 module Katello
   class Api::V2::ContentViewEnvironmentsController < Api::V2::ApiController
     before_action :find_optional_organization, :only => [:index, :auto_complete_search]
-    before_action :find_environment
-    before_action :find_content_view
-    before_action :find_activation_key
-    before_action :find_host
-    before_action :find_content_source
+    before_action :find_authorized_katello_resource, :only => [:show]
+    before_action :find_environment, :only => [:index]
+    before_action :find_content_view, :only => [:index]
+    before_action :find_activation_key, :only => [:index]
+    before_action :find_host, :only => [:index]
+    before_action :find_content_source, :only => [:index]
+    before_action :find_hostgroup, :only => [:index]
 
     resource_description do
       api_version "v2"
@@ -17,10 +19,19 @@ module Katello
     param :content_view_id, :number, :desc => N_("Content view identifier"), :required => false
     param :activation_key_id, :number, :desc => N_("Activation key identifier"), :required => false
     param :host_id, :number, :desc => N_("Host identifier"), :required => false
+    param :hostgroup_id, :number, :desc => N_("Host group identifier"), :required => false
     param :content_source_id, :number, :desc => N_("Content source identifier to filter by available lifecycle environments"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      respond(:collection => scoped_search(index_relation.distinct, :id, :asc, resource_class: ContentViewEnvironment))
+      respond(:collection => scoped_search(index_relation.distinct, :id, :asc,
+                                           :resource_class => ContentViewEnvironment,
+                                           :includes => {:hostgroup_content_facets => :hostgroup}))
+    end
+
+    api :GET, "/content_view_environments/:id", N_("Show a content view environment")
+    param :id, :number, :desc => N_("Content view environment identifier"), :required => true
+    def show
+      respond_for_show(:resource => @content_view_environment)
     end
 
     def index_relation
@@ -30,6 +41,7 @@ module Katello
       content_view_environments = content_view_environments.where(content_view: @content_view) if @content_view
       content_view_environments = content_view_environments.where(id: @activation_key.content_view_environments) if @activation_key
       content_view_environments = content_view_environments.where(id: @host.content_view_environments) if @host
+      content_view_environments = content_view_environments.where(id: @hostgroup.content_view_environment) if @hostgroup
 
       # Filter by content source if provided (only show CVEnvs from environments on that capsule)
       if @content_source.present? && !@content_source.pulp_primary?
@@ -63,6 +75,11 @@ module Katello
     def find_content_source
       return unless params.key?(:content_source_id)
       @content_source = SmartProxy.authorized(:view_smart_proxies).find(params[:content_source_id])
+    end
+
+    def find_hostgroup
+      return unless params.key?(:hostgroup_id)
+      @hostgroup = ::Hostgroup.authorized(:view_hostgroups).find(params[:hostgroup_id])
     end
   end
 end
