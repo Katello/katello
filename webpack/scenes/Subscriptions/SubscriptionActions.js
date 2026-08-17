@@ -18,7 +18,6 @@ import {
   toastTaskFinished,
   clearPollTaskData,
 } from '../Tasks/TaskActions';
-import pingUpstreamSubscriptions from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
 import { selectIsPollingTasks, selectIsPollingTask } from '../Tasks/TaskSelectors';
 import { bulkSearchKey } from '../Tasks/helpers';
 

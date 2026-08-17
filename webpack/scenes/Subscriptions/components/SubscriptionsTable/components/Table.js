@@ -410,8 +410,15 @@ const Table = ({
     pushToHistory: false,
   });
 
-  const showCustomEmptyState = rows.length === 0 && !bodyMessage && emptyState;
   const isPending = status === STATUS.PENDING;
+  const showCustomEmptyState = !isPending && rows.length === 0 && !bodyMessage && emptyState;
+  const customEmptyState = showCustomEmptyState ? (
+    <Tr ouiaId="table-empty">
+      <Td colSpan={100}>
+        <EmptyState {...emptyState} />
+      </Td>
+    </Tr>
+  ) : null;
 
   const customToolbarItems = editing ? (
     <>
@@ -449,13 +456,13 @@ const Table = ({
       creatable={false}
       updateParamsByUrl={false}
       customToolbarItems={customToolbarItems}
-      customEmptyState={showCustomEmptyState ? <EmptyState {...emptyState} /> : null}
-      emptyMessage={bodyMessage}
       ouiaId="subscriptions-table"
     >
       <TableIndexTable
         columns={visibleColumns}
         results={rows}
+        customEmptyState={customEmptyState}
+        emptyMessage={bodyMessage}
         params={{
           ...params,
           page: page || params.page,

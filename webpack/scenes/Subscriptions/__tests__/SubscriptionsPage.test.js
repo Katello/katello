@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useSelector } from 'react-redux';
 import SubscriptionsPage from '../SubscriptionsPage';
-import pingUpstreamSubscriptions from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
 
 const mockDispatch = jest.fn();
 const mockSelectorState = {
