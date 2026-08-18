@@ -121,6 +121,28 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_equal_arrays target_cvenvs_ids, host.content_facet.content_view_environments.ids
   end
 
+  def test_host_contents_cvenv_ids_param_deduplicates
+    Setting[:allow_multiple_content_views] = true
+    ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+    target_cvenvs_ids = [::Katello::ContentViewEnvironment.where(:content_view_id => @cv4.id,
+      :environment_id => @dev.id).first, ::Katello::ContentViewEnvironment.where(:content_view_id => @cv3.id,
+      :environment_id => @dev.id).first].map(&:id)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_view_environment_ids => target_cvenvs_ids + [target_cvenvs_ids.first],
+      },
+    }, session: set_session_user
+    assert_response :success
+    host.content_facet.reload
+
+    assert_equal 2, host.content_facet.content_view_environment_ids.count
+    assert_equal_arrays target_cvenvs_ids, host.content_facet.content_view_environments.ids
+  end
+
   def test_set_content_view_environments_with_valid_content_view_environs_param
     # Updating content_view_environments sets cvenvs_changed=true, which makes backend_update_needed? return true,
     # which triggers the update_candlepin_associations callback
