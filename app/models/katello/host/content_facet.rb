@@ -86,12 +86,9 @@ module Katello
 
       def initialize(*args)
         init_args = args.first || {}
-        cvenv_ids = init_args.delete(:content_view_environment_ids)&.reject(&:blank?)
+        cvenv_ids = init_args.delete(:content_view_environment_ids)
         super(*args)
-        if cvenv_ids.present?
-          # find() preserves input order and raises on missing IDs, unlike where()
-          self.content_view_environments = ContentViewEnvironment.find(cvenv_ids)
-        end
+        self.content_view_environment_ids = cvenv_ids if cvenv_ids.present?
         self.cvenvs_changed = false
       end
 
@@ -144,7 +141,18 @@ module Katello
         content_view_environments&.first&.lifecycle_environment
       end
 
+      def content_view_environment_ids=(ids)
+        ids = Array(ids).reject(&:blank?)
+        if ids.empty?
+          self.content_view_environments = []
+        else
+          # find() preserves input order and raises on missing IDs, unlike where()
+          self.content_view_environments = ContentViewEnvironment.find(ids.uniq)
+        end
+      end
+
       def content_view_environments=(new_cvenvs)
+        new_cvenvs = Array(new_cvenvs).uniq(&:id)
         if new_cvenvs.length > 1 && !Setting['allow_multiple_content_views']
           fail ::Katello::Errors::MultiEnvironmentNotSupportedError,
           _("Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.")

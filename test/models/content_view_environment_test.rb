@@ -75,5 +75,38 @@ module Katello
         ContentViewEnvironment.fetch_content_view_environments(ids: [cve.id, 9999], organization: dev.organization)
       end
     end
+
+    def test_fetch_content_view_environments_deduplicates_labels
+      dev = katello_environments(:dev)
+      view = katello_content_views(:library_dev_view)
+      cvenv = Katello::ContentViewEnvironment.where(:environment_id => dev, :content_view_id => view).first
+      result = ContentViewEnvironment.fetch_content_view_environments(
+        labels: ['published_dev_view_dev', 'published_dev_view_dev'],
+        organization: dev.organization
+      )
+      assert_equal [cvenv], result
+    end
+
+    def test_fetch_content_view_environments_deduplicates_ids
+      dev = katello_environments(:dev)
+      view = katello_content_views(:library_dev_view)
+      cvenv = Katello::ContentViewEnvironment.where(:environment_id => dev, :content_view_id => view).first
+      result = ContentViewEnvironment.fetch_content_view_environments(
+        ids: [cvenv.id, cvenv.id],
+        organization: dev.organization
+      )
+      assert_equal [cvenv], result
+    end
+
+    def test_fetch_content_view_environments_preserves_order_when_deduplicating
+      org = katello_environments(:dev).organization
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      result = ContentViewEnvironment.fetch_content_view_environments(
+        ids: [cvenv1.id, cvenv2.id, cvenv1.id],
+        organization: org
+      )
+      assert_equal [cvenv1, cvenv2], result
+    end
   end
 end

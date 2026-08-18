@@ -5,7 +5,8 @@ module Katello
 
     default_scope { order(:priority => :asc) }
 
-    validates :content_view_environment_id, presence: true
+    validates :content_view_environment_id, presence: true,
+              uniqueness: { scope: :content_facet_id, message: N_("has already been taken for this host") }
     validates :content_facet_id, presence: true, unless: :new_record?
     validate :ensure_valid_content_source, if: proc { Setting['validate_host_lce_content_source_coherence'] }
 

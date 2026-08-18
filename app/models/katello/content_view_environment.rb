@@ -102,6 +102,7 @@ module Katello
     def self.fetch_content_view_environments(organization:, labels: [], ids: [])
       # Must ensure content view environments remain in the same order.
       # Using ActiveRecord .where will return them in a different order.
+      # Duplicate labels/ids are ignored while preserving first-occurrence order.
       id_errors = []
       label_errors = []
       cvenvs = []
@@ -125,12 +126,12 @@ module Katello
           end
         end
       end
-      if labels.present? && labels.length != cvenvs.length
-        fail HttpErrors::UnprocessableEntity, _("No content view environments found with names: %{names}") % {names: label_errors.join(', ')} if label_errors.present?
-      elsif ids.present? && ids.length != cvenvs.length
-        fail HttpErrors::UnprocessableEntity, _("No content view environments found with ids: %{ids}") % {ids: id_errors.join(', ')} if id_errors.present?
+      if label_errors.present?
+        fail HttpErrors::UnprocessableEntity, _("No content view environments found with names: %{names}") % {names: label_errors.join(', ')}
+      elsif id_errors.present?
+        fail HttpErrors::UnprocessableEntity, _("No content view environments found with ids: %{ids}") % {ids: id_errors.join(', ')}
       end
-      cvenvs
+      cvenvs.uniq(&:id)
     end
 
     private
