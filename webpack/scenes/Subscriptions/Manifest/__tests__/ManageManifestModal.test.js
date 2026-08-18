@@ -42,11 +42,12 @@ const renderModal = (props = {}) => {
   } = renderWithStore(<ManageManifestModal {...defaultProps} {...props} />);
 
   const rerenderModal = (newProps = {}) => {
-    renderResult.rerender(
+    const updated = (
       <Provider store={store}>
         <ManageManifestModal {...defaultProps} {...newProps} />
       </Provider>
     );
+    renderResult.rerender(updated);
   };
 
   return { ...renderResult, store, rerenderModal };
