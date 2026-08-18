@@ -123,6 +123,43 @@ module Katello
       assert_equal 2, content_facet.content_view_environments.length
     end
 
+    def test_content_view_environments_deduplicates
+      Setting['allow_multiple_content_views'] = true
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      content_facet.content_view_environments = [cvenv1, cvenv2, cvenv1]
+      assert_equal [cvenv1, cvenv2], content_facet.content_view_environments.reload.to_a
+    end
+
+    def test_content_view_environments_deduplicates_preserves_order
+      Setting['allow_multiple_content_views'] = true
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      # uniq keeps first occurrence, so reversed duplicates keep cvenv2 first
+      content_facet.content_view_environments = [cvenv2, cvenv1, cvenv2]
+      assert_equal [cvenv2, cvenv1], content_facet.content_view_environments.reload.to_a
+    end
+
+    def test_content_view_environment_ids_deduplicates
+      Setting['allow_multiple_content_views'] = true
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      content_facet.content_view_environment_ids = [cvenv1.id, cvenv2.id, cvenv1.id]
+      assert_equal [cvenv1, cvenv2], content_facet.content_view_environments.reload.to_a
+    end
+
+    def test_content_view_environment_ids_deduplicates_preserves_order
+      Setting['allow_multiple_content_views'] = true
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      content_facet.content_view_environment_ids = [cvenv2.id, cvenv1.id, cvenv2.id]
+      assert_equal [cvenv2, cvenv1], content_facet.content_view_environments.reload.to_a
+    end
+
     def test_multi_cv_not_enabled
       Setting['allow_multiple_content_views'] = false
       assert_equal 1, content_facet.content_view_environments.length

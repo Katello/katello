@@ -5,7 +5,8 @@ module Katello
 
     default_scope { order(:priority => :asc) }
 
-    validates :content_view_environment_id, presence: true
+    validates :content_view_environment_id, presence: true,
+              uniqueness: { scope: :activation_key_id, message: N_("has already been taken for this activation key") }
     validates :activation_key_id, presence: true, unless: :new_record?
 
     def self.reprioritize_for_activation_key(activation_key, new_cvenvs)
