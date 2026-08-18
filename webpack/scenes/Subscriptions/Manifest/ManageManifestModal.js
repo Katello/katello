@@ -29,6 +29,7 @@ const ManageManifestModal = ({
   closeModal,
   upload,
   refresh,
+  refreshManifest,
   delete: deleteManifestAction,
   loadManifestHistory,
   getContentCredentials,
@@ -49,6 +50,12 @@ const ManageManifestModal = ({
   const showManifestTab = canEditOrganizations || showSubscriptionManifest;
 
   const [activeTabKey, setActiveTabKey] = useState(() => getDefaultTabKey(showManifestTab));
+
+  useEffect(() => {
+    if (isOpen) {
+      setActiveTabKey(getDefaultTabKey(showManifestTab));
+    }
+  }, [isOpen, showManifestTab, organization.id]);
 
   const manifestTabRef = useRef(null);
   const historyTabRef = useRef(null);
@@ -160,7 +167,7 @@ const ManageManifestModal = ({
               disableManifestActions={disableManifestActions}
               disabledReason={disabledReason}
               upload={upload}
-              refresh={refresh}
+              refresh={refresh || refreshManifest}
               delete={deleteManifestAction}
             />
           </TabContent>
@@ -202,6 +209,7 @@ ManageManifestModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   upload: PropTypes.func.isRequired,
   refresh: PropTypes.func.isRequired,
+  refreshManifest: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
   loadManifestHistory: PropTypes.func.isRequired,
   getContentCredentials: PropTypes.func.isRequired,

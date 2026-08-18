@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Divider, Grid, GridItem, Title } from '@patternfly/react-core';
+import { Grid, GridItem, Title } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import CdnConfigurationForm from './CdnConfigurationTab';
 
@@ -10,9 +10,6 @@ const CdnTabContent = ({ cdnConfiguration, contentCredentials, onUpdate }) => (
       <Title headingLevel="h3" size="lg" ouiaId="cdn-configuration-title">
         {__('CDN Configuration for Red Hat Content')}
       </Title>
-    </GridItem>
-    <GridItem span={12}>
-      <Divider />
     </GridItem>
     <GridItem span={12}>
       <CdnConfigurationForm

@@ -1,26 +1,10 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { screen, fireEvent } from '@testing-library/react';
+import { rtlHelpers } from 'foremanReact/common/testHelpers';
 import ManageManifestModal from '../ManageManifestModal';
 
-jest.mock('foremanReact/components/common/Slot', () => ({
-  __esModule: true,
-  default: ({ children }) => children,
-}));
-
-jest.mock('foremanReact/components/common/EmptyState', () => ({
-  __esModule: true,
-  default: props => JSON.stringify(props),
-}));
-
-jest.mock('foremanReact/components/Loading', () => ({
-  __esModule: true,
-  default: () => <div>Loading</div>,
-}));
-
-jest.mock('../CdnConfigurationTab', () => ({
-  __esModule: true,
-  default: () => <div>CDN configuration</div>,
-}));
+const { renderWithStore } = rtlHelpers;
 
 const defaultProps = {
   isOpen: true,
@@ -44,37 +28,58 @@ const defaultProps = {
   contentCredentials: [],
 };
 
+const tabInteractionProps = {
+  canImportManifest: false,
+  canDeleteManifest: true,
+  canEditOrganizations: true,
+  isManifestImported: true,
+};
+
+const renderModal = (props = {}) => {
+  const {
+    store,
+    ...renderResult
+  } = renderWithStore(<ManageManifestModal {...defaultProps} {...props} />);
+
+  const rerenderModal = (newProps = {}) => {
+    renderResult.rerender(
+      <Provider store={store}>
+        <ManageManifestModal {...defaultProps} {...newProps} />
+      </Provider>
+    );
+  };
+
+  return { ...renderResult, store, rerenderModal };
+};
+
 describe('ManageManifestModal', () => {
   it('shows loading state for manifest history', () => {
-    render(<ManageManifestModal
-      {...defaultProps}
-      canImportManifest={false}
-      canDeleteManifest={false}
-      canEditOrganizations={false}
-      manifestHistory={{ loading: true, results: [] }}
-    />);
+    renderModal({
+      canImportManifest: false,
+      canDeleteManifest: false,
+      canEditOrganizations: false,
+      manifestHistory: { loading: true, results: [] },
+    });
 
     expect(screen.getByText('Loading')).toBeInTheDocument();
   });
 
   it('shows empty state when manifest history is empty', () => {
-    render(<ManageManifestModal
-      {...defaultProps}
-      canImportManifest={false}
-      canDeleteManifest={false}
-      canEditOrganizations={false}
-    />);
+    renderModal({
+      canImportManifest: false,
+      canDeleteManifest: false,
+      canEditOrganizations: false,
+    });
 
     expect(screen.getByText(/There is no manifest history to display/)).toBeInTheDocument();
   });
 
   it('renders manifest history table columns and rows', () => {
-    render(<ManageManifestModal
-      {...defaultProps}
-      canImportManifest={false}
-      canDeleteManifest={false}
-      canEditOrganizations={false}
-      manifestHistory={{
+    renderModal({
+      canImportManifest: false,
+      canDeleteManifest: false,
+      canEditOrganizations: false,
+      manifestHistory: {
         loading: false,
         results: [
           {
@@ -83,12 +88,41 @@ describe('ManageManifestModal', () => {
             created: '2024-01-01 12:00:00',
           },
         ],
-      }}
-    />);
+      },
+    });
 
     expect(screen.getByText('Status')).toBeInTheDocument();
     expect(screen.getByText('Message')).toBeInTheDocument();
     expect(screen.getByText('Timestamp')).toBeInTheDocument();
     expect(screen.getByText('Manifest imported')).toBeInTheDocument();
+  });
+
+  it('resets to the manifest tab when the modal is reopened', () => {
+    const { rerenderModal } = renderModal({ ...tabInteractionProps, isOpen: true });
+
+    fireEvent.click(screen.getByText('Manifest History'));
+    expect(screen.getByRole('tab', { name: 'Manifest History' })).toHaveAttribute('aria-selected', 'true');
+
+    rerenderModal({ isOpen: false });
+    rerenderModal({ isOpen: true });
+
+    expect(screen.getByRole('tab', { name: 'Manifest' })).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('resets to the default tab when the organization changes', () => {
+    const { rerenderModal } = renderModal({
+      ...tabInteractionProps,
+      isOpen: true,
+      organization: { id: 1 },
+    });
+
+    fireEvent.click(screen.getByText('Manifest History'));
+
+    rerenderModal({
+      isOpen: true,
+      organization: { id: 2 },
+    });
+
+    expect(screen.getByRole('tab', { name: 'Manifest' })).toHaveAttribute('aria-selected', 'true');
   });
 });

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import {
   Alert,
   Button,
-  Divider,
+  FileUpload,
   Grid,
   GridItem,
   Modal,
@@ -21,6 +21,11 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
+
+const MANIFEST_UPLOAD_ACCEPT = {
+  'application/zip': ['.zip'],
+  'application/x-zip-compressed': ['.zip'],
+};
 
 const getManifestName = (organization) => {
   let name = __('No manifest imported');
@@ -55,12 +60,32 @@ const ManifestTabContent = ({
   canDeleteManifest,
   actionInProgress,
   disableManifestActions,
-  disabledReason,
   upload,
   refresh,
   delete: deleteManifestAction,
 }) => {
   const [isDeleteManifestModalOpen, setIsDeleteManifestModalOpen] = useState(false);
+  const [isDeleteManifestPending, setIsDeleteManifestPending] = useState(false);
+  const [manifestUploadValidated, setManifestUploadValidated] = useState('default');
+
+  useEffect(() => {
+    if (!actionInProgress) {
+      setIsDeleteManifestPending(false);
+    }
+  }, [actionInProgress]);
+
+  const closeDeleteManifestModal = () => {
+    if (!actionInProgress && !isDeleteManifestPending) {
+      setIsDeleteManifestModalOpen(false);
+    }
+  };
+
+  const confirmDeleteManifest = () => {
+    setIsDeleteManifestPending(true);
+    deleteManifestAction();
+  };
+
+  const isDeleteModalBusy = isDeleteManifestPending || actionInProgress;
 
   const disabledTooltipText = () => {
     if (actionInProgress) {
@@ -69,10 +94,21 @@ const ManifestTabContent = ({
     return __('This is disabled because no manifest exists');
   };
 
-  const uploadManifest = (fileList) => {
-    if (fileList.length > 0) {
-      upload(fileList[0]);
-    }
+  const isRefreshDisabled = !isManifestImported ||
+    actionInProgress ||
+    disableManifestActions;
+
+  const handleManifestFileChange = (_event, file) => {
+    setManifestUploadValidated('default');
+    upload(file);
+  };
+
+  const handleManifestFileClear = () => {
+    setManifestUploadValidated('default');
+  };
+
+  const handleManifestFileRejected = () => {
+    setManifestUploadValidated('error');
   };
 
   const manifestExpiredMessage = manifestExpirationDate
@@ -89,7 +125,7 @@ const ManifestTabContent = ({
               size="lg"
               ouiaId="subscription-manifest-title"
             >
-              {__('Subscription Manifest')}
+              {__('Red Hat Cloud Inventory')}
             </Title>
           </GridItem>
           {manifestExpiringSoon && (
@@ -136,9 +172,6 @@ const ManifestTabContent = ({
               </Alert>
             </GridItem>
           )}
-          <GridItem span={12}>
-            <Divider />
-          </GridItem>
           <GridItem span={5}>
             <strong>{__('Manifest')}</strong>
           </GridItem>
@@ -146,61 +179,65 @@ const ManifestTabContent = ({
           {isManifestImported && Boolean(manifestExpirationDate) && (
             <>
               <GridItem span={5} />
-              <GridItem span={7} ouiaId="manifest-expiration-date">
+              <GridItem span={7}>
                 {manifestExpired ? __('Expired ') : __('Expires ')}
                 {new Date(manifestExpirationDate).toDateString()}
               </GridItem>
             </>
           )}
           <GridItem span={5}>
-            {canImportManifest && (
-              <label htmlFor="usmaFile">{__('Import new manifest')}</label>
-            )}
+            {canImportManifest && <strong>{__('Import new manifest')}</strong>}
           </GridItem>
           <GridItem span={7}>
             <Stack hasGutter>
               <StackItem>
-                {actionInProgress && (
-                  <Spinner
-                    size="md"
-                    aria-label={__('Loading')}
-                    ouiaId="manifest-action-spinner"
-                  />
-                )}
                 {canImportManifest && (
-                  <input
-                    id="usmaFile"
-                    type="file"
-                    accept=".zip"
-                    disabled={actionInProgress}
-                    onChange={(e) => {
-                      uploadManifest(e.target.files);
-                      e.target.value = null;
-                    }}
-                  />
+                  <Grid>
+                    <GridItem span={8}>
+                      <FileUpload
+                        id="manifest-file-upload"
+                        hideDefaultPreview
+                        browseButtonText={__('Upload')}
+                        clearButtonText={__('Clear')}
+                        filenamePlaceholder={__('Drag here')}
+                        validated={manifestUploadValidated}
+                        isDisabled={actionInProgress}
+                        onFileInputChange={handleManifestFileChange}
+                        onClearClick={handleManifestFileClear}
+                        dropzoneProps={{
+                          accept: MANIFEST_UPLOAD_ACCEPT,
+                          onReadFinished: () =>
+                            setManifestUploadValidated('default'),
+                          onDropRejected: handleManifestFileRejected,
+                        }}
+                      >
+                        {manifestUploadValidated === 'error'
+                          ? __('Only .zip manifest files are accepted')
+                          : __('Upload a zip file')}
+                      </FileUpload>
+                    </GridItem>
+                  </Grid>
                 )}
               </StackItem>
               <StackItem>
-                <Flex>
-                  <FlexItem>
-                    {canImportManifest && (
-                      <TooltipButton
-                        onClick={refresh}
-                        tooltipId="refresh-manifest-button-tooltip"
-                        tooltipText={disabledReason}
-                        tooltipPlacement="top"
-                        title={__('Refresh')}
+                <Flex
+                  alignItems={{ default: 'alignItemsCenter' }}
+                  spaceItems={{ default: 'spaceItemsSm' }}
+                >
+                  {canImportManifest && (
+                    <FlexItem>
+                      <Button
+                        ouiaId="refresh-manifest-button"
                         variant="tertiary"
-                        disabled={
-                          !isManifestImported ||
-                          actionInProgress ||
-                          disableManifestActions
-                        }
-                      />
-                    )}
-                  </FlexItem>
-                  <FlexItem>
-                    {canDeleteManifest && (
+                        onClick={() => refresh()}
+                        isDisabled={isRefreshDisabled}
+                      >
+                        {__('Refresh')}
+                      </Button>
+                    </FlexItem>
+                  )}
+                  {canDeleteManifest && (
+                    <FlexItem>
                       <TooltipButton
                         variant="danger"
                         disabled={!isManifestImported || actionInProgress}
@@ -210,35 +247,48 @@ const ManifestTabContent = ({
                         tooltipText={disabledTooltipText()}
                         tooltipPlacement="top"
                       />
-                    )}
-                  </FlexItem>
+                    </FlexItem>
+                  )}
+                  {actionInProgress && (
+                    <FlexItem>
+                      <Spinner
+                        size="md"
+                        aria-label={__('Loading')}
+                        ouiaId="manifest-action-spinner"
+                      />
+                    </FlexItem>
+                  )}
                 </Flex>
               </StackItem>
             </Stack>
             <Modal
               isOpen={isDeleteManifestModalOpen}
-              onClose={() => setIsDeleteManifestModalOpen(false)}
+              onClose={closeDeleteManifestModal}
+              showClose={!isDeleteModalBusy}
               title={__('Confirm delete manifest')}
+              titleIconVariant="danger"
               id={DELETE_MANIFEST_MODAL_ID}
               ouiaId={DELETE_MANIFEST_MODAL_ID}
               key={DELETE_MANIFEST_MODAL_ID}
               variant={ModalVariant.small}
               actions={[
                 <Button
-                  key="cancel-btn"
-                  variant="link"
-                  ouiaId="delete-manifest-cancel-button"
-                  onClick={() => setIsDeleteManifestModalOpen(false)}
-                >
-                  {__('Cancel')}
-                </Button>,
-                <Button
                   key="delete-btn"
                   variant="danger"
                   ouiaId="delete-manifest-confirm-button"
-                  onClick={deleteManifestAction}
+                  isDisabled={isDeleteModalBusy}
+                  onClick={confirmDeleteManifest}
                 >
                   {__('Delete')}
+                </Button>,
+                <Button
+                  key="cancel-btn"
+                  variant="link"
+                  ouiaId="delete-manifest-cancel-button"
+                  isDisabled={isDeleteModalBusy}
+                  onClick={closeDeleteManifestModal}
+                >
+                  {__('Cancel')}
                 </Button>,
               ]}
             >
@@ -272,7 +322,6 @@ ManifestTabContent.propTypes = {
   canDeleteManifest: PropTypes.bool,
   actionInProgress: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
-  disabledReason: PropTypes.string,
   upload: PropTypes.func.isRequired,
   refresh: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
@@ -288,7 +337,6 @@ ManifestTabContent.defaultProps = {
   canDeleteManifest: false,
   actionInProgress: false,
   disableManifestActions: false,
-  disabledReason: '',
 };
 
 export default ManifestTabContent;
