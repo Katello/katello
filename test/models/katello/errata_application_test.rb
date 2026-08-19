@@ -187,6 +187,72 @@ module Katello
       assert_equal 'success', status
     end
 
+    def test_record_from_task_with_package_update_job
+      task = create_task_for_package_update(@host, 'foobar')
+
+      erratum_scope = Katello::Erratum.where(errata_id: @erratum.errata_id)
+      Katello::Erratum.stubs(:installable_for_hosts).with([@host]).returns(erratum_scope)
+
+      application = ErrataApplication.record_from_task(task, nil)
+
+      assert_not_nil application
+      assert_equal @host.id, application.host_id
+      assert_includes application.errata_ids, @erratum.errata_id
+      assert_equal 'success', application.status
+    end
+
+    def test_record_from_task_with_package_update_no_matching_errata
+      task = create_task_for_package_update(@host, 'nonexistent-package')
+
+      erratum_scope = Katello::Erratum.where(errata_id: @erratum.errata_id)
+      Katello::Erratum.stubs(:installable_for_hosts).with([@host]).returns(erratum_scope)
+
+      application = ErrataApplication.record_from_task(task, nil)
+
+      assert_nil application
+    end
+
+    def test_record_from_task_with_package_update_all
+      task = create_task_for_package_update(@host, '')
+
+      erratum_scope = Katello::Erratum.where(errata_id: [@erratum.errata_id])
+      Katello::Erratum.stubs(:installable_for_hosts).with([@host]).returns(erratum_scope)
+
+      application = ErrataApplication.record_from_task(task, nil)
+
+      assert_not_nil application
+      assert_includes application.errata_ids, @erratum.errata_id
+    end
+
+    def test_record_from_task_with_package_update_no_content_facet
+      host_without_facet = ::Host::Managed.create!(name: 'no-facet-host', managed: false)
+      task = create_task_for_package_update(host_without_facet, 'foobar')
+
+      application = ErrataApplication.record_from_task(task, nil)
+
+      assert_nil application
+    ensure
+      host_without_facet&.destroy
+    end
+
+    def test_record_from_task_with_package_update_by_search
+      task = create_task_for_package_update_by_search(@host, 'name = foobar')
+
+      erratum_scope = Katello::Erratum.where(errata_id: @erratum.errata_id)
+      Katello::Erratum.stubs(:installable_for_hosts).with([@host]).returns(erratum_scope)
+
+      installed_scope = mock('installed_scope')
+      installed_scope.stubs(:distinct).returns(installed_scope)
+      installed_scope.stubs(:pluck).with(:name).returns(['foobar'])
+      @host.stubs(:installed_packages).returns(mock('packages_assoc'))
+      @host.installed_packages.stubs(:search_for).with('name = foobar').returns(installed_scope)
+
+      application = ErrataApplication.record_from_task(task, nil)
+
+      assert_not_nil application
+      assert_includes application.errata_ids, @erratum.errata_id
+    end
+
     private
 
     def create_task_with_errata(host, errata_ids)
@@ -212,6 +278,73 @@ module Katello
       ErrataApplication.stubs(:dynflow_initialized?).returns(true)
 
       task
+    end
+
+    def create_task_for_package_update(host, package_input)
+      input = {}
+      input['host'] = { 'id' => host.id } if host
+      input['job_features'] = ['katello_package_update']
+
+      task = create_base_task(input)
+      stub_template_invocation(task, host)
+      stub_template_input_values(998, 'package' => package_input.presence, 'Packages search query' => nil)
+
+      ErrataApplication.stubs(:dynflow_initialized?).returns(true)
+
+      task
+    end
+
+    def create_task_for_package_update_by_search(host, search_query)
+      input = {}
+      input['host'] = { 'id' => host.id } if host
+      input['job_features'] = ['katello_packages_update_by_search']
+
+      task = create_base_task(input)
+      stub_template_invocation(task, host)
+      stub_template_input_values(998, 'package' => nil, 'Packages search query' => search_query)
+
+      ErrataApplication.stubs(:dynflow_initialized?).returns(true)
+
+      task
+    end
+
+    def create_base_task(input)
+      task = ForemanTasks::Task.create!(
+        label: 'Actions::RemoteExecution::RunHostJob',
+        state: 'stopped',
+        result: 'success',
+        started_at: Time.zone.now,
+        ended_at: Time.zone.now,
+        type: 'ForemanTasks::Task::DynflowTask'
+      )
+
+      task.stubs(:input).returns(input)
+      task.stubs(:user).returns(@user)
+      task
+    end
+
+    def stub_template_invocation(task, host)
+      template_invocation = mock('template_invocation')
+      template_invocation.stubs(:id).returns(998)
+      template_invocation.stubs(:host_id).returns(host&.id)
+      task.stubs(:template_invocation).returns(template_invocation)
+    end
+
+    def stub_template_input_values(invocation_id, inputs)
+      ::TemplateInvocationInputValue.stubs(:joins).returns(::TemplateInvocationInputValue)
+      ::TemplateInvocationInputValue.stubs(:where).with(template_invocation_id: invocation_id).returns(::TemplateInvocationInputValue)
+
+      inputs.each do |name, value|
+        query = mock("query_#{name}")
+        if value
+          result = mock("result_#{name}")
+          result.stubs(:value).returns(value)
+          query.stubs(:first).returns(result)
+        else
+          query.stubs(:first).returns(nil)
+        end
+        ::TemplateInvocationInputValue.stubs(:where).with("template_inputs.name = ?", name).returns(query)
+      end
     end
   end
 end

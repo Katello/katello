@@ -1,7 +1,15 @@
 module Actions
   module Middleware
-    # Records errata applications to database when errata installation tasks complete
+    # Records errata applications to database when errata install or package update tasks complete
     class RecordErrataApplication < Dynflow::Middleware
+      TRACKED_FEATURES = %w[
+        katello_errata_install
+        katello_errata_install_by_search
+        katello_package_update
+        katello_packages_update_by_search
+        katello_package_update_by_search
+      ].freeze
+
       def finalize
         pass
       ensure
@@ -13,7 +21,7 @@ module Actions
       def record_if_errata_job
         task = find_task
         return unless task
-        return unless errata_install_job?(task)
+        return unless tracked_content_job?(task)
 
         ::Katello::ErrataApplication.record_from_task(task, action)
       rescue StandardError => e
@@ -25,7 +33,7 @@ module Actions
         return nil unless action.execution_plan_id
 
         features = action.input['job_features']
-        return nil unless features && (features & ['katello_errata_install', 'katello_errata_install_by_search']).any?
+        return nil unless features && (features & TRACKED_FEATURES).any?
 
         ::ForemanTasks::Task.where(
           external_id: action.execution_plan_id,
@@ -33,12 +41,12 @@ module Actions
         ).first
       end
 
-      def errata_install_job?(task)
+      def tracked_content_job?(task)
         return false unless task.template_invocation
         return false unless task.template_invocation.template
 
         task.template_invocation.template.remote_execution_features
-          .where(label: ['katello_errata_install', 'katello_errata_install_by_search'])
+          .where(label: TRACKED_FEATURES)
           .exists?
       end
     end
