@@ -93,7 +93,9 @@ module Katello
         end
 
         client = rest_client(REQUEST_MAP[method], method, path)
-        args = [method, payload, headers].compact
+        bodyless_methods = [:get, :delete]
+        # get/delete take (headers); post/put/patch take (payload, headers).
+        args = bodyless_methods.include?(method) ? [method, headers || {}] : [method, payload, headers || {}]
 
         process_response(client.send(*args))
       rescue RestClient::Exception => e
