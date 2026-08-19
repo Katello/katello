@@ -11,6 +11,21 @@ jest.mock('foremanReact/redux', () => {
   return { __esModule: true, default: { getState: () => state } };
 });
 
+// i18nProviderWrapperFactory renders async (waits for intl.ready); provide a synchronous
+// version so renderWithI18n from rtlTestHelpers works with synchronous getBy* assertions.
+jest.mock('foremanReact/common/i18nProviderWrapperFactory', () => {
+  const React = require('react');
+  const { IntlProvider } = require('react-intl');
+  return {
+    i18nProviderWrapperFactory: () => WrappedComponent => {
+      const Wrapper = props =>
+        React.createElement(IntlProvider, { locale: 'en' },
+          React.createElement(WrappedComponent, props));
+      return Wrapper;
+    },
+  };
+});
+
 // LongDateTime depends on react-intl's formatRelative which rejects out-of-range fixture dates
 jest.mock('foremanReact/components/common/dates/LongDateTime', () => ({
   __esModule: true,

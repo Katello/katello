@@ -4,12 +4,12 @@
 import React from 'react';
 import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
-import { IntlProvider } from 'react-intl';
 import { APIMiddleware, reducers as apiReducer } from 'foremanReact/redux/API';
 import { reducers as fillReducers } from 'foremanReact/components/common/Fill';
 import { reducers as foremanModalReducer } from 'foremanReact/components/ForemanModal';
 import { STATUS } from 'foremanReact/constants';
-import { render as rtlRender, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { rtlHelpers } from 'foremanReact/common/rtlTestHelpers';
+import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter, BrowserRouter } from 'react-router-dom';
@@ -48,26 +48,20 @@ function renderWithRedux(
   });
   const middlewares = applyMiddleware(thunk, APIMiddleware);
   const store = createStore(combinedReducers, initialFullState, middlewares);
-  const connectedComponent = (
-    <IntlProvider locale="en">
+  return {
+    ...rtlHelpers.renderWithI18n(
       <Provider store={store}>
-        <MemoryRouter {...routerParams} >{component}</MemoryRouter>
+        <MemoryRouter {...routerParams}>{component}</MemoryRouter>
       </Provider>
-    </IntlProvider>
-  );
-
-  return { ...rtlRender(connectedComponent), store };
+    ),
+    store,
+  };
 }
 
 // When you actually need to change browser history
 const renderWithRouter = (ui, { route = '/' } = {}) => {
   window.history.pushState({}, 'Test page', route);
-
-  const Wrapper = ({ children }) => ( // eslint-disable-line react/prop-types
-    <IntlProvider locale="en"><BrowserRouter>{children}</BrowserRouter></IntlProvider>
-  );
-
-  return rtlRender(ui, { wrapper: Wrapper });
+  return rtlHelpers.renderWithI18n(<BrowserRouter>{ui}</BrowserRouter>);
 };
 
 // When the tests run slower, they can hit the default waitFor timeout, which is 1000ms
@@ -80,10 +74,6 @@ export const patientlyWaitForRemoval = waitForFunc =>
 // re-export everything, so the library can be used from this wrapper.
 export * from '@testing-library/react';
 
-// Override render to always provide IntlProvider context
-const AllProviders = ({ children }) => ( // eslint-disable-line react/prop-types
-  <IntlProvider locale="en">{children}</IntlProvider>
-);
-const render = (ui, options) => rtlRender(ui, { wrapper: AllProviders, ...options });
+const { renderWithI18n: render } = rtlHelpers;
 
 export { render, renderWithRedux, renderWithRouter };
