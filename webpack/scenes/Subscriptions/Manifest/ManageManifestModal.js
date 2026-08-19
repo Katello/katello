@@ -29,7 +29,6 @@ const ManageManifestModal = ({
   closeModal,
   upload,
   refresh,
-  refreshManifest,
   delete: deleteManifestAction,
   loadManifestHistory,
   getContentCredentials,
@@ -167,7 +166,7 @@ const ManageManifestModal = ({
               disableManifestActions={disableManifestActions}
               disabledReason={disabledReason}
               upload={upload}
-              refresh={refresh || refreshManifest}
+              refresh={refresh}
               delete={deleteManifestAction}
             />
           </TabContent>
@@ -209,7 +208,6 @@ ManageManifestModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   upload: PropTypes.func.isRequired,
   refresh: PropTypes.func.isRequired,
-  refreshManifest: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
   loadManifestHistory: PropTypes.func.isRequired,
   getContentCredentials: PropTypes.func.isRequired,

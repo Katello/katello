@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -60,6 +60,7 @@ const ManifestTabContent = ({
   canDeleteManifest,
   actionInProgress,
   disableManifestActions,
+  disabledReason,
   upload,
   refresh,
   delete: deleteManifestAction,
@@ -67,6 +68,9 @@ const ManifestTabContent = ({
   const [isDeleteManifestModalOpen, setIsDeleteManifestModalOpen] = useState(false);
   const [isDeleteManifestPending, setIsDeleteManifestPending] = useState(false);
   const [manifestUploadValidated, setManifestUploadValidated] = useState('default');
+  const [manifestFilename, setManifestFilename] = useState('');
+  const [manifestFile, setManifestFile] = useState(null);
+  const skipDuplicateUploadRef = useRef(false);
 
   useEffect(() => {
     if (!actionInProgress) {
@@ -94,17 +98,27 @@ const ManifestTabContent = ({
     return __('This is disabled because no manifest exists');
   };
 
-  const isRefreshDisabled = !isManifestImported ||
-    actionInProgress ||
-    disableManifestActions;
+  const isRefreshDisabled =
+    !isManifestImported || actionInProgress || disableManifestActions;
 
   const handleManifestFileChange = (_event, file) => {
+    if (!file) return;
+    if (skipDuplicateUploadRef.current) {
+      skipDuplicateUploadRef.current = false;
+      return;
+    }
+    skipDuplicateUploadRef.current = true;
     setManifestUploadValidated('default');
+    setManifestFilename(file.name);
+    setManifestFile(file);
     upload(file);
   };
 
   const handleManifestFileClear = () => {
     setManifestUploadValidated('default');
+    setManifestFilename('');
+    setManifestFile(null);
+    skipDuplicateUploadRef.current = false;
   };
 
   const handleManifestFileRejected = () => {
@@ -196,6 +210,8 @@ const ManifestTabContent = ({
                     <GridItem span={8}>
                       <FileUpload
                         id="manifest-file-upload"
+                        value={manifestFile}
+                        filename={manifestFilename}
                         hideDefaultPreview
                         browseButtonText={__('Upload')}
                         clearButtonText={__('Clear')}
@@ -226,14 +242,15 @@ const ManifestTabContent = ({
                 >
                   {canImportManifest && (
                     <FlexItem>
-                      <Button
-                        ouiaId="refresh-manifest-button"
-                        variant="tertiary"
+                      <TooltipButton
                         onClick={() => refresh()}
-                        isDisabled={isRefreshDisabled}
-                      >
-                        {__('Refresh')}
-                      </Button>
+                        tooltipId="refresh-manifest-button-tooltip"
+                        tooltipText={disabledReason}
+                        tooltipPlacement="top"
+                        title={__('Refresh')}
+                        variant="tertiary"
+                        disabled={isRefreshDisabled}
+                      />
                     </FlexItem>
                   )}
                   {canDeleteManifest && (
@@ -251,11 +268,7 @@ const ManifestTabContent = ({
                   )}
                   {actionInProgress && (
                     <FlexItem>
-                      <Spinner
-                        size="md"
-                        aria-label={__('Loading')}
-                        ouiaId="manifest-action-spinner"
-                      />
+                      <Spinner size="md" aria-label={__('Loading')} />
                     </FlexItem>
                   )}
                 </Flex>
@@ -322,6 +335,7 @@ ManifestTabContent.propTypes = {
   canDeleteManifest: PropTypes.bool,
   actionInProgress: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
+  disabledReason: PropTypes.string,
   upload: PropTypes.func.isRequired,
   refresh: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
@@ -337,6 +351,7 @@ ManifestTabContent.defaultProps = {
   canDeleteManifest: false,
   actionInProgress: false,
   disableManifestActions: false,
+  disabledReason: '',
 };
 
 export default ManifestTabContent;
