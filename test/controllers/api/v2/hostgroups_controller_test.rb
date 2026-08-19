@@ -140,6 +140,36 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
     assert_equal cvenv.id, response['content_view_environment_id']
   end
 
+  def test_show_child_hostgroup_inherits_content_attributes
+    org = FactoryBot.create(:katello_organization)
+    library = FactoryBot.create(:katello_environment, :library, organization: org)
+    view = FactoryBot.create(:katello_content_view, organization: org)
+    view_version = FactoryBot.create(:katello_content_view_version, content_view: view)
+    cvenv = FactoryBot.create(:katello_content_view_environment,
+                            content_view_version: view_version,
+                            environment: library)
+    content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
+
+    parent = ::Hostgroup.create!(name: 'InheritTestParent')
+    parent.content_view_environment_id = cvenv.id
+    parent.content_source_id = content_source.id
+    parent.save!
+
+    child = ::Hostgroup.create!(name: 'InheritTestChild', parent: parent)
+
+    get :show, params: { :id => child.id }
+
+    assert_response :success
+    response = JSON.parse(@response.body)
+    assert_nil response['content_source_id']
+    assert_equal content_source.name, response['content_source_name']
+    assert_nil response['content_view_id']
+    assert_equal view.name, response['content_view_name']
+    assert_nil response['lifecycle_environment_id']
+    assert_equal library.name, response['lifecycle_environment_name']
+    assert_nil response['content_view_environment_id']
+  end
+
   def test_create_with_content_view_environment_id
     org = FactoryBot.create(:katello_organization)
     library = FactoryBot.create(:katello_environment, :library, organization: org)
