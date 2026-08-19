@@ -139,7 +139,7 @@ const ManifestTabContent = ({
               size="lg"
               ouiaId="subscription-manifest-title"
             >
-              {__('Red Hat Cloud Inventory')}
+              {__('Subscription Manifest')}
             </Title>
           </GridItem>
           {manifestExpiringSoon && (
