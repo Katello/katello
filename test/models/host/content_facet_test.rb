@@ -221,6 +221,40 @@ module Katello
     end
   end
 
+  class ContentFacetIgnoreUpdateTest < ContentFacetBase
+    def test_rejects_when_no_meaningful_attributes
+      assert empty_host.content_facet_ignore_update?({})
+    end
+
+    def test_rejects_when_only_blank_cvenv_ids
+      assert empty_host.content_facet_ignore_update?({'content_view_environment_ids' => ['']})
+    end
+
+    def test_does_not_reject_when_content_source_id_present
+      refute empty_host.content_facet_ignore_update?({'content_source_id' => 1})
+    end
+
+    def test_rejects_when_content_source_id_is_blank
+      assert empty_host.content_facet_ignore_update?({'content_source_id' => ''})
+    end
+
+    def test_does_not_reject_when_kickstart_repository_id_present
+      refute empty_host.content_facet_ignore_update?({'kickstart_repository_id' => 1})
+    end
+
+    def test_rejects_when_kickstart_repository_id_is_blank
+      assert empty_host.content_facet_ignore_update?({'kickstart_repository_id' => ''})
+    end
+
+    def test_does_not_reject_when_cvenv_ids_present
+      refute empty_host.content_facet_ignore_update?({'content_view_environment_ids' => ['1']})
+    end
+
+    def test_does_not_reject_when_content_facet_exists
+      refute host.content_facet_ignore_update?({})
+    end
+  end
+
   class ContentFacetErrataTest < ContentFacetBase
     let(:host) { hosts(:one) }
 
