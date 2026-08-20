@@ -74,10 +74,10 @@ module Katello
         def content_facet_ignore_update?(attributes)
           attrs = attributes.with_indifferent_access
           cvenv_ids = attrs[:content_view_environment_ids]&.reject(&:blank?)
-          self.content_facet.blank? && (
-            attributes.values.all?(&:blank?) ||
-            cvenv_ids.blank?
-          )
+          self.content_facet.blank? &&
+            cvenv_ids.blank? &&
+            attrs[:content_source_id].blank? &&
+            attrs[:kickstart_repository_id].blank?
         end
 
         apipie :class do
