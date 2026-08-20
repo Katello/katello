@@ -233,6 +233,35 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     host_show(host, smart_proxy)
   end
 
+  def test_create_with_invalid_content_source_id
+    cvenv = ::Katello::ContentViewEnvironment.where(
+      :content_view_id => @content_view.id,
+      :environment_id => @environment.id
+    ).first
+    cf_attrs = {:content_source_id => 99_999, :content_view_environment_ids => [cvenv.id]}
+    attrs = @host.clone.attributes.merge(
+      "name" => "invalidcs.example.com",
+      "content_facet_attributes" => cf_attrs
+    ).compact
+
+    assert_no_difference('Host.unscoped.count') do
+      post :create, params: attrs, session: set_session_user
+    end
+    assert_response :unprocessable_entity
+  end
+
+  def test_update_with_invalid_content_source_id
+    host = FactoryBot.create(:host, :with_content, :with_operatingsystem,
+                              :content_view => @content_view, :lifecycle_environment => @environment)
+    put :update, params: {
+      :id => host.id,
+      :content_facet_attributes => {
+        :content_source_id => 99_999,
+      },
+    }, session: set_session_user
+    assert_response :unprocessable_entity
+  end
+
   def test_create_with_permitted_attributes
     cf_attrs = {:content_view_id => @content_view.id, :lifecycle_environment_id => @environment.id}
     sf_attrs = {:purpose_role => "MyRole"}
