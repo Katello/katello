@@ -1,5 +1,9 @@
 import Immutable from 'seamless-immutable';
 import { toastErrorAction, failureAction } from '../../../services/api/testHelpers';
+import {
+  UPDATE_QUANTITY_KEY,
+  SUBSCRIPTIONS_QUANTITIES_KEY,
+} from '../SubscriptionConstants';
 
 export const initialState = Immutable({
   loading: true,
@@ -368,27 +372,27 @@ export const poolsUpdate = [{
 
 export const updateQuantitySuccessActions = [
   {
-    type: 'UPDATE_QUANTITY_REQUEST',
+    type: `${UPDATE_QUANTITY_KEY}_REQUEST`,
   },
   {
-    type: 'UPDATE_QUANTITY_SUCCESS',
+    type: `${UPDATE_QUANTITY_KEY}_SUCCESS`,
     response: requestSuccessResponse,
   },
 ];
 
 export const updateQuantityFailureActions = [
   {
-    type: 'UPDATE_QUANTITY_REQUEST',
+    type: `${UPDATE_QUANTITY_KEY}_REQUEST`,
   },
-  failureAction('UPDATE_QUANTITY_FAILURE'),
+  failureAction(`${UPDATE_QUANTITY_KEY}_FAILURE`),
   toastErrorAction(),
 ];
 
 export const loadQuantitiesFailureActions = [
   {
-    type: 'SUBSCRIPTIONS_QUANTITIES_REQUEST',
+    type: `${SUBSCRIPTIONS_QUANTITIES_KEY}_REQUEST`,
   },
-  failureAction('SUBSCRIPTIONS_QUANTITIES_FAILURE', 'Request failed with status code 500'),
+  failureAction(`${SUBSCRIPTIONS_QUANTITIES_KEY}_FAILURE`, 'Request failed with status code 500'),
   toastErrorAction('Request failed with status code 500'),
 ];
 
@@ -396,10 +400,10 @@ export const loadQuantitiesSuccessActionPayload = { 4: 100, 5: 100, 6: 40 };
 
 export const loadQuantitiesSuccessActions = [
   {
-    type: 'SUBSCRIPTIONS_QUANTITIES_REQUEST',
+    type: `${SUBSCRIPTIONS_QUANTITIES_KEY}_REQUEST`,
   },
   {
-    type: 'SUBSCRIPTIONS_QUANTITIES_SUCCESS',
+    type: `${SUBSCRIPTIONS_QUANTITIES_KEY}_SUCCESS`,
     payload: loadQuantitiesSuccessActionPayload,
   },
 ];

@@ -1,6 +1,8 @@
 import { bindActionCreators } from 'redux';
 
 import { connect } from 'react-redux';
+import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
+import { STATUS } from 'foremanReact/constants';
 import * as manifestActions from './ManifestActions';
 import * as organizationActions from '../../Organizations/OrganizationActions';
 import * as contentCredentialActions from '../../ContentCredentials/ContentCredentialActions';
@@ -10,10 +12,23 @@ import {
   selectIsManifestImported,
   selectUpdatingCdnConfiguration,
 } from '../../Organizations/OrganizationSelectors';
-import { selectManifestActionStarted } from '../SubscriptionsSelectors';
 import { selectContentCredentials } from '../../ContentCredentials/ContentCredentialSelectors';
+import {
+  UPLOAD_MANIFEST_KEY,
+  REFRESH_MANIFEST_KEY,
+  DELETE_MANIFEST_KEY,
+} from './ManifestConstants';
 
 import ManifestModal from './ManageManifestModal';
+
+const selectManifestActionStarted = (state) => {
+  const statuses = [
+    selectAPIStatus(state, UPLOAD_MANIFEST_KEY),
+    selectAPIStatus(state, REFRESH_MANIFEST_KEY),
+    selectAPIStatus(state, DELETE_MANIFEST_KEY),
+  ];
+  return statuses.includes(STATUS.PENDING);
+};
 
 // map state to props
 const mapStateToProps = state => ({

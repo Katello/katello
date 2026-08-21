@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
 
   case MANIFEST_HISTORY_FAILURE:
     return state.merge({
-      error: action.payload.message,
+      error: action.response?.response?.data?.message || action.response?.message,
       loading: false,
     });
 
