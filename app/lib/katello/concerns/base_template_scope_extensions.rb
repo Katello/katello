@@ -150,7 +150,7 @@ module Katello
         returns array_of: 'Erratum', desc: 'Filtered applicable errata for the host'
       end
       def host_applicable_errata_filtered(host, filter = '')
-        host.applicable_errata.includes(:cves).search_for(filter)
+        host.applicable_errata.search_for(filter)
       end
 
       apipie :method, 'Returns filtered installable errata for the host' do
@@ -160,7 +160,66 @@ module Katello
       end
       def host_installable_errata_filtered(host, filter = '')
         return [] if host.content_facet.nil?
-        host.installable_errata.includes(:cves).search_for(filter)
+        host.installable_errata.search_for(filter)
+      end
+
+      apipie :method, 'Loads all host-errata-CVE pairs for a group of hosts' do
+        required :hosts, 'Array', desc: 'Batch of host objects from load_hosts'
+        keyword :installability, ['applicable', 'installable'], desc: 'Whether to return applicable or installable errata', default: 'applicable'
+        keyword :errata_filter, String, desc: 'Optional filter to apply on errata', default: ''
+        returns object_of: Hash, desc: 'Hash with :errata_by_host and :cves_by_erratum mappings'
+        example 'load_errata_and_cves_by_host(hosts) # => { errata_by_host: { 2 => [<Erratum "RHEA-2012:0055">] }, cves_by_erratum: { "RHEA-2012:0055" => ["CVE-2012-0055"] } }'
+      end
+      def load_errata_and_cves_by_host(hosts, installability: 'applicable', errata_filter: '')
+        host_ids = hosts.map(&:id)
+        facet_to_host = Katello::Host::ContentFacet.where(host_id: host_ids).pluck(:id, :host_id).to_h
+
+        query = Katello::Erratum
+          .select('katello_errata.*, katello_content_facet_errata.content_facet_id')
+          .joins(content_facet_errata: :content_facet)
+          .where(katello_content_facets: { host_id: host_ids })
+
+        query = query.search_for(errata_filter) if errata_filter.present?
+
+        if installability == 'installable'
+          query = query
+            .joins(:repository_errata)
+            .joins("INNER JOIN katello_content_facet_repositories ON katello_content_facet_repositories.repository_id = katello_repository_errata.repository_id AND katello_content_facet_repositories.content_facet_id = katello_content_facets.id")
+            .distinct
+        end
+
+        # Deduplicate errata by id
+        facet_errata_pairs = query.pluck('katello_errata.id', 'katello_content_facet_errata.content_facet_id')
+        unique_erratum_ids = facet_errata_pairs.map(&:first).uniq
+        errata_map = Katello::Erratum.where(id: unique_erratum_ids).index_by(&:id)
+        errata_id_map = errata_map.transform_values(&:errata_id)
+
+        errata_by_host = {}
+        facet_errata_pairs.each do |erratum_id, content_facet_id|
+          erratum = errata_map[erratum_id]
+          next unless erratum
+
+          host_id = facet_to_host[content_facet_id]
+          errata_by_host[host_id] ||= []
+          errata_by_host[host_id] << erratum
+        end
+
+        cves_by_erratum_id = Katello::ErratumCve
+          .where(erratum_id: errata_id_map.keys)
+          .pluck(:erratum_id, :cve_id)
+          .group_by(&:first)
+          .transform_values { |pairs| pairs.map(&:last) }
+
+        cves_by_erratum = {}
+        cves_by_erratum_id.each do |db_id, cve_list|
+          errata_id_string = errata_id_map[db_id]
+          cves_by_erratum[errata_id_string] = cve_list if errata_id_string
+        end
+
+        {
+          errata_by_host: errata_by_host,
+          cves_by_erratum: cves_by_erratum,
+        }
       end
 
       apipie :method, 'Returns version of the latest applicable RPM package' do
