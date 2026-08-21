@@ -6,6 +6,7 @@ module Katello
     include ForemanTasks::Triggers
     LOCAL_FIND_TAXONOMY_ACTIONS = %w(repo_discover cancel_repo_discover download_debug_certificate
                                      cdn_configuration redhat_provider update releases).freeze
+
     before_action :local_find_taxonomy, :only => LOCAL_FIND_TAXONOMY_ACTIONS
 
     prepend_before_action :drop_taxonomy_id_from_params
@@ -127,9 +128,17 @@ module Katello
     end
 
     api :GET, "/organizations/:id/download_debug_certificate", N_("Download a debug certificate")
-    param :id, String, :desc => N_("Organization ID or title")
+    param :id, String, :desc => N_("Organization ID or title"), :required => true
+    param :key_algorithms, Array, :of => String, :desc => N_("Optional key algorithm OID strings")
+    param :signature_algorithms, Array, :of => String, :desc => N_("Optional signature algorithm OID strings")
     def download_debug_certificate
-      pem = @organization.debug_cert
+      key_algorithms = params[:key_algorithms] || []
+      signature_algorithms = params[:signature_algorithms] || []
+
+      pem = @organization.generate_debug_cert_with_algorithms(
+        key_algorithms: key_algorithms,
+        signature_algorithms: signature_algorithms
+      )
       data = "#{pem[:key]}\n\n#{pem[:cert]}"
       send_data data,
                 :filename => "#{@organization.name}-key-cert.pem",

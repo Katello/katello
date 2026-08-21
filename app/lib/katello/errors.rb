@@ -113,6 +113,7 @@ module Katello
     class CandlepinNotRunning < StandardError; end
     class CandlepinPoolGone < CandlepinError; end
     class CandlepinEnvironmentGone < CandlepinError; end
+    class CandlepinCryptoConflict < CandlepinError; end
 
     class Pulp3Error < StandardError; end
     class Pulp3MigrationError < StandardError; end

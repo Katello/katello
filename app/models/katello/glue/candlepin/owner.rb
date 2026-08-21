@@ -51,6 +51,14 @@ module Katello
         return generate_debug_cert
       end
 
+      def generate_debug_cert_with_algorithms(key_algorithms: [], signature_algorithms: [])
+        Resources::Candlepin::Owner.generate_ueber_cert(
+          label,
+          key_algorithms: key_algorithms,
+          signature_algorithms: signature_algorithms
+        )
+      end
+
       def imports
         Resources::Candlepin::Owner.imports(self.label)
       end
