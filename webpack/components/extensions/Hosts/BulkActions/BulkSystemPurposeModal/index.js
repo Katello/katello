@@ -6,7 +6,7 @@ import BulkSystemPurposeModal from './BulkSystemPurposeModal';
 
 const BulkSystemPurposeModalScene = () => {
   const orgId = useForemanOrganization()?.id;
-  const { selectedCount, fetchBulkParams } = useContext(ForemanActionsBarContext);
+  const { selectedCount, fetchBulkParams, refreshTableData } = useContext(ForemanActionsBarContext);
   const { isOpen, close: closeModal } = useBulkModalOpen('bulk-system-purpose-modal');
 
   if (!orgId) return null;
@@ -19,6 +19,7 @@ const BulkSystemPurposeModalScene = () => {
       isOpen={isOpen}
       closeModal={closeModal}
       orgId={orgId}
+      refreshTableData={refreshTableData}
     />
   );
 };

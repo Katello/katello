@@ -43,7 +43,7 @@ const BulkRepositorySetsWizard = () => {
 
   const finishButtonText = __('Set content overrides');
   const replacementResponse = !modalOpen ? { response: {} } : false;
-  const { selectedCount: initialSelectedHostCount, fetchBulkParams }
+  const { selectedCount: initialSelectedHostCount, fetchBulkParams, refreshTableData }
       = useContext(ForemanActionsBarContext);
   const repoSetsResponse = useTableIndexAPIResponse({
     replacementResponse, // don't fetch data if modal is closed
@@ -109,6 +109,7 @@ const BulkRepositorySetsWizard = () => {
     finishButtonLoading,
     setFinishButtonLoading,
     closeModal,
+    refreshTableData,
     repoSetsBulkSelect,
     repoSetsResults,
     repoSetsMetadata,

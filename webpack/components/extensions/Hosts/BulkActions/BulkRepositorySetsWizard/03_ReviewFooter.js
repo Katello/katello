@@ -18,6 +18,7 @@ export const BulkRepositorySetsReviewFooter = () => {
     finishButtonLoading,
     setFinishButtonLoading,
     closeModal,
+    refreshTableData,
     hostsBulkSelect,
   } = useContext(BulkRepositorySetsWizardContext);
 
@@ -45,6 +46,7 @@ export const BulkRepositorySetsReviewFooter = () => {
   const handleFinishButtonClick = () => {
     setFinishButtonLoading(true);
     saveContentOverrides();
+    refreshTableData();
     closeModal();
   };
   return (
