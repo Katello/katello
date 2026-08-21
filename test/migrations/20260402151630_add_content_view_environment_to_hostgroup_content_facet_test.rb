@@ -74,7 +74,7 @@ module Katello
       assert_equal "Custom error", result[:reason]
     end
 
-    def test_build_error_info_with_no_cve
+    def test_build_error_info_with_no_cvenv
       hostgroup_facet = OpenStruct.new(id: 2, hostgroup_id: 20)
       hostgroup = nil
       cv_id = 6
@@ -94,7 +94,7 @@ module Katello
       hostgroup = OpenStruct.new(name: "Failed HG")
       cv_id = 7
       lce_id = 5
-      cv_env_id = 100 # CVE exists but update failed
+      cv_env_id = 100 # content view environment exists but update failed
 
       result = @migration.send(:build_error_info, hostgroup_facet, hostgroup, cv_id, lce_id, cv_env_id)
 
@@ -242,7 +242,7 @@ module Katello
       skip "Integration test - requires database setup"
     end
 
-    def test_migrate_facet_with_nonexistent_cve
+    def test_migrate_facet_with_nonexistent_cvenv
       skip "Integration test - requires database setup"
     end
 

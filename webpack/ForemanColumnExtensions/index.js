@@ -213,7 +213,7 @@ const hostsIndexColumnExtensions = [
             }
           >
             <Button variant="plain" style={{ padding: 0, color: 'inherit' }} ouiaId="content-view-environments-button">
-              {truncate(contentViewEnvironments.map(cve => cve.label).join(', '), 35)}
+              {truncate(contentViewEnvironments.map(cvEnv => cvEnv.label).join(', '), 35)}
             </Button>
           </Popover>
         </Flex>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
-import { CVEDetailsCreateCard } from '../CVEDetailsCreateCard';
+import { CvEnvDetailsCreateCard } from '../CvEnvDetailsCreateCard';
 
 // Mock the ForemanContext
 jest.mock('foremanReact/Root/Context/ForemanContext', () => ({
@@ -10,7 +10,7 @@ jest.mock('foremanReact/Root/Context/ForemanContext', () => ({
 
 const { useForemanContext, useForemanPermissions } = require('foremanReact/Root/Context/ForemanContext');
 
-describe('CVEDetailsCreateCard', () => {
+describe('CvEnvDetailsCreateCard', () => {
   beforeEach(() => {
     // Reset mocks before each test
     jest.clearAllMocks();
@@ -45,7 +45,7 @@ describe('CVEDetailsCreateCard', () => {
   });
 
   test('Renders empty state when no assignments', async () => {
-    const { getByText } = renderWithRedux(<CVEDetailsCreateCard />);
+    const { getByText } = renderWithRedux(<CvEnvDetailsCreateCard />);
 
     await patientlyWaitFor(() => {
       expect(getByText('No content view environments yet')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('CVEDetailsCreateCard', () => {
   });
 
   test('Shows "Assign content view environments" button', async () => {
-    const { getByRole } = renderWithRedux(<CVEDetailsCreateCard />);
+    const { getByRole } = renderWithRedux(<CvEnvDetailsCreateCard />);
 
     await patientlyWaitFor(() => {
       expect(getByRole('button', { name: 'assign_content_view_environments' })).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('CVEDetailsCreateCard', () => {
     const dataNode = document.getElementById('ak-create-cve-data');
     delete dataNode.dataset.orgId;
 
-    const { container } = renderWithRedux(<CVEDetailsCreateCard />);
+    const { container } = renderWithRedux(<CvEnvDetailsCreateCard />);
 
     // Component should return null and not render anything
     expect(container.firstChild).toBeNull();
@@ -82,7 +82,7 @@ describe('CVEDetailsCreateCard', () => {
       },
     });
 
-    const { getByText } = renderWithRedux(<CVEDetailsCreateCard />);
+    const { getByText } = renderWithRedux(<CvEnvDetailsCreateCard />);
 
     await patientlyWaitFor(() => {
       // With 0 assignments, shows plural "Content view environments"
@@ -96,7 +96,7 @@ describe('CVEDetailsCreateCard', () => {
       metadata: {},
     });
 
-    const { getByText } = renderWithRedux(<CVEDetailsCreateCard />);
+    const { getByText } = renderWithRedux(<CvEnvDetailsCreateCard />);
 
     await patientlyWaitFor(() => {
       // With 0 assignments, shows plural "Content view environments"
@@ -119,7 +119,7 @@ describe('CVEDetailsCreateCard', () => {
       element: jest.fn(() => mockElement),
     };
 
-    const { getByRole } = renderWithRedux(<CVEDetailsCreateCard />);
+    const { getByRole } = renderWithRedux(<CvEnvDetailsCreateCard />);
 
     await patientlyWaitFor(() => {
       expect(getByRole('button', { name: 'assign_content_view_environments' })).toBeInTheDocument();

@@ -3,7 +3,7 @@ import { DropdownItem } from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { isEqual } from 'lodash';
 import { useForemanContext, useForemanPermissions } from 'foremanReact/Root/Context/ForemanContext';
-import { CVEDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
+import { CvEnvDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import AssignAKCVModal from './AssignAKCVModal';
 
 const getAKDetailsFromDOM = (node) => {
@@ -13,7 +13,7 @@ const getAKDetailsFromDOM = (node) => {
     return null;
   }
 };
-export const CVEDetailsCard = () => { // used as foreman-react-component, takes no props
+export const CvEnvDetailsCard = () => { // used as foreman-react-component, takes no props
   const akDetailsNode = useRef(document.getElementById('ak-cve-details')).current;
   const [akDetails, setAkDetails] = useState(getAKDetailsFromDOM(akDetailsNode));
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -61,7 +61,7 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
   // Check for edit_activation_keys permission from ForemanContext
   const hasEditPermission = userPermissions.has('edit_activation_keys');
 
-  // Build permissions object for CVEDetailsBareCard
+  // Build permissions object for CvEnvDetailsBareCard
   // Convert Set to object format expected by the card
   const permissions = {
     view_lifecycle_environments: userPermissions.has('view_lifecycle_environments'),
@@ -86,15 +86,15 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
   // Transform existing assignments to the format expected by AssignAKCVModal
   // Map from snake_case (API data) to the format the modal expects
   // Include the label from the parent content_view_environment object
-  const existingAssignments = akDetails.content_view_environments?.map(cve => ({
-    contentView: cve.content_view,
-    environment: cve.lifecycle_environment,
-    label: cve.label, // Pre-computed label from backend
+  const existingAssignments = akDetails.content_view_environments?.map(cvEnv => ({
+    contentView: cvEnv.content_view,
+    environment: cvEnv.lifecycle_environment,
+    cvEnvLabel: cvEnv.label, // Pre-computed label from backend
   })) || [];
 
   return (
     <>
-      <CVEDetailsBareCard
+      <CvEnvDetailsBareCard
         contentViewEnvironments={akDetails.content_view_environments}
         permissions={permissions}
         dropdownItems={dropdownItems}
@@ -118,4 +118,4 @@ export const CVEDetailsCard = () => { // used as foreman-react-component, takes 
   );
 };
 
-export default CVEDetailsCard;
+export default CvEnvDetailsCard;

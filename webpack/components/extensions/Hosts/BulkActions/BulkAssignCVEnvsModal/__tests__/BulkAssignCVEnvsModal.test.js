@@ -272,7 +272,7 @@ test('builds correct payload for multiple CVEs preserving order', () => {
     },
   };
 
-  // Verify request payload contains all CVE labels in correct order
+  // Verify request payload contains all content view environment labels in correct order
   expect(requestBody).toEqual({
     content_view_environments: [
       'library_label/test_cv_1',

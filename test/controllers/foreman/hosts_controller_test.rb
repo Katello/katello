@@ -51,7 +51,7 @@ class HostsControllerTest < ActionController::TestCase
   end
 
   test 'empty content facet parameters are removed' do
-    orig_cves = @host.content_facet.content_view_environment_ids.to_a
+    orig_cvenvs = @host.content_facet.content_view_environment_ids.to_a
     post :create, params: { :host => {
       :name => 'test-content',
       :content_facet_attributes => {
@@ -59,7 +59,7 @@ class HostsControllerTest < ActionController::TestCase
         :content_source_id => "",
       },
     } }, session: set_session_user
-    assert_equal_arrays orig_cves, @host.content_facet.content_view_environment_ids
+    assert_equal_arrays orig_cvenvs, @host.content_facet.content_view_environment_ids
   end
 
   context 'csv' do

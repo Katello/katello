@@ -47,18 +47,18 @@ module Katello
 
         def handle_content_view_environments_for_create
           # validations should occur before the action so that the request can fail and not render multiple responses
-          cves = validate_content_view_environment_params
+          cvenvs = validate_content_view_environment_params
           yield
           # Skip if the create action didn't persist the host
           return unless @host&.persisted?
           # Reload so @host.content_facet reflects what the create action saved
           @host.reload
-          set_content_view_environments(cves)
+          set_content_view_environments(cvenvs)
         end
 
         def handle_content_view_environments_for_update
-          cves = validate_content_view_environment_params
-          set_content_view_environments(cves)
+          cvenvs = validate_content_view_environment_params
+          set_content_view_environments(cvenvs)
         end
 
         def validate_content_view_environment_params
@@ -66,20 +66,20 @@ module Katello
           return if content_facet_attributes.blank?
           return unless cvenv_params[:content_view_environments].present? || cvenv_params[:content_view_environment_ids].present?
 
-          cves = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
+          cvenvs = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
             labels: cvenv_params[:content_view_environments],
             ids: cvenv_params[:content_view_environment_ids],
             organization: find_organization || @host&.organization)
-          if cves.blank?
+          if cvenvs.blank?
             handle_errors(labels: cvenv_params[:content_view_environments],
               ids: cvenv_params[:content_view_environment_ids])
           end
-          cves
+          cvenvs
         end
 
         # rubocop:disable Naming/AccessorMethodName
-        def set_content_view_environments(cves)
-          return if cves.blank?
+        def set_content_view_environments(cvenvs)
+          return if cvenvs.blank?
           if @host.blank?
             Rails.logger.debug "No host; not assigning content view environments"
             return
@@ -87,7 +87,7 @@ module Katello
             content_facet = Katello::Host::ContentFacet.new(host: @host)
             @host.content_facet = content_facet
           end
-          @host.content_facet.content_view_environments = cves
+          @host.content_facet.content_view_environments = cvenvs
         end
         # rubocop:enable Naming/AccessorMethodName
 

@@ -8,8 +8,8 @@
  *
  * @param {Object} assignment - Assignment object with lifecycle environment
  *                              and content view
- * @param {Object} assignment.cveLabel - Pre-computed label from API
- *                                       (if available)
+ * @param {Object} assignment.cvEnvLabel - Pre-computed label from API
+ *                                         (if available)
  * @param {Array|Object} assignment.selectedEnv - Selected lifecycle
  *                                                environment (array or object)
  * @param {Object} assignment.environment - Lifecycle environment object
@@ -19,7 +19,7 @@
  */
 const buildContentViewEnvironmentLabel = (assignment) => {
   // If assignment has pre-computed label from API, use it
-  if (assignment.cveLabel) return assignment.cveLabel;
+  if (assignment.cvEnvLabel) return assignment.cvEnvLabel;
 
   // Get lifecycle environment - support both selectedEnv array and direct environment property
   const env = assignment.selectedEnv?.[0] || assignment.environment;

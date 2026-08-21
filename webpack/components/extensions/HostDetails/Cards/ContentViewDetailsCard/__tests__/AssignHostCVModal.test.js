@@ -570,7 +570,7 @@ describe('AssignHostCVModal', () => {
         {
           contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
           environment: { id: 1, name: 'Library', label: 'Library' },
-          cveLabel: 'Library/cv_1',
+          cvEnvLabel: 'Library/cv_1',
         },
       ];
 
@@ -602,12 +602,12 @@ describe('AssignHostCVModal', () => {
         {
           contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
           environment: { id: 1, name: 'Library', label: 'Library' },
-          cveLabel: 'Library/cv_1',
+          cvEnvLabel: 'Library/cv_1',
         },
         {
           contentView: { id: 3, name: 'cv_2', label: 'cv_2' },
           environment: { id: 2, name: 'dev', label: 'dev' },
-          cveLabel: 'dev/cv_2',
+          cvEnvLabel: 'dev/cv_2',
         },
       ];
 
@@ -654,7 +654,7 @@ describe('AssignHostCVModal', () => {
         {
           contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
           environment: { id: 1, name: 'Library', label: 'Library' },
-          cveLabel: 'Library/cv_1',
+          cvEnvLabel: 'Library/cv_1',
         },
       ];
 
@@ -706,12 +706,12 @@ describe('AssignHostCVModal', () => {
         {
           contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
           environment: { id: 1, name: 'Library', label: 'Library' },
-          cveLabel: 'Library/cv_1',
+          cvEnvLabel: 'Library/cv_1',
         },
         {
           contentView: { id: 3, name: 'cv_2', label: 'cv_2' },
           environment: { id: 2, name: 'dev', label: 'dev' },
-          cveLabel: 'dev/cv_2',
+          cvEnvLabel: 'dev/cv_2',
         },
       ];
 
@@ -746,7 +746,7 @@ describe('AssignHostCVModal', () => {
         {
           contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
           environment: { id: 1, name: 'Library', label: 'Library' },
-          cveLabel: 'Library/cv_1',
+          cvEnvLabel: 'Library/cv_1',
         },
       ];
 
@@ -805,7 +805,7 @@ describe('AssignHostCVModal', () => {
       jest.restoreAllMocks();
     });
 
-    test('Save with existing assignment preserves cveLabel', async () => {
+    test('Save with existing assignment preserves cvEnvLabel', async () => {
       const existingAssignments = [
         {
           contentView: {
@@ -821,7 +821,7 @@ describe('AssignHostCVModal', () => {
             label: 'Library',
             library: true,
           },
-          cveLabel: 'Library/cv_1', // Existing label from API
+          cvEnvLabel: 'Library/cv_1', // Existing label from API
         },
         {
           contentView: {
@@ -837,7 +837,7 @@ describe('AssignHostCVModal', () => {
             label: 'Library',
             library: true,
           },
-          cveLabel: 'Library', // Default CV in Library uses just env label
+          cvEnvLabel: 'Library', // Default CV in Library uses just env label
         },
       ];
 
@@ -877,7 +877,7 @@ describe('AssignHostCVModal', () => {
         userEvent.click(saveButton);
       });
 
-      // Verify API was called with existing cveLabel preserved for first assignment
+      // Verify API was called with existing cvEnvLabel preserved for first assignment
       await patientlyWaitFor(() => {
         expect(mockAssignHostCVEnvironments).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -1048,17 +1048,17 @@ describe('AssignHostCVModal', () => {
         {
           contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
           environment: { id: 1, name: 'Library', label: 'Library' },
-          cveLabel: 'Library/cv_1',
+          cvEnvLabel: 'Library/cv_1',
         },
         {
           contentView: { id: 3, name: 'composite_cv', label: 'composite_cv' },
           environment: { id: 2, name: 'dev', label: 'dev' },
-          cveLabel: 'dev/composite_cv',
+          cvEnvLabel: 'dev/composite_cv',
         },
         {
           contentView: { id: 4, name: 'cv_2', label: 'cv_2' },
           environment: { id: 3, name: 'prod', label: 'prod' },
-          cveLabel: 'prod/cv_2',
+          cvEnvLabel: 'prod/cv_2',
         },
       ];
 
@@ -1126,7 +1126,7 @@ describe('AssignHostCVModal', () => {
       });
     });
 
-    test('Changing CV in existing assignment builds new label instead of reusing old cveLabel', async () => {
+    test('Changing CV in existing assignment builds new label instead of reusing old cvEnvLabel', async () => {
       const existingAssignments = [
         {
           contentView: {
@@ -1142,7 +1142,7 @@ describe('AssignHostCVModal', () => {
             label: 'Library',
             library: true,
           },
-          cveLabel: 'Library/cv_1', // User currently has cv_1
+          cvEnvLabel: 'Library/cv_1', // User currently has cv_1
         },
       ];
 
@@ -1203,7 +1203,7 @@ describe('AssignHostCVModal', () => {
       });
 
       // Verify API was called with NEW label (Library/composite_cv),
-      // NOT the old cveLabel (Library/cv_1)
+      // NOT the old cvEnvLabel (Library/cv_1)
       await patientlyWaitFor(() => {
         expect(mockAssignHostCVEnvironments).toHaveBeenCalledWith(
           expect.objectContaining({

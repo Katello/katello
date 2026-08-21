@@ -103,7 +103,7 @@ ContentViewEnvironmentDisplay.propTypes = {
   }).isRequired,
 };
 
-export const CVEDetailsBareCard = ({
+export const CvEnvDetailsBareCard = ({
   contentViewEnvironments, hostPermissions, permissions, dropdownItems,
   isDropdownOpen, toggleKebab, openModal, allowMultipleContentViews,
 }) => {
@@ -185,7 +185,7 @@ export const CVEDetailsBareCard = ({
   );
 };
 
-CVEDetailsBareCard.propTypes = {
+CvEnvDetailsBareCard.propTypes = {
   contentViewEnvironments: PropTypes.arrayOf(PropTypes.shape({
     content_view: PropTypes.shape({
       name: PropTypes.string,
@@ -212,7 +212,7 @@ CVEDetailsBareCard.propTypes = {
   allowMultipleContentViews: PropTypes.bool,
 };
 
-CVEDetailsBareCard.defaultProps = {
+CvEnvDetailsBareCard.defaultProps = {
   contentViewEnvironments: [],
   hostPermissions: {},
   permissions: {},
@@ -258,12 +258,12 @@ export const ContentViewEnvironmentDetails = ({
   const existingAssignments = contentViewEnvironments.map(env => ({
     contentView: env.content_view,
     environment: env.lifecycle_environment,
-    cveLabel: env.label, // Use the CVE label from the API
+    cvEnvLabel: env.label, // Use the content view environment label from the API
   }));
 
   return (
     <GridItem rowSpan={1} md={6} lg={4} xl2={3} >
-      <CVEDetailsBareCard
+      <CvEnvDetailsBareCard
         isDropdownOpen={isDropdownOpen}
         toggleKebab={toggleKebab}
         contentViewEnvironments={contentViewEnvironments}
