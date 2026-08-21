@@ -7,7 +7,7 @@ module Katello
     class << self
       def services(capsule_id = nil)
         proxy = fetch_proxy(capsule_id)
-        services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events]
+        services = [:candlepin, :candlepin_auth, :foreman_tasks]
         services += [:pulp3, :pulp3_content] if proxy&.pulp3_enabled?
 
         services
@@ -33,24 +33,6 @@ module Katello
           version: Katello::VERSION,
           timeUTC: Time.now.getutc,
         }
-      end
-
-      def event_daemon_status(status, result)
-        running = status&.dig(:running)
-
-        if running
-          result[:message] = "#{status[:processed_count].to_i} Processed, #{status[:failed_count].to_i} Failed"
-        else
-          result[:status] = FAIL_RETURN_CODE
-          result[:message] = _("Not running")
-        end
-      end
-
-      def ping_katello_events(result)
-        exception_watch(result) do
-          status = Katello::EventDaemon::Runner.service_status(:katello_events)
-          event_daemon_status(status, result)
-        end
       end
 
       def ping_pulp3_without_auth(service_result, capsule_id)
@@ -171,7 +153,6 @@ module Katello
 
         ping_candlepin_with_auth(result[:candlepin_auth]) if result.include?(:candlepin_auth)
         ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
-        ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
 
         # set overall status result code
         result = {:services => result}
