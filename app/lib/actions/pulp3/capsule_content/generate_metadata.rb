@@ -5,13 +5,11 @@ module Actions
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
         def plan(repository, smart_proxy, options = {})
           options[:contents_changed] = (options && options.key?(:contents_changed)) ? options[:contents_changed] : true
-          sequence do
-            unless repository.repository_type.pulp3_skip_publication
-              plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id,
-                         :options => options).output
-            end
-            plan_action(RefreshDistribution, repository, smart_proxy,
-                          :contents_changed => options[:contents_changed])
+          # RefreshDistribution is planned from SyncCapsule#plan_distribution_cutover
+          # after all sync batches (atomic cutover). Do not inline it here.
+          unless repository.repository_type.pulp3_skip_publication
+            plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id,
+                       :options => options).output
           end
         end
 
