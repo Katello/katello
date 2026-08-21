@@ -124,7 +124,8 @@ module Katello
 
       return true if authenticate_from_request(request.headers['Authorization'])
 
-      unauthorized
+      unauthorized unless performed?
+      false
     end
 
     def static_index_authorize
@@ -219,7 +220,7 @@ module Katello
           :bad_request
         )
       end
-      org = Organization.where("LOWER(label) = '#{org_label}'") # convert to lowercase
+      org = visible_organizations.where("LOWER(label) = LOWER(?)", org_label)
       # reject ambiguous orgs (possible due to lowercase conversion)
       if org.length > 1
         # Determine if the repo already exists in one of the possible products. If yes,
@@ -253,11 +254,7 @@ module Katello
         )
       end
       if org.length == 0
-        return render_podman_error(
-          "NAME_UNKNOWN",
-          _("Organization not found: '%s'") % org_label,
-          :not_found
-        )
+        return render_push_name_unknown
       end
       @organization = org.first
       true
@@ -272,13 +269,9 @@ module Katello
           :bad_request
         )
       end
-      @organization = Organization.find_by_id(org_id.to_i)
+      @organization = visible_organizations.find_by_id(org_id.to_i)
       if @organization.nil?
-        return render_podman_error(
-          "NAME_UNKNOWN",
-          _("Organization id not found: '%s'") % org_id,
-          :not_found
-        )
+        return render_push_name_unknown
       end
       true
     end
@@ -322,11 +315,7 @@ module Katello
         )
       end
       if product.length == 0
-        return render_podman_error(
-          "NAME_UNKNOWN",
-          _("Product not found: '%s'") % prod_label,
-          :not_found
-        )
+        return render_push_name_unknown
       end
       @product = product.first
       true
@@ -341,19 +330,16 @@ module Katello
           :bad_request
         )
       end
-      @product = @organization.products.find_by_id(prod_id.to_i)
+      @product = @organization.products.readable.find_by_id(prod_id.to_i)
       if @product.nil?
-        return render_podman_error(
-          "NAME_UNKNOWN",
-          _("Product id not found: '%s'") % prod_id,
-          :not_found
-        )
+        return render_push_name_unknown
       end
       true
     end
 
     def get_matching_products_from_org(organization, product_label)
-      return organization.products.where("LOWER(label) = '#{product_label}'") # convert to lowercase
+      # The actual push permission (sync_products) is checked in create_container_repo_if_needed.
+      return organization.products.readable.where("LOWER(label) = LOWER(?)", product_label)
     end
 
     def get_root_repo_from_product(product, root_repo_name)
@@ -401,7 +387,7 @@ module Katello
         return render_podman_error(
           'DENIED',
           _("Requested access to '%s' is denied") % @container_name,
-          :not_found
+          :forbidden
         )
       end
 
@@ -967,6 +953,23 @@ module Katello
 
     def manifest_not_found(item)
       render_podman_error("MANIFEST_UNKNOWN", _("%s was not found!") % item, :not_found)
+    end
+
+    def render_push_name_unknown
+      # Uniform response for any organization/product that the current user cannot see.
+      # Collapsing "does not exist" and "not visible" into a single 404 NAME_UNKNOWN
+      # follows the OCI distribution spec guidance to return NAME_UNKNOWN rather than
+      # disclosing the existence of resources the user may not access.
+      render_podman_error("NAME_UNKNOWN", _("Requested repository name is unknown to the registry."), :not_found)
+    end
+
+    def visible_organizations
+      # Organizations visible to the current user. Used to scope push validation so that
+      # organizations the user cannot see are indistinguishable from organizations that do
+      # not exist. The actual push permission (sync_products) is checked later in
+      # create_container_repo_if_needed, which returns DENIED for visible but non-syncable
+      # products.
+      ::Organization.my_organizations
     end
 
     def static_index
