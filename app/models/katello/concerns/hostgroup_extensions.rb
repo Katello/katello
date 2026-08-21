@@ -27,7 +27,6 @@ module Katello
 
         before_validation :correct_kickstart_repository
 
-        delegate :content_source_name, to: :content_facet, allow_nil: true
         delegate :content_source_id, :kickstart_repository_id, :content_view_id, :lifecycle_environment_id, :content_view_environment_id, to: :content_facet, allow_nil: true
         delegate :'content_source_id=', :'kickstart_repository_id=', :'content_view_environment_id=', to: :safe_content_facet, allow_nil: true
 
@@ -105,12 +104,20 @@ module Katello
         inherited_ancestry_attribute(:kickstart_repository_id, :content_facet)
       end
 
+      def content_source_name
+        content_source&.name
+      end
+
       def content_view_name
         content_view&.name
       end
 
       def lifecycle_environment_name
         lifecycle_environment&.name
+      end
+
+      def kickstart_repository_name
+        kickstart_repository&.name
       end
 
       def rhsm_organization_label
