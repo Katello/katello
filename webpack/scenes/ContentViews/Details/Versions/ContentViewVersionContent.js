@@ -13,7 +13,6 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
     docker_manifest_count: dockerManifestCount = 0,
     docker_manifest_list_count: dockerManifestListCount = 0,
     docker_tag_count: dockerTagCount = 0,
-    file_count: fileCount = 0,
     module_stream_count: moduleStreamCount = 0,
     ansible_collection_count: ansibleCollectionCount = 0,
   } = cvVersion;
@@ -36,7 +35,7 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
 
   const noCounts =
     !Number(debCount) && !Number(dockerManifestCount) && !Number(dockerTagCount) &&
-    !Number(fileCount) && !Number(moduleStreamCount) && !Number(ansibleCollectionCount) &&
+    !Number(moduleStreamCount) && !Number(ansibleCollectionCount) &&
     !Number(dockerManifestListCount) && !contentConfigTypes?.length;
 
   if (noCounts) {
@@ -74,11 +73,6 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
         </Link><br />
       </>
       }
-      {fileCount > 0 &&
-        <>
-          <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/files`, '')}>{`${fileCount} Files`}</a><br />
-        </>
-      }
       {contentConfigTypes?.length > 0 &&
         contentConfigTypes.map(({ label, count, pluralLabel }) => (
           <React.Fragment key={label}>
@@ -99,7 +93,6 @@ ContentViewVersionContent.propTypes = {
     docker_manifest_count: PropTypes.number,
     docker_manifest_list_count: PropTypes.number,
     docker_tag_count: PropTypes.number,
-    file_count: PropTypes.number,
     module_stream_count: PropTypes.number,
     ansible_collection_count: PropTypes.number,
   }),
@@ -112,7 +105,6 @@ ContentViewVersionContent.defaultProps = {
     deb_count: 0,
     docker_manifest_count: 0,
     docker_tag_count: 0,
-    file_count: 0,
     module_stream_count: 0,
     ansible_collection_count: 0,
   },

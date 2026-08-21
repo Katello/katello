@@ -11,20 +11,7 @@
      *   State routes defined for the files module
      */
     function FilesConfig($stateProvider) {
-        $stateProvider.state('files', {
-            url: '/files',
-            permission: ['view_products', 'view_content_views'],
-            views: {
-                '@': {
-                    controller: 'FilesController',
-                    templateUrl: 'files/views/files.html'
-                }
-            },
-            ncyBreadcrumb: {
-                label: "{{ 'Files' | translate }}"
-            }
-        })
-        .state('file', {
+        $stateProvider.state('file', {
             abstract: true,
             url: '/files/:fileId',
             permission: ['view_products', 'view_content_views'],
@@ -36,8 +23,7 @@
             permission: ['view_products', 'view_content_views'],
             templateUrl: 'files/details/views/file-info.html',
             ncyBreadcrumb: {
-                label: "{{ file.name }}",
-                parent: 'files'
+                label: "{{ file.name }}"
             }
         })
         .state('file.repositories', {

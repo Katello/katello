@@ -142,7 +142,7 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :files,
          :caption => N_('Files'),
-         :url => '/files',
+         :url => '/content/files',
          :url_hash => {:controller => 'katello/api/v2/file_units',
                        :action => 'index'},
          :engine => Katello::Engine,

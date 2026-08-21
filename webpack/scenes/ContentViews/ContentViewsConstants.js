@@ -8,7 +8,6 @@ const ERRATA_KEY = 'ERRATA';
 const MODULE_STREAMS_KEY = 'MODULE_STREAMS';
 const DEB_PACKAGES_KEY = 'DEB_PACKAGES';
 const DOCKER_TAGS_KEY = 'DOCKER_TAGS';
-const FILES_KEY = 'FILES';
 const CONTAINER_MANIFEST_LISTS_KEY = 'CONTAINER_MANIFEST_LISTS';
 export const CREATE_CONTENT_VIEW_KEY = 'CONTENT_VIEW_CREATE';
 export const COPY_CONTENT_VIEW_KEY = 'CONTENT_VIEW_COPY';
@@ -36,7 +35,6 @@ export const CONTAINER_MANIFEST_LIST_CONTENT = 'CONTAINER_MANIFEST_LIST_CONTENT'
 export const MODULE_STREAMS_CONTENT = 'MODULE_STREAMS_CONTENT';
 export const DEB_PACKAGES_CONTENT = 'DEB_PACKAGES_CONTENT';
 export const RPM_PACKAGES_CONTENT = 'RPM_PACKAGES_CONTENT';
-export const FILE_CONTENT = 'FILE_CONTENT';
 export const CONTENT_VIEW_NEEDS_PUBLISH = 'CV_NEEDS_PUBLISH';
 export const CONTENT_VIEW_NEEDS_PUBLISH_RESET = 'CV_NEEDS_PUBLISH_RESET';
 export const generatedContentKey = pluralLabel => `${toUpper(pluralLabel)}_CONTENT`;
@@ -75,7 +73,6 @@ export const cvModuleStreamsCompareKey = (versionOne, versionTwo, viewBy) => `${
 export const cvDebPackagesCompareKey = (versionOne, versionTwo, viewBy) => `${DEB_PACKAGES_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const cvDockerTagsCompareKey = (versionOne, versionTwo, viewBy) => `${DOCKER_TAGS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 export const cvContainerManifestListsCompareKey = (versionOne, versionTwo, viewBy) => `${CONTAINER_MANIFEST_LISTS_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
-export const filesCompareKey = (versionOne, versionTwo, viewBy) => `${FILES_KEY}_COMPARE_${versionOne}_${versionTwo}_VIEW_BY_${toUpper(viewBy)}`;
 
 // Repo added to content view status display and key
 export const ADDED = 'Added';
