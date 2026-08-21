@@ -289,4 +289,20 @@ export default [
       },
     ],
   },
+  {
+    names: {
+      pluralTitle: __('Files'),
+      singularTitle: __('File'),
+      pluralLowercase: __('files'),
+      singularLowercase: __('file'),
+      pluralLabel: 'files',
+      singularLabel: 'file',
+      capsuleCountLabel: 'file',
+    },
+    columnHeaders: [
+      { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`files/${unit?.id}`, '')}>{unit?.name}</a>) },
+      { title: __('Path'), getProperty: unit => unit?.path },
+      { title: __('Checksum'), getProperty: unit => unit?.checksum },
+    ],
+  },
 ];

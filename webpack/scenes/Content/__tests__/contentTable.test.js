@@ -6,11 +6,15 @@ import GenericContentPage from '../GenericContentPage';
 import ansibleCollectionsResponse from './ansibleCollections.fixtures';
 import contentTypesResponse from './contentTypes.fixtures.json';
 import pythonPackagesResponse from './pythonPackages.fixtures.json';
+import filesResponse from './files.fixtures.json';
+import moduleStreamsResponse from './moduleStreams.fixtures.json';
 import ContentTable from '../Table/ContentTable';
 
 const contentTypesPath = api.getApiUrl('/repositories/content_types');
 const pythonPackagesPath = api.getApiUrl('/python_packages');
 const ansibleCollectionsPath = api.getApiUrl('/ansible_collections');
+const filesPath = api.getApiUrl('/files');
+const moduleStreamsPath = api.getApiUrl('/module_streams');
 
 test('Can call API for Python Packages and show table on page load', async (done) => {
   const autocompleteUrl = '/python_packages/auto_complete_search';
@@ -73,5 +77,79 @@ test('Can call API for Ansible collections and show table on page load', async (
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(ansibleCollections);
+  done();
+});
+
+test('Can call API for Files and show table on page load', async (done) => {
+  const mockContentTypes = { Files: ['file', 'files'] };
+  const autocompleteUrl = '/files/auto_complete_search';
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+
+  const { results } = filesResponse;
+  const [firstFile] = results;
+
+  const filesScope = nockInstance
+    .get(filesPath)
+    .query(true)
+    .reply(200, filesResponse);
+
+  const { queryByText, getAllByText } =
+    renderWithRedux(<ContentTable
+      contentTypes={mockContentTypes}
+      selectedContentType="Files"
+      setSelectedContentType={() => { }}
+      showContentTypeSelector={false}
+    />);
+
+  expect(queryByText(firstFile.name)).toBeNull();
+  await patientlyWaitFor(() => {
+    expect(getAllByText(firstFile.name)[0]).toBeInTheDocument();
+    expect(getAllByText(firstFile.path)[0]).toBeInTheDocument();
+    expect(getAllByText(firstFile.checksum)[0]).toBeInTheDocument();
+  });
+  await patientlyWaitFor(() => {
+    expect(autocompleteScope.isDone()).toBe(true);
+    expect(filesScope.isDone()).toBe(true);
+  });
+  autocompleteScope.done();
+  filesScope.done();
+  done();
+});
+
+test('Can call API for Module Streams and show table on page load', async (done) => {
+  const mockContentTypes = { 'Module Streams': ['modulemd', 'module_streams'] };
+  const autocompleteUrl = '/module_streams/auto_complete_search';
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+
+  const { results } = moduleStreamsResponse;
+  const [firstModuleStream] = results;
+
+  const moduleStreamsScope = nockInstance
+    .get(moduleStreamsPath)
+    .query(true)
+    .reply(200, moduleStreamsResponse);
+
+  const { queryByText, getAllByText } =
+    renderWithRedux(<ContentTable
+      contentTypes={mockContentTypes}
+      selectedContentType="Module Streams"
+      setSelectedContentType={() => { }}
+      showContentTypeSelector={false}
+    />);
+
+  expect(queryByText(firstModuleStream.name)).toBeNull();
+  await patientlyWaitFor(() => {
+    expect(getAllByText(firstModuleStream.name)[0]).toBeInTheDocument();
+    expect(getAllByText(firstModuleStream.stream)[0]).toBeInTheDocument();
+    expect(getAllByText(firstModuleStream.version)[0]).toBeInTheDocument();
+    expect(getAllByText(firstModuleStream.arch)[0]).toBeInTheDocument();
+    expect(getAllByText(firstModuleStream.context)[0]).toBeInTheDocument();
+  });
+  await patientlyWaitFor(() => {
+    expect(autocompleteScope.isDone()).toBe(true);
+    expect(moduleStreamsScope.isDone()).toBe(true);
+  });
+  autocompleteScope.done();
+  moduleStreamsScope.done();
   done();
 });

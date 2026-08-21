@@ -29,7 +29,6 @@ import {
   DEB_PACKAGES_CONTENT,
   DOCKER_TAGS_CONTENT,
   ERRATA_CONTENT,
-  FILE_CONTENT,
   generatedContentKey,
   HOSTS_KEY,
   MODULE_STREAMS_CONTENT,
@@ -43,7 +42,6 @@ import {
   cvModuleStreamsCompareKey,
   cvDockerTagsCompareKey,
   cvDebPackagesCompareKey,
-  filesCompareKey,
   genericContentCompareKey,
   cvRepositoriesCompareKey,
   CONTAINER_MANIFEST_LIST_CONTENT,
@@ -212,15 +210,6 @@ export const selectDebPackagesComparisonStatus = (state, versionOne, versionTwo,
 export const selectDebPackagesComparisonError = (state, versionOne, versionTwo, viewBy) =>
   selectAPIError(state, cvDebPackagesCompareKey(versionOne, versionTwo, viewBy));
 
-export const selectFilesComparison = (state, versionOne, versionTwo, viewBy) =>
-  selectAPIResponse(state, filesCompareKey(versionOne, versionTwo, viewBy)) || {};
-
-export const selectFilesComparisonStatus = (state, versionOne, versionTwo, viewBy) =>
-  selectAPIStatus(state, filesCompareKey(versionOne, versionTwo, viewBy)) || STATUS.PENDING;
-
-export const selectFilesComparisonError = (state, versionOne, versionTwo, viewBy) =>
-  selectAPIError(state, filesCompareKey(versionOne, versionTwo, viewBy));
-
 export const selectGenericContentComparison =
   (state, versionOne, versionTwo, pluralLabel, viewBy) =>
     selectAPIResponse(
@@ -290,12 +279,6 @@ export const selectRPMPackages = state =>
 
 export const selectRPMPackagesStatus = state =>
   selectAPIStatus(state, RPM_PACKAGES_CONTENT) || STATUS.PENDING;
-
-export const selectFiles = state =>
-  selectAPIResponse(state, FILE_CONTENT);
-
-export const selectFilesStatus = state =>
-  selectAPIStatus(state, FILE_CONTENT) || STATUS.PENDING;
 
 export const selectErrata = state =>
   selectAPIResponse(state, ERRATA_CONTENT);

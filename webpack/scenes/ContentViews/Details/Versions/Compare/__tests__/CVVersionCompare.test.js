@@ -118,7 +118,7 @@ const testConfigAllContentTypes = [
       last(cvVersionPackageGroupsCompareAllContentData.results).name],
   },
   {
-    name: 'Files',
+    name: 'files',
     countKey: 'file_count',
     autoCompleteUrl: '/files/auto_complete_search',
     dataUrl: api.getApiUrl('/files/compare'),
@@ -220,7 +220,7 @@ const testConfigThreeContentTypes = [
       last(cvVersionErrataCompareThreeContentTypesData.results).name],
   },
   {
-    name: 'Files',
+    name: 'files',
     countKey: 'file_count',
     autoCompleteUrl: '/files/auto_complete_search',
     dataUrl: api.getApiUrl('/files/compare'),
@@ -257,7 +257,7 @@ const testConfigViewByDifferent = [
     textQuery: emptyContentViewByText('Errata'),
   },
   {
-    name: 'Files',
+    name: 'files',
     countKey: 'file_count',
     autoCompleteUrl: '/files/auto_complete_search',
     dataUrl: api.getApiUrl('/files/compare'),
@@ -299,12 +299,12 @@ const testConfigViewBySame = [
       last(cvVersionErrataCompareThreeContentTypesData.results).name],
   },
   {
-    name: 'Files',
+    name: 'files',
     countKey: 'file_count',
     autoCompleteUrl: '/files/auto_complete_search',
     dataUrl: api.getApiUrl('/files/compare'),
     data: cvVersionEmptyContent,
-    textQuery: emptyContentViewByText('Files'),
+    textQuery: emptyContentViewByText('files'),
   },
 ];
 
@@ -592,7 +592,7 @@ test('Can select viewing by "Different" in the dropdown and see the content in e
     expect(getByText('No matching Repositories found.')).toBeTruthy();
   });
 
-  (testConfigViewByDifferent.find(({ name }) => name === 'Files')).textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
+  (testConfigViewByDifferent.find(({ name }) => name === 'files')).textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
 
   fireEvent.click(getByText('RPM packages'));
   await patientlyWaitFor(() => {
@@ -660,15 +660,17 @@ test('Can select viewing by "Same" in the dropdown and see the content in common
     testConfigViewBySame.forEach(({ name }) => {
       expect(queryByText(name)).toBeTruthy();
     });
-    (testConfigViewBySame.filter(({ name }) => !(name === 'Files'))).forEach(({ textQuery }) => {
+  });
+  await patientlyWaitFor(() => {
+    (testConfigViewBySame.filter(({ name }) => !(name === 'files'))).forEach(({ textQuery }) => {
       textQuery.forEach(query => expect(queryAllByText(query)).toBeTruthy());
     });
   });
 
-  expect(getByText('Files')).toBeTruthy();
-  fireEvent.click(getByText('Files'));
+  expect(getByText('files')).toBeTruthy();
+  fireEvent.click(getByText('files'));
   await patientlyWaitFor(() => {
-    expect(getByText('No matching Files found.')).toBeTruthy();
+    expect(getByText('No matching files found.')).toBeTruthy();
   });
   assertNockRequest(scopeCVDetails);
   assertNockRequest(scopeVersionOneDetails);

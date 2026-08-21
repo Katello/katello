@@ -11,8 +11,6 @@ import {
   selectPackageGroupsComparisonStatus,
   selectRPMPackagesComparison,
   selectRPMPackagesComparisonStatus,
-  selectFilesComparison,
-  selectFilesComparisonStatus,
   selectErrataComparison,
   selectErrataComparisonStatus,
   selectDebPackagesComparison,
@@ -29,7 +27,6 @@ import {
 import {
   getPackageGroupsComparison,
   getRPMPackagesComparison,
-  getFilesComparison,
   getErrataComparison,
   getDebPackagesComparison,
   getDockerTagsComparison,
@@ -181,32 +178,6 @@ export default ({
       columnHeaders: [
         { title: __('Name'), getProperty: item => item?.name },
         { title: __('Repository'), getProperty: item => item?.repository?.name },
-        { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
-        { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
-      ],
-      sortConfig: {
-        [__('Name')]: 'name',
-      },
-    },
-    {
-      name: __('Files'),
-      getCountKey: (itemVersionOne, itemVersionTwo) =>
-        itemVersionOne?.file_count || itemVersionTwo?.file_count,
-      responseSelector: state => selectFilesComparison(state, versionOneId, versionTwoId, viewBy),
-      statusSelector: state =>
-        selectFilesComparisonStatus(state, versionOneId, versionTwoId, viewBy),
-      autocompleteEndpoint: '/katello/api/v2/files',
-      bookmarkController: 'katello_content_view_components',
-      fetchItems: params => getFilesComparison(versionOneId, versionTwoId, viewBy, params),
-      columnHeaders: [
-        {
-          title: __('Name'),
-          getProperty: item => (
-            <a href={urlBuilder(`files/${item?.id}`, '')}>
-              {item?.name}
-            </a>),
-        },
-        { title: __('Path'), getProperty: item => item?.path },
         { title: __(`Version ${versionOne}`), getProperty: item => compareContent(item, versionOneId) },
         { title: __(`Version ${versionTwo}`), getProperty: item => compareContent(item, versionTwoId) },
       ],

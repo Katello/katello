@@ -54,10 +54,6 @@ const ContentViewVersionRepositoryCell = ({
       name: __('Container image tags'),
       to: `dockerTags?repository_id=${libraryInstanceId}`,
     },
-    file: {
-      name: __('Files'),
-      to: `files?repository_id=${libraryInstanceId}`,
-    },
     package_group: {
       name: __('Package groups'),
       to: `rpmPackageGroups?repository_id=${libraryInstanceId}`,

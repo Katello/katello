@@ -42,7 +42,6 @@ import {
   cvVersionDetailsKey,
   cvRemoveVersionKey,
   REPOSITORY_CONTENT,
-  FILE_CONTENT,
   ERRATA_CONTENT,
   MODULE_STREAMS_CONTENT,
   DEB_PACKAGES_CONTENT,
@@ -56,7 +55,6 @@ import {
   cvModuleStreamsCompareKey,
   cvDockerTagsCompareKey,
   cvDebPackagesCompareKey,
-  filesCompareKey,
   genericContentCompareKey,
   cvRepositoriesCompareKey, cvContainerManifestListsCompareKey,
 } from '../ContentViewsConstants';
@@ -192,19 +190,6 @@ export const getContainerManifestListsComparison = (versionOne, versionTwo, view
   });
 };
 
-export const getFilesComparison = (versionOne, versionTwo, viewBy, params) => {
-  const versions = { content_view_version_ids: [versionOne, versionTwo] };
-  const restrictComparison = { restrict_comparison: viewBy };
-  const apiParams = { ...versions, ...restrictComparison, ...params };
-  const apiUrl = '/files/compare';
-  return get({
-    key: filesCompareKey(versionOne, versionTwo, viewBy),
-    params: apiParams,
-    errorToast: error => __(`Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}`),
-    url: api.getApiUrl(apiUrl),
-  });
-};
-
 export const getGenericContentComparison =
   (pluralLabel, versionOne, versionTwo, viewBy, params) => {
     const versions = { content_view_version_ids: [versionOne, versionTwo] };
@@ -218,14 +203,6 @@ export const getGenericContentComparison =
       url: api.getApiUrl(apiUrl),
     });
   };
-
-export const getFiles = params => get({
-  type: API_OPERATIONS.GET,
-  key: FILE_CONTENT,
-  url: api.getApiUrl('/files'),
-  params,
-  errorToast: error => __(`Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}`),
-});
 
 export const updateContentView = (cvId, params, handleSuccess) => put({
   type: API_OPERATIONS.PUT,

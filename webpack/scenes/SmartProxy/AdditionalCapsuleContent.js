@@ -9,7 +9,6 @@ const AdditionalCapsuleContent = ({ counts }) => {
     docker_manifest: dockerManifestCount = 0,
     docker_manifest_list: dockerManifestListCount = 0,
     docker_tag: dockerTagCount = 0,
-    file: fileCount = 0,
     erratum: errataCount = 0,
     package_group: packageGroup = 0,
     module_stream: moduleStreamCount = 0,
@@ -62,11 +61,6 @@ const AdditionalCapsuleContent = ({ counts }) => {
         {`${dockerManifestListCount} ${__('Container manifest lists')}`}<br />
       </>
       }
-      {fileCount > 0 &&
-      <>
-        {`${fileCount} ${__('Files')}`}<br />
-      </>
-            }
       {debPackageCount > 0 &&
       <>
         {`${debPackageCount} ${__('Debian packages')}`}<br />
@@ -87,7 +81,6 @@ AdditionalCapsuleContent.propTypes = {
     docker_manifest: PropTypes.number,
     docker_manifest_list: PropTypes.number,
     docker_tag: PropTypes.number,
-    file: PropTypes.number,
     erratum: PropTypes.number,
     package_group: PropTypes.number,
     module_stream: PropTypes.number,
