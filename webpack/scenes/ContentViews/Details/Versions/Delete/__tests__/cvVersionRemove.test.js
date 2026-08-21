@@ -186,7 +186,9 @@ test('Can open Remove wizard and remove version from environment with hosts', as
     expect(getByText('Select lifecycle environment')).toBeInTheDocument();
     expect(getByText('Show hosts')).toBeInTheDocument();
   });
-  expect(getByText('affectedHost.example.com')).toBeInTheDocument();
+  await patientlyWaitFor(() => {
+    expect(getByText('affectedHost.example.com')).toBeInTheDocument();
+  });
   fireEvent.click(getByLabelText('test1'));
   await patientlyWaitFor(() => {
     expect(getByText('Select content view')).toBeInTheDocument();
@@ -279,7 +281,9 @@ test('Can open Remove wizard and remove version from environment with activation
     expect(getByText('Select lifecycle environment')).toBeInTheDocument();
     expect(getByText('Show activation keys')).toBeInTheDocument();
   });
-  expect(getByText('test activation key')).toBeInTheDocument();
+  await patientlyWaitFor(() => {
+    expect(getByText('test activation key')).toBeInTheDocument();
+  });
   fireEvent.click(getByLabelText('test1'));
   await patientlyWaitFor(() => {
     expect(getByText('Select content view')).toBeInTheDocument();

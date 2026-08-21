@@ -17,8 +17,6 @@ const contentRepositoryDetailsPath = api.getApiUrl('/repositories');
 
 const withContentRoute = component => <Route path="/content/:content_type([a-z_]+)/:id([0-9]+)">{component}</Route>;
 
-jest.mock('react-intl', () => ({ addLocaleData: () => { }, FormattedDate: () => 'mocked' }));
-
 test('Can call API for Python package details and show details tab on page load', async (done) => {
   const renderOptions = {
     apiNamespace: CONTENT_ID_KEY,

@@ -55,7 +55,7 @@ beforeEach(() => {
 
 test('shows content view details when host is registered', () => {
   const { getByText } = render(<ContentViewDetailsCard hostDetails={baseHostDetails} />);
-  expect(getByText('Version {version} (latest)')).toBeInTheDocument();
+  expect(getByText('Version 1.0 (latest)')).toBeInTheDocument();
 });
 
 
@@ -65,7 +65,7 @@ test('does not show content view details when host is not registered', () => {
     subscription_facet_attributes: undefined,
   };
   const { queryByText } = render(<ContentViewDetailsCard hostDetails={hostDetails} />);
-  expect(queryByText('Version {version}')).toBeNull();
+  expect(queryByText('Version 1.0')).toBeNull();
 });
 
 
@@ -86,8 +86,8 @@ test('shows when the CV in use is not the latest version', () => {
     },
   };
   const { getByText, queryByText } = render(<ContentViewDetailsCard hostDetails={hostDetails} />);
-  expect(getByText('Version {version}')).toBeInTheDocument();
-  expect(queryByText('Version {version} (latest)')).toBeNull();
+  expect(getByText('Version 1.0')).toBeInTheDocument();
+  expect(queryByText('Version 1.0 (latest)')).toBeNull();
 });
 
 test('does not show version info when using Default Organization View', () => {
@@ -110,6 +110,6 @@ test('does not show version info when using Default Organization View', () => {
 
   const { queryByText } = render(<ContentViewDetailsCard hostDetails={hostDetails} />);
   expect(queryByText('Default Organization View')).toBeInTheDocument();
-  expect(queryByText('Version {version}')).toBeNull();
+  expect(queryByText(/^Version \d/)).toBeNull();
 });
 

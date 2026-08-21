@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Modal, ModalVariant, Button, Flex, FlexItem } from '@patternfly/react-core';
 import { Table /* data-codemods */, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { EnterpriseIcon } from '@patternfly/react-icons';
-import { urlBuilder } from '../../../__mocks__/foremanReact/common/urlHelpers';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 
 /* eslint-disable react/no-array-index-key */
 const RelatedCompositeContentViewsModal = ({

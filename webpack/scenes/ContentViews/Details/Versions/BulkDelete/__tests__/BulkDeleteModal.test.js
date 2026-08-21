@@ -104,7 +104,7 @@ test('Open bulk delete modal and step through all steps', () => {
   expect(queryAllByText('Review affected environments')).toHaveLength(3);
   expect(getByText('Reassign affected host')).toBeInTheDocument();
   expect(getByText('Reassign affected activation key')).toBeInTheDocument();
-  expect(getByText('{versionOrVersions} {versionList} will be removed from the listed environments and will no longer be available for promotion.')).toBeInTheDocument();
+  expect(getByText(/will be removed from the listed environments and will no longer be available for promotion\./)).toBeInTheDocument();
 
   fireEvent.click(queryByText('Next'));
 

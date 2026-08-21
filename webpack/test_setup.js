@@ -1,24 +1,34 @@
-// Setup file for enzyme
-// See http://airbnb.io/enzyme/docs/installation/react-16.html
-import 'core-js/shim';
-import 'regenerator-runtime/runtime';
-
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import 'foremanJSTestSetup';
 import MutationObserver from '@sheerun/mutationobserver-shim';
-import * as Services from './services/api';
 
-configure({ adapter: new Adapter() });
-
-// Mocking translation function
-global.__ = text => text; // eslint-disable-line
-Services.orgId = () => 1;
-
-// Mocking locales to prevent unnecessary fallback messages
-window.locales = { en: { domain: 'app', locale_data: { app: { '': {} } } } };
-
-// see https://github.com/testing-library/dom-testing-library/releases/tag/v7.0.0
+// jsdom in jest 24 (standalone) lacks MutationObserver; shim needed for @testing-library/dom v7+
 window.MutationObserver = MutationObserver;
 
-// This will return undefined in test environments and is expected in some helper functions.
-window.URL_PREFIX = '';
+// Minimal store for modules importing foremanReact/redux at module scope
+jest.mock('foremanReact/redux', () => {
+  const state = { katello: { setOrganization: { currentId: 1 } } };
+
+  return { __esModule: true, default: { getState: () => state } };
+});
+
+// i18nProviderWrapperFactory renders async (waits for intl.ready); provide a synchronous
+// version so renderWithI18n from rtlTestHelpers works with synchronous getBy* assertions.
+jest.mock('foremanReact/common/i18nProviderWrapperFactory', () => {
+  const React = require('react');
+  const { IntlProvider } = require('react-intl');
+  return {
+    i18nProviderWrapperFactory: () => WrappedComponent => {
+      const Wrapper = props =>
+        React.createElement(IntlProvider, { locale: 'en' },
+          React.createElement(WrappedComponent, props));
+      return Wrapper;
+    },
+  };
+});
+
+// LongDateTime depends on react-intl's formatRelative which rejects out-of-range fixture dates
+jest.mock('foremanReact/components/common/dates/LongDateTime', () => ({
+  __esModule: true,
+  // eslint-disable-next-line global-require
+  default: ({ date, defaultValue }) => require('react').createElement('span', null, date || defaultValue || ''),
+}));
