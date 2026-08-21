@@ -392,7 +392,13 @@ module Katello
     def test_save_with_organization_location
       set_default_location
       @proxy.destroy!
-      @proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+      # In production the Pulpcore feature is associated by the associate_features
+      # before_save hook, so it is present when the before_create taxonomy callbacks
+      # run. The :with_pulp3 factory trait only adds it in after(:create), so build
+      # the feature here to reflect the real ordering.
+      @proxy = FactoryBot.build(:smart_proxy)
+      @proxy.smart_proxy_features.build(feature: pulp_features.first)
+      @proxy.save!
       @proxy_mirror.save!
 
       assert @proxy.pulp_primary?
@@ -410,6 +416,20 @@ module Katello
       assert_not_equal Katello::KTEnvironment.all.count, 0
       assert_equal @proxy.lifecycle_environments.all, Katello::KTEnvironment.all
       assert_equal @proxy_mirror.lifecycle_environments.all.count, 0
+    end
+
+    def test_non_pulp_proxy_is_not_pulp_primary
+      proxy = FactoryBot.create(:smart_proxy)
+
+      refute proxy.has_feature?(::SmartProxy::PULP3_FEATURE)
+      refute proxy.pulp_primary?
+    end
+
+    def test_non_pulp_proxy_not_associated_with_lifecycle_environments
+      assert_not_equal 0, Katello::KTEnvironment.all.count
+      proxy = FactoryBot.create(:smart_proxy)
+
+      assert_equal 0, proxy.lifecycle_environments.count
     end
 
     def test_rhsm_url_without_rhsm_url_setting

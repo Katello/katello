@@ -474,7 +474,7 @@ module Katello
       end
 
       def pulp_primary?
-        !pulp_mirror?
+        pulp3_enabled? && !pulp_mirror?
       end
 
       def supported_pulp_types
