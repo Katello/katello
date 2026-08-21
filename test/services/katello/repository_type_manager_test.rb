@@ -3,9 +3,14 @@ require 'katello_test_helper'
 module Katello
   class RepositoryTypeManagerTest < ActiveSupport::TestCase
     def setup
+      @enabled_repository_types = ::Katello::RepositoryTypeManager.enabled_repository_types(false)
       ::Katello::RepositoryTypeManager.instance_variable_set(:@enabled_repository_types, {})
       @feature = SmartProxy.pulp_primary.features.detect { |feature| feature.name == 'Pulpcore' }.smart_proxy_features.first
       @feature.update(capabilities: [])
+    end
+
+    def teardown
+      ::Katello::RepositoryTypeManager.instance_variable_set(:@enabled_repository_types, @enabled_repository_types)
     end
 
     def test_enabled_repository_types_update_false
