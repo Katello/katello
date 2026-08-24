@@ -48,8 +48,24 @@
       <%= hidden_field_tag 'host[content_facet_attributes][content_view_environment_ids][]', cvenv_id, :id => nil %>
     <% end %>
 
+    <% host_cvenvs = @host.content_view_environments.any? ? @host.content_view_environments : (@host.hostgroup&.content_view_environment ? [@host.hostgroup.content_view_environment] : []) %>
+    <% cvenv_labels = host_cvenvs.map(&:label) %>
+    <% cvenv_display = cvenv_labels.join(', ') %>
+    <% cvenv_truncated = truncate(cvenv_display, :length => 70) %>
+    <% cvenv_overflow = cvenv_display.length > 70 %>
+    <% cvenv_popover_lines = host_cvenvs.map do |cvenv|
+      version_info = (cvenv.content_view.default? || cvenv.content_view.rolling?) ? '' : " <small class=\"text-muted\">#{_('Version')} #{cvenv.content_view_version.version}#{cvenv.content_view_version.latest? ? ' (' + _('latest') + ')' : ''}</small>"
+      "<strong>#{h(cvenv.label)}</strong>#{version_info}"
+    end %>
     <%= field(f, 'content_facet.content_view_environment', {:label => _("Content View Environment")}) do %>
-      <%= select_tag :host_content_view_environment_id, content_view_environment_options(@host, :selected_host_group => @hostgroup || @host&.hostgroup), :class => 'form-control', :disabled => true %>
+      <% if cvenv_overflow %>
+        <div class="input-group">
+          <%= text_field_tag :host_content_view_environment_id, cvenv_truncated, :class => 'form-control', :disabled => true %>
+          <span class="input-group-btn"><%= popover("", cvenv_popover_lines.join('<br>'), :class => 'btn btn-default') %></span>
+        </div>
+      <% else %>
+        <%= text_field_tag :host_content_view_environment_id, cvenv_display, :class => 'form-control', :disabled => true %>
+      <% end %>
     <% end %>
   <% else %>
     <%# On host create, show a CVEnv dropdown %>
