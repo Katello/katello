@@ -117,7 +117,7 @@ FactoryBot.define do
         repo.root.send("#{attr}=", evaluator.send(attr)) if evaluator.send(attr)
       end
       repo.root.unprotected = true
-      repo.root.download_policy = ""
+      repo.root.download_policy = "on_demand"
     end
 
     trait :hq_repo_alpha do

@@ -22,6 +22,23 @@ module Katello
           assert_equal "Default_Organization-Cabinet-pulp3_Python_1", pulp3_repo.with_mirror_adapter.remote_options[:name]
           assert pulp3_repo.with_mirror_adapter.remote_options[:url].end_with?(pulp3_repo.partial_repo_path)
         end
+
+        def test_remote_options_includes_download_policy
+          @repo.root.update(download_policy: 'immediate')
+          pulp3_repo = @repo.repository_type.pulp3_service_class.new(@repo, SmartProxy.pulp_primary)
+
+          options = pulp3_repo.remote_options
+          assert_includes options.keys, :policy
+          assert_equal 'immediate', options[:policy]
+        end
+
+        def test_remote_options_respects_on_demand_policy
+          @repo.root.update(download_policy: 'on_demand')
+          pulp3_repo = @repo.repository_type.pulp3_service_class.new(@repo, SmartProxy.pulp_primary)
+
+          options = pulp3_repo.remote_options
+          assert_equal 'on_demand', options[:policy]
+        end
       end
     end
   end

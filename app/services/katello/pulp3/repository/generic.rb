@@ -23,11 +23,20 @@ module Katello
 
         def remote_options
           generic_remote_options = JSON.parse(root.generic_remote_options)
-          if generic_remote_options.any?
-            common_remote_options.merge(generic_remote_options).symbolize_keys
-          else
-            common_remote_options
+          # Sanitize empty strings which would otherwise be sent to Pulp on update
+          generic_remote_options.reject! { |_k, v| v.is_a?(String) && v.empty? }
+
+          options = if generic_remote_options.any?
+                      common_remote_options.merge(generic_remote_options).symbolize_keys
+                    else
+                      common_remote_options
+                    end
+
+          if Katello::RootRepository::CONTENT_ATTRIBUTE_RESTRICTIONS[:download_policy].include?(repo.content_type)
+            options.merge!(policy: root.download_policy)
           end
+
+          options
         end
 
         def partial_repo_path

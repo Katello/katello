@@ -272,6 +272,14 @@ module Katello
       assert_match(/Cannot set attribute.*ansible_collection.*/, @root.errors[:download_policy][0])
     end
 
+    def test_create_python_with_download_policy
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
+      @root.content_type = 'python'
+      @root.url = 'https://pypi.org'
+      assert @root.valid?, "Validation failed for create with download_policy and python repository: #{@root.errors.full_messages}"
+      assert_equal ::Katello::RootRepository::DOWNLOAD_ON_DEMAND, @root.download_policy
+    end
+
     test_attributes :pid => 'c49a3c49-110d-4b74-ae14-5c9494a4541c'
     def test_create_with_invalid_checksum_type
       @root.checksum_type = 'invalid checksum_type'
@@ -570,7 +578,7 @@ module Katello
 
       @root.ignorable_content = ["srpm"]
       @root.content_type = Repository::FILE_TYPE
-      @root.download_policy = nil
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
       refute @root.valid?
       assert_includes @root.errors, :ignorable_content
 

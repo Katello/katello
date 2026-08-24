@@ -3,6 +3,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::FILE_TYPE) do
   pulp3_service_class Katello::Pulp3::Repository::File
   pulp3_api_class Katello::Pulp3::Api::File
   pulp3_plugin 'file'
+  supports_download_policy true
 
   client_module_class PulpFileClient
   api_class PulpFileClient::ApiClient

@@ -29,7 +29,7 @@ module Katello
     def test_docker_full_path
       full_path = @repo.full_path
       @repo.root.content_type = 'docker'
-      @repo.root.download_policy = nil
+      @repo.root.download_policy = 'on_demand'
       refute_equal full_path, @repo.full_path
       @repo.container_repository_name = "abc123"
       assert @repo.full_path =~ /abc123/

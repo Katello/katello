@@ -60,7 +60,7 @@ module Katello
       mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, {})
       mapper.expects(:katello_content_type).returns('python')
       Setting[:default_redhat_download_policy] = 'immediate'
-      assert_equal '', mapper.download_policy
+      assert_equal 'immediate', mapper.download_policy
     end
   end
 end

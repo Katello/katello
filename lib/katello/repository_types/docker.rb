@@ -5,6 +5,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
   repo_discovery_class ::Katello::Resources::Discovery::Container
   pulp3_skip_publication true
   pulp3_plugin 'container'
+  supports_download_policy true
 
   set_unique_content_per_repo
 

@@ -75,6 +75,30 @@ fedora_17_x86_64_duplicate_root:
   download_policy:      immediate
   mirroring_policy:     "mirror_content_only"
 
+ostree_integration_test_root:
+  name:                 OSTree Integration Test
+  content_id:           1
+  content_type:         ostree
+  label:                ostree_integration_test_label
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  url:                  "http://myrepo.com"
+  unprotected:          <%= true %>
+  mirroring_policy:     "mirror_content_only"
+
+python_integration_test_root:
+  name:                 Python Integration Test
+  content_id:           1
+  content_type:         python
+  label:                python_integration_test_label
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  url:                  "http://myrepo.com"
+  unprotected:          <%= true %>
+  download_policy:      immediate
+  mirroring_policy:     "mirror_content_only"
+  generic_remote_options: "{}"
+
 feedless_fedora_17_x86_64_root:
   name:                 Feedless Fedora 17 x86_64
   content_id:           1
@@ -286,6 +310,8 @@ pulp3_python_root_1:
   unprotected:          <%= true %>
   url:                  ""
   mirroring_policy:     "mirror_content_only"
+  download_policy:      "on_demand"
+  generic_remote_options: "{}"
 
 uln_ovm2_2_1_1_i386_patch_root:
   name:                 ovm2 i386 patch

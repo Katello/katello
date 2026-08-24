@@ -17,13 +17,24 @@ types.values.each do |repository_type|
       def setup
         User.current = users(:admin)
         @primary = SmartProxy.pulp_primary
-        @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-        @repo.root.update!(url: repo_type.test_url, :content_type => repo_type.id,
-                           :download_policy => nil, generic_remote_options: {})
+        @repo = select_fixture_for_type(repo_type)
+        @repo.root.update!(url: repo_type.test_url, generic_remote_options: {})
         @repo.root.update(repo_type.test_url_root_options) if repo_type.test_url_root_options
         @repo.update(:pulp_id => @repo.pulp_id + "-test-#{repo_type.id}", :relative_path => "integration_tests/#{repo_type.id}")
         create_repo(@repo, @primary)
         ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, @repo)
+      end
+
+      def select_fixture_for_type(repo_type)
+        case repo_type.id
+        when :ostree
+          katello_repositories(:ostree_integration_test)
+        when :python
+          katello_repositories(:python_integration_test)
+        else
+          # Fallback for yum and other types with test URLs
+          katello_repositories(:fedora_17_x86_64_duplicate)
+        end
       end
 
       def teardown

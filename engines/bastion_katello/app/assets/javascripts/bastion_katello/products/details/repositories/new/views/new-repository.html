@@ -309,7 +309,7 @@
         </div>
       </div>
 
-      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'deb' || repository.content_type === 'docker' || repository.content_type === 'file' || repository.content_type === 'yum'">
+      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'deb' || repository.content_type === 'docker' || repository.content_type === 'file' || repository.content_type === 'python' || repository.content_type === 'yum'">
         <select id="download_policy"
                 name="download_policy"
                 ng-model="repository.download_policy"

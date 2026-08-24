@@ -137,6 +137,20 @@ fedora_17_x86_64_duplicate:
   distribution_variant: "TestVariant"
   distribution_bootable: true
 
+ostree_integration_test:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:ostree_integration_test_root) %>
+  pulp_id:              ostree_integration_test
+  relative_path:        'ACME_Corporation/dev/ostree_integration_test_label'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
+python_integration_test:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:python_integration_test_root) %>
+  pulp_id:              python_integration_test
+  relative_path:        'ACME_Corporation/dev/python_integration_test_label'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
 fedora_17_library_library_view:
   library_instance:     fedora_17_x86_64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>

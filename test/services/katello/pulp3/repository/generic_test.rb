@@ -31,6 +31,28 @@ module Katello
 
             refute_includes publication_options.keys, :publication
           end
+
+          def test_remote_options_includes_download_policy_for_python
+            python_repo = katello_repositories(:pulp3_python_1)
+            python_repo.root.update(download_policy: 'on_demand')
+            service = Katello::Pulp3::Repository::Generic.new(python_repo, @proxy)
+
+            options = service.remote_options
+            assert_includes options.keys, :policy
+            assert_equal 'on_demand', options[:policy]
+          end
+
+          def test_remote_options_filters_empty_string_values
+            python_repo = katello_repositories(:pulp3_python_1)
+            python_repo.root.update(
+              generic_remote_options: '{"keep_latest_packages":"","includes":["pip"]}'
+            )
+            service = Katello::Pulp3::Repository::Generic.new(python_repo, @proxy)
+
+            options = service.remote_options
+            refute_includes options.keys, :keep_latest_packages
+            assert_equal ['pip'], options[:includes]
+          end
         end
       end
     end

@@ -4,6 +4,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
   repo_discovery_class ::Katello::Resources::Discovery::Yum
   pulp3_plugin 'rpm'
   prevent_unneeded_metadata_publish
+  supports_download_policy true
 
   client_module_class PulpRpmClient
   api_class PulpRpmClient::ApiClient

@@ -23,7 +23,7 @@ module Katello
     SKIPABLE_METADATA_TYPES = [Repository::YUM_TYPE, Repository::DEB_TYPE].freeze
 
     CONTENT_ATTRIBUTE_RESTRICTIONS = {
-      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE, Repository::DOCKER_TYPE, Repository::FILE_TYPE],
+      :download_policy => Katello::RepositoryTypeManager.defined_repository_types.select { |_, type| type.supports_download_policy }.keys,
     }.freeze
 
     MAX_EXPIRE_TIME = 7 * 24 * 60 * 60
@@ -103,7 +103,7 @@ module Katello
     validates :download_policy, inclusion: {
       :in => DOWNLOAD_POLICIES,
       :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', '),
-    }, if: :yum?
+    }, if: -> { CONTENT_ATTRIBUTE_RESTRICTIONS[:download_policy].include?(content_type) }
     validates :http_proxy_policy, inclusion: {
       :in => HTTP_PROXY_POLICIES,
       :message => _("must be one of the following: %s") % HTTP_PROXY_POLICIES.join(', '),

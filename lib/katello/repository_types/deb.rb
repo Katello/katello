@@ -3,6 +3,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DEB_TYPE) do
   pulp3_api_class Katello::Pulp3::Api::Apt
   pulp3_plugin 'deb'
   prevent_unneeded_metadata_publish
+  supports_download_policy true
 
   client_module_class PulpDebClient
   api_class PulpDebClient::ApiClient

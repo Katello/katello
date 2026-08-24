@@ -346,7 +346,7 @@
           options="certs()"
           on-save="save(repository)">
       </dd>
-      <span ng-if="repository.content_type === 'deb' || repository.content_type === 'docker' || repository.content_type === 'file' || repository.content_type === 'yum'">
+      <span ng-if="repository.content_type === 'deb' || repository.content_type === 'docker' || repository.content_type === 'file' || repository.content_type === 'python' || repository.content_type === 'yum'">
         <dt translate>Download Policy</dt>
         <dd bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
             readonly="denied('edit_products', product) || !repository.allow_updates || repository.is_container_push"

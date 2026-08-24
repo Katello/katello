@@ -25,13 +25,13 @@ FactoryBot.define do
     trait :docker_root do
       content_type { "docker" }
       docker_upstream_name { "dockeruser/repo" }
-      download_policy { "" }
+      download_policy { "on_demand" }
       unprotected { true }
     end
 
     trait :iso_root do
       content_type { "file" }
-      download_policy { "" }
+      download_policy { "on_demand" }
     end
 
     trait :ostree_root do
@@ -41,7 +41,7 @@ FactoryBot.define do
 
     trait :deb_root do
       content_type { "deb" }
-      download_policy { "" }
+      download_policy { "on_demand" }
       deb_releases { "5 6" }
       deb_components { "best" }
       deb_architectures { "x86_64" }
