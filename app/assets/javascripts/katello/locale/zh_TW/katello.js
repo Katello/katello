@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -2133,9 +2133,6 @@
       "DEB package updates": [
         ""
       ],
-      "Database connection": [
-        "資料庫連線"
-      ],
       "Date": [
         "日期"
       ],
@@ -2802,9 +2799,6 @@
       "Error": [
         "錯誤"
       ],
-      "Error connecting to Pulp service": [
-        "連線 Pulp 服務時發生錯誤"
-      ],
       "Error connecting. Got: %s": [
         "連線錯誤。收到：%s"
       ],
@@ -3184,7 +3178,7 @@
         "GPG 金鑰的網址"
       ],
       "General": [
-        ""
+        "一般"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
@@ -4319,9 +4313,6 @@
       "Lifecycle environment: {lce}": [
         ""
       ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        ""
-      ],
       "Limit": [
         "限制"
       ],
@@ -4754,9 +4745,6 @@
       "Message": [
         "訊息"
       ],
-      "Messaging connection": [
-        "訊息連線"
-      ],
       "Metadata generate": [
         ""
       ],
@@ -4984,9 +4972,6 @@
       ],
       "No Content View": [
         "沒有內容視域"
-      ],
-      "No Content found": [
-        ""
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         ""
@@ -5270,9 +5255,6 @@
       "No profiles to show": [
         ""
       ],
-      "No pulp workers running.": [
-        "沒有 pulp 工作者執行中。"
-      ],
       "No pulpcore content apps are running at %s.": [
         ""
       ],
@@ -5364,9 +5346,6 @@
         ""
       ],
       "Not added": [
-        ""
-      ],
-      "Not all necessary pulp workers running at %s.": [
         ""
       ],
       "Not installed": [
@@ -5945,9 +5924,6 @@
       "Pullable path": [
         ""
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5960,32 +5936,14 @@
       "Pulp database connection issue at %s.": [
         ""
       ],
-      "Pulp database connection issue.": [
-        "Pulp 資料庫連線有誤。"
-      ],
       "Pulp disk space notification": [
         ""
       ],
       "Pulp does not appear to be running at %s.": [
         ""
       ],
-      "Pulp does not appear to be running.": [
-        "Pulp n似乎不在執行中。"
-      ],
-      "Pulp message bus connection issue at %s.": [
-        ""
-      ],
-      "Pulp message bus connection issue.": [
-        "Pulp 訊息匯流排連線有誤。"
-      ],
-      "Pulp node": [
-        "Pulp 節點"
-      ],
       "Pulp redis connection issue at %s.": [
         ""
-      ],
-      "Pulp server version": [
-        "Pulp 伺服器版本"
       ],
       "Pulp storage": [
         "Pulp 儲存"
@@ -7287,9 +7245,6 @@
         "",
         ""
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        "pulp 檢查失敗後，跳過 pulp_auth"
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
       ],
@@ -8448,16 +8403,7 @@
       "Unable to connect": [
         "無法連線"
       ],
-      "Unable to connect. Got: %s": [
-        "無法連線。收到：%s"
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
-        ""
-      ],
-      "Unable to detect pulp storage": [
-        "無法偵測 pulp 儲存"
-      ],
-      "Unable to detect puppet path": [
         ""
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
@@ -9114,9 +9060,6 @@
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
         ""
-      ],
-      "Workers": [
-        "工作者"
       ],
       "Wrong content type submitted.": [
         ""

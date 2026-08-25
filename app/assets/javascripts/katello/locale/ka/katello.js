@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2026",
@@ -685,7 +685,7 @@
         "აპლიკაცია"
       ],
       "Application name": [
-        ""
+        "აპლიკაციის სახელი"
       ],
       "Apply": [
         "გამოყენება"
@@ -733,7 +733,7 @@
         "არქიტექტურა"
       ],
       "Architectures": [
-        ""
+        "არქიტექტურები"
       ],
       "Are you sure you want to delete %s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
         ""
@@ -986,7 +986,7 @@
         ""
       ],
       "Booted": [
-        ""
+        "ჩატვირთულია"
       ],
       "Both": [
         "ორივე"
@@ -1355,7 +1355,7 @@
         ""
       ],
       "Choose file": [
-        ""
+        "ფაილის არჩევა"
       ],
       "Clean Backend Objects": [
         ""
@@ -1394,7 +1394,7 @@
         "ყველას ჩაკეცვა"
       ],
       "Collapse all": [
-        ""
+        "ყველას ჩაკეცვა"
       ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
@@ -1802,7 +1802,7 @@
         "საკონტაქტო ნომერი"
       ],
       "Copied": [
-        ""
+        "დაკოპირდა"
       ],
       "Copied to clipboard": [
         "დაკოპირდა გაცვლის ბაფერში"
@@ -2087,7 +2087,7 @@
         ""
       ],
       "Creation": [
-        ""
+        "შეიქმნა"
       ],
       "Credentials": [
         "მომხმ/პაროლი"
@@ -2133,9 +2133,6 @@
       ],
       "DEB package updates": [
         "DEB პაკეტის განახლებები"
-      ],
-      "Database connection": [
-        "შეერთება მონაცემთა ბაზასთან"
       ],
       "Date": [
         "თარიღი"
@@ -2417,7 +2414,7 @@
         ""
       ],
       "Depth": [
-        ""
+        "სიღრმე"
       ],
       "Description": [
         "დახასიათება"
@@ -2543,7 +2540,7 @@
         ""
       ],
       "Distributions": [
-        ""
+        "განაწილებები"
       ],
       "Do not include this array of content views": [
         "შემცველობის ხედის ეს მასივი არ ჩაამატო"
@@ -2803,9 +2800,6 @@
       "Error": [
         "შეცდომა"
       ],
-      "Error connecting to Pulp service": [
-        "Pulp-ის სერვისთან მიერთები შეცდომა"
-      ],
       "Error connecting. Got: %s": [
         "შეერთების შეცდომა: %s"
       ],
@@ -2942,7 +2936,7 @@
         ""
       ],
       "Failed to upload file.": [
-        ""
+        "ფაილის ატვირთვა ჩავარდა."
       ],
       "Fails if any of the repositories belonging to this organization are unexportable. False by default.": [
         ""
@@ -2951,7 +2945,7 @@
         ""
       ],
       "False": [
-        ""
+        "მცდარი"
       ],
       "Fetch applicable errata for one or more hosts.": [
         "შესატყვისი მორჩენილი პაჩების გამოთხოვა ერთი ან მეტი ჰოსტისთვის."
@@ -3095,7 +3089,7 @@
         "დასრულებულია"
       ],
       "Flatpak": [
-        ""
+        "Flat pak"
       ],
       "Flatpak Remote ${name} created": [
         ""
@@ -3185,7 +3179,7 @@
         "GPG გასაღების URL"
       ],
       "General": [
-        ""
+        "მთავარი"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
@@ -3459,7 +3453,7 @@
         "ჰაიპერვაიზორის განახლება"
       ],
       "ID": [
-        ""
+        "ID"
       ],
       "ID of a HTTP Proxy": [
         "HTTP პროქსის ID"
@@ -3708,7 +3702,7 @@
         ""
       ],
       "Image mode": [
-        ""
+        "გამოსახულების რეჟიმი"
       ],
       "Image mode / package mode": [
         ""
@@ -3717,7 +3711,7 @@
         ""
       ],
       "Image name": [
-        ""
+        "გამოსახულების სახელი"
       ],
       "Image-mode host": [
         ""
@@ -3894,7 +3888,7 @@
         ""
       ],
       "Inherit parent (%s)": [
-        ""
+        "მშობლის მემკვიდრეობა (%s)"
       ],
       "Initiate a sync of the products attached to the sync plan": [
         ""
@@ -3909,8 +3903,8 @@
         "მორჩენილი პაჩის დაყენება Katello-ის ინტერფეისიდან"
       ],
       "Install package": [
-        "",
-        ""
+        "პაკეტის დაყენება",
+        "პაკეტების დაყენება"
       ],
       "Install package group via Katello interface": [
         "პაკეტების ჯგუფის დაყენება Katello-ის ინტერფეისიდან"
@@ -4320,9 +4314,6 @@
       "Lifecycle environment: {lce}": [
         "ცხოვრების ციკლის გარემო: {lce}"
       ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        ""
-      ],
       "Limit": [
         "ზღვარი"
       ],
@@ -4651,7 +4642,7 @@
         ""
       ],
       "Manage packages": [
-        ""
+        "პაკეტების მართვა"
       ],
       "Manage repository sets": [
         ""
@@ -4755,9 +4746,6 @@
       "Message": [
         "შეტყობინება"
       ],
-      "Messaging connection": [
-        "შეერთება შეტყობინებების სერვერთან"
-      ],
       "Metadata generate": [
         ""
       ],
@@ -4771,7 +4759,7 @@
         "მინიმალური ვერსია"
       ],
       "Mirror": [
-        ""
+        "სარკე"
       ],
       "Mirror Remote Repository": [
         ""
@@ -4807,7 +4795,7 @@
         "საშუალო"
       ],
       "Modified": [
-        ""
+        "შეიცვალა"
       ],
       "Modify via remote execution": [
         ""
@@ -4831,7 +4819,7 @@
         ""
       ],
       "Multi Content View Environment": [
-        ""
+        "მრავალშემცველობიანი ხედის გარემო"
       ],
       "Multi copy all units": [
         ""
@@ -4985,9 +4973,6 @@
       ],
       "No Content View": [
         "შემცველობის ხედის გარეშე"
-      ],
-      "No Content found": [
-        "შემცველობის გარეშე"
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         ""
@@ -5271,9 +5256,6 @@
       "No profiles to show": [
         "საჩვენებელი პროფილების გარეშე"
       ],
-      "No pulp workers running.": [
-        "Pulp-ის დამხმარე პროცესები გაშვებული არაა."
-      ],
       "No pulpcore content apps are running at %s.": [
         "%s-ზე pulpcore-ის შემცველობის აპები გაშვებული არაა."
       ],
@@ -5314,7 +5296,7 @@
         "საჩვენებელი რეპოზიტორიის სეტების გარეშე."
       ],
       "No results found": [
-        ""
+        "შედეგების გარეშე"
       ],
       "No rules yet": [
         "წესების გარეშე"
@@ -5366,9 +5348,6 @@
       ],
       "Not added": [
         "დამატებული არაა"
-      ],
-      "Not all necessary pulp workers running at %s.": [
-        "%s-ზე pulp-ის დამხმარე პროცესების რაოდენობა საკმარისი არაა."
       ],
       "Not installed": [
         "დაყენებული არაა"
@@ -5425,7 +5404,7 @@
         "OSTree მიბმები"
       ],
       "Ok": [
-        ""
+        "დიახ"
       ],
       "On Demand": [
         "საჭიროებისამებრ"
@@ -5605,7 +5584,7 @@
         "საჭიროა პაკეტების მითითება"
       ],
       "Packages to be removed": [
-        ""
+        "პაკეტები რომლებიც უნდა წაიშალოს"
       ],
       "Packages to be updated": [
         ""
@@ -5677,13 +5656,13 @@
         ""
       ],
       "Persistence": [
-        ""
+        "შენახვა"
       ],
       "Persistence must be one of: %s": [
         ""
       ],
       "Persistent": [
-        ""
+        "მუდმივი"
       ],
       "Physical": [
         "ფიზიკური"
@@ -5946,9 +5925,6 @@
       "Pullable path": [
         ""
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         "Pulp 3-ის გატანის სამიზნე ფაილის ბილიკი"
       ],
@@ -5961,32 +5937,14 @@
       "Pulp database connection issue at %s.": [
         "Pulp-ის პრობლემა ბაზასთან მიერთებისას: %s."
       ],
-      "Pulp database connection issue.": [
-        "Pulp-ის პრობლემა ბაზასთან მიერთებისას."
-      ],
       "Pulp disk space notification": [
         "Pulp-ის დისკის ადგილის გაფრთხილება"
       ],
       "Pulp does not appear to be running at %s.": [
         "%s-ზე Pulp-ი გაშვებული არაა."
       ],
-      "Pulp does not appear to be running.": [
-        "Pulp-ი გაშვებული არაა."
-      ],
-      "Pulp message bus connection issue at %s.": [
-        "Pulp-ის შეცდომა შეტყობინებების მატარებელთან მიერთებისას მისამართზე %s."
-      ],
-      "Pulp message bus connection issue.": [
-        "Pulp შეტყობინებების მატარებელთან მიერთების შეცდომა."
-      ],
-      "Pulp node": [
-        "Pulp-ის კვანძი"
-      ],
       "Pulp redis connection issue at %s.": [
         "Pulp-ის პრობლემა redis-თან მიერთებისას: %s."
-      ],
-      "Pulp server version": [
-        "Pulp-ის სერვერის ვერსია"
       ],
       "Pulp storage": [
         "Pulp-ის საცავი"
@@ -6373,7 +6331,7 @@
         "პაკეტის წაშლა Katello-ის ინტერფეისიდან"
       ],
       "Remove packages": [
-        ""
+        "პაკეტების მოცილება"
       ],
       "Remove packages via Katello interface": [
         "პაკეტების წაშლა Katello-ის ინტერფეისიდან"
@@ -6412,7 +6370,7 @@
         ""
       ],
       "Repair": [
-        ""
+        "აღდგენა"
       ],
       "Replace content source on the target machine": [
         ""
@@ -6715,7 +6673,7 @@
         ""
       ],
       "Review": [
-        ""
+        "Მიმოხილვა"
       ],
       "Review affected environment": [
         "მოყოლილი გარემოს გადახედვა"
@@ -6736,7 +6694,7 @@
         "დეტალების გადახედვა"
       ],
       "Review hosts": [
-        ""
+        "ჰოსტების მიმოხილვა"
       ],
       "Review the information below and click ": [
         "გადახედეთ ინფორმას და დააწკაპუნეთ "
@@ -6841,7 +6799,7 @@
         "შემცველობის ალტერნატიული წყაროს შენახვა..."
       ],
       "Scan": [
-        ""
+        "სკანირება"
       ],
       "Scan a flatpak remote": [
         ""
@@ -6973,7 +6931,7 @@
         "აირჩიეთ წყარო"
       ],
       "Select action": [
-        ""
+        "აირჩიეთ ქმედება"
       ],
       "Select all": [
         "ყველას მონიშვნა"
@@ -7288,9 +7246,6 @@
         "",
         ""
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        ""
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
       ],
@@ -7550,7 +7505,7 @@
         "საწყისი თარიღი"
       ],
       "Started at": [
-        ""
+        "გაშვების დრო"
       ],
       "Starts": [
         "საწყისი"
@@ -7646,7 +7601,7 @@
         "გამოწერები შენახულია და მიმდინარეობს მათი განახლება. "
       ],
       "Subscriptions information": [
-        ""
+        "ინფორმაცია გამოწერების შესახებ"
       ],
       "Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}].": [
         ""
@@ -7814,7 +7769,7 @@
         "სინქრონიზაცია: შემცველობის დამოწმება"
       ],
       "Syncing": [
-        ""
+        "სინქრონიზაცია"
       ],
       "Syncing Complete.": [
         "სინქრონიზაცია დასრულდა."
@@ -8372,10 +8327,10 @@
         ""
       ],
       "Transient": [
-        ""
+        "გარდამავალი"
       ],
       "True": [
-        ""
+        "ჭეშმარიტი"
       ],
       "Try changing your search criteria.": [
         "სცადეთ შეცვალოთ ძებნის მოთხოვნები."
@@ -8426,7 +8381,7 @@
         "OSTree-ის რეპოზიტორიის URL."
       ],
       "URL:": [
-        ""
+        "URL:"
       ],
       "UUID": [
         "UUID"
@@ -8449,17 +8404,8 @@
       "Unable to connect": [
         "დაკავშირება შეუძლებელია"
       ],
-      "Unable to connect. Got: %s": [
-        "შეერთების შეცდომა. პასუხი: %s"
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         "ალტერნატიული შემცველობის წყაროს წაშლა შეუძლებელია. ან წაშლის წვდომა არ გაგაჩნიათ, ან ალტერნატიული შემცველობის წყაროები არ არსებობენ."
-      ],
-      "Unable to detect pulp storage": [
-        "Pulp-ის საცავის პოვნა შეუძლებელია"
-      ],
-      "Unable to detect puppet path": [
-        "Puppet-ის ბილიკის პოვნა შეუძლებელია"
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         ""
@@ -8769,7 +8715,7 @@
         ""
       ],
       "Upgrade packages": [
-        ""
+        "პაკეტის ვერსიების აწევა"
       ],
       "Upgrade via customized remote execution": [
         "მორგებული დაშორებული გაშვების გავლით განახლება"
@@ -8790,13 +8736,13 @@
         ""
       ],
       "Upload file": [
-        ""
+        "ფაილის ატვირთვა"
       ],
       "Upload into": [
         "ატვირთვის სამიზნე"
       ],
       "Upload new file": [
-        ""
+        "ახალი ფაილის ატვირთვა"
       ],
       "Upload package / repos profile": [
         "პაკეტის / რეპოზიტორიის პროფილის ატვირთვა"
@@ -9018,7 +8964,7 @@
         "შემცველობის ხედების ნახვა"
       ],
       "View details": [
-        ""
+        "დეტალების ნახვა"
       ],
       "View documentation": [
         "იხილეთ დოკუმენტაცია"
@@ -9115,9 +9061,6 @@
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
         ""
-      ],
-      "Workers": [
-        "დამხმარე პროცესები"
       ],
       "Wrong content type submitted.": [
         "გადაცემული შემცველობის ტიპი არასწორია."
@@ -9261,7 +9204,7 @@
         "ქმედება არ არსებობს"
       ],
       "activation key": [
-        ""
+        "აქტივაციის გასაღები"
       ],
       "activation key identifier": [
         "აქტივაციის გასაღების იდენტიფიკატორი"
@@ -9279,7 +9222,7 @@
         ""
       ],
       "ago": [
-        ""
+        "წინ"
       ],
       "all environments": [
         "ყველა გარემო"
@@ -9606,10 +9549,10 @@
         "ჰოსტის კოლქციის გასაფილტრი სახელი"
       ],
       "host group": [
-        ""
+        "ჰოსტების ჯგუფი"
       ],
       "host groups": [
-        ""
+        "ჰოსტის ჯგუფები"
       ],
       "hosts": [
         "ჰოსტი"
@@ -9639,7 +9582,7 @@
         "pulp-ის ამოცანის ინიციალიზაცია"
       ],
       "installed": [
-        ""
+        "დაყენებულია"
       ],
       "installing or updating packages": [
         "პაკეტების დაყენება ან განახლება"
@@ -9810,8 +9753,8 @@
         "ორგანიზაციის იდენტიფიკატორი"
       ],
       "package": [
-        "",
-        ""
+        "პაკეტი",
+        "პაკეტი"
       ],
       "package group: uuid": [
         "პაკეტების ჯგუფი: UUID"
@@ -9985,7 +9928,7 @@
         "ფილტრის ატვირთვა"
       ],
       "updated": [
-        ""
+        "განახლებულია"
       ],
       "upstream Foreman server": [
         "\\\"Foreman\\\"-ის აღმავალი სერვერი"

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: katello 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 14:41+0000\n"
-"PO-Revision-Date: 2026-07-23 14:41+0000\n"
+"POT-Creation-Date: 2026-08-25 17:21+0000\n"
+"PO-Revision-Date: 2026-08-25 17:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -3149,9 +3149,9 @@ msgstr ""
 #: ../app/controllers/katello/api/v2/sync_plans_controller.rb:92
 #: ../app/controllers/katello/api/v2/sync_plans_controller.rb:104
 #: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:19
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:40
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:52
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:65
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:39
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:51
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:64
 msgid "Organization ID"
 msgstr ""
 
@@ -4431,47 +4431,47 @@ msgstr ""
 msgid "Return only subscriptions which can be attached to the upstream allocation"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:39
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:38
 msgid "Update the quantity of one or more subscriptions on an upstream allocation"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:41
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:40
 msgid "Array of Pools to be updated. Only pools originating upstream are accepted."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:42
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:41
 msgid "Katello ID of local pool to update"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:43
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:42
 msgid "Desired quantity of the pool"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:51
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:50
 msgid "Remove one or more subscriptions from an upstream manifest"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:53
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:52
 msgid "Array of local pool IDs. Only pools originating upstream are accepted."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:60
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:59
 msgid "Add subscriptions consumed by a manifest from Red Hat Subscription Management"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:61
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:60
 msgid "Array of pools to add"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:62
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:61
 msgid "Candlepin ID of pool to add"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:63
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:62
 msgid "Quantity of entitlements to bind"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:73
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:72
 msgid "Check if a connection can be made to Red Hat Subscription Management."
 msgstr ""
 
@@ -4623,7 +4623,7 @@ msgid "Smart proxy content source not found!"
 msgstr ""
 
 #:
-#: ../app/controllers/katello/concerns/api/v2/registration_controller_extensions.rb:37
+#: ../app/controllers/katello/concerns/api/v2/registration_controller_extensions.rb:42
 msgid "Pulp 3 is not enabled on Smart proxy!"
 msgstr ""
 
@@ -4925,11 +4925,6 @@ msgstr ""
 #:
 #: ../app/controllers/katello/concerns/smart_proxies_controller_extensions.rb:37
 msgid "Error retrieving Pulp storage"
-msgstr ""
-
-#:
-#: ../app/controllers/katello/concerns/smart_proxies_controller_extensions.rb:48
-msgid "Error connecting to Pulp service"
 msgstr ""
 
 #: ../app/controllers/katello/remote_execution_controller.rb:55
@@ -5372,11 +5367,11 @@ msgstr ""
 msgid "Incremental Update"
 msgstr ""
 
-#: ../app/lib/actions/katello/content_view_version/incremental_update.rb:329
+#: ../app/lib/actions/katello/content_view_version/incremental_update.rb:320
 msgid "Content View Version %{id} not in all specified environments %{envs}"
 msgstr ""
 
-#: ../app/lib/actions/katello/content_view_version/incremental_update.rb:354
+#: ../app/lib/actions/katello/content_view_version/incremental_update.rb:345
 msgid ""
 "Incremental update will not add any new content. The specified content is alre"
 "ady present."
@@ -6534,7 +6529,7 @@ msgstr ""
 msgid "You cannot set an organization's parent_id. This feature is disabled."
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:66
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:60
 #: ../app/models/katello/content_view_erratum_filter_rule.rb:26
 #: ../app/models/katello/content_view_version_export_history.rb:21
 #: ../app/models/katello/root_repository.rb:105
@@ -6542,43 +6537,42 @@ msgstr ""
 msgid "must be one of the following: %s"
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:98
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:88
 msgid "Could not find a smart proxy with pulp feature."
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:549
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:513
 msgid "Content type %{content_type_string} does not belong to an enabled repo type."
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:573
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:537
 msgid "Could not remove the lifecycle environment from the smart proxy"
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:576
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:540
 msgid ""
 "Lifecycle environment was not attached to the smart proxy; therefore, no chang"
 "es were made."
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:663
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:669
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:627
 msgid "%s is unreachable. %s"
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:721
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:679
 msgid ""
 "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol."
 " Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting."
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:724
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:682
 msgid ""
 "Smart Proxy '%{proxy}': RHSM URL must use HTTPS protocol. The URL is derived f"
 "rom the 'foreman_url' setting. Current value: '%{url}'. Please update the 'for"
 "eman_url' setting to use HTTPS."
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:744
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:702
 msgid "Successfully synced capsule."
 msgstr ""
 
@@ -7181,52 +7175,39 @@ msgstr ""
 msgid "Lifecycle Environment"
 msgstr ""
 
-#: ../app/models/katello/ping.rb:48
+#: ../app/models/katello/ping.rb:45
 msgid "Not running"
 msgstr ""
 
-#: ../app/models/katello/ping.rb:90
-msgid "Skipped pulp_auth check after failed pulp check"
-msgstr ""
-
-#: ../app/models/katello/ping.rb:108
+#: ../app/models/katello/ping.rb:89
 msgid "foreman-tasks service not running or is not ready yet"
 msgstr ""
 
-#: ../app/models/katello/ping.rb:114
+#: ../app/models/katello/ping.rb:95
 msgid "some executors are not responding, check %{status_url}"
 msgstr ""
 
-#: ../app/models/katello/ping.rb:121
+#: ../app/models/katello/ping.rb:102
 msgid "Candlepin is not running properly"
 msgstr ""
 
-#: ../app/models/katello/ping.rb:159 ../app/models/katello/ping.rb:178
-#: ../app/models/katello/ping.rb:196
+#: ../app/models/katello/ping.rb:129 ../app/models/katello/ping.rb:147
 msgid "Pulp does not appear to be running at %s."
 msgstr ""
 
-#: ../app/models/katello/ping.rb:162 ../app/models/katello/ping.rb:181
+#: ../app/models/katello/ping.rb:132
 msgid "Pulp database connection issue at %s."
 msgstr ""
 
-#: ../app/models/katello/ping.rb:166
-msgid "Pulp message bus connection issue at %s."
-msgstr ""
-
-#: ../app/models/katello/ping.rb:170
-msgid "Not all necessary pulp workers running at %s."
-msgstr ""
-
-#: ../app/models/katello/ping.rb:185
+#: ../app/models/katello/ping.rb:136
 msgid "Pulp redis connection issue at %s."
 msgstr ""
 
-#: ../app/models/katello/ping.rb:189
+#: ../app/models/katello/ping.rb:140
 msgid "No pulpcore workers are running at %s."
 msgstr ""
 
-#: ../app/models/katello/ping.rb:199
+#: ../app/models/katello/ping.rb:150
 msgid "No pulpcore content apps are running at %s."
 msgstr ""
 
@@ -7584,26 +7565,6 @@ msgid ""
 "tent_url}] To [%{new_url}]."
 msgstr ""
 
-#: ../app/services/katello/proxy_status/pulp.rb:16
-msgid "Unable to connect. Got: %s"
-msgstr ""
-
-#: ../app/services/katello/proxy_status/pulp.rb:18
-msgid "Pulp does not appear to be running."
-msgstr ""
-
-#: ../app/services/katello/proxy_status/pulp.rb:23
-msgid "No pulp workers running."
-msgstr ""
-
-#: ../app/services/katello/proxy_status/pulp.rb:27
-msgid "Pulp database connection issue."
-msgstr ""
-
-#: ../app/services/katello/proxy_status/pulp.rb:31
-msgid "Pulp message bus connection issue."
-msgstr ""
-
 #: ../app/services/katello/pulp3/content_view_version/export.rb:177
 msgid "Export format must be specified for library exports."
 msgstr ""
@@ -7798,7 +7759,7 @@ msgid ""
 "type}"
 msgstr ""
 
-#: ../app/services/katello/smart_proxy_helper.rb:21
+#: ../app/services/katello/smart_proxy_helper.rb:17
 msgid "Lifecycle environment '%{environment}' is not attached to this capsule."
 msgstr ""
 
@@ -7890,8 +7851,8 @@ msgstr ""
 #: ../webpack/scenes/ContainerImages/Synced/Details/ManifestDetails.js:184
 #: ../webpack/scenes/ContainerImages/Synced/SyncedContainerImagesPage.js:94
 #: ../webpack/scenes/ContainerImages/Synced/SyncedContainerImagesPage.js:328
-#: ../webpack/scenes/Content/Table/ContentTable.js:51
-#: ../webpack/scenes/Content/Table/ContentTable.js:54
+#: ../webpack/scenes/Content/Table/ContentTable.js:52
+#: ../webpack/scenes/Content/Table/ContentTable.js:55
 #: ../webpack/scenes/ContentCredentials/ContentCredentialsPage.js:105
 #: ../webpack/scenes/ContentCredentials/Create/CreateContentCredentialForm.js:128
 #: ../webpack/scenes/ContentCredentials/Details/DetailsTab.js:134
@@ -8614,7 +8575,8 @@ msgid "Content Source"
 msgstr ""
 
 #: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:37
-#: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:56
+#: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:51
+#: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:60
 msgid "Content View Environment"
 msgstr ""
 
@@ -8703,12 +8665,6 @@ msgstr ""
 msgid "Lifecycle Environments"
 msgstr ""
 
-#: ../app/views/overrides/smart_proxies/_environment_tab_pane.html.erb:6
-msgid ""
-"Lifecycle environments cannot be modifed on the default Smart proxy.  The cont"
-"ent from all Lifecycle Environments will exist on this Smart proxy."
-msgstr ""
-
 #: ../app/views/overrides/taxonomies/_action_buttons.html.erb:3
 #: ../app/views/overrides/taxonomies/_action_buttons.html.erb:12
 #: ../webpack/components/EditableTextInput/PencilEditButton.js:14
@@ -8777,14 +8733,6 @@ msgstr ""
 msgid "%s Available"
 msgstr ""
 
-#: ../app/views/smart_proxies/plugins/_pulp.html.erb:2
-msgid "Pulp"
-msgstr ""
-
-#: ../app/views/smart_proxies/plugins/_pulp_node.html.erb:2
-msgid "Pulp node"
-msgstr ""
-
 #: ../app/views/smart_proxies/plugins/_pulpcore.html.erb:2
 #: ../lib/katello/plugin.rb:8 ../lib/katello/plugin.rb:258
 #: ../lib/katello/plugin.rb:272 ../lib/katello/plugin.rb:360
@@ -8799,24 +8747,7 @@ msgid "Content"
 msgstr ""
 
 #: ../app/views/smart_proxies/plugins/_pulpcore.html.erb:7
-#: ../app/views/smart_proxies/pulp_status.html.erb:26
 msgid "Supported Content Types"
-msgstr ""
-
-#: ../app/views/smart_proxies/pulp_status.html.erb:2
-msgid "Pulp server version"
-msgstr ""
-
-#: ../app/views/smart_proxies/pulp_status.html.erb:8
-msgid "Database connection"
-msgstr ""
-
-#: ../app/views/smart_proxies/pulp_status.html.erb:14
-msgid "Messaging connection"
-msgstr ""
-
-#: ../app/views/smart_proxies/pulp_status.html.erb:20
-msgid "Workers"
 msgstr ""
 
 #: ../app/views/smart_proxies/show/_storage.html.erb:1
@@ -9833,14 +9764,6 @@ msgstr ""
 msgid "Unable to update host-repository mapping"
 msgstr ""
 
-#: ../lib/proxy_api/pulp.rb:12 ../lib/proxy_api/pulp_node.rb:12
-msgid "Unable to detect pulp storage"
-msgstr ""
-
-#: ../lib/proxy_api/pulp.rb:19 ../lib/proxy_api/pulp_node.rb:19
-msgid "Unable to detect puppet path"
-msgstr ""
-
 #: ../webpack/ForemanColumnExtensions/index.js:35
 msgid "Image mode / package mode"
 msgstr ""
@@ -9998,18 +9921,6 @@ msgstr ""
 msgid "Add new bookmark"
 msgstr ""
 
-#: ../webpack/components/Loading.js:28
-#: ../webpack/components/LoadingState/LoadingState.js:50
-#: ../webpack/components/SelectOrg/SetOrganization.js:41
-#: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:84
-#: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:123
-#: ../webpack/scenes/Subscriptions/Details/SubscriptionDetails.js:65
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:304
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:209
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTable.js:185
-msgid "Loading"
-msgstr ""
-
 #: ../webpack/components/EditableTextInput/EditableTextInput.js:157
 msgid "None provided"
 msgstr ""
@@ -10036,6 +9947,18 @@ msgstr ""
 
 #: ../webpack/components/Errata/index.js:186
 msgid "Critical"
+msgstr ""
+
+#: ../webpack/components/Loading.js:28
+#: ../webpack/components/LoadingState/LoadingState.js:50
+#: ../webpack/components/SelectOrg/SetOrganization.js:41
+#: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:84
+#: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:123
+#: ../webpack/scenes/Subscriptions/Details/SubscriptionDetails.js:65
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:304
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:209
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTable.js:185
+msgid "Loading"
 msgstr ""
 
 #: ../webpack/components/MultiSelect/index.js:109
@@ -10140,7 +10063,7 @@ msgstr ""
 #: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:68
 #: ../webpack/scenes/AlternateContentSources/MainTable/ACSTable.js:303
 #: ../webpack/scenes/Content/Details/ContentRepositories.js:30
-#: ../webpack/scenes/Content/Table/ContentTable.js:41
+#: ../webpack/scenes/Content/Table/ContentTable.js:42
 #: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ContentViewComponents.js:241
 #: ../webpack/scenes/ContentViews/Details/Filters/AffectedRepositories/AffectedRepositoryTable.js:185
 #: ../webpack/scenes/ContentViews/Details/Filters/CVErrataIDFilterContent.js:267
@@ -13115,15 +13038,15 @@ msgstr ""
 msgid "${selectedContentType}"
 msgstr ""
 
-#: ../webpack/scenes/Content/Table/ContentTable.js:38
+#: ../webpack/scenes/Content/Table/ContentTable.js:39
 msgid "You currently don't have any ${selectedContentType}."
 msgstr ""
 
-#: ../webpack/scenes/Content/Table/ContentTable.js:39
+#: ../webpack/scenes/Content/Table/ContentTable.js:40
 msgid "No matching ${selectedContentType} found"
 msgstr ""
 
-#: ../webpack/scenes/Content/Table/ContentTable.js:40
+#: ../webpack/scenes/Content/Table/ContentTable.js:41
 msgid "${selectedContentType} will appear here when created."
 msgstr ""
 

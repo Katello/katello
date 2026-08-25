@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -2134,9 +2134,6 @@
       "DEB package updates": [
         ""
       ],
-      "Database connection": [
-        "Подключение к базе данных"
-      ],
       "Date": [
         "Дата"
       ],
@@ -2803,9 +2800,6 @@
       "Error": [
         "Ошибка"
       ],
-      "Error connecting to Pulp service": [
-        "Произошла ошибка при подключении к сервису Pulp"
-      ],
       "Error connecting. Got: %s": [
         ""
       ],
@@ -3185,7 +3179,7 @@
         "URL ключа GPG"
       ],
       "General": [
-        ""
+        "Общие"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
@@ -4320,9 +4314,6 @@
       "Lifecycle environment: {lce}": [
         ""
       ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        ""
-      ],
       "Limit": [
         "Ограничение"
       ],
@@ -4755,9 +4746,6 @@
       "Message": [
         "Сообщение"
       ],
-      "Messaging connection": [
-        "Система обмена сообщениями"
-      ],
       "Metadata generate": [
         ""
       ],
@@ -4985,9 +4973,6 @@
       ],
       "No Content View": [
         "Нет представления"
-      ],
-      "No Content found": [
-        ""
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         ""
@@ -5271,9 +5256,6 @@
       "No profiles to show": [
         ""
       ],
-      "No pulp workers running.": [
-        "Нет работающих обработчиков Pulp."
-      ],
       "No pulpcore content apps are running at %s.": [
         ""
       ],
@@ -5365,9 +5347,6 @@
         ""
       ],
       "Not added": [
-        ""
-      ],
-      "Not all necessary pulp workers running at %s.": [
         ""
       ],
       "Not installed": [
@@ -5946,9 +5925,6 @@
       "Pullable path": [
         ""
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5961,32 +5937,14 @@
       "Pulp database connection issue at %s.": [
         ""
       ],
-      "Pulp database connection issue.": [
-        "Не удалось подключиться к базе данных Pulp."
-      ],
       "Pulp disk space notification": [
         ""
       ],
       "Pulp does not appear to be running at %s.": [
         ""
       ],
-      "Pulp does not appear to be running.": [
-        "Похоже, Pulp не выполняется."
-      ],
-      "Pulp message bus connection issue at %s.": [
-        ""
-      ],
-      "Pulp message bus connection issue.": [
-        "Не удалось подключиться к шине обмена сообщениями Pulp."
-      ],
-      "Pulp node": [
-        "Узел Pulp"
-      ],
       "Pulp redis connection issue at %s.": [
         ""
-      ],
-      "Pulp server version": [
-        "Версия сервера Pulp"
       ],
       "Pulp storage": [
         "Хранилище Pulp"
@@ -7288,9 +7246,6 @@
         "",
         ""
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        "Проверка pulp_auth была пропущена после неудачной проверки pulp"
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
       ],
@@ -8449,16 +8404,7 @@
       "Unable to connect": [
         "Не удалось подключиться"
       ],
-      "Unable to connect. Got: %s": [
-        ""
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
-        ""
-      ],
-      "Unable to detect pulp storage": [
-        "Хранилище Pulp не обнаружено"
-      ],
-      "Unable to detect puppet path": [
         ""
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
@@ -9115,9 +9061,6 @@
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
         ""
-      ],
-      "Workers": [
-        "Обработчики"
       ],
       "Wrong content type submitted.": [
         ""

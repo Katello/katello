@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -2135,9 +2135,6 @@
       "DEB package updates": [
         ""
       ],
-      "Database connection": [
-        ""
-      ],
       "Date": [
         "Data"
       ],
@@ -2804,9 +2801,6 @@
       "Error": [
         "Errore"
       ],
-      "Error connecting to Pulp service": [
-        ""
-      ],
       "Error connecting. Got: %s": [
         ""
       ],
@@ -3186,7 +3180,7 @@
         "URL chiave GPG"
       ],
       "General": [
-        ""
+        "Generale"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
@@ -4321,9 +4315,6 @@
       "Lifecycle environment: {lce}": [
         ""
       ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        ""
-      ],
       "Limit": [
         "Limite"
       ],
@@ -4756,9 +4747,6 @@
       "Message": [
         "Messaggio"
       ],
-      "Messaging connection": [
-        ""
-      ],
       "Metadata generate": [
         ""
       ],
@@ -4986,9 +4974,6 @@
       ],
       "No Content View": [
         "Nessuna visualizzazione del contenuto"
-      ],
-      "No Content found": [
-        ""
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         ""
@@ -5272,9 +5257,6 @@
       "No profiles to show": [
         ""
       ],
-      "No pulp workers running.": [
-        ""
-      ],
       "No pulpcore content apps are running at %s.": [
         ""
       ],
@@ -5366,9 +5348,6 @@
         ""
       ],
       "Not added": [
-        ""
-      ],
-      "Not all necessary pulp workers running at %s.": [
         ""
       ],
       "Not installed": [
@@ -5947,9 +5926,6 @@
       "Pullable path": [
         ""
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5962,31 +5938,13 @@
       "Pulp database connection issue at %s.": [
         ""
       ],
-      "Pulp database connection issue.": [
-        ""
-      ],
       "Pulp disk space notification": [
         ""
       ],
       "Pulp does not appear to be running at %s.": [
         ""
       ],
-      "Pulp does not appear to be running.": [
-        ""
-      ],
-      "Pulp message bus connection issue at %s.": [
-        ""
-      ],
-      "Pulp message bus connection issue.": [
-        ""
-      ],
-      "Pulp node": [
-        ""
-      ],
       "Pulp redis connection issue at %s.": [
-        ""
-      ],
-      "Pulp server version": [
         ""
       ],
       "Pulp storage": [
@@ -7289,9 +7247,6 @@
         "",
         ""
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        ""
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
       ],
@@ -8450,16 +8405,7 @@
       "Unable to connect": [
         "Impossibile collegarsi"
       ],
-      "Unable to connect. Got: %s": [
-        ""
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
-        ""
-      ],
-      "Unable to detect pulp storage": [
-        ""
-      ],
-      "Unable to detect puppet path": [
         ""
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
@@ -9115,9 +9061,6 @@
         ""
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
-        ""
-      ],
-      "Workers": [
         ""
       ],
       "Wrong content type submitted.": [

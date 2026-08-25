@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026",
@@ -2132,9 +2132,6 @@
       "DEB package updates": [
         "DEB パッケージの更新"
       ],
-      "Database connection": [
-        "データベース接続"
-      ],
       "Date": [
         "日付"
       ],
@@ -2801,9 +2798,6 @@
       "Error": [
         "エラー"
       ],
-      "Error connecting to Pulp service": [
-        "Pulp サービスへの接続時にエラーが発生しました"
-      ],
       "Error connecting. Got: %s": [
         "接続エラー。結果: %s"
       ],
@@ -3183,7 +3177,7 @@
         "GPG キー URL"
       ],
       "General": [
-        ""
+        "全般"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         "必要に応じて、必要なリポジトリーの RHUI 証明書を生成します。"
@@ -4316,9 +4310,6 @@
       "Lifecycle environment: {lce}": [
         "ライフサイクル環境: {lce}"
       ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        "ライフサイクル環境をデフォルトの Smart Proxy で変更できません。すべてのライフサイクル環境のコンテンツはこの Smart Proxy 上に存在します。"
-      ],
       "Limit": [
         "制限"
       ],
@@ -4751,9 +4742,6 @@
       "Message": [
         "メッセージ"
       ],
-      "Messaging connection": [
-        "メッセージング接続"
-      ],
       "Metadata generate": [
         "メタデータの生成"
       ],
@@ -4981,9 +4969,6 @@
       ],
       "No Content View": [
         "コンテンツビューがありません"
-      ],
-      "No Content found": [
-        "コンテンツが見つかりません"
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         "Red Hat 製品がありません。%(anchorBegin)s ここ %(anchorEnd)s にマニフェストをインポートして Red Hat コンテンツを受信してください。利用可能なリポジトリーセットがありません。"
@@ -5267,9 +5252,6 @@
       "No profiles to show": [
         "表示するプロファイルはありません"
       ],
-      "No pulp workers running.": [
-        "Pulp ワーカーが実行されていません。"
-      ],
       "No pulpcore content apps are running at %s.": [
         "%s で実行中の pulpcore コンテンツアプリケーションはありません。"
       ],
@@ -5310,7 +5292,7 @@
         "表示するリポジトリーセットはありません。"
       ],
       "No results found": [
-        ""
+        "結果は見つかりませんでした"
       ],
       "No rules yet": [
         "まだルールはありません"
@@ -5362,9 +5344,6 @@
       ],
       "Not added": [
         "追加されていません"
-      ],
-      "Not all necessary pulp workers running at %s.": [
-        "必要な Pulp ワーカーすべてが %s で実行されているわけではありません。"
       ],
       "Not installed": [
         "未インストール"
@@ -5942,9 +5921,6 @@
       "Pullable path": [
         "プル可能なパス"
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         "Pulp 3 のエクスポート先のファイルパス"
       ],
@@ -5957,32 +5933,14 @@
       "Pulp database connection issue at %s.": [
         "%s で Pulp データベース接続の問題が発生しています。"
       ],
-      "Pulp database connection issue.": [
-        "Pulp データベース接続の問題。"
-      ],
       "Pulp disk space notification": [
         "Pulp ディスク容量の通知"
       ],
       "Pulp does not appear to be running at %s.": [
         "Pulp が %s で実行されていないようです。"
       ],
-      "Pulp does not appear to be running.": [
-        "Pulp が実行されていないようです。"
-      ],
-      "Pulp message bus connection issue at %s.": [
-        "%s で Pulp メッセージバス接続の問題が発生しています。"
-      ],
-      "Pulp message bus connection issue.": [
-        "Pulp メッセージバス接続の問題。"
-      ],
-      "Pulp node": [
-        "Pulp ノード"
-      ],
       "Pulp redis connection issue at %s.": [
         "%s で Pulp redis 接続の問題が発生しています。"
-      ],
-      "Pulp server version": [
-        "Pulp サーバーバージョン"
       ],
       "Pulp storage": [
         "Pulp ストレージ"
@@ -7283,9 +7241,6 @@
       "Skipped %{count} unregistered host": [
         "%{count} 個の未登録ホストをスキップしました"
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        "pulp チェックの失敗後に pulp_auth チェックが省略されました"
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         "Smart Proxy '%{proxy}' には、HTTPS プロトコルを使用する必要がある 'rhsm_url' 設定があります。現在の値: '%{url}'。Smart Proxy の rhsm_url 設定を更新してください。"
       ],
@@ -8444,17 +8399,8 @@
       "Unable to connect": [
         "接続できません"
       ],
-      "Unable to connect. Got: %s": [
-        "接続できません。結果: %s"
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         "代替コンテンツソースを削除できません。削除するパーミッションがないか、代替コンテンツソースが存在しません。"
-      ],
-      "Unable to detect pulp storage": [
-        "Pulp ストレージを検出できません"
-      ],
-      "Unable to detect puppet path": [
-        "Puppet パスを検出できません"
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         "提供されたパラメーターを使用した増分エクスポートに使用するベースコンテンツビューを見つけることができません:%{params}"
@@ -9109,9 +9055,6 @@
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
         ""
-      ],
-      "Workers": [
-        "ワーカー"
       ],
       "Wrong content type submitted.": [
         "誤ったコンテンツタイプが送信されました。"
