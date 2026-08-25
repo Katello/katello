@@ -165,7 +165,7 @@ const testConfig = [
   },
   {
     name: 'Module Streams',
-    countKey: 'module_stream_count',
+    countKey: 'modulemd_count',
     autoCompleteUrl: '/module_streams/auto_complete_search',
     dataUrl: api.getApiUrl('/module_streams'),
     data: ContentViewVersionModuleStreamsData,
@@ -259,6 +259,51 @@ testConfig.forEach(({
     assertNockRequest(scope);
     done();
   }));
+
+test('Does not duplicate Module Streams tab when both count keys are present', async () => {
+  const { version } = ContentViewVersionDetailsData;
+  const autocompleteScope = mockAutocomplete(
+    nockInstance,
+    '/module_streams/auto_complete_search',
+    autocompleteQuery('Module Streams'),
+  );
+
+  const scope = nockInstance
+    .get(cvVersions)
+    .query(true)
+    .reply(200, {
+      ...getTabSpecificData('modulemd_count'),
+      module_stream_count: ContentViewVersionDetailsCounts.module_stream_count,
+    });
+
+  const tabScope = nockInstance
+    .get(api.getApiUrl('/module_streams'))
+    .query(queryParams('Module Streams'))
+    .reply(200, ContentViewVersionModuleStreamsData);
+
+  const { getByText, queryByText, getAllByRole } = renderWithRedux(
+    withCVRoute(<ContentViewVersionDetails cvId={3} details={cvDetailData} />),
+    renderOptions,
+  );
+
+  expect(queryByText(`Version ${version}`)).toBeNull();
+  await patientlyWaitFor(() => {
+    expect(getByText(`Version ${version}`)).toBeTruthy();
+  });
+
+  await patientlyWaitFor(() => {
+    const moduleStreamTabs = getAllByRole('tab', { name: /Module Streams/ });
+    expect(moduleStreamTabs).toHaveLength(1);
+  });
+
+  await new Promise((resolve) => {
+    assertNockRequest(autocompleteScope, () => {
+      assertNockRequest(scope, () => {
+        assertNockRequest(tabScope, resolve);
+      });
+    });
+  });
+});
 
 test('Can change repository selector', async (done) => {
   const {
