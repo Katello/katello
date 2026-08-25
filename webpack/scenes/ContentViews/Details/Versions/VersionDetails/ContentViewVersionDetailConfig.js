@@ -16,7 +16,6 @@ import {
   getDockerTags,
   getErrata,
   getFiles,
-  getModuleStreams,
   getPackageGroups,
   getRepositories,
   getRPMPackages,
@@ -33,8 +32,6 @@ import {
   selectFilesStatus,
   selectErrata,
   selectErrataStatus,
-  selectModuleStreams,
-  selectModuleStreamsStatus,
   selectRepositories,
   selectRepositoriesStatus,
   selectRPMPackageGroups,
@@ -253,31 +250,6 @@ export default ({ cvId, versionId }) => [
         title: __('Updated'),
         getProperty: item => item?.updated,
       },
-    ],
-  },
-  {
-    name: __('Module Streams'),
-    route: 'moduleStreams',
-    repoType: 'yum',
-    getCountKey: item => item?.module_stream_count,
-    responseSelector: state => selectModuleStreams(state),
-    statusSelector: state => selectModuleStreamsStatus(state),
-    autocompleteEndpoint: '/katello/api/v2/module_streams',
-    autocompleteQueryParams: { content_view_version_id: versionId },
-    bookmarkController: 'katello_content_view_components',
-    fetchItems: params => getModuleStreams({ content_view_version_id: versionId, ...params }),
-    columnHeaders: [
-      {
-        title: __('Name'),
-        getProperty: item => (
-          <a href={urlBuilder(`content/module_streams/${item?.id}`, '')}>
-            {item?.name}
-          </a>),
-      },
-      { title: __('Stream'), getProperty: item => item?.stream },
-      { title: __('Version'), getProperty: item => item?.version },
-      { title: __('Context'), getProperty: item => item?.context },
-      { title: __('Arch'), getProperty: item => item?.arch },
     ],
   },
   {
