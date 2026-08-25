@@ -6,18 +6,18 @@
 # Translators:
 # Martin Liu <liuzh66@gmail.com>, 2020
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2020
-# Ondřej Gajdušek, 2026
 # tim123, 2026
 # Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026
 # Amit Upadhye <aupadhye@redhat.com>, 2026
 # Bryan Kearney <bryan.kearney@gmail.com>, 2026
+# Ondřej Gajdušek, 2026
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 5.0.0.pre.master\n"
+"Project-Id-Version: katello 5.0.0.rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
-"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2026\n"
+"Last-Translator: Ondřej Gajdušek, 2026\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/foreman/teams/114/zh"
 "_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -2155,9 +2155,6 @@ msgstr "DEB 名称"
 msgid "DEB package updates"
 msgstr "DEB 软件包更新"
 
-msgid "Database connection"
-msgstr "資料庫連線"
-
 msgid "Date"
 msgstr "日期"
 
@@ -2824,9 +2821,6 @@ msgstr "勘误"
 msgid "Error"
 msgstr "错误"
 
-msgid "Error connecting to Pulp service"
-msgstr "连接到 Pulp 服务时出错"
-
 msgid "Error connecting. Got: %s"
 msgstr "连接错误。获得：%s"
 
@@ -3210,7 +3204,7 @@ msgid "GPG Key URL"
 msgstr "GPG 密钥 URL"
 
 msgid "General"
-msgstr ""
+msgstr "常规"
 
 msgid "Generate RHUI certificates for the desired repositories as necessary."
 msgstr "根据需要为所需的仓库生成 RHUI 证书。"
@@ -4349,9 +4343,6 @@ msgstr "生命周期环境没有附加到智能代理，因此没有改变。"
 msgid "Lifecycle environment: {lce}"
 msgstr "生命周期环境：{lce}"
 
-msgid "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy."
-msgstr "无法在默认的智能代理上修改生命周期环境。所有生命周期环境中的内容都将存在于此智能代理中。"
-
 msgid "Limit"
 msgstr "限制"
 
@@ -4784,9 +4775,6 @@ msgstr "介质 ID"
 msgid "Message"
 msgstr "信息"
 
-msgid "Messaging connection"
-msgstr "訊息連線"
-
 msgid "Metadata generate"
 msgstr "生成元数据"
 
@@ -5030,9 +5018,6 @@ msgstr "没有选择激活码"
 
 msgid "No Content View"
 msgstr "沒有內容视图"
-
-msgid "No Content found"
-msgstr "没有找到内容"
 
 msgid "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available."
 msgstr "当前不存在任何红帽产品，请导入清单 %(anchorBegin)s %(anchorEnd)s 来接收红帽内容。没有可用的仓库集。"
@@ -5316,9 +5301,6 @@ msgstr ""
 msgid "No profiles to show"
 msgstr "没有可显示的配置集"
 
-msgid "No pulp workers running."
-msgstr "没有 pulp worker 在运行。"
-
 msgid "No pulpcore content apps are running at %s."
 msgstr "在 %s 上没有允许 没有 pulpcore 内容应用程序。"
 
@@ -5411,9 +5393,6 @@ msgstr "不是一个数字"
 
 msgid "Not added"
 msgstr "未添加"
-
-msgid "Not all necessary pulp workers running at %s."
-msgstr "并非所有需要的 pulp worker 都在 %s 上运行。"
 
 msgid "Not installed"
 msgstr "未安装"
@@ -5995,9 +5974,6 @@ msgstr "发布内容视图"
 msgid "Pullable path"
 msgstr "可拉取路径"
 
-msgid "Pulp"
-msgstr "Pulp"
-
 msgid "Pulp 3 export destination filepath"
 msgstr "Pulp 3 导出目的地文件路径"
 
@@ -6010,32 +5986,14 @@ msgstr "Pulp 批量负载大小"
 msgid "Pulp database connection issue at %s."
 msgstr "在 %s 上有 Pulp 数据库连接问题 。"
 
-msgid "Pulp database connection issue."
-msgstr "Pulp 数据库连接有问题。"
-
 msgid "Pulp disk space notification"
 msgstr "Pulp 磁盘空间通知"
 
 msgid "Pulp does not appear to be running at %s."
 msgstr "Pulp 没有在 %s 上运行。."
 
-msgid "Pulp does not appear to be running."
-msgstr "Pulp 没有运行。"
-
-msgid "Pulp message bus connection issue at %s."
-msgstr "在 %s 上有 Pulp 消息总线连接问题。"
-
-msgid "Pulp message bus connection issue."
-msgstr "Pulp 信息总线连接有问题。"
-
-msgid "Pulp node"
-msgstr "Pulp 节点"
-
 msgid "Pulp redis connection issue at %s."
 msgstr "在 %s 上有 Pulp redis 连接问题。"
-
-msgid "Pulp server version"
-msgstr "Pulp 服务器版本"
 
 msgid "Pulp storage"
 msgstr "Pulp 存储"
@@ -7337,9 +7295,6 @@ msgid "Skipped %{count} unregistered host"
 msgid_plural "Skipped %{count} unregistered hosts"
 msgstr[0] "跳过 %{count} 未注册的主机"
 
-msgid "Skipped pulp_auth check after failed pulp check"
-msgstr "pulp 检查失败后跳过 pulp_auth"
-
 msgid "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting."
 msgstr "Smart Proxy '%{proxy}' 有一个 'rhsm_url' 设置，它必须使用 HTTPS 协议。当前值： '%{url}'。请更新 Smart Proxy 的 rhsm_url 设置。"
 
@@ -8502,17 +8457,8 @@ msgstr "来自主机的 hypervisor 的虚拟客户机的 UUID"
 msgid "Unable to connect"
 msgstr "无法连接"
 
-msgid "Unable to connect. Got: %s"
-msgstr "无法连接。得到了： %s"
-
 msgid "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist."
 msgstr "无法删除任何备用内容源。您没有删除的权限，或者没有任何备用内容源。"
-
-msgid "Unable to detect pulp storage"
-msgstr "无法检测到 pulp 存储"
-
-msgid "Unable to detect puppet path"
-msgstr "无法检测到 puppet 路径"
 
 msgid "Unable to find a base content view to use for incremental export using the provided parameters:%{params}"
 msgstr "无法使用提供的参数查找用于增量导出的基本内容视图：%{params}"
@@ -9168,9 +9114,6 @@ msgstr "是否在结果中包括可用的内容属性"
 
 msgid "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9)."
 msgstr ""
-
-msgid "Workers"
-msgstr "工作节点"
 
 msgid "Wrong content type submitted."
 msgstr "提交了错误的内容类型。"

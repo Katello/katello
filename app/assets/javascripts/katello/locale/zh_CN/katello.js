@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
+        "Last-Translator": "Ondřej Gajdušek, 2026",
         "Language-Team": "Chinese (China) (https://app.transifex.com/foreman/teams/114/zh_CN/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -2132,9 +2132,6 @@
       "DEB package updates": [
         "DEB 软件包更新"
       ],
-      "Database connection": [
-        "資料庫連線"
-      ],
       "Date": [
         "日期"
       ],
@@ -2801,9 +2798,6 @@
       "Error": [
         "错误"
       ],
-      "Error connecting to Pulp service": [
-        "连接到 Pulp 服务时出错"
-      ],
       "Error connecting. Got: %s": [
         "连接错误。获得：%s"
       ],
@@ -3183,7 +3177,7 @@
         "GPG 密钥 URL"
       ],
       "General": [
-        ""
+        "常规"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         "根据需要为所需的仓库生成 RHUI 证书。"
@@ -4316,9 +4310,6 @@
       "Lifecycle environment: {lce}": [
         "生命周期环境：{lce}"
       ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        "无法在默认的智能代理上修改生命周期环境。所有生命周期环境中的内容都将存在于此智能代理中。"
-      ],
       "Limit": [
         "限制"
       ],
@@ -4751,9 +4742,6 @@
       "Message": [
         "信息"
       ],
-      "Messaging connection": [
-        "訊息連線"
-      ],
       "Metadata generate": [
         "生成元数据"
       ],
@@ -4981,9 +4969,6 @@
       ],
       "No Content View": [
         "沒有內容视图"
-      ],
-      "No Content found": [
-        "没有找到内容"
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         "当前不存在任何红帽产品，请导入清单 %(anchorBegin)s %(anchorEnd)s 来接收红帽内容。没有可用的仓库集。"
@@ -5267,9 +5252,6 @@
       "No profiles to show": [
         "没有可显示的配置集"
       ],
-      "No pulp workers running.": [
-        "没有 pulp worker 在运行。"
-      ],
       "No pulpcore content apps are running at %s.": [
         "在 %s 上没有允许 没有 pulpcore 内容应用程序。"
       ],
@@ -5362,9 +5344,6 @@
       ],
       "Not added": [
         "未添加"
-      ],
-      "Not all necessary pulp workers running at %s.": [
-        "并非所有需要的 pulp worker 都在 %s 上运行。"
       ],
       "Not installed": [
         "未安装"
@@ -5942,9 +5921,6 @@
       "Pullable path": [
         "可拉取路径"
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         "Pulp 3 导出目的地文件路径"
       ],
@@ -5957,32 +5933,14 @@
       "Pulp database connection issue at %s.": [
         "在 %s 上有 Pulp 数据库连接问题 。"
       ],
-      "Pulp database connection issue.": [
-        "Pulp 数据库连接有问题。"
-      ],
       "Pulp disk space notification": [
         "Pulp 磁盘空间通知"
       ],
       "Pulp does not appear to be running at %s.": [
         "Pulp 没有在 %s 上运行。."
       ],
-      "Pulp does not appear to be running.": [
-        "Pulp 没有运行。"
-      ],
-      "Pulp message bus connection issue at %s.": [
-        "在 %s 上有 Pulp 消息总线连接问题。"
-      ],
-      "Pulp message bus connection issue.": [
-        "Pulp 信息总线连接有问题。"
-      ],
-      "Pulp node": [
-        "Pulp 节点"
-      ],
       "Pulp redis connection issue at %s.": [
         "在 %s 上有 Pulp redis 连接问题。"
-      ],
-      "Pulp server version": [
-        "Pulp 服务器版本"
       ],
       "Pulp storage": [
         "Pulp 存储"
@@ -7283,9 +7241,6 @@
       "Skipped %{count} unregistered host": [
         "跳过 %{count} 未注册的主机"
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        "pulp 检查失败后跳过 pulp_auth"
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         "Smart Proxy '%{proxy}' 有一个 'rhsm_url' 设置，它必须使用 HTTPS 协议。当前值： '%{url}'。请更新 Smart Proxy 的 rhsm_url 设置。"
       ],
@@ -8444,17 +8399,8 @@
       "Unable to connect": [
         "无法连接"
       ],
-      "Unable to connect. Got: %s": [
-        "无法连接。得到了： %s"
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         "无法删除任何备用内容源。您没有删除的权限，或者没有任何备用内容源。"
-      ],
-      "Unable to detect pulp storage": [
-        "无法检测到 pulp 存储"
-      ],
-      "Unable to detect puppet path": [
-        "无法检测到 puppet 路径"
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         "无法使用提供的参数查找用于增量导出的基本内容视图：%{params}"
@@ -9109,9 +9055,6 @@
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
         ""
-      ],
-      "Workers": [
-        "工作节点"
       ],
       "Wrong content type submitted.": [
         "提交了错误的内容类型。"

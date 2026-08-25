@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
+        "Last-Translator": "fe37ea014ea122db60df81cd86b163af_742ef71 <ba9f59c06b0be83ac3724b1834a4c14b_93939>, 2026",
         "Language-Team": "Spanish (https://app.transifex.com/foreman/teams/114/es/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -2136,9 +2136,6 @@
       "DEB package updates": [
         ""
       ],
-      "Database connection": [
-        "Conexión a la base de datos"
-      ],
       "Date": [
         "Fecha"
       ],
@@ -2805,9 +2802,6 @@
       "Error": [
         "Error"
       ],
-      "Error connecting to Pulp service": [
-        "Error al conectarse con el servicio Pulp"
-      ],
       "Error connecting. Got: %s": [
         "Error al conectar. Se obtuvo: %s."
       ],
@@ -3187,7 +3181,7 @@
         "URL de llave GPG"
       ],
       "General": [
-        ""
+        "General"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
@@ -4322,9 +4316,6 @@
       "Lifecycle environment: {lce}": [
         ""
       ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        "Los entornos del ciclo de vida no se pueden modificar en el proxy inteligente predeterminado.  El contenido de todos los entornos del ciclo de vida existirá en este proxy inteligente."
-      ],
       "Limit": [
         "Límite"
       ],
@@ -4757,9 +4748,6 @@
       "Message": [
         "Mensaje"
       ],
-      "Messaging connection": [
-        "Conexión de mensajes"
-      ],
       "Metadata generate": [
         ""
       ],
@@ -4987,9 +4975,6 @@
       ],
       "No Content View": [
         "No hay vista de contenido"
-      ],
-      "No Content found": [
-        "No se encontró contenido"
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         "No existen productos Red Hat actualmente, por favor importe un manifiesto %(anchorBegin)s aquí %(anchorEnd)s para recibir contenido Red Hat. No hay conjuntos de repositorios disponibles."
@@ -5273,9 +5258,6 @@
       "No profiles to show": [
         "No hay perfiles para mostrar"
       ],
-      "No pulp workers running.": [
-        "No hay trabajadores Pulp en ejecución."
-      ],
       "No pulpcore content apps are running at %s.": [
         ""
       ],
@@ -5368,9 +5350,6 @@
       ],
       "Not added": [
         ""
-      ],
-      "Not all necessary pulp workers running at %s.": [
-        "No todos los trabajadores de pulp trabajan en %s."
       ],
       "Not installed": [
         "No instalado"
@@ -5948,9 +5927,6 @@
       "Pullable path": [
         ""
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5963,32 +5939,14 @@
       "Pulp database connection issue at %s.": [
         "Problema de conexión de la base de datos de Pulp en %s."
       ],
-      "Pulp database connection issue.": [
-        "Problema de conexión a la base de datos Pulp"
-      ],
       "Pulp disk space notification": [
         "Notificación de espacio en el disco de Pulp"
       ],
       "Pulp does not appear to be running at %s.": [
         "Pulp no parece estar ejecutándose en %s."
       ],
-      "Pulp does not appear to be running.": [
-        "Pulp no parece estar ejecutándose."
-      ],
-      "Pulp message bus connection issue at %s.": [
-        "El mensaje Pulp tiene un problema de conexión del bus en %s."
-      ],
-      "Pulp message bus connection issue.": [
-        "Problema de conexión de bus de mensaje de Pulp."
-      ],
-      "Pulp node": [
-        "Pulp node"
-      ],
       "Pulp redis connection issue at %s.": [
         "Problema de conexión de redistribución de Pulp en %."
-      ],
-      "Pulp server version": [
-        "Versión del servidor Pulp"
       ],
       "Pulp storage": [
         "Almacenamiento Pulp"
@@ -7290,9 +7248,6 @@
         "",
         ""
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        "Se omitió la verificación pulp_auth luego de que la verificación de Pulp produjo un error."
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
       ],
@@ -8451,17 +8406,8 @@
       "Unable to connect": [
         "Incapaz de conectar"
       ],
-      "Unable to connect. Got: %s": [
-        "No se pudo establecer la conexión. Se obtuvo: %s."
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         ""
-      ],
-      "Unable to detect pulp storage": [
-        "No se pudo detectar el almacenamiento Pulp"
-      ],
-      "Unable to detect puppet path": [
-        "No se pudo detectar la ruta de Puppet"
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         ""
@@ -9117,9 +9063,6 @@
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
         ""
-      ],
-      "Workers": [
-        "Trabajadores"
       ],
       "Wrong content type submitted.": [
         "Se ha enviado un tipo de contenido incorrecto."

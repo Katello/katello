@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.0.0.rc1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026",
+        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
         "Language-Team": "Korean (https://app.transifex.com/foreman/teams/114/ko/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -2132,9 +2132,6 @@
       "DEB package updates": [
         "DEB 패키지 업데이트"
       ],
-      "Database connection": [
-        "데이터베이스 연결"
-      ],
       "Date": [
         "날짜 "
       ],
@@ -2801,9 +2798,6 @@
       "Error": [
         "오류"
       ],
-      "Error connecting to Pulp service": [
-        "Pulp 서비스에 연결하는 도중 오류가 발생했습니다."
-      ],
       "Error connecting. Got: %s": [
         "연결하는 도중 오류가 발생했습니다. 오류 메시지: %s"
       ],
@@ -3183,7 +3177,7 @@
         "GPG 키 URL"
       ],
       "General": [
-        ""
+        "일반"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         "필요에 따라 원하는 리포지토리에 대한 RHUI 인증서를 생성합니다."
@@ -4316,9 +4310,6 @@
       "Lifecycle environment: {lce}": [
         "라이프사이클 환경: {lce}"
       ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        "기본 스마트 프록시에서는 라이프사이클 환경을 수정할 수 없습니다. 모든 라이프사이클 환경의 콘텐츠는 이 스마트 프록시에 존재합니다."
-      ],
       "Limit": [
         "제한 "
       ],
@@ -4751,9 +4742,6 @@
       "Message": [
         "메세지 "
       ],
-      "Messaging connection": [
-        "메시징 연결"
-      ],
       "Metadata generate": [
         "메타데이터 생성"
       ],
@@ -4981,9 +4969,6 @@
       ],
       "No Content View": [
         "컨텐츠 보기가 없습니다 "
-      ],
-      "No Content found": [
-        "콘텐츠를 찾을 수 없음"
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         "현재 Red Hat 제품이 없습니다. %(anchorBegin)s 여기 %(anchorEnd)s에서 매니페스트를 가져와서 Red Hat 콘텐츠를 수신합니다. 사용 가능한 리포지토리 세트가 없습니다."
@@ -5267,9 +5252,6 @@
       "No profiles to show": [
         "표시할 프로필이 없음"
       ],
-      "No pulp workers running.": [
-        "실행 중인 pulp worker가 없습니다."
-      ],
       "No pulpcore content apps are running at %s.": [
         "%s에서 pulpcore 콘텐츠 앱이 실행 중이 아닙니다."
       ],
@@ -5310,7 +5292,7 @@
         "표시할 리포지터리 세트가 없습니다."
       ],
       "No results found": [
-        ""
+        "검색 결과가 없습니다"
       ],
       "No rules yet": [
         "아직 규칙이 없음"
@@ -5362,9 +5344,6 @@
       ],
       "Not added": [
         "추가되지 않음"
-      ],
-      "Not all necessary pulp workers running at %s.": [
-        "%s에서 모든 필수 Pulp 작업자가 실행되고 있는 것은 아닙니다."
       ],
       "Not installed": [
         "설치되지 않음 "
@@ -5942,9 +5921,6 @@
       "Pullable path": [
         "Pull 가능 경로"
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         "Pulp 3 내보내기 대상 파일 경로"
       ],
@@ -5957,32 +5933,14 @@
       "Pulp database connection issue at %s.": [
         "%s에서 Pulp 데이터베이스 연결 문제."
       ],
-      "Pulp database connection issue.": [
-        "Pulp 데이터베이스 연결 문제가 발생했습니다."
-      ],
       "Pulp disk space notification": [
         "Pulp 디스크 공간 알림"
       ],
       "Pulp does not appear to be running at %s.": [
         "Pulp가 %s에서 실행되고 있지 않은 것 같습니다."
       ],
-      "Pulp does not appear to be running.": [
-        "Pulp가 실행되고 있지 않습니다."
-      ],
-      "Pulp message bus connection issue at %s.": [
-        "%s에서 Pulp 메시지 버스 연결 문제."
-      ],
-      "Pulp message bus connection issue.": [
-        "Pulp 메시지 버스 연결 문제가 발생했습니다."
-      ],
-      "Pulp node": [
-        "Pulp 노드"
-      ],
       "Pulp redis connection issue at %s.": [
         "%s에서 Pulp Redis 연결 문제."
-      ],
-      "Pulp server version": [
-        "Pulp 서버 버전"
       ],
       "Pulp storage": [
         "Pulp 스토리지"
@@ -7283,9 +7241,6 @@
       "Skipped %{count} unregistered host": [
         "등록되지 않은 %{count} 호스트 건너뜀"
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        "실패한 pulp 검사 후 pulp_auth 검사를 건너뛰었습니다."
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         "Smart Proxy '%{proxy}'의 rhsm_url 설정은 HTTPS 프로토콜을 사용해야 합니다. 현재 값: '%{url} 스마트 프록시의 rhsm_url 설정을 업데이트해 주세요."
       ],
@@ -8444,17 +8399,8 @@
       "Unable to connect": [
         "연결할 수 없음"
       ],
-      "Unable to connect. Got: %s": [
-        "연결할 수 없습니다. 오류 메시지: %s"
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         "대체 콘텐츠 소스를 삭제할 수 없습니다. 삭제할 권한이 없거나 대체 콘텐츠 소스가 하나도 없습니다."
-      ],
-      "Unable to detect pulp storage": [
-        "pulp 스토리지를 감지할 수 없습니다."
-      ],
-      "Unable to detect puppet path": [
-        "puppet 경로를 감지할 수 없습니다"
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         "제공된 매개변수를 사용하여 증분 내보내기에 사용할 기본 콘텐츠 뷰를 찾을 수 없습니다:%{params}"
@@ -9109,9 +9055,6 @@
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
         ""
-      ],
-      "Workers": [
-        "작업자"
       ],
       "Wrong content type submitted.": [
         "잘못된 콘텐츠 유형이 제출되었습니다."

@@ -23,15 +23,15 @@
 # Wiederoder <stefanwiederoder@googlemail.com>, 2026
 # Alexander Stoll <Alexander.Stoll@netways.de>, 2026
 # Bryan Kearney <bryan.kearney@gmail.com>, 2026
-# Ettore Atalan <atalanttore@googlemail.com>, 2026
 # pdolinic, 2026
+# Ettore Atalan <atalanttore@googlemail.com>, 2026
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: katello 5.0.0.pre.master\n"
+"Project-Id-Version: katello 5.0.0.rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-12-19 20:14+0000\n"
-"Last-Translator: pdolinic, 2026\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2026\n"
 "Language-Team: German (https://app.transifex.com/foreman/teams/114/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2168,9 +2168,6 @@ msgstr "DEB-Name"
 msgid "DEB package updates"
 msgstr ""
 
-msgid "Database connection"
-msgstr "Verbindung zur Datenbank "
-
 msgid "Date"
 msgstr "Datum"
 
@@ -2837,9 +2834,6 @@ msgstr "Erratum"
 msgid "Error"
 msgstr "Fehler"
 
-msgid "Error connecting to Pulp service"
-msgstr "Fehler bei Verbindung zu Pulp-Dienst"
-
 msgid "Error connecting. Got: %s"
 msgstr "Verbindungsfehler. Ausgabe: %s"
 
@@ -3223,7 +3217,7 @@ msgid "GPG Key URL"
 msgstr "GPG-Schlüssel-URL"
 
 msgid "General"
-msgstr ""
+msgstr "Allgemein"
 
 msgid "Generate RHUI certificates for the desired repositories as necessary."
 msgstr ""
@@ -4362,9 +4356,6 @@ msgstr "Die Lebenszyklusumgebung wurde nicht an den Smart Proxy angehängt; dahe
 msgid "Lifecycle environment: {lce}"
 msgstr ""
 
-msgid "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy."
-msgstr "Lebenszyklusumgebungen können auf dem standardmäßigen Smart Proxy nicht geändert werden. Der Inhalt aller Lifecycle-Umgebungen ist auf diesem Smart Proxy vorhanden."
-
 msgid "Limit"
 msgstr "Grenze"
 
@@ -4797,9 +4788,6 @@ msgstr "Medium Kennungen"
 msgid "Message"
 msgstr "Nachricht"
 
-msgid "Messaging connection"
-msgstr "Verbindung zum Messaging"
-
 msgid "Metadata generate"
 msgstr ""
 
@@ -5039,9 +5027,6 @@ msgstr "Keine Aktivierungsschlüssel zur Auswahl"
 
 msgid "No Content View"
 msgstr "Keine Inhaltsansicht"
-
-msgid "No Content found"
-msgstr "Kein Inhalt gefunden"
 
 msgid "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available."
 msgstr "Derzeit sind keine Red Hat-Produkte vorhanden. Bitte importieren Sie ein Manifest %(anchorBegin)s hier %(anchorEnd)s , um Red Hat-Inhalte zu erhalten. Keine Repository-Sets verfügbar."
@@ -5325,9 +5310,6 @@ msgstr ""
 msgid "No profiles to show"
 msgstr "Keine Profile zum Anzeigen"
 
-msgid "No pulp workers running."
-msgstr "Pulp-Worker laufen nicht."
-
 msgid "No pulpcore content apps are running at %s."
 msgstr ""
 
@@ -5420,9 +5402,6 @@ msgstr "Keine Zahl"
 
 msgid "Not added"
 msgstr "Nicht hinzugefügt"
-
-msgid "Not all necessary pulp workers running at %s."
-msgstr "Nicht alle notwendigen Pulp-Worker laufen bei %s ."
 
 msgid "Not installed"
 msgstr "Nicht installiert"
@@ -6004,9 +5983,6 @@ msgstr "Inhaltsansicht veröffentlichen"
 msgid "Pullable path"
 msgstr ""
 
-msgid "Pulp"
-msgstr "Pulp"
-
 msgid "Pulp 3 export destination filepath"
 msgstr "Pulp 3 Exportzieldateipfad"
 
@@ -6019,32 +5995,14 @@ msgstr "Pulp-bulk Belastungsgröße"
 msgid "Pulp database connection issue at %s."
 msgstr "Problem mit der Pulp-Datenbankverbindung bei %s."
 
-msgid "Pulp database connection issue."
-msgstr "Verbindungsproblem mit Pulp-Datenbank."
-
 msgid "Pulp disk space notification"
 msgstr "Benachrichtigung über Pulp-Speicherplatz"
 
 msgid "Pulp does not appear to be running at %s."
 msgstr "Pulp scheint nicht zu laufen %s."
 
-msgid "Pulp does not appear to be running."
-msgstr "Pulp scheint nicht zu laufen."
-
-msgid "Pulp message bus connection issue at %s."
-msgstr "Pulp-Message-Bus-Verbindungsproblem bei %s ."
-
-msgid "Pulp message bus connection issue."
-msgstr "Verbindungsproblem mit Pulp-Nachrichtenbus."
-
-msgid "Pulp node"
-msgstr "Pulp-Knoten"
-
 msgid "Pulp redis connection issue at %s."
 msgstr "Pulp redis connection issue at %s ."
-
-msgid "Pulp server version"
-msgstr "Pulp-Server Version"
 
 msgid "Pulp storage"
 msgstr "Pulp-Speicher"
@@ -7347,9 +7305,6 @@ msgid_plural "Skipped %{count} unregistered hosts"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Skipped pulp_auth check after failed pulp check"
-msgstr "pulp_auth Check wurde übersprungen, nachdem Pulp-Check fehlschlug"
-
 msgid "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting."
 msgstr ""
 
@@ -8516,17 +8471,8 @@ msgstr "UUIDs der virtuellen Gäste vom Hypervisor des Hosts"
 msgid "Unable to connect"
 msgstr "Verbindung kann nicht hergestellt werden"
 
-msgid "Unable to connect. Got: %s"
-msgstr "Verbindung fehlgeschlagen: %s"
-
 msgid "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist."
 msgstr ""
-
-msgid "Unable to detect pulp storage"
-msgstr "Pulp-Speicher nicht gefunden"
-
-msgid "Unable to detect puppet path"
-msgstr "Puppet-Pfad kann nicht erkannt werden"
 
 msgid "Unable to find a base content view to use for incremental export using the provided parameters:%{params}"
 msgstr ""
@@ -9183,9 +9129,6 @@ msgstr "Ob verfügbare Inhaltsattribute in Ergebnisse eingeschlossen werden soll
 
 msgid "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9)."
 msgstr ""
-
-msgid "Workers"
-msgstr "Worker"
 
 msgid "Wrong content type submitted."
 msgstr "Falscher Inhaltstyp übermittelt."
