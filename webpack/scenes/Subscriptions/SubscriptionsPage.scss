@@ -1,5 +1,3 @@
-@import 'foremanReact/common/variables';
-
 h1[data-ouia-component-id="subscriptions-title"] {
   margin: 0;
   display: flex;
@@ -13,6 +11,7 @@ h1[data-ouia-component-id="subscriptions-title"] {
 #subscriptions-toolbar {
   .subscriptions-filter-group {
     flex-grow: 0;
+    margin-inline-end: var(--pf-v5-global--spacer--md);
   }
 
   [data-ouia-component-id="subscriptions-kebab-dropdown"] {
@@ -54,41 +53,52 @@ h1[data-ouia-component-id="subscriptions-title"] {
   }
 }
 
-#subscriptions-table {
-  .editable {
-    &.changed {
-      font-weight: bold;
-    }
+.table-index-page #subscriptions-toolbar {
+  width: 100%;
+  padding-left: var(--pf-v5-global--spacer--lg);
+  padding-right: var(--pf-v5-global--spacer--lg);
+
+  .subscriptions-toolbar-content {
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  .pf-table-inline-edit {
-    tbody {
-      .form-group {
-        margin-bottom: 0;
-      }
+  .subscriptions-filter-group {
+    width: auto;
+  }
+}
 
-      tr.open-grouped-row {
-        background-color: $table-bg-hover;
+#subscriptions-table {
+  .editable.changed {
+    font-weight: var(--pf-v5-global--FontWeight--bold);
+  }
 
-        td {
-          border-bottom-color: $table-border-hover;
-        }
-      }
-    }
+  .subscriptions-table-select {
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
 
-    .table-view-pf-select {
-      width: 50px;
+  .subscriptions-table-select-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--pf-v5-global--spacer--sm);
+    min-height: var(--pf-v5-global--FontSize--xl);
+  }
 
-      .collapse-subscription-group-button {
-        margin-top: 4px;
-        cursor: pointer;
-        float: left;
-        font-weight: bold;
-      }
+  .collapse-subscription-group-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+  }
 
-      input[type='checkbox'] {
-        float: right;
-      }
+  tr.open-grouped-row {
+    background-color: var(--pf-v5-global--BackgroundColor--200);
+
+    td {
+      border-bottom-color: var(--pf-v5-global--BorderColor--100);
     }
   }
 }
