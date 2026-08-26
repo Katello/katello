@@ -6,7 +6,6 @@ import api, { orgId } from '../../../services/api';
 import { apiError, getResponseErrorMsgs } from '../../../utils/helpers';
 import {
   SAVE_UPSTREAM_SUBSCRIPTIONS_KEY,
-  PING_UPSTREAM_SUBSCRIPTIONS_KEY,
   PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
   PING_UPSTREAM_SUBSCRIPTIONS_FAILURE,
 } from './UpstreamSubscriptionsConstants';
@@ -34,12 +33,16 @@ export const saveUpstreamSubscriptions = (params, handleSuccess) =>
     handleSuccess,
   });
 
-const pingUpstreamSubscriptions = () => dispatch =>
-  dispatch(APIActions.get({
-    key: PING_UPSTREAM_SUBSCRIPTIONS_KEY,
-    url: api.getApiUrl(`/organizations/${orgId()}/upstream_subscriptions/ping`),
-    handleSuccess: () => dispatch({ type: PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS }),
-    handleError: error => dispatch(apiError(PING_UPSTREAM_SUBSCRIPTIONS_FAILURE, error)),
-  }));
+const pingUpstreamSubscriptions = () => async (dispatch) => {
+  try {
+    const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions/ping`);
+    return dispatch({
+      type: PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(PING_UPSTREAM_SUBSCRIPTIONS_FAILURE, error));
+  }
+};
 
 export default pingUpstreamSubscriptions;

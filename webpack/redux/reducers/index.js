@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import { organization } from '../../containers/Application';
 import redHatRepositories from './RedHatRepositories';
-import { subscriptions } from '../../scenes/Subscriptions';
 import { manifestHistory } from '../../scenes/Subscriptions/Manifest';
 import { subscriptionDetails } from '../../scenes/Subscriptions/Details';
 import { setOrganization } from '../../components/SelectOrg/SetOrganization';
@@ -14,7 +13,6 @@ import tables from '../../scenes/Settings';
 export default combineReducers({
   organization,
   redHatRepositories,
-  subscriptions,
   manifestHistory,
   subscriptionDetails,
   setOrganization,

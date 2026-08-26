@@ -1,63 +1,95 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import PropTypes from 'prop-types';
-import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { Popover, Title, Button } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
-import PageLayout from 'foremanReact/routes/common/PageLayout/PageLayout';
 import { useCurrentUserTablePreferences } from 'foremanReact/components/PF4/TableIndexPage/Table/TableIndexHooks';
+import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import ManageManifestModal from './Manifest/';
-import { SubscriptionsTable } from './components/SubscriptionsTable';
+import SubscriptionsTable from './components/SubscriptionsTable/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
-import { filterRHSubscriptions } from './SubscriptionHelpers';
+import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
-
-import { createSubscriptionParams } from './SubscriptionActions.js';
-import { SUBSCRIPTION_TABLE_DEFAULT_COLUMNS, SUBSCRIPTIONS_SERVICE_DOC_URL } from './SubscriptionConstants';
-import './SubscriptionsPage.scss';
-
-const SubscriptionsPage = ({
-  resetTasks,
+import {
+  createSubscriptionParams,
+  pollTasks,
+  cancelPollTasks,
   handleStartTask,
   handleFinishedTask,
-  isTaskPending,
-  isPollingTask,
-  hasUpstreamConnection,
   loadAvailableQuantities,
-  organization,
-  isManifestImported,
-  pingUpstreamSubscriptions,
-  subscriptions,
-  task,
-  cancelPollTasks,
-  loadSubscriptions,
-  loadTableColumns,
-  pollTasks,
-  deleteModalOpened,
-  openDeleteModal,
-  closeDeleteModal,
-  deleteButtonDisabled,
-  disableDeleteButton,
-  enableDeleteButton,
-  searchQuery,
-  updateSearchQuery,
-  activePermissions,
+  updateQuantity,
+  deleteSubscriptions,
+} from './SubscriptionActions';
+import { stopPollingTask } from '../Tasks/TaskActions';
+import {
+  SUBSCRIPTIONS,
+  SUBSCRIPTION_TABLE_COLUMNS,
+  SUBSCRIPTION_TABLE_DEFAULT_COLUMNS,
+  SUBSCRIPTIONS_SERVICE_DOC_URL,
+  MANIFEST_DELETE_TASK_LABEL,
+} from './SubscriptionConstants';
+import { createSubscriptionsColumns } from './SubscriptionsColumns';
+import { selectOrganizationState, selectIsManifestImported } from '../Organizations/OrganizationSelectors';
+import { selectIsPollingTask, selectIsPollingTasks } from '../Tasks/TaskSelectors';
+import { bulkSearchKey, pollTaskKey } from '../Tasks/helpers';
+import pingUpstreamSubscriptions from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
+import {
+  PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
+} from './UpstreamSubscriptions/UpstreamSubscriptionsConstants';
+import {
   uploadManifest,
   deleteManifest,
   refreshManifest,
-  updateQuantity,
-  deleteSubscriptions,
-}) => {
+} from './Manifest/ManifestActions';
+import './SubscriptionsPage.scss';
+
+const buildTableColumns = enabledColumns =>
+  SUBSCRIPTION_TABLE_COLUMNS.map(option => ({
+    ...option,
+    value: enabledColumns.includes(option.key),
+  }));
+
+const SubscriptionsPage = () => {
+  const dispatch = useDispatch();
+  const organization = useSelector(selectOrganizationState);
+  const isManifestImported = useSelector(selectIsManifestImported);
+  const isPollingTask = useSelector(state => selectIsPollingTask(state, SUBSCRIPTIONS));
+  const isPollingTasks = useSelector(state => selectIsPollingTasks(state, SUBSCRIPTIONS));
+  const taskSearchResponse = useSelector(
+    state => selectAPIResponse(state, bulkSearchKey(SUBSCRIPTIONS)),
+    shallowEqual,
+  );
+  const pollTaskResponse = useSelector(
+    state => selectAPIResponse(state, pollTaskKey(SUBSCRIPTIONS)),
+    shallowEqual,
+  );
+
   const [isManageManifestModalOpen, setIsManageManifestModalOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [availableQuantitiesLoaded, setAvailableQuantitiesLoaded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+  const [deleteButtonDisabled, setDeleteButtonDisabled] = useState(true);
+  const [task, setTask] = useState(null);
+  const [hasUpstreamConnection, setHasUpstreamConnection] = useState(false);
+  const [availableQuantities, setAvailableQuantities] = useState(null);
+  const [loadedQuantityPoolIds, setLoadedQuantityPoolIds] = useState('');
+  const [activePermissions, setActivePermissions] = useState({});
+  const [missingPermissions, setMissingPermissions] = useState(undefined);
+  const [subscriptionResults, setSubscriptionResults] = useState([]);
+  const [selectedColumnKeys, setSelectedColumnKeys] = useState(SUBSCRIPTION_TABLE_DEFAULT_COLUMNS);
+  const [tableColumns, setTableColumns] =
+    useState(buildTableColumns(SUBSCRIPTION_TABLE_DEFAULT_COLUMNS));
+  const refreshSubscriptionsRef = useRef(() => {});
   const prevPropsRef = useRef({});
+  const finishedTaskIdsRef = useRef(new Set());
+  const startedTaskIdRef = useRef(null);
+  const quantitiesRequestTokenRef = useRef(0);
+  const quantitiesInFlightPoolIdsRef = useRef('');
 
-  // Load column preferences from Foreman's table_preferences API
   const {
     columns: userColumns,
     hasPreference,
@@ -66,29 +98,61 @@ const SubscriptionsPage = ({
     tableName: 'subscriptions',
   });
 
-  // Apply user column preferences when they load, or use defaults if none saved
   useEffect(() => {
     try {
-      // Use saved preferences if they exist, otherwise use default columns
       const columnsToLoad = userColumns && userColumns.length > 0
         ? userColumns
         : SUBSCRIPTION_TABLE_DEFAULT_COLUMNS;
-
-      loadTableColumns({ columns: columnsToLoad });
+      setSelectedColumnKeys((prev) => {
+        if (prev.length === columnsToLoad.length &&
+            prev.every((key, idx) => key === columnsToLoad[idx])) {
+          return prev;
+        }
+        return columnsToLoad;
+      });
+      setTableColumns((prev) => {
+        const next = buildTableColumns(columnsToLoad);
+        if (prev.length === next.length &&
+            prev.every((col, idx) => col.key === next[idx].key && col.value === next[idx].value)) {
+          return prev;
+        }
+        return next;
+      });
     } catch (error) {
-      // If loading preferences fails, fall back to default columns
       // eslint-disable-next-line no-console
       console.error('Failed to load table column preferences:', error);
-      loadTableColumns({ columns: SUBSCRIPTION_TABLE_DEFAULT_COLUMNS });
+      setSelectedColumnKeys(SUBSCRIPTION_TABLE_DEFAULT_COLUMNS);
+      setTableColumns(buildTableColumns(SUBSCRIPTION_TABLE_DEFAULT_COLUMNS));
     }
-    // loadTableColumns is from bindActionCreators and has a stable reference
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userColumns]);
 
-  const loadData = useCallback(async () => {
-    pollTasks();
-    loadSubscriptions();
-  }, [pollTasks, loadSubscriptions]);
+  const isTaskPending = !!(
+    task &&
+    (task.pending ||
+      task.result === 'pending' ||
+      task.state === 'pending' ||
+      task.state === 'running' ||
+      task.state === 'planned')
+  );
+
+  const isTaskStopped = !!(task && task.state === 'stopped');
+
+  const onTaskStarted = useCallback((response) => {
+    setTask(response.data);
+  }, []);
+
+  const refreshSubscriptions = useCallback(() => {
+    refreshSubscriptionsRef.current();
+  }, []);
+
+  const onRefreshReady = useCallback((refreshFn) => {
+    refreshSubscriptionsRef.current = refreshFn;
+  }, []);
+
+  const doPingUpstream = useCallback(async () => {
+    const action = await dispatch(pingUpstreamSubscriptions());
+    setHasUpstreamConnection(action?.type === PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS);
+  }, [dispatch]);
 
   const getDisabledReason = useCallback((deleteButton) => {
     let disabledReason = null;
@@ -110,81 +174,186 @@ const SubscriptionsPage = ({
     setSelectedRows(rows);
   }, []);
 
+  const handleApiResponse = useCallback((apiData) => {
+    setSubscriptionResults(apiData.results || []);
+    setActivePermissions(apiData.activePermissions || {});
+    setMissingPermissions(apiData.missingPermissions);
+  }, []);
+
+  // Start watching for pending subscription tasks on mount (e.g. bind entitlements
+  // after redirect from Add Subscriptions). Stop on unmount.
   useEffect(() => {
-    resetTasks();
-  }, [resetTasks]);
+    dispatch(pollTasks());
+    return () => {
+      dispatch(cancelPollTasks());
+      dispatch(stopPollingTask(SUBSCRIPTIONS));
+    };
+  }, [dispatch]);
 
-  // Cleanup on unmount
-  useEffect(() => () => {
-    cancelPollTasks();
-  }, [cancelPollTasks]);
+  // Watch bulk-search results: adopt a pending task, or stop when idle.
+  useEffect(() => {
+    if (!isPollingTasks) {
+      return;
+    }
+    // Wait until a real search payload arrives (avoid acting on {} / REQUEST null)
+    if (!taskSearchResponse || !Object.prototype.hasOwnProperty.call(taskSearchResponse, 'results')) {
+      return;
+    }
+    if (taskSearchResponse.results.length === 0) {
+      dispatch(cancelPollTasks());
+      return;
+    }
+    if (task) {
+      return;
+    }
+    const nextTask = taskSearchResponse.results.find(candidate =>
+      candidate?.id && !finishedTaskIdsRef.current.has(String(candidate.id)));
+    if (nextTask) {
+      setTask(nextTask);
+    } else {
+      // Only finished/stale tasks remain in the payload
+      dispatch(cancelPollTasks());
+    }
+  }, [taskSearchResponse, task, isPollingTasks, dispatch]);
 
-  // Handle task lifecycle
+  // Keep local task in sync while polling a single task
+  useEffect(() => {
+    if (!isPollingTask || !pollTaskResponse?.id) {
+      return;
+    }
+    setTask((prev) => {
+      if (!prev || String(prev.id) !== String(pollTaskResponse.id)) {
+        return pollTaskResponse;
+      }
+      if (
+        prev.pending === pollTaskResponse.pending &&
+        prev.result === pollTaskResponse.result &&
+        prev.progress === pollTaskResponse.progress &&
+        prev.state === pollTaskResponse.state
+      ) {
+        return prev;
+      }
+      return pollTaskResponse;
+    });
+  }, [isPollingTask, pollTaskResponse]);
+
+  // Handle task lifecycle: start single-task poll, finish when stopped
   useEffect(() => {
     const prevProps = prevPropsRef.current;
 
-    if (task) {
+    if (task?.id) {
       if (isPollingTask) {
-        if (prevProps.isTaskPending && !isTaskPending) {
-          handleFinishedTask(task);
+        const justFinished = (prevProps.isTaskPending && !isTaskPending) ||
+          (prevProps.isTaskPending && isTaskStopped);
+        if (justFinished) {
+          const finishedTask = task;
+          finishedTaskIdsRef.current.add(String(finishedTask.id));
+          startedTaskIdRef.current = null;
+          dispatch(handleFinishedTask(finishedTask, refreshSubscriptions));
+          if (finishedTask.label === MANIFEST_DELETE_TASK_LABEL) {
+            setHasUpstreamConnection(false);
+          } else {
+            doPingUpstream();
+          }
+          setTask(null);
+          setLoadedQuantityPoolIds('');
         }
-      } else {
-        handleStartTask(task);
+      } else if (startedTaskIdRef.current !== String(task.id)) {
+        startedTaskIdRef.current = String(task.id);
+        dispatch(handleStartTask(task));
       }
     }
 
-    prevPropsRef.current = { ...prevPropsRef.current, isTaskPending };
-  }, [task, isPollingTask, isTaskPending, handleStartTask, handleFinishedTask]);
+    prevPropsRef.current = {
+      ...prevPropsRef.current,
+      isTaskPending: isTaskPending && !isTaskStopped,
+    };
+  }, [task, isPollingTask, isTaskPending, isTaskStopped, dispatch, refreshSubscriptions,
+    doPingUpstream]);
 
   // Handle organization changes
+  const organizationId = organization?.id;
   useEffect(() => {
     const prevProps = prevPropsRef.current;
 
-    if (organization && (!prevProps.organization ||
-        prevProps.organization.id !== organization.id)) {
-      loadData();
+    if (organizationId && prevProps.organizationId !== organizationId) {
+      finishedTaskIdsRef.current = new Set();
+      startedTaskIdRef.current = null;
+      setTask(null);
+      dispatch(cancelPollTasks());
+      dispatch(pollTasks());
+      refreshSubscriptions();
+      setHasUpstreamConnection(false);
+      setAvailableQuantities(null);
+      setLoadedQuantityPoolIds('');
+      quantitiesRequestTokenRef.current += 1;
+      quantitiesInFlightPoolIdsRef.current = '';
       if (isManifestImported) {
-        pingUpstreamSubscriptions();
-        setAvailableQuantitiesLoaded(false);
+        doPingUpstream();
       }
     }
 
-    prevPropsRef.current = { ...prevPropsRef.current, organization };
-  }, [organization, isManifestImported, loadData, pingUpstreamSubscriptions]);
+    prevPropsRef.current = { ...prevPropsRef.current, organizationId };
+  }, [organizationId, isManifestImported, dispatch, refreshSubscriptions, doPingUpstream]);
 
   // Handle available quantities loading
   useEffect(() => {
-    if (hasUpstreamConnection && subscriptions.results) {
-      const poolIds = filterRHSubscriptions(subscriptions.results).map(subs => subs.id);
-      if (poolIds.length > 0 && !availableQuantitiesLoaded) {
-        loadAvailableQuantities({ poolIds });
-        setAvailableQuantitiesLoaded(true);
-      }
+    if (!hasUpstreamConnection || subscriptionResults.length === 0) {
+      quantitiesRequestTokenRef.current += 1;
+      quantitiesInFlightPoolIdsRef.current = '';
+      return;
     }
-  }, [hasUpstreamConnection, subscriptions.results, availableQuantitiesLoaded,
-    loadAvailableQuantities]);
+
+    const poolIds = filterRHSubscriptions(subscriptionResults).map(subs => subs.id);
+    const poolIdsKey = [...poolIds].sort().join(',');
+    if (
+      poolIds.length === 0 ||
+      poolIdsKey === loadedQuantityPoolIds ||
+      poolIdsKey === quantitiesInFlightPoolIdsRef.current
+    ) {
+      return;
+    }
+
+    quantitiesRequestTokenRef.current += 1;
+    const requestToken = quantitiesRequestTokenRef.current;
+    quantitiesInFlightPoolIdsRef.current = poolIdsKey;
+    dispatch(loadAvailableQuantities({ poolIds }, (response) => {
+      if (requestToken !== quantitiesRequestTokenRef.current) {
+        return;
+      }
+      quantitiesInFlightPoolIdsRef.current = '';
+      setAvailableQuantities(selectSubscriptionsQuantitiesFromResponse(response.data));
+      setLoadedQuantityPoolIds(poolIdsKey);
+    }, () => {
+      if (requestToken !== quantitiesRequestTokenRef.current) {
+        return;
+      }
+      quantitiesInFlightPoolIdsRef.current = '';
+    }));
+  }, [
+    hasUpstreamConnection,
+    subscriptionResults,
+    loadedQuantityPoolIds,
+    dispatch,
+  ]);
 
   const currentOrg = orgId();
+  const columns = useMemo(() => createSubscriptionsColumns(), []);
 
-  // If organization failed to load (404/403), the user doesn't have
-  // permission to view this organization. Show permission denied
-  // regardless of whether subscriptions returned results
   if (organization?.error && !organization.loading) {
     const statusCode = organization.error.response?.status;
 
     if (statusCode === 404 || statusCode === 403) {
-      const errorMessage = 'You do not have permission to view this organization.';
+      const errorMessage = __('You do not have permission to view this organization.');
       return <PermissionDenied missingPermissions={[errorMessage]} />;
     }
   }
 
-  // Basic permissions - should we even show this page?
-  if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
-    return <PermissionDenied missingPermissions={subscriptions.missingPermissions} />;
+  if (missingPermissions && missingPermissions.length > 0) {
+    return <PermissionDenied missingPermissions={missingPermissions} />;
   }
 
-  // Granular permissions
-  const permissions = propsToCamelCase(activePermissions);
+  const permissions = propsToCamelCase(activePermissions || {});
   const {
     canDeleteManifest,
     canManageSubscriptionAllocations,
@@ -193,22 +362,21 @@ const SubscriptionsPage = ({
   } = permissions;
   const disableManifestActions = !!task || !hasUpstreamConnection;
 
-  const tableColumns = Immutable.asMutable(subscriptions.tableColumns, { deep: true });
   const onSearch = (search) => {
-    loadSubscriptions({ search });
+    setSearchQuery(search);
   };
 
   const onDeleteSubscriptions = (rows) => {
-    deleteSubscriptions(rows);
+    dispatch(deleteSubscriptions(rows, onTaskStarted));
     handleSelectedRowsChange([]);
-    closeDeleteModal();
+    setDeleteModalOpened(false);
+    setDeleteButtonDisabled(true);
   };
 
   const toggleDeleteButton = rowsSelected =>
-    (rowsSelected ? enableDeleteButton() : disableDeleteButton());
+    setDeleteButtonDisabled(!rowsSelected);
 
   const csvParams = createSubscriptionParams({ search: searchQuery });
-  const columns = subscriptions.selectedTableColumns;
   const emptyStateData = isManifestImported
     ? {
       header: __('There are no Subscriptions to display'),
@@ -267,8 +435,9 @@ const SubscriptionsPage = ({
       disableDeleteReason={getDisabledReason(true)}
       disableAddButton={disableManifestActions}
       autocompleteQueryParams={{ organization_id: currentOrg }}
-      updateSearchQuery={updateSearchQuery}
-      onDeleteButtonClick={openDeleteModal}
+      updateSearchQuery={setSearchQuery}
+      searchQuery={searchQuery}
+      onDeleteButtonClick={() => setDeleteModalOpened(true)}
       onSearch={onSearch}
       onManageManifestButtonClick={() => setIsManageManifestModalOpen(true)}
       onExportCsvButtonClick={() => { api.open('/subscriptions.csv', csvParams); }}
@@ -287,132 +456,43 @@ const SubscriptionsPage = ({
         taskInProgress={!!task}
         disableManifestActions={disableManifestActions}
         disabledReason={getDisabledReason()}
-        upload={uploadManifest}
-        delete={deleteManifest}
-        refresh={refreshManifest}
+        upload={file => dispatch(uploadManifest(file, onTaskStarted))}
+        delete={() => dispatch(deleteManifest({}, onTaskStarted))}
+        refresh={() => dispatch(refreshManifest({}, onTaskStarted))}
         isOpen={isManageManifestModalOpen}
         closeModal={() => setIsManageManifestModalOpen(false)}
       />
 
-      <PageLayout
-        searchable={false}
-        header={__('Subscriptions')}
-        customHeader={customHeader}
-        customToolbar={customToolbar}
-      >
-        <div id="subscriptions-table" className="modal-container">
-          <SubscriptionsTable
-            canManageSubscriptionAllocations={canManageSubscriptionAllocations}
-            loadSubscriptions={loadSubscriptions}
-            tableColumns={columns}
-            updateQuantity={updateQuantity}
-            emptyState={emptyStateData}
-            subscriptions={subscriptions}
-            subscriptionDeleteModalOpen={deleteModalOpened}
-            onSubscriptionDeleteModalClose={closeDeleteModal}
-            onDeleteSubscriptions={onDeleteSubscriptions}
-            toggleDeleteButton={toggleDeleteButton}
-            task={task}
-            selectedRows={selectedRows}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            selectionEnabled={!disableManifestActions}
-          />
-          <ModalProgressBar
-            show={!!task}
-            container={document.getElementById('subscriptions-table')}
-            title={task ? task.humanized.action : null}
-            progress={task ? Math.round(task.progress * 100) : 0}
-          />
-        </div>
-      </PageLayout>
+      <div id="subscriptions-table">
+        <SubscriptionsTable
+          canManageSubscriptionAllocations={canManageSubscriptionAllocations}
+          tableColumns={selectedColumnKeys}
+          columns={columns}
+          updateQuantity={quantities => dispatch(updateQuantity(quantities, onTaskStarted))}
+          emptyState={emptyStateData}
+          searchQuery={searchQuery}
+          organizationId={organization?.id || currentOrg}
+          availableQuantities={availableQuantities}
+          subscriptionDeleteModalOpen={deleteModalOpened}
+          onSubscriptionDeleteModalClose={() => setDeleteModalOpened(false)}
+          onDeleteSubscriptions={onDeleteSubscriptions}
+          toggleDeleteButton={toggleDeleteButton}
+          selectedRows={selectedRows}
+          onSelectedRowsChange={handleSelectedRowsChange}
+          selectionEnabled={!disableManifestActions}
+          customHeader={customHeader}
+          customToolbar={customToolbar}
+          onApiResponse={handleApiResponse}
+          onRefreshReady={onRefreshReady}
+        />
+        <ModalProgressBar
+          show={!!task}
+          title={task ? (task.humanized?.action ?? null) : null}
+          progress={task?.progress != null ? Math.round(task.progress * 100) : 0}
+        />
+      </div>
     </>
   );
-};
-
-SubscriptionsPage.propTypes = {
-  pingUpstreamSubscriptions: PropTypes.func.isRequired,
-  loadSubscriptions: PropTypes.func.isRequired,
-  loadAvailableQuantities: PropTypes.func.isRequired,
-  uploadManifest: PropTypes.func.isRequired,
-  deleteManifest: PropTypes.func.isRequired,
-  resetTasks: PropTypes.func.isRequired,
-  updateQuantity: PropTypes.func.isRequired,
-  loadTableColumns: PropTypes.func.isRequired,
-  isManifestImported: PropTypes.bool,
-  subscriptions: PropTypes.shape({
-    tableColumns: PropTypes.arrayOf(PropTypes.shape({
-      key: PropTypes.string,
-      label: PropTypes.string,
-      value: PropTypes.bool,
-    })),
-    selectedTableColumns: PropTypes.arrayOf(PropTypes.string),
-    missingPermissions: PropTypes.arrayOf(PropTypes.string),
-    results: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-    })),
-  }).isRequired,
-  activePermissions: PropTypes.shape({
-    can_delete_manifest: PropTypes.bool,
-    can_manage_subscription_allocations: PropTypes.bool,
-  }),
-  organization: PropTypes.shape({
-    id: PropTypes.number,
-    loading: PropTypes.bool,
-    owner_details: PropTypes.shape({
-      upstreamConsumer: PropTypes.shape({
-        name: PropTypes.string,
-        webUrl: PropTypes.string,
-        uuid: PropTypes.string,
-      }),
-    }),
-    error: PropTypes.shape({
-      response: PropTypes.shape({
-        status: PropTypes.number,
-      }),
-    }),
-  }),
-  task: PropTypes.shape({
-    id: PropTypes.string,
-    progress: PropTypes.number,
-    humanized: PropTypes.shape({
-      action: PropTypes.string,
-    }),
-    pending: PropTypes.bool,
-  }),
-  isTaskPending: PropTypes.bool,
-  isPollingTask: PropTypes.bool,
-  pollTasks: PropTypes.func.isRequired,
-  cancelPollTasks: PropTypes.func.isRequired,
-  handleStartTask: PropTypes.func.isRequired,
-  handleFinishedTask: PropTypes.func.isRequired,
-  hasUpstreamConnection: PropTypes.bool,
-  deleteSubscriptions: PropTypes.func.isRequired,
-  refreshManifest: PropTypes.func.isRequired,
-  searchQuery: PropTypes.string,
-  updateSearchQuery: PropTypes.func.isRequired,
-  deleteButtonDisabled: PropTypes.bool,
-  disableDeleteButton: PropTypes.func.isRequired,
-  enableDeleteButton: PropTypes.func.isRequired,
-  deleteModalOpened: PropTypes.bool,
-  openDeleteModal: PropTypes.func.isRequired,
-  closeDeleteModal: PropTypes.func.isRequired,
-};
-
-SubscriptionsPage.defaultProps = {
-  task: undefined,
-  isTaskPending: undefined,
-  isPollingTask: undefined,
-  organization: undefined,
-  searchQuery: '',
-  deleteModalOpened: false,
-  deleteButtonDisabled: true,
-  isManifestImported: false,
-  hasUpstreamConnection: false,
-  activePermissions: {
-    can_import_manifest: false,
-    can_manage_subscription_allocations: false,
-  },
 };
 
 export default SubscriptionsPage;

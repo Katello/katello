@@ -1,130 +1,89 @@
-import thunk from 'redux-thunk';
-import Immutable from 'seamless-immutable';
-import configureMockStore from 'redux-mock-store';
-import {
-  manifestHistorySuccessResponse,
-  manifestHistorySuccessActions,
-  manifestHistoryFailureActions,
-  taskSuccessResponse,
-  uploadManifestSuccessActions,
-  uploadManifestFailureActions,
-  refreshManifestSuccessActions,
-  refreshManifestFailureActions,
-  deleteManifestSuccessActions,
-  deleteManifestFailureActions,
-} from './manifest.fixtures';
+import { API_OPERATIONS } from 'foremanReact/redux/API';
 import {
   loadManifestHistory,
   uploadManifest,
   refreshManifest,
   deleteManifest,
 } from '../ManifestActions';
-import { mock as mockApi, mockErrorRequest } from '../../../../mockRequest';
-
-const mockStore = configureMockStore([thunk]);
-const store = mockStore({ manifest: Immutable({}) });
-
-beforeEach(() => {
-  store.clearActions();
-  mockApi.reset();
-});
-
-let originalTimeout;
-
-beforeEach(() => {
-  originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-  jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-});
-
-afterEach(() => {
-  jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-});
+import {
+  UPLOAD_MANIFEST_KEY,
+  REFRESH_MANIFEST_KEY,
+  DELETE_MANIFEST_KEY,
+  MANIFEST_HISTORY_KEY,
+  UPLOAD_MANIFEST_REQUEST,
+  UPLOAD_MANIFEST_SUCCESS,
+  UPLOAD_MANIFEST_FAILURE,
+  REFRESH_MANIFEST_REQUEST,
+  REFRESH_MANIFEST_SUCCESS,
+  REFRESH_MANIFEST_FAILURE,
+  DELETE_MANIFEST_REQUEST,
+  DELETE_MANIFEST_SUCCESS,
+  DELETE_MANIFEST_FAILURE,
+  MANIFEST_HISTORY_REQUEST,
+  MANIFEST_HISTORY_SUCCESS,
+  MANIFEST_HISTORY_FAILURE,
+} from '../ManifestConstants';
 
 describe('manifest actions', () => {
-  describe('creates GET_MANIFEST_HISTORY_REQUEST', () => {
-    const url = '/katello/api/v2/organizations/1/subscriptions/manifest_history';
-
-    it('and then fails with 422', async () => {
-      mockErrorRequest({
-        url,
-        status: 422,
-      });
-
-      await store.dispatch(loadManifestHistory());
-      expect(store.getActions()).toEqual(manifestHistoryFailureActions);
-    });
-
-    it('and ends with success', async () => {
-      mockApi.onGet(url).reply(200, manifestHistorySuccessResponse);
-
-      await store.dispatch(loadManifestHistory());
-      expect(store.getActions()).toEqual(manifestHistorySuccessActions);
+  it('creates loadManifestHistory API action', () => {
+    expect(loadManifestHistory({ page: 1 })).toMatchObject({
+      type: API_OPERATIONS.GET,
+      payload: {
+        key: MANIFEST_HISTORY_KEY,
+        url: '/katello/api/v2/organizations/1/subscriptions/manifest_history',
+        params: { page: 1 },
+        actionTypes: {
+          REQUEST: MANIFEST_HISTORY_REQUEST,
+          SUCCESS: MANIFEST_HISTORY_SUCCESS,
+          FAILURE: MANIFEST_HISTORY_FAILURE,
+        },
+      },
     });
   });
 
-  describe('creates UPLOAD_MANIFEST_REQUEST', () => {
-    const url = '/katello/api/v2/organizations/1/subscriptions/upload';
-
-    it('and then fails with 422', async () => {
-      mockErrorRequest({
-        url,
-        status: 422,
-        method: 'POST',
-      });
-
-      await store.dispatch(uploadManifest());
-      expect(store.getActions()).toEqual(uploadManifestFailureActions);
-    });
-
-    it('and ends with success', async () => {
-      mockApi.onPost(url).reply(200, taskSuccessResponse);
-
-      await store.dispatch(uploadManifest());
-      expect(store.getActions()).toEqual(uploadManifestSuccessActions);
+  it('creates uploadManifest API action', () => {
+    const file = new Blob(['manifest']);
+    expect(uploadManifest(file)).toMatchObject({
+      type: API_OPERATIONS.POST,
+      payload: {
+        key: UPLOAD_MANIFEST_KEY,
+        url: '/katello/api/v2/organizations/1/subscriptions/upload',
+        actionTypes: {
+          REQUEST: UPLOAD_MANIFEST_REQUEST,
+          SUCCESS: UPLOAD_MANIFEST_SUCCESS,
+          FAILURE: UPLOAD_MANIFEST_FAILURE,
+        },
+      },
     });
   });
 
-  describe('creates REFRESH_MANIFEST_REQUEST', () => {
-    const url = '/katello/api/v2/organizations/1/subscriptions/refresh_manifest';
-
-    it('and then fails with 422', async () => {
-      mockErrorRequest({
-        url,
-        status: 422,
-        method: 'PUT',
-      });
-
-      await store.dispatch(refreshManifest());
-      expect(store.getActions()).toEqual(refreshManifestFailureActions);
-    });
-
-    it('and ends with success', async () => {
-      mockApi.onPut(url).reply(200, taskSuccessResponse);
-
-      await store.dispatch(refreshManifest());
-      expect(store.getActions()).toEqual(refreshManifestSuccessActions);
+  it('creates refreshManifest API action', () => {
+    expect(refreshManifest()).toMatchObject({
+      type: API_OPERATIONS.PUT,
+      payload: {
+        key: REFRESH_MANIFEST_KEY,
+        url: '/katello/api/v2/organizations/1/subscriptions/refresh_manifest',
+        actionTypes: {
+          REQUEST: REFRESH_MANIFEST_REQUEST,
+          SUCCESS: REFRESH_MANIFEST_SUCCESS,
+          FAILURE: REFRESH_MANIFEST_FAILURE,
+        },
+      },
     });
   });
 
-  describe('creates DELETE_MANIFEST_REQUEST', () => {
-    const url = '/katello/api/v2/organizations/1/subscriptions/delete_manifest';
-
-    it('and then fails with 422', async () => {
-      mockErrorRequest({
-        url,
-        status: 422,
-        method: 'POST',
-      });
-
-      await store.dispatch(deleteManifest());
-      expect(store.getActions()).toEqual(deleteManifestFailureActions);
-    });
-
-    it('and ends with success', async () => {
-      mockApi.onPost(url).reply(200, taskSuccessResponse);
-
-      await store.dispatch(deleteManifest());
-      expect(store.getActions()).toEqual(deleteManifestSuccessActions);
+  it('creates deleteManifest API action', () => {
+    expect(deleteManifest()).toMatchObject({
+      type: API_OPERATIONS.POST,
+      payload: {
+        key: DELETE_MANIFEST_KEY,
+        url: '/katello/api/v2/organizations/1/subscriptions/delete_manifest',
+        actionTypes: {
+          REQUEST: DELETE_MANIFEST_REQUEST,
+          SUCCESS: DELETE_MANIFEST_SUCCESS,
+          FAILURE: DELETE_MANIFEST_FAILURE,
+        },
+      },
     });
   });
 });

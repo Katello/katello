@@ -1,7 +1,7 @@
+import { API_OPERATIONS, get, put, post } from 'foremanReact/redux/API';
 import { propsToSnakeCase } from 'foremanReact/common/helpers';
-
 import api, { orgId } from '../../../services/api';
-import { apiError } from '../../../utils/helpers.js';
+import { getResponseErrorMsgs } from '../../../utils/helpers.js';
 
 import {
   UPLOAD_MANIFEST_REQUEST,
@@ -16,81 +16,75 @@ import {
   MANIFEST_HISTORY_REQUEST,
   MANIFEST_HISTORY_SUCCESS,
   MANIFEST_HISTORY_FAILURE,
+  UPLOAD_MANIFEST_KEY,
+  REFRESH_MANIFEST_KEY,
+  DELETE_MANIFEST_KEY,
+  MANIFEST_HISTORY_KEY,
 } from './ManifestConstants';
 
-export const uploadManifest = file => async (dispatch) => {
-  dispatch({ type: UPLOAD_MANIFEST_REQUEST });
+const manifestErrorToast = error => getResponseErrorMsgs(error.response);
 
+export const uploadManifest = (file, handleSuccess) => {
   const formData = new FormData();
   formData.append('content', file);
 
-  const config = {
-    'Content-Type': 'multipart/form-data',
-  };
-
-  try {
-    const { data } = await api.post(`/organizations/${orgId()}/subscriptions/upload`, formData, config);
-    return dispatch({
-      type: UPLOAD_MANIFEST_SUCCESS,
-      response: data,
-    });
-  } catch (error) {
-    return dispatch(apiError(UPLOAD_MANIFEST_FAILURE, error));
-  }
+  return post({
+    type: API_OPERATIONS.POST,
+    key: UPLOAD_MANIFEST_KEY,
+    url: api.getApiUrl(`/organizations/${orgId()}/subscriptions/upload`),
+    params: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    handleSuccess,
+    errorToast: manifestErrorToast,
+    actionTypes: {
+      REQUEST: UPLOAD_MANIFEST_REQUEST,
+      SUCCESS: UPLOAD_MANIFEST_SUCCESS,
+      FAILURE: UPLOAD_MANIFEST_FAILURE,
+    },
+  });
 };
 
-export const refreshManifest = (extendedParams = {}) => async (dispatch) => {
-  dispatch({ type: REFRESH_MANIFEST_REQUEST });
+export const refreshManifest = (extendedParams = {}, handleSuccess) => put({
+  type: API_OPERATIONS.PUT,
+  key: REFRESH_MANIFEST_KEY,
+  url: api.getApiUrl(`/organizations/${orgId()}/subscriptions/refresh_manifest`),
+  params: propsToSnakeCase(extendedParams),
+  handleSuccess,
+  errorToast: manifestErrorToast,
+  actionTypes: {
+    REQUEST: REFRESH_MANIFEST_REQUEST,
+    SUCCESS: REFRESH_MANIFEST_SUCCESS,
+    FAILURE: REFRESH_MANIFEST_FAILURE,
+  },
+});
 
-  const params = {
-    ...propsToSnakeCase(extendedParams),
-  };
+export const deleteManifest = (extendedParams = {}, handleSuccess) => post({
+  type: API_OPERATIONS.POST,
+  key: DELETE_MANIFEST_KEY,
+  url: api.getApiUrl(`/organizations/${orgId()}/subscriptions/delete_manifest`),
+  params: propsToSnakeCase(extendedParams),
+  handleSuccess,
+  errorToast: manifestErrorToast,
+  actionTypes: {
+    REQUEST: DELETE_MANIFEST_REQUEST,
+    SUCCESS: DELETE_MANIFEST_SUCCESS,
+    FAILURE: DELETE_MANIFEST_FAILURE,
+  },
+});
 
-  try {
-    const { data } = await api.put(`/organizations/${orgId()}/subscriptions/refresh_manifest`, {}, params);
-    return dispatch({
-      type: REFRESH_MANIFEST_SUCCESS,
-      response: data,
-    });
-  } catch (error) {
-    return dispatch(apiError(REFRESH_MANIFEST_FAILURE, error));
-  }
-};
-
-export const deleteManifest = (extendedParams = {}) => async (dispatch) => {
-  dispatch({ type: DELETE_MANIFEST_REQUEST });
-
-  const params = {
-    ...propsToSnakeCase(extendedParams),
-  };
-
-  try {
-    const { data } = await api.post(`/organizations/${orgId()}/subscriptions/delete_manifest`, {}, params);
-    return dispatch({
-      type: DELETE_MANIFEST_SUCCESS,
-      response: data,
-    });
-  } catch (error) {
-    return dispatch(apiError(DELETE_MANIFEST_FAILURE, error));
-  }
-};
-
-export const loadManifestHistory = (extendedParams = {}) => async (dispatch) => {
-  dispatch({ type: MANIFEST_HISTORY_REQUEST });
-
-  const params = {
-    ...propsToSnakeCase(extendedParams),
-  };
-
-  try {
-    const { data } = await api.get(`/organizations/${orgId()}/subscriptions/manifest_history`, {}, params);
-    return dispatch({
-      type: MANIFEST_HISTORY_SUCCESS,
-      response: data,
-    });
-  } catch (error) {
-    return dispatch(apiError(MANIFEST_HISTORY_FAILURE, error));
-  }
-};
+export const loadManifestHistory = (extendedParams = {}) => get({
+  type: API_OPERATIONS.GET,
+  key: MANIFEST_HISTORY_KEY,
+  url: api.getApiUrl(`/organizations/${orgId()}/subscriptions/manifest_history`),
+  params: propsToSnakeCase(extendedParams),
+  errorToast: manifestErrorToast,
+  actionTypes: {
+    REQUEST: MANIFEST_HISTORY_REQUEST,
+    SUCCESS: MANIFEST_HISTORY_SUCCESS,
+    FAILURE: MANIFEST_HISTORY_FAILURE,
+  },
+});
 
 export default loadManifestHistory;

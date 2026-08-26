@@ -32,6 +32,7 @@ const SubscriptionsToolbar = ({
   disableAddButton,
   autocompleteQueryParams,
   updateSearchQuery,
+  searchQuery,
   onDeleteButtonClick,
   onSearch,
   onManageManifestButtonClick,
@@ -71,22 +72,37 @@ const SubscriptionsToolbar = ({
     hasPreference,
   };
 
+  const searchProps = getControllerSearchProps(
+    '/katello/api/v2/subscriptions',
+    'searchBar-katello_subscriptions',
+    true,
+    autocompleteQueryParams,
+  );
+
   return (
     <Toolbar id="subscriptions-toolbar" ouiaId="subscriptions-toolbar">
-      <ToolbarContent>
-        <ToolbarGroup variant="filter-group" className="subscriptions-filter-group">
+      <ToolbarContent className="subscriptions-toolbar-content">
+        <ToolbarGroup
+          variant="filter-group"
+          className="subscriptions-filter-group"
+        >
           <ToolbarItem variant="search-filter">
             <SearchBar
               data={{
-                ...getControllerSearchProps('/katello/api/v2/subscriptions', 'searchBar-katello_subscriptions', true, autocompleteQueryParams),
+                ...searchProps,
                 controller: 'katello_subscriptions',
+                autocomplete: {
+                  ...searchProps.autocomplete,
+                  searchQuery,
+                },
               }}
+              initialQuery={searchQuery}
               onSearch={onSearch}
               onSearchChange={updateSearchQuery}
             />
           </ToolbarItem>
         </ToolbarGroup>
-        <ToolbarGroup>
+        <ToolbarGroup variant="button-group">
           {canManageSubscriptionAllocations &&
             <ToolbarItem>
               <LinkContainer
@@ -204,6 +220,7 @@ SubscriptionsToolbar.propTypes = {
   disableAddButton: PropTypes.bool,
   autocompleteQueryParams: PropTypes.shape({}),
   updateSearchQuery: PropTypes.func,
+  searchQuery: PropTypes.string,
   onSearch: PropTypes.func,
   onDeleteButtonClick: PropTypes.func,
   onManageManifestButtonClick: PropTypes.func,
@@ -223,6 +240,7 @@ SubscriptionsToolbar.defaultProps = {
   disableAddButton: false,
   autocompleteQueryParams: undefined,
   updateSearchQuery: noop,
+  searchQuery: '',
   onSearch: noop,
   onDeleteButtonClick: noop,
   onManageManifestButtonClick: noop,
