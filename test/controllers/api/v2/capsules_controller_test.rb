@@ -52,5 +52,38 @@ module Katello
         get :show, params: { :id => proxy_with_pulp.id}
       end
     end
+
+    def test_index_returns_deterministic_order
+      # Create additional capsules with content to test ordering
+      proxy2 = FactoryBot.create(:smart_proxy, :with_pulp3)
+      proxy2.organizations = @organization
+      proxy2.locations = @location
+      proxy2.save!
+
+      proxy3 = FactoryBot.create(:smart_proxy, :with_pulp3)
+      proxy3.organizations = @organization
+      proxy3.locations = @location
+      proxy3.save!
+
+      # Get all capsules
+      get :index
+      assert_response :success
+
+      body = JSON.parse(response.body)
+      ids = body['results'].map { |r| r['id'] }
+
+      # Verify results are ordered by ID (ascending)
+      assert_equal ids.sort, ids, "Capsules should be returned in ascending ID order"
+
+      # Make the same request again to verify consistent ordering
+      get :index
+      assert_response :success
+
+      body2 = JSON.parse(response.body)
+      ids2 = body2['results'].map { |r| r['id'] }
+
+      # Verify same order on repeated requests
+      assert_equal ids, ids2, "Repeated requests should return capsules in the same order"
+    end
   end
 end

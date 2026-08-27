@@ -11,7 +11,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       @smart_proxies = SmartProxy.with_content.authorized(:view_smart_proxies).includes(:features).
-                search_for(*search_options).paginate(paginate_options)
+                search_for(*search_options).order(:id).paginate(paginate_options)
       @total = SmartProxy.with_content.authorized(:view_smart_proxies).includes(:features).count
     end
 
