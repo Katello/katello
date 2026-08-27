@@ -109,7 +109,7 @@ const BootedContainerImagesPage = () => {
       controller="/katello/api/v2/host_bootc_images"
     >
       <>
-        <Table variant="compact" ouiaId="booted-containers-table" isStriped>
+        <Table variant="compact" ouiaId="booted-containers-table" isStriped className="katello-pf4-table">
           <Thead>
             <Tr ouiaId="table-header">
               <>
@@ -165,7 +165,7 @@ const BootedContainerImagesPage = () => {
                     <Td />
                     <Td colSpan={3}>
                       <ExpandableRowContent>
-                        <Table variant="compact" isStriped ouiaId={`table-composable-expanded-${rowIndex}`}>
+                        <Table variant="compact" isStriped ouiaId={`table-composable-expanded-${rowIndex}`} className="katello-pf4-table">
                           <Thead>
                             <Tr ouiaId={`table-row-inner-expandable-${rowIndex}`}>
                               <Th width={55}>{__('Image digest')}</Th>

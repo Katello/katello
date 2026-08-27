@@ -249,7 +249,7 @@ const SyncedContainerImagesPage = () => {
       ouiaId="synced-container-images-table-index"
     >
       <>
-        <Table variant="compact" ouiaId="synced-container-images-table">
+        <Table variant="compact" ouiaId="synced-container-images-table" isStriped className="katello-pf4-table">
           <Thead>
             <Tr ouiaId="table-header">
               <Th />
