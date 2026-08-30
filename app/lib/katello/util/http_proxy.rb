@@ -22,6 +22,10 @@ module Katello
       end
 
       def proxy_host
+        URI(proxy.url).hostname
+      end
+
+      def proxy_hostname
         URI(proxy.url).host
       end
 
