@@ -8,30 +8,30 @@ node :multi_content_view_environment do |ak|
 end
 
 child :content_view_environments => :content_view_environments do
-  node :content_view do |cve|
+  node :content_view do |cvenv|
     {
-      id: cve.content_view&.id,
-      name: cve.content_view&.name,
-      label: cve.content_view&.label,
-      composite: cve.content_view&.composite,
-      rolling: cve.content_view&.rolling,
-      content_view_version: cve.content_view_version&.version,
-      content_view_version_id: cve.content_view_version&.id,
-      content_view_version_latest: cve.content_view_version&.latest?,
-      content_view_default: cve.content_view&.default?,
-      content_view_environment_id: cve.id,
+      id: cvenv.content_view&.id,
+      name: cvenv.content_view&.name,
+      label: cvenv.content_view&.label,
+      composite: cvenv.content_view&.composite,
+      rolling: cvenv.content_view&.rolling,
+      content_view_version: cvenv.content_view_version&.version,
+      content_view_version_id: cvenv.content_view_version&.id,
+      content_view_version_latest: cvenv.content_view_version&.latest?,
+      content_view_default: cvenv.content_view&.default?,
+      content_view_environment_id: cvenv.id,
     }
   end
-  node :lifecycle_environment do |cve|
+  node :lifecycle_environment do |cvenv|
     {
-      id: cve.lifecycle_environment&.id,
-      name: cve.lifecycle_environment&.name,
-      label: cve.lifecycle_environment&.label,
-      lifecycle_environment_library: cve.lifecycle_environment&.library?,
+      id: cvenv.lifecycle_environment&.id,
+      name: cvenv.lifecycle_environment&.name,
+      label: cvenv.lifecycle_environment&.label,
+      lifecycle_environment_library: cvenv.lifecycle_environment&.library?,
     }
   end
-  node :label do |cve|
-    cve.label
+  node :label do |cvenv|
+    cvenv.label
   end
 end
 

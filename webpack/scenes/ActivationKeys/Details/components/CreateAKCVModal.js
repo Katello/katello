@@ -106,7 +106,7 @@ CreateAKCVModal.propTypes = {
   existingAssignments: PropTypes.arrayOf(PropTypes.shape({
     contentView: PropTypes.shape({}),
     environment: PropTypes.shape({}),
-    label: PropTypes.string,
+    cvEnvLabel: PropTypes.string,
   })),
   onAssignmentsChange: PropTypes.func.isRequired,
   allowMultipleContentViews: PropTypes.bool,

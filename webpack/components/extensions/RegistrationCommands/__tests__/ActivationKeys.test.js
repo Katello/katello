@@ -73,8 +73,8 @@ describe('ActivationKeys', () => {
     const propsWithKeys = {
       ...defaultProps,
       activationKeys: [
-        { name: 'production-key', cves: 'Production/Library' },
-        { name: 'dev-key', cves: 'Development/Library' },
+        { name: 'production-key', cvEnvs: 'Production/Library' },
+        { name: 'dev-key', cvEnvs: 'Development/Library' },
       ],
     };
     render(<ActivationKeys {...propsWithKeys} />);
@@ -89,8 +89,8 @@ describe('ActivationKeys', () => {
     const propsWithKeys = {
       ...defaultProps,
       activationKeys: [
-        { name: 'production-key', cves: 'Production/Library' },
-        { name: 'dev-key', cves: 'Development/Library' },
+        { name: 'production-key', cvEnvs: 'Production/Library' },
+        { name: 'dev-key', cvEnvs: 'Development/Library' },
       ],
       selectedKeys: [],
     };
@@ -108,8 +108,8 @@ describe('ActivationKeys', () => {
     const propsWithKeys = {
       ...defaultProps,
       activationKeys: [
-        { name: 'production-key', cves: 'Production/Library' },
-        { name: 'dev-key', cves: 'Development/Library' },
+        { name: 'production-key', cvEnvs: 'Production/Library' },
+        { name: 'dev-key', cvEnvs: 'Development/Library' },
       ],
       selectedKeys: ['production-key'],
     };

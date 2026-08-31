@@ -15,9 +15,9 @@ module Katello
       @environment_1 = katello_environments(:dev)
       @environment_2 = katello_environments(:staging)
 
-      @library_cve = katello_content_view_environments(:library_default_view_environment)
-      @dev_cve = katello_content_view_environments(:library_dev_view_dev)
-      @staging_cve = katello_content_view_environments(:library_dev_staging_view_staging)
+      @library_cvenv = katello_content_view_environments(:library_default_view_environment)
+      @dev_cvenv = katello_content_view_environments(:library_dev_view_dev)
+      @staging_cvenv = katello_content_view_environments(:library_dev_staging_view_staging)
 
       @akey = ActivationKey.create(:name => aname, :description => adesc, :organization => @organization,
                                    :unlimited_hosts => false,
@@ -27,7 +27,7 @@ module Katello
     describe "in valid state" do
       it "should be valid if the environment is Library" do
         @akey.name = 'valid key'
-        @akey.content_view_environments = [@library_cve]
+        @akey.content_view_environments = [@library_cvenv]
         value(@akey).must_be :valid?
         value(@akey.errors[:base]).must_be_empty
       end
@@ -84,8 +84,8 @@ module Katello
       it "environment" do
         a = ActivationKey.find_by_name(aname)
         value(a).wont_be :nil?
-        b = ActivationKey.update(a.id, content_view_environments: [@staging_cve])
-        value(b.content_view_environments.first).must_equal @staging_cve
+        b = ActivationKey.update(a.id, content_view_environments: [@staging_cvenv])
+        value(b.content_view_environments.first).must_equal @staging_cvenv
       end
     end
 

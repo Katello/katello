@@ -73,5 +73,19 @@ module.exports = {
       }
     ],
     '@theforeman/rules/require-ouiaid': "error",
-  }
+    'no-cve-abbreviation': 'error',
+  },
+  overrides: [
+    {
+      // These files legitimately use "cve"/"cves" for real security CVEs
+      // (Common Vulnerabilities and Exposures), not content view environments.
+      files: [
+        'components/extensions/HostDetails/Tabs/ErrataTab/ErratumExpansionContents.js',
+        'components/extensions/HostDetails/Tabs/__tests__/errataTab.test.js',
+      ],
+      rules: {
+        'no-cve-abbreviation': 'off',
+      },
+    },
+  ],
 }

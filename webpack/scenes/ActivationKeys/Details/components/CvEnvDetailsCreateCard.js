@@ -2,10 +2,10 @@ import React, { useRef, useState } from 'react';
 import { DropdownItem } from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useForemanContext, useForemanPermissions } from 'foremanReact/Root/Context/ForemanContext';
-import { CVEDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
+import { CvEnvDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import CreateAKCVModal from './CreateAKCVModal';
 
-export const CVEDetailsCreateCard = () => {
+export const CvEnvDetailsCreateCard = () => {
   const dataNode = useRef(document.getElementById('ak-create-cve-data')).current;
   const [assignments, setAssignments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,7 +42,7 @@ export const CVEDetailsCreateCard = () => {
     }
   };
 
-  // Transform assignments to format for display in CVEDetailsBareCard
+  // Transform assignments to format for display in CvEnvDetailsBareCard
   const displayAssignments = assignments
     .filter(a => a.contentView && a.environment)
     .map(a => ({
@@ -50,7 +50,7 @@ export const CVEDetailsCreateCard = () => {
       lifecycle_environment: a.environment,
     }));
 
-  // Build permissions object for CVEDetailsBareCard
+  // Build permissions object for CvEnvDetailsBareCard
   const permissions = {
     view_lifecycle_environments: userPermissions.has('view_lifecycle_environments'),
     view_content_views: userPermissions.has('view_content_views'),
@@ -59,10 +59,10 @@ export const CVEDetailsCreateCard = () => {
   };
 
   // Check if user has permission to assign content view environments
-  const canAssignCVEs = userPermissions.has('create_activation_keys');
+  const canAssignCvEnvs = userPermissions.has('create_activation_keys');
 
   // Create dropdown items for kebab menu if user has permission
-  const dropdownItems = canAssignCVEs ? [
+  const dropdownItems = canAssignCvEnvs ? [
     <DropdownItem
       aria-label="assign-content-view-environments"
       ouiaId="assign-content-view-environments"
@@ -79,16 +79,16 @@ export const CVEDetailsCreateCard = () => {
 
   return (
     <>
-      <CVEDetailsBareCard
+      <CvEnvDetailsBareCard
         contentViewEnvironments={displayAssignments}
         permissions={permissions}
         dropdownItems={dropdownItems}
         isDropdownOpen={isDropdownOpen}
         toggleKebab={toggleKebab}
-        openModal={canAssignCVEs ? openModal : null}
+        openModal={canAssignCvEnvs ? openModal : null}
         allowMultipleContentViews={allowMultipleContentViews}
       />
-      {canAssignCVEs && (
+      {canAssignCvEnvs && (
         <CreateAKCVModal
           isOpen={isModalOpen}
           closeModal={closeModal}
@@ -102,4 +102,4 @@ export const CVEDetailsCreateCard = () => {
   );
 };
 
-export default CVEDetailsCreateCard;
+export default CvEnvDetailsCreateCard;

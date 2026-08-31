@@ -9,13 +9,13 @@ namespace :katello do
         msg_word = commit ? "Deleting" : "Listing"
         Rails.logger.info "#{msg_word} CVEs with no CVV id.\n"
         User.current = User.anonymous_admin
-        ::Katello::ContentViewEnvironment.where(content_view_version: nil).find_each do |cve|
-          Rails.logger.info "#{msg_word} CVE with id: #{cve.id} that has no CVV id.\n"
+        ::Katello::ContentViewEnvironment.where(content_view_version: nil).find_each do |cvenv|
+          Rails.logger.info "#{msg_word} CVE with id: #{cvenv.id} that has no CVV id.\n"
           if commit
-            cve.destroy!
+            cvenv.destroy!
           end
         rescue StandardError => e
-          Rails.logger.error "Error encountered when #{msg_word} record for CVE with id #{cve.id}: #{e}"
+          Rails.logger.error "Error encountered when #{msg_word} record for CVE with id #{cvenv.id}: #{e}"
         end
       end
     end

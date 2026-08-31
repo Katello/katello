@@ -91,10 +91,10 @@ child :sorted_organization_readable_environments => :environments do
   end
 
   node :hostgroup_count do |env|
-    cve_ids = version.content_view&.content_view_environments&.where(environment_id: env.id)&.select(:id) || []
+    cvenv_ids = version.content_view&.content_view_environments&.where(environment_id: env.id)&.select(:id) || []
     ::Hostgroup.authorized('view_hostgroups').in_environments(env).where(
       'katello_hostgroup_content_facets.content_view_environment_id IN (?)',
-      cve_ids
+      cvenv_ids
     ).count
   end
 end

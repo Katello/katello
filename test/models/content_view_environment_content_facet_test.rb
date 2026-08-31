@@ -17,13 +17,13 @@ module Katello
       @content_facet.content_view_environments = [
         katello_content_view_environments(:library_dev_view_dev),
         katello_content_view_environments(:library_dev_staging_view_dev)]
-      cve1 = @content_facet.content_view_environments.first
-      cve2 = @content_facet.content_view_environments.last
-      new_cves = [cve2, cve1]
-      ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(@content_facet, new_cves)
+      cvenv1 = @content_facet.content_view_environments.first
+      cvenv2 = @content_facet.content_view_environments.last
+      new_cvenvs = [cvenv2, cvenv1]
+      ContentViewEnvironmentContentFacet.reprioritize_for_content_facet(@content_facet, new_cvenvs)
       @content_facet.content_view_environments.reload
-      assert_equal 1, cve1.priority(@content_facet)
-      assert_equal 0, cve2.priority(@content_facet)
+      assert_equal 1, cvenv1.priority(@content_facet)
+      assert_equal 0, cvenv2.priority(@content_facet)
     end
 
     def test_uniqueness_of_content_view_environment_per_content_facet

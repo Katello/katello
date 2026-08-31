@@ -12,13 +12,13 @@ class AddContentViewEnvironmentActivationKey < ActiveRecord::Migration[6.1]
     FakeActivationKey.all.each do |activation_key|
       next if activation_key.environment_id.blank? && activation_key.content_view_id.blank?
 
-      cve_id = ::Katello::KTEnvironment.find(activation_key.environment_id)
+      cvenv_id = ::Katello::KTEnvironment.find(activation_key.environment_id)
           .content_view_environments
           .find_by(content_view_id: activation_key.content_view_id)
           &.id
-      unless cve_id.present? && ::Katello::ContentViewEnvironmentActivationKey.create(
+      unless cvenv_id.present? && ::Katello::ContentViewEnvironmentActivationKey.create(
         activation_key_id: activation_key.id,
-        content_view_environment_id: cve_id
+        content_view_environment_id: cvenv_id
       )
         Rails.logger.warn "Failed to create ContentViewEnvironmentActivationKey for activation_key #{activation_key.id}"
       end
@@ -42,8 +42,8 @@ class AddContentViewEnvironmentActivationKey < ActiveRecord::Migration[6.1]
 
     ::Katello::ContentViewEnvironmentActivationKey.unscoped.all.each do |cveak|
       activation_key = cveak.activation_key
-      cve = cveak.content_view_environment
-      default_org = cve.environment&.organization
+      cvenv = cveak.content_view_environment
+      default_org = cvenv.environment&.organization
       default_cv_id = default_org&.default_content_view&.id
       default_lce_id = default_org&.library&.id
       cv_id = cveak.content_view_environment.content_view_id || default_cv_id
