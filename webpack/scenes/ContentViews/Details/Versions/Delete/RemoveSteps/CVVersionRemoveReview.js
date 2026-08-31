@@ -28,7 +28,7 @@ const CVVersionRemoveReview = () => {
     'Changes listed below will be effective after clicking Remove.');
 
   const matchedCVResults = cvVersions?.results?.filter(cv => cv.id === versionIdToRemove) || [];
-  const selectedCVE = matchedCVResults
+  const selectedCvEnv = matchedCVResults
     .flatMap(cv => cv.content_view_environments || [])
     .filter(env => selectedEnvSet.has(env.environment_id));
 
@@ -63,7 +63,7 @@ const CVVersionRemoveReview = () => {
           <p style={{ marginBottom: '0.5em' }}>{versionDeleteInfo}</p>
         </Alert>}
       {!(deleteFlow || removeDeletionFlow) && <WizardHeader description={removalNotice} />}
-      {(selectedCVE?.length !== 0) &&
+      {(selectedCvEnv?.length !== 0) &&
         <>
           <h3>{__('Environments')}</h3>
           <Flex>
@@ -71,7 +71,7 @@ const CVVersionRemoveReview = () => {
             <FlexItem style={{ marginBottom: '0.5em' }}>{__('This version will be removed from:')}</FlexItem>
           </Flex>
           <Flex>
-            {selectedCVE?.map(({ environment_name: name, environment_id: id }) =>
+            {selectedCvEnv?.map(({ environment_name: name, environment_id: id }) =>
               <FlexItem key={name}><Label color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label></FlexItem>)}
           </Flex>
         </>}
@@ -113,14 +113,14 @@ const CVVersionRemoveReview = () => {
                         id="environment.plural"
                         defaultMessage="{count, plural, one {{envSingular}} other {{envPlural}}}"
                         values={{
-                          count: selectedCVE?.length,
+                          count: selectedCvEnv?.length,
                           envSingular: __('Content view environment'),
                           envPlural: __('Content view environments'),
                         }}
                       />
                     ),
-                    envCV: selectedCVE
-                      ?.map(cve => cve.label)
+                    envCV: selectedCvEnv
+                      ?.map(cvEnv => cvEnv.label)
                       .join(', '),
                     hostCount: multiCVHostsCount,
                     hostSingular: __('multi-environment host'),
@@ -183,14 +183,14 @@ const CVVersionRemoveReview = () => {
                         id="environment.plural"
                         defaultMessage="{count, plural, one {{envSingular}} other {{envPlural}}}"
                         values={{
-                          count: selectedCVE?.length,
+                          count: selectedCvEnv?.length,
                           envSingular: __('Content view environment'),
                           envPlural: __('Content view environments'),
                         }}
                       />
                     ),
-                    envCV: selectedCVE
-                      ?.map(cve => cve.label)
+                    envCV: selectedCvEnv
+                      ?.map(cvEnv => cvEnv.label)
                       .join(', '),
                     akCount: multiCVActivationKeysCount,
                     keySingular: __('multi-environment activation key'),

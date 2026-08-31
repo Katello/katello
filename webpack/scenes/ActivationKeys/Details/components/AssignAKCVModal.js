@@ -113,13 +113,13 @@ const AssignAKCVModal = ({
     // Build array of content view environment labels for all assignments
     // Backend processes either IDs OR labels, not both (elsif in backend code)
     // So we use labels for everything to support mixed existing+new assignments
-    const cveLabels = assignments
+    const cvEnvLabels = assignments
       .map(constructCVELabel)
       .filter(Boolean); // Remove any null values (incomplete assignments)
 
     const requestBody = {
       id: akId,
-      content_view_environments: cveLabels, // Can be empty array for activation keys
+      content_view_environments: cvEnvLabels, // Can be empty array for activation keys
     };
 
     dispatch(assignAKCVEnvironments(
@@ -192,7 +192,7 @@ AssignAKCVModal.propTypes = {
   existingAssignments: PropTypes.arrayOf(PropTypes.shape({
     contentView: PropTypes.shape({}),
     environment: PropTypes.shape({}),
-    label: PropTypes.string, // Pre-computed label from backend
+    cvEnvLabel: PropTypes.string, // Pre-computed label from backend
   })),
   allowMultipleContentViews: PropTypes.bool,
 };

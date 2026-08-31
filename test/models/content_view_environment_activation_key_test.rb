@@ -18,13 +18,13 @@ module Katello
         katello_content_view_environments(:library_dev_staging_view_dev),
       ]
 
-      cve1 = @activation_key.content_view_environments.first
-      cve2 = @activation_key.content_view_environments.last
-      new_cves = [cve2, cve1]
-      ContentViewEnvironmentActivationKey.reprioritize_for_activation_key(@activation_key, new_cves)
+      cvenv1 = @activation_key.content_view_environments.first
+      cvenv2 = @activation_key.content_view_environments.last
+      new_cvenvs = [cvenv2, cvenv1]
+      ContentViewEnvironmentActivationKey.reprioritize_for_activation_key(@activation_key, new_cvenvs)
       @activation_key.content_view_environments.reload
-      assert_equal 1, cve1.priority(@activation_key)
-      assert_equal 0, cve2.priority(@activation_key)
+      assert_equal 1, cvenv1.priority(@activation_key)
+      assert_equal 0, cvenv2.priority(@activation_key)
     end
 
     def test_content_view_environments_deduplicates

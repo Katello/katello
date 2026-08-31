@@ -39,10 +39,10 @@ module Katello
     end
 
     def test_match_environments
-      cves = ::Katello::ContentViewEnvironment.where(environment_id: @repo2_cv.environment,
+      cvenvs = ::Katello::ContentViewEnvironment.where(environment_id: @repo2_cv.environment,
                                                       content_view_id: @repo2_cv.content_view)
 
-      @key.update!(content_view_environments: cves)
+      @key.update!(content_view_environments: cvenvs)
 
       Katello::Repository.where(:root => Katello::RootRepository.where(:content_id => @repo1.content_id),
                                 :content_view_version_id => @key.single_content_view.version(@key.single_lifecycle_environment)).destroy_all
@@ -63,10 +63,10 @@ module Katello
 
     def test_match_environments
       repo5 = katello_repositories(:debian_10_amd64_composite_view_version_1)
-      cves = ::Katello::ContentViewEnvironment.where(environment_id: @repo2_cv.environment,
+      cvenvs = ::Katello::ContentViewEnvironment.where(environment_id: @repo2_cv.environment,
                                                       content_view_id: @repo2_cv.content_view)
 
-      @key.stubs(:content_view_environments).returns(cves)
+      @key.stubs(:content_view_environments).returns(cvenvs)
 
       #Katello::Repository.where(:root => Katello::RootRepository.where(:content_id => @repo1.content_id),
       #                          :content_view_version_id => @key.content_view.version(@key.environment)).destroy_all
@@ -84,11 +84,11 @@ module Katello
     def test_debian_return_only_one_content_id_for_the_same_library_instance
       repo_dev = katello_repositories(:debian_10_dev_view)
       repo_test = katello_repositories(:debian_10_test_view)
-      cves = ::Katello::ContentViewEnvironment.where(
+      cvenvs = ::Katello::ContentViewEnvironment.where(
         environment_id: [repo_dev.environment_id, repo_test.environment_id],
         content_view_version_id: [repo_dev.content_view_version_id, repo_test.content_view_version_id])
 
-      @key.stubs(:content_view_environments).returns(cves)
+      @key.stubs(:content_view_environments).returns(cvenvs)
       pcf = Katello::ProductContentFinder.new(:consumable => @key, :match_environment => true)
       product_content = pcf.product_content
 

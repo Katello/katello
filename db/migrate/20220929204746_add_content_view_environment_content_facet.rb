@@ -10,13 +10,13 @@ class AddContentViewEnvironmentContentFacet < ActiveRecord::Migration[6.1]
     end
     ::Katello::Util::CVECFMigrator.new.execute!
     FakeContentFacet.all.each do |content_facet|
-      cve_id = ::Katello::KTEnvironment.find(content_facet.lifecycle_environment_id)
+      cvenv_id = ::Katello::KTEnvironment.find(content_facet.lifecycle_environment_id)
           .content_view_environments
           .find_by(content_view_id: content_facet.content_view_id)
           &.id
-      unless cve_id.present? && ::Katello::ContentViewEnvironmentContentFacet.create(
+      unless cvenv_id.present? && ::Katello::ContentViewEnvironmentContentFacet.create(
         content_facet_id: content_facet.id,
-        content_view_environment_id: cve_id
+        content_view_environment_id: cvenv_id
       )
         Rails.logger.warn "Failed to create ContentViewEnvironmentContentFacet for content_facet #{content_facet.id}"
       end
@@ -40,8 +40,8 @@ class AddContentViewEnvironmentContentFacet < ActiveRecord::Migration[6.1]
 
     ::Katello::ContentViewEnvironmentContentFacet.all.each do |cvecf|
       content_facet = cvecf.content_facet
-      cve = cvecf.content_view_environment
-      default_org = cve.environment&.organization
+      cvenv = cvecf.content_view_environment
+      default_org = cvenv.environment&.organization
       default_cv_id = default_org&.default_content_view&.id
       default_lce_id = default_org&.library&.id
       cv_id = cvecf.content_view_environment.content_view_id || default_cv_id

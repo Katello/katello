@@ -21,13 +21,13 @@ export const getFormData = (hostIds, search) => (post({
 export const changeContentSource =
   (assignments, contentSourceId, hostIds, handleSuccess, successToast) => {
     // Build CVEnv labels from assignments
-    const cveLabels = assignments.map(buildContentViewEnvironmentLabel).filter(Boolean);
+    const cvEnvLabels = assignments.map(buildContentViewEnvironmentLabel).filter(Boolean);
 
     return put({
       key: CHANGE_CONTENT_SOURCE,
       url: foremanUrl('/api/v2/hosts/bulk/change_content_source'),
       params: {
-        content_view_environments: cveLabels,
+        content_view_environments: cvEnvLabels,
         content_source_id: contentSourceId,
         host_ids: hostIds,
       },

@@ -49,7 +49,7 @@ const AssignmentShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   contentView: ContentViewShape,
   environment: EnvironmentShape,
-  cveLabel: PropTypes.string,
+  cvEnvLabel: PropTypes.string,
   isExpanded: PropTypes.bool,
   cvSelectOpen: PropTypes.bool,
   selectedEnv: PropTypes.arrayOf(EnvironmentShape),
@@ -60,7 +60,7 @@ const AssignmentShape = PropTypes.shape({
 const ExistingAssignmentShape = PropTypes.shape({
   contentView: ContentViewShape,
   environment: EnvironmentShape,
-  cveLabel: PropTypes.string,
+  cvEnvLabel: PropTypes.string,
 });
 
 const AssignmentSection = ({
@@ -307,7 +307,7 @@ export const OrderableAssignmentList = ({
         id: `existing-${index}`,
         contentView: assignment.contentView,
         environment: assignment.environment,
-        cveLabel: assignment.cveLabel, // Preserve the CVE label from API
+        cvEnvLabel: assignment.cvEnvLabel, // Preserve the content view environment label from API
         isExpanded: !shouldCollapseByDefault,
         cvSelectOpen: false,
         selectedEnv: assignment.environment ? [assignment.environment] : [],
@@ -419,7 +419,7 @@ export const OrderableAssignmentList = ({
       selectedCV: null,
       environment: selection[0] || null,
       contentView: null,
-      cveLabel: null, // Clear CV environment label when environment changes
+      cvEnvLabel: null, // Clear CVEnv label when environment changes
     });
   };
 
@@ -451,7 +451,7 @@ export const OrderableAssignmentList = ({
       selectedCV: selection,
       cvSelectOpen: false,
       contentView: contentViewWithVersion,
-      cveLabel: null, // Clear CV environment label when CV changes
+      cvEnvLabel: null, // Clear CVEnv label when CV changes
     });
   };
 

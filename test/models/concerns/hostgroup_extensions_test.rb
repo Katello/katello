@@ -149,7 +149,7 @@ module Katello
       @root.save!
       assert_equal @view, @root.content_view
 
-      # Removing content_view_id removes the CVE association, making both nil
+      # Removing content_view_id removes the content view environment association, making both nil
       @root.content_facet.content_view_environment = nil
       @root.save!
       assert_nil @root.reload.content_view
