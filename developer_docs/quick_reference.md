@@ -36,10 +36,12 @@ curl https://$(hostname)/api/v2/ping            # Get basic status of database a
 cd $GITDIR/foreman
 bundle exec rake test:katello                   # All Katello tests
 
-# For individual test files, ALWAYS use ktest:
+# For individual test files, ALWAYS use ktest (or foreman-test in foremanctl/containerized environments):
 cd $GITDIR/katello
 ktest /path/to/test_file.rb                     # Specific file
 ktest /path/to/test_file.rb -n test_method_name # Specific method
+foreman-test /path/to/test_file.rb                     # Specific file (foremanctl/containerized)
+foreman-test /path/to/test_file.rb -n test_method_name # Specific method (foremanctl/containerized)
 
 # JavaScript testing:
 cd $GITDIR/katello
