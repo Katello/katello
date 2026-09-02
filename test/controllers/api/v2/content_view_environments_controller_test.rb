@@ -96,15 +96,15 @@ module Katello
     end
 
     def test_show
-      cve = katello_content_view_environments(:library_dev_view_library)
-      get :show, params: { :id => cve.id }
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      get :show, params: { :id => cvenv.id }
 
       assert_response :success
-      assert_equal cve.id, resp.id
-      assert_equal cve.label, resp.label
-      assert_equal cve.hostgroups.pluck(:id).sort, resp.hostgroups.map(&:id).sort
-      assert_equal cve.hostgroups.pluck(:name).sort, resp.hostgroups.map(&:name).sort
-      assert_equal cve.hostgroups.count, resp.hostgroups_count
+      assert_equal cvenv.id, resp.id
+      assert_equal cvenv.label, resp.label
+      assert_equal cvenv.hostgroups.pluck(:id).sort, resp.hostgroups.map(&:id).sort
+      assert_equal cvenv.hostgroups.pluck(:name).sort, resp.hostgroups.map(&:name).sort
+      assert_equal cvenv.hostgroups.count, resp.hostgroups_count
       assert_template 'api/v2/content_view_environments/show'
     end
 
