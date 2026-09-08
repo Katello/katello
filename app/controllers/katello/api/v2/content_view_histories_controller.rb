@@ -17,7 +17,7 @@ module Katello
     private
 
     def find_content_view
-      @view = ContentView.find(params[:content_view_id]) if params[:content_view_id]
+      @view = ContentView.readable.find(params[:content_view_id]) if params[:content_view_id]
     end
   end
 end
