@@ -31,6 +31,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "json"
   gem.add_dependency "oauth"
   gem.add_dependency "rest-client"
+  gem.add_dependency "net-http-persistent", ">= 4.0"
 
   gem.add_dependency "rabl"
   gem.add_dependency "foreman-tasks", ">= 12.0.0"
