@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc1",
+        "Project-Id-Version": "katello 5.0.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Ettore Atalan <atalanttore@googlemail.com>, 2026",
@@ -1396,6 +1396,9 @@
       "Collapse all": [
         ""
       ],
+      "Collapse group": [
+        ""
+      ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1457,6 +1460,9 @@
         ""
       ],
       "Configuration updated on Foreman": [
+        ""
+      ],
+      "Confirm": [
         ""
       ],
       "Confirm Deletion": [
@@ -1724,6 +1730,9 @@
         ""
       ],
       "Content view environment ID": [
+        ""
+      ],
+      "Content view environment identifier": [
         ""
       ],
       "Content view environments": [
@@ -2614,6 +2623,9 @@
       "Edit details": [
         "Details bearbeiten"
       ],
+      "Edit entitlements": [
+        ""
+      ],
       "Edit filter rule": [
         ""
       ],
@@ -2844,6 +2856,9 @@
       ],
       "Expand All": [
         "Alle ausklappen"
+      ],
+      "Expand group": [
+        ""
       ],
       "Expire soon days": [
         "Verfällt bald Tage"
@@ -3257,8 +3272,8 @@
       "Greater than": [
         ""
       ],
-      "Guests of": [
-        "Gäste von"
+      "Guests of %s": [
+        ""
       ],
       "HTTP Proxies": [
         "HTTP-Proxies"
@@ -3382,6 +3397,9 @@
       ],
       "Host group IDs": [
         "Hostgruppen-IDs"
+      ],
+      "Host group identifier": [
+        ""
       ],
       "Host groups": [
         "Hostgruppen"
@@ -6798,6 +6816,12 @@
       "Saving alternate content source...": [
         ""
       ],
+      "Saving subscription quantities...": [
+        ""
+      ],
+      "Saving...": [
+        ""
+      ],
       "Scan": [
         ""
       ],
@@ -7133,6 +7157,9 @@
       ],
       "Show a content view component": [
         "Zeige einen Kontent-View Komponenten"
+      ],
+      "Show a content view environment": [
+        ""
       ],
       "Show a content view's history": [
         "Inhaltsansichtschronik anzeigen"
@@ -9104,6 +9131,9 @@
       "You currently have no content views to display": [
         ""
       ],
+      "You do not have permission to view this organization.": [
+        ""
+      ],
       "You do not have permissions to delete %s": [
         "Sie sind nicht dazu berechtigt, %s zu löschen"
       ],
@@ -9536,6 +9566,12 @@
       "has already been taken for a product in this organization.": [
         "wird bereits für ein Produkt dieser Organisation verwendet."
       ],
+      "has already been taken for this activation key": [
+        ""
+      ],
+      "has already been taken for this host": [
+        ""
+      ],
       "has already been taken for this product.": [
         "wird bereits verwendet für dieses Produkt."
       ],
@@ -9622,6 +9658,9 @@
       ],
       "label of the repository": [
         "Label des Repositorys"
+      ],
+      "latest": [
+        ""
       ],
       "limit to only repositories with this download policy": [
         "Beschränken Sie sich auf nur Repositorys mit dieser Download-Richtlinie"

@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc1",
+        "Project-Id-Version": "katello 5.0.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -1396,6 +1396,9 @@
       "Collapse all": [
         ""
       ],
+      "Collapse group": [
+        ""
+      ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1457,6 +1460,9 @@
         ""
       ],
       "Configuration updated on Foreman": [
+        ""
+      ],
+      "Confirm": [
         ""
       ],
       "Confirm Deletion": [
@@ -1724,6 +1730,9 @@
         ""
       ],
       "Content view environment ID": [
+        ""
+      ],
+      "Content view environment identifier": [
         ""
       ],
       "Content view environments": [
@@ -2614,6 +2623,9 @@
       "Edit details": [
         ""
       ],
+      "Edit entitlements": [
+        ""
+      ],
       "Edit filter rule": [
         ""
       ],
@@ -2844,6 +2856,9 @@
       ],
       "Expand All": [
         "Развернуть все"
+      ],
+      "Expand group": [
+        ""
       ],
       "Expire soon days": [
         ""
@@ -3257,8 +3272,8 @@
       "Greater than": [
         ""
       ],
-      "Guests of": [
-        "Гости"
+      "Guests of %s": [
+        ""
       ],
       "HTTP Proxies": [
         ""
@@ -3382,6 +3397,9 @@
       ],
       "Host group IDs": [
         "Идентификаторы группы узлов"
+      ],
+      "Host group identifier": [
+        ""
       ],
       "Host groups": [
         "Группы узлов"
@@ -6798,6 +6816,12 @@
       "Saving alternate content source...": [
         ""
       ],
+      "Saving subscription quantities...": [
+        ""
+      ],
+      "Saving...": [
+        ""
+      ],
       "Scan": [
         ""
       ],
@@ -7132,6 +7156,9 @@
         "Показать представление"
       ],
       "Show a content view component": [
+        ""
+      ],
+      "Show a content view environment": [
         ""
       ],
       "Show a content view's history": [
@@ -9104,6 +9131,9 @@
       "You currently have no content views to display": [
         ""
       ],
+      "You do not have permission to view this organization.": [
+        ""
+      ],
       "You do not have permissions to delete %s": [
         "Недостаточно разрешений для удаления %s"
       ],
@@ -9536,6 +9566,12 @@
       "has already been taken for a product in this organization.": [
         "уже используется продуктом в этой организации."
       ],
+      "has already been taken for this activation key": [
+        ""
+      ],
+      "has already been taken for this host": [
+        ""
+      ],
       "has already been taken for this product.": [
         "уже используется для этого продукта."
       ],
@@ -9621,6 +9657,9 @@
         "метка окружения"
       ],
       "label of the repository": [
+        ""
+      ],
+      "latest": [
         ""
       ],
       "limit to only repositories with this download policy": [

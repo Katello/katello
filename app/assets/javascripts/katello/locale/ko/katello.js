@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc1",
+        "Project-Id-Version": "katello 5.0.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -1394,6 +1394,9 @@
       "Collapse all": [
         ""
       ],
+      "Collapse group": [
+        ""
+      ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1456,6 +1459,9 @@
       ],
       "Configuration updated on Foreman": [
         "Foreman에서 구성이 업데이트됨"
+      ],
+      "Confirm": [
+        ""
       ],
       "Confirm Deletion": [
         "삭제 확인"
@@ -1722,6 +1728,9 @@
         "콘텐츠 뷰 환경"
       ],
       "Content view environment ID": [
+        ""
+      ],
+      "Content view environment identifier": [
         ""
       ],
       "Content view environments": [
@@ -2612,6 +2621,9 @@
       "Edit details": [
         "세부 정보 편집"
       ],
+      "Edit entitlements": [
+        ""
+      ],
       "Edit filter rule": [
         "필터 규칙 편집"
       ],
@@ -2842,6 +2854,9 @@
       ],
       "Expand All": [
         "모두 확장 "
+      ],
+      "Expand group": [
+        ""
       ],
       "Expire soon days": [
         "며칠 이내에 만료"
@@ -3254,8 +3269,8 @@
       "Greater than": [
         "보다 큼"
       ],
-      "Guests of": [
-        "게스트 "
+      "Guests of %s": [
+        ""
       ],
       "HTTP Proxies": [
         "HTTP 프록시"
@@ -3379,6 +3394,9 @@
       ],
       "Host group IDs": [
         "호스트 그룹 ID"
+      ],
+      "Host group identifier": [
+        ""
       ],
       "Host groups": [
         "호스트 그룹 "
@@ -6794,6 +6812,12 @@
       "Saving alternate content source...": [
         "대체 콘텐츠 소스를 저장 중입니다..."
       ],
+      "Saving subscription quantities...": [
+        ""
+      ],
+      "Saving...": [
+        ""
+      ],
       "Scan": [
         "스캔"
       ],
@@ -7129,6 +7153,9 @@
       ],
       "Show a content view component": [
         "콘텐츠 뷰 구성 요소 표시"
+      ],
+      "Show a content view environment": [
+        ""
       ],
       "Show a content view's history": [
         "컨텐츠 뷰의 기록 표시 "
@@ -9098,6 +9125,9 @@
       "You currently have no content views to display": [
         "현재 표시할 콘텐츠 뷰가 없습니다."
       ],
+      "You do not have permission to view this organization.": [
+        ""
+      ],
       "You do not have permissions to delete %s": [
         "%s을(를) 삭제할 권한이 없습니다 "
       ],
@@ -9530,6 +9560,12 @@
       "has already been taken for a product in this organization.": [
         "이 조직의 제품에 대해 이미 사용되고 있습니다."
       ],
+      "has already been taken for this activation key": [
+        ""
+      ],
+      "has already been taken for this host": [
+        ""
+      ],
       "has already been taken for this product.": [
         "제품에 대해 이미 사용되고 있습니다. "
       ],
@@ -9616,6 +9652,9 @@
       ],
       "label of the repository": [
         "리포지터리의 라벨"
+      ],
+      "latest": [
+        ""
       ],
       "limit to only repositories with this download policy": [
         "이 다운로드 정책이 있는 리포지터리로만 제한"

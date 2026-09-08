@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc1",
+        "Project-Id-Version": "katello 5.0.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Claer <transiblu@claer.hammock.fr>, 2026",
@@ -1398,6 +1398,9 @@
       "Collapse all": [
         ""
       ],
+      "Collapse group": [
+        ""
+      ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1460,6 +1463,9 @@
       ],
       "Configuration updated on Foreman": [
         "Configuration mise à jour sur Foreman"
+      ],
+      "Confirm": [
+        ""
       ],
       "Confirm Deletion": [
         "Confirmer la suppression"
@@ -1726,6 +1732,9 @@
         "Environnement d'affichage du contenu"
       ],
       "Content view environment ID": [
+        ""
+      ],
+      "Content view environment identifier": [
         ""
       ],
       "Content view environments": [
@@ -2616,6 +2625,9 @@
       "Edit details": [
         "Modifier les détails"
       ],
+      "Edit entitlements": [
+        ""
+      ],
       "Edit filter rule": [
         "Modifier la règle de filtrage"
       ],
@@ -2846,6 +2858,9 @@
       ],
       "Expand All": [
         "Tout agrandir"
+      ],
+      "Expand group": [
+        ""
       ],
       "Expire soon days": [
         "Expiration prochaine en jours"
@@ -3260,8 +3275,8 @@
       "Greater than": [
         "Plus grand que"
       ],
-      "Guests of": [
-        "Les invités de"
+      "Guests of %s": [
+        ""
       ],
       "HTTP Proxies": [
         "Proxies HTTP"
@@ -3385,6 +3400,9 @@
       ],
       "Host group IDs": [
         "IDs des groupes"
+      ],
+      "Host group identifier": [
+        ""
       ],
       "Host groups": [
         "Groupes d'hôtes"
@@ -6802,6 +6820,12 @@
       "Saving alternate content source...": [
         "Mise à jour de la source de contenu alternatif..."
       ],
+      "Saving subscription quantities...": [
+        ""
+      ],
+      "Saving...": [
+        ""
+      ],
       "Scan": [
         "Scan"
       ],
@@ -7137,6 +7161,9 @@
       ],
       "Show a content view component": [
         "Afficher un composant d'affichage de contenu"
+      ],
+      "Show a content view environment": [
+        ""
       ],
       "Show a content view's history": [
         "Afficher un historique d'affichage de contenu"
@@ -9110,6 +9137,9 @@
       "You currently have no content views to display": [
         "Vous n'avez actuellement aucune vue de contenu à afficher"
       ],
+      "You do not have permission to view this organization.": [
+        ""
+      ],
       "You do not have permissions to delete %s": [
         "Vous ne disposez pas des droits nécessaires pour supprimer %s"
       ],
@@ -9542,6 +9572,12 @@
       "has already been taken for a product in this organization.": [
         "a déjà été pris comme produit dans cette organisation."
       ],
+      "has already been taken for this activation key": [
+        ""
+      ],
+      "has already been taken for this host": [
+        ""
+      ],
       "has already been taken for this product.": [
         "a déjà été pris pour ce produit."
       ],
@@ -9628,6 +9664,9 @@
       ],
       "label of the repository": [
         "libellé du référentiel"
+      ],
+      "latest": [
+        ""
       ],
       "limit to only repositories with this download policy": [
         "limiter aux référentiels ayant cette politique de téléchargement"

@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc1",
+        "Project-Id-Version": "katello 5.0.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Ondřej Gajdušek, 2026",
@@ -1394,6 +1394,9 @@
       "Collapse all": [
         ""
       ],
+      "Collapse group": [
+        ""
+      ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1456,6 +1459,9 @@
       ],
       "Configuration updated on Foreman": [
         "Foreman 上更新的配置"
+      ],
+      "Confirm": [
+        ""
       ],
       "Confirm Deletion": [
         "确认删除"
@@ -1722,6 +1728,9 @@
         "内容视图环境"
       ],
       "Content view environment ID": [
+        ""
+      ],
+      "Content view environment identifier": [
         ""
       ],
       "Content view environments": [
@@ -2612,6 +2621,9 @@
       "Edit details": [
         "编辑详情"
       ],
+      "Edit entitlements": [
+        ""
+      ],
       "Edit filter rule": [
         "列表过滤规则"
       ],
@@ -2842,6 +2854,9 @@
       ],
       "Expand All": [
         "展开全部"
+      ],
+      "Expand group": [
+        ""
       ],
       "Expire soon days": [
         "即将过期天数"
@@ -3254,8 +3269,8 @@
       "Greater than": [
         "大于"
       ],
-      "Guests of": [
-        "的客户"
+      "Guests of %s": [
+        ""
       ],
       "HTTP Proxies": [
         "HTTP 代理服务器"
@@ -3379,6 +3394,9 @@
       ],
       "Host group IDs": [
         "主机组 ID"
+      ],
+      "Host group identifier": [
+        ""
       ],
       "Host groups": [
         "主机组"
@@ -6794,6 +6812,12 @@
       "Saving alternate content source...": [
         "更新备用内容源..."
       ],
+      "Saving subscription quantities...": [
+        ""
+      ],
+      "Saving...": [
+        ""
+      ],
       "Scan": [
         "扫描"
       ],
@@ -7129,6 +7153,9 @@
       ],
       "Show a content view component": [
         "显示内容视图组件"
+      ],
+      "Show a content view environment": [
+        ""
       ],
       "Show a content view's history": [
         "显示内容视图的历史记录"
@@ -9098,6 +9125,9 @@
       "You currently have no content views to display": [
         "您目前没有要显示的内容视图"
       ],
+      "You do not have permission to view this organization.": [
+        ""
+      ],
       "You do not have permissions to delete %s": [
         "您没有权限删除 %s"
       ],
@@ -9530,6 +9560,12 @@
       "has already been taken for a product in this organization.": [
         "已被该机构的产品采用。"
       ],
+      "has already been taken for this activation key": [
+        ""
+      ],
+      "has already been taken for this host": [
+        ""
+      ],
       "has already been taken for this product.": [
         "已經為此產品使用。"
       ],
@@ -9616,6 +9652,9 @@
       ],
       "label of the repository": [
         "仓库标签"
+      ],
+      "latest": [
+        ""
       ],
       "limit to only repositories with this download policy": [
         "限制为仅具有此下载策略的仓库"
