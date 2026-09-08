@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc1",
+        "Project-Id-Version": "katello 5.0.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Pavel Borecki <pavel.borecki@gmail.com>, 2026",
@@ -1398,6 +1398,9 @@
       "Collapse all": [
         ""
       ],
+      "Collapse group": [
+        ""
+      ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1459,6 +1462,9 @@
         ""
       ],
       "Configuration updated on Foreman": [
+        ""
+      ],
+      "Confirm": [
         ""
       ],
       "Confirm Deletion": [
@@ -1726,6 +1732,9 @@
         ""
       ],
       "Content view environment ID": [
+        ""
+      ],
+      "Content view environment identifier": [
         ""
       ],
       "Content view environments": [
@@ -2616,6 +2625,9 @@
       "Edit details": [
         ""
       ],
+      "Edit entitlements": [
+        ""
+      ],
       "Edit filter rule": [
         ""
       ],
@@ -2846,6 +2858,9 @@
       ],
       "Expand All": [
         "Rozbalit vše"
+      ],
+      "Expand group": [
+        ""
       ],
       "Expire soon days": [
         ""
@@ -3259,8 +3274,8 @@
       "Greater than": [
         ""
       ],
-      "Guests of": [
-        "Host od"
+      "Guests of %s": [
+        ""
       ],
       "HTTP Proxies": [
         "HTTP proxy"
@@ -3384,6 +3399,9 @@
       ],
       "Host group IDs": [
         "Identifikátory skupiny strojů"
+      ],
+      "Host group identifier": [
+        ""
       ],
       "Host groups": [
         "Skupiny hostitelů"
@@ -6800,6 +6818,12 @@
       "Saving alternate content source...": [
         ""
       ],
+      "Saving subscription quantities...": [
+        ""
+      ],
+      "Saving...": [
+        ""
+      ],
       "Scan": [
         ""
       ],
@@ -7134,6 +7158,9 @@
         "Zobrazit pohled na obsah"
       ],
       "Show a content view component": [
+        ""
+      ],
+      "Show a content view environment": [
         ""
       ],
       "Show a content view's history": [
@@ -9106,6 +9133,9 @@
       "You currently have no content views to display": [
         ""
       ],
+      "You do not have permission to view this organization.": [
+        ""
+      ],
       "You do not have permissions to delete %s": [
         ""
       ],
@@ -9538,6 +9568,12 @@
       "has already been taken for a product in this organization.": [
         ""
       ],
+      "has already been taken for this activation key": [
+        ""
+      ],
+      "has already been taken for this host": [
+        ""
+      ],
       "has already been taken for this product.": [
         ""
       ],
@@ -9624,6 +9660,9 @@
       ],
       "label of the repository": [
         "štítek repozitáře"
+      ],
+      "latest": [
+        ""
       ],
       "limit to only repositories with this download policy": [
         ""

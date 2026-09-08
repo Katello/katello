@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: katello 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 17:21+0000\n"
-"PO-Revision-Date: 2026-08-25 17:21+0000\n"
+"POT-Creation-Date: 2026-09-08 14:42+0000\n"
+"PO-Revision-Date: 2026-09-08 14:42+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -211,7 +211,7 @@ msgstr ""
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:38
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:93
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:102
-#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:15
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:17
 #: ../app/controllers/katello/api/v2/content_views_controller.rb:53
 #: ../app/controllers/katello/api/v2/environments_controller.rb:48
 #: ../app/controllers/katello/api/v2/environments_controller.rb:128
@@ -281,7 +281,7 @@ msgid "List activation keys"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:39
-#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:16
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:18
 #: ../app/controllers/katello/api/v2/content_views_controller.rb:54
 #: ../app/controllers/katello/concerns/api/v2/repository_content_controller.rb:29
 msgid "environment identifier"
@@ -970,7 +970,7 @@ msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_exports_controller.rb:9
 #: ../app/controllers/katello/api/v2/content_imports_controller.rb:8
-#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:17
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:19
 #: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:18
 #: ../app/controllers/katello/api/v2/content_views_controller.rb:104
 #: ../app/controllers/katello/api/v2/content_views_controller.rb:114
@@ -1168,20 +1168,32 @@ msgid ""
 " both."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:14
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:16
 msgid "List content view environments"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:18
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:20
 msgid "Activation key identifier"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:19
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:21
 msgid "Host identifier"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:20
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:22
+msgid "Host group identifier"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:23
 msgid "Content source identifier to filter by available lifecycle environments"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:31
+msgid "Show a content view environment"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_view_environments_controller.rb:32
+msgid "Content view environment identifier"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_view_filter_rules_controller.rb:7
@@ -5178,8 +5190,8 @@ msgstr ""
 #: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:259
 #: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:286
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/DeleteDialog.js:22
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:167
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:179
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:183
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:195
 #: action_names.rb:43 action_names.rb:44 action_names.rb:45 action_names.rb:46
 #: action_names.rb:47 action_names.rb:48 action_names.rb:49
 msgid "Delete"
@@ -5932,7 +5944,7 @@ msgid ""
 " at least one distribution!"
 msgstr ""
 
-#: ../app/lib/katello/http_resource.rb:103
+#: ../app/lib/katello/http_resource.rb:105
 msgid "A backend service [ %s ] is unreachable"
 msgstr ""
 
@@ -6361,23 +6373,23 @@ msgstr ""
 msgid "cannot be lower than current usage count (%s)"
 msgstr ""
 
-#: ../app/models/katello/activation_key.rb:89
+#: ../app/models/katello/activation_key.rb:99
 msgid ""
 "Assigning an activation key to multiple content view environments is not enabl"
 "ed. To enable, set the allow_multiple_content_views setting."
 msgstr ""
 
-#: ../app/models/katello/activation_key.rb:108
+#: ../app/models/katello/activation_key.rb:118
 msgid "Activation key %s has more than one content view. Use #content_views instead."
 msgstr ""
 
-#: ../app/models/katello/activation_key.rb:115
+#: ../app/models/katello/activation_key.rb:125
 msgid ""
 "Activation key %s has more than one lifecycle environment. Use #lifecycle_envi"
 "ronments instead."
 msgstr ""
 
-#: ../app/models/katello/activation_key.rb:154
+#: ../app/models/katello/activation_key.rb:164
 #: ../app/views/overrides/activation_keys/_host_tab.html.erb:2
 #: ../lib/katello/plugin.rb:113
 #: ../webpack/components/ActivationKeysSearch/index.js:198
@@ -6385,14 +6397,14 @@ msgstr ""
 msgid "Activation Keys"
 msgstr ""
 
-#: ../app/models/katello/activation_key.rb:167
+#: ../app/models/katello/activation_key.rb:177
 msgid ""
 "This activation key is associated to one or more Hosts/Hostgroups. Search and "
 "unassociate Hosts/Hostgroups using params.kt_activation_keys ~ \"%{name}\" befor"
 "e deleting."
 msgstr ""
 
-#: ../app/models/katello/activation_key.rb:180
+#: ../app/models/katello/activation_key.rb:190
 msgid "Cannot add content view environments from a different organization"
 msgstr ""
 
@@ -6809,15 +6821,23 @@ msgid ""
 "er not been published or has not been promoted to that lifecycle environment."
 msgstr ""
 
-#: ../app/models/katello/content_view_environment.rb:129
+#: ../app/models/katello/content_view_environment.rb:130
 msgid "No content view environments found with names: %{names}"
 msgstr ""
 
-#: ../app/models/katello/content_view_environment.rb:131
+#: ../app/models/katello/content_view_environment.rb:132
 msgid "No content view environments found with ids: %{ids}"
 msgstr ""
 
-#: ../app/models/katello/content_view_environment_content_facet.rb:19
+#: ../app/models/katello/content_view_environment_activation_key.rb:9
+msgid "has already been taken for this activation key"
+msgstr ""
+
+#: ../app/models/katello/content_view_environment_content_facet.rb:9
+msgid "has already been taken for this host"
+msgstr ""
+
+#: ../app/models/katello/content_view_environment_content_facet.rb:20
 msgid ""
 "Host %{hostname}: Cannot add content view environment to content facet. The ho"
 "st's content source '%{content_source}' does not sync lifecycle environment '%"
@@ -6907,6 +6927,8 @@ msgstr ""
 
 #: ../app/models/katello/content_view_filter.rb:12 ../lib/katello/plugin.rb:75
 #: ../webpack/containers/Application/config.js:90
+#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:38
+#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:40
 msgid "Container Images"
 msgstr ""
 
@@ -7079,19 +7101,19 @@ msgid ""
 "e host. See the logs for more information."
 msgstr ""
 
-#: ../app/models/katello/host/content_facet.rb:135
+#: ../app/models/katello/host/content_facet.rb:132
 msgid ""
 "Content facet for host %s has more than one content view. Use #content_views i"
 "nstead."
 msgstr ""
 
-#: ../app/models/katello/host/content_facet.rb:142
+#: ../app/models/katello/host/content_facet.rb:139
 msgid ""
 "Content facet for host %s has more than one lifecycle environment. Use #lifecy"
 "cle_environments instead."
 msgstr ""
 
-#: ../app/models/katello/host/content_facet.rb:150
+#: ../app/models/katello/host/content_facet.rb:158
 msgid ""
 "Assigning a host to multiple content view environments is not enabled. To enab"
 "le, set the allow_multiple_content_views setting."
@@ -7500,7 +7522,7 @@ msgid "Traces"
 msgstr ""
 
 #: ../app/models/katello/trace_status.rb:15
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:313
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:315
 msgid "Reboot required"
 msgstr ""
 
@@ -7776,9 +7798,9 @@ msgstr ""
 #: ../db/seeds.d/109-katello-notification-blueprints.rb:71
 #: ../lib/katello/plugin.rb:12 ../webpack/containers/Application/config.js:35
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionDetails.js:55
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:242
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:299
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:198
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:410
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:188
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:448
 msgid "Subscriptions"
 msgstr ""
 
@@ -7845,7 +7867,7 @@ msgstr ""
 #: ../webpack/components/extensions/HostDetails/Tabs/ErrataTab/ErrataTab.js:174
 #: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:72
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/02_BulkErrataTable.js:100
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:304
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:306
 #: ../webpack/scenes/AlternateContentSources/Details/ACSExpandableDetails.js:159
 #: ../webpack/scenes/AlternateContentSources/MainTable/ACSTable.js:240
 #: ../webpack/scenes/ContainerImages/Synced/Details/ManifestDetails.js:184
@@ -7879,8 +7901,8 @@ msgstr ""
 #: ../webpack/scenes/SmartProxy/ExpandedSmartProxyRepositories.js:142
 #: ../webpack/scenes/SmartProxy/ExpandedSmartProxyRepositories.js:162
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionAttributes.js:14
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:89
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:85
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:58
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:46
 msgid "Type"
 msgstr ""
 
@@ -7969,8 +7991,8 @@ msgstr ""
 #: ../webpack/scenes/FlatpakRemotes/FlatpakRemotesPage.js:51
 #: ../webpack/scenes/ModuleStreams/Details/Profiles/ModuleStreamDetailProfiles.js:38
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionAttributes.js:4
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:59
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:75
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:28
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:42
 #: ../webpack/scenes/SyncStatus/components/SyncStatusTable.js:234
 msgid "Name"
 msgstr ""
@@ -8107,7 +8129,7 @@ msgid "The following hosts have errata that apply to them: "
 msgstr ""
 
 #: ../app/views/katello/errata_mailer/host_errata.html.erb:46
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:299
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:301
 msgid "Host"
 msgstr ""
 
@@ -8229,7 +8251,7 @@ msgstr ""
 
 #: ../app/views/katello/subscription_mailer/subscription_expiry.html.erb:17
 #: ../app/views/katello/subscription_mailer/subscription_expiry.text.erb:4
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsTableSchema.js:13
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/hooks/useUpstreamSubscriptionsColumns.js:20
 msgid "Subscription Name"
 msgstr ""
 
@@ -8246,28 +8268,28 @@ msgstr ""
 
 #: ../app/views/katello/subscription_mailer/subscription_expiry.html.erb:22
 #: ../app/views/katello/subscription_mailer/subscription_expiry.text.erb:9
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:64
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:95
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:33
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:50
 msgid "SKU"
 msgstr ""
 
 #: ../app/views/katello/subscription_mailer/subscription_expiry.html.erb:23
 #: ../app/views/katello/subscription_mailer/subscription_expiry.text.erb:10
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:69
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsTableSchema.js:31
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:105
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:38
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:59
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/hooks/useUpstreamSubscriptionsColumns.js:32
 msgid "Contract"
 msgstr ""
 
 #: ../app/views/katello/subscription_mailer/subscription_expiry.html.erb:24
 #: ../app/views/katello/subscription_mailer/subscription_expiry.text.erb:11
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsTableSchema.js:42
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/hooks/useUpstreamSubscriptionsColumns.js:35
 msgid "Start Date"
 msgstr ""
 
 #: ../app/views/katello/subscription_mailer/subscription_expiry.html.erb:25
 #: ../app/views/katello/subscription_mailer/subscription_expiry.text.erb:12
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsTableSchema.js:52
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/hooks/useUpstreamSubscriptionsColumns.js:38
 msgid "End Date"
 msgstr ""
 
@@ -8375,13 +8397,13 @@ msgstr ""
 #: ../webpack/components/extensions/HostDetails/Tabs/ModuleStreamsTab/ModuleStreamsTab.js:192
 #: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/ContainerfileInstallCommandModal.js:149
 #: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/EnableTracerModal.js:167
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:108
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:264
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/04_ReviewFooter.js:97
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:268
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/04_ReviewFooter.js:139
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/03_ReviewFooter.js:67
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:227
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:102
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:257
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/04_ReviewFooter.js:99
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:270
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/04_ReviewFooter.js:141
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/03_ReviewFooter.js:69
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:230
 #: ../webpack/scenes/ActivationKeys/Details/components/AssignAKCVModal.js:150
 #: ../webpack/scenes/ActivationKeys/Details/components/CreateAKCVModal.js:66
 #: ../webpack/scenes/ActivationKeys/Details/components/DeleteModal.js:42
@@ -8408,10 +8430,11 @@ msgstr ""
 #: ../webpack/scenes/FlatpakRemotes/Delete/DeleteFlatpakModal.js:38
 #: ../webpack/scenes/FlatpakRemotes/Details/Mirror/MirrorRepositoryModal.js:177
 #: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:278
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:134
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:146
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/DeleteDialog.js:30
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/UnsavedChangesDialog.js:30
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/UpdateDialog.js:45
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:440
 msgid "Cancel"
 msgstr ""
 
@@ -8575,9 +8598,52 @@ msgid "Content Source"
 msgstr ""
 
 #: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:37
-#: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:51
 #: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:60
+#: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:76
 msgid "Content View Environment"
+msgstr ""
+
+#: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:57
+#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:103
+#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:103
+#: ../webpack/scenes/Content/ContentConfig.js:25
+#: ../webpack/scenes/Content/ContentConfig.js:35
+#: ../webpack/scenes/Content/ContentConfig.js:91
+#: ../webpack/scenes/Content/ContentConfig.js:100
+#: ../webpack/scenes/Content/ContentConfig.js:154
+#: ../webpack/scenes/Content/ContentConfig.js:166
+#: ../webpack/scenes/Content/ContentConfig.js:222
+#: ../webpack/scenes/Content/ContentConfig.js:236
+#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewAddModal.js:110
+#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewBulkAddModal.js:82
+#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewBulkAddModal.js:109
+#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ContentViewComponents.js:76
+#: ../webpack/scenes/ContentViews/Details/Filters/CVModuleStreamFilterContent.js:77
+#: ../webpack/scenes/ContentViews/Details/Filters/Rules/DebPackage/AddEditDebPackageRuleModal.js:183
+#: ../webpack/scenes/ContentViews/Details/Filters/Rules/DebPackage/AddEditDebPackageRuleModal.js:198
+#: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:183
+#: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:200
+#: ../webpack/scenes/ContentViews/Details/Histories/ContentViewHistories.js:27
+#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ConfirmBulkDelete.js:53
+#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:59
+#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:95
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:156
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:165
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:299
+#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:306
+#: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersions.js:109
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:91
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:158
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:278
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:302
+#: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:94
+#: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:105
+#: ../webpack/scenes/SmartProxy/ExpandableCvDetails.js:20
+msgid "Version"
+msgstr ""
+
+#: ../app/views/overrides/activation_keys/_host_environment_select.html.erb:57
+msgid "latest"
 msgstr ""
 
 #: ../app/views/overrides/activation_keys/_host_media_type_select.html.erb:21
@@ -8836,8 +8902,8 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:36
 #: ../webpack/scenes/ContentViews/Details/Versions/Delete/RemoveSteps/CVEnvironmentSelectionForm.js:56
 #: ../webpack/scenes/Hosts/ChangeContentSource/index.js:109
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:99
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:162
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:68
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:85
 msgid "Hosts"
 msgstr ""
 
@@ -9893,9 +9959,9 @@ msgstr ""
 #: ../webpack/components/Bookmark/AddBookmarkModal.js:84
 #: ../webpack/components/extensions/HostDetails/Cards/ContentViewDetailsCard/AssignHostCVModal.js:163
 #: ../webpack/components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeEditModal.js:160
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:100
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:256
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:219
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:94
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:249
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:222
 #: ../webpack/scenes/ActivationKeys/Details/components/AssignAKCVModal.js:142
 #: ../webpack/scenes/ActivationKeys/Details/components/CreateAKCVModal.js:58
 #: ../webpack/scenes/ActivationKeys/Details/components/EditModal.js:118
@@ -9956,8 +10022,6 @@ msgstr ""
 #: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:123
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionDetails.js:65
 #: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:304
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:209
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTable.js:185
 msgid "Loading"
 msgstr ""
 
@@ -10098,11 +10162,11 @@ msgstr ""
 #: ../webpack/components/extensions/HostDetails/Cards/ContentViewDetailsCard/AssignHostCVModal.js:181
 #: ../webpack/components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard.js:121
 #: ../webpack/components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard.js:252
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:118
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:112
 #: ../webpack/scenes/ActivationKeys/Details/components/AssignAKCVModal.js:159
-#: ../webpack/scenes/ActivationKeys/Details/components/CVEDetailsCard.js:82
-#: ../webpack/scenes/ActivationKeys/Details/components/CVEDetailsCreateCard.js:73
 #: ../webpack/scenes/ActivationKeys/Details/components/CreateAKCVModal.js:75
+#: ../webpack/scenes/ActivationKeys/Details/components/CvEnvDetailsCard.js:82
+#: ../webpack/scenes/ActivationKeys/Details/components/CvEnvDetailsCreateCard.js:73
 msgid "Assign content view environments"
 msgstr ""
 
@@ -10162,7 +10226,7 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/ContentViewDetailsCard/AssignHostCVModal.js:241
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:167
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:161
 msgid ""
 "Errata and package information will be updated at the next host check-in or pa"
 "ckage action."
@@ -10344,7 +10408,7 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsActions.js:26
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:165
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:161
 msgid "Host collections updated"
 msgstr ""
 
@@ -10365,7 +10429,7 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsCard.js:126
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:203
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:196
 msgid "No host collections yet"
 msgstr ""
 
@@ -10402,13 +10466,13 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsModal.js:32
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:214
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:207
 msgid "Create host collection"
 msgstr ""
 
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsModal.js:35
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:270
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:263
 msgid "Host collection"
 msgstr ""
 
@@ -10419,7 +10483,7 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/HostCollectionsCard/HostCollectionsModal.js:35
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:305
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:298
 #: ../webpack/scenes/ActivationKeys/Details/components/EditModal.js:168
 #: ../webpack/scenes/ActivationKeys/Details/components/EditModal.js:173
 #: ../webpack/scenes/AlternateContentSources/Create/Steps/ACSReview.js:40
@@ -10508,7 +10572,7 @@ msgstr ""
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard.js:123
 #: ../webpack/components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeEditModal.js:188
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:269
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:272
 msgid "Role"
 msgstr ""
 
@@ -10526,7 +10590,7 @@ msgstr ""
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeCard.js:141
 #: ../webpack/components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeEditModal.js:239
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:323
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:326
 msgid "Release version"
 msgstr ""
 
@@ -10547,7 +10611,7 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/HostDetails/Cards/SystemPurposeCard/SystemPurposeEditModal.js:222
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:287
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:290
 msgid "Usage"
 msgstr ""
 
@@ -10797,51 +10861,12 @@ msgid "No matching packages found"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:103
-#: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:103
-#: ../webpack/scenes/Content/ContentConfig.js:25
-#: ../webpack/scenes/Content/ContentConfig.js:35
-#: ../webpack/scenes/Content/ContentConfig.js:91
-#: ../webpack/scenes/Content/ContentConfig.js:100
-#: ../webpack/scenes/Content/ContentConfig.js:154
-#: ../webpack/scenes/Content/ContentConfig.js:166
-#: ../webpack/scenes/Content/ContentConfig.js:222
-#: ../webpack/scenes/Content/ContentConfig.js:236
-#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewAddModal.js:110
-#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewBulkAddModal.js:82
-#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewBulkAddModal.js:109
-#: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ContentViewComponents.js:76
-#: ../webpack/scenes/ContentViews/Details/Filters/CVModuleStreamFilterContent.js:77
-#: ../webpack/scenes/ContentViews/Details/Filters/Rules/DebPackage/AddEditDebPackageRuleModal.js:183
-#: ../webpack/scenes/ContentViews/Details/Filters/Rules/DebPackage/AddEditDebPackageRuleModal.js:198
-#: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:183
-#: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:200
-#: ../webpack/scenes/ContentViews/Details/Histories/ContentViewHistories.js:27
-#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ConfirmBulkDelete.js:53
-#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:59
-#: ../webpack/scenes/ContentViews/Details/Versions/BulkDelete/Steps/ReviewEnvironments.js:95
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:156
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:165
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:299
-#: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:306
-#: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersions.js:109
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:91
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:158
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:278
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:302
-#: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:94
-#: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:105
-#: ../webpack/scenes/SmartProxy/ExpandableCvDetails.js:20
-msgid "Version"
-msgstr ""
-
-#:
 #: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebInstallModal.js:170
 #: ../webpack/components/extensions/HostDetails/Tabs/DebsTab/DebsTab.js:387
 #: ../webpack/components/extensions/HostDetails/Tabs/PackagesTab/PackageInstallModal.js:170
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/02_BulkPackagesTable.js:40
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:88
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:245
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:246
 msgid "Install packages"
 msgstr ""
 
@@ -11605,12 +11630,12 @@ msgid "Problem searching traces"
 msgstr ""
 
 #: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:71
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:294
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:296
 msgid "Application"
 msgstr ""
 
 #: ../webpack/components/extensions/HostDetails/Tabs/TracesTab/TracesTab.js:73
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:308
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:310
 msgid "Helper"
 msgstr ""
 
@@ -11685,18 +11710,18 @@ msgid "Manage traces"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:87
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:81
 #: ../webpack/scenes/Hosts/ChangeContentSource/components/MultiCVEnvForm.js:39
 msgid "Add content view environment"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:119
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:113
 msgid "Assign content view environment"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:131
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:125
 msgid ""
 "A content view environment is a combination of a particular lifecycle environm"
 "ent and content view. You can assign multiple content view environments to pro"
@@ -11705,7 +11730,7 @@ msgid ""
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:132
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:126
 msgid ""
 "A content view environment is a combination of a particular lifecycle environm"
 "ent and content view. Your selection here will {replace} all existing content "
@@ -11713,22 +11738,22 @@ msgid ""
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:134
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:128
 #: ../webpack/scenes/Hosts/ChangeContentSource/index.js:185
 msgid "replace"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:141
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:336
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:255
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:135
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:329
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:258
 msgid "selected host"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:142
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:337
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:256
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkAssignCVEnvsModal/BulkAssignCVEnvsModal.js:136
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:330
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:259
 msgid "selected hosts"
 msgstr ""
 
@@ -11738,32 +11763,32 @@ msgid "Host content view environments updated."
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:151
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:147
 msgid "An error occurred while updating host collections"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:205
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:198
 msgid "To get started, create a host collection."
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:276
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:269
 msgid "Limit"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:294
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:287
 msgid "Insufficient space for selected hosts"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:317
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:310
 msgid "Change host collections"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:328
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:321
 msgid ""
 "Select host collections to change their associations with {selectedHosts}. Cha"
 "nging host collection will affect all your selected hosts. Some hosts may alre"
@@ -11771,19 +11796,19 @@ msgid ""
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:348
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:200
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:206
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:341
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:201
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:207
 msgid "Select action"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:354
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:347
 msgid "Add to host collections"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:362
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkChangeHostCollectionsModal/BulkChangeHostCollectionsModal.js:355
 msgid "Remove from host collections"
 msgstr ""
 
@@ -11828,11 +11853,11 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/04_Review.js:111
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/BulkErrataWizard.js:148
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/BulkErrataWizard.js:149
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/04_Review.js:118
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:285
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:286
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/03_Review.js:32
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:159
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:160
 msgid "Review"
 msgstr ""
 
@@ -11848,27 +11873,27 @@ msgid "Selected errata will be applied on {hostCount} hosts"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/04_ReviewFooter.js:93
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/04_ReviewFooter.js:135
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/03_ReviewFooter.js:53
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/04_ReviewFooter.js:95
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/04_ReviewFooter.js:137
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/03_ReviewFooter.js:55
 #: ../webpack/scenes/AlternateContentSources/Create/Steps/ACSReview.js:25
 msgid "Back"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/BulkErrataWizard.js:124
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/BulkErrataWizard.js:125
 msgid "Manage errata"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/BulkErrataWizard.js:127
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/BulkErrataWizard.js:128
 msgid "Select errata"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/BulkErrataWizard.js:135
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:271
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:146
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/BulkErrataWizard.js:136
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:272
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:147
 #: ../webpack/components/extensions/Hosts/BulkActions/HostReview.js:112
 msgid "Review hosts"
 msgstr ""
@@ -11895,51 +11920,51 @@ msgid "Failed to initiate trace resolution job."
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:217
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:219
 msgid "Customize and restart"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:222
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:224
 msgid "Reboot hosts"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:314
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:316
 msgid "This application requires a host reboot"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:340
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:342
 msgid "Restart applications"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:372
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:374
 msgid "At least one of the selected items requires the hosts to reboot"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:381
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:383
 msgid "Select at least one trace."
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:400
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkManageTracesModal/BulkManageTracesModal.js:402
 msgid "The selected hosts do not show any applications needing restart."
 msgstr ""
 
 #:
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/02_BulkPackagesTable.js:40
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:88
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:254
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:255
 msgid "Remove packages"
 msgstr ""
 
 #:
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/02_BulkPackagesTable.js:40
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:88
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:236
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:237
 msgid "Upgrade packages"
 msgstr ""
 
@@ -11969,7 +11994,7 @@ msgstr ""
 
 #:
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/02_BulkPackagesTable.js:129
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:217
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:218
 msgid "No upgradable packages found."
 msgstr ""
 
@@ -12005,18 +12030,18 @@ msgid "updated"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/04_ReviewFooter.js:58
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:227
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/04_ReviewFooter.js:59
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:228
 msgid "Upgrade all packages"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:197
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:198
 msgid "Manage packages"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:209
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkPackagesWizard/BulkPackagesWizard.js:210
 msgid "To manage packages, select an action."
 msgstr ""
 
@@ -12043,18 +12068,18 @@ msgid "Set content overrides"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:121
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:122
 msgid "Manage repository sets"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:125
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:132
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:126
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:133
 msgid "Select repository sets"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:135
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkRepositorySetsWizard/BulkRepositorySetsWizard.js:136
 msgid ""
 "Below you can add content overrides, which change whether a repository is enab"
 "led or disabled. Change their state one by one, or use the checkboxes and sele"
@@ -12067,12 +12092,12 @@ msgid "Content overrides updating."
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:236
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:239
 msgid "Change system purpose"
 msgstr ""
 
 #:
-#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:305
+#: ../webpack/components/extensions/Hosts/BulkActions/BulkSystemPurposeModal/BulkSystemPurposeModal.js:308
 msgid "Service level (SLA)"
 msgstr ""
 
@@ -12171,6 +12196,8 @@ msgid ""
 msgstr ""
 
 #: ../webpack/components/pf3Table/components/TableSelectionCell.js:37
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:151
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:178
 msgid "Select row"
 msgstr ""
 
@@ -12178,13 +12205,15 @@ msgstr ""
 #: ../webpack/components/pf3Table/formatters/EntitlementsInlineEditFormatter.js:51
 #: ../webpack/scenes/ActivationKeys/Details/ActivationKeyDetails.js:81
 #: ../webpack/scenes/ActivationKeys/Details/components/EditModal.js:160
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsTableSchema.js:69
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/hooks/useUpstreamSubscriptionsColumns.js:42
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableHelpers.js:117
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:52
 msgid "Unlimited"
 msgstr ""
 
 #:
 #: ../webpack/components/pf3Table/formatters/EntitlementsInlineEditFormatter.js:52
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:53
 msgid "Max %(maxQuantity)s"
 msgstr ""
 
@@ -12197,7 +12226,8 @@ msgid "RH Repos"
 msgstr ""
 
 #: ../webpack/containers/Application/config.js:39
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:202
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:179
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:192
 msgid "Add Subscriptions"
 msgstr ""
 
@@ -12778,25 +12808,19 @@ msgstr ""
 msgid "Image digest"
 msgstr ""
 
-#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:37
-#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:39
-#: ../webpack/scenes/ContainerImages/Synced/Details/ManifestDetails.js:102
-msgid "Container images"
-msgstr ""
-
-#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:42
+#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:43
 msgid ""
 "View container images in the local registry using the Synced tab. View contain"
 "er images booted by image mode hosts using the Booted tab. The Booted tab also"
 " shows images outside of the local container registry."
 msgstr ""
 
-#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:61
+#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:65
 #: ../webpack/scenes/SmartProxy/ExpandableCvDetails.js:22
 msgid "Synced"
 msgstr ""
 
-#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:71
+#: ../webpack/scenes/ContainerImages/ContainerImagesPage.js:75
 msgid "Booted"
 msgstr ""
 
@@ -12821,6 +12845,10 @@ msgstr ""
 
 #: ../webpack/scenes/ContainerImages/LabelsAnnotationsModal.js:82
 msgid "Show ${remainingCount} more"
+msgstr ""
+
+#: ../webpack/scenes/ContainerImages/Synced/Details/ManifestDetails.js:102
+msgid "Container images"
 msgstr ""
 
 #: ../webpack/scenes/ContainerImages/Synced/Details/ManifestDetails.js:125
@@ -13521,7 +13549,7 @@ msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/ComponentContentViews/ComponentContentViewAddModal.js:158
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:129
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:136
 msgid "Submit"
 msgstr ""
 
@@ -14100,8 +14128,8 @@ msgstr ""
 #:
 #: ../webpack/scenes/ContentViews/Details/Filters/CVErrataDateFilterContent.js:268
 #: ../webpack/scenes/ContentViews/Details/Filters/CVErrataIDFilterContent.js:417
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:74
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:115
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:43
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:63
 msgid "Start date"
 msgstr ""
 
@@ -14117,8 +14145,8 @@ msgstr ""
 #:
 #: ../webpack/scenes/ContentViews/Details/Filters/CVErrataDateFilterContent.js:290
 #: ../webpack/scenes/ContentViews/Details/Filters/CVErrataIDFilterContent.js:438
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:79
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:125
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:48
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:67
 msgid "End date"
 msgstr ""
 
@@ -14318,7 +14346,7 @@ msgstr ""
 #: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:104
 #: ../webpack/scenes/RedHatRepositories/components/RecommendedRepositorySetsToggler.js:34
 #: ../webpack/scenes/RedHatRepositories/components/RepositorySetRepository/RepositorySetRepository.js:95
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:250
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:418
 msgid "Help"
 msgstr ""
 
@@ -16319,13 +16347,15 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:84
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:135
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:53
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:71
 msgid "Requires virt-who"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:94
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:152
+#: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:63
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:78
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:83
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:96
 msgid "Entitlements"
 msgstr ""
 
@@ -16341,157 +16371,160 @@ msgstr ""
 msgid "Exceeds available quantity"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:97
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:24
+msgid "Physical"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:30
+msgid "Guests of %s"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:35
+msgid "Temporary"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:37
+msgid "Virtual"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:74
+msgid "True"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/SubscriptionsColumns.js:74
+msgid "False"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:161
 msgid "This is disabled because no connection could be made to the upstream Manifest."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:99
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:163
 msgid "This is disabled because a manifest-related task is in progress."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:101
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:165
 msgid "This is disabled because no subscriptions are selected."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:103
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:167
 msgid "This is disabled because no manifest has been uploaded."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:214
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:222
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:347
+msgid "You do not have permission to view this organization."
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:382
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:390
 msgid "There are no Subscriptions to display"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:215
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:383
 msgid "Add subscriptions using the Add Subscriptions button."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:217
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:100
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:385
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:116
 msgid "Add subscriptions"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:223
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:391
 msgid "Import a subscription manifest to give hosts access to Red Hat content."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:226
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:394
 msgid "Import a Manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:234
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:402
 msgid "subscriptions service"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:236
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:404
 msgid ""
 "This page shows subscriptions available from this organization's subscription "
 "manifest alongside this organization's locally-hosted products. Learn more abo"
 "ut subscriptions and entitlement management with the {subscriptionsService}."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:245
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:413
 msgid "Subscriptions information"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:19
-msgid "Please enter a positive number above zero"
-msgstr ""
-
-#:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:21
-msgid "Please limit number to 10 digits"
-msgstr ""
-
-#:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:22
-msgid "No pools available"
-msgstr ""
-
-#:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:25
-msgid "Quantity must not be above %s"
-msgstr ""
-
-#:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:28
-msgid "Please enter digits only"
-msgstr ""
-
-#:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:104
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsActions.js:18
 msgid "Subscriptions have been saved and are being updated. "
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:106
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsActions.js:20
 msgid "Click here to go to the tasks page for the task."
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:171
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:165
 msgid "There are no Manifests to display"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:172
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:166
 msgid "Import a Manifest to Begin"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsTableSchema.js:62
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:211
+msgid "Saving..."
+msgstr ""
+
+#:
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:212
+msgid "Saving subscription quantities..."
+msgstr ""
+
+#:
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/hooks/useUpstreamSubscriptionsColumns.js:41
 msgid "Available Entitlements"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsTableSchema.js:78
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/hooks/useUpstreamSubscriptionsColumns.js:45
 msgid "Quantity to Allocate"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsTableSchema.js:88
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/hooks/useUpstreamSubscriptionsColumns.js:57
 msgid "Number to Allocate"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionTypeFormatter.js:9
-msgid "Physical"
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/upstreamSubscriptionsHelpers.js:9
+msgid "Please enter a positive number above zero"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionTypeFormatter.js:14
-msgid "Guests of"
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/upstreamSubscriptionsHelpers.js:12
+msgid "Please limit number to 10 digits"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionTypeFormatter.js:20
-msgid "Temporary"
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/upstreamSubscriptionsHelpers.js:16
+msgid "No pools available"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionTypeFormatter.js:22
-msgid "Virtual"
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/upstreamSubscriptionsHelpers.js:25
+msgid "Quantity must not be above %s"
+msgstr ""
+
+#:
+#: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/upstreamSubscriptionsHelpers.js:32
+msgid "Please enter digits only"
 msgstr ""
 
 #:
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableHelpers.js:113
 msgid "NA"
-msgstr ""
-
-#:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:52
-msgid "Select all rows"
-msgstr ""
-
-#:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:144
-msgid "True"
-msgstr ""
-
-#:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:144
-msgid "False"
 msgstr ""
 
 #:
@@ -16542,33 +16575,58 @@ msgid "You're making changes to %s entitlement(s)"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:26
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:108
+msgid "Edit entitlements"
+msgstr ""
+
+#:
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:161
+msgid "Expand group"
+msgstr ""
+
+#:
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:162
+msgid "Collapse group"
+msgstr ""
+
+#:
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:328
 msgid "No subscriptions match your search criteria."
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:55
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:352
+msgid "Select all rows"
+msgstr ""
+
+#:
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Table.js:431
+msgid "Confirm"
+msgstr ""
+
+#:
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:56
 msgid "General"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:110
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:126
 msgid "Export CSV"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:126
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:142
 #: ../webpack/scenes/SyncStatus/components/SyncStatusTable.js:353
 msgid "Actions"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:146
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:162
 msgid "Manage manifest"
 msgstr ""
 
 #:
-#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:154
+#: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:170
 msgid "View subscription usage"
 msgstr ""
 

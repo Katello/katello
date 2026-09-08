@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc1",
+        "Project-Id-Version": "katello 5.0.0.rc2",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Language-Team": "Romanian (https://app.transifex.com/foreman/teams/114/ro/)",
@@ -1395,6 +1395,9 @@
       "Collapse all": [
         ""
       ],
+      "Collapse group": [
+        ""
+      ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1456,6 +1459,9 @@
         ""
       ],
       "Configuration updated on Foreman": [
+        ""
+      ],
+      "Confirm": [
         ""
       ],
       "Confirm Deletion": [
@@ -1723,6 +1729,9 @@
         ""
       ],
       "Content view environment ID": [
+        ""
+      ],
+      "Content view environment identifier": [
         ""
       ],
       "Content view environments": [
@@ -2613,6 +2622,9 @@
       "Edit details": [
         ""
       ],
+      "Edit entitlements": [
+        ""
+      ],
       "Edit filter rule": [
         ""
       ],
@@ -2842,6 +2854,9 @@
         ""
       ],
       "Expand All": [
+        ""
+      ],
+      "Expand group": [
         ""
       ],
       "Expire soon days": [
@@ -3256,7 +3271,7 @@
       "Greater than": [
         ""
       ],
-      "Guests of": [
+      "Guests of %s": [
         ""
       ],
       "HTTP Proxies": [
@@ -3380,6 +3395,9 @@
         ""
       ],
       "Host group IDs": [
+        ""
+      ],
+      "Host group identifier": [
         ""
       ],
       "Host groups": [
@@ -6797,6 +6815,12 @@
       "Saving alternate content source...": [
         ""
       ],
+      "Saving subscription quantities...": [
+        ""
+      ],
+      "Saving...": [
+        ""
+      ],
       "Scan": [
         ""
       ],
@@ -7131,6 +7155,9 @@
         ""
       ],
       "Show a content view component": [
+        ""
+      ],
+      "Show a content view environment": [
         ""
       ],
       "Show a content view's history": [
@@ -9103,6 +9130,9 @@
       "You currently have no content views to display": [
         ""
       ],
+      "You do not have permission to view this organization.": [
+        ""
+      ],
       "You do not have permissions to delete %s": [
         ""
       ],
@@ -9535,6 +9565,12 @@
       "has already been taken for a product in this organization.": [
         ""
       ],
+      "has already been taken for this activation key": [
+        ""
+      ],
+      "has already been taken for this host": [
+        ""
+      ],
       "has already been taken for this product.": [
         ""
       ],
@@ -9620,6 +9656,9 @@
         ""
       ],
       "label of the repository": [
+        ""
+      ],
+      "latest": [
         ""
       ],
       "limit to only repositories with this download policy": [
