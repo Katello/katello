@@ -6,7 +6,6 @@ import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import { APIMiddleware, reducers as apiReducer } from 'foremanReact/redux/API';
 import { reducers as fillReducers } from 'foremanReact/components/common/Fill';
-import { reducers as foremanModalReducer } from 'foremanReact/components/ForemanModal';
 import { STATUS } from 'foremanReact/constants';
 import { rtlHelpers } from 'foremanReact/common/rtlTestHelpers';
 import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
@@ -34,7 +33,6 @@ function renderWithRedux(
   const combinedReducers = combineReducers({
     katello: allKatelloReducers,
     ...apiReducer,
-    ...foremanModalReducer,
     ...fillReducers,
   });
 
