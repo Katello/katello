@@ -172,7 +172,7 @@ module Katello
     scoped_search :on => :content_label, :ext_method => :search_by_content_label, :default_operator => :like
 
     delegate :product, :redhat?, :custom?, :to => :root
-    delegate :yum?, :docker?, :deb?, :file?, :ostree?, :ansible_collection?, :generic?, :to => :root
+    delegate :yum?, :docker?, :deb?, :file?, :ostree?, :ansible_collection?, :python?, :generic?, :to => :root
     delegate :name, :label, :docker_upstream_name, :url, :download_concurrency, :to => :root
 
     delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :arch, :label, :url, :unprotected,
@@ -486,6 +486,8 @@ module Katello
         "#{pulp_uri.host.downcase}/#{container_repository_name}"
       elsif ansible_collection?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api/"
+      elsif python?
+        "#{scheme}://#{pulp_uri.host.downcase}/pypi/#{relative_path}/"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
       end
