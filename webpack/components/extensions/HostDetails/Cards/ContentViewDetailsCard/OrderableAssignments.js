@@ -13,9 +13,9 @@ import {
 import { MinusCircleIcon, GripVerticalIcon } from '@patternfly/react-icons';
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { orderable } from 'foremanReact/components/common/forms/OrderableSelect/helpers';
 import { STATUS } from 'foremanReact/constants';
 import SkeletonLoader from 'foremanReact/components/common/SkeletonLoader';
+import { orderable } from './orderable';
 import EnvironmentPaths from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPaths';
 import { selectContentViews, selectContentViewStatus } from '../../../../../scenes/ContentViews/ContentViewSelectors';
 import { selectEnvironmentPaths } from '../../../../../scenes/ContentViews/components/EnvironmentPaths/EnvironmentPathSelectors';
