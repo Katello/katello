@@ -82,5 +82,50 @@ module Katello
       subject { object.arches([Repository.new(:root => RootRepository.new(:arch => 'i386'))], 'test-parent').first }
       it { value(subject.keys).must_include(:id, :name) }
     end
+
+    describe "#version_aware_compare" do
+      it "orders RHEL minors numerically rather than lexicographically" do
+        versions = %w(10 10.0 10.1 8 8.1 8.10 8.9 9 9.6)
+        sorted = versions.sort { |a, b| object.version_aware_compare(a, b) }
+        value(sorted).must_equal %w(8 8.1 8.9 8.10 9 9.6 10 10.0 10.1)
+      end
+
+      it "orders repository names that embed RHEL versions" do
+        names = [
+          "Red Hat Satellite Client 6 for RHEL 10 x86_64 RPMs",
+          "Red Hat Satellite Client 6 for RHEL 8 x86_64 RPMs",
+          "Red Hat Satellite Client 6 for RHEL 9 x86_64 RPMs"
+        ]
+        sorted = names.sort { |a, b| object.version_aware_compare(a, b) }
+        value(sorted.first).must_include("RHEL 8")
+        value(sorted.last).must_include("RHEL 10")
+      end
+
+      it "does not raise on non-numeric suffixes such as 8Server" do
+        versions = %w(8Server 8.10 8)
+        sorted = versions.sort { |a, b| object.version_aware_compare(a, b) }
+        value(sorted.first).must_equal "8"
+        value(sorted).must_include "8Server"
+        value(sorted).must_include "8.10"
+      end
+    end
+
+    describe "#minors ordering" do
+      it "returns minor nodes in version order" do
+        grouped = { "10" => [], "8.10" => [], "8.9" => [], "8" => [] }
+        names = object.minors(grouped, "test-product").map { |node| node[:name] }
+        value(names).must_equal ["8", "8.9", "8.10", "10"]
+      end
+    end
+
+    describe "#arches ordering" do
+      it "returns arch nodes alphabetically" do
+        repos = %w(x86_64 noarch aarch64).map do |arch|
+          Repository.new(:root => RootRepository.new(:arch => arch, :name => "repo-#{arch}"))
+        end
+        names = object.arches(repos, "test-parent").map { |node| node[:name] }
+        value(names).must_equal %w(aarch64 noarch x86_64)
+      end
+    end
   end
 end
