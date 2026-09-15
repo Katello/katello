@@ -652,6 +652,7 @@ module Katello
         response_body = JSON.parse(response.body)
         assert response_body['errors'].length >= 1
         response_body['errors'].first.assert_valid_keys('code', 'message', 'details')
+        assert_equal 'NAME_UNKNOWN', response_body['errors'].first['code']
       end
 
       it "pull manifest repo tag not found" do
@@ -665,6 +666,19 @@ module Katello
         response_body = JSON.parse(response.body)
         assert response_body['errors'].length >= 1
         response_body['errors'].first.assert_valid_keys('code', 'message', 'details')
+        assert_equal 'MANIFEST_UNKNOWN', response_body['errors'].first['code']
+      end
+
+      it "pull manifest repo digest not found" do
+        @controller.stubs(:registry_authorize).returns(true)
+        @controller.stubs(:find_readable_repository).returns(@docker_repo)
+
+        get :pull_manifest, params: { repository: @docker_repo.name, tag: "sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789" }
+        assert_response 404
+        response_body = JSON.parse(response.body)
+        assert response_body['errors'].length >= 1
+        response_body['errors'].first.assert_valid_keys('code', 'message', 'details')
+        assert_equal 'MANIFEST_UNKNOWN', response_body['errors'].first['code']
       end
     end
 

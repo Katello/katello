@@ -520,11 +520,11 @@ module Katello
       if params[:tag]
         if params[:tag][0..6] == 'sha256:'
           manifest = Katello::DockerManifestList.where(digest: params[:tag]).first || Katello::DockerManifest.where(digest: params[:tag]).first
-          return item_not_found(params[:tag]) unless manifest
+          return manifest_not_found(params[:tag]) unless manifest
         else
           tag = ::Katello::DockerMetaTag.where(id: ::Katello::RepositoryDockerMetaTag.
                                     where(repository_id: @repository.id).select(:docker_meta_tag_id), name: params[:tag]).first
-          return item_not_found(params[:tag]) unless tag
+          return manifest_not_found(params[:tag]) unless tag
         end
       end
 
@@ -883,6 +883,10 @@ module Katello
 
     def item_not_found(item)
       render_podman_error("NAME_UNKNOWN", _("%s was not found!") % item, :not_found)
+    end
+
+    def manifest_not_found(item)
+      render_podman_error("MANIFEST_UNKNOWN", _("%s was not found!") % item, :not_found)
     end
 
     def static_index
