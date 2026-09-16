@@ -17,7 +17,7 @@ KT.organizations.initLabelFromName = function () {
   }
   $form.data('orgLabelBound', true);
 
-  // Once the user types a custom Label, do not overwrite it from Name.
+  // Auto-fill from Name only until the user edits Label (including clearing it).
   var labelTouched = false;
 
   // Match Katello::Util::Model.labelize for the common ASCII path.
@@ -30,25 +30,24 @@ KT.organizations.initLabelFromName = function () {
   };
 
   var fillFromName = function () {
-    if (!labelTouched) {
-      $label.val(labelize($name.val()));
-    }
+    $label.val(labelize($name.val()));
   };
 
-  $name.on('input', fillFromName);
-
-  $label.on('input', function () {
-    labelTouched = $label.val() !== '';
+  $name.on('input', function () {
     if (!labelTouched) {
       fillFromName();
     }
+  });
+
+  // Any Label edit is kept. Do not copy Name back when the field is emptied.
+  $label.on('input', function () {
+    labelTouched = true;
   });
 
   // Foreman does not set HTML5 required, so blank Label can still be posted.
   // Fill it here (same as the server callback) instead of disabling Submit.
   $form.on('submit', function () {
     if ($.trim($label.val()) === '') {
-      labelTouched = false;
       fillFromName();
     }
   });
