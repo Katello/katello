@@ -30,6 +30,12 @@ module Katello
         def partial_repo_path
           "/pulp/isos/#{repo.relative_path}/PULP_MANIFEST"
         end
+
+        def sync_url_params(sync_options)
+          params = super
+          params[:optimize] = sync_options[:optimize] if sync_options.key?(:optimize)
+          params
+        end
       end
     end
   end

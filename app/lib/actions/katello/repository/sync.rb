@@ -36,7 +36,7 @@ module Actions
           pulp_sync_options[:download_policy] = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
 
           #pulp3 options
-          pulp_sync_options[:optimize] = false if skip_metadata_check && (repo.yum? || repo.deb?)
+          pulp_sync_options[:optimize] = false if skip_metadata_check && (repo.yum? || repo.deb? || repo.file?)
 
           sequence do
             if validate_contents
@@ -89,7 +89,7 @@ module Actions
 
         def validate_repo!(repo:, skip_metadata_check:, skip_candlepin_check:)
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank?
-          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum/deb repositories.") if skip_metadata_check && !repo.yum? && !repo.deb?
+          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum/deb/file repositories.") if skip_metadata_check && !repo.yum? && !repo.deb? && !repo.file?
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository is not a library instance repository.") unless repo.library_instance?
           ::Katello::Util::CandlepinRepositoryChecker.check_repository_for_sync!(repo) if repo.yum? && !skip_candlepin_check
         end

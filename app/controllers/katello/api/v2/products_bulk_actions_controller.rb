@@ -24,7 +24,7 @@ module Katello
 
     api :PUT, "/products/bulk/sync", N_("Sync one or more products")
     param :ids, Array, :desc => N_("List of product ids"), :required => true
-    param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Non-yum repositories are skipped."), :required => false
+    param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected."), :required => false
     param :validate_contents, :bool, :desc => N_("Force a sync and validate the checksums of all content. Non-yum repositories (or those with \
                                                      On Demand download policy) are skipped."), :required => false
     def sync_products
