@@ -229,9 +229,9 @@ module Katello
         [api.repositories_api.sync(repository_reference.repository_href, repository_sync_url_data)]
       end
 
-      def sync_url_params(_sync_options)
-        params = {remote: repo.remote_href, mirror: repo.root.mirroring_policy == Katello::RootRepository::MIRRORING_POLICY_CONTENT}
-        params[:skip_types] = skip_types if (skip_types && repo.root.mirroring_policy != Katello::RootRepository::MIRRORING_POLICY_COMPLETE)
+      def sync_url_params(sync_options)
+        params = super
+        params[:optimize] = sync_options[:optimize] if sync_options.key?(:optimize)
         params
       end
 

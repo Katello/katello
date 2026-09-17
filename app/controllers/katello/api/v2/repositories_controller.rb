@@ -366,7 +366,7 @@ Alternatively, use the 'force' parameter to regenerate metadata locally. On the 
     api :POST, "/repositories/:id/sync", N_("Sync a repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :incremental, :bool, :desc => N_("perform an incremental import"), :required => false
-    param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Only used with yum or deb repositories."), :required => false
+    param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Only used with yum, deb, or file repositories."), :required => false
     param :validate_contents, :bool, :desc => N_("Force a sync and validate the checksums of all content. Only used with yum repositories."), :required => false
     def sync
       fail HttpErrors::BadRequest, _("attempted to sync a non-library repository.") unless @repository.library_instance?
