@@ -72,9 +72,8 @@ module Katello
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         assert_equal action_class, ::Actions::Katello::Repository::Sync
         refute_empty repos
-        assert repos.all? { |repo| repo.yum? }
+        assert repos.all? { |repo| ::Katello::RootRepository::SKIPABLE_METADATA_TYPES.include?(repo.content_type) }
       end
-
       put :sync_products, params: { :ids => @products.collect(&:id), :organization_id => @organization.id, :skip_metadata_check => true }
 
       assert_response :success
@@ -88,7 +87,7 @@ module Katello
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         assert_equal action_class, ::Actions::Katello::Repository::Sync
         refute_empty repos
-        assert repos.all? { |repo| repo.yum? } && repos.all? { |repo| repo.download_policy != ::Katello::RootRepository::DOWNLOAD_ON_DEMAND }
+        assert repos.all? { |repo| ::Katello::RootRepository::SKIPABLE_METADATA_TYPES.include?(repo.content_type) } && repos.all? { |repo| repo.download_policy != ::Katello::RootRepository::DOWNLOAD_ON_DEMAND }
       end
 
       put :sync_products, params: { :ids => @products.collect(&:id), :organization_id => @organization.id, :validate_contents => true }
