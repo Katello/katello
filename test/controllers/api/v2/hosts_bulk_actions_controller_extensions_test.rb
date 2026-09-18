@@ -11,7 +11,11 @@ module Katello
 
     def test_bulk_destroy
       Katello::RegistrationManager.expects(:unregister_host).twice
-      delete :bulk_destroy, params: { :search => "id ^ (#{[@host1.id, @host2.id].join(',')})" }
+      delete :bulk_destroy, params: {
+        :search => "id ^ (#{[@host1.id, @host2.id].join(',')})",
+        :skip_scope_hash => true,
+      }
+
       assert_response :success
     end
   end
