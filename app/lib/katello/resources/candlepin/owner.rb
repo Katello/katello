@@ -100,8 +100,17 @@ module Katello
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
           end
 
-          def generate_ueber_cert(key)
-            ueber_cert_json = self.post(join_path(path(key), "uebercert"), {}.to_json, self.default_headers).body
+          def generate_ueber_cert(key, key_algorithms: [], signature_algorithms: [])
+            body = {}
+            body[:keyAlgorithms] = key_algorithms if key_algorithms.any?
+            body[:signatureAlgorithms] = signature_algorithms if signature_algorithms.any?
+
+            begin
+              ueber_cert_json = self.post(join_path(path(key), "uebercert"), body.to_json, self.default_headers).body
+            rescue RestClient::Conflict => e
+              raise ::Katello::Errors::CandlepinCryptoConflict.from_exception(e) || ::Katello::Errors::CandlepinCryptoConflict.new(_("Candlepin could not generate a certificate with the requested cryptographic capabilities."))
+            end
+
             JSON.parse(ueber_cert_json).with_indifferent_access
           end
 

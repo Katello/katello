@@ -18,6 +18,7 @@ module Katello
           rescue_from Errors::NotFound, :with => :rescue_from_not_found
           rescue_from Errors::SecurityViolation, :with => :rescue_from_security_violation
           rescue_from Errors::ConflictException, :with => :rescue_from_conflict_exception
+          rescue_from Errors::CandlepinCryptoConflict, :with => :rescue_from_conflict_exception
           rescue_from Errors::UnsupportedActionException, :with => :rescue_from_unsupported_action_exception
           rescue_from Errors::MaxHostsReachedException, :with => :rescue_from_max_hosts_reached_exception
           rescue_from Errors::CdnSubstitutionError, :with => :rescue_from_bad_data

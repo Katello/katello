@@ -177,11 +177,36 @@ module Katello
     end
 
     def test_download_debug_certificate_success
-      # Stub the certificate data
       cert_data = { key: "DUMMY-CERTIFICATE-DATA", cert: "DUMMY-CERTIFICATE-DATA"}
-      Organization.any_instance.expects(:debug_cert).returns(cert_data)
-      # Perform the request
+      Organization.any_instance.expects(:generate_debug_cert_with_algorithms).with(
+        key_algorithms: [],
+        signature_algorithms: []
+      ).returns(cert_data)
+
       get :download_debug_certificate, params: { id: @organization.title }
+
+      assert_response :success
+      assert_match(/attachment; filename="#{@organization.name}-key-cert.pem"/, response.headers['Content-Disposition'])
+      assert_includes response.body, cert_data[:key]
+      assert_includes response.body, cert_data[:cert]
+    end
+
+    def test_download_debug_certificate_with_cryptographic_capabilities
+      cert_data = { key: "DUMMY-CERTIFICATE-DATA", cert: "DUMMY-CERTIFICATE-DATA"}
+      key_algs = ["1.2.840.113549.1.1.1"]
+      sig_algs = ["1.2.840.113549.1.1.11"]
+
+      Organization.any_instance.expects(:generate_debug_cert_with_algorithms).with(
+        key_algorithms: key_algs,
+        signature_algorithms: sig_algs
+      ).returns(cert_data)
+
+      get :download_debug_certificate, params: {
+        id: @organization.title,
+        key_algorithms: key_algs,
+        signature_algorithms: sig_algs,
+      }
+
       # Verify response
       assert_response :success
       assert_match(/attachment; filename="#{@organization.name}-key-cert.pem"/, response.headers['Content-Disposition'])

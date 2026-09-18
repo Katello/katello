@@ -38,5 +38,17 @@ module Cert
       cert_store.add_file backend_ca_cert_file(:candlepin)
       organization.regenerate_ueber_cert unless cert_store.verify ueber_cert
     end
+
+    # cert_mapping takes in a File and will return a hash with the key being an OID and the value being the human readable name.
+    def self.cert_mapping(cert)
+      certificate = OpenSSL::X509::Certificate.new(cert)
+      subject_public_key_info = OpenSSL::ASN1.decode(
+        certificate.public_key.public_to_der
+      )
+
+      algorithm_oid = subject_public_key_info.value.first.value.first
+
+      { algorithm_oid.oid => algorithm_oid.ln }
+    end
   end
 end
