@@ -26,7 +26,9 @@ module Katello
           @repo.reload
           @repo.index_content
           assert_equal @repo, ::Katello::Repository.find_by(:id => ::Katello::RepositoryDockerTag.first.repository_id)
-          assert_equal ::Katello::DockerManifest.find_by(id: ::Katello::DockerTag.first.docker_taggable_id).digest, "sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e"
+
+          taggable = ::Katello::DockerTag.first.docker_taggable
+          assert_equal taggable.digest, "sha256:861658fab564aee2f1fc78e5a86baea65cbe415c4854ff4b7763c56e1b1ec6ac"
         end
 
         def test_copy_units_rewrites_missing_content_error
@@ -45,7 +47,9 @@ module Katello
           @repo.reload
 
           assert_equal @repo, ::Katello::Repository.find_by(:id => ::Katello::RepositoryDockerTag.first.repository_id)
-          assert_equal ::Katello::DockerManifest.find_by(id: ::Katello::DockerTag.first.docker_taggable_id).digest, "sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e"
+
+          taggable = ::Katello::DockerTag.first.docker_taggable
+          assert_equal taggable.digest, "sha256:861658fab564aee2f1fc78e5a86baea65cbe415c4854ff4b7763c56e1b1ec6ac"
         end
 
         # https://projects.theforeman.org/issues/35709
@@ -74,7 +78,14 @@ module Katello
           meta_tag = @repo.docker_meta_tags.find_by(name: 'latest')
           dummy_cv_repo = ::Katello::Repository.find_by(pulp_id: 'Default_Organization-Test-busybox-dev')
           repo_meta_tag = ::Katello::RepositoryDockerMetaTag.create(docker_meta_tag_id: meta_tag.id, repository_id: dummy_cv_repo.id)
-          dummy_cv_repo.docker_manifests << repo_meta_tag.docker_meta_tag.schema2.docker_taggable
+
+          # Handle both DockerManifest and DockerManifestList
+          taggable = repo_meta_tag.docker_meta_tag.schema2.docker_taggable
+          if taggable.is_a?(::Katello::DockerManifestList)
+            dummy_cv_repo.docker_manifest_lists << taggable
+          else
+            dummy_cv_repo.docker_manifests << taggable
+          end
           dummy_cv_repo.docker_tags << meta_tag.schema2
 
           @repo.root.update(:include_tags => ['doesntexist'])

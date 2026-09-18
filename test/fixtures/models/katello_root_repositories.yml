@@ -281,8 +281,8 @@ pulp3_docker_root_1:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
   gpg_key_id:           null
   unprotected:          <%= true %>
-  url:                  "https://registry-1.docker.io/"
-  docker_upstream_name: "fedora/ssh"
+  url:                  "https://quay.io"
+  docker_upstream_name: "libpod/alpine"
   mirroring_policy:     "mirror_content_only"
   download_policy:      immediate
 
