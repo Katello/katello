@@ -35,45 +35,71 @@ Note for AI agents: The `record_vcr` command is available to assist with VCR rec
 - Never commit cassettes with sensitive data (tokens, passwords).
 - VCR cassettes are stored in `test/fixtures/vcr_cassettes/`.
 
-**Recording VCRs:**
+**Recording VCRs (Containerized Pulp):**
 1. Either back up the current vagrant VM with a snapshot or create a new vagrant VM before beginning. The active Katello VM will be wiped.
-2. Modify `/etc/pulp/settings.py` to include `ORPHAN_PROTECTION_TIME = 0`.
-3. Restart Pulp with `sudo systemctl restart pulpcore* --all` and confirm services are running.
-4. Configure SSL certificates by editing `~/foreman/config/settings.yaml.test` to include:
-   ```yaml
-:ssl_ca_file: /home/vagrant/foreman-certs/proxy_ca.pem
-:ssl_certificate: /home/vagrant/foreman-certs/client_cert.pem
-:ssl_priv_key: /home/vagrant/foreman-certs/client_key.pem
+2. Set `PULP_ORPHAN_PROTECTION_TIME=0` for VCR recording:
+   ```bash
+   sudo mkdir -p /etc/containers/systemd/pulp-api.container.d
+   sudo mkdir -p /etc/containers/systemd/pulp-content.container.d
+   sudo mkdir -p /etc/containers/systemd/pulp-worker@.container.d
+   
+   sudo tee /etc/containers/systemd/pulp-api.container.d/vcr.conf <<'EOF'
+   [Container]
+   Environment=PULP_ORPHAN_PROTECTION_TIME=0
+   EOF
+   
+   sudo tee /etc/containers/systemd/pulp-content.container.d/vcr.conf <<'EOF'
+   [Container]
+   Environment=PULP_ORPHAN_PROTECTION_TIME=0
+   EOF
+   
+   sudo tee /etc/containers/systemd/pulp-worker@.container.d/vcr.conf <<'EOF'
+   [Container]
+   Environment=PULP_ORPHAN_PROTECTION_TIME=0
+   EOF
+   
+   sudo systemctl daemon-reload
+   sudo systemctl restart pulp-api pulp-content pulp-worker@{1..4}
    ```
-5. Update test fixtures by editing `~/foreman/test/fixtures/settings.yml` to include:
+3. Configure SSL certificates:
+   
+   Edit `~/foreman/config/settings.yaml.test` to include:
    ```yaml
-attribute101:
-    name: ssl_ca_file
-    value: "/home/vagrant/foreman-certs/proxy_ca.pem"
-attribute102:
-    name: ssl_certificate
-    value: "/home/vagrant/foreman-certs/client_cert.pem"
-attribute103:
-    name: ssl_priv_key
-    value: "/home/vagrant/foreman-certs/client_key.pem"
+   :ssl_ca_file: /home/vagrant/foreman-certs/proxy_ca.pem
+   :ssl_certificate: /home/vagrant/foreman-certs/client_cert.pem
+   :ssl_priv_key: /home/vagrant/foreman-certs/client_key.pem
    ```
-6. Reset development database, Candlepin with `cd $GITDIR/foreman && bundle exec rake katello:reset`
-7. Reset test database with:
-    ```bash
-    cd $GITDIR/foreman
-    RAILS_ENV=test bundle exec rake db:drop         # Reset test database (step 1/4)
-    RAILS_ENV=test bundle exec rake db:create       # Reset test database (step 2/4)
-    RAILS_ENV=test bundle exec rake db:migrate      # Reset test database (step 3/4)
-    RAILS_ENV=test bundle exec rake db:seed         # Reset test database (step 4/4)
-    ```
-8. Clean up Pulp orphans by running `sudo pulp --force orphan cleanup`
-9. Record VCRs:
-    ```bash
-    cd $GITDIR/foreman
-    mode=all bundle exec rake test:katello:test:pulpcore # Full VCR record
-    mode=all ktest ~/katello/path/to/test_file.rb   # Single file VCR record
-    ```
-10. Important: Any re-records after running ktest require steps 6-9 to be repeated, as VCR errors may pollute dev, test, and/or Pulp databases due to failing test cleanup.
+   
+   Edit `~/foreman/test/fixtures/settings.yml` to include:
+   ```yaml
+   attribute101:
+       name: ssl_ca_file
+       value: "/home/vagrant/foreman-certs/proxy_ca.pem"
+   attribute102:
+       name: ssl_certificate
+       value: "/home/vagrant/foreman-certs/client_cert.pem"
+   attribute103:
+       name: ssl_priv_key
+       value: "/home/vagrant/foreman-certs/client_key.pem"
+   ```
+4. Reset databases and deploy fresh environment:
+   ```bash
+   sudo systemctl stop foreman.target
+   sudo rm -rf /var/lib/pgsql/data/* /var/lib/pulp/*
+   cd ~/foremanctl
+   ./forge deploy-dev \
+     --manage-repos=false \
+     --add-feature content/ostree \
+     --extra-vars pulp_container_image="<Red Hat registry>/pulp-development" \
+     --extra-vars pulp_container_tag="<target-version>"
+   ```
+5. Record VCRs:
+   ```bash
+   cd ~/foreman
+   mode=all bundle exec rake test:katello:test:pulpcore # Full VCR record
+   mode=all ktest ~/katello/path/to/test_file.rb   # Single file VCR record
+   ```
+6. Important: Any re-records after running ktest require step 4 to be repeated, as VCR errors may pollute dev, test, and/or Pulp databases due to failing test cleanup.
 
 ### Code Quality Standards
 - **Ruby**: Uses `theforeman-rubocop` with lenient configuration, plus a Katello-local cop (`Katello/CveAbbreviation`, in `lib/rubocop/cop/katello/cve_abbreviation.rb`) that flags "cve" used as shorthand for "content view environment" (see the CVE/CVEnv naming rule in `CLAUDE.md`, including its exclude list for legitimate errata/security CVE files)
