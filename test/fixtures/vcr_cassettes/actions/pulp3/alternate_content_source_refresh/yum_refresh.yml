@@ -29,13 +29,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Fri, 18 Sep 2026 06:37:08 GMT
+      - Fri, 18 Sep 2026 17:58:00 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/rpm/rpm/01a0b33b-af88-7c56-809d-67e763d823b5/"
+      - "/pulp/api/v3/remotes/rpm/rpm/01a0b5ab-0a47-7f81-8e6c-a4e2738b4d14/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -51,18 +51,18 @@ http_interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Correlation-Id:
-      - 69ee8184711946dab3a4b5fcb5971f2c
+      - f099211a7090410288f454a80395f4cd
       Access-Control-Expose-Headers:
       - Correlation-ID
     body:
       encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzAx
-        YTBiMzNiLWFmODgtN2M1Ni04MDlkLTY3ZTc2M2Q4MjNiNS8iLCJwcm4iOiJw
-        cm46cnBtLnJwbXJlbW90ZTowMWEwYjMzYi1hZjg4LTdjNTYtODA5ZC02N2U3
-        NjNkODIzYjUiLCJwdWxwX2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDA2OjM3OjA4
-        LjM2MDMwNloiLCJwdWxwX2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMDY6
-        Mzc6MDguMzYwMzE1WiIsIm5hbWUiOiJZdW0gQUNTIiwidXJsIjoiaHR0cHM6
+        YTBiNWFiLTBhNDctN2Y4MS04ZTZjLWE0ZTI3MzhiNGQxNC8iLCJwcm4iOiJw
+        cm46cnBtLnJwbXJlbW90ZTowMWEwYjVhYi0wYTQ3LTdmODEtOGU2Yy1hNGUy
+        NzM4YjRkMTQiLCJwdWxwX2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAw
+        LjUxOTcxN1oiLCJwdWxwX2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6
+        NTg6MDAuNTE5NzI3WiIsIm5hbWUiOiJZdW0gQUNTIiwidXJsIjoiaHR0cHM6
         Ly9maXh0dXJlcy5wdWxwcHJvamVjdC5vcmcvIiwicHVscF9sYWJlbHMiOnt9
         LCJwb2xpY3kiOiJvbl9kZW1hbmQiLCJoaWRkZW5fZmllbGRzIjpbeyJuYW1l
         IjoiY2xpZW50X2tleSIsImlzX3NldCI6ZmFsc2V9LHsibmFtZSI6InByb3h5
@@ -76,7 +76,7 @@ http_interactions:
         aW1lb3V0IjpudWxsLCJoZWFkZXJzIjpudWxsLCJkb3dubG9hZF9jb25jdXJy
         ZW5jeSI6bnVsbCwicmF0ZV9saW1pdCI6bnVsbCwic2xlc19hdXRoX3Rva2Vu
         IjpudWxsfQ==
-  recorded_at: Fri, 18 Sep 2026 06:37:08 GMT
+  recorded_at: Fri, 18 Sep 2026 17:58:00 GMT
 - request:
     method: post
     uri: https://localhost.localdomain/pulp/api/v3/acs/rpm/rpm/
@@ -84,7 +84,9 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiWXVtIEFDUyIsInBhdGhzIjpbInJwbS13aXRoLW1vZHVsZXMv
-        IiwicnBtLXdpdGgtc2hhLTUxMi8iXSwicmVtb3RlIjpudWxsfQ==
+        IiwicnBtLXdpdGgtc2hhLTUxMi8iXSwicmVtb3RlIjoiL3B1bHAvYXBpL3Yz
+        L3JlbW90ZXMvcnBtL3JwbS8wMWEwYjVhYi0wYTQ3LTdmODEtOGU2Yy1hNGUy
+        NzM4YjRkMTQvIn0=
     headers:
       Content-Type:
       - application/json
@@ -98,15 +100,17 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
-      code: 400
-      message: Bad Request
+      code: 201
+      message: Created
     headers:
       Date:
-      - Fri, 18 Sep 2026 06:37:08 GMT
+      - Fri, 18 Sep 2026 17:58:00 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
+      Location:
+      - "/pulp/api/v3/acs/rpm/rpm/01a0b5ab-0a96-75d0-a1e1-1ba17614b57c/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -114,7 +118,7 @@ http_interactions:
       X-Frame-Options:
       - DENY
       Content-Length:
-      - '42'
+      - '419'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
@@ -122,15 +126,2979 @@ http_interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Correlation-Id:
-      - 9175e19b40c64f65ab69e68a490b271b
+      - ea254ace129146598314b0c122ef5b9d
       Access-Control-Expose-Headers:
       - Correlation-ID
-      Connection:
-      - close
     body:
       encoding: UTF-8
-      base64_string: 'eyJyZW1vdGUiOlsiVGhpcyBmaWVsZCBtYXkgbm90IGJlIG51bGwuIl19
-
-        '
-  recorded_at: Fri, 18 Sep 2026 06:37:08 GMT
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvYWNzL3JwbS9ycG0vMDFhMGI1
+        YWItMGE5Ni03NWQwLWExZTEtMWJhMTc2MTRiNTdjLyIsInBybiI6InBybjpy
+        cG0ucnBtYWx0ZXJuYXRlY29udGVudHNvdXJjZTowMWEwYjVhYi0wYTk2LTc1
+        ZDAtYTFlMS0xYmExNzYxNGI1N2MiLCJwdWxwX2NyZWF0ZWQiOiIyMDI2LTA5
+        LTE4VDE3OjU4OjAwLjU5OTMyN1oiLCJwdWxwX2xhc3RfdXBkYXRlZCI6IjIw
+        MjYtMDktMThUMTc6NTg6MDAuNTk5MzM3WiIsIm5hbWUiOiJZdW0gQUNTIiwi
+        bGFzdF9yZWZyZXNoZWQiOm51bGwsInBhdGhzIjpbInJwbS13aXRoLXNoYS01
+        MTIvIiwicnBtLXdpdGgtbW9kdWxlcy8iXSwicmVtb3RlIjoiL3B1bHAvYXBp
+        L3YzL3JlbW90ZXMvcnBtL3JwbS8wMWEwYjVhYi0wYTQ3LTdmODEtOGU2Yy1h
+        NGUyNzM4YjRkMTQvIn0=
+  recorded_at: Fri, 18 Sep 2026 17:58:00 GMT
+- request:
+    method: patch
+    uri: https://localhost.localdomain/pulp/api/v3/remotes/rpm/rpm/01a0b5ab-0a47-7f81-8e6c-a4e2738b4d14/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0bHNfdmFsaWRhdGlvbiI6dHJ1ZSwibmFtZSI6Ill1bSBBQ1MiLCJ1cmwi
+        OiJodHRwczovL2ZpeHR1cmVzLnB1bHBwcm9qZWN0Lm9yZy8iLCJwb2xpY3ki
+        OiJvbl9kZW1hbmQiLCJwcm94eV91cmwiOm51bGwsInByb3h5X3VzZXJuYW1l
+        IjpudWxsLCJwcm94eV9wYXNzd29yZCI6bnVsbCwidG90YWxfdGltZW91dCI6
+        bnVsbCwidXNlcm5hbWUiOm51bGwsInBhc3N3b3JkIjpudWxsLCJjbGllbnRf
+        Y2VydCI6bnVsbCwiY2xpZW50X2tleSI6bnVsbCwiY2FfY2VydCI6bnVsbH0=
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.39.0/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:00 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '817'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 064c15dde90643b1886f317b98f23073
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzAx
+        YTBiNWFiLTBhNDctN2Y4MS04ZTZjLWE0ZTI3MzhiNGQxNC8iLCJwcm4iOiJw
+        cm46cnBtLnJwbXJlbW90ZTowMWEwYjVhYi0wYTQ3LTdmODEtOGU2Yy1hNGUy
+        NzM4YjRkMTQiLCJwdWxwX2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAw
+        LjUxOTcxN1oiLCJwdWxwX2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6
+        NTg6MDAuNTE5NzI3WiIsIm5hbWUiOiJZdW0gQUNTIiwidXJsIjoiaHR0cHM6
+        Ly9maXh0dXJlcy5wdWxwcHJvamVjdC5vcmcvIiwicHVscF9sYWJlbHMiOnt9
+        LCJwb2xpY3kiOiJvbl9kZW1hbmQiLCJoaWRkZW5fZmllbGRzIjpbeyJuYW1l
+        IjoiY2xpZW50X2tleSIsImlzX3NldCI6ZmFsc2V9LHsibmFtZSI6InByb3h5
+        X3VzZXJuYW1lIiwiaXNfc2V0IjpmYWxzZX0seyJuYW1lIjoicHJveHlfcGFz
+        c3dvcmQiLCJpc19zZXQiOmZhbHNlfSx7Im5hbWUiOiJ1c2VybmFtZSIsImlz
+        X3NldCI6ZmFsc2V9LHsibmFtZSI6InBhc3N3b3JkIiwiaXNfc2V0IjpmYWxz
+        ZX1dLCJjYV9jZXJ0IjpudWxsLCJjbGllbnRfY2VydCI6bnVsbCwidGxzX3Zh
+        bGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6bnVsbCwibWF4X3JldHJpZXMi
+        Om51bGwsInRvdGFsX3RpbWVvdXQiOm51bGwsImNvbm5lY3RfdGltZW91dCI6
+        bnVsbCwic29ja19jb25uZWN0X3RpbWVvdXQiOm51bGwsInNvY2tfcmVhZF90
+        aW1lb3V0IjpudWxsLCJoZWFkZXJzIjpudWxsLCJkb3dubG9hZF9jb25jdXJy
+        ZW5jeSI6bnVsbCwicmF0ZV9saW1pdCI6bnVsbCwic2xlc19hdXRoX3Rva2Vu
+        IjpudWxsfQ==
+  recorded_at: Fri, 18 Sep 2026 17:58:00 GMT
+- request:
+    method: post
+    uri: https://localhost.localdomain/pulp/api/v3/acs/rpm/rpm/01a0b5ab-0a96-75d0-a1e1-1ba17614b57c/refresh/
+    body:
+      encoding: UTF-8
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.39.0/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:00 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - POST, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '79'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 455d400b1a91419185280bc0f21b9d68
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrX2dyb3VwIjoiL3B1bHAvYXBpL3YzL3Rhc2stZ3JvdXBzLzAxYTBi
+        NWFiLTBiOWMtNzcxMi1hYzU0LWQ5NTM3MTQzYjliMi8ifQ==
+  recorded_at: Fri, 18 Sep 2026 17:58:00 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:00 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 45641253c01a4812bdf9b4ee3100d124
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjEsInNraXBwZWQiOjAsInJ1bm5pbmciOjEs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:00 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 5009aa7f8f424affbf04254b529db030
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 3c228d3c9d5446dcbf9dd38368b3be61
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - b6c6a92d816c492b9d8e0d2f049ded3c
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 8634b09e55e4482ba52d27f3838344a1
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 0dfac302d7d84d258ee30be0f2bd106f
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 90a77cff09544ea2beca3efb7fd0986b
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 8e40085ad3f84d258b6853350bce96ca
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 23be40fc43ae4fed89a71b2d11b8feda
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - b7f78f4b479048dfb588fdb0e9eaf09c
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - f72dbfc4c8e0486b8d9857cfb509fb08
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - ee2feef0daca401194e1855582b64ee0
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - e4ec793e737749de8faacf384875ad6f
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 745ebdbfa2b84da1829395959fa4f2a7
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - dde3e870baf248629e69da8467ce399f
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:01 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 69e6cea450904d87a1474900ae217f33
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:01 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 1dd1013afec44fd09bf458e7038daf1f
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 2dd60e13d2a54d58a9c3d91dd043e0cc
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - e252ca7bdb1341de8d381c6f1166674f
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - c1cb55452b164349ba41a677d9ec0807
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 761a8d2a05d34de4a148eab90da5898e
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 2ff4272ee3b34a4387722511ca16dc78
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 35da7122143b4bdb85793d3c07cbab62
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 5e8fe0ba6eaa49e2bb707cef37a93bd1
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 47bc958c6d5f47be87a64a21217eb148
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 4ced9bc11599423eae6cb8cb9669bf64
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - bacbd42df1be4816908340d3fd2e48c9
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1248'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 7e2dff9a568f41c1ae4488f15a97b0ec
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjIs
+        ImNvbXBsZXRlZCI6MCwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVubmluZyIs
+        InVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTAxNDgxWiIs
+        InN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk2MTI4NFoiLCJm
+        aW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:02 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1275'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 4882fa8eb92b40ccb47db725d2e88fd6
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjEs
+        ImNvbXBsZXRlZCI6MSwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoiY29tcGxldGVk
+        IiwidW5ibG9ja2VkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMC45MDE0ODFa
+        Iiwic3RhcnRlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTYxMjg0WiIs
+        ImZpbmlzaGVkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMi45MDQ4MDZaIiwi
+        d29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:02 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:03 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1275'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - b4127aa07b3846cdb847d845b0df8a64
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjEs
+        ImNvbXBsZXRlZCI6MSwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoiY29tcGxldGVk
+        IiwidW5ibG9ja2VkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMC45MDE0ODFa
+        Iiwic3RhcnRlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTYxMjg0WiIs
+        ImZpbmlzaGVkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMi45MDQ4MDZaIiwi
+        d29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:03 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:03 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1275'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 9b45d34a573947069fe4d68889114d25
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjEs
+        ImNvbXBsZXRlZCI6MSwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoiY29tcGxldGVk
+        IiwidW5ibG9ja2VkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMC45MDE0ODFa
+        Iiwic3RhcnRlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTYxMjg0WiIs
+        ImZpbmlzaGVkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMi45MDQ4MDZaIiwi
+        d29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:03 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:03 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1275'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - e69dc99f17974db99bdc070ae77f8455
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjEs
+        ImNvbXBsZXRlZCI6MSwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmQ4
+        LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjkyMzk0OFoiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTIxMjExWiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoicnVu
+        bmluZyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTQz
+        OTczWiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjk4NDYy
+        M1oiLCJmaW5pc2hlZF9hdCI6bnVsbCwid29ya2VyIjpudWxsfSx7InB1bHBf
+        aHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1LTc2MDYt
+        YjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFzazowMWEw
+        YjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxwX2xhc3Rf
+        dXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIsInB1bHBf
+        YXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Mu
+        c3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoiY29tcGxldGVk
+        IiwidW5ibG9ja2VkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMC45MDE0ODFa
+        Iiwic3RhcnRlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTYxMjg0WiIs
+        ImZpbmlzaGVkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMi45MDQ4MDZaIiwi
+        d29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:03 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/task-groups/01a0b5ab-0b9c-7712-ac54-d9537143b9b2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:03 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1302'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 0e2e24c3fa1240b3a83c3b2dc123246f
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFzay1ncm91cHMvMDFhMGI1
+        YWItMGI5Yy03NzEyLWFjNTQtZDk1MzcxNDNiOWIyLyIsInBybiI6InBybjpj
+        b3JlLnRhc2tncm91cDowMWEwYjVhYi0wYjljLTc3MTItYWM1NC1kOTUzNzE0
+        M2I5YjIiLCJkZXNjcmlwdGlvbiI6IlJlZnJlc2hpbmcgMiBhbHRlcm5hdGUg
+        Y29udGVudCBzb3VyY2UgcGF0aChzKS4iLCJhbGxfdGFza3NfZGlzcGF0Y2hl
+        ZCI6ZmFsc2UsIndhaXRpbmciOjAsInNraXBwZWQiOjAsInJ1bm5pbmciOjAs
+        ImNvbXBsZXRlZCI6MiwiY2FuY2VsZWQiOjAsImZhaWxlZCI6MCwiY2FuY2Vs
+        aW5nIjowLCJncm91cF9wcm9ncmVzc19yZXBvcnRzIjpbXSwidGFza3MiOlt7
+        InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wMWEwYjVhYi0wYmI1
+        LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYvIiwicHJuIjoicHJuOmNvcmUudGFz
+        azowMWEwYjVhYi0wYmI1LTc2MDYtYjYzOC03NmY5MWFhZDc0OWYiLCJwdWxw
+        X2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAwLjg4ODEwN1oiLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjYtMDktMThUMTc6NTg6MDAuODg1OTU4WiIs
+        InB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIsIm5hbWUiOiJwdWxwX3JwbS5hcHAu
+        dGFza3Muc3luY2hyb25pemluZy5zeW5jaHJvbml6ZSIsInN0YXRlIjoiY29t
+        cGxldGVkIiwidW5ibG9ja2VkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMC45
+        MDE0ODFaIiwic3RhcnRlZF9hdCI6IjIwMjYtMDktMThUMTc6NTg6MDAuOTYx
+        Mjg0WiIsImZpbmlzaGVkX2F0IjoiMjAyNi0wOS0xOFQxNzo1ODowMi45MDQ4
+        MDZaIiwid29ya2VyIjpudWxsfSx7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92
+        My90YXNrcy8wMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1Mi1kYzQ5MmY5NTU1YTkv
+        IiwicHJuIjoicHJuOmNvcmUudGFzazowMWEwYjVhYi0wYmQ4LTdhM2ItYWQ1
+        Mi1kYzQ5MmY5NTU1YTkiLCJwdWxwX2NyZWF0ZWQiOiIyMDI2LTA5LTE4VDE3
+        OjU4OjAwLjkyMzk0OFoiLCJwdWxwX2xhc3RfdXBkYXRlZCI6IjIwMjYtMDkt
+        MThUMTc6NTg6MDAuOTIxMjExWiIsInB1bHBfYXBpX3ZlcnNpb24iOiJ2MyIs
+        Im5hbWUiOiJwdWxwX3JwbS5hcHAudGFza3Muc3luY2hyb25pemluZy5zeW5j
+        aHJvbml6ZSIsInN0YXRlIjoiY29tcGxldGVkIiwidW5ibG9ja2VkX2F0Ijoi
+        MjAyNi0wOS0xOFQxNzo1ODowMC45NDM5NzNaIiwic3RhcnRlZF9hdCI6IjIw
+        MjYtMDktMThUMTc6NTg6MDAuOTg0NjIzWiIsImZpbmlzaGVkX2F0IjoiMjAy
+        Ni0wOS0xOFQxNzo1ODowMy4xODE1MjNaIiwid29ya2VyIjpudWxsfV19
+  recorded_at: Fri, 18 Sep 2026 17:58:03 GMT
+- request:
+    method: delete
+    uri: https://localhost.localdomain/pulp/api/v3/acs/rpm/rpm/01a0b5ab-0a96-75d0-a1e1-1ba17614b57c/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.39.0/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:03 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '67'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 308249da72124ad0ba36886c4314e250
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzAxYTBiNWFiLTE1OTgtN2Iy
+        Mi04M2M0LTU2MGQ2OGZjMmIwMS8ifQ==
+  recorded_at: Fri, 18 Sep 2026 17:58:03 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/tasks/01a0b5ab-1598-7b22-83c4-560d68fc2b01/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:03 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1102'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 7943084f64694b88aa33da97bfc7776d
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMDFhMGI1YWItMTU5
+        OC03YjIyLTgzYzQtNTYwZDY4ZmMyYjAxLyIsInBybiI6InBybjpjb3JlLnRh
+        c2s6MDFhMGI1YWItMTU5OC03YjIyLTgzYzQtNTYwZDY4ZmMyYjAxIiwicHVs
+        cF9jcmVhdGVkIjoiMjAyNi0wOS0xOFQxNzo1ODowMy40MTgxOTZaIiwicHVs
+        cF9sYXN0X3VwZGF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAzLjQxNjM0M1oi
+        LCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUiOiJwdWxwY29yZS5hcHAudGFz
+        a3MuYmFzZS5nZW5lcmFsX211bHRpX2RlbGV0ZSIsImxvZ2dpbmdfY2lkIjoi
+        MzA4MjQ5ZGE3MjEyNGFkMGJhMzY4ODZjNDMxNGUyNTAiLCJjcmVhdGVkX2J5
+        IjoiL3B1bHAvYXBpL3YzL3VzZXJzLzEvIiwidW5ibG9ja2VkX2F0IjoiMjAy
+        Ni0wOS0xOFQxNzo1ODowMy40MzI4MTNaIiwic3RhcnRlZF9hdCI6IjIwMjYt
+        MDktMThUMTc6NTg6MDMuNDY4ODE2WiIsImZpbmlzaGVkX2F0IjoiMjAyNi0w
+        OS0xOFQxNzo1ODowMy41NjA3NjVaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6
+        bnVsbCwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFz
+        a19ncm91cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRf
+        cmVzb3VyY2VzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZV9wcm5zIjpbXSwicmVz
+        ZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyJwcm46cnBtLnJwbWFsdGVybmF0
+        ZWNvbnRlbnRzb3VyY2U6MDFhMGI1YWItMGE5Ni03NWQwLWExZTEtMWJhMTc2
+        MTRiNTdjIiwic2hhcmVkOnBybjpjb3JlLmRvbWFpbjpkOWY3YzBlNi1kMDJk
+        LTQyMDgtOTVlOC05ZTUxZjQ2ZTViMGQiXSwicmVzdWx0Ijp7ImNvcmUuVXNl
+        clJvbGUiOjMsImNvcmUuUmVwb3NpdG9yeSI6MiwicnBtLlJwbVJlcG9zaXRv
+        cnkiOjIsImNvcmUuUmVwb3NpdG9yeVZlcnNpb24iOjIsImNvcmUuQWx0ZXJu
+        YXRlQ29udGVudFNvdXJjZSI6MSwicnBtLlJwbUFsdGVybmF0ZUNvbnRlbnRT
+        b3VyY2UiOjEsImNvcmUuQWx0ZXJuYXRlQ29udGVudFNvdXJjZVBhdGgiOjIs
+        ImNvcmUuUmVwb3NpdG9yeVZlcnNpb25Db250ZW50RGV0YWlscyI6MjR9LCJw
+        dWxwX2FwaV92ZXJzaW9uIjoidjMifQ==
+  recorded_at: Fri, 18 Sep 2026 17:58:03 GMT
+- request:
+    method: delete
+    uri: https://localhost.localdomain/pulp/api/v3/remotes/rpm/rpm/01a0b5ab-0a47-7f81-8e6c-a4e2738b4d14/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.39.0/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:03 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '67'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - '08d99873766e45f19a8dc28196562fd8'
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzAxYTBiNWFiLTE2YTUtNzEw
+        ZS1iNDlkLWUxMmFhYWVmMTNkNy8ifQ==
+  recorded_at: Fri, 18 Sep 2026 17:58:03 GMT
+- request:
+    method: get
+    uri: https://localhost.localdomain/pulp/api/v3/tasks/01a0b5ab-16a5-710e-b49d-e12aaaef13d7/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.118.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 Sep 2026 17:58:03 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '927'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Correlation-Id:
+      - 07e4262a39ce4702be696ff3434b396e
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMDFhMGI1YWItMTZh
+        NS03MTBlLWI0OWQtZTEyYWFhZWYxM2Q3LyIsInBybiI6InBybjpjb3JlLnRh
+        c2s6MDFhMGI1YWItMTZhNS03MTBlLWI0OWQtZTEyYWFhZWYxM2Q3IiwicHVs
+        cF9jcmVhdGVkIjoiMjAyNi0wOS0xOFQxNzo1ODowMy42ODc5NjhaIiwicHVs
+        cF9sYXN0X3VwZGF0ZWQiOiIyMDI2LTA5LTE4VDE3OjU4OjAzLjY4NjE5OFoi
+        LCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUiOiJwdWxwY29yZS5hcHAudGFz
+        a3MuYmFzZS5hZ2VuZXJhbF9kZWxldGUiLCJsb2dnaW5nX2NpZCI6IjA4ZDk5
+        ODczNzY2ZTQ1ZjE5YThkYzI4MTk2NTYyZmQ4IiwiY3JlYXRlZF9ieSI6Ii9w
+        dWxwL2FwaS92My91c2Vycy8xLyIsInVuYmxvY2tlZF9hdCI6IjIwMjYtMDkt
+        MThUMTc6NTg6MDMuNzA2Nzc2WiIsInN0YXJ0ZWRfYXQiOiIyMDI2LTA5LTE4
+        VDE3OjU4OjAzLjc0NTAyMVoiLCJmaW5pc2hlZF9hdCI6IjIwMjYtMDktMThU
+        MTc6NTg6MDMuNzg4MTI5WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOm51bGws
+        InBhcmVudF90YXNrIjpudWxsLCJjaGlsZF90YXNrcyI6W10sInRhc2tfZ3Jv
+        dXAiOm51bGwsInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291
+        cmNlcyI6W10sImNyZWF0ZWRfcmVzb3VyY2VfcHJucyI6W10sInJlc2VydmVk
+        X3Jlc291cmNlc19yZWNvcmQiOlsicHJuOnJwbS5ycG1yZW1vdGU6MDFhMGI1
+        YWItMGE0Ny03ZjgxLThlNmMtYTRlMjczOGI0ZDE0Iiwic2hhcmVkOnBybjpj
+        b3JlLmRvbWFpbjpkOWY3YzBlNi1kMDJkLTQyMDgtOTVlOC05ZTUxZjQ2ZTVi
+        MGQiXSwicmVzdWx0Ijp7ImNvcmUuUmVtb3RlIjoxLCJjb3JlLlVzZXJSb2xl
+        IjoxLCJycG0uUnBtUmVtb3RlIjoxLCJjb3JlLlJlbW90ZUFydGlmYWN0Ijo3
+        MH0sInB1bHBfYXBpX3ZlcnNpb24iOiJ2MyJ9
+  recorded_at: Fri, 18 Sep 2026 17:58:03 GMT
 recorded_with: VCR 6.4.0
