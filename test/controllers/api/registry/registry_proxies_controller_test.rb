@@ -259,6 +259,25 @@ module Katello
         assert_response 200
       end
 
+      it "token - smart-proxy certificate authentication is not used for the token action" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+        @docker_repo.environment.registry_unauthenticated_pull = false
+        @docker_repo.environment.save!
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        # registry_authorize (and therefore auth_smart_proxy/smart-proxy certificate
+        # detection) is excluded from the :token action's before_action chain, so a
+        # smart proxy must never be detected here; only the pre-existing
+        # ssl_client_authorized?/bearer-token flow applies.
+        @controller.expects(:auth_smart_proxy).never
+        get :token, params: { scope: "repository:#{@docker_repo.container_repository_name}:pull" }
+        assert_response 401
+      end
+
       it "token - do not allow unauthenticated push" do
         @docker_repo.set_container_repository_name
         @docker_repo.save!
@@ -1632,5 +1651,269 @@ module Katello
       end
     end
     #rubocop:enable Metrics/BlockLength
+
+    describe "smart-proxy container registry authentication" do
+      def setup_smart_proxy(hostname, organizations: [@organization])
+        proxy = FactoryBot.create(:smart_proxy, :url => "https://#{hostname}:9090", :container_registry_auth_enabled => true)
+        proxy.organizations = organizations
+        proxy
+      end
+
+      # Simulates a successful Foreman::Controller::SmartProxyAuth#auth_smart_proxy
+      # call: real auth_smart_proxy sets @detected_proxy on success, which our
+      # controller relies on to scope repository access to the proxy's organizations.
+      def stub_detected_proxy(proxy)
+        @controller.define_singleton_method(:auth_smart_proxy) do |*_args|
+          instance_variable_set(:@detected_proxy, proxy)
+          true
+        end
+      end
+
+      it "allows pull via smart-proxy SSL cert with container_registry_auth_enabled" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        proxy = setup_smart_proxy('proxy.example.com')
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        manifest = '{"mediaType":"MEDIATYPE"}'
+        manifest.stubs(:headers).returns({docker_content_digest: @digest, content_length: @length, content_type: 'MEDIATYPE'})
+        Resources::Registry::Proxy.stubs(:get).returns(manifest)
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
+
+        stub_detected_proxy(proxy)
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: @tag.name }
+        assert_response 200
+      ensure
+        proxy&.destroy
+      end
+
+      it "rejects SSL cert whose hosts do not match any smart-proxy" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        @controller.stubs(:auth_smart_proxy).returns(false)
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        assert_response 401
+      end
+
+      it "rejects a matching smart-proxy whose SSL client certificate does not authenticate" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        # container_registry_auth_enabled is true, but auth_smart_proxy runs for
+        # real (not stubbed) and fails because the test request carries no matching
+        # SSL_CLIENT_VERIFY/SSL_CLIENT_S_DN headers, so step 1 (authentication)
+        # never succeeds and the container_registry_auth_enabled flag is never checked.
+        proxy = setup_smart_proxy('proxy.unmatched.example.com')
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        assert_response 401
+      ensure
+        proxy&.destroy
+      end
+
+      it "rejects a proxy that authenticates but has not enabled container registry auth" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        proxy = FactoryBot.create(:smart_proxy, :url => "https://proxy.disabled.example.com:9090", :container_registry_auth_enabled => false)
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        # Step 1 (authentication) succeeds: simulate the SSL client cert matching
+        # this proxy. Step 2 (authorization) must still reject it because
+        # container_registry_auth_enabled is false.
+        stub_detected_proxy(proxy)
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        assert_response 401
+        # Confirm step 1 (authentication) actually succeeded, so this 401 is proof
+        # that step 2 (the container_registry_auth_enabled check) is what rejected
+        # the request, not a false pass caused by authentication silently failing.
+        assert_equal proxy, @controller.instance_variable_get(:@detected_proxy)
+        refute @controller.send(:container_registry_smart_proxy_authenticated?)
+      ensure
+        proxy&.destroy
+      end
+
+      it "rejects request when auth_smart_proxy returns false" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        proxy = setup_smart_proxy('proxy.example.com')
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        @controller.stubs(:auth_smart_proxy).returns(false)
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        assert_response 401
+      ensure
+        proxy&.destroy
+      end
+
+      it "rejects a detected smart-proxy that is not assigned to the repository's organization" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+
+        other_org = FactoryBot.create(:katello_organization)
+        proxy = setup_smart_proxy('proxy.otherorg.example.com', organizations: [other_org])
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        stub_detected_proxy(proxy)
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: 'latest' }
+        # Repository access is scoped to the detected proxy's organizations, so a
+        # proxy authenticated for a different organization must not see it.
+        assert_response 404
+      ensure
+        proxy&.destroy
+        other_org&.destroy
+      end
+
+      it "rejects a cross-organization push even though the smart proxy authenticates" do
+        other_org = FactoryBot.create(:katello_organization)
+        proxy = setup_smart_proxy('proxy.pushcross.example.com', organizations: [other_org])
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        # The proxy authenticates (its cert matches) and has container registry auth
+        # enabled, but it is only assigned to other_org, not @organization (the
+        # target of this push). Push actions resolve @organization/@product
+        # directly from the URL and never go through authorize_smart_proxy_repository,
+        # so without an explicit org-scope check here a smart proxy authorized for
+        # one organization could push into (and auto-create repositories in) any
+        # other organization's product.
+        stub_detected_proxy(proxy)
+        @controller.expects(:create_container_repo_if_needed).never
+        Resources::Registry::Proxy.expects(:post).never
+
+        repo_name = "#{@organization.label.downcase}/#{@docker_repo.product.label.downcase}/newpush"
+        post :start_upload_blob, params: { repository: repo_name }
+        assert_response 404
+        # check_blob_push_org_label/check_blob_push_product_label would also
+        # render a 404 if the org/product were missing, so assert on the exact
+        # message to confirm authorize_smart_proxy_push_organization (not an
+        # earlier check) is what rejected this request.
+        body = JSON.parse(response.body)
+        assert_equal "#{@organization.label} was not found!", body['errors'].first['message']
+      ensure
+        proxy&.destroy
+        other_org&.destroy
+      end
+
+      it "allows a same-organization push when a smart proxy authenticates" do
+        proxy = setup_smart_proxy('proxy.samorg.example.com', organizations: [@organization])
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        # The proxy authenticates and has container registry auth enabled, and is
+        # assigned to @organization, the target of this push, so
+        # authorize_smart_proxy_push_organization must let the request through to
+        # create_container_repo_if_needed and on to Pulp.
+        stub_detected_proxy(proxy)
+        @controller.expects(:create_container_repo_if_needed).returns(true)
+        @controller.stubs(:save_push_repo_hrefs).returns(true)
+        pulp_response = mock('pulp_response')
+        pulp_response.stubs(:code).returns(202)
+        pulp_response.stubs(:headers).returns({})
+        Resources::Registry::Proxy.stubs(:post).returns(pulp_response)
+
+        repo_name = "#{@organization.label.downcase}/#{@docker_repo.product.label.downcase}/newpush"
+        post :start_upload_blob, params: { repository: repo_name }
+        assert_response 202
+      ensure
+        proxy&.destroy
+      end
+
+      it "does not affect a normal user push when no smart proxy is involved" do
+        setup_controller_defaults_api
+
+        # No smart proxy is authenticated (no matching SSL client cert), so
+        # authorize_smart_proxy_push_organization must be a pure pass-through;
+        # the normal user's own permissions remain the only gate.
+        @controller.expects(:create_container_repo_if_needed).returns(true)
+        @controller.stubs(:save_push_repo_hrefs).returns(true)
+        pulp_response = mock('pulp_response')
+        pulp_response.stubs(:code).returns(202)
+        pulp_response.stubs(:headers).returns({})
+        Resources::Registry::Proxy.stubs(:post).returns(pulp_response)
+
+        repo_name = "#{@organization.label.downcase}/#{@docker_repo.product.label.downcase}/newpush"
+        post :start_upload_blob, params: { repository: repo_name }
+        assert_response 202
+      end
+
+      it "does not affect a normal authenticated user request when no smart proxy is involved" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+        @docker_repo.environment.registry_unauthenticated_pull = false
+        @docker_repo.environment.save!
+
+        # A regular logged-in user, no SSL client cert at all: auth_smart_proxy runs
+        # for real (not stubbed), matches no proxy, so container_registry_smart_proxy_authenticated?
+        # is false and authorize_smart_proxy_repository must be a pure pass-through.
+        setup_controller_defaults_api
+
+        manifest = '{"mediaType":"MEDIATYPE"}'
+        manifest.stubs(:headers).returns({docker_content_digest: @digest, content_length: @length, content_type: 'MEDIATYPE'})
+        Resources::Registry::Proxy.stubs(:get).returns(manifest)
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
+
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: @tag.name }
+        assert_response 200
+      end
+
+      it "does not affect the existing org-level SSL client certificate pull path" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+        @docker_repo.environment.registry_unauthenticated_pull = false
+        @docker_repo.environment.save!
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        # This is the pre-existing org-level client cert mechanism (ssl_client_authorized?),
+        # unrelated to smart proxies. It carries SSL_CLIENT_VERIFY/SSL_CLIENT_S_DN headers
+        # too, so it must not be mistaken for a smart-proxy certificate: no smart proxy
+        # exists that would match, so container_registry_smart_proxy_authenticated? is false.
+        request.headers.merge!(HTTP_SSL_CLIENT_VERIFY: 'SUCCESS', HTTP_SSL_CLIENT_S_DN: "O=#{@docker_repo.organization.label}")
+
+        manifest = '{"mediaType":"MEDIATYPE"}'
+        manifest.stubs(:headers).returns({docker_content_digest: @digest, content_length: @length, content_type: 'MEDIATYPE'})
+        Resources::Registry::Proxy.stubs(:get).returns(manifest)
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
+
+        get :pull_manifest, params: { repository: @docker_repo.container_repository_name, tag: @tag.name }
+        assert_response 200
+      end
+    end
   end
 end
