@@ -93,7 +93,7 @@ module Katello
       def validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden: false)
         return if hosts.empty?
 
-        hosts = hosts.where(organization_id: [organization.id, nil])
+        hosts = hosts.where(organization_id: [organization.id, nil]).to_a
         hosts_size = hosts.size
 
         if hosts_size == 0 # not in the correct org
@@ -120,7 +120,7 @@ module Katello
           end
         end
 
-        hosts = hosts.where.not(name: host_name)
+        hosts = hosts.reject { |other_host| other_host.name == host_name }
         registration_error("The DMI UUID of this host (%{uuid}) matches other registered hosts: %{existing}", uuid: host_uuid, existing: joined_hostnames(hosts))
       end
 
@@ -275,10 +275,9 @@ module Katello
       def set_host_collections(host, activation_keys)
         host_collection_ids = activation_keys.flat_map(&:host_collection_ids).compact.uniq
 
-        host_collection_ids.each do |host_collection_id|
-          host_collection = ::Katello::HostCollection.find(host_collection_id)
+        ::Katello::HostCollection.find(host_collection_ids).each do |host_collection|
           if !host_collection.unlimited_hosts && host_collection.max_hosts >= 0 &&
-             host_collection.hosts.length >= host_collection.max_hosts
+             host_collection.hosts.count >= host_collection.max_hosts
             fail _("Host collection '%{name}' exceeds maximum usage limit of '%{limit}'") %
                      {:limit => host_collection.max_hosts, :name => host_collection.name}
           end
