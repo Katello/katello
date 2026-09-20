@@ -218,8 +218,6 @@ module Katello
     def consumer_create
       host, consumer_data = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environments)
 
-      host.reload
-
       update_host_registered_through(host, request.headers)
 
       render :json => consumer_data
@@ -412,9 +410,10 @@ module Katello
 
       if (ak_names = params[:activation_keys])
         fail HttpErrors::NotFound, _("Organization not found") if organization.nil?
-        ak_names        = ak_names.split(",").uniq.compact
+        ak_names = ak_names.split(",").uniq.compact
+        activation_keys_by_name = organization.activation_keys.where(:name => ak_names).index_by(&:name)
         activation_keys = ak_names.map do |ak_name|
-          activation_key = organization.activation_keys.find_by(:name => ak_name)
+          activation_key = activation_keys_by_name[ak_name]
           fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
 
           if activation_key.multi_content_view_environment? && !Setting['allow_multiple_content_views']
