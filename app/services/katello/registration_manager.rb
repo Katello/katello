@@ -41,15 +41,12 @@ module Katello
 
         organization = validate_content_view_environment_org(content_view_environments, activation_keys.first)
 
-        hosts = find_existing_hosts(host_name, host_uuid)
-
-        validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden: host_uuid_overridden)
-
-        host = hosts.first || new_host_from_facts(
-          rhsm_params[:facts],
-          organization,
-          Location.default_host_subscribe_location!
-        )
+        host = existing_host_for_registration(host_name, host_uuid, organization, host_uuid_overridden: host_uuid_overridden) ||
+               new_host_from_facts(
+                 rhsm_params[:facts],
+                 organization,
+                 Location.default_host_subscribe_location!
+               )
         host.organization = organization unless host.organization
 
         consumer_data = register_host(host, rhsm_params, content_view_environments, activation_keys)
@@ -98,38 +95,42 @@ module Katello
         orgs.first
       end
 
-      def validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden: false)
-        return if hosts.empty?
+      # The existing host this registration continues, or nil when it is a new one.
+      # Raises when an existing host cannot be reused for this registration.
+      def existing_host_for_registration(host_name, host_uuid, organization, host_uuid_overridden: false)
+        candidates = find_existing_hosts(host_name, host_uuid)
+        in_organization = candidates.where(:organization_id => [organization.id, nil])
+        # This decides between a new host, one to reuse, and a collision. Two rows
+        # separate "exactly one" from "many" without a COUNT per registration or
+        # loading every match.
+        hosts = in_organization.limit(2).to_a
 
-        hosts = hosts.where(organization_id: [organization.id, nil])
-        hosts_size = hosts.size
-
-        if hosts_size == 0 # not in the correct org
-          #TODO: http://projects.theforeman.org/issues/11532
-          registration_error("Host with name %{host_name} is currently registered to a different org, please migrate host to %{org_name}.",
-                             org_name: organization.name, host_name: host_name)
-        end
-
-        if hosts_size == 1
-          host = hosts.first
-
-          if host.name == host_name
-            if !host.build && Setting[:host_re_register_build_only]
-              registration_error("Host with name %{host_name} is currently registered but not in build mode (host_re_register_build_only==True). Unregister the host manually or put it into build mode to continue.", host_name: host_name)
-            end
-
-            current_dmi_uuid = host.subscription_facet&.dmi_uuid
-            dmi_uuid_changed = current_dmi_uuid && current_dmi_uuid != host_uuid
-            if dmi_uuid_changed && !dmi_uuid_change_allowed?(host, host_uuid_overridden)
-              registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
-            end
-
-            return true
+        if hosts.empty?
+          if candidates.exists?
+            #TODO: http://projects.theforeman.org/issues/11532
+            registration_error("Host with name %{host_name} is currently registered to a different org, please migrate host to %{org_name}.",
+                               org_name: organization.name, host_name: host_name)
           end
+          return
         end
 
-        hosts = hosts.where.not(name: host_name)
-        registration_error("The DMI UUID of this host (%{uuid}) matches other registered hosts: %{existing}", uuid: host_uuid, existing: joined_hostnames(hosts))
+        if hosts.size == 1 && hosts.first.name == host_name
+          host = hosts.first
+          if !host.build && Setting[:host_re_register_build_only]
+            registration_error("Host with name %{host_name} is currently registered but not in build mode (host_re_register_build_only==True). Unregister the host manually or put it into build mode to continue.", host_name: host_name)
+          end
+
+          current_dmi_uuid = host.subscription_facet&.dmi_uuid
+          dmi_uuid_changed = current_dmi_uuid && current_dmi_uuid != host_uuid
+          if dmi_uuid_changed && !dmi_uuid_change_allowed?(host, host_uuid_overridden)
+            registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
+          end
+
+          return host
+        end
+
+        other_hosts = in_organization.where.not(:name => host_name)
+        registration_error("The DMI UUID of this host (%{uuid}) matches other registered hosts: %{existing}", uuid: host_uuid, existing: joined_hostnames(other_hosts))
       end
 
       def registration_error(message, meta = {})
@@ -283,15 +284,17 @@ module Katello
       def set_host_collections(host, activation_keys)
         host_collection_ids = activation_keys.flat_map(&:host_collection_ids).compact.uniq
 
-        host_collection_ids.each do |host_collection_id|
-          host_collection = ::Katello::HostCollection.find(host_collection_id)
+        host_collections = ::Katello::HostCollection.find(host_collection_ids)
+        host_collections.each do |host_collection|
           if !host_collection.unlimited_hosts && host_collection.max_hosts >= 0 &&
-             host_collection.hosts.length >= host_collection.max_hosts
+             host_collection.hosts.count >= host_collection.max_hosts &&
+             # a host already in the collection is counted in the limit, and re-registering adds no membership
+             !(host.persisted? && host.host_collection_ids.include?(host_collection.id))
             fail _("Host collection '%{name}' exceeds maximum usage limit of '%{limit}'") %
                      {:limit => host_collection.max_hosts, :name => host_collection.name}
           end
         end
-        host.host_collection_ids = host_collection_ids
+        host.host_collections = host_collections
       end
 
       def lookup_content_view_environments(activation_keys)
