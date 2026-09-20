@@ -42,19 +42,21 @@ module Katello
           @host = FactoryBot.create(:host, :with_subscription, organization: @org)
         end
 
-        let(:hosts) { ::Host.where(id: [@host.id]) }
-
         def test_different_org
           org2 = taxonomies(:organization2)
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, org2, nil, nil, host_uuid_overridden: nil) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.existing_host_for_registration(@host.name, nil, org2, host_uuid_overridden: nil) }
 
           assert_match(/different org/, error.message)
         end
 
         def test_multiple_hosts
-          assert ::Host.all.size > 1
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(::Host.all, @org, nil, nil, host_uuid_overridden: nil) }
+          dmi_uuid = 'shared_system_uuid'
+          @host.subscription_facet.update(dmi_uuid: dmi_uuid)
+          other = FactoryBot.create(:host, :with_subscription, organization: @org)
+          other.subscription_facet.update(dmi_uuid: dmi_uuid)
+
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.existing_host_for_registration(@host.name, dmi_uuid, @org, host_uuid_overridden: nil) }
           assert_match(/matches other registered/, error.message)
         end
 
@@ -62,7 +64,7 @@ module Katello
           existing_uuid = 'existing_system_uuid'
           @host.subscription_facet.update(dmi_uuid: existing_uuid)
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, 'new_host_name', existing_uuid, host_uuid_overridden: existing_uuid) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.existing_host_for_registration('new_host_name', existing_uuid, @org, host_uuid_overridden: existing_uuid) }
           assert_match(/matches other registered/, error.message)
         end
 
@@ -70,14 +72,14 @@ module Katello
           @host.subscription_facet.update(dmi_uuid: 'existing_system_uuid')
           Setting[:host_profile_assume] = false
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid', host_uuid_overridden: false) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.existing_host_for_registration(@host.name, 'different-uuid', @org, host_uuid_overridden: false) }
           assert_match(/DMI UUID that differs/, error.message)
 
           # if a registering client is matched by hostname to an existing profile
           # but its UUID has changed *and* is still unique, allow the registration when enabled
           Setting[:host_profile_assume] = true
 
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
+          assert @klass.existing_host_for_registration(@host.name, 'different-uuid', @org)
         end
 
         def test_host_profile_assume_build_mode_only_not_in_build
@@ -85,7 +87,7 @@ module Katello
           Setting[:host_profile_assume] = false
           Setting[:host_profile_assume_build_can_change] = true
           refute @host.build
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid', host_uuid_overridden: false) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.existing_host_for_registration(@host.name, 'different-uuid', @org, host_uuid_overridden: false) }
           assert_match(/DMI UUID that differs/, error.message)
         end
 
@@ -97,7 +99,7 @@ module Katello
           # if a registering client is matched by hostname to an existing profile
           # but its UUID has changed *and* is still unique, also it is in build mode
           # then allow the registration when enabled
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid', host_uuid_overridden: true)
+          assert @klass.existing_host_for_registration(@host.name, 'different-uuid', @org, host_uuid_overridden: true)
         end
 
         def test_re_register_build_mode
@@ -106,24 +108,36 @@ module Katello
           refute @host.build
           Setting[:host_re_register_build_only] = true
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, @host.uuid, host_uuid_overridden: nil) }
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.existing_host_for_registration(@host.name, @host.uuid, @org, host_uuid_overridden: nil) }
           assert_match(/currently registered/, error.message)
 
           @host.update(build: true)
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'existing_system_uuid', host_uuid_overridden: true)
+          assert @klass.existing_host_for_registration(@host.name, 'existing_system_uuid', @org, host_uuid_overridden: true)
+        end
+
+        def test_resolves_the_host_in_the_registering_organization
+          dmi_uuid = 'shared_across_orgs'
+          org2 = taxonomies(:organization2)
+          foreign = FactoryBot.create(:host, :with_subscription, organization: org2)
+          foreign.subscription_facet.update(dmi_uuid: dmi_uuid)
+          local = FactoryBot.create(:host, :with_subscription, organization: @org)
+          local.subscription_facet.update(dmi_uuid: dmi_uuid)
+
+          # both match the dmi_uuid, only one matches the name and the organization
+          assert_equal local, @klass.existing_host_for_registration(local.name, dmi_uuid, @org, host_uuid_overridden: true)
         end
 
         def test_existing_uuid_and_name
           @host.subscription_facet.update(dmi_uuid: 'host3-uuid')
 
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'host3-uuid')
+          assert @klass.existing_host_for_registration(@host.name, 'host3-uuid', @org)
         end
 
         def test_build_matching_hostname_new_uuid
           @host = FactoryBot.create(:host, :with_subscription, :managed, organization: @org, build: true)
           @host.subscription_facet.update(dmi_uuid: SecureRandom.uuid)
 
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid', host_uuid_overridden: true)
+          assert @klass.existing_host_for_registration(@host.name, 'different-uuid', @org, host_uuid_overridden: true)
         end
 
         def test_existing_host_null_uuid
@@ -131,7 +145,7 @@ module Katello
           # and *then* registers to it with subscription-manager
           assert_empty @host.fact_values
 
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid', host_uuid_overridden: true)
+          assert @klass.existing_host_for_registration(@host.name, 'different-uuid', @org, host_uuid_overridden: true)
         end
       end
 
@@ -301,6 +315,31 @@ module Katello
         end
 
         refute_includes new_host.host_collections, @host_collection
+      end
+
+      def test_re_registering_host_already_in_full_host_collection # rubocop:disable Metrics/AbcSize
+        ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+        @activation_key.host_collections << @one_host_limit_host_collection
+        existing_host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+                                          :lifecycle_environment => @library, :organization => @content_view.organization)
+        @one_host_limit_host_collection.hosts << existing_host
+        assert_equal 1, @one_host_limit_host_collection.hosts.count
+        assert_equal 1, @one_host_limit_host_collection.max_hosts
+
+        ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
+        ::Katello::Resources::Candlepin::Consumer.expects(:create)
+          .with([@content_view_environment.cp_id], rhsm_params, ["cp_name_baz"], @content_view.organization)
+          .returns('uuid' => 'fake-uuid-from-katello')
+        Katello::ActivationKey.any_instance.stubs(:cp_name).returns('cp_name_baz')
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+
+        ::Katello::RegistrationManager.register_host(existing_host, rhsm_params, [@content_view_environment], [@activation_key])
+
+        assert_equal 'fake-uuid-from-katello', existing_host.subscription_facet.uuid
+        assert_includes existing_host.host_collections, @one_host_limit_host_collection
       end
 
       def test_lookup_content_view_environments_raises_without_cvenvs
