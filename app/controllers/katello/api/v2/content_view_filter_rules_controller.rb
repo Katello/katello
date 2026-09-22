@@ -1,7 +1,8 @@
 module Katello
   class Api::V2::ContentViewFilterRulesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
-    before_action :find_filter
+    before_action :find_filter, :except => [:create, :update, :destroy]
+    before_action :find_editable_filter, :only => [:create, :update, :destroy]
     before_action :find_rule, :except => [:index, :create, :auto_complete_search]
 
     api :GET, "/content_view_filters/:content_view_filter_id/rules", N_("List filter rules")
@@ -10,7 +11,7 @@ module Katello
     param :errata_id, String, :desc => N_("errata_id of the content view filter rule"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      respond(collection: scoped_search(index_relation, :id, :asc, resource_class: ContentViewFilter.rule_class_for(@filter)))
+      respond(collection: scoped_search(index_relation, :id, :asc, resource_class: resource_class))
     end
 
     def index_relation
@@ -115,8 +116,17 @@ module Katello
 
     private
 
-    def find_filter
-      @filter = ContentViewFilter.find(params[:content_view_filter_id])
+    def find_filter(editable: false)
+      filter = if editable
+                 ContentViewFilter.editable
+               else
+                 ContentViewFilter.readable
+               end
+      @filter = filter.find(params[:content_view_filter_id])
+    end
+
+    def find_editable_filter
+      find_filter(editable: true)
     end
 
     def find_rule
