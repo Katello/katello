@@ -1,5 +1,10 @@
 module Cert
   module Certs
+    SHA_256_WITH_RSA_SIGNATURE_OID = '1.2.840.113549.1.1.11'.freeze
+    KEY_OID_TO_SIGNATURE_OID = {
+      '1.2.840.113549.1.1.1' => SHA_256_WITH_RSA_SIGNATURE_OID,  # rsaEncryption
+    }.freeze
+
     def self.ueber_cert(organization)
       organization.debug_cert
     end
@@ -49,6 +54,33 @@ module Cert
       algorithm_oid = subject_public_key_info.value.first.value.first
 
       { algorithm_oid.oid => algorithm_oid.ln }
+    end
+
+    # Returns available key algorithms using cert_mapping on the Candlepin CA certificate
+    # and additional supported algorithms
+    def self.available_key_algorithms
+      algorithms = Rails.cache.fetch('katello/available_key_algorithms', expires_in: 5.minutes, race_condition_ttl: 3.seconds, skip_nil: true) do
+        result = []
+
+        # Use cert_mapping on the Candlepin CA certificate to get the current algorithm(s)
+        begin
+          candlepin_cert = File.read(backend_ca_cert_file(:candlepin))
+          mapping = cert_mapping(candlepin_cert)
+
+          mapping.each do |key_oid, key_name|
+            result << {
+              oid: key_oid,
+              name: key_name,
+              signature_oid: KEY_OID_TO_SIGNATURE_OID.fetch(key_oid, key_oid),
+            }
+          end
+          result
+        rescue StandardError => e
+          Rails.logger.warn("Could not read Candlepin certificate: #{e.message}")
+          nil
+        end
+      end
+      algorithms || []
     end
   end
 end
