@@ -4,11 +4,18 @@
 
   <%= text_f f, :label, :disabled => true, :class => 'input-xlarge' %>
   <%= selectable_f(f, :service_level, options_for_select(service_level_options, service_level_selected), {}, :label => _('Default System SLA')) %>
+  <%= textarea_f f, :description, :rows => 5 %>
 
   <%= field(f, _('Debug Certificate'),
-            :help_inline => _('This certificate allows a user to view the repositories in any environment from a browser.')) do
-    button_tag _('Generate and Download'), :id => :download_debug_cert_key,
-               :type => :button, :style => 'margin-top: 8px;', :class => 'btn btn-small',
-               'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
-  end %>
+            :help_inline => _('This certificate allows a user to view the repositories in any environment from a browser.')) do %>
+    <div class="form-group">
+      <%= select_tag :key_algorithm, '<option value="">Loading...</option>'.html_safe,
+                     :class => 'form-control',
+                     :id => 'key_algorithm_select',
+                     'data-algorithms-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/key_algorithms" %>
+    </div>
+    <%= button_tag _('Generate and download'), :id => :download_debug_cert_key,
+               :type => :button, :class => 'btn btn-default',
+               'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate" %>
+  <% end %>
 <% end %>

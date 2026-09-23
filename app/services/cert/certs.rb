@@ -50,5 +50,41 @@ module Cert
 
       { algorithm_oid.oid => algorithm_oid.ln }
     end
+
+    # Returns available key algorithms using cert_mapping on the Candlepin CA certificate
+    # and additional supported algorithms
+    def self.available_key_algorithms
+      algorithms = []
+      sha256_with_rsa_oid = '1.2.840.113549.1.1.11'
+
+      # Use cert_mapping on the Candlepin CA certificate to get the current algorithm
+      begin
+        candlepin_cert = File.read(backend_ca_cert_file(:candlepin))
+        mapping = cert_mapping(candlepin_cert)
+        key_oid = mapping.keys.first
+        key_name = mapping.values.first
+
+        # Determine signature algorithm: use SHA256WithRSA for RSA, same OID for PQC
+        signature_oid = rsa_algorithm?(key_oid) ? sha256_with_rsa_oid : key_oid
+
+        algorithms << {
+          oid: key_oid,
+          name: key_name,
+          signature_oid: signature_oid,
+        }
+      rescue StandardError => e
+        Rails.logger.warn("Could not read Candlepin certificate: #{e.message}")
+      end
+    end
+
+    # Check if an algorithm OID represents an RSA algorithm
+    def self.rsa_algorithm?(oid)
+      rsa_oids = [
+        '1.2.840.113549.1.1.1',  # rsaEncryption
+        '1.2.840.113549.1.1.7',  # id-RSAES-OAEP
+        '1.2.840.113549.1.1.10', # id-RSASSA-PSS
+      ]
+      rsa_oids.include?(oid)
+    end
   end
 end

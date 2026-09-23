@@ -167,6 +167,24 @@ module Katello
       end
     end
 
+    def test_key_algorithms
+      algorithms = [
+        { oid: '1.2.840.113549.1.1.1', name: 'rsaEncryption', signature_oid: '1.2.840.113549.1.1.11' },
+        { oid: '2.16.840.1.101.3.4.3.17', name: 'mldsa44', signature_oid: '2.16.840.1.101.3.4.3.17' },
+      ]
+      Cert::Certs.expects(:available_key_algorithms).returns(algorithms)
+
+      results = JSON.parse(get(:key_algorithms, params: { :id => @organization.id }).body)
+
+      assert_response :success
+      # JSON keys are strings, not symbols
+      expected = [
+        { 'oid' => '1.2.840.113549.1.1.1', 'name' => 'rsaEncryption', 'signature_oid' => '1.2.840.113549.1.1.11' },
+        { 'oid' => '2.16.840.1.101.3.4.3.17', 'name' => 'mldsa44', 'signature_oid' => '2.16.840.1.101.3.4.3.17' },
+      ]
+      assert_equal expected, results['results']
+    end
+
     def test_download_debug_certificate_protected
       allowed_perms = [[@read_permission, @export_permission]]
       denied_perms = [@create_permission, @update_permission, @delete_permission]

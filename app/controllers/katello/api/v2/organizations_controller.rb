@@ -5,7 +5,7 @@ module Katello
     include Api::V2::Rendering
     include ForemanTasks::Triggers
     LOCAL_FIND_TAXONOMY_ACTIONS = %w(repo_discover cancel_repo_discover download_debug_certificate
-                                     cdn_configuration redhat_provider update releases).freeze
+                                     cdn_configuration redhat_provider update releases key_algorithms).freeze
 
     before_action :local_find_taxonomy, :only => LOCAL_FIND_TAXONOMY_ACTIONS
 
@@ -145,6 +145,13 @@ module Katello
                 :type => "application/text"
     end
 
+    api :GET, "/organizations/:id/key_algorithms", N_("List available key algorithms for debug certificates")
+    param :id, String, :desc => N_("Organization ID or title")
+    def key_algorithms
+      algorithms = Cert::Certs.available_key_algorithms
+      render :json => { :results => algorithms }
+    end
+
     api :GET, "/organizations/:id/releases", N_("List available releases in the organization")
     param :id, String, :desc => N_("ID of the Organization"), :required => true
     def releases
@@ -192,7 +199,7 @@ module Katello
     end
 
     def action_permission
-      if params[:action] == "releases"
+      if %w(releases key_algorithms).include?(params[:action])
         :view
       elsif params[:action] == "download_debug_certificate" && organization_export_content_permission?
         :view
