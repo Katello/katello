@@ -16,7 +16,6 @@ const MultiCVEnvForm = ({
   contentSourceId,
   assignmentCount,
   onAssignmentsChange,
-  allowMultipleContentViews,
   isLoading,
 }) => {
   // Fetch environment paths filtered by content source
@@ -26,20 +25,18 @@ const MultiCVEnvForm = ({
   useAPI('get', api.getApiUrl(pathsUrl), ENV_PATH_OPTIONS);
 
   const renderAddButton = (addNewAssignment, canAddAnother) => (
-    allowMultipleContentViews && (
-      <>
-        <hr style={{ margin: '1rem 0' }} />
-        <Button
-          variant="link"
-          icon={<PlusCircleIcon />}
-          onClick={addNewAssignment}
-          isDisabled={!canAddAnother || isLoading}
-          ouiaId="add-cvenv-button"
-        >
-          {__('Add content view environment')}
-        </Button>
-      </>
-    )
+    <>
+      <hr style={{ margin: '1rem 0' }} />
+      <Button
+        variant="link"
+        icon={<PlusCircleIcon />}
+        onClick={addNewAssignment}
+        isDisabled={!canAddAnother || isLoading}
+        ouiaId="add-cvenv-button"
+      >
+        {__('Add content view environment')}
+      </Button>
+    </>
   );
 
   return (
@@ -60,7 +57,6 @@ const MultiCVEnvForm = ({
         isOpen
         assignmentStatus={isLoading ? STATUS.PENDING : undefined}
         onAssignmentsChange={onAssignmentsChange}
-        allowMultipleContentViews={allowMultipleContentViews}
         renderAddButton={renderAddButton}
         organizationId={organizationId}
         contentSourceId={contentSourceId}
@@ -75,7 +71,6 @@ MultiCVEnvForm.propTypes = {
   contentSourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   assignmentCount: PropTypes.number,
   onAssignmentsChange: PropTypes.func.isRequired,
-  allowMultipleContentViews: PropTypes.bool,
   isLoading: PropTypes.bool,
 };
 
@@ -83,7 +78,6 @@ MultiCVEnvForm.defaultProps = {
   organizationId: null,
   contentSourceId: null,
   assignmentCount: 0,
-  allowMultipleContentViews: false,
   isLoading: false,
 };
 

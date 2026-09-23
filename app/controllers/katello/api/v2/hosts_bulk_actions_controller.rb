@@ -145,10 +145,8 @@ module Katello
     param_group :bulk_params
     param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels to be associated with the hosts, " \
                                                           "in the format of 'lifecycle_environment_label/content_view_label'. " \
-                                                          "Ignored if content_view_environment_ids is specified. " \
-                                                          "Requires allow_multiple_content_views setting to be on.")
-    param :content_view_environment_ids, Array, :desc => N_("Array of content view environment IDs to be associated with the hosts. " \
-                                                             "Requires allow_multiple_content_views setting to be on.")
+                                                          "Ignored if content_view_environment_ids is specified.")
+    param :content_view_environment_ids, Array, :desc => N_("Array of content view environment IDs to be associated with the hosts.")
     def assign_content_view_environments
       # Filter to only hosts with content facets (registered with subscription-manager)
       registered_hosts = @hosts.select(&:content_facet)

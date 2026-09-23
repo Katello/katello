@@ -94,10 +94,6 @@ module Katello
 
     def content_view_environments=(new_cvenvs)
       new_cvenvs = Array(new_cvenvs).uniq(&:id)
-      if new_cvenvs.length > 1 && !Setting['allow_multiple_content_views']
-        fail ::Katello::Errors::MultiEnvironmentNotSupportedError,
-        _("Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.")
-      end
       super(new_cvenvs)
       Katello::ContentViewEnvironmentActivationKey.reprioritize_for_activation_key(self, new_cvenvs)
       self.content_view_environments.reload unless self.new_record?

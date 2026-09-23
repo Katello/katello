@@ -6,7 +6,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import { openBulkModal } from 'foremanReact/common/BulkModalStateHelper';
 import { ForemanHostsIndexActionsBarContext } from 'foremanReact/components/HostsIndex';
-import { useForemanOrganization, useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
+import { useForemanOrganization } from 'foremanReact/Root/Context/ForemanContext';
 import './ActionsBar.scss';
 
 
@@ -34,9 +34,6 @@ const HostActionsBar = () => {
   } = useContext(ForemanHostsIndexActionsBarContext);
 
   const orgId = useForemanOrganization()?.id;
-  const foremanContext = useForemanContext();
-  const allowMultipleContentViews =
-    foremanContext?.metadata?.katello?.allow_multiple_content_views ?? true;
 
   let href = '';
   if (selectAllMode) {
@@ -102,7 +99,7 @@ const HostActionsBar = () => {
                   isDisabled={selectedCount === 0 || !orgId}
                   description={!orgId && <DisabledMenuItemDescription disabledReason={__('To assign content view environment(s), a specific organization must be selected from the organization context.')} />}
                 >
-                  {allowMultipleContentViews ? __('Content view environments') : __('Content view environment')}
+                  {__('Content view environments')}
                 </MenuItem>
                 <MenuItem
                   itemId="bulk-system-purpose-dropdown-item"

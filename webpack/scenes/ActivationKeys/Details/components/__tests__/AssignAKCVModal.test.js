@@ -77,43 +77,6 @@ describe('AssignAKCVModal', () => {
     }
   });
 
-  test('Renders modal with correct title and description when allowMultipleContentViews is true', async () => {
-    const { getByText } = renderWithRedux(
-      <AssignAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        akId={1}
-        orgId={1}
-        allowMultipleContentViews
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('Assign content view environments')).toBeInTheDocument();
-      expect(getByText(/You can assign multiple content view environments/)).toBeInTheDocument();
-    });
-  });
-
-  test('Renders modal without multiple assignment text when allowMultipleContentViews is false', async () => {
-    const { getByText, queryByText } = renderWithRedux(
-      <AssignAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        akId={1}
-        orgId={1}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('Assign content view environments')).toBeInTheDocument();
-      expect(getByText(/A content view environment is a combination of a particular lifecycle environment and content view\./)).toBeInTheDocument();
-      expect(queryByText(/You can assign multiple content view environments/)).not.toBeInTheDocument();
-    });
-  });
-
   test('Starts with one empty assignment when no existing assignments', async () => {
     const { getByText } = renderWithRedux(
       <AssignAKCVModal
@@ -121,7 +84,6 @@ describe('AssignAKCVModal', () => {
         closeModal={jest.fn()}
         akId={1}
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -131,14 +93,13 @@ describe('AssignAKCVModal', () => {
     });
   });
 
-  test('Add another content view button exists when allowMultipleContentViews is true', async () => {
+  test('Add another content view button exists', async () => {
     const { getByText } = renderWithRedux(
       <AssignAKCVModal
         isOpen
         closeModal={jest.fn()}
         akId={1}
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -148,40 +109,6 @@ describe('AssignAKCVModal', () => {
     });
   });
 
-  test('Add another content view button is disabled when allowMultipleContentViews is false', async () => {
-    const { getByText } = renderWithRedux(
-      <AssignAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        akId={1}
-        orgId={1}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      const addButton = getByText('Assign another content view environment').closest('button');
-      expect(addButton).toHaveAttribute('aria-disabled', 'true');
-    });
-  });
-
-  test('Displays remove button when allowMultipleContentViews is true', async () => {
-    const { getAllByRole } = renderWithRedux(
-      <AssignAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        akId={1}
-        orgId={1}
-        allowMultipleContentViews
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(1);
-    });
-  });
 
   test('Displays remove button even with single assignment (activation keys allow zero assignments)', async () => {
     const { getAllByRole } = renderWithRedux(
@@ -190,7 +117,6 @@ describe('AssignAKCVModal', () => {
         closeModal={jest.fn()}
         akId={1}
         orgId={1}
-        allowMultipleContentViews={false}
       />,
       renderOptions(),
     );
@@ -201,136 +127,7 @@ describe('AssignAKCVModal', () => {
     });
   });
 
-  test('Displays remove buttons with multiple assignments even when allowMultipleContentViews is false', async () => {
-    const existingAssignments = [
-      {
-        contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
-        environment: { id: 1, name: 'Library', label: 'Library' },
-        label: 'Library/cv_1',
-      },
-      {
-        contentView: { id: 3, name: 'composite_cv', label: 'composite_cv' },
-        environment: { id: 2, name: 'dev', label: 'dev' },
-        label: 'dev/composite_cv',
-      },
-    ];
-
-    // Mock content views fetch for environment id 2 (dev)
-    nockInstance
-      .get(contentViewsUrl)
-      .query(getCVQuery(2))
-      .reply(200, mockContentViews);
-
-    const { getAllByRole } = renderWithRedux(
-      <AssignAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        akId={1}
-        orgId={1}
-        existingAssignments={existingAssignments}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      // Should show remove buttons so user can reduce to 1 assignment
-      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(2);
-    });
-  });
-
-  test('Save button disabled with multiple assignments when allowMultipleContentViews is false', async () => {
-    const existingAssignments = [
-      {
-        contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
-        environment: { id: 1, name: 'Library', label: 'Library' },
-        label: 'Library/cv_1',
-      },
-      {
-        contentView: { id: 3, name: 'composite_cv', label: 'composite_cv' },
-        environment: { id: 2, name: 'dev', label: 'dev' },
-        label: 'dev/composite_cv',
-      },
-    ];
-
-    // Mock content views fetch for environment id 2 (dev)
-    nockInstance
-      .get(contentViewsUrl)
-      .query(getCVQuery(2))
-      .reply(200, mockContentViews);
-
-    const { getAllByRole } = renderWithRedux(
-      <AssignAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        akId={1}
-        orgId={1}
-        existingAssignments={existingAssignments}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      const saveButton = getAllByRole('button', { name: 'Save' })[0];
-      // Save should be disabled because there are 2 assignments
-      expect(saveButton).toHaveAttribute('aria-disabled', 'true');
-    });
-  });
-
-  test('Save button enabled after removing one assignment when allowMultipleContentViews is false', async () => {
-    const existingAssignments = [
-      {
-        contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
-        environment: { id: 1, name: 'Library', label: 'Library' },
-        label: 'Library/cv_1',
-      },
-      {
-        contentView: { id: 3, name: 'composite_cv', label: 'composite_cv' },
-        environment: { id: 2, name: 'dev', label: 'dev' },
-        label: 'dev/composite_cv',
-      },
-    ];
-
-    // Mock content views fetch for environment id 2 (dev)
-    nockInstance
-      .get(contentViewsUrl)
-      .query(getCVQuery(2))
-      .reply(200, mockContentViews);
-
-    const { getAllByRole, queryByText } = renderWithRedux(
-      <AssignAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        akId={1}
-        orgId={1}
-        existingAssignments={existingAssignments}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    // Initially disabled due to 2 assignments
-    await patientlyWaitFor(() => {
-      const saveButton = getAllByRole('button', { name: 'Save' })[0];
-      expect(saveButton).toHaveAttribute('aria-disabled', 'true');
-    });
-
-    // Remove one assignment
-    const removeButtons = getAllByRole('button', { name: 'Remove' });
-    await act(async () => {
-      userEvent.click(removeButtons[0]);
-    });
-
-    // Now should be enabled with only 1 assignment
-    await patientlyWaitFor(() => {
-      expect(queryByText('cv_1')).not.toBeInTheDocument();
-      const saveButton = getAllByRole('button', { name: 'Save' })[0];
-      expect(saveButton).not.toHaveAttribute('aria-disabled', 'true');
-    });
-  });
-
-  test('Initializes with multiple existing assignments when allowMultipleContentViews is true', async () => {
+  test('Initializes with multiple existing assignments', async () => {
     const existingAssignments = [
       {
         contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
@@ -357,7 +154,6 @@ describe('AssignAKCVModal', () => {
         akId={1}
         orgId={1}
         existingAssignments={existingAssignments}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -370,7 +166,7 @@ describe('AssignAKCVModal', () => {
     });
   });
 
-  test('Can remove an assignment when allowMultipleContentViews is true', async () => {
+  test('Can remove an assignment', async () => {
     const existingAssignments = [
       {
         contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
@@ -397,7 +193,6 @@ describe('AssignAKCVModal', () => {
         akId={1}
         orgId={1}
         existingAssignments={existingAssignments}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -435,7 +230,6 @@ describe('AssignAKCVModal', () => {
         closeModal={jest.fn()}
         akId={1}
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -463,7 +257,6 @@ describe('AssignAKCVModal', () => {
         closeModal={jest.fn()}
         akId={1}
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -482,7 +275,6 @@ describe('AssignAKCVModal', () => {
         closeModal={closeModal}
         akId={1}
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -571,7 +363,6 @@ describe('AssignAKCVModal', () => {
         akId={1}
         orgId={1}
         existingAssignments={existingAssignments}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );

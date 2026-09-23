@@ -380,12 +380,6 @@ Foreman::Plugin.register :katello do
         templates.each_with_object({}) { |tmpl, hash| hash[tmpl.name] = tmpl.name }
       end
 
-      setting 'allow_multiple_content_views',
-        type: :boolean,
-        default: true,
-        full_name: N_('Allow multiple content views'),
-        description: N_("Allow hosts or activation keys to be associated with multiple content view environments")
-
       setting 'content_default_http_proxy',
         type: :string,
         default: nil,
@@ -823,10 +817,4 @@ Foreman::Plugin.register :katello do
   precompile_assets(precompile)
 
   extend_observable_events(::Dynflow::Action.descendants.select { |klass| klass <= ::Actions::ObservableAction }.map(&:namespaced_event_names))
-
-  # Register metadata for ForemanContext (accessible in React via useForemanContext().metadata.katello)
-  ::Foreman::Plugin.app_metadata_registry.register(:katello,
-                                                    {
-                                                      allow_multiple_content_views: -> { Setting[:allow_multiple_content_views] },
-                                                    })
 end
