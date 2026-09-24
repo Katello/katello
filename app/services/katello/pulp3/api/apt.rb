@@ -17,7 +17,7 @@ module Katello
         end
 
         def self.add_remove_content_class
-          PulpDebClient::RepositoryAddRemoveContent
+          PulpDebClient::AptRepositoryAddRemoveContent
         end
 
         def copy_api

@@ -212,13 +212,13 @@ module Katello
         end
 
         def remove_all_content_from_repo(repo_href)
-          data = PulpDebClient::RepositoryAddRemoveContent.new(
+          data = PulpDebClient::AptRepositoryAddRemoveContent.new(
             remove_content_units: ['*'])
           api.repositories_api.modify(repo_href, data)
         end
 
         def remove_all_content
-          data = PulpDebClient::RepositoryAddRemoveContent.new(
+          data = PulpDebClient::AptRepositoryAddRemoveContent.new(
             remove_content_units: ['*'])
           api.repositories_api.modify(repository_reference.repository_href, data)
         end

@@ -16,7 +16,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::FILE_TYPE) do
   distribution_class PulpFileClient::FileFileDistribution
   publication_class PulpFileClient::FileFilePublication
   publications_api_class PulpFileClient::PublicationsFileApi
-  repo_sync_url_class PulpFileClient::RepositorySyncURL
+  repo_sync_url_class PulpFileClient::FileRepositorySyncURL
 
   content_type Katello::FileUnit,
                :pulp3_service_class => ::Katello::Pulp3::FileUnit,

@@ -88,7 +88,7 @@ module Katello
         end
 
         def cancel_task(task_href)
-          data = PulpcoreClient::TaskResponse.new(state: 'canceled')
+          data = PulpcoreClient::PatchedTaskCancel.new(state: 'canceled')
           self.class.ignore_409_exception do
             tasks_api.tasks_cancel(task_href, data)
           end
