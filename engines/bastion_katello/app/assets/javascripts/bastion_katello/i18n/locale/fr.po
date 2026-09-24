@@ -9,13 +9,13 @@
 # Baptiste Agasse <baptiste.agasse@gmail.com>, 2023
 # Bryan Kearney <bryan.kearney@gmail.com>, 2025
 # Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
-# Ondřej Gajdušek, 2026
 # Ian Ballou <ianballou67@gmail.com>, 2026
+# Ondřej Gajdušek, 2026
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: Ian Ballou <ianballou67@gmail.com>, 2026\n"
+"Last-Translator: Ondřej Gajdušek, 2026\n"
 "Language-Team: French (https://app.transifex.com/foreman/teams/114/fr/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,10 +25,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
 msgid "-- select an interval --"
 msgstr "-- sélectionner un intervalle --"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-msgid "{{ contentCredential.name }}"
-msgstr "{{ contentCredential.name }}"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ deb.hosts_applicable_count }} Host(s)"
@@ -496,16 +492,6 @@ msgstr "Environnements de cycle de vie"
 msgid "All Repositories"
 msgstr "Référentiels"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-acs.controller.js
-msgid "Alternate Content Sources"
-msgstr "Autres sources de contenu"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-msgid "Alternate Content Sources for"
-msgstr "Autres sources de contenu pour"
-
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
 msgid "An error occurred initiating the sync:"
 msgstr "Une erreur s'est produite en initiant la synchronisation :"
@@ -561,11 +547,6 @@ msgid "An error occurred updating the sync plan:"
 msgstr ""
 "Une erreur s'est produite lors de la mise à jour du plan de synchronisation "
 ":"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
-msgid "An error occurred while creating the Content Credential:"
-msgstr ""
-"Une erreur s'est produite lors de la création des Identifiants de contenu :"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "An error occurred while creating the Product: %s"
@@ -733,14 +714,6 @@ msgid ""
 msgstr ""
 "Êtes-vous sûr de vouloir retirer la clé d'activation \"{{ activationKey.name"
 " }}\" ?"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-msgid ""
-"Are you sure you want to remove Content Credential {{ contentCredential.name"
-" }}?"
-msgstr ""
-"Êtes-vous sûr de vouloir retirer votre Identifiant de contenu {{ "
-"contentCredential.name }}?"
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
 msgid "Are you sure you want to remove environment {{ environment.name }}?"
@@ -1078,10 +1051,6 @@ msgstr ""
 msgid "Capacity"
 msgstr "Capacité"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/content-type.filter.js
-msgid "Certificate"
-msgstr "Certificat"
-
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
 msgid "Change assigned Lifecycle Environment or Content View"
 msgstr "Changer l'environnement ou la vue du contenu du cycle de vie attribué"
@@ -1225,7 +1194,6 @@ msgstr "Registre d'images de conteneur"
 msgid "Container Image Tags"
 msgstr "Balises d'images de conteneurs"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "Content"
 msgstr "Contenu"
@@ -1233,30 +1201,6 @@ msgstr "Contenu"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Content Counts"
 msgstr "Nombre de contenus"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/content-credentials.controller.js
-msgid "Content Credential"
-msgstr "Identifiants de contenu"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
-msgid "Content Credential %s has been created."
-msgstr "L’identifiant de contenu %s a été créé."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Content Credential Contents *"
-msgstr "Identifiant accréditation Contenu *"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
-msgid "Content Credential successfully uploaded"
-msgstr "Les identifiants de contenu ont été téléchargés"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details.controller.js
-msgid "Content credential updated"
-msgstr "Identifiants de contenu mises à jour"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid "Content Credentials"
-msgstr "Identifiants de contenu"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
 msgid "Content Host Bulk Content"
@@ -1395,11 +1339,6 @@ msgstr "Créer une copie de {{ hostCollection.name }}"
 #: app/assets/javascripts/bastion_katello/activation-keys/views/activation-keys.html
 msgid "Create Activation Key"
 msgstr "Créer Clé d'activation"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid "Create Content Credential"
-msgstr "Créer identifiant de contenu"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-copy.controller.js
 #: app/assets/javascripts/bastion_katello/host-collections/details/host-collection-copy.controller.js
@@ -1583,7 +1522,6 @@ msgid "Description"
 msgstr "Description"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-details.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment.html
@@ -1711,6 +1649,21 @@ msgstr "Télécharger la politique"
 msgid "Enable"
 msgstr "Activer"
 
+#: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
+msgid ""
+"Enable dependency solving. Significantly increases publishing time. Do not "
+"enable unless package dependency issues are found first. Refer to the <a "
+"href=\"/links/docs/Managing_Content?chapter=dependency-solving-for-content-"
+"views\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a> for "
+"more information."
+msgstr ""
+"Activer la résolution des dépendances. Augmente considérablement le temps de"
+" publication. Ne l'activez que si des problèmes de dépendances entre paquets"
+" ont été identifiés au préalable. Consultez la documentation <a "
+"href=\"/links/docs/Managing_Content?chapter=dependency-solving-for-content-"
+"views\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a> pour"
+" plus d'informations."
+
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
 msgid "Enabled"
@@ -1808,7 +1761,6 @@ msgstr "Tâches d’errata"
 msgid "Errata:"
 msgstr "Errata:"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
 msgid "Error during upload:"
 msgstr "Erreur lors du téléchargement :"
@@ -1847,10 +1799,6 @@ msgid ""
 msgstr ""
 "La suppression des fichiers a été initiée en arrière-plan.  Cliquez <a "
 "href=\"{{ taskUrl() }}\">ici</a>  pour suivre l'évolution de la situation."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
-msgid "File too large."
-msgstr "Fichier trop volumineux."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
 msgid "File too large. Please use the CLI instead."
@@ -1892,12 +1840,6 @@ msgstr "Filtre"
 msgid "Filter by Environment"
 msgstr "Filtrer par environnement"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-msgid "Filter..."
-msgstr "Filtrer..."
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Filters"
 msgstr "Filtres"
@@ -1924,13 +1866,11 @@ msgstr "Par Défaut Global"
 msgid "Global Default (None)"
 msgstr "Pas de Par Défaut Global"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 #: app/assets/javascripts/bastion_katello/products/new/views/product-new-form.html
-#: app/assets/javascripts/bastion_katello/content-credentials/content-type.filter.js
 msgid "GPG Key"
 msgstr "Clé GPG"
 
@@ -2374,11 +2314,6 @@ msgstr "Sans objet"
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/activation-keys/new/views/activation-key-new.html
 #: app/assets/javascripts/bastion_katello/activation-keys/views/activation-keys.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-content-views.html
@@ -2427,10 +2362,6 @@ msgstr "Sans objet"
 msgid "Name"
 msgstr "Nom"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Name *"
-msgstr "Nom *"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
 "Name of the upstream repository you want to sync. Example: 'quay/busybox' or"
@@ -2451,10 +2382,6 @@ msgstr "Jamais synchronisé"
 #: app/assets/javascripts/bastion_katello/activation-keys/new/new-activation-key.controller.js
 msgid "New Activation Key"
 msgstr "Nouvelles clé d'activation"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/new-content-credential.controller.js
-msgid "New Content Credential"
-msgstr "Nouveaux identifiants de contenu"
 
 #: app/assets/javascripts/bastion_katello/environments/views/new-environment.html
 #: app/assets/javascripts/bastion_katello/environments/new-environment.controller.js
@@ -2676,10 +2603,6 @@ msgstr ""
 msgid "Optimized Sync"
 msgstr "Synchronisation optimisée"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid "Organization"
-msgstr "Organisation"
-
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
 msgid "Original Sync Date"
@@ -2791,10 +2714,6 @@ msgstr ""
 "l'authentification. Laissez vide si le référentiel ne nécessite pas "
 "d'authentification."
 
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Paste contents of Content Credential"
-msgstr "Coller le contenu des identifiants de contenu"
-
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
 #: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-files.html
@@ -2839,7 +2758,6 @@ msgstr "Plus 1 erreur supplémentaire"
 msgid "Prior Environment"
 msgstr "Environnement préalable"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-info.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-repositories.html
@@ -2897,13 +2815,9 @@ msgstr ""
 "La somme de contrôle de la vérification des produits a été initiée en "
 "arrière-plan."
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-details.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-products.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "Products"
 msgstr "Produits"
@@ -2911,10 +2825,6 @@ msgstr "Produits"
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
 msgid "Products <div>{{ library.counts.products || 0 }}</div>"
 msgstr "Produits <div>{{ library.counts.products || 0 }} </div>"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-msgid "Products for"
-msgstr "Produits pour"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-dependencies.html
 msgid "Provides"
@@ -3023,14 +2933,6 @@ msgstr "Supprimer les manifestes d'images de conteneurs"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
 msgid "Remove Content"
 msgstr "Supprimer le contenu"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-msgid "Remove Content Credential"
-msgstr "Supprimer les identifiants de contenu"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-msgid "Remove Content Credential {{ contentCredential.name }}"
-msgstr "Supprimer les identifiants de contenu {{ contentCredential.name }}"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-generic-content.html
 msgid "Remove Content?"
@@ -3147,10 +3049,6 @@ msgstr "Suppression des référentiels"
 msgid "Repo Discovery"
 msgstr "Repo Discovery"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-details.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum.html
@@ -3158,7 +3056,6 @@ msgstr "Repo Discovery"
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/debs/debs.controller.js
 #: app/assets/javascripts/bastion_katello/debs/details/deb-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/docker-tags/details/docker-tag-repositories.controller.js
@@ -3177,10 +3074,6 @@ msgstr "Référentiels contenant des errata {{ errata.errata_id }}"
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 msgid "Repositories containing package {{ package.nvrea }}"
 msgstr "Référentiels contenant le package {{ package.nvrea }}"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-msgid "Repositories for"
-msgstr "Référentiels pour"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 msgid "Repositories for Deb:"
@@ -3473,17 +3366,6 @@ msgstr "Sévérité"
 msgid "Size"
 msgstr "Taille"
 
-#: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
-msgid ""
-"Skip dependency solving for a significant speed increase. If the update "
-"cannot be applied to the host, delete the incremental content view version "
-"and retry the application with dependency solving turned on."
-msgstr ""
-"Ignorez la résolution des dépendances pour obtenir une augmentation "
-"significative de la vitesse. Si la mise à jour ne peut pas être appliquée à "
-"l'hôte, supprimez la version incrémentielle de l’affichage de contenu et "
-"réessayez l'application en activant la résolution des dépendances."
-
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy currently reclaiming space..."
 msgstr "Le smart proxy est entrain de récupérer le l’espace ..."
@@ -3498,11 +3380,13 @@ msgstr "Le smart proxy est synchronisé"
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy sync failed"
-msgstr ""
+msgstr "Échec de la sync du proxy"
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy sync finished with warning"
 msgstr ""
+"La synchronisation du proxy intelligent s'est terminée avec un "
+"avertissement."
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Solution"
@@ -3540,10 +3424,6 @@ msgstr "La récupération d’espace est sur le point de commencer..."
 #: app/assets/javascripts/bastion_katello/products/new/views/product-new-form.html
 msgid "SSL CA Cert"
 msgstr "SSL CA Cert"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "SSL Certificate"
-msgstr "Certificat SSL"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -4019,10 +3899,6 @@ msgstr ""
 "Activez Configuration > Contenu > Autoriser la suppression des référentiels "
 "dans les affichages de contenu publié"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-errata.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
@@ -4036,6 +3912,10 @@ msgstr "Type"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 msgid "Unauthenticated Pull"
 msgstr "Pull non authentifié"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
+msgid "Unknown error"
+msgstr "Erreur inconnue"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
@@ -4052,10 +3932,6 @@ msgstr "Hôtes Illimités"
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 msgid "Unprotected"
 msgstr "Non protégé"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/content-type.filter.js
-msgid "Unsupported Type!"
-msgstr "Type non pris en charge !"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
@@ -4090,14 +3966,9 @@ msgstr "Pouvant être mis à niveau"
 msgid "Upgradable For"
 msgstr "Mise à niveau pour"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Upload"
 msgstr "Télécharger"
-
-#: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
-msgid "Upload Content Credential file"
-msgstr "Télécharger fichier d’identifiants de contenu"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Upload File"
@@ -4119,7 +3990,6 @@ msgstr ""
 "Télécharger le fichier Requirements.yml <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'ansible_collection'\" uib-popover-html=\"requirementPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\">\n"
 "        </a>"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Uploading..."
 msgstr "Téléchargement..."
@@ -4197,12 +4067,6 @@ msgstr "Type d'utilisation :"
 msgid "Use specific HTTP Proxy"
 msgstr "Utiliser un proxy HTTP spécifique"
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-msgid "Used as"
-msgstr "Utilisé comme"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks-table.html
 msgid "User"
@@ -4212,6 +4076,15 @@ msgstr "Utilisateur"
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Username"
 msgstr "Nom d'utilisateur"
+
+#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
+msgid ""
+"Username and password are required for syncing the repository after it is "
+"created. Credentials are not validated during discovery."
+msgstr ""
+"Un nom d'utilisateur et un mot de passe sont requis pour synchroniser le "
+"référentiel après sa création. Les identifiants ne sont pas validés lors de "
+"la découverte."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -4425,25 +4298,9 @@ msgstr ""
 "Vous n'avez actuellement aucune clé d'activation, vous pouvez en ajouter en "
 "utilisant le bouton de droite."
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-acs.html
-msgid ""
-"You currently don't have any Alternate Content Sources associated with this "
-"Content Credential."
-msgstr ""
-"Vous n'avez actuellement aucune autre source de contenu associée à cette "
-"référence de contenu."
-
 #: app/assets/javascripts/bastion_katello/docker-tags/views/docker-tags.html
 msgid "You currently don't have any Container Image Tags."
 msgstr "Vous n'avez actuellement aucune étiquette d’image de contenu."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid ""
-"You currently don't have any Content Credential, you can add Content "
-"Credentials using the button on the right."
-msgstr ""
-"Vous n'avez actuellement aucun identifiant de contenu, vous pouvez en "
-"ajouter en utilisant le bouton de droite."
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 msgid ""
@@ -4475,13 +4332,6 @@ msgstr ""
 "Vous n'avez actuellement aucun hôte dans cette collection d'hôtes. Vous "
 "pouvez ajouter des hôtes de contenu en sélectionnant l'onglet \"Ajouter\"."
 
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-msgid ""
-"You currently don't have any Products associated with this Content "
-"Credential."
-msgstr ""
-"Vous n'avez actuellement aucun produit associé à cet identifiant de contenu."
-
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid ""
 "You currently don't have any Products<span bst-feature-"
@@ -4491,14 +4341,6 @@ msgstr ""
 "Vous n'avez actuellement aucun produit <span bst-feature-"
 "flag=\"custom_products\">, vous pouvez ajouter des produits en utilisant le "
 "bouton de droite</span>."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-msgid ""
-"You currently don't have any Repositories associated with this Content "
-"Credential."
-msgstr ""
-"Vous n'avez actuellement aucun référentiel associé à cet identifiant de "
-"contenu."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid ""
@@ -4538,10 +4380,6 @@ msgstr "Votre recherche a donné zéro clé d'activation."
 #: app/assets/javascripts/bastion_katello/docker-tags/views/docker-tags.html
 msgid "Your search returned zero Container Image Tags."
 msgstr "Votre recherche n'a donné aucun label d’image de conteneur."
-
-#: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
-msgid "Your search returned zero Content Credential."
-msgstr "Votre recherche n'a donné aucune identifiant de contenu."
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-content-hosts.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
