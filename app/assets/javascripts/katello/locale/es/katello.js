@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.pre.master",
+        "Project-Id-Version": "katello 5.1.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
+        "Last-Translator": "fe37ea014ea122db60df81cd86b163af_742ef71 <ba9f59c06b0be83ac3724b1834a4c14b_93939>, 2026",
         "Language-Team": "Spanish (https://app.transifex.com/foreman/teams/114/es/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -316,9 +316,6 @@
       "About page": [
         ""
       ],
-      "Abstract async task": [
-        ""
-      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
       ],
@@ -470,9 +467,6 @@
         ""
       ],
       "Add repositories with package groups to content view to select them here.": [
-        ""
-      ],
-      "Add rolling repo clone": [
         ""
       ],
       "Add rule": [
@@ -1101,6 +1095,9 @@
       "Candlepin consumer registration response is missing a uuid": [
         ""
       ],
+      "Candlepin could not generate a certificate with the requested cryptographic capabilities.": [
+        ""
+      ],
       "Candlepin is not running properly": [
         "Candlepin no está funcionando correctamente"
       ],
@@ -1362,6 +1359,9 @@
       "Clean Backend Objects": [
         ""
       ],
+      "Clear": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -1398,6 +1398,9 @@
       "Collapse all": [
         ""
       ],
+      "Collapse group": [
+        ""
+      ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
         ""
       ],
@@ -1420,9 +1423,6 @@
         ""
       ],
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
-        ""
-      ],
-      "Commit upload": [
         ""
       ],
       "Compare": [
@@ -1459,6 +1459,9 @@
         ""
       ],
       "Configuration updated on Foreman": [
+        ""
+      ],
+      "Confirm": [
         ""
       ],
       "Confirm Deletion": [
@@ -1728,6 +1731,9 @@
       "Content view environment ID": [
         ""
       ],
+      "Content view environment identifier": [
+        ""
+      ],
       "Content view environments": [
         ""
       ],
@@ -1812,14 +1818,8 @@
       "Copy": [
         ""
       ],
-      "Copy all units": [
-        ""
-      ],
       "Copy an activation key": [
         "Copiar una clave de activación"
-      ],
-      "Copy content": [
-        ""
       ],
       "Copy content view": [
         ""
@@ -1832,12 +1832,6 @@
       ],
       "Copy to clipboard": [
         "Copiar al portapapeles"
-      ],
-      "Copy version": [
-        ""
-      ],
-      "Copy version units to library": [
-        "Copiar unidades de versión a la biblioteca"
       ],
       "Cores per socket": [
         "Núcleos por socket"
@@ -2061,19 +2055,10 @@
       "Create content view": [
         ""
       ],
-      "Create exporter": [
-        ""
-      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
-        ""
-      ],
-      "Create import": [
-        ""
-      ],
-      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -2081,12 +2066,6 @@
       ],
       "Create organization": [
         "Crear organización"
-      ],
-      "Create publication": [
-        ""
-      ],
-      "Create remote": [
-        ""
       ],
       "Creation": [
         ""
@@ -2135,9 +2114,6 @@
       ],
       "DEB package updates": [
         ""
-      ],
-      "Database connection": [
-        "Conexión a la base de datos"
       ],
       "Date": [
         "Fecha"
@@ -2358,31 +2334,10 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
-      "Delete distributions": [
-        ""
-      ],
       "Delete manifest from Red Hat provider": [
         "Borrar manifiesto de proveedor de Red Hat"
       ],
       "Delete multiple filters from a content view": [
-        ""
-      ],
-      "Delete orphan alternate content sources": [
-        ""
-      ],
-      "Delete orphan distributions": [
-        ""
-      ],
-      "Delete orphan remotes": [
-        ""
-      ],
-      "Delete orphan repository versions": [
-        ""
-      ],
-      "Delete remote": [
-        ""
-      ],
-      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2487,12 +2442,6 @@
       "Destroy an environment in an organization": [
         "Destruir un entorno en una organización"
       ],
-      "Destroy exporter": [
-        ""
-      ],
-      "Destroy importer": [
-        ""
-      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2535,9 +2484,6 @@
       "Disabled": [
         "Deshabilitado"
       ],
-      "Discover": [
-        "Descubrir"
-      ],
       "Discover Repositories": [
         "Detectar repositorios"
       ],
@@ -2566,6 +2512,9 @@
         "Descargar un certificado de depuración"
       ],
       "Download rate limit": [
+        ""
+      ],
+      "Drag here": [
         ""
       ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
@@ -2617,6 +2566,9 @@
         ""
       ],
       "Edit details": [
+        ""
+      ],
+      "Edit entitlements": [
         ""
       ],
       "Edit filter rule": [
@@ -2745,9 +2697,6 @@
       "Environment cannot be in its own promotion path": [
         "No puede haber entorno en su propia ruta de entorno"
       ],
-      "Environment contents refresh": [
-        ""
-      ],
       "Environment identifier": [
         "Identificador del entorno"
       ],
@@ -2781,9 +2730,6 @@
       "Errata id of the erratum (RHSA-2012:108)": [
         "ID de errata de la errata (RHSA-2012:108)"
       ],
-      "Errata mail": [
-        "Correo de erratas"
-      ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
       ],
@@ -2804,9 +2750,6 @@
       ],
       "Error": [
         "Error"
-      ],
-      "Error connecting to Pulp service": [
-        "Error al conectarse con el servicio Pulp"
       ],
       "Error connecting. Got: %s": [
         "Error al conectar. Se obtuvo: %s."
@@ -2852,6 +2795,9 @@
       ],
       "Expand All": [
         "Expandir todo"
+      ],
+      "Expand group": [
+        ""
       ],
       "Expire soon days": [
         "Expiran pronto los días"
@@ -2964,9 +2910,6 @@
       "Fetch installable errata for one or more hosts.": [
         "Buscar erratas instalables para uno o más hosts."
       ],
-      "Fetch pxe files": [
-        "Buscar archivos pxe"
-      ],
       "Fetch traces for one or more hosts": [
         "Buscar rastros para uno o más hosts"
       ],
@@ -3071,9 +3014,6 @@
       ],
       "Filter...": [
         "Filtrar..."
-      ],
-      "Filtered index content": [
-        "Contenido del índice filtrado"
       ],
       "Filters": [
         "Filtros"
@@ -3187,7 +3127,7 @@
         "URL de llave GPG"
       ],
       "General": [
-        ""
+        "General"
       ],
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
@@ -3204,9 +3144,6 @@
       ],
       "Generate host applicability": [
         "Generar la aplicabilidad del host"
-      ],
-      "Generate metadata": [
-        ""
       ],
       "Generate repository applicability": [
         "Generar la aplicabilidad del repositorio"
@@ -3265,8 +3202,8 @@
       "Greater than": [
         ""
       ],
-      "Guests of": [
-        "Huéspedes de"
+      "Guests of %s": [
+        ""
       ],
       "HTTP Proxies": [
         "Proxis HTTP"
@@ -3391,6 +3328,9 @@
       "Host group IDs": [
         "ID de grupos de host"
       ],
+      "Host group identifier": [
+        ""
+      ],
       "Host groups": [
         "Grupo del host"
       ],
@@ -3453,12 +3393,6 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Cómo ordenar los resultados clasificados (p. ej., ASC para orden ascendente)"
-      ],
-      "Hypervisors": [
-        "Hipervisores"
-      ],
-      "Hypervisors update": [
-        "Actualización de hipervisores"
       ],
       "ID": [
         "ID"
@@ -3766,9 +3700,6 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
-      "Import migration": [
-        ""
-      ],
       "Import new manifest": [
         ""
       ],
@@ -3776,12 +3707,6 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
-        ""
-      ],
-      "Import repository upload": [
-        ""
-      ],
-      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -3856,9 +3781,6 @@
       "Incremental Update incomplete.": [
         "Actualización incremental incompleta."
       ],
-      "Incremental Update of  Content View Version(s) ": [
-        "Actualización gradual de versiones de la vista de contenido"
-      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Actualización gradual de versiones de la vista de contenido "
       ],
@@ -3873,18 +3795,6 @@
       ],
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
-      ],
-      "Index content": [
-        "Contenido del índice"
-      ],
-      "Index errata": [
-        "Erratas de índice"
-      ],
-      "Index module streams": [
-        "Secuencias del módulo de índice"
-      ],
-      "Index package groups": [
-        "Grupos de paquete del índice"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "El tipo informable debe ser uno de los siguientes [ %{list} ]"
@@ -3967,9 +3877,6 @@
       ],
       "Installed version": [
         ""
-      ],
-      "Instance update": [
-        "Actualización de instancia"
       ],
       "Instance-based": [
         "Basado en la instancia"
@@ -4321,9 +4228,6 @@
       ],
       "Lifecycle environment: {lce}": [
         ""
-      ],
-      "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        "Los entornos del ciclo de vida no se pueden modificar en el proxy inteligente predeterminado.  El contenido de todos los entornos del ciclo de vida existirá en este proxy inteligente."
       ],
       "Limit": [
         "Límite"
@@ -4685,6 +4589,9 @@
       "Manifest expiring soon": [
         ""
       ],
+      "Manifest history table": [
+        ""
+      ],
       "Manifest imported": [
         "Manifiesto importado"
       ],
@@ -4757,12 +4664,6 @@
       "Message": [
         "Mensaje"
       ],
-      "Messaging connection": [
-        "Conexión de mensajes"
-      ],
-      "Metadata generate": [
-        ""
-      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -4833,15 +4734,6 @@
         ""
       ],
       "Multi Content View Environment": [
-        ""
-      ],
-      "Multi copy all units": [
-        ""
-      ],
-      "Multi copy content": [
-        ""
-      ],
-      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -4987,9 +4879,6 @@
       ],
       "No Content View": [
         "No hay vista de contenido"
-      ],
-      "No Content found": [
-        "No se encontró contenido"
       ],
       "No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.": [
         "No existen productos Red Hat actualmente, por favor importe un manifiesto %(anchorBegin)s aquí %(anchorEnd)s para recibir contenido Red Hat. No hay conjuntos de repositorios disponibles."
@@ -5273,9 +5162,6 @@
       "No profiles to show": [
         "No hay perfiles para mostrar"
       ],
-      "No pulp workers running.": [
-        "No hay trabajadores Pulp en ejecución."
-      ],
       "No pulpcore content apps are running at %s.": [
         ""
       ],
@@ -5369,9 +5255,6 @@
       "Not added": [
         ""
       ],
-      "Not all necessary pulp workers running at %s.": [
-        "No todos los trabajadores de pulp trabajan en %s."
-      ],
       "Not installed": [
         "No instalado"
       ],
@@ -5456,6 +5339,9 @@
       "One or more processes require restarting": [
         "Uno o más procesos deben reiniciarse."
       ],
+      "Only .zip manifest files are accepted": [
+        ""
+      ],
       "Only On Demand repositories may have space reclaimed.": [
         ""
       ],
@@ -5473,6 +5359,12 @@
       ],
       "Operators": [
         "Operadores"
+      ],
+      "Optional key algorithm OID strings": [
+        ""
+      ],
+      "Optional signature algorithm OID strings": [
+        ""
       ],
       "Organization": [
         "Organización"
@@ -5948,9 +5840,6 @@
       "Pullable path": [
         ""
       ],
-      "Pulp": [
-        "Pulp"
-      ],
       "Pulp 3 export destination filepath": [
         ""
       ],
@@ -5963,41 +5852,20 @@
       "Pulp database connection issue at %s.": [
         "Problema de conexión de la base de datos de Pulp en %s."
       ],
-      "Pulp database connection issue.": [
-        "Problema de conexión a la base de datos Pulp"
-      ],
       "Pulp disk space notification": [
         "Notificación de espacio en el disco de Pulp"
       ],
       "Pulp does not appear to be running at %s.": [
         "Pulp no parece estar ejecutándose en %s."
       ],
-      "Pulp does not appear to be running.": [
-        "Pulp no parece estar ejecutándose."
-      ],
-      "Pulp message bus connection issue at %s.": [
-        "El mensaje Pulp tiene un problema de conexión del bus en %s."
-      ],
-      "Pulp message bus connection issue.": [
-        "Problema de conexión de bus de mensaje de Pulp."
-      ],
-      "Pulp node": [
-        "Pulp node"
-      ],
       "Pulp redis connection issue at %s.": [
         "Problema de conexión de redistribución de Pulp en %."
-      ],
-      "Pulp server version": [
-        "Versión del servidor Pulp"
       ],
       "Pulp storage": [
         "Almacenamiento Pulp"
       ],
       "Pulp task error": [
         "Error de tarea de Pulp"
-      ],
-      "Purge completed tasks": [
-        ""
       ],
       "Python Package": [
         ""
@@ -6107,9 +5975,6 @@
       "Reclaim Space": [
         ""
       ],
-      "Reclaim space": [
-        ""
-      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -6182,9 +6047,6 @@
       "Refresh all alternate content sources": [
         ""
       ],
-      "Refresh all distributions": [
-        ""
-      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -6197,13 +6059,7 @@
       "Refresh counts": [
         ""
       ],
-      "Refresh distribution": [
-        ""
-      ],
       "Refresh errata applicability": [
-        ""
-      ],
-      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -6211,12 +6067,6 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Actualizar el manifiesto importado anteriormente para el proveedor de Red Hat"
-      ],
-      "Refresh remote": [
-        ""
-      ],
-      "Refresh repos": [
-        ""
       ],
       "Refresh source": [
         ""
@@ -6259,9 +6109,6 @@
       ],
       "Registry token expiration time": [
         ""
-      ],
-      "Reindex subscriptions": [
-        "Reindexar suscripciones"
       ],
       "Related composite content views": [
         ""
@@ -6365,9 +6212,6 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
-      "Remove orphans": [
-        ""
-      ],
       "Remove package group via Katello interface": [
         "Eliminar el grupo de paquetes a través de la interfaz de Katello"
       ],
@@ -6382,15 +6226,6 @@
       ],
       "Remove products from sync plan": [
         "Eliminar productos del plan de sincronización"
-      ],
-      "Remove rolling repo clone": [
-        ""
-      ],
-      "Remove units": [
-        ""
-      ],
-      "Remove unneeded repos": [
-        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Eliminar versiones y/o entornos de una vista de contenido y volver a asignar sistemas y llaves"
@@ -6413,9 +6248,6 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         ""
       ],
-      "Repair": [
-        ""
-      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -6434,17 +6266,11 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
-      "Repositories certs reset": [
-        ""
-      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "No se permiten los  de vistas de contenido publicadas "
-      ],
-      "Repositories gpg reset": [
-        ""
       ],
       "Repositories table": [
         ""
@@ -6824,34 +6650,19 @@
       "Save Environments": [
         ""
       ],
-      "Save artifact": [
-        ""
-      ],
-      "Save distribution references": [
-        ""
-      ],
-      "Save publication": [
-        ""
-      ],
-      "Save version": [
-        ""
-      ],
-      "Save versions": [
-        ""
-      ],
       "Saving alternate content source...": [
+        ""
+      ],
+      "Saving subscription quantities...": [
+        ""
+      ],
+      "Saving...": [
         ""
       ],
       "Scan": [
         ""
       ],
       "Scan a flatpak remote": [
-        ""
-      ],
-      "Scan cdn": [
-        ""
-      ],
-      "Scan remote": [
         ""
       ],
       "Schema version 1": [
@@ -7178,6 +6989,9 @@
       "Show a content view component": [
         "Mostrar un componente de vista de contenido"
       ],
+      "Show a content view environment": [
+        ""
+      ],
       "Show a content view's history": [
         "Mostrar el historial de una vista de contenido"
       ],
@@ -7290,9 +7104,6 @@
         "",
         ""
       ],
-      "Skipped pulp_auth check after failed pulp check": [
-        "Se omitió la verificación pulp_auth luego de que la verificación de Pulp produjo un error."
-      ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
       ],
@@ -7395,9 +7206,6 @@
       "Something went wrong while fetching ${lowerCase(pluralLabel)}! ${getResponseErrorMsgs(error.response)}": [
         ""
       ],
-      "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        ""
-      ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
         ""
       ],
@@ -7477,9 +7285,6 @@
         ""
       ],
       "Something went wrong while retrieving the errata! ${getResponseErrorMsgs(error.response)}": [
-        ""
-      ],
-      "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
         ""
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
@@ -7692,9 +7497,6 @@
       "Supported Content Types": [
         "Tipos de contenido admitidos"
       ],
-      "Sync": [
-        "Sincronizar"
-      ],
       "Sync Canceled": [
         "Sincronización cancelada"
       ],
@@ -7752,9 +7554,6 @@
       "Sync canceled": [
         ""
       ],
-      "Sync capsule": [
-        "Cápsula de sincronización"
-      ],
       "Sync complete.": [
         "Sincronización completa."
       ],
@@ -7777,9 +7576,6 @@
         ""
       ],
       "Sync state": [
-        ""
-      ],
-      "Syncable export": [
         ""
       ],
       "Synced": [
@@ -8451,17 +8247,8 @@
       "Unable to connect": [
         "Incapaz de conectar"
       ],
-      "Unable to connect. Got: %s": [
-        "No se pudo establecer la conexión. Se obtuvo: %s."
-      ],
       "Unable to delete any alternate content source. You either do not have the permission to delete, or none of the alternate content sources exist.": [
         ""
-      ],
-      "Unable to detect pulp storage": [
-        "No se pudo detectar el almacenamiento Pulp"
-      ],
-      "Unable to detect puppet path": [
-        "No se pudo detectar la ruta de Puppet"
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         ""
@@ -8649,26 +8436,14 @@
       "Update content counts for the smart proxy": [
         ""
       ],
-      "Update content urls": [
-        "Actualizar los URL de contenido"
-      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
-      "Update distributions": [
-        ""
-      ],
       "Update hosts manually": [
         ""
-      ],
-      "Update http proxy": [
-        "Actualizar el proxy http"
-      ],
-      "Update http proxy details": [
-        "Actualizar los detalles del proxy http"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Actualizar los paquetes instalados, los repositorios habilitados, el inventario de módulos"
@@ -8685,20 +8460,11 @@
       "Update packages via Katello interface": [
         ""
       ],
-      "Update redhat repository": [
-        "Actualizar el repositorio de redhat"
-      ],
       "Update release version for host": [
         "Actualizar versión de lanzamiento para el host"
       ],
       "Update release version for host %s": [
         "Actualizar versión de lanzamiento para el host"
-      ],
-      "Update remote": [
-        ""
-      ],
-      "Update repository": [
-        ""
       ],
       "Update services requiring restart": [
         "La actualización de servicios requiere el reinicio"
@@ -8779,6 +8545,9 @@
       "Upgrade via remote execution": [
         ""
       ],
+      "Upload": [
+        ""
+      ],
       "Upload Content Credential contents": [
         ""
       ],
@@ -8788,7 +8557,7 @@
       "Upload a subscription manifest": [
         "Cargar un manifiesto de suscripción"
       ],
-      "Upload content": [
+      "Upload a zip file": [
         ""
       ],
       "Upload file": [
@@ -8808,9 +8577,6 @@
       ],
       "Upload request id": [
         "Cargar ID de solicitud"
-      ],
-      "Upload tag": [
-        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -8931,9 +8697,6 @@
       ],
       "Verify SSL": [
         "Verificar SSL"
-      ],
-      "Verify checksum": [
-        "Verificar la suma de comprobación"
       ],
       "Verify checksum for content on smart proxy": [
         ""
@@ -9118,9 +8881,6 @@
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
         ""
       ],
-      "Workers": [
-        "Trabajadores"
-      ],
       "Wrong content type submitted.": [
         "Se ha enviado un tipo de contenido incorrecto."
       ],
@@ -9161,6 +8921,9 @@
         ""
       ],
       "You currently have no content views to display": [
+        ""
+      ],
+      "You do not have permission to view this organization.": [
         ""
       ],
       "You do not have permissions to delete %s": [
@@ -9496,7 +9259,7 @@
       "disk": [
         ""
       ],
-      "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
+      "download policy for deb, docker, file, python, and yum repos (either 'immediate' or 'on_demand')": [
         ""
       ],
       "edit the content source": [
@@ -9595,6 +9358,12 @@
       "has already been taken for a product in this organization.": [
         "ya se ha tomado para un producto en esta organización"
       ],
+      "has already been taken for this activation key": [
+        ""
+      ],
+      "has already been taken for this host": [
+        ""
+      ],
       "has already been taken for this product.": [
         "ya se ha tomado para este producto."
       ],
@@ -9681,6 +9450,9 @@
       ],
       "label of the repository": [
         "etiqueta del repositorio"
+      ],
+      "latest": [
+        ""
       ],
       "limit to only repositories with this download policy": [
         ""
