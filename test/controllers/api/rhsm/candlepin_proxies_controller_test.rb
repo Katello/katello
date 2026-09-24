@@ -32,17 +32,17 @@ module Katello
     describe "register with activation key should fail" do
       it "without specifying owner (organization)" do
         post('consumer_activate', params: { :activation_keys => 'non_existent_key' })
-        assert_response 404
+        assert_response :not_found
       end
 
       it "with unknown organization" do
         post('consumer_activate', params: { :owner => 'not_an_organization', :activation_keys => 'non_existent_key' })
-        assert_response 404
+        assert_response :not_found
       end
 
       it "with known organization and no activation_keys" do
         post('consumer_activate', params: { :owner => @organization.label, :activation_keys => '' })
-        assert_response 400
+        assert_response :bad_request
       end
     end
 
@@ -82,7 +82,25 @@ module Katello
         post(:consumer_activate, params: { :organization_id => @activation_key.organization.label,
                                            :activation_keys => @activation_key.name, :facts => @facts })
 
-        assert_response 500
+        assert_response :internal_server_error
+      end
+
+      it "should forward cryptographicCapabilities to Candlepin" do
+        # RSA + ML-DSA-65 key OIDs; SHA256withRSA + ML-DSA-65 signature OIDs
+        crypto_capabilities = {
+          'keyAlgorithms' => ['1.2.840.113549.1.1.1', '2.16.840.1.101.3.4.3.18'],
+          'signatureAlgorithms' => ['1.2.840.113549.1.1.11', '2.16.840.1.101.3.4.3.18'],
+        }
+        Resources::Candlepin::Consumer.expects(:get).never
+        ::Katello::RegistrationManager.expects(:process_registration).with(
+          { 'facts' => @facts, 'cryptographicCapabilities' => crypto_capabilities }, nil, [@activation_key]
+        ).returns([@host, { 'uuid' => 'fake-uuid' }])
+
+        post(:consumer_activate, params: { :organization_id => @activation_key.organization.label,
+                                           :activation_keys => @activation_key.name, :facts => @facts,
+                                           :cryptographicCapabilities => crypto_capabilities })
+
+        assert_response :success
       end
     end
 
@@ -121,7 +139,7 @@ module Katello
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label,
                                          :environment_id => @content_view_environment.cp_id, :facts => @facts })
 
-        assert_response 500
+        assert_response :internal_server_error
       end
 
       it "should not register with multiple envs" do
@@ -133,7 +151,7 @@ module Katello
         body = JSON.parse(response.body)
 
         assert_equal 'Registering to multiple environments is not enabled.', body['displayMessage']
-        assert_response 400
+        assert_response :bad_request
       end
 
       it "should return Candlepin validation error when name is invalid" do
@@ -155,7 +173,26 @@ module Katello
 
         body = JSON.parse(response.body)
         assert_includes body['displayMessage'], 'System name cannot begin with # character'
-        assert_response 400
+        assert_response :bad_request
+      end
+
+      it "should forward cryptographicCapabilities to Candlepin" do
+        # RSA + ML-DSA-65 key OIDs; SHA256withRSA + ML-DSA-65 signature OIDs
+        crypto_capabilities = {
+          'keyAlgorithms' => ['1.2.840.113549.1.1.1', '2.16.840.1.101.3.4.3.18'],
+          'signatureAlgorithms' => ['1.2.840.113549.1.1.11', '2.16.840.1.101.3.4.3.18'],
+        }
+        Resources::Candlepin::Consumer.expects(:get).never
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(true)
+        ::Katello::RegistrationManager.expects(:process_registration).with(
+          { 'facts' => @facts, 'cryptographicCapabilities' => crypto_capabilities }, [@content_view_environment]
+        ).returns([@host, { 'uuid' => 'fake-uuid' }])
+
+        post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label,
+                                         :environment_id => @content_view_environment.cp_id, :facts => @facts,
+                                         :cryptographicCapabilities => crypto_capabilities })
+
+        assert_response :success
       end
 
       it "should return displayMessage instead of message for RHSM error responses" do
@@ -231,6 +268,21 @@ module Katello
         put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts }
         assert_equal 200, response.status
       end
+
+      it "should forward cryptographicCapabilities to Candlepin" do
+        facts = {'rhsm_fact' => 'rhsm_value'}
+        # RSA + ML-DSA-65 key OIDs; SHA256withRSA + ML-DSA-65 signature OIDs
+        crypto_capabilities = {
+          'keyAlgorithms' => ['1.2.840.113549.1.1.1', '2.16.840.1.101.3.4.3.18'],
+          'signatureAlgorithms' => ['1.2.840.113549.1.1.11', '2.16.840.1.101.3.4.3.18'],
+        }
+        ::Host.any_instance.expects(:update_candlepin_associations).with(
+          { "facts" => facts, "cryptographicCapabilities" => crypto_capabilities }
+        )
+        put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts,
+                              :cryptographicCapabilities => crypto_capabilities }
+        assert_equal 200, response.status
+      end
     end
 
     describe "update facts with non-consumer user" do
@@ -238,7 +290,7 @@ module Katello
         login_user(setup_user_with_permissions(:view_hosts, User.find(users(:restricted).id)))
         facts = {'rhsm_fact' => 'rhsm_value'}
         put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts }
-        assert_response 403
+        assert_response :forbidden
       end
 
       it "should allow update facts for admin" do
@@ -248,7 +300,7 @@ module Katello
         facts = {'rhsm_fact' => 'rhsm_value'}
         ::Host.any_instance.expects(:update_candlepin_associations).with({ "facts" => facts })
         put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts}
-        assert_response 200
+        assert_response :ok
       end
     end
 
@@ -257,7 +309,7 @@ module Katello
         User.current = User.find(users(:admin).id)
         get :list_owners, params: { :login => User.current.login }
 
-        assert_empty((JSON.parse(response.body).collect { |org| org['displayName'] } - Organization.pluck(:name)))
+        assert_empty(JSON.parse(response.body).collect { |org| org['displayName'] } - Organization.pluck(:name))
       end
 
       it 'should return organizations user is assigned to' do
@@ -269,7 +321,7 @@ module Katello
 
       it "should protect list owners with authentication" do
         get :list_owners, params: { :login => User.current.login }
-        assert_response 200
+        assert_response :ok
       end
 
       it "should prevent listing owners for unauthenticated requests" do
@@ -277,7 +329,7 @@ module Katello
         session[:user] = nil
         set_basic_auth('100', '100')
         get :list_owners, params: { :login => 100 }
-        assert_response 401
+        assert_response :unauthorized
       end
     end
 
@@ -326,7 +378,7 @@ module Katello
     describe "hypervisors_update" do
       it "hypervisors_update_with_no_owner" do
         post :hypervisors_update
-        assert_response 403
+        assert_response :forbidden
       end
 
       it "hypervisors_update" do
@@ -335,7 +387,7 @@ module Katello
         end
 
         post(:hypervisors_update, :params => {:owner => @organization.label, :env => 'dev/dev'})
-        assert_response 200
+        assert_response :ok
       end
     end
 
@@ -355,7 +407,7 @@ module Katello
         end
 
         post(:async_hypervisors_update, :params => {owner: owner, reporter_id: reporter_id, env: env})
-        assert_response 200
+        assert_response :ok
       end
     end
 
@@ -373,7 +425,7 @@ module Katello
           assert_equal params, 'owner' => @host.organization.label, 'env' => nil
         end
         post :hypervisors_update
-        assert_response 200
+        assert_response :ok
       end
 
       it "hypervisors_update_ignore_params" do
@@ -381,7 +433,7 @@ module Katello
           assert_equal params, 'owner' => @host.organization.label, 'env' => nil
         end
         post(:hypervisors_update, :params => {:owner => 'owner', :env => 'dev/dev'})
-        assert_response 200
+        assert_response :ok
       end
     end
 
@@ -391,7 +443,7 @@ module Katello
 
         put :hypervisors_heartbeat, params: { owner: @organization.label, reporter_id: 123 }
 
-        assert_response 200
+        assert_response :ok
       end
     end
 
@@ -402,7 +454,7 @@ module Katello
         User.stubs(:consumer?).returns(true)
         stub_cp_consumer_with_uuid(uuid)
         get :available_releases, params: { :id => @host.subscription_facet.uuid }
-        assert_response 200
+        assert_response :ok
       end
 
       it "forbidden with invalid consumer" do
@@ -413,7 +465,7 @@ module Katello
         # Getting the available releases for a different consumer
         # should not be allowed.
         get :available_releases, params: { :id => @host.subscription_facet.uuid }
-        assert_response 403
+        assert_response :forbidden
       end
     end
 
@@ -430,7 +482,7 @@ module Katello
         ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true)
         delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
 
-        assert_response 204
+        assert_response :no_content
       end
 
       it "should destroy the host if setting is set" do
@@ -439,20 +491,20 @@ module Katello
         ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => false)
         delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
 
-        assert_response 204
+        assert_response :no_content
       end
 
       it "should return Candlepin error when backend is down" do
         ::Katello::RegistrationManager.expects(:unregister_host).raises(RestClient::ServiceUnavailable.new(nil, 503))
         delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
-        assert_response 503
+        assert_response :service_unavailable
       end
 
       it "should not unregister when services are down" do
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
         ::Katello::RegistrationManager.expects(:unregister_host).never
         delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
-        assert_response 500
+        assert_response :internal_server_error
       end
     end
 
@@ -464,14 +516,14 @@ module Katello
       it "can be accessed by user" do
         User.current = setup_user_with_permissions(:create_hosts, User.find(users(:restricted).id))
         get :consumer_show, params: { :id => @host.subscription_facet.uuid }
-        assert_response 200
+        assert_response :ok
       end
 
       it "can be accessed by client" do
         uuid = @host.subscription_facet.uuid
         stub_cp_consumer_with_uuid(uuid)
         get :consumer_show, params: { :id => uuid }
-        assert_response 200
+        assert_response :ok
       end
     end
 
@@ -486,7 +538,7 @@ module Katello
         stub_cp_consumer_with_uuid(uuid)
 
         get :serials, params: { :id => uuid }
-        assert_response 200
+        assert_response :ok
         refute_nil @host.subscription_facet.reload.last_checkin
       end
     end
@@ -514,7 +566,7 @@ module Katello
           "distribution::name" => "Red Hat Enterprise Linux",
         }
         put :facts, params: { :id => uuid, :facts => facts }
-        assert_response 200
+        assert_response :ok
         assert_equal ::Katello::RhelLifecycleStatus::FULL_SUPPORT, @host.reload.get_status(::Katello::RhelLifecycleStatus).status
       end
     end
@@ -535,7 +587,7 @@ module Katello
 
         2.times do
           get :server_status
-          assert_response 503
+          assert_response :service_unavailable
         end
 
         assert_nil Rails.cache.read(::Katello::Resources::Candlepin::CandlepinPing::CACHE_KEY)

@@ -474,7 +474,7 @@ module Katello
     end
 
     def rhsm_params
-      params.slice(:name, :type, :facts, :installedProducts, :releaseVer, :usage, :role, :serviceLevel, :uuid, :capabilities, :guestIds, :lastCheckin).to_h
+      params.slice(:name, :type, :facts, :installedProducts, :releaseVer, :usage, :role, :serviceLevel, :uuid, :capabilities, :cryptographicCapabilities, :guestIds, :lastCheckin).to_h
     end
 
     def logger
@@ -544,7 +544,7 @@ module Katello
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/CyclomaticComplexity
     def authorize_proxy_routes
-      deny_access unless (authenticate || authenticate_client)
+      deny_access unless authenticate || authenticate_client
 
       route, params = Engine.routes.router.recognize(request) do |rte, parameters|
         break rte, parameters if rte.name
@@ -561,7 +561,7 @@ module Katello
           User.consumer? || ::User.current.can?(:view_organizations)
         end
       when "rhsm_proxy_owner_servicelevels_path", "rhsm_proxy_owner_system_purpose_path"
-        (User.consumer? || ::User.current.can?(:view_organizations))
+        User.consumer? || ::User.current.can?(:view_organizations)
       when "rhsm_proxy_consumer_accessible_content_path", "rhsm_proxy_consumer_certificates_path",
            "rhsm_proxy_consumer_releases_path", "rhsm_proxy_certificate_serials_path",
            "rhsm_proxy_consumer_entitlements_path", "rhsm_proxy_consumer_entitlements_post_path",
