@@ -51,7 +51,7 @@ describe('useAssignmentManagement', () => {
 
   describe('hasChanges detection', () => {
     it('detects no changes when nothing has changed', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
+      const { result } = renderHook(() => useAssignmentManagement());
 
       // Simulate initial assignments
       const initialAssignments = [
@@ -85,7 +85,7 @@ describe('useAssignmentManagement', () => {
     });
 
     it('detects changes when an assignment is removed', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
+      const { result } = renderHook(() => useAssignmentManagement());
 
       const initialAssignments = [
         {
@@ -115,7 +115,7 @@ describe('useAssignmentManagement', () => {
     });
 
     it('detects changes when an assignment is added', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
+      const { result } = renderHook(() => useAssignmentManagement());
 
       const initialAssignments = [
         {
@@ -149,7 +149,7 @@ describe('useAssignmentManagement', () => {
     });
 
     it('detects changes when assignments are reordered', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
+      const { result } = renderHook(() => useAssignmentManagement());
 
       const initialAssignments = [
         {
@@ -182,7 +182,7 @@ describe('useAssignmentManagement', () => {
     });
 
     it('detects changes when CV is changed in an assignment', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
+      const { result } = renderHook(() => useAssignmentManagement());
 
       const initialAssignments = [
         {
@@ -215,7 +215,7 @@ describe('useAssignmentManagement', () => {
     });
 
     it('detects changes when environment is changed in an assignment', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
+      const { result } = renderHook(() => useAssignmentManagement());
 
       const initialAssignments = [
         {
@@ -250,7 +250,7 @@ describe('useAssignmentManagement', () => {
 
   describe('canSave validation', () => {
     it('requires all assignments to be complete', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
+      const { result } = renderHook(() => useAssignmentManagement());
 
       // Incomplete assignment (missing content view)
       const incompleteAssignments = [
@@ -270,8 +270,9 @@ describe('useAssignmentManagement', () => {
       expect(result.current.canSave).toBe(false);
     });
 
-    it('enforces single assignment when allowMultipleContentViews is false', () => {
-      const { result } = renderHook(() => useAssignmentManagement(false));
+
+    it('allows multiple assignments', () => {
+      const { result } = renderHook(() => useAssignmentManagement());
 
       const initialAssignments = [
         {
@@ -286,42 +287,7 @@ describe('useAssignmentManagement', () => {
         result.current.handleAssignmentsChange(initialAssignments);
       });
 
-      // Add another assignment (not allowed when allowMultipleContentViews is false)
-      const multipleAssignments = [
-        ...initialAssignments,
-        {
-          id: '2',
-          selectedEnv: [{ label: 'dev', lifecycle_environment_library: false, library: false }],
-          contentView: { label: 'cv_2', content_view_default: false, default: false },
-          selectedCV: 'cv_2',
-        },
-      ];
-
-      act(() => {
-        result.current.handleAssignmentsChange(multipleAssignments);
-      });
-
-      // Should not be able to save with 2 assignments
-      expect(result.current.canSave).toBe(false);
-    });
-
-    it('allows multiple assignments when allowMultipleContentViews is true', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
-
-      const initialAssignments = [
-        {
-          id: '1',
-          selectedEnv: [{ label: 'Library', lifecycle_environment_library: true, library: true }],
-          contentView: { label: 'cv_1', content_view_default: false, default: false },
-          selectedCV: 'cv_1',
-        },
-      ];
-
-      act(() => {
-        result.current.handleAssignmentsChange(initialAssignments);
-      });
-
-      // Add another assignment (allowed when allowMultipleContentViews is true)
+      // Add another assignment
       const multipleAssignments = [
         ...initialAssignments,
         {
@@ -343,7 +309,7 @@ describe('useAssignmentManagement', () => {
 
   describe('resetState', () => {
     it('clears assignments and initial state', () => {
-      const { result } = renderHook(() => useAssignmentManagement(true));
+      const { result } = renderHook(() => useAssignmentManagement());
 
       const assignments = [
         {

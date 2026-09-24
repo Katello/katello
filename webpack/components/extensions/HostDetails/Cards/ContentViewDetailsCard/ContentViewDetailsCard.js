@@ -23,7 +23,6 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
-import { useForemanContext } from 'foremanReact/Root/Context/ForemanContext';
 import PropTypes from 'prop-types';
 import ContentViewIcon from '../../../../../scenes/ContentViews/components/ContentViewIcon';
 import { hasRequiredPermissions, hostIsRegistered } from '../../hostDetailsHelpers';
@@ -105,7 +104,7 @@ ContentViewEnvironmentDisplay.propTypes = {
 
 export const CvEnvDetailsBareCard = ({
   contentViewEnvironments, hostPermissions, permissions, dropdownItems,
-  isDropdownOpen, toggleKebab, openModal, allowMultipleContentViews,
+  isDropdownOpen, toggleKebab, openModal,
 }) => {
   const userPermissions = { ...hostPermissions, ...permissions };
   const showKebab = hasRequiredPermissions(requiredPermissions, userPermissions);
@@ -117,9 +116,7 @@ export const CvEnvDetailsBareCard = ({
       variant="secondary"
       aria-label="assign_content_view_environments"
     >
-      {allowMultipleContentViews
-        ? __('Assign content view environments')
-        : __('Edit content view environment')}
+      {__('Assign content view environments')}
     </Button>
   ) : null;
 
@@ -209,7 +206,6 @@ CvEnvDetailsBareCard.propTypes = {
   isDropdownOpen: PropTypes.bool,
   toggleKebab: PropTypes.func,
   openModal: PropTypes.func,
-  allowMultipleContentViews: PropTypes.bool,
 };
 
 CvEnvDetailsBareCard.defaultProps = {
@@ -220,12 +216,11 @@ CvEnvDetailsBareCard.defaultProps = {
   isDropdownOpen: false,
   toggleKebab: () => {},
   openModal: null,
-  allowMultipleContentViews: true,
 };
 
 export const ContentViewEnvironmentDetails = ({
   contentViewEnvironments, hostId, hostName, orgId,
-  hostPermissions, permissions, contentSourceId, allowMultipleContentViews,
+  hostPermissions, permissions, contentSourceId,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleKebab = () => setIsDropdownOpen(prev => !prev);
@@ -248,9 +243,7 @@ export const ContentViewEnvironmentDetails = ({
       component="button"
       onClick={openModal}
     >
-      {allowMultipleContentViews
-        ? __('Assign content view environments')
-        : __('Edit content view environment')}
+      {__('Assign content view environments')}
     </DropdownItem>,
   ];
 
@@ -270,7 +263,6 @@ export const ContentViewEnvironmentDetails = ({
         hostPermissions={hostPermissions}
         permissions={permissions}
         dropdownItems={showKebab ? dropdownItems : []}
-        allowMultipleContentViews={allowMultipleContentViews}
         openModal={showKebab ? openModal : null}
       />
       {hostId &&
@@ -282,7 +274,6 @@ export const ContentViewEnvironmentDetails = ({
           contentSourceId={contentSourceId}
           orgId={orgId}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews={allowMultipleContentViews}
           key={`cv-assign-modal-${hostId}`}
         />
       }
@@ -314,7 +305,6 @@ ContentViewEnvironmentDetails.propTypes = {
     promote_or_remove_content_views_to_environments: PropTypes.bool,
   }),
   contentSourceId: PropTypes.number,
-  allowMultipleContentViews: PropTypes.bool.isRequired,
 };
 
 ContentViewEnvironmentDetails.defaultProps = {
@@ -329,10 +319,6 @@ ContentViewEnvironmentDetails.defaultProps = {
 
 
 const ContentViewDetailsCard = ({ hostDetails }) => {
-  const foremanContext = useForemanContext();
-  const allowMultipleContentViews =
-    foremanContext?.metadata?.katello?.allow_multiple_content_views ?? true;
-
   if (hostIsRegistered({ hostDetails })
     && hostDetails.content_facet_attributes && hostDetails.organization_id) {
     return (<ContentViewEnvironmentDetails
@@ -341,7 +327,6 @@ const ContentViewDetailsCard = ({ hostDetails }) => {
       contentSourceId={hostDetails.content_facet_attributes.content_source?.id}
       orgId={hostDetails.organization_id}
       hostPermissions={hostDetails.permissions}
-      allowMultipleContentViews={allowMultipleContentViews}
       {...propsToCamelCase(hostDetails.content_facet_attributes)}
     />);
   }

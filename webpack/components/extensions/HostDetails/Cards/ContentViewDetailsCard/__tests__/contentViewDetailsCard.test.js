@@ -3,12 +3,6 @@ import { render } from 'react-testing-lib-wrapper';
 import * as hooks from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import ContentViewDetailsCard from '../ContentViewDetailsCard';
 
-jest.mock('foremanReact/Root/Context/ForemanContext', () => ({
-  useForemanContext: () => ({
-    metadata: { katello: { allow_multiple_content_views: true } },
-  }),
-}));
-
 const baseHostDetails = {
   organization_id: 1,
   content_facet_attributes: {
@@ -25,7 +19,6 @@ const baseHostDetails = {
     content_view_version_id: 1000,
     content_view_version: '1.0',
     content_view_version_latest: true,
-    allow_multiple_content_views: true,
     content_view_environments: [
       {
         content_view: {

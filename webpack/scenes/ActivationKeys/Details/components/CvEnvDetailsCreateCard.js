@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { DropdownItem } from '@patternfly/react-core/deprecated';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useForemanContext, useForemanPermissions } from 'foremanReact/Root/Context/ForemanContext';
+import { useForemanPermissions } from 'foremanReact/Root/Context/ForemanContext';
 import { CvEnvDetailsBareCard } from '../../../../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
 import CreateAKCVModal from './CreateAKCVModal';
 
@@ -11,10 +11,6 @@ export const CvEnvDetailsCreateCard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const userPermissions = useForemanPermissions();
-
-  // Get setting from ForemanContext (registered in plugin.rb)
-  const { metadata = {} } = useForemanContext();
-  const allowMultipleContentViews = metadata?.katello?.allow_multiple_content_views ?? true;
 
   // Read orgId from DOM
   const orgId = dataNode ? parseInt(dataNode.dataset.orgId, 10) : null;
@@ -86,7 +82,6 @@ export const CvEnvDetailsCreateCard = () => {
         isDropdownOpen={isDropdownOpen}
         toggleKebab={toggleKebab}
         openModal={canAssignCvEnvs ? openModal : null}
-        allowMultipleContentViews={allowMultipleContentViews}
       />
       {canAssignCvEnvs && (
         <CreateAKCVModal
@@ -95,7 +90,6 @@ export const CvEnvDetailsCreateCard = () => {
           orgId={orgId}
           existingAssignments={assignments}
           onAssignmentsChange={handleAssignmentsChange}
-          allowMultipleContentViews={allowMultipleContentViews}
         />
       )}
     </>

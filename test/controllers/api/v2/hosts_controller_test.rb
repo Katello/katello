@@ -74,7 +74,6 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_host_contents_environments_param
-    Setting[:allow_multiple_content_views] = true
     ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
     host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
                               :content_view => @content_view, :lifecycle_environment => @environment, :organization => @environment.organization)
@@ -98,7 +97,6 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_host_contents_cvenv_ids_param
-    Setting[:allow_multiple_content_views] = true
     ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
     host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
                               :content_view => @content_view, :lifecycle_environment => @environment)
@@ -122,7 +120,6 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_host_contents_cvenv_ids_param_deduplicates
-    Setting[:allow_multiple_content_views] = true
     ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
     host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
                               :content_view => @content_view, :lifecycle_environment => @environment)

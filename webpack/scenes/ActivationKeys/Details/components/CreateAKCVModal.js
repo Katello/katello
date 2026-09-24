@@ -24,14 +24,13 @@ const CreateAKCVModal = ({
   orgId,
   existingAssignments,
   onAssignmentsChange,
-  allowMultipleContentViews,
 }) => {
   const {
     assignments,
     handleAssignmentsChange,
     resetState,
     canSave,
-  } = useAssignmentManagement(allowMultipleContentViews);
+  } = useAssignmentManagement();
 
   const pathsUrl = `/organizations/${orgId}/environments/paths?permission_type=promotable`;
   useAPI(isOpen ? 'get' : null, api.getApiUrl(pathsUrl), ENV_PATH_OPTIONS);
@@ -79,7 +78,7 @@ const CreateAKCVModal = ({
       id="assign-cv-modal"
       ouiaId="assign-cv-modal"
     >
-      <AssignmentModalDescription allowMultipleContentViews={allowMultipleContentViews} />
+      <AssignmentModalDescription />
 
       <div className="attached-content-views">
         <AssignmentsHeading show={existingAssignments.length > 0} />
@@ -88,7 +87,6 @@ const CreateAKCVModal = ({
           existingAssignments={existingAssignments}
           isOpen={isOpen}
           onAssignmentsChange={handleAssignmentsChange}
-          allowMultipleContentViews={allowMultipleContentViews}
           allowZeroAssignments
           renderAddButton={(addFn, canAdd) => (
             <AddAnotherCVButton onClick={addFn} isDisabled={!canAdd} />
@@ -109,14 +107,12 @@ CreateAKCVModal.propTypes = {
     cvEnvLabel: PropTypes.string,
   })),
   onAssignmentsChange: PropTypes.func.isRequired,
-  allowMultipleContentViews: PropTypes.bool,
 };
 
 CreateAKCVModal.defaultProps = {
   isOpen: false,
   closeModal: () => {},
   existingAssignments: [],
-  allowMultipleContentViews: false,
 };
 
 export default CreateAKCVModal;

@@ -7,12 +7,7 @@ module Katello
       @activation_key = katello_activation_keys(:simple_key)
     end
 
-    def teardown
-      Setting['allow_multiple_content_views'] = false
-    end
-
     def test_reprioritize_for_activation_key
-      Setting['allow_multiple_content_views'] = true
       @activation_key.content_view_environments = [
         katello_content_view_environments(:library_dev_view_dev),
         katello_content_view_environments(:library_dev_staging_view_dev),
@@ -28,7 +23,6 @@ module Katello
     end
 
     def test_content_view_environments_deduplicates
-      Setting['allow_multiple_content_views'] = true
       cvenv1 = katello_content_view_environments(:library_dev_view_dev)
       cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
       @activation_key.content_view_environments = [cvenv1, cvenv2, cvenv1]
@@ -36,7 +30,6 @@ module Katello
     end
 
     def test_content_view_environments_deduplicates_preserves_order
-      Setting['allow_multiple_content_views'] = true
       cvenv1 = katello_content_view_environments(:library_dev_view_dev)
       cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
       # uniq keeps first occurrence, so reversed duplicates keep cvenv2 first
@@ -45,7 +38,6 @@ module Katello
     end
 
     def test_content_view_environment_ids_deduplicates
-      Setting['allow_multiple_content_views'] = true
       cvenv1 = katello_content_view_environments(:library_dev_view_dev)
       cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
       @activation_key.content_view_environment_ids = [cvenv1.id, cvenv2.id, cvenv1.id]

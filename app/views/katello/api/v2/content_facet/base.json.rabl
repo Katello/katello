@@ -48,10 +48,6 @@ node :content_view_environments_all_default_or_rolling do |content_facet|
   content_facet.content_view_environments_all_default_or_rolling?
 end
 
-node :allow_multiple_content_views do
-  Setting['allow_multiple_content_views']
-end
-
 # single cv/lce for backward compatibility
 node :content_view do |content_facet|
   content_view = content_facet.single_content_view
