@@ -353,7 +353,7 @@ module Katello
       def pulp3_configuration(config_class)
         config_class.new do |config|
           uri = pulp3_uri!
-          config.host = uri.host
+          config.host = uri.port == uri.default_port ? uri.host : "#{uri.host}:#{uri.port}"
           config.scheme = uri.scheme
           pulp3_ssl_configuration(config)
           config.debugging = ::Foreman::Logging.logger('katello/pulp_rest').debug?
