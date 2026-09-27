@@ -47,12 +47,20 @@ module Katello
 
           def load_class
             pulp_primary = ::SmartProxy.pulp_primary
+            container_registry_api_url = pulp_primary
+              .setting(SmartProxy::PULP3_FEATURE, 'container_registry_api_url')
+              .presence
             content_app_url = pulp_primary.setting(SmartProxy::PULP3_FEATURE, 'content_app_url')
 
-            fail Errors::ContainerRegistryNotConfigured unless content_app_url
+            fail Errors::ContainerRegistryNotConfigured unless container_registry_api_url || content_app_url
 
-            uri = URI.parse(content_app_url)
-            self.prefix = "/pulpcore_registry/"
+            uri = URI.parse(container_registry_api_url || content_app_url)
+            self.prefix = if container_registry_api_url
+                            registry_path = uri.path == '/' ? nil : uri.path.presence
+                            "#{(registry_path || '/pulpcore_registry').chomp('/')}/"
+                          else
+                            "/pulpcore_registry/"
+                          end
             self.site = "#{uri.scheme}://#{uri.host}:#{uri.port}"
             pulp_primary.pulp3_ssl_configuration(self, :net_http)
 
