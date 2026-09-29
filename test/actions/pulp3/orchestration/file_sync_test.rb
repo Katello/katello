@@ -63,6 +63,35 @@ module ::Actions::Pulp3
       end
     end
 
+    # UNCOMMENT when pulp bug is resolved: https://github.com/pulp/pulpcore/issues/8141
+    # def test_optimize_false
+    #   SETTINGS[:katello][:katello_applicability] = true
+    #   sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+    #   ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+    #   @repo.reload
+    #   @repo.index_content
+
+    #   old_url = @repo.version_href
+    #   initial_file_count = @repo.files.count
+    #   @repo.update(version_href: old_url.sub('/1/', '/0/'))
+    #   @repo.index_content #should clear out the repo
+    #   assert_empty @repo.files
+
+    #   task = ForemanTasks.sync_task(::Actions::Katello::Repository::Sync,
+    #                                 @repo,
+    #                                 skip_metadata_check: true,
+    #                                 skip_candlepin_check: true)
+
+    #   @repo.reload
+    #   assert_equal old_url, @repo.version_href
+    #   refute_empty @repo.files
+    #   assert_equal initial_file_count, @repo.files.count
+
+    #   assert_equal "Added Files: #{initial_file_count}", task.get_humanized(:humanized_output).split("\n").first
+    # ensure
+    #   SETTINGS[:katello][:katello_applicability] = false
+    # end
+
     def test_sync_with_mirror_false
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
