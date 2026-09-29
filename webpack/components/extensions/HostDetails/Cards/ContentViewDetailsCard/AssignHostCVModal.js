@@ -60,7 +60,6 @@ const AssignHostCVModal = ({
   contentSourceId,
   hostName,
   existingAssignments,
-  allowMultipleContentViews,
 }) => {
   const [assignments, setAssignments] = useState([]);
   const initialAssignmentsRef = useRef(null);
@@ -177,9 +176,7 @@ const AssignHostCVModal = ({
       isOpen={isOpen}
       onClose={handleModalClose}
       onEscapePress={handleModalClose}
-      title={allowMultipleContentViews
-        ? __('Assign content view environments')
-        : __('Edit content view environment')}
+      title={__('Assign content view environments')}
       width="50%"
       position="top"
       actions={modalActions}
@@ -188,9 +185,7 @@ const AssignHostCVModal = ({
     >
       <TextContent style={{ marginBottom: '1rem' }}>
         <Text component={TextVariants.p} ouiaId="modal-description">
-          {allowMultipleContentViews
-            ? __('A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content.')
-            : __('A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host.')}
+          {__('A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content.')}
         </Text>
       </TextContent>
 
@@ -210,25 +205,22 @@ const AssignHostCVModal = ({
       )}
 
       <div className="attached-content-views">
-        {allowMultipleContentViews && (
-          <Text
-            component={TextVariants.h3}
-            style={{ marginBottom: '0.5rem' }}
-            ouiaId="attached-content-views-heading"
-          >
-            {__('Associated content view environments')}
-          </Text>
-        )}
+        <Text
+          component={TextVariants.h3}
+          style={{ marginBottom: '0.5rem' }}
+          ouiaId="attached-content-views-heading"
+        >
+          {__('Associated content view environments')}
+        </Text>
 
         <OrderableAssignmentList
           existingAssignments={existingAssignments}
           isOpen={isOpen}
           assignmentStatus={hostUpdateStatus}
           onAssignmentsChange={handleAssignmentsChange}
-          allowMultipleContentViews={allowMultipleContentViews}
-          renderAddButton={allowMultipleContentViews ? (addFn, canAdd) => (
+          renderAddButton={(addFn, canAdd) => (
             <AddAnotherCVButton onClick={addFn} isDisabled={!canAdd} />
-          ) : null}
+          )}
         />
       </div>
 
@@ -260,7 +252,6 @@ AssignHostCVModal.propTypes = {
   contentSourceId: PropTypes.number,
   hostName: PropTypes.string.isRequired,
   existingAssignments: PropTypes.arrayOf(ExistingAssignmentShape),
-  allowMultipleContentViews: PropTypes.bool.isRequired,
 };
 
 AssignHostCVModal.defaultProps = {

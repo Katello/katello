@@ -26,10 +26,8 @@ module Katello
 
       param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels to be associated with the activation key,"\
                                               " in the format of 'lifecycle_environment_label/content_view_label'."\
-                                              " Ignored if content_view_environment_ids is specified."\
-                                              " Requires allow_multiple_content_views setting to be on.")
-      param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids to be associated with the activation key."\
-                                              " Requires allow_multiple_content_views setting to be on.")
+                                              " Ignored if content_view_environment_ids is specified.")
+      param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids to be associated with the activation key.")
     end
 
     api :GET, "/activation_keys", N_("List activation keys")
@@ -41,10 +39,8 @@ module Katello
     param :name, String, :desc => N_("activation key name to filter by")
     param :content_view_environments, Array, :desc => N_("Comma-separated list of content view environment labels associated with the activation key,"\
                                             " in the format of 'lifecycle_environment_label/content_view_label'."\
-                                            " Ignored if content_view_environment_ids is specified."\
-                                            " Requires allow_multiple_content_views setting to be on.")
-    param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids associated with the activation key."\
-                                            " Requires allow_multiple_content_views setting to be on.")
+                                            " Ignored if content_view_environment_ids is specified.")
+    param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids associated with the activation key.")
 
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ActivationKey)

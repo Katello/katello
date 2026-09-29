@@ -61,44 +61,6 @@ describe('AssignHostCVModal', () => {
       .persist(); // Allow multiple calls to this endpoint
   });
 
-  test('Renders modal with correct title and description for multiple CVE mode', async () => {
-    const { getByText } = renderWithRedux(
-      <AssignHostCVModal
-        isOpen
-        closeModal={jest.fn()}
-        hostId={1}
-        hostName="test-host"
-        orgId={1}
-        allowMultipleContentViews
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('Assign content view environments')).toBeInTheDocument();
-      expect(getByText(/You can assign multiple content view environments/)).toBeInTheDocument();
-    });
-  });
-
-  test('Renders modal with correct title and description for single CVE mode', async () => {
-    const { getByText } = renderWithRedux(
-      <AssignHostCVModal
-        isOpen
-        closeModal={jest.fn()}
-        hostId={1}
-        hostName="test-host"
-        orgId={1}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('Edit content view environment')).toBeInTheDocument();
-      expect(getByText(/Select a content view environment to assign to this host\./)).toBeInTheDocument();
-    });
-  });
-
   test('Displays environment paths in first assignment', async () => {
     const { getAllByText } = renderWithRedux(
       <AssignHostCVModal
@@ -107,7 +69,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -125,7 +86,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -150,7 +110,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -171,7 +130,7 @@ describe('AssignHostCVModal', () => {
     });
   });
 
-  test('Add another content view button exists in multiple CVE mode', async () => {
+  test('Add another content view button exists', async () => {
     const {
       getByText,
     } = renderWithRedux(
@@ -181,7 +140,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -192,28 +150,8 @@ describe('AssignHostCVModal', () => {
     });
   });
 
-  test('Add another content view button does NOT exist in single CVE mode', async () => {
-    const {
-      queryByText,
-    } = renderWithRedux(
-      <AssignHostCVModal
-        isOpen
-        closeModal={jest.fn()}
-        hostId={1}
-        hostName="test-host"
-        orgId={1}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
 
-    // Verify "Assign another content view environment" button does NOT exist
-    await patientlyWaitFor(() => {
-      expect(queryByText('Assign another content view environment')).not.toBeInTheDocument();
-    });
-  });
-
-  test('Initializes with multiple existing assignments in multiple CVE mode', async () => {
+  test('Initializes with multiple existing assignments', async () => {
     const existingAssignments = [
       {
         contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
@@ -239,7 +177,6 @@ describe('AssignHostCVModal', () => {
         hostName="test-host"
         orgId={1}
         existingAssignments={existingAssignments}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -282,7 +219,6 @@ describe('AssignHostCVModal', () => {
         hostName="test-host"
         orgId={1}
         existingAssignments={existingAssignments}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -334,7 +270,6 @@ describe('AssignHostCVModal', () => {
         hostName="test-host"
         orgId={1}
         existingAssignments={existingAssignments}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -345,24 +280,6 @@ describe('AssignHostCVModal', () => {
     });
   });
 
-  test('Does NOT display remove button in single CVE mode', async () => {
-    const { queryByRole } = renderWithRedux(
-      <AssignHostCVModal
-        isOpen
-        closeModal={jest.fn()}
-        hostId={1}
-        hostName="test-host"
-        orgId={1}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      // No remove button in single CVE mode
-      expect(queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
-    });
-  });
 
   test('Force profile upload checkbox toggles text', async () => {
     const { getByRole, getByText } = renderWithRedux(
@@ -372,7 +289,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -400,7 +316,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -419,7 +334,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -453,7 +367,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       {
         apiNamespace: HOST_CV_AND_ENV_KEY,
@@ -473,7 +386,7 @@ describe('AssignHostCVModal', () => {
     });
   });
 
-  test('Displays attached content views header in multiple CVE mode', async () => {
+  test('Displays attached content views header', async () => {
     const { getByText } = renderWithRedux(
       <AssignHostCVModal
         isOpen
@@ -481,7 +394,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -491,23 +403,6 @@ describe('AssignHostCVModal', () => {
     });
   });
 
-  test('Does NOT display attached content views header in single CVE mode', async () => {
-    const { queryByText } = renderWithRedux(
-      <AssignHostCVModal
-        isOpen
-        closeModal={jest.fn()}
-        hostId={1}
-        hostName="test-host"
-        orgId={1}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(queryByText('Associated content view environments')).not.toBeInTheDocument();
-    });
-  });
 
   test('Cancel button closes modal', async () => {
     const closeModal = jest.fn();
@@ -518,7 +413,6 @@ describe('AssignHostCVModal', () => {
         hostId={1}
         hostName="test-host"
         orgId={1}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -536,33 +430,6 @@ describe('AssignHostCVModal', () => {
     expect(closeModal).toHaveBeenCalled();
   });
 
-  test('Initializes with single existing assignment in single CVE mode', async () => {
-    const existingAssignments = [
-      {
-        contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
-        environment: { id: 1, name: 'Library', label: 'Library' },
-      },
-    ];
-
-    const { getByText, queryByRole } = renderWithRedux(
-      <AssignHostCVModal
-        isOpen
-        closeModal={jest.fn()}
-        hostId={1}
-        hostName="test-host"
-        orgId={1}
-        existingAssignments={existingAssignments}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('cv_1')).toBeInTheDocument();
-      // No remove button in single CVE mode
-      expect(queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
-    });
-  });
 
   describe('Change detection and Save button enablement', () => {
     test('Save button disabled when no changes made to existing assignments', async () => {
@@ -582,7 +449,6 @@ describe('AssignHostCVModal', () => {
           hostName="test-host"
           orgId={1}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -625,7 +491,6 @@ describe('AssignHostCVModal', () => {
           hostName="test-host"
           orgId={1}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -666,7 +531,6 @@ describe('AssignHostCVModal', () => {
           hostName="test-host"
           orgId={1}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -729,7 +593,6 @@ describe('AssignHostCVModal', () => {
           hostName="test-host"
           orgId={1}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -758,7 +621,6 @@ describe('AssignHostCVModal', () => {
           hostName="test-host"
           orgId={1}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -849,7 +711,6 @@ describe('AssignHostCVModal', () => {
           hostName="test-host"
           orgId={1}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -903,7 +764,6 @@ describe('AssignHostCVModal', () => {
           hostId={123}
           hostName="test-host"
           orgId={1}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -977,7 +837,6 @@ describe('AssignHostCVModal', () => {
           hostId={123}
           hostName="test-host"
           orgId={1}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -1080,7 +939,6 @@ describe('AssignHostCVModal', () => {
           hostName="test-host"
           orgId={1}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -1154,7 +1012,6 @@ describe('AssignHostCVModal', () => {
           hostName="test-host"
           orgId={1}
           existingAssignments={existingAssignments}
-          allowMultipleContentViews={false}
         />,
         renderOptions(),
       );
@@ -1221,79 +1078,6 @@ describe('AssignHostCVModal', () => {
       });
     });
 
-    test('Save in single CVE mode sends single label', async () => {
-      const { getAllByRole, getByRole } = renderWithRedux(
-        <AssignHostCVModal
-          isOpen
-          closeModal={jest.fn()}
-          hostId={123}
-          hostName="test-host"
-          orgId={1}
-          allowMultipleContentViews={false}
-        />,
-        renderOptions(),
-      );
-
-      // Select Library environment
-      await patientlyWaitFor(() => {
-        expect(getAllByRole('radio', { name: firstEnv.name })[0]).toBeInTheDocument();
-      });
-
-      const envRadio = getAllByRole('radio', { name: firstEnv.name })[0];
-      await act(async () => {
-        userEvent.click(envRadio);
-      });
-
-      // Wait for content views to load
-      await patientlyWaitFor(() => {
-        expect(getByRole('button', { name: 'Options menu' })).not.toHaveAttribute('disabled');
-      });
-
-      // Click to open CV select
-      const cvSelectButton = getByRole('button', { name: 'Options menu' });
-      await act(async () => {
-        userEvent.click(cvSelectButton);
-      });
-
-      // Select a CV
-      await patientlyWaitFor(() => {
-        expect(getByRole('option', { name: /cv_1/ })).toBeInTheDocument();
-      });
-
-      const cvOption = getByRole('option', { name: /cv_1/ });
-      await act(async () => {
-        userEvent.click(cvOption);
-      });
-
-      // Wait for Save button to be enabled
-      await patientlyWaitFor(() => {
-        const saveButton = getAllByRole('button', { name: 'Save' })[0];
-        expect(saveButton).not.toHaveAttribute('aria-disabled', 'true');
-      });
-
-      // Click Save
-      const saveButton = getAllByRole('button', { name: 'Save' })[0];
-      await act(async () => {
-        userEvent.click(saveButton);
-      });
-
-      // Verify API was called with single label in array
-      await patientlyWaitFor(() => {
-        expect(mockAssignHostCVEnvironments).toHaveBeenCalledWith(
-          expect.objectContaining({
-            id: 123,
-            host: {
-              content_facet_attributes: {
-                content_view_environments: ['Library/cv_1'],
-              },
-            },
-          }),
-          123,
-          expect.any(Function),
-          expect.any(Function),
-        );
-      });
-    });
 
     test('Save with forceProfileUpload triggers remote execution', async () => {
       const { getAllByRole, getByRole } = renderWithRedux(
@@ -1303,7 +1087,6 @@ describe('AssignHostCVModal', () => {
           hostId={123}
           hostName="test-host"
           orgId={1}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );
@@ -1370,7 +1153,6 @@ describe('AssignHostCVModal', () => {
           hostId={123}
           hostName="test-host"
           orgId={1}
-          allowMultipleContentViews
         />,
         renderOptions(),
       );

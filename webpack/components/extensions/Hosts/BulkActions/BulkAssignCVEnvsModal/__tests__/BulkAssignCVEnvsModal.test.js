@@ -43,14 +43,13 @@ const defaultProps = {
   fetchBulkParams: jest.fn(() => 'name ~ test'),
   selectedCount: 5,
   orgId: 1,
-  allowMultipleContentViews: true,
 };
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test('renders modal when open with multiple CVs enabled', async () => {
+test('renders modal when open', async () => {
   const environmentPathsScope = nockInstance
     .get(environmentPathsUrl)
     .query(true)
@@ -71,27 +70,6 @@ test('renders modal when open with multiple CVs enabled', async () => {
   assertNockRequest(environmentPathsScope, false);
 });
 
-test('renders modal with single CV mode when disabled', async () => {
-  const environmentPathsScope = nockInstance
-    .get(environmentPathsUrl)
-    .query(true)
-    .reply(200, mockEnvironmentPaths)
-    .persist();
-
-  const { getByText, queryByText } = renderWithRedux(
-    <BulkAssignCVEnvsModal {...defaultProps} allowMultipleContentViews={false} />,
-    renderOptions(),
-  );
-
-  await patientlyWaitFor(() => {
-    expect(getByText('Assign content view environment')).toBeInTheDocument();
-  });
-
-  // Add button should not be visible in single CV mode
-  expect(queryByText('Add content view environment')).not.toBeInTheDocument();
-
-  assertNockRequest(environmentPathsScope, false);
-});
 
 test('Save button is disabled when no CVE is added', async () => {
   const environmentPathsScope = nockInstance
@@ -151,43 +129,6 @@ test('does not fetch data when modal is closed', () => {
   );
 
   expect(queryByText('Assign content view environments')).not.toBeInTheDocument();
-});
-
-test('displays proper description based on allowMultipleContentViews setting', async () => {
-  const environmentPathsScope1 = nockInstance
-    .get(environmentPathsUrl)
-    .query(true)
-    .reply(200, mockEnvironmentPaths)
-    .persist();
-
-  const { getByText, unmount } = renderWithRedux(
-    <BulkAssignCVEnvsModal {...defaultProps} allowMultipleContentViews />,
-    renderOptions(),
-  );
-
-  await patientlyWaitFor(() => {
-    expect(getByText(/You can assign multiple content view environments/)).toBeInTheDocument();
-  });
-
-  unmount();
-  assertNockRequest(environmentPathsScope1, false);
-
-  const environmentPathsScope2 = nockInstance
-    .get(environmentPathsUrl)
-    .query(true)
-    .reply(200, mockEnvironmentPaths)
-    .persist();
-
-  const { queryByText } = renderWithRedux(
-    <BulkAssignCVEnvsModal {...defaultProps} allowMultipleContentViews={false} />,
-    renderOptions(),
-  );
-
-  await patientlyWaitFor(() => {
-    expect(queryByText(/You can assign multiple content view environments/)).not.toBeInTheDocument();
-  });
-
-  assertNockRequest(environmentPathsScope2, false);
 });
 
 test('builds correct payload for single CVE', () => {
