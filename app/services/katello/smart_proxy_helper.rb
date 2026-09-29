@@ -45,7 +45,8 @@ module Katello
       environments = @smart_proxy.lifecycle_environments if environments.nil?
       repos = Katello::Repository.in_environment(environments)
       repos = repos.in_content_views([content_view]) if content_view
-      repos.smart_proxy_syncable
+      # Callers read repo.content_type (delegated to root), so preload it once here.
+      repos.smart_proxy_syncable.includes(:root)
     end
 
     def unsyncable_content_types
