@@ -1,3 +1,4 @@
 attributes :download_policy
 attributes :supported_pulp_types
 attributes :lifecycle_environments
+attributes :container_registry_auth_enabled
