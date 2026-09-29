@@ -116,7 +116,6 @@ module Katello
     end
 
     def test_content_view_environments=
-      Setting['allow_multiple_content_views'] = true
       Katello::ContentViewEnvironmentContentFacet.expects(:reprioritize_for_content_facet).twice
       content_facet.content_view_environments.reload
       content_facet.content_view_environments = [katello_content_view_environments(:library_dev_view_dev), katello_content_view_environments(:library_dev_staging_view_dev)]
@@ -124,7 +123,6 @@ module Katello
     end
 
     def test_content_view_environments_deduplicates
-      Setting['allow_multiple_content_views'] = true
       ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       cvenv1 = katello_content_view_environments(:library_dev_view_dev)
       cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
@@ -133,7 +131,6 @@ module Katello
     end
 
     def test_content_view_environments_deduplicates_preserves_order
-      Setting['allow_multiple_content_views'] = true
       ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       cvenv1 = katello_content_view_environments(:library_dev_view_dev)
       cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
@@ -143,7 +140,6 @@ module Katello
     end
 
     def test_content_view_environment_ids_deduplicates
-      Setting['allow_multiple_content_views'] = true
       ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       cvenv1 = katello_content_view_environments(:library_dev_view_dev)
       cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
@@ -152,20 +148,11 @@ module Katello
     end
 
     def test_content_view_environment_ids_deduplicates_preserves_order
-      Setting['allow_multiple_content_views'] = true
       ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
       cvenv1 = katello_content_view_environments(:library_dev_view_dev)
       cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
       content_facet.content_view_environment_ids = [cvenv2.id, cvenv1.id, cvenv2.id]
       assert_equal [cvenv2, cvenv1], content_facet.content_view_environments.reload.to_a
-    end
-
-    def test_multi_cv_not_enabled
-      Setting['allow_multiple_content_views'] = false
-      assert_equal 1, content_facet.content_view_environments.length
-      assert_raises(::Katello::Errors::MultiEnvironmentNotSupportedError) do
-        content_facet.content_view_environments = [katello_content_view_environments(:library_dev_view_dev), katello_content_view_environments(:library_dev_staging_view_dev)]
-      end
     end
 
     def test_audit_for_content_facet
@@ -199,7 +186,6 @@ module Katello
     def test_all_default_or_rolling_returns_true_when_first_is_library_with_others
       library_cvenv = katello_content_view_environments(:library_default_view_environment)
       non_rolling_cvenv = katello_content_view_environments(:library_dev_view_dev)
-      Setting['allow_multiple_content_views'] = true
       content_facet.content_view_environments = [library_cvenv, non_rolling_cvenv]
       assert content_facet.content_view_environments_all_default_or_rolling?
     end
@@ -207,7 +193,6 @@ module Katello
     def test_all_default_or_rolling_returns_false_when_rolling_first_non_rolling_second
       rolling_cvenv = katello_content_view_environments(:rolling_view_library)
       non_rolling_cvenv = katello_content_view_environments(:library_dev_view_dev)
-      Setting['allow_multiple_content_views'] = true
       content_facet.content_view_environments = [rolling_cvenv, non_rolling_cvenv]
       refute content_facet.content_view_environments_all_default_or_rolling?
     end
@@ -215,7 +200,6 @@ module Katello
     def test_all_default_or_rolling_returns_true_when_all_rolling_or_library
       rolling_cvenv = katello_content_view_environments(:rolling_view_library)
       library_cvenv = katello_content_view_environments(:library_default_view_environment)
-      Setting['allow_multiple_content_views'] = true
       content_facet.content_view_environments = [rolling_cvenv, library_cvenv]
       assert content_facet.content_view_environments_all_default_or_rolling?
     end
@@ -702,10 +686,6 @@ module Katello
     def setup
       assert host #force lazy load
       assert host_one
-    end
-
-    def teardown
-      Setting['allow_multiple_content_views'] = false
     end
 
     def test_content_view_search

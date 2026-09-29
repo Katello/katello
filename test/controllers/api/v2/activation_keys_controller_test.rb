@@ -446,8 +446,6 @@ module Katello
     end
 
     def test_update_from_angularjs_preserves_multi_cvenv
-      original_setting = Setting['allow_multiple_content_views']
-      Setting['allow_multiple_content_views'] = true
       multi_key = katello_activation_keys(:library_dev_staging_view_key)
       cvenv2 = katello_content_view_environments(:library_dev_view_library)
       multi_key.content_view_environments << cvenv2
@@ -465,8 +463,6 @@ module Katello
       multi_key.reload
       assert_equal 'Renamed Multi Key', multi_key.name
       assert_equal 2, multi_key.content_view_environments.size
-    ensure
-      Setting['allow_multiple_content_views'] = original_setting
     end
 
     def test_update_protected

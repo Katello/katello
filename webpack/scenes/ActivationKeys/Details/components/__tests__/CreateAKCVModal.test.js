@@ -55,43 +55,6 @@ describe('CreateAKCVModal', () => {
       .persist();
   });
 
-  test('Renders modal with correct title when allowMultipleContentViews is true', async () => {
-    const { getByText } = renderWithRedux(
-      <CreateAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        orgId={1}
-        onAssignmentsChange={jest.fn()}
-        allowMultipleContentViews
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('Assign content view environments')).toBeInTheDocument();
-      expect(getByText(/You can assign multiple content view environments/)).toBeInTheDocument();
-    });
-  });
-
-  test('Renders modal without multiple assignment text when allowMultipleContentViews is false', async () => {
-    const { getByText, queryByText } = renderWithRedux(
-      <CreateAKCVModal
-        isOpen
-        closeModal={jest.fn()}
-        orgId={1}
-        onAssignmentsChange={jest.fn()}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getByText('Assign content view environments')).toBeInTheDocument();
-      expect(getByText(/A content view environment is a combination of a particular lifecycle environment and content view\./)).toBeInTheDocument();
-      expect(queryByText(/You can assign multiple content view environments/)).not.toBeInTheDocument();
-    });
-  });
-
   test('Calls onAssignmentsChange callback when Save is clicked', async () => {
     const onAssignmentsChange = jest.fn();
     const closeModal = jest.fn();
@@ -111,7 +74,6 @@ describe('CreateAKCVModal', () => {
         orgId={1}
         existingAssignments={existingAssignments}
         onAssignmentsChange={onAssignmentsChange}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -162,7 +124,6 @@ describe('CreateAKCVModal', () => {
         orgId={1}
         existingAssignments={existingAssignments}
         onAssignmentsChange={jest.fn()}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -182,7 +143,6 @@ describe('CreateAKCVModal', () => {
         closeModal={closeModal}
         orgId={1}
         onAssignmentsChange={jest.fn()}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -219,7 +179,6 @@ describe('CreateAKCVModal', () => {
         orgId={1}
         existingAssignments={existingAssignments}
         onAssignmentsChange={onAssignmentsChange}
-        allowMultipleContentViews
       />,
       renderOptions(),
     );
@@ -241,64 +200,6 @@ describe('CreateAKCVModal', () => {
     });
 
     // Click save
-    const saveButton = getAllByRole('button', { name: 'Save' })[0];
-    await act(async () => {
-      userEvent.click(saveButton);
-    });
-
-    // Verify callback receives empty array
-    expect(onAssignmentsChange).toHaveBeenCalledTimes(1);
-    expect(onAssignmentsChange).toHaveBeenCalledWith([]);
-
-    // Verify modal closed
-    expect(closeModal).toHaveBeenCalled();
-  });
-
-  test('Allows saving with zero assignments when single-assignment mode', async () => {
-    const onAssignmentsChange = jest.fn();
-    const closeModal = jest.fn();
-
-    const existingAssignments = [
-      {
-        contentView: { id: 2, name: 'cv_1', label: 'cv_1' },
-        environment: { id: 1, name: 'Library', label: 'Library' },
-        label: 'Library/cv_1',
-      },
-    ];
-
-    const { getAllByRole } = renderWithRedux(
-      <CreateAKCVModal
-        isOpen
-        closeModal={closeModal}
-        orgId={1}
-        existingAssignments={existingAssignments}
-        onAssignmentsChange={onAssignmentsChange}
-        allowMultipleContentViews={false}
-      />,
-      renderOptions(),
-    );
-
-    await patientlyWaitFor(() => {
-      expect(getAllByRole('button', { name: 'Remove' })).toHaveLength(1);
-    });
-
-    // Remove all assignments
-    const removeButtons = getAllByRole('button', { name: 'Remove' });
-    // eslint-disable-next-line no-restricted-syntax
-    for (const button of removeButtons) {
-      // eslint-disable-next-line no-await-in-loop
-      await act(async () => {
-        userEvent.click(button);
-      });
-    }
-
-    // Verify Save is enabled
-    await patientlyWaitFor(() => {
-      const saveButton = getAllByRole('button', { name: 'Save' })[0];
-      expect(saveButton).not.toHaveAttribute('aria-disabled', 'true');
-    });
-
-    // Click save and verify payload
     const saveButton = getAllByRole('button', { name: 'Save' })[0];
     await act(async () => {
       userEvent.click(saveButton);

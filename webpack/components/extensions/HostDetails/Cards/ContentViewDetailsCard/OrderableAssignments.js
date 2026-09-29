@@ -270,7 +270,6 @@ export const OrderableAssignmentList = ({
   assignmentStatus,
   onAssignmentsChange,
   renderAddButton,
-  allowMultipleContentViews,
   allowZeroAssignments,
 }) => {
   const [assignments, setAssignments] = useState([]);
@@ -372,8 +371,7 @@ export const OrderableAssignmentList = ({
     ]);
   };
 
-  const canAddAnother = assignments.every(a => a.selectedCV && a.selectedEnv.length > 0) &&
-                         (allowMultipleContentViews || assignments.length === 0);
+  const canAddAnother = assignments.every(a => a.selectedCV && a.selectedEnv.length > 0);
 
   const removeAssignment = (assignmentId) => {
     setAssignments(prev => prev.filter(a => a.id !== assignmentId));
@@ -477,7 +475,6 @@ export const OrderableAssignmentList = ({
             onToggleCVSelect={() =>
               handleToggleCVSelect(assignment.id, !assignment.cvSelectOpen)}
             assignmentStatus={assignmentStatus}
-            allowMultipleContentViews={allowMultipleContentViews}
             allowZeroAssignments={allowZeroAssignments}
           />
         ))}
@@ -494,7 +491,6 @@ OrderableAssignmentList.propTypes = {
   assignmentStatus: PropTypes.string,
   onAssignmentsChange: PropTypes.func.isRequired,
   renderAddButton: PropTypes.func,
-  allowMultipleContentViews: PropTypes.bool.isRequired,
   allowZeroAssignments: PropTypes.bool,
 };
 
