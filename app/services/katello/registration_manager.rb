@@ -287,25 +287,9 @@ module Katello
       end
 
       def lookup_content_view_environments(activation_keys)
-        # If the setting is on, we combine all CVEnvs from all AKs
-        if Setting['allow_multiple_content_views']
-          cvenvs = activation_keys.map do |act_key|
-            act_key.content_view_environments
-          end
-          cvenvs = cvenvs.flatten.uniq
-          fail _('At least one activation key must have a lifecycle environment and content view assigned to it') if cvenvs.blank?
-          return cvenvs
-        end
-
-        # If the setting is off, we stick with the previous behavior (the last AK with a valid cv/lce wins).
-        activation_key = activation_keys.reverse.detect do |act_key|
-          act_key.content_view_environments.any?
-        end
-        if activation_key
-          [activation_key.content_view_environments.first]
-        else
-          fail _('At least one activation key must have a lifecycle environment and content view assigned to it')
-        end
+        cvenvs = activation_keys.map(&:content_view_environments).flatten.uniq
+        fail _('At least one activation key must have a lifecycle environment and content view assigned to it') if cvenvs.blank?
+        cvenvs
       end
 
       def candlepin_consumer_destroy(host_uuid)

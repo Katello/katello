@@ -24,7 +24,6 @@ const BulkAssignCVEnvsModal = ({
   selectedCount,
   orgId,
   fetchBulkParams,
-  allowMultipleContentViews,
   refreshTableData,
 }) => {
   const [assignments, setAssignments] = useState([]);
@@ -108,9 +107,7 @@ const BulkAssignCVEnvsModal = ({
       isOpen={isOpen}
       onClose={handleModalClose}
       onEscapePress={handleModalClose}
-      title={allowMultipleContentViews
-        ? __('Assign content view environments')
-        : __('Assign content view environment')}
+      title={__('Assign content view environments')}
       width="50%"
       position="top"
       actions={modalActions}
@@ -121,9 +118,7 @@ const BulkAssignCVEnvsModal = ({
       <TextContent style={{ marginBottom: '1rem' }}>
         <Text component={TextVariants.p} ouiaId="bulk-assign-cves-description">
           <FormattedMessage
-            defaultMessage={allowMultipleContentViews
-              ? __('A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide access to different sets of content. Your selection here will {replace} all existing content view environments on {hosts}.')
-              : __('A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}.')}
+            defaultMessage={__('A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide access to different sets of content. Your selection here will {replace} all existing content view environments on {hosts}.')}
             values={{
               replace: <strong>{__('replace')}</strong>,
               hosts: (
@@ -150,8 +145,7 @@ const BulkAssignCVEnvsModal = ({
         isOpen={isOpen}
         assignmentStatus={assignmentStatus}
         onAssignmentsChange={handleAssignmentsChange}
-        renderAddButton={allowMultipleContentViews ? renderAddButton : null}
-        allowMultipleContentViews={allowMultipleContentViews}
+        renderAddButton={renderAddButton}
       />
 
       <hr style={{ margin: '1.5rem 0' }} />
@@ -171,14 +165,12 @@ BulkAssignCVEnvsModal.propTypes = {
   selectedCount: PropTypes.number.isRequired,
   orgId: PropTypes.number.isRequired,
   fetchBulkParams: PropTypes.func.isRequired,
-  allowMultipleContentViews: PropTypes.bool,
   refreshTableData: PropTypes.func,
 };
 
 BulkAssignCVEnvsModal.defaultProps = {
   isOpen: false,
   closeModal: () => {},
-  allowMultipleContentViews: true,
   refreshTableData: () => {},
 };
 

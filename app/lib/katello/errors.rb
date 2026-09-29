@@ -12,8 +12,6 @@ module Katello
 
     class InvalidRepositoryTypeError < StandardError; end
 
-    class MultiEnvironmentNotSupportedError < StandardError; end
-
     class ContentViewEnvironmentError < StandardError; end
 
     # unauthorized access

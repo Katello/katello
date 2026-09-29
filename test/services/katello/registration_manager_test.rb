@@ -31,7 +31,6 @@ module Katello
 
       after do
         Setting[:retain_build_profile_upon_unregistration] = false
-        Setting['allow_multiple_content_views'] = true
       end
 
       let(:rhsm_params) { {:name => 'foobar.example.com', :facts => @facts, :type => 'system'} }
@@ -247,7 +246,6 @@ module Katello
       end
 
       def test_registration_sets_priorities_for_new_content_facet_with_multiple_cvenvs
-        Setting['allow_multiple_content_views'] = true
         new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @library.organization)
         cvenvs = [
           katello_content_view_environments(:library_dev_view_dev),
@@ -284,15 +282,7 @@ module Katello
         refute_includes new_host.host_collections, @host_collection
       end
 
-      def test_lookup_content_view_environments_single_cvenv_mode
-        Setting['allow_multiple_content_views'] = false
-        result = ::Katello::RegistrationManager.send(:lookup_content_view_environments, [@activation_key])
-        assert_equal 1, result.length
-        assert_equal @activation_key.content_view_environments.first, result.first
-      end
-
       def test_lookup_content_view_environments_raises_without_cvenvs
-        Setting['allow_multiple_content_views'] = false
         empty_key = katello_activation_keys(:simple_key)
         empty_key.stubs(:content_view_environments).returns([])
         assert_raises(RuntimeError) do

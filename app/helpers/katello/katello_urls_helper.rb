@@ -56,10 +56,8 @@ module Katello
       if @host.default_environment?
         # Don't update the content_path if the host is using the default org view / library
         lifecycle_environment = ::Katello::KTEnvironment.library.find_by(organization_id: @host.organization_id)
-      elsif !@host.single_content_view_environment?
-        fail ::Katello::Errors::MultiEnvironmentNotSupportedError,
-          "Host #{@host.name} must be subscribed to only a single content view & environment or subscribe to the default organization content view for liveimg provisioning."
       else
+        # Use the first content view environment when the host has multiple
         lifecycle_environment = @host.single_lifecycle_environment
         content_path = [@host.single_content_view.label, content_path].join('/')
       end
