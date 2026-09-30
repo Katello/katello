@@ -23,6 +23,13 @@ class OrganizationsControllerTest < ActionController::TestCase
     assert_equal session[:organization_id], org.id
   end
 
+  # Refs #39747 / SAT-38345: Katello Deface override must inject Label on the create form.
+  def test_new_includes_label_field
+    get :new
+    assert_response :success
+    assert_select 'input[name=?]', 'organization[label]'
+  end
+
   def test_edit_override_can_toggle
     org = get_organization(:organization2)
     Organization.any_instance.stubs(:service_level)
