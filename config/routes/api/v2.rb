@@ -262,6 +262,7 @@ Katello::Engine.routes.draw do
             post :repo_discover
             post :cancel_repo_discover
             get :download_debug_certificate
+            get :key_algorithms
             get :redhat_provider
             get :releases
             put :cdn_configuration

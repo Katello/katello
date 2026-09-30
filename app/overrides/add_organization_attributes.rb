@@ -17,6 +17,12 @@ Deface::Override.new(:virtual_path => "taxonomies/_step1",
                     :partial => 'overrides/organizations/step_1_override'
                     )
 
+# Hide original description field for Organizations (we render it in the partial in the correct order)
+Deface::Override.new(:virtual_path => "taxonomies/_form",
+                     :name => "hide_organization_description",
+                     :surround => 'erb[loud]:contains("textarea_f"):contains(":description")',
+                     :text => '<% if taxonomy.is_a?(Location) %><%= render_original %><% end %>')
+
 # Add organization attributes to org edit
 Deface::Override.new(:virtual_path => "taxonomies/_form",
                      :name => "add_organization_attributes_on_edit",

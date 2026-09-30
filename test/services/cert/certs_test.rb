@@ -24,6 +24,44 @@ module Katello
     #   cert = File.read(File.join(Katello::Engine.root, "test/fixtures/certs/real-cert.crt"))
     #   assert_equal({ "2.16.840.1.101.3.4.3.17" => "ML-DSA-44" }, Cert::Certs.cert_mapping(cert))
     # end
+
+    def test_available_key_algorithms_returns_empty_array_on_error
+      # Clear the cache before the test
+      Rails.cache.delete('katello/available_key_algorithms')
+
+      # Stub File.read to raise an error
+      File.stubs(:read).raises(StandardError.new("File not found"))
+
+      # Should return empty array when fetch fails
+      result = Cert::Certs.available_key_algorithms
+      assert_empty result
+
+      # Verify that nil was not cached (skip_nil: true should prevent caching nil)
+      # Call it again - if nil was cached, it would return [] from cache
+      # If nil wasn't cached, it will try to read the file again and raise the error again
+      File.expects(:read).raises(StandardError.new("File not found"))
+      result = Cert::Certs.available_key_algorithms
+      assert_empty result
+    end
+
+    def test_available_key_algorithms_caches_successful_result
+      # Clear the cache before the test
+      Rails.cache.delete('katello/available_key_algorithms')
+
+      cert = File.read(File.join(Katello::Engine.root, "test/fixtures/certs/real-cert.crt"))
+
+      # First call - should read from file
+      File.expects(:read).with(Cert::Certs.backend_ca_cert_file(:candlepin)).returns(cert).once
+
+      result1 = Cert::Certs.available_key_algorithms
+      assert_equal 1, result1.size
+      assert_equal '1.2.840.113549.1.1.1', result1.first[:oid]
+      assert_equal 'rsaEncryption', result1.first[:name]
+
+      # Second call - should use cached value (File.read should NOT be called)
+      result2 = Cert::Certs.available_key_algorithms
+      assert_equal result1, result2
+    end
   end
 
   class CertsTest < ActiveSupport::TestCase
