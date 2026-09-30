@@ -225,6 +225,27 @@ module Katello
         assert_equal new_host.subscription_facet.uuid, 'fake-uuid-from-candlepin'
       end
 
+      def test_registration_forwards_cryptographic_capabilities
+        new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @library.organization)
+        # RSA + ML-DSA-65 key OIDs; SHA256withRSA + ML-DSA-65 signature OIDs
+        crypto_capabilities = {
+          'keyAlgorithms' => ['1.2.840.113549.1.1.1', '2.16.840.1.101.3.4.3.18'],
+          'signatureAlgorithms' => ['1.2.840.113549.1.1.11', '2.16.840.1.101.3.4.3.18'],
+        }
+        params = rhsm_params.merge(:cryptographicCapabilities => crypto_capabilities)
+
+        ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
+
+        ::Katello::Resources::Candlepin::Consumer.expects(:create).with([@content_view_environment.cp_id], params, [], @library.organization).returns('uuid' => 'fake-uuid-from-candlepin')
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_hypervisor).twice
+        ::Katello::Host::SubscriptionFacet.any_instance.expects(:update_guests).twice
+
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+        ::Katello::RegistrationManager.register_host(new_host, params, [@content_view_environment])
+
+        assert_equal new_host.subscription_facet.uuid, 'fake-uuid-from-candlepin'
+      end
+
       def test_registration_activation_key
         new_host = ::Host::Managed.new(:name => 'foobar.example.com', :managed => false, :organization => @host_collection.organization)
         cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.single_content_view, :environment_id => @activation_key.single_lifecycle_environment).first
