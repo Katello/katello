@@ -1149,12 +1149,13 @@ module Katello
         end
 
         it 'renders a uniform NAME_UNKNOWN message that does not disclose org vs product' do
-          @controller.expects(:render_podman_error).with do |code, message, status|
+          error_expectation = @controller.expects(:render_podman_error).with do |code, message, status|
             code == "NAME_UNKNOWN" &&
               status == :not_found &&
               message !~ /organization/i &&
               message !~ /product/i
-          end.returns(false)
+          end
+          error_expectation.returns(false)
           refute @controller.send(:render_push_name_unknown)
         end
       end
