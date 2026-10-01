@@ -50,15 +50,14 @@ class HostUrlHelpers < UrlHelperBase
     assert_equal path, repository_url('/custom/zoo/zoo/zoo.iso')
   end
 
-  test 'repository_url should error out if there are multiple content environments without the default org view' do
+  test 'repository_url uses the first content view environment when the host has multiple' do
     @host.update(organization_id: @host.single_content_view.organization_id)
-    ::Katello::ContentViewEnvironmentContentFacet.destroy_all
-    ::Katello::ContentViewEnvironmentContentFacet.create(content_facet_id: @host.content_facet.id, content_view_environment_id: ::Katello::ContentViewEnvironment.find_by(name: 'Library and Dev Content View Environment').id)
-    ::Katello::ContentViewEnvironmentContentFacet.create(content_facet_id: @host.content_facet.id, content_view_environment_id: ::Katello::ContentViewEnvironment.find_by(name: 'Published Library Composite Content View Environment').id)
+    first_cvenv = ::Katello::ContentViewEnvironment.find_by(name: 'Library and Dev Content View Environment')
+    second_cvenv = ::Katello::ContentViewEnvironment.find_by(name: 'Published Library Composite Content View Environment')
+    @host.content_facet.content_view_environments = [first_cvenv, second_cvenv]
     @host.reload
-    message = "Host #{@host.name} must be subscribed to only a single content view & environment or subscribe to the default organization content view for liveimg provisioning."
-    assert_raises_with_message ::Katello::Errors::MultiEnvironmentNotSupportedError, message do
-      repository_url('/custom/zoo/zoo/zoo.iso')
-    end
+
+    path = "http://#{@host.content_source.hostname}/pulp/content/#{first_cvenv.lifecycle_environment.organization.label}/#{first_cvenv.lifecycle_environment.label}/#{first_cvenv.content_view.label}/custom/zoo/zoo/zoo.iso".freeze
+    assert_equal path, repository_url('/custom/zoo/zoo/zoo.iso')
   end
 end

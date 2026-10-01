@@ -8,7 +8,7 @@ export { constructCVELabel };
  * Custom hook for managing assignment state and validation in both
  * AssignAKCVModal and CreateAKCVModal
  */
-const useAssignmentManagement = (allowMultipleContentViews) => {
+const useAssignmentManagement = () => {
   const [assignments, setAssignments] = useState([]);
   const [initialAssignments, setInitialAssignments] = useState([]);
 
@@ -39,11 +39,9 @@ const useAssignmentManagement = (allowMultipleContentViews) => {
   };
 
   // Allow zero assignments for activation keys (unlike hosts)
-  // When allowMultipleContentViews is false, only allow saving with 0 or 1 assignment
   const canSave =
     assignments.every(a => a.selectedCV && a.selectedEnv.length > 0) &&
-    hasChanges() &&
-    (allowMultipleContentViews || assignments.length <= 1);
+    hasChanges();
 
   return {
     assignments,

@@ -35,20 +35,13 @@ AddAnotherCVButton.propTypes = {
 /**
  * Shared modal description that explains content view environments
  */
-export const AssignmentModalDescription = ({ allowMultipleContentViews }) => (
+export const AssignmentModalDescription = () => (
   <TextContent style={{ marginBottom: '1rem' }}>
     <Text component={TextVariants.p} ouiaId="modal-description">
-      {allowMultipleContentViews
-        ? __('A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.')
-        : __('A content view environment is a combination of a particular lifecycle environment and content view.')
-      }
+      {__('A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.')}
     </Text>
   </TextContent>
 );
-
-AssignmentModalDescription.propTypes = {
-  allowMultipleContentViews: PropTypes.bool.isRequired,
-};
 
 /**
  * Shared heading for the assignments section

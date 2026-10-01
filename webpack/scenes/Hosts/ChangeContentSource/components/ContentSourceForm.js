@@ -90,7 +90,6 @@ const ContentSourceForm = ({
   isLoading,
   hostsUpdated,
   showTemplate,
-  allowMultipleContentViews,
   assignments,
   onAssignmentsChange,
   organizationId,
@@ -173,7 +172,6 @@ const ContentSourceForm = ({
           contentSourceId={contentSourceId}
           assignmentCount={completeAssignmentCount}
           onAssignmentsChange={onAssignmentsChange}
-          allowMultipleContentViews={allowMultipleContentViews}
           isLoading={isLoading || hostsUpdated}
         />
       )}
@@ -269,7 +267,6 @@ ContentSourceForm.propTypes = {
   isLoading: PropTypes.bool,
   hostsUpdated: PropTypes.bool,
   showTemplate: PropTypes.func.isRequired,
-  allowMultipleContentViews: PropTypes.bool,
   assignments: PropTypes.arrayOf(PropTypes.shape({})),
   onAssignmentsChange: PropTypes.func.isRequired,
   organizationId: PropTypes.number,
@@ -282,7 +279,6 @@ ContentSourceForm.defaultProps = {
   contentHosts: [],
   isLoading: false,
   hostsUpdated: false,
-  allowMultipleContentViews: false,
   assignments: [],
   organizationId: null,
 };

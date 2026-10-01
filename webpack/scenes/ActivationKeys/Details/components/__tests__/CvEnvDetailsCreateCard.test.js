@@ -4,11 +4,10 @@ import { CvEnvDetailsCreateCard } from '../CvEnvDetailsCreateCard';
 
 // Mock the ForemanContext
 jest.mock('foremanReact/Root/Context/ForemanContext', () => ({
-  useForemanContext: jest.fn(),
   useForemanPermissions: jest.fn(),
 }));
 
-const { useForemanContext, useForemanPermissions } = require('foremanReact/Root/Context/ForemanContext');
+const { useForemanPermissions } = require('foremanReact/Root/Context/ForemanContext');
 
 describe('CvEnvDetailsCreateCard', () => {
   beforeEach(() => {
@@ -20,15 +19,6 @@ describe('CvEnvDetailsCreateCard', () => {
     dataNode.id = 'ak-create-cve-data';
     dataNode.dataset.orgId = '1';
     document.body.appendChild(dataNode);
-
-    // Mock useForemanContext with default values
-    useForemanContext.mockReturnValue({
-      metadata: {
-        katello: {
-          allow_multiple_content_views: true,
-        },
-      },
-    });
 
     // Mock useForemanPermissions with default permissions
     useForemanPermissions.mockReturnValue({
@@ -70,38 +60,6 @@ describe('CvEnvDetailsCreateCard', () => {
 
     // Component should return null and not render anything
     expect(container.firstChild).toBeNull();
-  });
-
-  test('Uses allowMultipleContentViews from ForemanContext', async () => {
-    // Override the mock to return false
-    useForemanContext.mockReturnValue({
-      metadata: {
-        katello: {
-          allow_multiple_content_views: false,
-        },
-      },
-    });
-
-    const { getByText } = renderWithRedux(<CvEnvDetailsCreateCard />);
-
-    await patientlyWaitFor(() => {
-      // With 0 assignments, shows plural "Content view environments"
-      expect(getByText('No content view environments yet')).toBeInTheDocument();
-    });
-  });
-
-  test('Defaults to true when allow_multiple_content_views setting is missing', async () => {
-    // Mock missing metadata
-    useForemanContext.mockReturnValue({
-      metadata: {},
-    });
-
-    const { getByText } = renderWithRedux(<CvEnvDetailsCreateCard />);
-
-    await patientlyWaitFor(() => {
-      // With 0 assignments, shows plural "Content view environments"
-      expect(getByText('No content view environments yet')).toBeInTheDocument();
-    });
   });
 
   test('Calls AngularJS scope method when assignments change', async () => {
