@@ -6,7 +6,7 @@ module Katello
       include VCR::TestCase
     end
 
-    class RegistrationManager < RegistrationManagerTestBase
+    class RegistrationManager < RegistrationManagerTestBase # rubocop:disable Metrics/ClassLength
       include FactImporterIsolation
       allow_transactions_for_any_importer
 

@@ -320,6 +320,30 @@ module Katello
         get :token, params: { account: User.current.login, scope: "repository:#{@docker_repo.container_repository_name}:pull" }
         assert_response 401
       end
+
+      # A failed Basic-auth on a registry_authorize action used to render a 401
+      # (via Foreman's `authorize`) and then call `unauthorized`, rendering a second
+      # time and raising DoubleRenderError -> opaque 500. registry_authorize must not
+      # render again when a response has already been produced.
+      it "registry_authorize does not double-render on failed basic auth" do
+        @controller.stubs(:find_readable_repository).returns(nil)
+        @controller.stubs(:require_user_authorization?).returns(true)
+        # simulate authenticate_from_request having already rendered (e.g. Foreman authorize 401)
+        @controller.stubs(:authenticate_from_request).returns(false)
+        @controller.stubs(:performed?).returns(true)
+        # unauthorized must NOT be called again once a response is already performed
+        @controller.expects(:unauthorized).never
+        refute @controller.send(:registry_authorize)
+      end
+
+      it "registry_authorize renders unauthorized when nothing rendered yet" do
+        @controller.stubs(:find_readable_repository).returns(nil)
+        @controller.stubs(:require_user_authorization?).returns(true)
+        @controller.stubs(:authenticate_from_request).returns(false)
+        @controller.stubs(:performed?).returns(false)
+        @controller.expects(:unauthorized).once.returns(false)
+        refute @controller.send(:registry_authorize)
+      end
     end
 
     describe "catalog" do
@@ -849,7 +873,9 @@ module Katello
       it 'determines correct org with label' do
         mock_org = mock('Organization')
         props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
-        Organization.stubs(:where).with("LOWER(label) = '#{props[:organization]}'").returns([mock_org])
+        visible = mock('visible_organizations')
+        visible.stubs(:where).with("LOWER(label) = LOWER(?)", props[:organization]).returns([mock_org])
+        @controller.stubs(:visible_organizations).returns(visible)
         assert @controller.check_blob_push_org_label(props)
         assert_equal mock_org, @controller.instance_variable_get(:@organization)
       end
@@ -857,7 +883,9 @@ module Katello
       it 'determines correct org with id' do
         mock_org = mock('Organization')
         props = {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"}
-        Organization.stubs(:find_by_id).with(props[:organization].to_i).returns(mock_org)
+        visible = mock('visible_organizations')
+        visible.stubs(:find_by_id).with(props[:organization].to_i).returns(mock_org)
+        @controller.stubs(:visible_organizations).returns(visible)
         assert @controller.check_blob_push_org_id(props)
         assert_equal mock_org, @controller.instance_variable_get(:@organization)
       end
@@ -884,14 +912,18 @@ module Katello
         mock_prod1.stubs(:root_repositories).returns(mock_root_repos1)
         mock_prod1.stubs(:label).returns(props[:product])
         mock_products1 = mock('products')
-        mock_products1.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([mock_prod1])
+        mock_readable1 = mock('readable_products')
+        mock_readable1.stubs(:where).with("LOWER(label) = LOWER(?)", props[:product]).returns([mock_prod1])
+        mock_products1.stubs(:readable).returns(mock_readable1)
         mock_org1 = mock('Organization')
         mock_org1.stubs(:products).returns(mock_products1)
         mock_org1.stubs(:name).returns(props[:organization])
         mock_org1.stubs(:id).returns(0)
         mock_org1.stubs(:label).returns(props[:organization])
         mock_org2 = mock('Organization')
-        Organization.stubs(:where).with("LOWER(label) = '#{props[:organization]}'").returns([mock_org1, mock_org2])
+        visible = mock('visible_organizations')
+        visible.stubs(:where).with("LOWER(label) = LOWER(?)", props[:organization]).returns([mock_org1, mock_org2])
+        @controller.stubs(:visible_organizations).returns(visible)
         expect_render_podman_error("NAME_INVALID", :conflict)
         refute @controller.check_blob_push_org_label(props)
       end
@@ -899,21 +931,29 @@ module Katello
       it 'rejects ambiguous org label without existing repo' do
         props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
         mock_products1 = mock('products')
-        mock_products1.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([])
+        mock_readable1 = mock('readable_products')
+        mock_readable1.stubs(:where).with("LOWER(label) = LOWER(?)", props[:product]).returns([])
+        mock_products1.stubs(:readable).returns(mock_readable1)
         mock_org1 = mock('Organization')
         mock_org1.stubs(:products).returns(mock_products1)
         mock_products2 = mock('products')
-        mock_products2.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([])
+        mock_readable2 = mock('readable_products')
+        mock_readable2.stubs(:where).with("LOWER(label) = LOWER(?)", props[:product]).returns([])
+        mock_products2.stubs(:readable).returns(mock_readable2)
         mock_org2 = mock('Organization')
         mock_org2.stubs(:products).returns(mock_products2)
-        Organization.stubs(:where).with("LOWER(label) = '#{props[:organization]}'").returns([mock_org1, mock_org2])
+        visible = mock('visible_organizations')
+        visible.stubs(:where).with("LOWER(label) = LOWER(?)", props[:organization]).returns([mock_org1, mock_org2])
+        @controller.stubs(:visible_organizations).returns(visible)
         expect_render_podman_error("NAME_INVALID", :conflict)
         refute @controller.check_blob_push_org_label(props)
       end
 
       it 'rejects org label when no org exists' do
         props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
-        Organization.stubs(:where).with("LOWER(label) = '#{props[:organization]}'").returns([])
+        visible = mock('visible_organizations')
+        visible.stubs(:where).with("LOWER(label) = LOWER(?)", props[:organization]).returns([])
+        @controller.stubs(:visible_organizations).returns(visible)
         expect_render_podman_error("NAME_UNKNOWN", :not_found)
         refute @controller.check_blob_push_org_label(props)
       end
@@ -932,16 +972,20 @@ module Katello
 
       it 'rejects org id when no org exists' do
         props = {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"}
-        Organization.stubs(:find_by_id).with(props[:organization].to_i).returns([])
+        visible = mock('visible_organizations')
+        visible.stubs(:find_by_id).with(props[:organization].to_i).returns(nil)
+        @controller.stubs(:visible_organizations).returns(visible)
         expect_render_podman_error("NAME_UNKNOWN", :not_found)
-        refute @controller.check_blob_push_org_label(props)
+        refute @controller.check_blob_push_org_id(props)
       end
 
       it 'determines correct prod with label' do
         props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
         mock_prod = mock('Product')
+        mock_readable = mock('readable_products')
+        mock_readable.stubs(:where).with("LOWER(label) = LOWER(?)", props[:product]).returns([mock_prod])
         mock_products = mock('products')
-        mock_products.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([mock_prod])
+        mock_products.stubs(:readable).returns(mock_readable)
         mock_org = mock('Organization')
         mock_org.stubs(:products).returns(mock_products)
         @controller.instance_variable_set(:@organization, mock_org)
@@ -953,8 +997,10 @@ module Katello
       it 'determines correct prod with id' do
         props = {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"}
         mock_prod = mock('Product')
+        mock_readable = mock('readable_products')
+        mock_readable.stubs(:find_by_id).with(props[:product].to_i).returns(mock_prod)
         mock_products = mock('products')
-        mock_products.stubs(:find_by_id).with(props[:product].to_i).returns(mock_prod)
+        mock_products.stubs(:readable).returns(mock_readable)
         mock_org = mock('Organization')
         mock_org.stubs(:products).returns(mock_products)
         @controller.instance_variable_set(:@organization, mock_org)
@@ -987,8 +1033,10 @@ module Katello
         mock_prod1.stubs(:label).returns(props[:product])
         mock_prod1.stubs(:id).returns(0)
         mock_prod2 = mock('Product')
+        mock_readable = mock('readable_products')
+        mock_readable.stubs(:where).with("LOWER(label) = LOWER(?)", props[:product]).returns([mock_prod1, mock_prod2])
         mock_products = mock('products')
-        mock_products.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([mock_prod1, mock_prod2])
+        mock_products.stubs(:readable).returns(mock_readable)
         mock_org = mock('Organization')
         mock_org.stubs(:label).returns(props[:organization])
         mock_org.stubs(:products).returns(mock_products)
@@ -1007,8 +1055,10 @@ module Katello
         mock_root_repos2.stubs(:where).with(label: props[:name]).returns([])
         mock_prod2 = mock('Product')
         mock_prod2.stubs(:root_repositories).returns(mock_root_repos1)
+        mock_readable = mock('readable_products')
+        mock_readable.stubs(:where).with("LOWER(label) = LOWER(?)", props[:product]).returns([mock_prod1, mock_prod2])
         mock_products = mock('products')
-        mock_products.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([mock_prod1, mock_prod2])
+        mock_products.stubs(:readable).returns(mock_readable)
         mock_org = mock('Organization')
         mock_org.stubs(:label).returns(props[:organization])
         mock_org.stubs(:products).returns(mock_products)
@@ -1019,8 +1069,10 @@ module Katello
 
       it 'rejects prod label when no prod exists' do
         props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+        mock_readable = mock('readable_products')
+        mock_readable.stubs(:where).with("LOWER(label) = LOWER(?)", props[:product]).returns([])
         mock_products = mock('products')
-        mock_products.stubs(:where).with("LOWER(label) = '#{props[:product]}'").returns([])
+        mock_products.stubs(:readable).returns(mock_readable)
         mock_org = mock('Organization')
         mock_org.stubs(:products).returns(mock_products)
         @controller.instance_variable_set(:@organization, mock_org)
@@ -1042,13 +1094,70 @@ module Katello
 
       it 'rejects prod id when no prod exists' do
         props = {valid_format: true, schema: "id", organization: "0", product: "0", name: "foo"}
+        mock_readable = mock('readable_products')
+        mock_readable.stubs(:find_by_id).with(props[:product].to_i).returns(nil)
         mock_products = mock('products')
-        mock_products.stubs(:find_by_id).with(props[:product].to_i).returns(nil)
+        mock_products.stubs(:readable).returns(mock_readable)
         mock_org = mock('Organization')
         mock_org.stubs(:products).returns(mock_products)
         @controller.instance_variable_set(:@organization, mock_org)
         expect_render_podman_error("NAME_UNKNOWN", :not_found)
         refute @controller.check_blob_push_product_id(props)
+      end
+
+      # Unauthorized users must not be able to enumerate organizations and products
+      # through differential push-validation errors.
+      describe 'push resource enumeration prevention' do
+        it 'visible_organizations returns the current users organizations' do
+          Organization.expects(:my_organizations).returns(:scoped)
+          assert_equal :scoped, @controller.send(:visible_organizations)
+        end
+
+        it 'org label lookup is scoped to visible_organizations (not global) and parameterized' do
+          props = {valid_format: true, schema: "label", organization: "foo", product: "bar", name: "baz"}
+          visible = mock('visible_organizations')
+          # must be called on the scoped relation, with a parameterized (not interpolated) query
+          visible.expects(:where).with("LOWER(label) = LOWER(?)", props[:organization]).returns([])
+          @controller.expects(:visible_organizations).returns(visible)
+          # global Organization.where must never be used for label lookup
+          Organization.expects(:where).never
+          expect_render_podman_error("NAME_UNKNOWN", :not_found)
+          refute @controller.check_blob_push_org_label(props)
+        end
+
+        it 'org id lookup is scoped to visible_organizations (not global)' do
+          props = {valid_format: true, schema: "id", organization: "5", product: "6", name: "foo"}
+          visible = mock('visible_organizations')
+          visible.expects(:find_by_id).with(5).returns(nil)
+          @controller.expects(:visible_organizations).returns(visible)
+          Organization.expects(:find_by_id).never
+          expect_render_podman_error("NAME_UNKNOWN", :not_found)
+          refute @controller.check_blob_push_org_id(props)
+        end
+
+        it 'product id lookup is scoped to readable products' do
+          props = {valid_format: true, schema: "id", organization: "5", product: "6", name: "foo"}
+          readable_scope = mock('readable_products')
+          readable_scope.expects(:find_by_id).with(6).returns(nil)
+          products = mock('products')
+          products.expects(:readable).returns(readable_scope)
+          mock_org = mock('Organization')
+          mock_org.stubs(:products).returns(products)
+          @controller.instance_variable_set(:@organization, mock_org)
+          expect_render_podman_error("NAME_UNKNOWN", :not_found)
+          refute @controller.check_blob_push_product_id(props)
+        end
+
+        it 'renders a uniform NAME_UNKNOWN message that does not disclose org vs product' do
+          error_expectation = @controller.expects(:render_podman_error).with do |code, message, status|
+            code == "NAME_UNKNOWN" &&
+              status == :not_found &&
+              message !~ /organization/i &&
+              message !~ /product/i
+          end
+          error_expectation.returns(false)
+          refute @controller.send(:render_push_name_unknown)
+        end
       end
 
       it 'sets container names correctly with label format' do
@@ -1148,7 +1257,7 @@ module Katello
         @controller.instance_variable_set(:@container_name, container_name)
         @controller.instance_variable_set(:@container_path_input, container_push_name)
         @controller.instance_variable_set(:@container_push_name_format, container_push_name_format)
-        expect_render_podman_error("DENIED", :not_found)
+        expect_render_podman_error("DENIED", :forbidden)
         refute @controller.create_container_repo_if_needed
       end
 
