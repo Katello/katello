@@ -964,12 +964,14 @@ module Katello
     end
 
     def visible_organizations
-      # Organizations visible to the current user. Used to scope push validation so that
-      # organizations the user cannot see are indistinguishable from organizations that do
-      # not exist. The actual push permission (sync_products) is checked later in
-      # create_container_repo_if_needed, which returns DENIED for visible but non-syncable
-      # products.
-      ::Organization.my_organizations
+      # Scope push validation to organizations visible to the current user and,
+      # for authenticated smart proxies, assigned to the detected proxy.
+      # The actual push permission (sync_products) is checked later in
+      # create_container_repo_if_needed.
+      organizations = ::Organization.my_organizations
+      return organizations unless container_registry_smart_proxy_authenticated?
+
+      organizations.where(id: @detected_proxy.organization_ids)
     end
 
     def static_index

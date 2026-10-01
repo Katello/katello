@@ -1937,13 +1937,8 @@ module Katello
         session[:user] = nil
         reset_api_credentials
 
-        # The proxy authenticates (its cert matches) and has container registry auth
-        # enabled, but it is only assigned to other_org, not @organization (the
-        # target of this push). Push actions resolve @organization/@product
-        # directly from the URL and never go through authorize_smart_proxy_repository,
-        # so without an explicit org-scope check here a smart proxy authorized for
-        # one organization could push into (and auto-create repositories in) any
-        # other organization's product.
+        # The proxy authenticates but is assigned only to other_org. An existing
+        # organization outside its scope must look the same as a nonexistent one.
         stub_detected_proxy(proxy)
         @controller.expects(:create_container_repo_if_needed).never
         Resources::Registry::Proxy.expects(:post).never
@@ -1951,12 +1946,15 @@ module Katello
         repo_name = "#{@organization.label.downcase}/#{@docker_repo.product.label.downcase}/newpush"
         post :start_upload_blob, params: { repository: repo_name }
         assert_response 404
-        # check_blob_push_org_label/check_blob_push_product_label would also
-        # render a 404 if the org/product were missing, so assert on the exact
-        # message to confirm authorize_smart_proxy_push_organization (not an
-        # earlier check) is what rejected this request.
-        body = JSON.parse(response.body)
-        assert_equal "#{@organization.label} was not found!", body['errors'].first['message']
+        unassigned_response = response.body
+        assert_equal 'NAME_UNKNOWN', JSON.parse(unassigned_response)['errors'].first['code']
+
+        nonexistent_org_label = "missing-org-#{other_org.id}"
+        refute ::Organization.where("LOWER(label) = LOWER(?)", nonexistent_org_label).exists?
+        nonexistent_repo_name = "#{nonexistent_org_label}/#{@docker_repo.product.label.downcase}/newpush"
+        post :start_upload_blob, params: { repository: nonexistent_repo_name }
+        assert_response 404
+        assert_equal unassigned_response, response.body
       ensure
         proxy&.destroy
         other_org&.destroy
