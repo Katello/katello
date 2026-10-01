@@ -316,6 +316,9 @@
       "About page": [
         ""
       ],
+      "Abstract async task": [
+        ""
+      ],
       "Access to Red Hat Subscription Management is prohibited. If you would like to change this, please update the content setting 'Subscription connection enabled'.": [
         ""
       ],
@@ -469,6 +472,9 @@
       "Add repositories with package groups to content view to select them here.": [
         ""
       ],
+      "Add rolling repo clone": [
+        ""
+      ],
       "Add rule": [
         ""
       ],
@@ -578,6 +584,12 @@
         ""
       ],
       "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host.": [
+        ""
+      ],
+      "Allow this smart proxy to authenticate to the container registry using its SSL client certificate": [
+        ""
+      ],
+      "Allow this smart proxy to pull and push container images using its SSL client certificate.": [
         ""
       ],
       "Also include the latest upgradable package version for each host package": [
@@ -1269,7 +1281,7 @@
       "Cannot set auto publish to a non-composite content view": [
         "No se puede establecer la autopublicación en una vista de contenido no compuesta"
       ],
-      "Cannot skip metadata check on non-yum/deb repositories.": [
+      "Cannot skip metadata check on non-yum/deb/file repositories.": [
         ""
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
@@ -1425,6 +1437,9 @@
       "Command contains %(packageCount)s of %(selectedCount)s selected %(selectedWord)s": [
         ""
       ],
+      "Commit upload": [
+        ""
+      ],
       "Compare": [
         ""
       ],
@@ -1490,6 +1505,9 @@
       ],
       "Container Images": [
         "Imágenes de contenedor"
+      ],
+      "Container Registry Authentication": [
+        ""
       ],
       "Container image tag": [
         ""
@@ -1818,8 +1836,14 @@
       "Copy": [
         ""
       ],
+      "Copy all units": [
+        ""
+      ],
       "Copy an activation key": [
         "Copiar una clave de activación"
+      ],
+      "Copy content": [
+        ""
       ],
       "Copy content view": [
         ""
@@ -1832,6 +1856,12 @@
       ],
       "Copy to clipboard": [
         "Copiar al portapapeles"
+      ],
+      "Copy version": [
+        ""
+      ],
+      "Copy version units to library": [
+        "Copiar unidades de versión a la biblioteca"
       ],
       "Cores per socket": [
         "Núcleos por socket"
@@ -2055,10 +2085,19 @@
       "Create content view": [
         ""
       ],
+      "Create exporter": [
+        ""
+      ],
       "Create filter": [
         ""
       ],
       "Create host collection": [
+        ""
+      ],
+      "Create import": [
+        ""
+      ],
+      "Create importer": [
         ""
       ],
       "Create new activation key": [
@@ -2066,6 +2105,12 @@
       ],
       "Create organization": [
         "Crear organización"
+      ],
+      "Create publication": [
+        ""
+      ],
+      "Create remote": [
+        ""
       ],
       "Creation": [
         ""
@@ -2334,10 +2379,31 @@
       "Delete content view filters that have this repository as the last associated repository. Defaults to true. If false, such filters will now apply to all repositories in the content view.": [
         ""
       ],
+      "Delete distributions": [
+        ""
+      ],
       "Delete manifest from Red Hat provider": [
         "Borrar manifiesto de proveedor de Red Hat"
       ],
       "Delete multiple filters from a content view": [
+        ""
+      ],
+      "Delete orphan alternate content sources": [
+        ""
+      ],
+      "Delete orphan distributions": [
+        ""
+      ],
+      "Delete orphan remotes": [
+        ""
+      ],
+      "Delete orphan repository versions": [
+        ""
+      ],
+      "Delete remote": [
+        ""
+      ],
+      "Delete repository references": [
         ""
       ],
       "Delete version": [
@@ -2442,6 +2508,12 @@
       "Destroy an environment in an organization": [
         "Destruir un entorno en una organización"
       ],
+      "Destroy exporter": [
+        ""
+      ],
+      "Destroy importer": [
+        ""
+      ],
       "Destroy one or more alternate content sources": [
         ""
       ],
@@ -2483,6 +2555,9 @@
       ],
       "Disabled": [
         "Deshabilitado"
+      ],
+      "Discover": [
+        "Descubrir"
       ],
       "Discover Repositories": [
         "Detectar repositorios"
@@ -2697,6 +2772,9 @@
       "Environment cannot be in its own promotion path": [
         "No puede haber entorno en su propia ruta de entorno"
       ],
+      "Environment contents refresh": [
+        ""
+      ],
       "Environment identifier": [
         "Identificador del entorno"
       ],
@@ -2729,6 +2807,9 @@
       ],
       "Errata id of the erratum (RHSA-2012:108)": [
         "ID de errata de la errata (RHSA-2012:108)"
+      ],
+      "Errata mail": [
+        "Correo de erratas"
       ],
       "Errata statuses not updated for deleted content facet with UUID %s": [
         ""
@@ -2910,6 +2991,9 @@
       "Fetch installable errata for one or more hosts.": [
         "Buscar erratas instalables para uno o más hosts."
       ],
+      "Fetch pxe files": [
+        "Buscar archivos pxe"
+      ],
       "Fetch traces for one or more hosts": [
         "Buscar rastros para uno o más hosts"
       ],
@@ -3015,6 +3099,9 @@
       "Filter...": [
         "Filtrar..."
       ],
+      "Filtered index content": [
+        "Contenido del índice filtrado"
+      ],
       "Filters": [
         "Filtros"
       ],
@@ -3096,10 +3183,10 @@
       "Force regenerate applicability.": [
         "Aplicabilidad de la fuerza de regeneración."
       ],
-      "Force sync even if no upstream changes are detected. Non-yum repositories are skipped.": [
-        "Forzar sincronización incluso si no se detectan cambios en canal ascendente. Los repositorios que no corresponden a yum se saltan."
+      "Force sync even if no upstream changes are detected.": [
+        ""
       ],
-      "Force sync even if no upstream changes are detected. Only used with yum or deb repositories.": [
+      "Force sync even if no upstream changes are detected. Only used with yum, deb, or file repositories.": [
         ""
       ],
       "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy.": [
@@ -3132,7 +3219,7 @@
       "Generate RHUI certificates for the desired repositories as necessary.": [
         ""
       ],
-      "Generate and Download": [
+      "Generate and download": [
         "Generar y descargar"
       ],
       "Generate containerfile install command (%s package selected)": [
@@ -3144,6 +3231,9 @@
       ],
       "Generate host applicability": [
         "Generar la aplicabilidad del host"
+      ],
+      "Generate metadata": [
+        ""
       ],
       "Generate repository applicability": [
         "Generar la aplicabilidad del repositorio"
@@ -3393,6 +3483,12 @@
       ],
       "How to order the sorted results (e.g. ASC for ascending)": [
         "Cómo ordenar los resultados clasificados (p. ej., ASC para orden ascendente)"
+      ],
+      "Hypervisors": [
+        "Hipervisores"
+      ],
+      "Hypervisors update": [
+        "Actualización de hipervisores"
       ],
       "ID": [
         "ID"
@@ -3700,6 +3796,9 @@
       "Import a subscription manifest to give hosts access to Red Hat content.": [
         ""
       ],
+      "Import migration": [
+        ""
+      ],
       "Import new manifest": [
         ""
       ],
@@ -3707,6 +3806,12 @@
         ""
       ],
       "Import only Content Views cannot be directly publsihed. Content can only be updated by importing into the view.": [
+        ""
+      ],
+      "Import repository upload": [
+        ""
+      ],
+      "Import upload": [
         ""
       ],
       "Import uploads into a repository": [
@@ -3781,6 +3886,9 @@
       "Incremental Update incomplete.": [
         "Actualización incremental incompleta."
       ],
+      "Incremental Update of  Content View Version(s) ": [
+        "Actualización gradual de versiones de la vista de contenido"
+      ],
       "Incremental Update of %{content_view_count} Content View Version(s) ": [
         "Actualización gradual de versiones de la vista de contenido "
       ],
@@ -3795,6 +3903,18 @@
       ],
       "Incremental update will not add any new content. The specified content is already present.": [
         ""
+      ],
+      "Index content": [
+        "Contenido del índice"
+      ],
+      "Index errata": [
+        "Erratas de índice"
+      ],
+      "Index module streams": [
+        "Secuencias del módulo de índice"
+      ],
+      "Index package groups": [
+        "Grupos de paquete del índice"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "El tipo informable debe ser uno de los siguientes [ %{list} ]"
@@ -3877,6 +3997,9 @@
       ],
       "Installed version": [
         ""
+      ],
+      "Instance update": [
+        "Actualización de instancia"
       ],
       "Instance-based": [
         "Basado en la instancia"
@@ -4286,6 +4409,9 @@
       "List alternate content sources.": [
         ""
       ],
+      "List available key algorithms for debug certificates": [
+        ""
+      ],
       "List available releases in the organization": [
         "Lista de las versiones disponibles en la organización"
       ],
@@ -4664,6 +4790,9 @@
       "Message": [
         "Mensaje"
       ],
+      "Metadata generate": [
+        ""
+      ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
       ],
@@ -4734,6 +4863,15 @@
         ""
       ],
       "Multi Content View Environment": [
+        ""
+      ],
+      "Multi copy all units": [
+        ""
+      ],
+      "Multi copy content": [
+        ""
+      ],
+      "Multi copy units": [
         ""
       ],
       "Multi-entitlement": [
@@ -5867,6 +6005,9 @@
       "Pulp task error": [
         "Error de tarea de Pulp"
       ],
+      "Purge completed tasks": [
+        ""
+      ],
       "Python Package": [
         ""
       ],
@@ -5975,6 +6116,9 @@
       "Reclaim Space": [
         ""
       ],
+      "Reclaim space": [
+        ""
+      ],
       "Reclaim space from On Demand repositories": [
         ""
       ],
@@ -6047,6 +6191,9 @@
       "Refresh all alternate content sources": [
         ""
       ],
+      "Refresh all distributions": [
+        ""
+      ],
       "Refresh alternate content sources": [
         ""
       ],
@@ -6059,7 +6206,13 @@
       "Refresh counts": [
         ""
       ],
+      "Refresh distribution": [
+        ""
+      ],
       "Refresh errata applicability": [
+        ""
+      ],
+      "Refresh if needed": [
         ""
       ],
       "Refresh package applicability": [
@@ -6067,6 +6220,12 @@
       ],
       "Refresh previously imported manifest for Red Hat provider": [
         "Actualizar el manifiesto importado anteriormente para el proveedor de Red Hat"
+      ],
+      "Refresh remote": [
+        ""
+      ],
+      "Refresh repos": [
+        ""
       ],
       "Refresh source": [
         ""
@@ -6109,6 +6268,9 @@
       ],
       "Registry token expiration time": [
         ""
+      ],
+      "Reindex subscriptions": [
+        "Reindexar suscripciones"
       ],
       "Related composite content views": [
         ""
@@ -6212,6 +6374,9 @@
       "Remove one or more subscriptions from an upstream manifest": [
         ""
       ],
+      "Remove orphans": [
+        ""
+      ],
       "Remove package group via Katello interface": [
         "Eliminar el grupo de paquetes a través de la interfaz de Katello"
       ],
@@ -6226,6 +6391,15 @@
       ],
       "Remove products from sync plan": [
         "Eliminar productos del plan de sincronización"
+      ],
+      "Remove rolling repo clone": [
+        ""
+      ],
+      "Remove units": [
+        ""
+      ],
+      "Remove unneeded repos": [
+        ""
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Eliminar versiones y/o entornos de una vista de contenido y volver a asignar sistemas y llaves"
@@ -6248,6 +6422,9 @@
       "Removing this version from all environments will not delete the version. Version will still be available for later promotion.": [
         ""
       ],
+      "Repair": [
+        ""
+      ],
       "Replace content source on the target machine": [
         ""
       ],
@@ -6266,11 +6443,17 @@
       "Repositories are not available for enablement while CDN configuration is set to Air-gapped (disconnected).": [
         ""
       ],
+      "Repositories certs reset": [
+        ""
+      ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         ""
       ],
       "Repositories from published Content Views are not allowed.": [
         "No se permiten los  de vistas de contenido publicadas "
+      ],
+      "Repositories gpg reset": [
+        ""
       ],
       "Repositories table": [
         ""
@@ -6650,6 +6833,21 @@
       "Save Environments": [
         ""
       ],
+      "Save artifact": [
+        ""
+      ],
+      "Save distribution references": [
+        ""
+      ],
+      "Save publication": [
+        ""
+      ],
+      "Save version": [
+        ""
+      ],
+      "Save versions": [
+        ""
+      ],
       "Saving alternate content source...": [
         ""
       ],
@@ -6663,6 +6861,12 @@
         ""
       ],
       "Scan a flatpak remote": [
+        ""
+      ],
+      "Scan cdn": [
+        ""
+      ],
+      "Scan remote": [
         ""
       ],
       "Schema version 1": [
@@ -7497,6 +7701,9 @@
       "Supported Content Types": [
         "Tipos de contenido admitidos"
       ],
+      "Sync": [
+        "Sincronizar"
+      ],
       "Sync Canceled": [
         "Sincronización cancelada"
       ],
@@ -7554,6 +7761,9 @@
       "Sync canceled": [
         ""
       ],
+      "Sync capsule": [
+        "Cápsula de sincronización"
+      ],
       "Sync complete.": [
         "Sincronización completa."
       ],
@@ -7576,6 +7786,9 @@
         ""
       ],
       "Sync state": [
+        ""
+      ],
+      "Syncable export": [
         ""
       ],
       "Synced": [
@@ -8436,14 +8649,26 @@
       "Update content counts for the smart proxy": [
         ""
       ],
+      "Update content urls": [
+        "Actualizar los URL de contenido"
+      ],
       "Update content view environments for host": [
         ""
       ],
       "Update content view environments for host %s": [
         ""
       ],
+      "Update distributions": [
+        ""
+      ],
       "Update hosts manually": [
         ""
+      ],
+      "Update http proxy": [
+        "Actualizar el proxy http"
+      ],
+      "Update http proxy details": [
+        "Actualizar los detalles del proxy http"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "Actualizar los paquetes instalados, los repositorios habilitados, el inventario de módulos"
@@ -8460,11 +8685,20 @@
       "Update packages via Katello interface": [
         ""
       ],
+      "Update redhat repository": [
+        "Actualizar el repositorio de redhat"
+      ],
       "Update release version for host": [
         "Actualizar versión de lanzamiento para el host"
       ],
       "Update release version for host %s": [
         "Actualizar versión de lanzamiento para el host"
+      ],
+      "Update remote": [
+        ""
+      ],
+      "Update repository": [
+        ""
       ],
       "Update services requiring restart": [
         "La actualización de servicios requiere el reinicio"
@@ -8560,6 +8794,9 @@
       "Upload a zip file": [
         ""
       ],
+      "Upload content": [
+        ""
+      ],
       "Upload file": [
         ""
       ],
@@ -8577,6 +8814,9 @@
       ],
       "Upload request id": [
         "Cargar ID de solicitud"
+      ],
+      "Upload tag": [
+        ""
       ],
       "Upstream Candlepin": [
         ""
@@ -8697,6 +8937,9 @@
       ],
       "Verify SSL": [
         "Verificar SSL"
+      ],
+      "Verify checksum": [
+        "Verificar la suma de comprobación"
       ],
       "Verify checksum for content on smart proxy": [
         ""
