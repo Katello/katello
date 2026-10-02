@@ -56,14 +56,29 @@ module Katello
     end
 
     def empty_task(repo)
-      state = 'never_synced'
-      {
-        :id => repo.id,
-        :product_id => repo.product.id,
-        :progress => {},
-        :state => format_state(OpenStruct.new(:state => state)),
-        :raw_state => state,
-      }
+      # Check if repository has been synced before
+      sync_audit_time = repo.latest_sync_audit&.created_at
+
+      if sync_audit_time
+        state = 'stopped'
+        {
+          :id => repo.id,
+          :product_id => repo.product.id,
+          :progress => {},
+          :state => format_state(OpenStruct.new(:state => state)),
+          :raw_state => state,
+          :start_time => format_date(sync_audit_time),
+        }
+      else
+        state = 'never_synced'
+        {
+          :id => repo.id,
+          :product_id => repo.product.id,
+          :progress => {},
+          :state => format_state(OpenStruct.new(:state => state)),
+          :raw_state => state,
+        }
+      end
     end
 
     def raw_state(task)
