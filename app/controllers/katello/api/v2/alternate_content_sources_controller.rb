@@ -143,6 +143,12 @@ module Katello
         missing_smart_proxies = params[:smart_proxy_names] - @smart_proxies.pluck(:name)
         fail HttpErrors::NotFound, _("Couldn't find smart proxies with name '%s'") % missing_smart_proxies.to_sentence
       end
+
+      non_pulp_proxies = @smart_proxies&.reject(&:pulp3_enabled?) || []
+      if non_pulp_proxies.any?
+        fail HttpErrors::UnprocessableEntity,
+          _("Smart proxies must have the Pulp feature to be used with alternate content sources: %s") % non_pulp_proxies.map(&:name).to_sentence
+      end
     end
 
     def find_products
