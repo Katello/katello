@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc2",
+        "Project-Id-Version": "katello 5.0.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2026",
@@ -1271,7 +1271,7 @@
         ""
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        "არა-yum/deb რეპოზიორიების მეტამონაცემების შემოწმების გამოტოვება შეუძლებელია."
+        ""
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         ""
@@ -1358,6 +1358,9 @@
         "ფაილის არჩევა"
       ],
       "Clean Backend Objects": [
+        ""
+      ],
+      "Clear": [
         ""
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
@@ -1463,7 +1466,7 @@
         "Foreman-ზე კონფიგურაცია შეიცვალა"
       ],
       "Confirm": [
-        ""
+        "დადასტურება"
       ],
       "Confirm Deletion": [
         "წაშლის დადასტურება"
@@ -2572,6 +2575,9 @@
       "Download rate limit": [
         "გადმოწერის სიჩქარის ლიმიტი"
       ],
+      "Drag here": [
+        ""
+      ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
         ""
       ],
@@ -3200,7 +3206,7 @@
         ""
       ],
       "Generate and Download": [
-        "გენერაცია და გადმოწერა"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3273,7 +3279,7 @@
         "მეტი, ვიდრე"
       ],
       "Guests of %s": [
-        ""
+        "%s-ის სტუმრები"
       ],
       "HTTP Proxies": [
         "HTTP პროქსიები"
@@ -4692,6 +4698,9 @@
       "Manifest expiring soon": [
         ""
       ],
+      "Manifest history table": [
+        ""
+      ],
       "Manifest imported": [
         "მანიფესტი შემოტანილია"
       ],
@@ -5451,6 +5460,9 @@
       "One or more processes require restarting": [
         "ერთი ან მეტი პროცესი მოითხოვს გადატვირთვას"
       ],
+      "Only .zip manifest files are accepted": [
+        ""
+      ],
       "Only On Demand repositories may have space reclaimed.": [
         ""
       ],
@@ -5493,9 +5505,6 @@
       "Organization id": [
         "ორგანიზაციის ID"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "ორგანიზაციის იდენტიფიკატორი"
       ],
@@ -5510,9 +5519,6 @@
       ],
       "Organization not found": [
         "ორგანიზაცია არ არსებობს"
-      ],
-      "Organization not found: '%s'": [
-        ""
       ],
       "Organization required": [
         "ორგანიზაციის მითითება აუცილებელია"
@@ -5805,9 +5811,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         "პროდუქტის ჭდე"
       ],
@@ -5822,9 +5825,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "პროდუქტის სახელი იმ სახით, როგორითაც ის ჰოსტზე დაყენებული პროდუქტების სიაშია ჩამოთვლილი"
-      ],
-      "Product not found: '%s'": [
-        ""
       ],
       "Product the repository belongs to": [
         "პროდუქტი, რომელსაც რეპოზიტორია მიეკუთვნება"
@@ -6532,6 +6532,9 @@
         "რეპოზიტორიის მეტამონაცემების თავიდან გამოქვეყნება"
       ],
       "Requested access to '%s' is denied": [
+        ""
+      ],
+      "Requested repository name is unknown to the registry.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -7376,7 +7379,7 @@
         "გამოთხოვის შეცდომა ${lowerCase(pluralLabel)}! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        "შეცდომა ფაილების გამოთხოვისას! ${getResponseErrorMsgs(error.response)}"
+        ""
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
         "RPM პაკეტის გამოთხოვის შეცდომა! ${getResponseErrorMsgs(error.response)}"
@@ -7460,7 +7463,7 @@
         "შეცდომა მორჩენილი პაჩების მიღებისას! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
-        "შეცდომა ფაილების მიღებისას! ${getResponseErrorMsgs(error.response)}"
+        ""
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
         "შეცდომა ჰოსტების მიღებისას! ${getResponseErrorMsgs(error.response)}"
@@ -8750,6 +8753,9 @@
       "Upgrade via remote execution": [
         "დაშორებულ გაშვებით განახლება"
       ],
+      "Upload": [
+        "ატვირთვა"
+      ],
       "Upload Content Credential contents": [
         "შემცველობის ავტორიზაციის დეტალების შემცველობის ატვირთვა"
       ],
@@ -8758,6 +8764,9 @@
       ],
       "Upload a subscription manifest": [
         "გამოწერის მანიფესტის ატვირთვა"
+      ],
+      "Upload a zip file": [
+        ""
       ],
       "Upload content": [
         ""

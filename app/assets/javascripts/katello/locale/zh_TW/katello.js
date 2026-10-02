@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc2",
+        "Project-Id-Version": "katello 5.0.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -1359,6 +1359,9 @@
       "Clean Backend Objects": [
         ""
       ],
+      "Clear": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -1462,7 +1465,7 @@
         ""
       ],
       "Confirm": [
-        ""
+        "確認"
       ],
       "Confirm Deletion": [
         ""
@@ -2571,6 +2574,9 @@
       "Download rate limit": [
         ""
       ],
+      "Drag here": [
+        ""
+      ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
         ""
       ],
@@ -3199,7 +3205,7 @@
         ""
       ],
       "Generate and Download": [
-        "產生與下載"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -4691,6 +4697,9 @@
       "Manifest expiring soon": [
         ""
       ],
+      "Manifest history table": [
+        ""
+      ],
       "Manifest imported": [
         ""
       ],
@@ -5450,6 +5459,9 @@
       "One or more processes require restarting": [
         ""
       ],
+      "Only .zip manifest files are accepted": [
+        ""
+      ],
       "Only On Demand repositories may have space reclaimed.": [
         ""
       ],
@@ -5492,9 +5504,6 @@
       "Organization id": [
         "組織 ID"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "組織識別子"
       ],
@@ -5508,9 +5517,6 @@
         ""
       ],
       "Organization not found": [
-        ""
-      ],
-      "Organization not found: '%s'": [
         ""
       ],
       "Organization required": [
@@ -5804,9 +5810,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -5821,9 +5824,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "來自主機已安裝產品的產品名稱"
-      ],
-      "Product not found: '%s'": [
-        ""
       ],
       "Product the repository belongs to": [
         "產品的軟體庫屬於"
@@ -6533,6 +6533,9 @@
       "Requested access to '%s' is denied": [
         ""
       ],
+      "Requested repository name is unknown to the registry.": [
+        ""
+      ],
       "Requirements is not valid yaml.": [
         ""
       ],
@@ -6819,7 +6822,7 @@
         ""
       ],
       "Saving...": [
-        ""
+        "正在儲存…"
       ],
       "Scan": [
         ""
@@ -8749,6 +8752,9 @@
       "Upgrade via remote execution": [
         ""
       ],
+      "Upload": [
+        "上傳"
+      ],
       "Upload Content Credential contents": [
         ""
       ],
@@ -8757,6 +8763,9 @@
       ],
       "Upload a subscription manifest": [
         "上傳訂閱清單"
+      ],
+      "Upload a zip file": [
+        ""
       ],
       "Upload content": [
         ""

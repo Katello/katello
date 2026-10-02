@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: katello 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 14:42+0000\n"
-"PO-Revision-Date: 2026-09-08 14:42+0000\n"
+"POT-Creation-Date: 2026-10-02 19:36+0000\n"
+"PO-Revision-Date: 2026-10-02 19:36+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,17 +18,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:190
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:191
 msgid ""
 "Invalid format. Container pushes should follow 'organization_label/product_lab"
 "el/name' OR 'id/organization_id/product_id/name' schema."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:203
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:204
 msgid "Invalid format. Organization label cannot be blank."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:220
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:221
 msgid ""
 "Due to a change in your organizations, this container name has become ambiguou"
 "s (org name '%{org_label}'). If you wish to continue using this container name"
@@ -37,27 +37,19 @@ msgid ""
 "d retry your push using the id format."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:236
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:237
 msgid "Organization label '%s' is ambiguous. Try using an id-based container name."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:243
-msgid "Organization not found: '%s'"
-msgstr ""
-
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:256
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:253
 msgid "Invalid format. Organization id must be an integer without leading zeros."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:264
-msgid "Organization id not found: '%s'"
-msgstr ""
-
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:276
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:269
 msgid "Invalid format. Product label cannot be blank."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:291
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:284
 msgid ""
 "Due to a change in your products, this container name has become ambiguous (pr"
 "oduct name '%{prod_label}'). If you wish to continue using this container name"
@@ -66,27 +58,19 @@ msgid ""
 "o_label}' and retry your push using the id format."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:305
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:298
 msgid "Product label '%s' is ambiguous. Try using an id-based container name."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:312
-msgid "Product not found: '%s'"
-msgstr ""
-
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:325
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:314
 msgid "Invalid format. Product id must be an integer without leading zeros."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:333
-msgid "Product id not found: '%s'"
-msgstr ""
-
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:357
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:343
 msgid "Invalid format. Container name cannot be blank."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:375
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:361
 msgid ""
 "Repository name '%{container_name}' already exists in this product using a dif"
 "ferent naming scheme. Please retry your request with the %{root_repo_container"
@@ -94,24 +78,28 @@ msgid ""
 " schema."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:388
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:374
 msgid "Requested access to '%s' is denied"
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:414
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:400
 msgid "Could not locate local uploaded repository for content indexing."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:428
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:414
 msgid "Could not locate repository properties for content indexing."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:459
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:445
 msgid "Could not locate Pulp distribution."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:885
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:871
 msgid "%s was not found!"
+msgstr ""
+
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:879
+msgid "Requested repository name is unknown to the registry."
 msgstr ""
 
 #: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:28
@@ -5187,8 +5175,8 @@ msgstr ""
 #: ../webpack/scenes/FlatpakRemotes/Delete/DeleteFlatpakModal.js:35
 #: ../webpack/scenes/FlatpakRemotes/Details/FlatpakRemoteDetails.js:113
 #: ../webpack/scenes/FlatpakRemotes/FlatpakRemotesPage.js:85
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:259
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:286
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:262
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:295
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/DeleteDialog.js:22
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:183
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:195
@@ -6898,7 +6886,6 @@ msgstr ""
 #: ../app/models/katello/content_view_filter.rb:12 ../lib/katello/plugin.rb:174
 #: ../webpack/scenes/Content/ContentConfig.js:211
 #: ../webpack/scenes/ContentViews/Details/Filters/CVModuleStreamFilterContent.js:225
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:259
 msgid "Module Streams"
 msgstr ""
 
@@ -6919,7 +6906,7 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Filters/ContentType.js:16
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:218
 #: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersions.js:112
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:203
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:200
 #: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionRepositoryCell.js:34
 #: ../webpack/scenes/SmartProxy/AdditionalCapsuleContent.js:37
 msgid "Errata"
@@ -6933,7 +6920,7 @@ msgid "Container Images"
 msgstr ""
 
 #: ../app/models/katello/content_view_filter.rb:12 ../lib/katello/plugin.rb:124
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:284
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:256
 msgid "Deb Packages"
 msgstr ""
 
@@ -7280,19 +7267,19 @@ msgstr ""
 msgid "Successfully synchronized."
 msgstr ""
 
-#: ../app/models/katello/repository.rb:605
+#: ../app/models/katello/repository.rb:607
 msgid "Cannot clone into the Default Content View"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:612
+#: ../app/models/katello/repository.rb:614
 msgid "View %{view} has not been promoted to %{env}"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:617
+#: ../app/models/katello/repository.rb:619
 msgid "Repository has already been cloned to %{cv_name} in environment %{to_env}"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:835
+#: ../app/models/katello/repository.rb:837
 msgid ""
 "Repository cannot be deleted since it has already been included in a published"
 " Content View. Please delete all Content View versions containing this reposit"
@@ -7300,7 +7287,7 @@ msgid ""
 "flag to automatically remove the repository from all published versions."
 msgstr ""
 
-#: ../app/models/katello/repository.rb:892
+#: ../app/models/katello/repository.rb:894
 msgid "This is not a linked repository"
 msgstr ""
 
@@ -7469,11 +7456,11 @@ msgstr ""
 msgid "It is only allowed for Non-Redhat Yum repositories."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:421
+#: ../app/models/katello/root_repository.rb:425
 msgid "Cannot calculate name for custom repos"
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:464
+#: ../app/models/katello/root_repository.rb:468
 msgid "Cannot update properties of a container push repository"
 msgstr ""
 
@@ -7847,7 +7834,7 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:141
 #: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:347
 #: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:350
-#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryTableSchema.js:8
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryContent.js:30
 msgid "Status"
 msgstr ""
 
@@ -7893,8 +7880,8 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:129
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:240
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:277
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:123
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:226
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:120
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:223
 #: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:52
 #: ../webpack/scenes/ContentViews/Table/tableDataGenerator.js:14
 #: ../webpack/scenes/SmartProxy/ExpandedSmartProxyRepositories.js:120
@@ -7976,13 +7963,12 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Versions/Delete/affectedActivationKeys.js:36
 #: ../webpack/scenes/ContentViews/Details/Versions/Delete/affectedHostgroups.js:37
 #: ../webpack/scenes/ContentViews/Details/Versions/Delete/affectedHosts.js:31
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:116
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:152
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:176
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:193
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:271
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:296
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:319
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:113
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:149
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:173
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:190
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:268
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:291
 #: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:53
 #: ../webpack/scenes/ContentViews/Table/tableDataGenerator.js:16
 #: ../webpack/scenes/ContentViews/expansions/RelatedContentViewComponentsModal.js:81
@@ -8043,8 +8029,8 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:138
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:118
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:337
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:127
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:333
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:124
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:305
 #: ../webpack/scenes/FlatpakRemotes/Details/Mirror/MirrorRepositoryModal.js:148
 msgid "Product"
 msgstr ""
@@ -8072,7 +8058,7 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Filters/CVErrataIDFilterContent.js:96
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:229
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:275
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:215
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:212
 msgid "Errata ID"
 msgstr ""
 
@@ -8088,7 +8074,7 @@ msgstr ""
 #: ../webpack/components/extensions/Hosts/BulkActions/BulkErrataWizard/02_BulkErrataTable.js:94
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:236
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:276
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:222
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:219
 msgid "Title"
 msgstr ""
 
@@ -8230,7 +8216,7 @@ msgstr ""
 #: ../webpack/scenes/ContainerImages/Synced/ManifestRepositoriesTable.js:89
 #: ../webpack/scenes/ContentViews/Details/Filters/CVPackageGroupFilterContent.js:74
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:183
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:177
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:174
 #: ../webpack/scenes/SmartProxy/ExpandedSmartProxyRepositories.js:118
 #: ../webpack/scenes/SmartProxy/ExpandedSmartProxyRepositories.js:140
 #: ../webpack/scenes/SmartProxy/ExpandedSmartProxyRepositories.js:160
@@ -8429,7 +8415,7 @@ msgstr ""
 #: ../webpack/scenes/FlatpakRemotes/CreateEdit/FlatpakRemoteform.js:237
 #: ../webpack/scenes/FlatpakRemotes/Delete/DeleteFlatpakModal.js:38
 #: ../webpack/scenes/FlatpakRemotes/Details/Mirror/MirrorRepositoryModal.js:177
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:278
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:304
 #: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:146
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/DeleteDialog.js:30
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/UnsavedChangesDialog.js:30
@@ -8632,10 +8618,9 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:299
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:306
 #: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersions.js:109
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:91
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:158
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:278
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:302
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:88
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:155
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:274
 #: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:94
 #: ../webpack/scenes/ContentViews/Publish/CVPublishReview.js:105
 #: ../webpack/scenes/SmartProxy/ExpandableCvDetails.js:20
@@ -8679,7 +8664,7 @@ msgstr ""
 #: ../webpack/scenes/AlternateContentSources/Create/Steps/ACSReview.js:89
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:257
 #: ../webpack/scenes/ContentViews/Details/Versions/Delete/affectedHosts.js:77
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:243
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:240
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionDetailInfo.js:34
 msgid "Yes"
 msgstr ""
@@ -8690,7 +8675,7 @@ msgstr ""
 #: ../webpack/scenes/AlternateContentSources/Create/Steps/ACSReview.js:89
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:258
 #: ../webpack/scenes/ContentViews/Details/Versions/Delete/affectedHosts.js:77
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:244
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:241
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionDetailInfo.js:32
 msgid "No"
 msgstr ""
@@ -8808,7 +8793,7 @@ msgstr ""
 #: ../webpack/scenes/ContentCredentials/Details/DetailsTab.js:147
 #: ../webpack/scenes/ContentViews/Details/Filters/AffectedRepositories/AffectedRepositoryTable.js:64
 #: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:140
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:134
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:131
 msgid "Content"
 msgstr ""
 
@@ -9020,7 +9005,7 @@ msgstr ""
 
 #: ../lib/katello/plugin.rb:144
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:192
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:181
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:178
 #: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionRepositoryCell.js:58
 #: ../webpack/scenes/SmartProxy/AdditionalCapsuleContent.js:67
 msgid "Files"
@@ -9847,7 +9832,7 @@ msgstr ""
 #: ../webpack/scenes/ContainerImages/Synced/Details/ManifestDetails.js:171
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:365
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:379
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:356
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:328
 msgid "Digest"
 msgstr ""
 
@@ -10021,7 +10006,7 @@ msgstr ""
 #: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:84
 #: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:123
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionDetails.js:65
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:304
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:271
 msgid "Loading"
 msgstr ""
 
@@ -11134,7 +11119,6 @@ msgstr ""
 #: ../webpack/scenes/Content/ContentConfig.js:221
 #: ../webpack/scenes/Content/ContentConfig.js:235
 #: ../webpack/scenes/ContentViews/Details/Filters/CVModuleStreamFilterContent.js:76
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:277
 msgid "Stream"
 msgstr ""
 
@@ -12562,7 +12546,7 @@ msgstr ""
 #: ../webpack/scenes/AlternateContentSources/Create/Steps/AcsUrlPaths.js:145
 #: ../webpack/scenes/AlternateContentSources/Details/ACSExpandableDetails.js:386
 #: ../webpack/scenes/AlternateContentSources/Details/EditModals/ACSEditURLPaths.js:176
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:71
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:68
 msgid "Components"
 msgstr ""
 
@@ -12768,7 +12752,7 @@ msgstr ""
 
 #: ../webpack/scenes/AlternateContentSources/MainTable/ACSTable.js:277
 #: ../webpack/scenes/AlternateContentSources/MainTable/ACSTable.js:365
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:247
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:250
 #: action_names.rb:113 action_names.rb:114 action_names.rb:115
 msgid "Refresh"
 msgstr ""
@@ -12831,7 +12815,7 @@ msgstr ""
 #: ../webpack/scenes/ContainerImages/LabelsAnnotationsModal.js:50
 #: ../webpack/scenes/ContainerImages/Synced/PullablePathsModal.js:24
 #: ../webpack/scenes/ContentViews/Publish/CVPublishFinish.js:127
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:146
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:108
 msgid "Close"
 msgstr ""
 
@@ -12867,7 +12851,7 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:115
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompare.js:55
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:87
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:101
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:98
 msgid "Repositories"
 msgstr ""
 
@@ -13023,15 +13007,13 @@ msgstr ""
 #: ../webpack/scenes/Content/ContentConfig.js:237
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:158
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:167
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:160
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:280
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:157
 msgid "Arch"
 msgstr ""
 
 #: ../webpack/scenes/Content/ContentConfig.js:224
 #: ../webpack/scenes/Content/ContentConfig.js:238
 #: ../webpack/scenes/ContentViews/Details/Filters/CVModuleStreamFilterContent.js:78
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:279
 msgid "Context"
 msgstr ""
 
@@ -14050,7 +14032,7 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Filters/Rules/Package/AddEditPackageRuleModal.js:171
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:300
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:307
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:303
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:275
 msgid "Architecture"
 msgstr ""
 
@@ -14171,8 +14153,8 @@ msgstr ""
 #: ../webpack/scenes/ContentViews/Details/Filters/CVErrataIDFilterContent.js:99
 #: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:57
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:267
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:93
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:253
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:90
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:250
 msgid "Updated"
 msgstr ""
 
@@ -14538,7 +14520,7 @@ msgid "Promote"
 msgstr ""
 
 #: ../webpack/scenes/ContentViews/Details/Repositories/ContentCounts.js:57
-#: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersionContent.js:43
+#: ../webpack/scenes/ContentViews/Details/Versions/ContentViewVersionContent.js:42
 msgid "No content"
 msgstr ""
 
@@ -14897,13 +14879,13 @@ msgstr ""
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:157
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:166
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:159
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:156
 msgid "Release"
 msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:159
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:161
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:158
 msgid "Epoch"
 msgstr ""
 
@@ -14914,19 +14896,19 @@ msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:209
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:199
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:196
 msgid "Path"
 msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:255
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:241
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:238
 msgid "Modular"
 msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:262
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:248
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:245
 msgid "Applicable Content Hosts"
 msgstr ""
 
@@ -14938,7 +14920,7 @@ msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:311
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:307
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:279
 #: ../webpack/scenes/SmartProxy/AdditionalCapsuleContent.js:52
 msgid "Container tags"
 msgstr ""
@@ -14946,36 +14928,36 @@ msgstr ""
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:330
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:369
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:326
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:360
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:298
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:332
 msgid "Available schema versions"
 msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:332
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:371
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:328
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:362
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:300
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:334
 msgid "Schema version 1"
 msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:333
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:372
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:329
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:363
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:301
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:335
 msgid "Schema version 2"
 msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:343
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:339
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:311
 msgid "Image"
 msgstr ""
 
 #:
 #: ../webpack/scenes/ContentViews/Details/Versions/Compare/CVVersionCompareConfig.js:352
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:343
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:315
 #: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionRepositoryCell.js:50
 #: ../webpack/scenes/SmartProxy/AdditionalCapsuleContent.js:62
 msgid "Container manifest lists"
@@ -15237,17 +15219,17 @@ msgid "Your search returned no matching hosts."
 msgstr ""
 
 #:
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:85
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:82
 msgid "Content View Name"
 msgstr ""
 
 #:
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:140
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:137
 msgid "RPM Packages"
 msgstr ""
 
 #:
-#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:165
+#: ../webpack/scenes/ContentViews/Details/Versions/VersionDetails/ContentViewVersionDetailConfig.js:162
 msgid "RPM Package Groups"
 msgstr ""
 
@@ -16223,6 +16205,10 @@ msgstr ""
 msgid "Select one"
 msgstr ""
 
+#: ../webpack/scenes/Subscriptions/Manifest/CdnTabContent.js:11
+msgid "CDN Configuration for Red Hat Content"
+msgstr ""
+
 #: ../webpack/scenes/Subscriptions/Manifest/DeleteManifestModalText.js:6
 msgid "Are you sure you want to delete the manifest?"
 msgstr ""
@@ -16235,116 +16221,136 @@ msgstr ""
 msgid "This action should only be taken for debugging purposes."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:65
-msgid "This is disabled because a manifest task is in progress"
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:99
+msgid "Manage Manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:67
-msgid "This is disabled because no manifest exists"
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:123
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:190
+msgid "Manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:98
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:132
+msgid "Manifest History"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:141
+msgid "CDN Configuration"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryContent.js:12
 msgid "There is no manifest history to display."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:99
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryContent.js:13
 msgid "Import a manifest using the Manifest tab above."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:101
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryContent.js:15
 msgid "Learn more about adding subscription manifests in "
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:102
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryContent.js:16
 msgid "the documentation."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:108
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryContent.js:26
+msgid "Manifest history table"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryContent.js:31
+msgid "Message"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryContent.js:32
+msgid "Timestamp"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:31
 msgid "No manifest imported"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:128
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:96
+msgid "This is disabled because a manifest task is in progress"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:98
+msgid "This is disabled because no manifest exists"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:129
 msgid ""
 "Your manifest expired on {expirationDate}. To continue using Red Hat content, "
 "import a new manifest."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:128
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:130
 msgid ""
 "Your manifest has expired. To continue using Red Hat content, import a new man"
 "ifest."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:137
-msgid "Manage Manifest"
-msgstr ""
-
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:154
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:203
-msgid "Manifest"
-msgstr ""
-
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:159
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:142
 msgid "Subscription Manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:164
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:150
 msgid "Manifest expiring soon"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:167
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:153
 msgid ""
 "Your manifest will expire in {daysMessage}. To extend the expiration date, ref"
 "resh your manifest. Or, if your Foreman is disconnected, import a new manifest"
 "."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:174
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:160
 msgid "day"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:175
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:161
 msgid "days"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:189
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:177
 msgid "Manifest expired"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:213
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:197
 msgid "Expired "
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:213
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:197
 msgid "Expires "
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:224
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:203
 msgid "Import new manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:271
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:216
+msgid "Upload"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:217
+msgid "Clear"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:218
+msgid "Drag here"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:231
+msgid "Only .zip manifest files are accepted"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:232
+msgid "Upload a zip file"
+msgstr ""
+
+#: ../webpack/scenes/Subscriptions/Manifest/ManifestTabContent.js:281
 msgid "Confirm delete manifest"
-msgstr ""
-
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:302
-msgid "Manifest History"
-msgstr ""
-
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:315
-msgid "CDN Configuration"
-msgstr ""
-
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:318
-msgid "CDN Configuration for Red Hat Content"
-msgstr ""
-
-#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryTableSchema.js:21
-msgid "Message"
-msgstr ""
-
-#: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryTableSchema.js:35
-msgid "Timestamp"
 msgstr ""
 
 #: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:53
