@@ -1322,7 +1322,7 @@ msgstr "Delta RPM"
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
 msgid "Dependencies"
-msgstr "依赖性"
+msgstr "依赖关系"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
@@ -1474,6 +1474,9 @@ msgid ""
 "views\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a> for "
 "more information."
 msgstr ""
+"启用依赖项解析。这会显著增加发布时间。除非已先发现软件包依赖项问题，否则请勿启用。有关更多信息，请参考 <a "
+"href=\"/links/docs/Managing_Content?chapter=dependency-solving-for-content-"
+"views\" target=\"_blank\" rel=\"noopener noreferrer\"> 文档 </a>"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
@@ -1621,10 +1624,8 @@ msgstr "文件："
 msgid "Filename"
 msgstr "文件名"
 
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/files/files.controller.js
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Files"
@@ -2132,7 +2133,6 @@ msgstr "不适用"
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-content-views.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
@@ -2491,7 +2491,6 @@ msgid ""
 msgstr "用于身份验证的上游仓库用户的密码。如果仓库不需要身份验证，则保留为空。"
 
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-files.html
 msgid "Path"
 msgstr "路径"
@@ -3120,11 +3119,11 @@ msgstr "智能代理已同步"
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy sync failed"
-msgstr ""
+msgstr "智能代理同步失败"
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy sync finished with warning"
-msgstr ""
+msgstr "智能代理同步完成并显示警告"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Solution"
@@ -3603,7 +3602,7 @@ msgstr "未经身份验证的 pull 操作"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
 msgid "Unknown error"
-msgstr ""
+msgstr "未知错误"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
@@ -3767,7 +3766,7 @@ msgstr "用户名"
 msgid ""
 "Username and password are required for syncing the repository after it is "
 "created. Credentials are not validated during discovery."
-msgstr ""
+msgstr "存储库创建后，同步时需要提供用户名和密码。凭据在 Discovery 阶段不会进行校验。"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -3965,10 +3964,6 @@ msgid ""
 "the right."
 msgstr "当前您没有任何内容主机，可以通过从主菜单中选择“内容主机”，然后单击右侧的按钮来创建新的内容主机。"
 
-#: app/assets/javascripts/bastion_katello/files/views/files.html
-msgid "You currently don't have any Files."
-msgstr "您目前没有任何内容视图。"
-
 #: app/assets/javascripts/bastion_katello/host-collections/views/host-collections.html
 msgid ""
 "You currently don't have any Host Collections, you can add Host Collections "
@@ -4048,10 +4043,6 @@ msgstr "您的搜索返回了零个勘误。"
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 msgid "Your search returned zero Erratum."
 msgstr "您的搜索返回了零个勘误。"
-
-#: app/assets/javascripts/bastion_katello/files/views/files.html
-msgid "Your search returned zero Files."
-msgstr "您的搜索返回了零个文件。"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/views/host-collections.html

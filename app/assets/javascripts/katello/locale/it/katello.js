@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc2",
+        "Project-Id-Version": "katello 5.0.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -1361,6 +1361,9 @@
       "Clean Backend Objects": [
         ""
       ],
+      "Clear": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -1464,7 +1467,7 @@
         ""
       ],
       "Confirm": [
-        ""
+        "Conferma"
       ],
       "Confirm Deletion": [
         ""
@@ -2573,6 +2576,9 @@
       "Download rate limit": [
         ""
       ],
+      "Drag here": [
+        ""
+      ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
         ""
       ],
@@ -3201,7 +3207,7 @@
         ""
       ],
       "Generate and Download": [
-        "Genera e scarica"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -4693,6 +4699,9 @@
       "Manifest expiring soon": [
         ""
       ],
+      "Manifest history table": [
+        ""
+      ],
       "Manifest imported": [
         ""
       ],
@@ -5452,6 +5461,9 @@
       "One or more processes require restarting": [
         ""
       ],
+      "Only .zip manifest files are accepted": [
+        ""
+      ],
       "Only On Demand repositories may have space reclaimed.": [
         ""
       ],
@@ -5494,9 +5506,6 @@
       "Organization id": [
         "id organizzazione"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "Identificatore organizzazione"
       ],
@@ -5510,9 +5519,6 @@
         ""
       ],
       "Organization not found": [
-        ""
-      ],
-      "Organization not found: '%s'": [
         ""
       ],
       "Organization required": [
@@ -5806,9 +5812,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -5822,9 +5825,6 @@
         "Nome prodotto"
       ],
       "Product name as listed from a host's installed products": [
-        ""
-      ],
-      "Product not found: '%s'": [
         ""
       ],
       "Product the repository belongs to": [
@@ -6535,6 +6535,9 @@
       "Requested access to '%s' is denied": [
         ""
       ],
+      "Requested repository name is unknown to the registry.": [
+        ""
+      ],
       "Requirements is not valid yaml.": [
         ""
       ],
@@ -6821,7 +6824,7 @@
         ""
       ],
       "Saving...": [
-        ""
+        "Salvataggio..."
       ],
       "Scan": [
         ""
@@ -8751,6 +8754,9 @@
       "Upgrade via remote execution": [
         ""
       ],
+      "Upload": [
+        "Carica"
+      ],
       "Upload Content Credential contents": [
         ""
       ],
@@ -8759,6 +8765,9 @@
       ],
       "Upload a subscription manifest": [
         "Carica un manifesto della sottoscrizione"
+      ],
+      "Upload a zip file": [
+        ""
       ],
       "Upload content": [
         ""
