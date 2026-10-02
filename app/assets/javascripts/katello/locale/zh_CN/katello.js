@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ondřej Gajdušek, 2026",
+        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
         "Language-Team": "Chinese (China) (https://app.transifex.com/foreman/teams/114/zh_CN/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -459,7 +459,7 @@
         "具有可安装勘误的主机的提升后的摘要"
       ],
       "A publish is already scheduled for this content view. Please wait for the scheduled publish to complete.": [
-        ""
+        "此内容视图已调度发布。请等待调度的发布完成。"
       ],
       "A remote execution job is in progress": [
         "远程执行作业正在进行"
@@ -711,7 +711,7 @@
         "所有勘误已为最新"
       ],
       "All hosts must belong to the same organization": [
-        ""
+        "所有主机都必须属于同一机构"
       ],
       "All selected hosts were already members of host collection %{host_collection}.": [
         "所有选择的主机已经是主机集合 %{host_collection} 的成员。"
@@ -771,13 +771,13 @@
         "编辑的备用内容源"
       ],
       "Alternate content sources": [
-        ""
+        "备用内容源"
       ],
       "Alternate content sources define new locations to download content from at repository or smart proxy sync time.": [
         "备用内容源定义新位置，以便从仓库或智能代理同步时间下载内容。"
       ],
       "Alternate content sources table": [
-        ""
+        "替代内容源表"
       ],
       "Alternate content sources use the HTTP proxy of their assigned smart proxy for communication.": [
         "备用内容源使用其分配的智能代理的 HTTP 代理进行通信。"
@@ -894,7 +894,7 @@
         "架构"
       ],
       "Architectures": [
-        ""
+        "架构"
       ],
       "Are you sure you want to delete %(entitlementCount)s subscription(s)? This action will remove the subscription(s) and refresh your manifest. All systems using these subscription(s) will lose them and also may lose access to updates and Errata.": [
         ""
@@ -921,7 +921,7 @@
         "要删除的内容视图组件 ID 的数组。组件关联的标识符"
       ],
       "Array of content view environment IDs": [
-        ""
+        "内容视图环境 ID 数组"
       ],
       "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
         "要与主机关联的内容视图环境 ID 的数组。需要 allow_multiple_content_views 设置为 on。"
@@ -936,7 +936,7 @@
         ""
       ],
       "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
-        ""
+        "内容视图环境标签数组，格式为fecycle_environment_label/content_view_label'. 如果指定了 content_view_environment_ids，则被忽略。"
       ],
       "Array of dependency repository IDs to mirror along with the main repository": [
         "要镜像的依赖项仓库 ID 的数组，以及主仓库"
@@ -1008,7 +1008,7 @@
         "至少有一个激活密钥有分配的生命周期环境和内容视图"
       ],
       "At least one distribution is required for custom Deb ACS.": [
-        ""
+        "自定义 Deb ACS 至少需要一个发行版。"
       ],
       "At least one errata type option needs to be selected.": [
         "至少需要选择一个勘误类型选项。"
@@ -1230,13 +1230,13 @@
         "取消軟體庫搜尋"
       ],
       "Cancel repository synchronization": [
-        ""
+        "取消存储库同步"
       ],
       "Cancel running smart proxy synchronization": [
         "取消运行智能代理同步"
       ],
       "Cancel sync": [
-        ""
+        "取消同步"
       ],
       "Canceled": [
         "已取消"
@@ -1257,7 +1257,7 @@
         "Candlepin 消费者者 %s 已移除"
       ],
       "Candlepin consumer registration response is missing a uuid": [
-        ""
+        "Candlepin 消费者注册相应缺失了 uuid"
       ],
       "Candlepin is not running properly": [
         "Candlepin 没有正常运行"
@@ -1386,7 +1386,7 @@
         "无法在生成的内容视图版本 (%{name} version version %{version} 上执行增量更新"
       ],
       "Cannot perform an incremental update on a Rolling Content View Version (%{name} version %{version})": [
-        ""
+        "无法在轮询的内容视图版本 (%{name} version %{version}）上执行增量更新"
       ],
       "Cannot promote environment out of sequence. Use force to bypass restriction.": [
         "无法无序升级环境。强制绕过限制。"
@@ -1398,7 +1398,7 @@
         "如果指定了多个组件克隆，则无法发布链接仓库"
       ],
       "Cannot publish composite content view while its content views are being published. Please wait for component publishes to complete.": [
-        ""
+        "在发布内容视图时无法发布复合内容视图。请等待组件发布完成。"
       ],
       "Cannot publish default content view": [
         "无法发布默认内容视图"
@@ -1410,7 +1410,7 @@
         "无法从环境 '%{env}' 中删除 '%{view}'，因为关联了 %{dependent}: %{names}。"
       ],
       "Cannot remove '%{view}' from lifecycle environment '%{env}' due to associated host groups: %{names}.": [
-        ""
+        "因为关联了主机组 %{names}，无法从生命周期环境 '%{env}' 中删除 '%{view}'。"
       ],
       "Cannot remove content from a non-custom repository": [
         "無法從非自訂軟體庫移除內容"
@@ -1428,7 +1428,7 @@
         "无法将自动发布设置为非复合内容视图"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        "无法在非 yum/deb 仓库上跳过元数据检查。"
+        ""
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "无法同步带有按需下载策略的 file:// 仓库"
@@ -1512,7 +1512,7 @@
         "如果需要此 RHUI 源，请选择内容凭证。"
       ],
       "Choose file": [
-        ""
+        "选择文件"
       ],
       "Clean Backend Objects": [
         "清理后端对象"
@@ -1548,7 +1548,7 @@
         "全部折叠"
       ],
       "Collapse all": [
-        ""
+        "全部折叠"
       ],
       "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified, or if content_view_id and lifecycle_environment_id are specified. Requires allow_multiple_content_views setting to be on.": [
         ""
@@ -1674,7 +1674,7 @@
         "内容数"
       ],
       "Content Credential Details": [
-        ""
+        "內容凭证详情"
       ],
       "Content Credential ID": [
         "内容凭证 ID"
@@ -1719,7 +1719,7 @@
         "内容视图详情"
       ],
       "Content View Environment": [
-        ""
+        "内容视图环境"
       ],
       "Content View Environments": [
         "内容视图环境"
@@ -1770,10 +1770,10 @@
         "内容凭证"
       ],
       "Content credential file uploaded successfully.": [
-        ""
+        "内容凭证已成功上传。"
       ],
       "Content credential updated successfully.": [
-        ""
+        "內容凭证已成功更新。"
       ],
       "Content credentials": [
         "内容凭证"
@@ -1815,7 +1815,7 @@
         "内容源 ID"
       ],
       "Content source identifier to filter by available lifecycle environments": [
-        ""
+        "用于根据可用生命周期环境进行过滤的内容源标识符"
       ],
       "Content source was not set for host '%{host}'": [
         "没有为主机 '%{host}' 设置内容源"
@@ -1872,7 +1872,7 @@
         "内容视图环境"
       ],
       "Content view environment ID": [
-        ""
+        "内容视图环境 ID"
       ],
       "Content view environments": [
         "内容视图环境"
@@ -1902,7 +1902,7 @@
         "元数据中未提供的内容视图"
       ],
       "Content view not synced to capsule": [
-        ""
+        "内容视图未同步到 Capsule"
       ],
       "Content view numeric identifier": [
         "內容視域的數字識別子"
@@ -2048,6 +2048,9 @@
       "Couldn't find Organization '%s'.": [
         "找不到机构 '%s'。"
       ],
+      "Couldn't find Organization with id '%s'.": [
+        "找不到 ID 为 '%s' 的机构。"
+      ],
       "Couldn't find activation key '%s'": [
         "无法找到激活码 '%s'"
       ],
@@ -2088,7 +2091,7 @@
         "找不到主机集 '%s'"
       ],
       "Couldn't find host group content view environment id '%s'": [
-        ""
+        "无法找到主机组内容视图环境 id '%s'"
       ],
       "Couldn't find host with host id '%s'": [
         "找不到主机 id 为 '%s' 的主机"
@@ -2256,7 +2259,7 @@
         "DEB 软件包更新"
       ],
       "Database connection": [
-        "資料庫連線"
+        ""
       ],
       "Date": [
         "日期"
@@ -2289,16 +2292,16 @@
         "Deb 软件包"
       ],
       "Debian architectures (e.g., amd64, arm64)": [
-        ""
+        "Debian 架构 (如 md64, arm64)"
       ],
       "Debian components (e.g., main, contrib)": [
-        ""
+        "Debian 组件（例如，main、contrib）"
       ],
       "Debian packages": [
         "Debian 软件包"
       ],
       "Debian releases/distributions (e.g., trixie, bookworm)": [
-        ""
+        "Debian 版本/发布（如 trixie、bookworm）"
       ],
       "Debug Certificate": [
         "除錯憑證"
@@ -2427,7 +2430,7 @@
         "删除激活码"
       ],
       "Delete Content Credential": [
-        ""
+        "删除內容凭证"
       ],
       "Delete Flatpak remote?": [
         "删除 Flatpak remote?"
@@ -2628,7 +2631,7 @@
         "发布归档的内容视图版本"
       ],
       "Distributions": [
-        ""
+        "分发版"
       ],
       "Do not include this array of content views": [
         "不包括此内容视图数组"
@@ -2685,7 +2688,7 @@
         "编辑 RPM 规则"
       ],
       "Edit URL and Debian fields": [
-        ""
+        "编辑 URL 和 Debian 字段"
       ],
       "Edit URL and subpaths": [
         "编辑 URL 和子路径"
@@ -2808,7 +2811,7 @@
         "输入基本路径，以及搜索备用内容时应使用的任何子路径。"
       ],
       "Enter in the base url and the Debian fields that should be searched for alternate content. The base path can be a web address or a filesystem location.": [
-        ""
+        "请输入基础 URL 以及需搜索替代内容的 Debian 字段。基本路径可以是 Web 地址或文件系统位置。"
       ],
       "Entitlements": [
         "权利"
@@ -2901,7 +2904,7 @@
         "错误"
       ],
       "Error connecting to Pulp service": [
-        "连接到 Pulp 服务时出错"
+        ""
       ],
       "Error connecting. Got: %s": [
         "连接错误。获得：%s"
@@ -3030,19 +3033,19 @@
         "启动 trace 解析作业失败。"
       ],
       "Failed to remove content view environment: %{errors}": [
-        ""
+        "删除内容视图环境失败：%{errors}"
       ],
       "Failed to start repository synchronization": [
-        ""
+        "启动存储库同步失败"
       ],
       "Failed to update content credential.": [
-        ""
+        "更新內容凭证失败。"
       ],
       "Failed to upload content credential file.": [
-        ""
+        "更新内容凭证文件失败。"
       ],
       "Failed to upload file.": [
-        ""
+        "上传文件失败。"
       ],
       "Fails if any of the repositories belonging to this organization are unexportable. False by default.": [
         "如果属于该机构的任何仓库都无法导出，则失败。默认为False。"
@@ -3081,7 +3084,7 @@
         "文件"
       ],
       "Filter alternate content sources": [
-        ""
+        "过滤替代内容源"
       ],
       "Filter by Product": [
         "按产品过滤"
@@ -3114,7 +3117,7 @@
         "排除預設的內容視域"
       ],
       "Filter products": [
-        ""
+        "过滤产品"
       ],
       "Filter products by host id": [
         "以主機 ID 來篩選產品"
@@ -3132,7 +3135,7 @@
         "透過同步計畫 ID 來篩選產品"
       ],
       "Filter repositories": [
-        ""
+        "筛选存储库"
       ],
       "Filter repositories by content unit type (erratum, docker_tag, etc.). Check the \\\"Indexed?\\\" types here: /katello/api/repositories/repository_types": [
         "按内容单元类型 (erratum、docker_tag 等) 过滤仓库。要检查 \\\"Indexed?\\\" 类型：/katello/api/repositories/repository_types"
@@ -3162,7 +3165,7 @@
         "过滤在指定复合版本中作为组件的版本"
       ],
       "Filter...": [
-        ""
+        "过滤器......"
       ],
       "Filters": [
         "过滤器"
@@ -3246,10 +3249,10 @@
         "强制重新生成适用性。"
       ],
       "Force sync even if no upstream changes are detected. Non-yum repositories are skipped.": [
-        "即使未检测到上游更改也强制进行同步。非 yum 仓库会被跳过。"
+        ""
       ],
       "Force sync even if no upstream changes are detected. Only used with yum or deb repositories.": [
-        "即使未检测到上游更改也强制进行同步。仅用于 yum 或 deb 仓库。"
+        ""
       ],
       "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy.": [
         "强制重新发布指定存储库，在文件系统上重新生成元数据和符号链接。不允许使用\\\"Complete Mirroring' 镜像\\\"镜像策略的存储库。"
@@ -3258,10 +3261,10 @@
         "强制重新发布版本仓库的元数据"
       ],
       "Format: [epoch:]version[-release]": [
-        ""
+        "格式：[epoch:]version[-release]"
       ],
       "Format: [epoch:]version[-release]. If epoch is omitted, defaults to epoch 0.": [
-        ""
+        "格式：[epoch:]version[-release]。如果忽略 epoch 默认 epoch 为 0。"
       ],
       "Full description": [
         "完整描述"
@@ -3279,7 +3282,7 @@
         "根据需要为所需的仓库生成 RHUI 证书。"
       ],
       "Generate and Download": [
-        "生成并下载"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "生成 containerfile 安装命令 (选择了 %s 软件包)"
@@ -3321,7 +3324,7 @@
         "為指定的軟體庫取得同步化的狀態"
       ],
       "Get sync status for all repositories in an organization": [
-        ""
+        "获取机构中所有存储库的同步状态"
       ],
       "Given a set of hosts and errata, lists the content view versions and environments that need updating.": [
         "给定一组主机和勘误，列出需要更新的内容视图版本和环境。"
@@ -3348,7 +3351,7 @@
         "大于"
       ],
       "Guests of": [
-        "的客户"
+        ""
       ],
       "HTTP Proxies": [
         "HTTP 代理服务器"
@@ -3375,7 +3378,7 @@
         "隐藏回收空间警告"
       ],
       "Hide activation keys": [
-        ""
+        "隐藏激活码"
       ],
       "Hide affected activation keys": [
         "隐藏受影响的激活码"
@@ -3387,10 +3390,10 @@
         "隐藏描述"
       ],
       "Hide host groups": [
-        ""
+        "隐藏主机组"
       ],
       "Hide hosts": [
-        ""
+        "隐藏主机"
       ],
       "History": [
         "历史"
@@ -3456,7 +3459,7 @@
         "已更新的主机集合"
       ],
       "Host content source will remain the same. Click Save below to update the host's content view environments.": [
-        ""
+        "主机内容源将保持不变。点下面的 Save 以更新主机的内容视图环境。"
       ],
       "Host content view environment(s) assigned": [
         "分配的主机内容视图环境"
@@ -3561,7 +3564,7 @@
         "欲顯示其軟體庫的環境之 ID"
       ],
       "ID of an organization": [
-        ""
+        "机构 ID"
       ],
       "ID of an organization to show repositories in": [
         "在其中显示仓库的机构 ID"
@@ -3615,7 +3618,7 @@
         "用来查找包括文件的仓库的文件 ID"
       ],
       "Id of a module stream to find repositories that contain the module stream": [
-        ""
+        "用于查找包含模块流的存储库的 ID"
       ],
       "Id of a rpm package to find repositories that contain the rpm": [
         "用来查找包括 rpm 的仓库的 rpm ID"
@@ -3951,7 +3954,7 @@
         "为复合 %{name} 版本 %{version} 指定了增量更新，但没有更新的组件。"
       ],
       "Incremental update will not add any new content. The specified content is already present.": [
-        ""
+        "增量更新不会添加新内容。指定的内容已存在。"
       ],
       "Informable Type must be one of the following [ %{list} ]": [
         "信息类型需要是 [ %{list} ] 之一"
@@ -3960,10 +3963,10 @@
         "从仓库继承"
       ],
       "Inherit parent": [
-        ""
+        "继承父级"
       ],
       "Inherit parent (%s)": [
-        ""
+        "继承父级（%s）"
       ],
       "Initiate a sync of the products attached to the sync plan": [
         "启动同步计划中附加产品的同步"
@@ -4320,10 +4323,10 @@
         "最后同步"
       ],
       "Last sync failed": [
-        ""
+        "最后的同步失败"
       ],
       "Last sync finished with warnings": [
-        ""
+        "最后同步完成并显示警告"
       ],
       "Last task": [
         "最新任务"
@@ -4380,7 +4383,7 @@
         "生命周期环境"
       ],
       "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
-        ""
+        "生命周期环境 %s 已与主机组关联。在删除这个生命周期环境前，请先修改或删除关联的主机组。"
       ],
       "Lifecycle environment '%{environment}' is not attached to this capsule.": [
         "生命周期环境%{environment}'未连接到此 capsule。"
@@ -4401,7 +4404,7 @@
         "生命周期环境：{lce}"
       ],
       "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        "无法在默认的智能代理上修改生命周期环境。所有生命周期环境中的内容都将存在于此智能代理中。"
+        ""
       ],
       "Limit": [
         "限制"
@@ -4629,10 +4632,10 @@
         "机构中的仓库列表"
       ],
       "List of repository IDs to poll": [
-        ""
+        "要轮询的存储库 ID 列表"
       ],
       "List of repository IDs to sync": [
-        ""
+        "要同步的存储库 ID 列表"
       ],
       "List of repository ids": [
         "軟體庫 ID 清單"
@@ -4833,7 +4836,7 @@
         "信息"
       ],
       "Messaging connection": [
-        "訊息連線"
+        ""
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         "元数据重新发布会面临\\\"完成镜像\\\"存储库的风险。更改镜像策略并重试。 \\n 或者，使用 'force' 参数在本地重新生成元数据。在下一次同步中，上游存储库的元数据将覆盖 'Complete Mirroring' 存储库的本地元数据。"
@@ -5070,13 +5073,13 @@
         "不需要操作"
       ],
       "No activation keys available": [
-        ""
+        "没有可用的激活密钥"
       ],
       "No alternate content sources match your filter criteria.": [
-        ""
+        "没有匹配您的过滤器标准的替代内容源。"
       ],
       "No alternate content sources using this credential": [
-        ""
+        "没有使用此凭证的替代内容源"
       ],
       "No applicable errata": [
         "没有适用的勘误"
@@ -5196,7 +5199,7 @@
         "还没有主机集合"
       ],
       "No host groups found.": [
-        ""
+        "没有找到主机组。"
       ],
       "No hosts found": [
         "没有找到主机"
@@ -5244,7 +5247,7 @@
         "未找到匹配的激活码。"
       ],
       "No matching alternate content sources": [
-        ""
+        "没有匹配的替代内容源"
       ],
       "No matching alternate content sources found": [
         "没有找到匹配的备用内容源"
@@ -5277,10 +5280,10 @@
         "没有找到匹配的软件包组"
       ],
       "No matching products": [
-        ""
+        "没有匹配的产品"
       ],
       "No matching repositories": [
-        ""
+        "没有匹配的存储库"
       ],
       "No matching repositories found": [
         "找不到匹配的仓库"
@@ -5337,16 +5340,16 @@
         "没有启用任何产品。"
       ],
       "No products match your filter criteria.": [
-        ""
+        "没有产品与您的筛选标准匹配。"
       ],
       "No products using this credential": [
-        ""
+        "没有使用此凭证的产品"
       ],
       "No profiles to show": [
         "没有可显示的配置集"
       ],
       "No pulp workers running.": [
-        "没有 pulp worker 在运行。"
+        ""
       ],
       "No pulpcore content apps are running at %s.": [
         "在 %s 上没有允许 没有 pulpcore 内容应用程序。"
@@ -5373,13 +5376,13 @@
         "没有启用的仓库。"
       ],
       "No repositories match your filter criteria.": [
-        ""
+        "没有存储库匹配您的筛选标准。"
       ],
       "No repositories selected.": [
         "没有选择仓库。"
       ],
       "No repositories using this credential": [
-        ""
+        "没有使用此凭证的存储库"
       ],
       "No repository sets match your search criteria.": [
         "没有仓库集符合您的搜索条件。"
@@ -5415,7 +5418,7 @@
         "未指定上传参数。需要导入的上传阵列。"
       ],
       "No valid organization found for the selected hosts": [
-        ""
+        "没有为所选主机找到有效的机构"
       ],
       "No versions yet": [
         "还没有版本"
@@ -5442,7 +5445,7 @@
         "未添加"
       ],
       "Not all necessary pulp workers running at %s.": [
-        "并非所有需要的 pulp worker 都在 %s 上运行。"
+        ""
       ],
       "Not installed": [
         "未安装"
@@ -5567,9 +5570,6 @@
       "Organization id": [
         "組織 ID"
       ],
-      "Organization id not found: '%s'": [
-        "机构 id 没有找到: '%s'"
-      ],
       "Organization identifier": [
         "机构标识符"
       ],
@@ -5584,9 +5584,6 @@
       ],
       "Organization not found": [
         "没有找到机构"
-      ],
-      "Organization not found: '%s'": [
-        "没有找到机构：'%s'"
       ],
       "Organization required": [
         "需要的机构"
@@ -5910,7 +5907,7 @@
         "在分配 kickstart 仓库之前，请先选择一个操作系统"
       ],
       "Please select an organization to view activation keys.": [
-        ""
+        "请选择一个机构以查看激活密钥。"
       ],
       "Please select one from the list below and you will be redirected.": [
         "请从下面的列表中选择一个，您将被重定向。"
@@ -5925,7 +5922,7 @@
         "为镜像内容设置的策略。必须是 %s 之一。"
       ],
       "Poll sync status for specified repositories": [
-        ""
+        "轮询指定存储库的同步状态"
       ],
       "Prefer registered through Smart Proxy for remote execution": [
         "首选通过智能代理注册的远程执行"
@@ -5990,9 +5987,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "产品 id，与列出的主机安装的产品一样，\\\\\\n        而不是 products api 返回的 product id"
       ],
-      "Product id not found: '%s'": [
-        "没有找到产品 id: '%s'"
-      ],
       "Product label": [
         "产品标签"
       ],
@@ -6008,9 +6002,6 @@
       "Product name as listed from a host's installed products": [
         "产品名称，与列出的主机安装的产品一样"
       ],
-      "Product not found: '%s'": [
-        "未找到产品：'%s'"
-      ],
       "Product the repository belongs to": [
         "仓库所属的产品"
       ],
@@ -6021,7 +6012,7 @@
         "在 Candlepin 中找不到 ID 为 %s 的产品。跳过内容导入。"
       ],
       "Product | Repository": [
-        ""
+        "产品 | 存储库"
       ],
       "Product: '%{product}', Repository: '%{repository}'": [
         "产品：'%{product}', 仓库：'%{repository}' "
@@ -6033,7 +6024,7 @@
         "产品"
       ],
       "Products table": [
-        ""
+        "产品表"
       ],
       "Products updated.": [
         "产品已更新。"
@@ -6042,7 +6033,7 @@
         "配置集"
       ],
       "Progress / Result": [
-        ""
+        "进度/结果"
       ],
       "Promote": [
         "升级"
@@ -6129,7 +6120,7 @@
         "可拉取路径"
       ],
       "Pulp": [
-        "Pulp"
+        ""
       ],
       "Pulp 3 export destination filepath": [
         "Pulp 3 导出目的地文件路径"
@@ -6144,7 +6135,7 @@
         "在 %s 上有 Pulp 数据库连接问题 。"
       ],
       "Pulp database connection issue.": [
-        "Pulp 数据库连接有问题。"
+        ""
       ],
       "Pulp disk space notification": [
         "Pulp 磁盘空间通知"
@@ -6153,22 +6144,22 @@
         "Pulp 没有在 %s 上运行。."
       ],
       "Pulp does not appear to be running.": [
-        "Pulp 没有运行。"
+        ""
       ],
       "Pulp message bus connection issue at %s.": [
-        "在 %s 上有 Pulp 消息总线连接问题。"
+        ""
       ],
       "Pulp message bus connection issue.": [
-        "Pulp 信息总线连接有问题。"
+        ""
       ],
       "Pulp node": [
-        "Pulp 节点"
+        ""
       ],
       "Pulp redis connection issue at %s.": [
         "在 %s 上有 Pulp redis 连接问题。"
       ],
       "Pulp server version": [
-        "Pulp 服务器版本"
+        ""
       ],
       "Pulp storage": [
         "Pulp 存储"
@@ -6264,10 +6255,10 @@
         "重新分配受影响的主机"
       ],
       "Reassign affected host group": [
-        ""
+        "重新分配受影响的主机组"
       ],
       "Reassign affected host groups": [
-        ""
+        "重新分配受影响的主机组"
       ],
       "Reassign affected hosts": [
         "重新分配受影响的主机"
@@ -6585,7 +6576,7 @@
         "不允许来自发布的内容视图中的仓库。"
       ],
       "Repositories table": [
-        ""
+        "存储库表"
       ],
       "Repository": [
         "仓库"
@@ -6639,7 +6630,7 @@
         "找不到軟體庫"
       ],
       "Repository not found or not syncable": [
-        ""
+        "存储库未找到或不可同步"
       ],
       "Repository path": [
         "仓库路径"
@@ -6681,7 +6672,7 @@
         "仓库同步失败"
       ],
       "Repository synchronization started": [
-        ""
+        "存储库同步已启动"
       ],
       "Repository type": [
         "仓库类型"
@@ -6697,6 +6688,9 @@
       ],
       "Requested access to '%s' is denied": [
         "请求对 '%s' 的访问被拒绝"
+      ],
+      "Requested repository name is unknown to the registry.": [
+        ""
       ],
       "Requirements is not valid yaml.": [
         "Requirements 不是有效的 yaml。"
@@ -6930,7 +6924,7 @@
         "SRPM 详情"
       ],
       "SSL CA Certificate": [
-        ""
+        "SSL CA 证书"
       ],
       "SSL CA Content Credential": [
         "SSL CA 内容凭证"
@@ -6939,7 +6933,7 @@
         "SSL CA 证书"
       ],
       "SSL Client Certificate": [
-        ""
+        "SSL 客户端证书"
       ],
       "SSL Client Key": [
         "Pulp 客户端密钥"
@@ -7059,19 +7053,19 @@
         "选择一个内容视图"
       ],
       "Select a content view environment": [
-        ""
+        "选择内容视图环境"
       ],
       "Select a lifecycle environment": [
         "选择一个生命周期环境"
       ],
       "Select a lifecycle environment and a content view to move these host groups.": [
-        ""
+        "选择一个生命周期环境和一个内容视图来移动这些主机组。"
       ],
       "Select a lifecycle environment and a content view to move these hosts.": [
         "选择一个生命周期环境和一个内容视图来移动这些主机。"
       ],
       "Select a lifecycle environment and a content view to move this host group.": [
-        ""
+        "选择一个生命周期环境和一个内容视图来移动这个主机组。"
       ],
       "Select a lifecycle environment and a content view to move this host.": [
         "选择一个生命周期环境和一个内容视图来移动这个主机。"
@@ -7155,7 +7149,7 @@
         "选择生命周期环境"
       ],
       "Select node": [
-        ""
+        "选择节点"
       ],
       "Select none": [
         "全部不选择"
@@ -7185,7 +7179,7 @@
         "选择要与这个源关联的产品。"
       ],
       "Select repository": [
-        ""
+        "选择存储库"
       ],
       "Select repository sets": [
         "选择仓库集"
@@ -7320,7 +7314,7 @@
         "显示同步计划"
       ],
       "Show activation keys": [
-        ""
+        "显示激活码"
       ],
       "Show affected activation keys": [
         "显示受影响的激活码"
@@ -7356,10 +7350,10 @@
         "显示完整描述"
       ],
       "Show host groups": [
-        ""
+        "显示主机组"
       ],
       "Show hosts": [
-        ""
+        "显示主机"
       ],
       "Show hosts associated to an activation key": [
         "显示与激活码关联的主机"
@@ -7380,7 +7374,7 @@
         "显示主机上启用的仓库，被 Katello 知道"
       ],
       "Show syncing only": [
-        ""
+        "只显示同步"
       ],
       "Show the available repository types": [
         "显示可用的仓库类型"
@@ -7407,7 +7401,7 @@
         "跳过 %{count} 未注册的主机"
       ],
       "Skipped pulp_auth check after failed pulp check": [
-        "pulp 检查失败后跳过 pulp_auth"
+        ""
       ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         "Smart Proxy '%{proxy}' 有一个 'rhsm_url' 设置，它必须使用 HTTPS 协议。当前值： '%{url}'。请更新 Smart Proxy 的 rhsm_url 设置。"
@@ -7455,13 +7449,13 @@
         "一些环境被禁用，因为它们没有与所有受影响主机的内容源关联。"
       ],
       "Some hosts are not registered and will be ignored.": [
-        ""
+        "某些主机没有注册并将被忽略。"
       ],
       "Some lifecycle environments are disabled because they are not associated with the host's content source.": [
         "有些生命周期环境被禁用，因为它们没有与主机的内容源关联。"
       ],
       "Some lifecycle environments are disabled because they are not associated with the selected content source.": [
-        ""
+        "有些生命周期环境被禁用，因为它们没有与所选主机的内容源关联。"
       ],
       "Some of your inputs contain errors. Please update them and save your changes again.": [
         "您的某些输入包含错误。请更新它们，然后再次保存更改。"
@@ -7512,7 +7506,7 @@
         "获取 ${lowerCase(pluralLabel)} 时出错! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        "获取文件时出错！${getResponseErrorMsgs(error.response)}"
+        ""
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
         "获取 rpm 软件包时发生错误！${getResponseErrorMsgs(error.response)}"
@@ -7596,7 +7590,7 @@
         "获取勘误时出错！${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
-        "获取文件时出错！${getResponseErrorMsgs(error.response)}"
+        ""
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
         "获取主机时出错！${getResponseErrorMsgs(error.response)}"
@@ -7788,7 +7782,7 @@
         "成功删除 %s 主机。"
       ],
       "Successfully synced": [
-        ""
+        "成功同步"
       ],
       "Successfully synced capsule.": [
         "成功同步的 capsule。"
@@ -7863,7 +7857,7 @@
         "为一个产品同步所有存储库"
       ],
       "Sync canceled": [
-        ""
+        "同步已取消"
       ],
       "Sync complete.": [
         "完成同步。"
@@ -7872,10 +7866,10 @@
         "同步勘误"
       ],
       "Sync in progress": [
-        ""
+        "同步进行中"
       ],
       "Sync incomplete": [
-        ""
+        "同步未完成"
       ],
       "Sync one or more products": [
         "同步一个或多个产品"
@@ -7905,7 +7899,7 @@
         "现在同步"
       ],
       "Synchronize repositories": [
-        ""
+        "同步存储库"
       ],
       "Synchronize repository": [
         "同步仓库"
@@ -7923,13 +7917,13 @@
         "同步：验证内容"
       ],
       "Syncing": [
-        ""
+        "正在同步"
       ],
       "Syncing Complete.": [
         "同步完成。"
       ],
       "Syncing complete": [
-        ""
+        "同步完成"
       ],
       "Synopsis": [
         "synopsis"
@@ -8193,7 +8187,7 @@
         "有 {numberOfActivationKeys} 个需要重新分配的激活码。"
       ],
       "There are {numberOfHostgroups} host groups that need to be reassigned.": [
-        ""
+        "有 {numberOfHostgroups} 个主机需要重新分配。"
       ],
       "There are {numberOfHosts} hosts that need to be reassigned.": [
         "有 {numberOfHosts} 个主机需要重新分配。"
@@ -8217,7 +8211,7 @@
         "有 {numberOfActivationKeys} 个需要重新分配的激活码。"
       ],
       "There is {numberOfHostgroups} host group that needs to be reassigned.": [
-        ""
+        "有 {numberOfHostgroups} 个主机需要重新分配。"
       ],
       "There is {numberOfHosts} host that needs to be reassigned.": [
         "有 {numberOfHosts} 个主机需要重新分配。"
@@ -8262,13 +8256,13 @@
         "此证书允许用户从浏览器查看任何环境中的存储库。"
       ],
       "This content credential is not currently being used by any alternate content sources.": [
-        ""
+        "此内容凭证目前没有被任何替代内容源使用。"
       ],
       "This content credential is not currently being used by any products.": [
-        ""
+        "此内容凭证目前没有被任何产品使用。"
       ],
       "This content credential is not currently being used by any repositories.": [
-        ""
+        "此内容凭证目前没有被任何存储库使用。"
       ],
       "This content view does not have any versions associated.": [
         "此内容视图没有任何关联的版本。"
@@ -8400,7 +8394,7 @@
         "要开始，将此主机添加到主机集合。"
       ],
       "To get started, create a host collection.": [
-        ""
+        "要开始使用，请创建一个主机集合。"
       ],
       "To give your hosts access to content, assign content view environments.": [
         "要授予主机对内容的访问权限，分配内容视图环境。"
@@ -8505,7 +8499,7 @@
         "URL"
       ],
       "URL and Debian fields": [
-        ""
+        "URL 和 Debian 字段"
       ],
       "URL and paths": [
         "URL 和路径"
@@ -8547,7 +8541,7 @@
         "无法连接"
       ],
       "Unable to connect. Got: %s": [
-        "无法连接。得到了： %s"
+        ""
       ],
       "Unable to create ContentViewEnvironment. Check the logs for more information.": [
         ""
@@ -8556,10 +8550,10 @@
         "无法删除任何备用内容源。您没有删除的权限，或者没有任何备用内容源。"
       ],
       "Unable to detect pulp storage": [
-        "无法检测到 pulp 存储"
+        ""
       ],
       "Unable to detect puppet path": [
-        "无法检测到 puppet 路径"
+        ""
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         "无法使用提供的参数查找用于增量导出的基本内容视图：%{params}"
@@ -8592,10 +8586,10 @@
         "无法重新分配内容主机。请提供system_content_view_id 和 system_environment_id。"
       ],
       "Unable to reassign host groups. Please check hostgroup_content_view_environment_id.": [
-        ""
+        "无法创新分配主机组。请检查 hostgroup_content_view_environment_id。"
       ],
       "Unable to reassign host groups. Please provide hostgroup_content_view_environment_id.": [
-        ""
+        "无法创新分配主机组。请提供 hostgroup_content_view_environment_id。"
       ],
       "Unable to reassign systems. Please check system_content_view_id and system_environment_id.": [
         "無法重新指定系統。請檢查 system_content_view_id 與 system_environment_id。"
@@ -8874,7 +8868,7 @@
         "上传到"
       ],
       "Upload new file": [
-        ""
+        "上传新文件"
       ],
       "Upload package / repos profile": [
         "上传软件包 / 仓库配置集"
@@ -9180,10 +9174,10 @@
         "是否在结果中包括可用的内容属性"
       ],
       "Without epoch, matches all epochs. Release must be exact if specified (e.g. 1.el9).": [
-        ""
+        "如果没有指定 epoch，则匹配所有 epoch。如果指定，则需要准确发行版本（如 1.el9）。"
       ],
       "Workers": [
-        "工作节点"
+        ""
       ],
       "Wrong content type submitted.": [
         "提交了错误的内容类型。"
@@ -9492,13 +9486,13 @@
         "内容类型 ('deb', 'file', 'ostree_ref', 'rpm', 'srpm')"
       ],
       "content type value": [
-        ""
+        "內容类型值"
       ],
       "content view component ID. Identifier of the component association": [
         "内容视图组件 ID。组件关联的标识符"
       ],
       "content view environment to reassign orphaned host groups to": [
-        ""
+        "用于重新分配孤立主机组的内容视图环境"
       ],
       "content view filter identifier": [
         "内容视图过滤器标识符"
@@ -9582,10 +9576,10 @@
         "磁盘"
       ],
       "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
-        "下载对 deb、docker、file 和 yum 仓库（ 'immediate' 或 'on_demand'）的下载策略"
+        ""
       ],
       "edit the content source": [
-        ""
+        "编辑内容源"
       ],
       "enables or disables synchronization": [
         "启用或禁用同步"
@@ -9693,10 +9687,10 @@
         "要过滤的主机集合名称"
       ],
       "host group": [
-        ""
+        "主机组"
       ],
       "host groups": [
-        ""
+        "主机组"
       ],
       "hosts": [
         "主机"
@@ -10128,7 +10122,7 @@
         "查看内容视图标签页。"
       ],
       "view tasks button": [
-        ""
+        "查看任务按钮"
       ],
       "waiting for %s to finish the task": [
         "等待 %s 完成任务"
@@ -10167,10 +10161,10 @@
         "{numberOfActivationKeys} 激活码将分配给内容视图 {cvName}"
       ],
       "{numberOfHostgroups} host group will be assigned to content view {cvName} in": [
-        ""
+        "{numberOfHostgroups} 主机组将分配给内容视图 {cvName}"
       ],
       "{numberOfHostgroups} host groups will be assigned to content view {cvName} in": [
-        ""
+        "{numberOfHostgroups} 主机组将分配给内容视图 {cvName}"
       ],
       "{numberOfHosts} host will be assigned to content view {cvName} in": [
         "{numberOfHosts} 主机将分配给内容视图 {cvName}"

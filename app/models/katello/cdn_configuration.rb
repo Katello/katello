@@ -8,6 +8,7 @@ module Katello
     CUSTOM_CDN_TYPE = 'custom_cdn'.freeze
 
     TYPES = [CDN_TYPE, NETWORK_SYNC, EXPORT_SYNC, CUSTOM_CDN_TYPE].freeze
+    REDHAT_CDN_HOST_PATTERN = /\Acdn(-[a-z]+)?\.redhat\.com\z/
 
     belongs_to :organization, :inverse_of => :cdn_configuration
 
@@ -41,8 +42,10 @@ module Katello
       custom_cdn_auth_enabled
     end
 
-    def redhat_cdn_url?
-      Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
+    def redhat_cdn_host?
+      URI.parse(url).host&.match?(REDHAT_CDN_HOST_PATTERN)
+    rescue URI::InvalidURIError
+      false
     end
 
     def export_sync?

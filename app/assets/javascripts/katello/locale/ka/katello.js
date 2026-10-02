@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2026",
@@ -1430,7 +1430,7 @@
         ""
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        "არა-yum/deb რეპოზიორიების მეტამონაცემების შემოწმების გამოტოვება შეუძლებელია."
+        ""
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         ""
@@ -2050,6 +2050,9 @@
       "Couldn't find Organization '%s'.": [
         "ორგანიზაცია არ არსებობს: '%s'."
       ],
+      "Couldn't find Organization with id '%s'.": [
+        ""
+      ],
       "Couldn't find activation key '%s'": [
         "აქტივაციის გასაღების (%s) პოვნა შეუძლებელია"
       ],
@@ -2258,7 +2261,7 @@
         "DEB პაკეტის განახლებები"
       ],
       "Database connection": [
-        "შეერთება მონაცემთა ბაზასთან"
+        ""
       ],
       "Date": [
         "თარიღი"
@@ -2903,7 +2906,7 @@
         "შეცდომა"
       ],
       "Error connecting to Pulp service": [
-        "Pulp-ის სერვისთან მიერთები შეცდომა"
+        ""
       ],
       "Error connecting. Got: %s": [
         "შეერთების შეცდომა: %s"
@@ -3281,7 +3284,7 @@
         ""
       ],
       "Generate and Download": [
-        "გენერაცია და გადმოწერა"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3351,7 +3354,7 @@
         "მეტი, ვიდრე"
       ],
       "Guests of": [
-        "სტუმარი"
+        ""
       ],
       "HTTP Proxies": [
         "HTTP პროქსიები"
@@ -4837,7 +4840,7 @@
         "შეტყობინება"
       ],
       "Messaging connection": [
-        "შეერთება შეტყობინებების სერვერთან"
+        ""
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
@@ -5350,7 +5353,7 @@
         "საჩვენებელი პროფილების გარეშე"
       ],
       "No pulp workers running.": [
-        "Pulp-ის დამხმარე პროცესები გაშვებული არაა."
+        ""
       ],
       "No pulpcore content apps are running at %s.": [
         "%s-ზე pulpcore-ის შემცველობის აპები გაშვებული არაა."
@@ -5446,7 +5449,7 @@
         "დამატებული არაა"
       ],
       "Not all necessary pulp workers running at %s.": [
-        "%s-ზე pulp-ის დამხმარე პროცესების რაოდენობა საკმარისი არაა."
+        ""
       ],
       "Not installed": [
         "დაყენებული არაა"
@@ -5571,9 +5574,6 @@
       "Organization id": [
         "ორგანიზაციის ID"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "ორგანიზაციის იდენტიფიკატორი"
       ],
@@ -5588,9 +5588,6 @@
       ],
       "Organization not found": [
         "ორგანიზაცია არ არსებობს"
-      ],
-      "Organization not found: '%s'": [
-        ""
       ],
       "Organization required": [
         "ორგანიზაციის მითითება აუცილებელია"
@@ -5994,9 +5991,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         "პროდუქტის ჭდე"
       ],
@@ -6011,9 +6005,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "პროდუქტის სახელი იმ სახით, როგორითაც ის ჰოსტზე დაყენებული პროდუქტების სიაშია ჩამოთვლილი"
-      ],
-      "Product not found: '%s'": [
-        ""
       ],
       "Product the repository belongs to": [
         "პროდუქტი, რომელსაც რეპოზიტორია მიეკუთვნება"
@@ -6133,7 +6124,7 @@
         ""
       ],
       "Pulp": [
-        "Pulp"
+        ""
       ],
       "Pulp 3 export destination filepath": [
         "Pulp 3-ის გატანის სამიზნე ფაილის ბილიკი"
@@ -6148,7 +6139,7 @@
         "Pulp-ის პრობლემა ბაზასთან მიერთებისას: %s."
       ],
       "Pulp database connection issue.": [
-        "Pulp-ის პრობლემა ბაზასთან მიერთებისას."
+        ""
       ],
       "Pulp disk space notification": [
         "Pulp-ის დისკის ადგილის გაფრთხილება"
@@ -6157,22 +6148,22 @@
         "%s-ზე Pulp-ი გაშვებული არაა."
       ],
       "Pulp does not appear to be running.": [
-        "Pulp-ი გაშვებული არაა."
+        ""
       ],
       "Pulp message bus connection issue at %s.": [
-        "Pulp-ის შეცდომა შეტყობინებების მატარებელთან მიერთებისას მისამართზე %s."
+        ""
       ],
       "Pulp message bus connection issue.": [
-        "Pulp შეტყობინებების მატარებელთან მიერთების შეცდომა."
+        ""
       ],
       "Pulp node": [
-        "Pulp-ის კვანძი"
+        ""
       ],
       "Pulp redis connection issue at %s.": [
         "Pulp-ის პრობლემა redis-თან მიერთებისას: %s."
       ],
       "Pulp server version": [
-        "Pulp-ის სერვერის ვერსია"
+        ""
       ],
       "Pulp storage": [
         "Pulp-ის საცავი"
@@ -6700,6 +6691,9 @@
         "რეპოზიტორიის მეტამონაცემების თავიდან გამოქვეყნება"
       ],
       "Requested access to '%s' is denied": [
+        ""
+      ],
+      "Requested repository name is unknown to the registry.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -7517,7 +7511,7 @@
         "გამოთხოვის შეცდომა ${lowerCase(pluralLabel)}! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        "შეცდომა ფაილების გამოთხოვისას! ${getResponseErrorMsgs(error.response)}"
+        ""
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
         "RPM პაკეტის გამოთხოვის შეცდომა! ${getResponseErrorMsgs(error.response)}"
@@ -7601,7 +7595,7 @@
         "შეცდომა მორჩენილი პაჩების მიღებისას! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
-        "შეცდომა ფაილების მიღებისას! ${getResponseErrorMsgs(error.response)}"
+        ""
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
         "შეცდომა ჰოსტების მიღებისას! ${getResponseErrorMsgs(error.response)}"
@@ -8552,7 +8546,7 @@
         "დაკავშირება შეუძლებელია"
       ],
       "Unable to connect. Got: %s": [
-        "შეერთების შეცდომა. პასუხი: %s"
+        ""
       ],
       "Unable to create ContentViewEnvironment. Check the logs for more information.": [
         ""
@@ -8561,10 +8555,10 @@
         "ალტერნატიული შემცველობის წყაროს წაშლა შეუძლებელია. ან წაშლის წვდომა არ გაგაჩნიათ, ან ალტერნატიული შემცველობის წყაროები არ არსებობენ."
       ],
       "Unable to detect pulp storage": [
-        "Pulp-ის საცავის პოვნა შეუძლებელია"
+        ""
       ],
       "Unable to detect puppet path": [
-        "Puppet-ის ბილიკის პოვნა შეუძლებელია"
+        ""
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         ""
@@ -9189,7 +9183,7 @@
         ""
       ],
       "Workers": [
-        "დამხმარე პროცესები"
+        ""
       ],
       "Wrong content type submitted.": [
         "გადაცემული შემცველობის ტიპი არასწორია."

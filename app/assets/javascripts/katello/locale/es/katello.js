@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "fe37ea014ea122db60df81cd86b163af_742ef71 <ba9f59c06b0be83ac3724b1834a4c14b_93939>, 2026",
+        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2026",
         "Language-Team": "Spanish (https://app.transifex.com/foreman/teams/114/es/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -2052,6 +2052,9 @@
       "Couldn't find Organization '%s'.": [
         "No se encontró la organización '%s'"
       ],
+      "Couldn't find Organization with id '%s'.": [
+        ""
+      ],
       "Couldn't find activation key '%s'": [
         "No se encontró la llave de activación '%s'"
       ],
@@ -2260,7 +2263,7 @@
         ""
       ],
       "Database connection": [
-        "Conexión a la base de datos"
+        ""
       ],
       "Date": [
         "Fecha"
@@ -2905,7 +2908,7 @@
         "Error"
       ],
       "Error connecting to Pulp service": [
-        "Error al conectarse con el servicio Pulp"
+        ""
       ],
       "Error connecting. Got: %s": [
         "Error al conectar. Se obtuvo: %s."
@@ -3250,7 +3253,7 @@
         "Aplicabilidad de la fuerza de regeneración."
       ],
       "Force sync even if no upstream changes are detected. Non-yum repositories are skipped.": [
-        "Forzar sincronización incluso si no se detectan cambios en canal ascendente. Los repositorios que no corresponden a yum se saltan."
+        ""
       ],
       "Force sync even if no upstream changes are detected. Only used with yum or deb repositories.": [
         ""
@@ -3283,7 +3286,7 @@
         ""
       ],
       "Generate and Download": [
-        "Generar y descargar"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3353,7 +3356,7 @@
         ""
       ],
       "Guests of": [
-        "Huéspedes de"
+        ""
       ],
       "HTTP Proxies": [
         "Proxis HTTP"
@@ -4407,7 +4410,7 @@
         ""
       ],
       "Lifecycle environments cannot be modifed on the default Smart proxy.  The content from all Lifecycle Environments will exist on this Smart proxy.": [
-        "Los entornos del ciclo de vida no se pueden modificar en el proxy inteligente predeterminado.  El contenido de todos los entornos del ciclo de vida existirá en este proxy inteligente."
+        ""
       ],
       "Limit": [
         "Límite"
@@ -4839,7 +4842,7 @@
         "Mensaje"
       ],
       "Messaging connection": [
-        "Conexión de mensajes"
+        ""
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
@@ -5352,7 +5355,7 @@
         "No hay perfiles para mostrar"
       ],
       "No pulp workers running.": [
-        "No hay trabajadores Pulp en ejecución."
+        ""
       ],
       "No pulpcore content apps are running at %s.": [
         ""
@@ -5448,7 +5451,7 @@
         ""
       ],
       "Not all necessary pulp workers running at %s.": [
-        "No todos los trabajadores de pulp trabajan en %s."
+        ""
       ],
       "Not installed": [
         "No instalado"
@@ -5573,9 +5576,6 @@
       "Organization id": [
         "ID de organización"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "identificador de la organización"
       ],
@@ -5590,9 +5590,6 @@
       ],
       "Organization not found": [
         "Organización no encontrada"
-      ],
-      "Organization not found: '%s'": [
-        ""
       ],
       "Organization required": [
         "Se requiere organización"
@@ -5996,9 +5993,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "El ID de producto como aparece en la lista de los productos instalados por el host\\n        no es el mismo ID de producto que la devuelve la api de productos"
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -6013,9 +6007,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "El nombre de producto como aparece en la lista de los productos instalados por el host"
-      ],
-      "Product not found: '%s'": [
-        ""
       ],
       "Product the repository belongs to": [
         "Producto al que pertenece el repositorio"
@@ -6135,7 +6126,7 @@
         ""
       ],
       "Pulp": [
-        "Pulp"
+        ""
       ],
       "Pulp 3 export destination filepath": [
         ""
@@ -6150,7 +6141,7 @@
         "Problema de conexión de la base de datos de Pulp en %s."
       ],
       "Pulp database connection issue.": [
-        "Problema de conexión a la base de datos Pulp"
+        ""
       ],
       "Pulp disk space notification": [
         "Notificación de espacio en el disco de Pulp"
@@ -6159,22 +6150,22 @@
         "Pulp no parece estar ejecutándose en %s."
       ],
       "Pulp does not appear to be running.": [
-        "Pulp no parece estar ejecutándose."
+        ""
       ],
       "Pulp message bus connection issue at %s.": [
-        "El mensaje Pulp tiene un problema de conexión del bus en %s."
+        ""
       ],
       "Pulp message bus connection issue.": [
-        "Problema de conexión de bus de mensaje de Pulp."
+        ""
       ],
       "Pulp node": [
-        "Pulp node"
+        ""
       ],
       "Pulp redis connection issue at %s.": [
         "Problema de conexión de redistribución de Pulp en %."
       ],
       "Pulp server version": [
-        "Versión del servidor Pulp"
+        ""
       ],
       "Pulp storage": [
         "Almacenamiento Pulp"
@@ -6702,6 +6693,9 @@
         ""
       ],
       "Requested access to '%s' is denied": [
+        ""
+      ],
+      "Requested repository name is unknown to the registry.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -7414,7 +7408,7 @@
         ""
       ],
       "Skipped pulp_auth check after failed pulp check": [
-        "Se omitió la verificación pulp_auth luego de que la verificación de Pulp produjo un error."
+        ""
       ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
@@ -8554,7 +8548,7 @@
         "Incapaz de conectar"
       ],
       "Unable to connect. Got: %s": [
-        "No se pudo establecer la conexión. Se obtuvo: %s."
+        ""
       ],
       "Unable to create ContentViewEnvironment. Check the logs for more information.": [
         ""
@@ -8563,10 +8557,10 @@
         ""
       ],
       "Unable to detect pulp storage": [
-        "No se pudo detectar el almacenamiento Pulp"
+        ""
       ],
       "Unable to detect puppet path": [
-        "No se pudo detectar la ruta de Puppet"
+        ""
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         ""
@@ -9191,7 +9185,7 @@
         ""
       ],
       "Workers": [
-        "Trabajadores"
+        ""
       ],
       "Wrong content type submitted.": [
         "Se ha enviado un tipo de contenido incorrecto."
