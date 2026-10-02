@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Pavel Borecki <pavel.borecki@gmail.com>, 2026",
@@ -2052,6 +2052,9 @@
       "Couldn't find Organization '%s'.": [
         ""
       ],
+      "Couldn't find Organization with id '%s'.": [
+        ""
+      ],
       "Couldn't find activation key '%s'": [
         "Nedaří se nalézt aktivační klíč „%s“"
       ],
@@ -2260,7 +2263,7 @@
         ""
       ],
       "Database connection": [
-        "Databázové spojení"
+        ""
       ],
       "Date": [
         "Datum"
@@ -3283,7 +3286,7 @@
         ""
       ],
       "Generate and Download": [
-        "Vytvořit a stáhnout"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3353,7 +3356,7 @@
         ""
       ],
       "Guests of": [
-        "Host od"
+        ""
       ],
       "HTTP Proxies": [
         "HTTP proxy"
@@ -5573,9 +5576,6 @@
       "Organization id": [
         "Identifikátor organizace"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "Identifikátor organizace"
       ],
@@ -5590,9 +5590,6 @@
       ],
       "Organization not found": [
         "Organizace nenalezena"
-      ],
-      "Organization not found: '%s'": [
-        ""
       ],
       "Organization required": [
         "Je vyžadována organizace"
@@ -5996,9 +5993,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -6012,9 +6006,6 @@
         "Název produktu"
       ],
       "Product name as listed from a host's installed products": [
-        ""
-      ],
-      "Product not found: '%s'": [
         ""
       ],
       "Product the repository belongs to": [
@@ -6702,6 +6693,9 @@
         ""
       ],
       "Requested access to '%s' is denied": [
+        ""
+      ],
+      "Requested repository name is unknown to the registry.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -8566,7 +8560,7 @@
         ""
       ],
       "Unable to detect puppet path": [
-        "Nedaří se zjistiti umístění puppet"
+        ""
       ],
       "Unable to find a base content view to use for incremental export using the provided parameters:%{params}": [
         ""

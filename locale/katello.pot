@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: katello 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 19:53+0000\n"
-"PO-Revision-Date: 2026-08-07 19:53+0000\n"
+"POT-Creation-Date: 2026-10-02 19:21+0000\n"
+"PO-Revision-Date: 2026-10-02 19:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,17 +18,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:190
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:191
 msgid ""
 "Invalid format. Container pushes should follow 'organization_label/product_lab"
 "el/name' OR 'id/organization_id/product_id/name' schema."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:203
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:204
 msgid "Invalid format. Organization label cannot be blank."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:220
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:221
 msgid ""
 "Due to a change in your organizations, this container name has become ambiguou"
 "s (org name '%{org_label}'). If you wish to continue using this container name"
@@ -37,27 +37,19 @@ msgid ""
 "d retry your push using the id format."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:236
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:237
 msgid "Organization label '%s' is ambiguous. Try using an id-based container name."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:243
-msgid "Organization not found: '%s'"
-msgstr ""
-
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:256
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:253
 msgid "Invalid format. Organization id must be an integer without leading zeros."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:264
-msgid "Organization id not found: '%s'"
-msgstr ""
-
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:276
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:269
 msgid "Invalid format. Product label cannot be blank."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:291
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:284
 msgid ""
 "Due to a change in your products, this container name has become ambiguous (pr"
 "oduct name '%{prod_label}'). If you wish to continue using this container name"
@@ -66,27 +58,19 @@ msgid ""
 "o_label}' and retry your push using the id format."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:305
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:298
 msgid "Product label '%s' is ambiguous. Try using an id-based container name."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:312
-msgid "Product not found: '%s'"
-msgstr ""
-
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:325
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:314
 msgid "Invalid format. Product id must be an integer without leading zeros."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:333
-msgid "Product id not found: '%s'"
-msgstr ""
-
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:357
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:343
 msgid "Invalid format. Container name cannot be blank."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:375
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:361
 msgid ""
 "Repository name '%{container_name}' already exists in this product using a dif"
 "ferent naming scheme. Please retry your request with the %{root_repo_container"
@@ -94,24 +78,28 @@ msgid ""
 " schema."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:388
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:374
 msgid "Requested access to '%s' is denied"
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:414
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:400
 msgid "Could not locate local uploaded repository for content indexing."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:428
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:414
 msgid "Could not locate repository properties for content indexing."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:459
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:445
 msgid "Could not locate Pulp distribution."
 msgstr ""
 
-#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:885
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:871
 msgid "%s was not found!"
+msgstr ""
+
+#: ../app/controllers/katello/api/registry/registry_proxies_controller.rb:879
+msgid "Requested repository name is unknown to the registry."
 msgstr ""
 
 #: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:28
@@ -173,32 +161,37 @@ msgid "Couldn't find Organization '%s'."
 msgstr ""
 
 #: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:372
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:394
 msgid "User '%{user}' does not belong to Organization '%{organization}'."
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:391
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:389
+msgid "Couldn't find Organization with id '%s'."
+msgstr ""
+
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:409
 msgid "Organization not found"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:395
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:413
 msgid "Couldn't find activation key '%s'"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:398
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:416
 msgid ""
 "Activation key '%s' is associated to multiple environments and registering to "
 "multiple environments is not enabled."
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:403
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:421
 msgid "Max Hosts (%{limit}) reached for activation key '%{name}'"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:412
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:430
 msgid "At least one activation key must be provided"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:433
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:451
 msgid "Couldn't find environment '%s'"
 msgstr ""
 
@@ -5945,19 +5938,19 @@ msgstr ""
 msgid "Current organization not set."
 msgstr ""
 
-#: ../app/lib/katello/resources/cdn.rb:153
+#: ../app/lib/katello/resources/cdn.rb:158
 msgid "Couldn't establish a connection to %s"
 msgstr ""
 
-#: ../app/lib/katello/resources/cdn.rb:159
+#: ../app/lib/katello/resources/cdn.rb:164
 msgid "CDN loading error: %s not found"
 msgstr ""
 
-#: ../app/lib/katello/resources/cdn.rb:161
+#: ../app/lib/katello/resources/cdn.rb:166
 msgid "CDN loading error: access denied to %s"
 msgstr ""
 
-#: ../app/lib/katello/resources/cdn.rb:163
+#: ../app/lib/katello/resources/cdn.rb:168
 msgid "CDN loading error: access forbidden to %s"
 msgstr ""
 
@@ -6942,7 +6935,7 @@ msgstr ""
 msgid "is already attached to the capsule"
 msgstr ""
 
-#: ../app/models/katello/cdn_configuration.rb:75
+#: ../app/models/katello/cdn_configuration.rb:78
 msgid ""
 "Username, Password, Upstream Organization Label, and SSL CA Credential are req"
 "uired when using an upstream Foreman server."
@@ -8309,7 +8302,7 @@ msgstr ""
 msgid "%s content type is not enabled."
 msgstr ""
 
-#: ../app/services/katello/pulp3/repository.rb:625
+#: ../app/services/katello/pulp3/repository.rb:631
 msgid "The repository's publication is missing. Please run a 'complete sync' on %s."
 msgstr ""
 
