@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc2",
+        "Project-Id-Version": "katello 5.0.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Robert Antoni Buj i Gelonch <rbuj@fedoraproject.org>, 2026",
@@ -1360,6 +1360,9 @@
       "Clean Backend Objects": [
         ""
       ],
+      "Clear": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -2570,6 +2573,9 @@
         "Baixa un certificat de depuració"
       ],
       "Download rate limit": [
+        ""
+      ],
+      "Drag here": [
         ""
       ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
@@ -4692,6 +4698,9 @@
       "Manifest expiring soon": [
         ""
       ],
+      "Manifest history table": [
+        ""
+      ],
       "Manifest imported": [
         ""
       ],
@@ -5451,6 +5460,9 @@
       "One or more processes require restarting": [
         ""
       ],
+      "Only .zip manifest files are accepted": [
+        ""
+      ],
       "Only On Demand repositories may have space reclaimed.": [
         ""
       ],
@@ -5493,9 +5505,6 @@
       "Organization id": [
         ""
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "Identificador d'organització"
       ],
@@ -5509,9 +5518,6 @@
         ""
       ],
       "Organization not found": [
-        ""
-      ],
-      "Organization not found: '%s'": [
         ""
       ],
       "Organization required": [
@@ -5805,9 +5811,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -5821,9 +5824,6 @@
         "Nom de producte"
       ],
       "Product name as listed from a host's installed products": [
-        ""
-      ],
-      "Product not found: '%s'": [
         ""
       ],
       "Product the repository belongs to": [
@@ -6534,6 +6534,9 @@
       "Requested access to '%s' is denied": [
         ""
       ],
+      "Requested repository name is unknown to the registry.": [
+        ""
+      ],
       "Requirements is not valid yaml.": [
         ""
       ],
@@ -6820,7 +6823,7 @@
         ""
       ],
       "Saving...": [
-        ""
+        "S'està desant..."
       ],
       "Scan": [
         ""
@@ -8750,6 +8753,9 @@
       "Upgrade via remote execution": [
         ""
       ],
+      "Upload": [
+        ""
+      ],
       "Upload Content Credential contents": [
         ""
       ],
@@ -8757,6 +8763,9 @@
         ""
       ],
       "Upload a subscription manifest": [
+        ""
+      ],
+      "Upload a zip file": [
         ""
       ],
       "Upload content": [

@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc2",
+        "Project-Id-Version": "katello 5.0.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ettore Atalan <atalanttore@googlemail.com>, 2026",
+        "Last-Translator": "pdolinic, 2026",
         "Language-Team": "German (https://app.transifex.com/foreman/teams/114/de/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -1360,6 +1360,9 @@
       "Clean Backend Objects": [
         ""
       ],
+      "Clear": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "Löschen Sie alle vorherigen Registrierungen und führen Sie den Subscription-Manager mit --force aus."
       ],
@@ -2572,6 +2575,9 @@
       "Download rate limit": [
         ""
       ],
+      "Drag here": [
+        ""
+      ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
         ""
       ],
@@ -3164,7 +3170,7 @@
         "Erzwingen Sie die Anwendbarkeit der Regenerierung."
       ],
       "Force sync even if no upstream changes are detected. Non-yum repositories are skipped.": [
-        "Synchronisierung erzwingen, auch wenn keine Upstream-Änderungen erkannt werden. Nicht-yum-Repositorys werden übersprungen."
+        ""
       ],
       "Force sync even if no upstream changes are detected. Only used with yum or deb repositories.": [
         ""
@@ -3200,7 +3206,7 @@
         ""
       ],
       "Generate and Download": [
-        "Generieren und herunterladen"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3273,7 +3279,7 @@
         ""
       ],
       "Guests of %s": [
-        ""
+        "Gäste von %s"
       ],
       "HTTP Proxies": [
         "HTTP-Proxies"
@@ -4692,6 +4698,9 @@
       "Manifest expiring soon": [
         ""
       ],
+      "Manifest history table": [
+        ""
+      ],
       "Manifest imported": [
         "Manifest importiert"
       ],
@@ -5451,6 +5460,9 @@
       "One or more processes require restarting": [
         "Ein oder mehrere Prozesse erfordern einen Neustart"
       ],
+      "Only .zip manifest files are accepted": [
+        ""
+      ],
       "Only On Demand repositories may have space reclaimed.": [
         ""
       ],
@@ -5493,9 +5505,6 @@
       "Organization id": [
         "Organisations-ID"
       ],
-      "Organization id not found: '%s'": [
-        "Kennung der Organisation nicht gefunden: '%s'"
-      ],
       "Organization identifier": [
         "Organisations-ID"
       ],
@@ -5510,9 +5519,6 @@
       ],
       "Organization not found": [
         "Organisation nicht gefunden"
-      ],
-      "Organization not found: '%s'": [
-        "Organisation nicht gefunden: '%s'"
       ],
       "Organization required": [
         "Organisation erforderlich"
@@ -5805,9 +5811,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "Produkt-ID wie in den installierten Produkten eines Hosts aufgeführt, \\\\\\nDies ist nicht die gleiche Produkt-ID wie die Produkt-API, die zurückgegeben wird"
       ],
-      "Product id not found: '%s'": [
-        "Kennung des Produkts nicht gefunden: '%s'"
-      ],
       "Product label": [
         ""
       ],
@@ -5822,9 +5825,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "Produktname wie aus den installierten Produkten eines Hosts aufgelistet"
-      ],
-      "Product not found: '%s'": [
-        "Produkt nicht gefunden: '%s'"
       ],
       "Product the repository belongs to": [
         "Produkt, zu dem das Repository gehört"
@@ -6534,6 +6534,9 @@
       "Requested access to '%s' is denied": [
         "Angefragter Zugriff auf '%s' wurde verweigert"
       ],
+      "Requested repository name is unknown to the registry.": [
+        ""
+      ],
       "Requirements is not valid yaml.": [
         ""
       ],
@@ -6820,7 +6823,7 @@
         ""
       ],
       "Saving...": [
-        ""
+        "Speichern …"
       ],
       "Scan": [
         ""
@@ -8750,6 +8753,9 @@
       "Upgrade via remote execution": [
         ""
       ],
+      "Upload": [
+        "Hochladen"
+      ],
       "Upload Content Credential contents": [
         "Lade Kontent-Kredentials hoch"
       ],
@@ -8758,6 +8764,9 @@
       ],
       "Upload a subscription manifest": [
         "Subskriptionsmanifest hochladen"
+      ],
+      "Upload a zip file": [
+        ""
       ],
       "Upload content": [
         ""
