@@ -92,7 +92,10 @@ module Katello
         # rubocop:enable Naming/AccessorMethodName
 
         def cvenv_params
-          params.require(:host).require(:content_facet_attributes).permit(content_view_environments: [], content_view_environment_ids: [])
+          attributes = params.require(:host).require(:content_facet_attributes).permit(
+            content_view_environments: [], content_view_environment_ids: [], content_view_environment_labels: [])
+          attributes[:content_view_environments] ||= attributes[:content_view_environment_labels]
+          attributes
         end
       end
     end

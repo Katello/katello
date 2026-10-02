@@ -30,6 +30,7 @@ module Katello
                                               " Requires allow_multiple_content_views setting to be on.")
       param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids to be associated with the activation key."\
                                               " Requires allow_multiple_content_views setting to be on.")
+      param :content_view_environment_labels, Array, :desc => N_("Alias for content_view_environments")
     end
 
     api :GET, "/activation_keys", N_("List activation keys")
@@ -219,6 +220,7 @@ module Katello
     private
 
     def find_content_view_environments
+      params[:content_view_environments] ||= params[:content_view_environment_labels] if params.key?(:content_view_environment_labels)
       @content_view_environments = []
       if params_likely_not_from_angularjs? && (params[:content_view_environments] || params[:content_view_environment_ids])
         @content_view_environments = ::Katello::ContentViewEnvironment.fetch_content_view_environments(
