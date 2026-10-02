@@ -37,6 +37,8 @@ module Katello
     def test_index_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
+      set_organization(get_organization)
+
       assert_protected_action(:index, allowed_perms, denied_perms, [get_organization]) do
         get :index, params: { :content_view_filter_id => @filter.id }
       end
@@ -67,8 +69,9 @@ module Katello
     def test_create_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
+      set_organization(@filter.content_view.organization)
 
-      assert_protected_action(:create, allowed_perms, denied_perms, [get_organization]) do
+      assert_protected_action(:create, allowed_perms, denied_perms, [@filter.content_view.organization]) do
         post :create, params: { :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0" }
       end
     end
@@ -104,8 +107,9 @@ module Katello
     def test_show_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
+      set_organization(get_organization)
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:show, allowed_perms, denied_perms, [get_organization]) do
         get :show, params: { :content_view_filter_id => @filter.id, :id => @rule.id }
       end
     end
@@ -124,8 +128,9 @@ module Katello
     def test_update_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
+      set_organization(get_organization)
 
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [get_organization]) do
         put :update, params: { :content_view_filter_id => @filter.id, :id => @rule.id, :name => "new name" }
       end
     end
@@ -155,8 +160,9 @@ module Katello
     def test_destroy_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
+      set_organization(get_organization)
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [get_organization]) do
         delete :destroy, params: { :content_view_filter_id => @filter.id, :id => @rule.id }
       end
     end
