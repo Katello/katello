@@ -61,5 +61,34 @@ module Katello
 
       assert_response :success
     end
+
+    def test_sync_status_persists_after_task_delete
+      # Setup: Sync the repository to create an audit record
+      @repository.audit_sync
+
+      # Delete all sync tasks to simulate task cleanup
+      ForemanTasks::Task.where(
+        label: ::Actions::Katello::Repository::Sync.name
+      ).for_resource(@repository).destroy_all
+
+      # Clear memoization
+      @repository.instance_variable_set(:@latest_dynflow_sync, nil)
+
+      # Verify task is deleted but audit exists
+      assert_nil @repository.latest_dynflow_sync
+      assert_not_nil @repository.latest_sync_audit
+
+      # Call the controller
+      get :poll, params: { :repository_ids => [@repository.id], :organization_id => @organization.id }
+
+      assert_response :success
+      result = JSON.parse(@response.body)
+
+      # Should show "Syncing Complete" not "Never Synced"
+      assert_equal 1, result.length
+      assert_equal 'stopped', result[0]['raw_state']
+      assert_equal 'Syncing Complete.', result[0]['state']
+      assert_not_nil result[0]['start_time']
+    end
   end
 end
