@@ -2,7 +2,7 @@ import React from 'react';
 import * as reactRedux from 'react-redux';
 import { Route } from 'react-router-dom';
 import { act, fireEvent, patientlyWaitFor, renderWithRedux } from 'react-testing-lib-wrapper';
-import api, { foremanApi } from '../../../../services/api';
+import api from '../../../../services/api';
 import { assertNockRequest, mockAutocomplete, nockInstance } from '../../../../test-utils/nockWrapper';
 import ACSTable from '../../MainTable/ACSTable';
 import contentCredentialResult from './contentCredentials.fixtures';
@@ -13,7 +13,7 @@ const withACSRoute = component => <Route path="/alternate_content_sources/">{com
 const ACSIndexPath = api.getApiUrl('/alternate_content_sources');
 const ACSCreatePath = api.getApiUrl('/alternate_content_sources');
 const contentCredentialPath = api.getApiUrl('/content_credentials');
-const smartProxyPath = foremanApi.getApiUrl('/smart_proxies');
+const smartProxyPath = api.getApiUrl('/capsules');
 const productsPath = api.getApiUrl('/products');
 const autocompleteUrl = '/alternate_content_sources/auto_complete_search';
 
