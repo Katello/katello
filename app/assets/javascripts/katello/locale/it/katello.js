@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -2051,6 +2051,9 @@
       "Couldn't find Organization '%s'.": [
         "Impossibile trovare l'organizzazione '%s'."
       ],
+      "Couldn't find Organization with id '%s'.": [
+        ""
+      ],
       "Couldn't find activation key '%s'": [
         "Impossibile trovare la chiave di attivazione '%s'"
       ],
@@ -3282,7 +3285,7 @@
         ""
       ],
       "Generate and Download": [
-        "Genera e scarica"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3352,7 +3355,7 @@
         ""
       ],
       "Guests of": [
-        "Guest di"
+        ""
       ],
       "HTTP Proxies": [
         ""
@@ -5572,9 +5575,6 @@
       "Organization id": [
         "id organizzazione"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "Identificatore organizzazione"
       ],
@@ -5588,9 +5588,6 @@
         ""
       ],
       "Organization not found": [
-        ""
-      ],
-      "Organization not found: '%s'": [
         ""
       ],
       "Organization required": [
@@ -5995,9 +5992,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -6011,9 +6005,6 @@
         "Nome prodotto"
       ],
       "Product name as listed from a host's installed products": [
-        ""
-      ],
-      "Product not found: '%s'": [
         ""
       ],
       "Product the repository belongs to": [
@@ -6134,7 +6125,7 @@
         ""
       ],
       "Pulp": [
-        "Pulp"
+        ""
       ],
       "Pulp 3 export destination filepath": [
         ""
@@ -6701,6 +6692,9 @@
         ""
       ],
       "Requested access to '%s' is denied": [
+        ""
+      ],
+      "Requested repository name is unknown to the registry.": [
         ""
       ],
       "Requirements is not valid yaml.": [

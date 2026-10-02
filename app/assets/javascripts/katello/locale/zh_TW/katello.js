@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -2049,6 +2049,9 @@
       "Couldn't find Organization '%s'.": [
         "找不到組織「%s」。"
       ],
+      "Couldn't find Organization with id '%s'.": [
+        ""
+      ],
       "Couldn't find activation key '%s'": [
         "找不到啟動金鑰「%s」"
       ],
@@ -2257,7 +2260,7 @@
         ""
       ],
       "Database connection": [
-        "資料庫連線"
+        ""
       ],
       "Date": [
         "日期"
@@ -2902,7 +2905,7 @@
         "錯誤"
       ],
       "Error connecting to Pulp service": [
-        "連線 Pulp 服務時發生錯誤"
+        ""
       ],
       "Error connecting. Got: %s": [
         "連線錯誤。收到：%s"
@@ -3280,7 +3283,7 @@
         ""
       ],
       "Generate and Download": [
-        "產生與下載"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3350,7 +3353,7 @@
         ""
       ],
       "Guests of": [
-        "客座"
+        ""
       ],
       "HTTP Proxies": [
         ""
@@ -4836,7 +4839,7 @@
         "訊息"
       ],
       "Messaging connection": [
-        "訊息連線"
+        ""
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
@@ -5349,7 +5352,7 @@
         ""
       ],
       "No pulp workers running.": [
-        "沒有 pulp 工作者執行中。"
+        ""
       ],
       "No pulpcore content apps are running at %s.": [
         ""
@@ -5570,9 +5573,6 @@
       "Organization id": [
         "組織 ID"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "組織識別子"
       ],
@@ -5586,9 +5586,6 @@
         ""
       ],
       "Organization not found": [
-        ""
-      ],
-      "Organization not found: '%s'": [
         ""
       ],
       "Organization required": [
@@ -5993,9 +5990,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -6010,9 +6004,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "來自主機已安裝產品的產品名稱"
-      ],
-      "Product not found: '%s'": [
-        ""
       ],
       "Product the repository belongs to": [
         "產品的軟體庫屬於"
@@ -6132,7 +6123,7 @@
         ""
       ],
       "Pulp": [
-        "Pulp"
+        ""
       ],
       "Pulp 3 export destination filepath": [
         ""
@@ -6147,7 +6138,7 @@
         ""
       ],
       "Pulp database connection issue.": [
-        "Pulp 資料庫連線有誤。"
+        ""
       ],
       "Pulp disk space notification": [
         ""
@@ -6156,22 +6147,22 @@
         ""
       ],
       "Pulp does not appear to be running.": [
-        "Pulp n似乎不在執行中。"
+        ""
       ],
       "Pulp message bus connection issue at %s.": [
         ""
       ],
       "Pulp message bus connection issue.": [
-        "Pulp 訊息匯流排連線有誤。"
+        ""
       ],
       "Pulp node": [
-        "Pulp 節點"
+        ""
       ],
       "Pulp redis connection issue at %s.": [
         ""
       ],
       "Pulp server version": [
-        "Pulp 伺服器版本"
+        ""
       ],
       "Pulp storage": [
         "Pulp 儲存"
@@ -6699,6 +6690,9 @@
         ""
       ],
       "Requested access to '%s' is denied": [
+        ""
+      ],
+      "Requested repository name is unknown to the registry.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -7411,7 +7405,7 @@
         ""
       ],
       "Skipped pulp_auth check after failed pulp check": [
-        "pulp 檢查失敗後，跳過 pulp_auth"
+        ""
       ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
@@ -8551,7 +8545,7 @@
         "無法連線"
       ],
       "Unable to connect. Got: %s": [
-        "無法連線。收到：%s"
+        ""
       ],
       "Unable to create ContentViewEnvironment. Check the logs for more information.": [
         ""
@@ -8560,7 +8554,7 @@
         ""
       ],
       "Unable to detect pulp storage": [
-        "無法偵測 pulp 儲存"
+        ""
       ],
       "Unable to detect puppet path": [
         ""
@@ -9188,7 +9182,7 @@
         ""
       ],
       "Workers": [
-        "工作者"
+        ""
       ],
       "Wrong content type submitted.": [
         ""

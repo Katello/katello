@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 4.21.0",
+        "Project-Id-Version": "katello 4.21.1.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
@@ -2050,6 +2050,9 @@
       "Couldn't find Organization '%s'.": [
         "Организация «%s» не найдена."
       ],
+      "Couldn't find Organization with id '%s'.": [
+        ""
+      ],
       "Couldn't find activation key '%s'": [
         "Ключ активации «%s» не найден."
       ],
@@ -2258,7 +2261,7 @@
         ""
       ],
       "Database connection": [
-        "Подключение к базе данных"
+        ""
       ],
       "Date": [
         "Дата"
@@ -2903,7 +2906,7 @@
         "Ошибка"
       ],
       "Error connecting to Pulp service": [
-        "Произошла ошибка при подключении к сервису Pulp"
+        ""
       ],
       "Error connecting. Got: %s": [
         ""
@@ -3281,7 +3284,7 @@
         ""
       ],
       "Generate and Download": [
-        "Создать и загрузить"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3351,7 +3354,7 @@
         ""
       ],
       "Guests of": [
-        "Гости"
+        ""
       ],
       "HTTP Proxies": [
         ""
@@ -4837,7 +4840,7 @@
         "Сообщение"
       ],
       "Messaging connection": [
-        "Система обмена сообщениями"
+        ""
       ],
       "Metadata republishing is risky on 'Complete Mirroring' repositories. Change the mirroring policy and try again.\\nAlternatively, use the 'force' parameter to regenerate metadata locally. On the next sync, the upstream repository's metadata will overwrite local metadata for 'Complete Mirroring' repositories.": [
         ""
@@ -5350,7 +5353,7 @@
         ""
       ],
       "No pulp workers running.": [
-        "Нет работающих обработчиков Pulp."
+        ""
       ],
       "No pulpcore content apps are running at %s.": [
         ""
@@ -5571,9 +5574,6 @@
       "Organization id": [
         "Идентификатор организации"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "Идентификатор организации"
       ],
@@ -5587,9 +5587,6 @@
         ""
       ],
       "Organization not found": [
-        ""
-      ],
-      "Organization not found: '%s'": [
         ""
       ],
       "Organization required": [
@@ -5994,9 +5991,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -6011,9 +6005,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "Название продукта в соответствии с указанным в списке установленных продуктов"
-      ],
-      "Product not found: '%s'": [
-        ""
       ],
       "Product the repository belongs to": [
         "Продукт, с которым будет ассоциирован новый репозиторий"
@@ -6133,7 +6124,7 @@
         ""
       ],
       "Pulp": [
-        "Pulp"
+        ""
       ],
       "Pulp 3 export destination filepath": [
         ""
@@ -6148,7 +6139,7 @@
         ""
       ],
       "Pulp database connection issue.": [
-        "Не удалось подключиться к базе данных Pulp."
+        ""
       ],
       "Pulp disk space notification": [
         ""
@@ -6157,22 +6148,22 @@
         ""
       ],
       "Pulp does not appear to be running.": [
-        "Похоже, Pulp не выполняется."
+        ""
       ],
       "Pulp message bus connection issue at %s.": [
         ""
       ],
       "Pulp message bus connection issue.": [
-        "Не удалось подключиться к шине обмена сообщениями Pulp."
+        ""
       ],
       "Pulp node": [
-        "Узел Pulp"
+        ""
       ],
       "Pulp redis connection issue at %s.": [
         ""
       ],
       "Pulp server version": [
-        "Версия сервера Pulp"
+        ""
       ],
       "Pulp storage": [
         "Хранилище Pulp"
@@ -6700,6 +6691,9 @@
         ""
       ],
       "Requested access to '%s' is denied": [
+        ""
+      ],
+      "Requested repository name is unknown to the registry.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -7412,7 +7406,7 @@
         ""
       ],
       "Skipped pulp_auth check after failed pulp check": [
-        "Проверка pulp_auth была пропущена после неудачной проверки pulp"
+        ""
       ],
       "Smart Proxy '%{proxy}' has an 'rhsm_url' setting that must use HTTPS protocol. Current value: '%{url}'. Please update the Smart Proxy's rhsm_url setting.": [
         ""
@@ -8561,7 +8555,7 @@
         ""
       ],
       "Unable to detect pulp storage": [
-        "Хранилище Pulp не обнаружено"
+        ""
       ],
       "Unable to detect puppet path": [
         ""
@@ -9189,7 +9183,7 @@
         ""
       ],
       "Workers": [
-        "Обработчики"
+        ""
       ],
       "Wrong content type submitted.": [
         ""
