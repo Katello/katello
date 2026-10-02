@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc2",
+        "Project-Id-Version": "katello 5.0.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Pavel Borecki <pavel.borecki@gmail.com>, 2026",
@@ -1362,6 +1362,9 @@
       "Clean Backend Objects": [
         ""
       ],
+      "Clear": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -1465,7 +1468,7 @@
         ""
       ],
       "Confirm": [
-        ""
+        "Potvrdit"
       ],
       "Confirm Deletion": [
         ""
@@ -2574,6 +2577,9 @@
       "Download rate limit": [
         ""
       ],
+      "Drag here": [
+        ""
+      ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
         ""
       ],
@@ -3202,7 +3208,7 @@
         ""
       ],
       "Generate and Download": [
-        "Vytvořit a stáhnout"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3275,7 +3281,7 @@
         ""
       ],
       "Guests of %s": [
-        ""
+        "Host na %s"
       ],
       "HTTP Proxies": [
         "HTTP proxy"
@@ -4694,6 +4700,9 @@
       "Manifest expiring soon": [
         ""
       ],
+      "Manifest history table": [
+        ""
+      ],
       "Manifest imported": [
         ""
       ],
@@ -5453,6 +5462,9 @@
       "One or more processes require restarting": [
         "Jeden nebo více procesů vyžaduje restart"
       ],
+      "Only .zip manifest files are accepted": [
+        ""
+      ],
       "Only On Demand repositories may have space reclaimed.": [
         ""
       ],
@@ -5495,9 +5507,6 @@
       "Organization id": [
         "Identifikátor organizace"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "Identifikátor organizace"
       ],
@@ -5512,9 +5521,6 @@
       ],
       "Organization not found": [
         "Organizace nenalezena"
-      ],
-      "Organization not found: '%s'": [
-        ""
       ],
       "Organization required": [
         "Je vyžadována organizace"
@@ -5807,9 +5813,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -5823,9 +5826,6 @@
         "Název produktu"
       ],
       "Product name as listed from a host's installed products": [
-        ""
-      ],
-      "Product not found: '%s'": [
         ""
       ],
       "Product the repository belongs to": [
@@ -6536,6 +6536,9 @@
       "Requested access to '%s' is denied": [
         ""
       ],
+      "Requested repository name is unknown to the registry.": [
+        ""
+      ],
       "Requirements is not valid yaml.": [
         ""
       ],
@@ -6822,7 +6825,7 @@
         ""
       ],
       "Saving...": [
-        ""
+        "Ukládání…"
       ],
       "Scan": [
         ""
@@ -8752,6 +8755,9 @@
       "Upgrade via remote execution": [
         ""
       ],
+      "Upload": [
+        "Nahrát"
+      ],
       "Upload Content Credential contents": [
         ""
       ],
@@ -8759,6 +8765,9 @@
         "Nahrát shluk obsahu souboru"
       ],
       "Upload a subscription manifest": [
+        ""
+      ],
+      "Upload a zip file": [
         ""
       ],
       "Upload content": [

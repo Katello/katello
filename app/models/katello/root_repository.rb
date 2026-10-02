@@ -391,6 +391,10 @@ module Katello
       self.content_type == Repository::ANSIBLE_COLLECTION_TYPE
     end
 
+    def python?
+      self.content_type == Repository::PYTHON_TYPE
+    end
+
     def generic?
       Katello::RepositoryTypeManager.generic_repository_types(false).values.map(&:id).map(&:to_s).flatten.include? self.content_type
     end

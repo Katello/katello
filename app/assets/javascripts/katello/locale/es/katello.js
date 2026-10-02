@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0.rc2",
+        "Project-Id-Version": "katello 5.0.0",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "fe37ea014ea122db60df81cd86b163af_742ef71 <ba9f59c06b0be83ac3724b1834a4c14b_93939>, 2026",
+        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2026",
         "Language-Team": "Spanish (https://app.transifex.com/foreman/teams/114/es/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -1362,6 +1362,9 @@
       "Clean Backend Objects": [
         ""
       ],
+      "Clear": [
+        ""
+      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -2574,6 +2577,9 @@
       "Download rate limit": [
         ""
       ],
+      "Drag here": [
+        ""
+      ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
         ""
       ],
@@ -3166,7 +3172,7 @@
         "Aplicabilidad de la fuerza de regeneración."
       ],
       "Force sync even if no upstream changes are detected. Non-yum repositories are skipped.": [
-        "Forzar sincronización incluso si no se detectan cambios en canal ascendente. Los repositorios que no corresponden a yum se saltan."
+        ""
       ],
       "Force sync even if no upstream changes are detected. Only used with yum or deb repositories.": [
         ""
@@ -3202,7 +3208,7 @@
         ""
       ],
       "Generate and Download": [
-        "Generar y descargar"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3275,7 +3281,7 @@
         ""
       ],
       "Guests of %s": [
-        ""
+        "Invitados de %s"
       ],
       "HTTP Proxies": [
         "Proxis HTTP"
@@ -4694,6 +4700,9 @@
       "Manifest expiring soon": [
         ""
       ],
+      "Manifest history table": [
+        ""
+      ],
       "Manifest imported": [
         "Manifiesto importado"
       ],
@@ -5453,6 +5462,9 @@
       "One or more processes require restarting": [
         "Uno o más procesos deben reiniciarse."
       ],
+      "Only .zip manifest files are accepted": [
+        ""
+      ],
       "Only On Demand repositories may have space reclaimed.": [
         ""
       ],
@@ -5495,9 +5507,6 @@
       "Organization id": [
         "ID de organización"
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         "identificador de la organización"
       ],
@@ -5512,9 +5521,6 @@
       ],
       "Organization not found": [
         "Organización no encontrada"
-      ],
-      "Organization not found: '%s'": [
-        ""
       ],
       "Organization required": [
         "Se requiere organización"
@@ -5807,9 +5813,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "El ID de producto como aparece en la lista de los productos instalados por el host\\n        no es el mismo ID de producto que la devuelve la api de productos"
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -5824,9 +5827,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "El nombre de producto como aparece en la lista de los productos instalados por el host"
-      ],
-      "Product not found: '%s'": [
-        ""
       ],
       "Product the repository belongs to": [
         "Producto al que pertenece el repositorio"
@@ -6536,6 +6536,9 @@
       "Requested access to '%s' is denied": [
         ""
       ],
+      "Requested repository name is unknown to the registry.": [
+        ""
+      ],
       "Requirements is not valid yaml.": [
         ""
       ],
@@ -6822,7 +6825,7 @@
         ""
       ],
       "Saving...": [
-        ""
+        "Guardando…"
       ],
       "Scan": [
         ""
@@ -8752,6 +8755,9 @@
       "Upgrade via remote execution": [
         ""
       ],
+      "Upload": [
+        "Cargar"
+      ],
       "Upload Content Credential contents": [
         ""
       ],
@@ -8760,6 +8766,9 @@
       ],
       "Upload a subscription manifest": [
         "Cargar un manifiesto de suscripción"
+      ],
+      "Upload a zip file": [
+        ""
       ],
       "Upload content": [
         ""
