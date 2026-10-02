@@ -6,6 +6,7 @@ module Katello
                                               " Ignored if content_view_environment_ids is specified."\
                                               " Requires allow_multiple_content_views setting to be on.")
       param :content_view_environment_ids, Array, :desc => N_("Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on.")
+      param :content_view_environment_labels, Array, :desc => N_("Alias for content_view_environments")
       param :content_source_id, Integer, :desc => N_("Id of the smart proxy from which the host consumes content.")
       param :kickstart_repository_id, Integer, :desc => N_("Repository Id associated with the kickstart repo used for provisioning")
     end

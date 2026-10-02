@@ -73,28 +73,30 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_equal target_cvenv, host.content_facet.content_view_environments.first
   end
 
-  def test_host_contents_environments_param
-    Setting[:allow_multiple_content_views] = true
-    ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
-    host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
-                              :content_view => @content_view, :lifecycle_environment => @environment, :organization => @environment.organization)
-    Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
-    orig_cvenvs = host.content_facet.content_view_environment_ids.to_a
-    target_cvenvs = [::Katello::ContentViewEnvironment.where(:content_view_id => @cv4.id,
-      :environment_id => @dev.id).first, ::Katello::ContentViewEnvironment.where(:content_view_id => @cv3.id,
-      :environment_id => @dev.id).first]
-    target_cvenvs_ids = target_cvenvs.map(&:id)
-    put :update, params: {
-      :id => host.id,
-      :content_facet_attributes => {
-        :content_view_environments => target_cvenvs.map(&:label),
-      },
-    }, session: set_session_user
-    assert_response :success
-    host.content_facet.reload
-    assert_equal 2, host.content_facet.content_view_environment_ids.count
-    refute_equal orig_cvenvs, host.content_facet.content_view_environment_ids
-    assert_equal_arrays target_cvenvs_ids, host.content_facet.content_view_environments.ids
+  [:content_view_environments, :content_view_environment_labels].each do |labels_param|
+    define_method("test_host_contents_environments_param_#{labels_param}") do
+      Setting[:allow_multiple_content_views] = true
+      ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :with_operatingsystem,
+                                :content_view => @content_view, :lifecycle_environment => @environment, :organization => @environment.organization)
+      Katello::Host::SubscriptionFacet.any_instance.expects(:backend_update_needed?).returns(false)
+      orig_cvenvs = host.content_facet.content_view_environment_ids.to_a
+      target_cvenvs = [::Katello::ContentViewEnvironment.where(:content_view_id => @cv4.id,
+        :environment_id => @dev.id).first, ::Katello::ContentViewEnvironment.where(:content_view_id => @cv3.id,
+        :environment_id => @dev.id).first]
+      target_cvenvs_ids = target_cvenvs.map(&:id)
+      put :update, params: {
+        :id => host.id,
+        :content_facet_attributes => {
+          labels_param => target_cvenvs.map(&:label),
+        },
+      }, session: set_session_user
+      assert_response :success
+      host.content_facet.reload
+      assert_equal 2, host.content_facet.content_view_environment_ids.count
+      refute_equal orig_cvenvs, host.content_facet.content_view_environment_ids
+      assert_equal_arrays target_cvenvs_ids, host.content_facet.content_view_environments.ids
+    end
   end
 
   def test_host_contents_cvenv_ids_param
@@ -169,6 +171,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
       :id => host.id,
       :content_facet_attributes => {
         :content_view_environment_ids => [@cv4.content_view_environments.first.id],
+        :content_view_environment_labels => ["invalid label ignored in favor of ids"],
       },
     }, session: set_session_user
     assert_response :success
@@ -186,16 +189,18 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_response :unprocessable_entity
   end
 
-  def test_set_content_view_environments_with_invalid_content_view_environs_param
-    host = FactoryBot.create(:host, :with_content, :with_subscription,
-                              :content_view => @content_view, :lifecycle_environment => @environment)
-    put :update, params: {
-      :id => host.id,
-      :content_facet_attributes => {
-        :content_view_environments => ["invalid string"],
-      },
-    }, session: set_session_user
-    assert_response 422
+  [:content_view_environments, :content_view_environment_labels].each do |labels_param|
+    define_method("test_set_content_view_environments_with_invalid_content_view_environs_param_#{labels_param}") do
+      host = FactoryBot.create(:host, :with_content, :with_subscription,
+                                :content_view => @content_view, :lifecycle_environment => @environment)
+      put :update, params: {
+        :id => host.id,
+        :content_facet_attributes => {
+          labels_param => ["invalid string"],
+        },
+      }, session: set_session_user
+      assert_response 422
+    end
   end
 
   def test_handle_content_view_environments_for_create
@@ -205,6 +210,18 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     cf_attrs = {:content_view_id => @content_view.id, :lifecycle_environment_id => @environment.id,
                 :content_view_environments => ["Library"]}
     attrs = @host.clone.attributes.merge("name" => "contenthost.example.com", "content_facet_attributes" => cf_attrs).compact
+
+    post :create, params: attrs, session: set_session_user
+    assert_response :success
+  end
+
+  def test_handle_content_view_environments_for_create_with_labels_alias
+    ::Host::Managed.any_instance.stubs(:update_candlepin_associations)
+    @controller.expects(:set_content_view_environments).with([katello_content_view_environments(:library_default_view_environment)])
+
+    cf_attrs = {:content_view_id => @content_view.id, :lifecycle_environment_id => @environment.id,
+                :content_view_environment_labels => [katello_content_view_environments(:library_default_view_environment).label]}
+    attrs = @host.clone.attributes.merge("organization_id" => @environment.organization_id, "name" => "contenthost.example.com", "content_facet_attributes" => cf_attrs).compact
 
     post :create, params: attrs, session: set_session_user
     assert_response :success

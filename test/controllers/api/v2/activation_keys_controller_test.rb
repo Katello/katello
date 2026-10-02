@@ -260,6 +260,26 @@ module Katello
       assert_template 'katello/api/v2/common/create'
     end
 
+    def test_create_with_content_view_environments_param_with_labels_alias
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      cvenv.update(organization: @organization)
+      content_view_environments = ['published_dev_view_library']
+      ActivationKey.any_instance.expects(:reload)
+      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
+        assert_equal content_view_environments, activation_key.content_view_environments.map(&:label), [cvenv.label]
+        assert_valid activation_key
+      end
+
+      post :create, params: {
+        :organization_id => @organization.id,
+        :content_view_environment_labels => content_view_environments,
+        :activation_key => {:name => 'new key'},
+      }
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
     def test_create_with_content_view_environment_ids_param
       cvenv = katello_content_view_environments(:library_dev_view_library)
       cvenv.update(organization: @organization)
@@ -273,6 +293,7 @@ module Katello
       post :create, params: {
         :organization_id => @organization.id,
         :content_view_environment_ids => content_view_environment_ids,
+        :content_view_environment_labels => ['invalid label ignored in favor of ids'],
         :activation_key => {:name => 'new key'},
       }
 
@@ -388,9 +409,32 @@ module Katello
       assert_response :unprocessable_entity
     end
 
+    def test_should_not_update_with_invalid_content_view_environments_param_with_labels_alias
+      put :update, params: { :organization_id => @organization.id, :id => @activation_key.id, :content_view_environment_labels => ['foo'] }
+      assert_response :unprocessable_entity
+    end
+
     def test_should_not_update_with_invalid_content_view_environment_ids_param
       put :update, params: { :organization_id => @organization.id, :id => @activation_key.id, :content_view_environment_ids => ['foo'] }
       assert_response :unprocessable_entity
+    end
+
+    def test_update_with_content_view_environment_labels
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      cvenv.update!(organization: @organization)
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
+        assert_equal [cvenv.id], activation_key.content_view_environment_ids
+        assert_valid activation_key
+      end
+
+      put :update, params: {
+        :organization_id => @organization.id,
+        :id => @activation_key.id,
+        :content_view_environment_labels => [cvenv.label],
+      }
+
+      assert_response :success
+      assert_equal [cvenv.id], @activation_key.reload.content_view_environment_ids
     end
 
     def test_update_with_cleared_cvenvs
@@ -405,6 +449,24 @@ module Katello
         :organization_id => @organization.id,
         :id => @activation_key.id,
         :content_view_environments => [],
+      }
+
+      assert_response :success
+      assert_equal 0, @activation_key.content_view_environments.size
+    end
+
+    def test_update_with_cleared_cvenvs_with_labels_alias
+      cvenv = katello_content_view_environments(:library_dev_view_library)
+      cvenv.update(organization: @organization)
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, _activation_key_params|
+        assert_valid activation_key
+      end
+      assert_operator @activation_key.content_view_environments.size, :>, 0
+
+      put :update, params: {
+        :organization_id => @organization.id,
+        :id => @activation_key.id,
+        :content_view_environment_labels => [],
       }
 
       assert_response :success
