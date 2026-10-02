@@ -744,6 +744,24 @@ module Katello
       @primary.fix_pulp3_capabilities('file')
     end
 
+    def test_pulp3_configuration_preserves_non_default_port
+      config_class = Class.new do
+        attr_accessor :host, :scheme, :debugging, :timeout, :logger, :username, :password
+
+        def initialize
+          super()
+          yield self
+        end
+      end
+      @primary.stubs(:pulp3_uri!).returns(URI('https://pulp.example.test:8443'))
+      @primary.stubs(:pulp3_ssl_configuration)
+
+      config = @primary.pulp3_configuration(config_class)
+
+      assert_equal 'pulp.example.test:8443', config.host
+      assert_equal 'https', config.scheme
+    end
+
     pulpcore_features = {
       'rpm': Katello::Repository::YUM_TYPE,
       'file': Katello::Repository::FILE_TYPE,
