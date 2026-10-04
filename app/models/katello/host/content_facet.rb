@@ -260,9 +260,9 @@ module Katello
       end
 
       def self.trigger_applicability_generation(host_ids)
-        host_ids = [host_ids] unless host_ids.is_a?(Array)
-        ::Katello::ApplicableHostQueue.push_hosts(host_ids)
-        ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, 0)
+        Array.wrap(host_ids).compact.uniq.each_slice(Setting["applicability_batch_size"]) do |batch|
+          ForemanTasks.async_task(::Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: batch)
+        end
       end
 
       # Katello applicability
