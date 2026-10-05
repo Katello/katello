@@ -1,5 +1,4 @@
 # Translators:
-# 0868a4d1af5275b3f70b0a6dac4c99a4, 2017
 # Amit Upadhye <aupadhye@redhat.com>, 2023
 # Bryan Kearney <bryan.kearney@gmail.com>, 2023
 # Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
@@ -25,7 +24,7 @@ msgstr "ホスト {{ deb.hosts_applicable_count }} 台"
 
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
 msgid "{{ deb.hosts_applicable_count || 0 }} Applicable,"
-msgstr "適用可能: {{ deb.hosts_applicable_count || 0 }} 件"
+msgstr "適用可能: {{ deb.hosts_applicable_count || 0 }} 件、"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ deb.hosts_available_count }} Host(s)"
@@ -69,7 +68,7 @@ msgstr "ホスト {{ package.hosts_applicable_count }} 台"
 
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 msgid "{{ package.hosts_applicable_count || 0 }} Applicable,"
-msgstr "適用可能: {{ package.hosts_applicable_count || 0 }} 件"
+msgstr "適用可能: {{ package.hosts_applicable_count || 0 }} 件、"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "{{ package.hosts_available_count }} Host(s)"
@@ -1427,7 +1426,7 @@ msgstr "無効化済み"
 
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
 msgid "Disabled (overridden)"
-msgstr "無効 (上書き)"
+msgstr "無効 (オーバーライド)"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Discover"
@@ -1505,6 +1504,9 @@ msgid ""
 "views\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a> for "
 "more information."
 msgstr ""
+"依存関係の解決を有効にします。公開時間が大幅に増加します。パッケージの依存関係の問題が最初に発見されるまでは有効にしないでください。詳細は、<a "
+"href=\"/links/docs/Managing_Content?chapter=dependency-solving-for-content-"
+"views\" target=\"_blank\" rel=\"noopener noreferrer\">ドキュメント</a> を参照してください。"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
@@ -1513,7 +1515,7 @@ msgstr "有効化済み"
 
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
 msgid "Enabled (overridden)"
-msgstr "有効 (上書き)"
+msgstr "有効 (オーバーライド)"
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-errata.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata-counts.html
@@ -1654,10 +1656,8 @@ msgstr "ファイル:"
 msgid "Filename"
 msgstr "ファイル名"
 
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/files/files.controller.js
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Files"
@@ -1812,7 +1812,7 @@ msgstr "HttpProxy ポリシー"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "Id"
-msgstr "ID"
+msgstr "Id"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid ""
@@ -2025,7 +2025,7 @@ msgstr "リスト/削除"
 #: app/assets/javascripts/bastion_katello/environments/views/new-environment.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content-host-status.controller.js
 msgid "Loading..."
-msgstr "読み込み中..."
+msgstr "ロード中..."
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "Maintainer"
@@ -2168,7 +2168,6 @@ msgstr "N/A"
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-content-views.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
@@ -2368,7 +2367,7 @@ msgstr "開始前"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "Not Synced"
-msgstr "同期なし"
+msgstr "同期されていません"
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
 msgid "Number of Repositories"
@@ -2443,15 +2442,15 @@ msgstr "その他のアドバイザリー"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 msgid "Overridden"
-msgstr "上書き済み"
+msgstr "オーバーライド済み"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 msgid "Override to Disabled"
-msgstr "無効に上書き"
+msgstr "無効にオーバーライド"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 msgid "Override to Enabled"
-msgstr "有効に上書き"
+msgstr "有効にオーバーライド"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 msgid "Package"
@@ -2530,7 +2529,6 @@ msgid ""
 msgstr "認証用のアップストリームリポジトリーユーザーのパスワード。リポジトリーで認証が必要ない場合は、空白のままにします。"
 
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-files.html
 msgid "Path"
 msgstr "パス"
@@ -3162,11 +3160,11 @@ msgstr "Smart Proxy を同期します"
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy sync failed"
-msgstr ""
+msgstr "スマートプロキシーの同期に失敗しました"
 
 #: app/assets/javascripts/bastion_katello/capsule-content/capsule-content.controller.js
 msgid "Smart proxy sync finished with warning"
-msgstr ""
+msgstr "スマートプロキシーの同期が警告付きで完了しました"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Solution"
@@ -3247,7 +3245,7 @@ msgstr "状態"
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks-table.html
 #: app/assets/javascripts/bastion_katello/tasks/views/user-tasks-table.html
 msgid "Status"
-msgstr "ステータス"
+msgstr "状態"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 #: app/assets/javascripts/bastion_katello/module-streams/views/partials/module-streams-table.html
@@ -3432,7 +3430,7 @@ msgid ""
 "&lt;%= organization.label %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt;\n"
 "&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt;</pre>"
 msgstr ""
-"<i>レジストリー名のパターン</i> はデフォルト名を上書きし、このパターンでサーバーからコンテナーイメージがプルされる場合があります (デフォルトではこの名前は組織、ライフサイクル環境、コンテンツビュー、製品およびリポジトリーラベルの組み合わせです。こちらはスラッシュ \"/\" で区切ります。)\n"
+"<i>レジストリー名のパターン</i> はデフォルト名をオーバーライドし、このパターンでサーバーからコンテナーイメージがプルされる場合があります (デフォルトではこの名前は組織、ライフサイクル環境、コンテンツビュー、製品およびリポジトリーラベルの組み合わせです。こちらはスラッシュ \"/\" で区切ります。)\n"
 "\n"
 "          <br><br>この名前は、ERB 構文を使用して構成される場合があります。利用可能な変数は以下のとおりです:\n"
 "\n"
@@ -3480,7 +3478,7 @@ msgstr "保持する各パッケージのバージョンの最大数。"
 msgid ""
 "The page you are attempting to access requires selecting a specific "
 "organization."
-msgstr "アクセス先のページには、特定の組織を選択する必要があります。"
+msgstr "アクセスしようとしているページでは、特定の組織を選択する必要があります。"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -3650,7 +3648,7 @@ msgstr "認証されていないプル"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
 msgid "Unknown error"
-msgstr ""
+msgstr "不明なエラー"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
@@ -3814,7 +3812,7 @@ msgstr "ユーザー名"
 msgid ""
 "Username and password are required for syncing the repository after it is "
 "created. Credentials are not validated during discovery."
-msgstr ""
+msgstr "リポジトリーの作成後、同期を行うにはユーザー名とパスワードが必要です。検出時には認証情報の検証は行われません。"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -4017,10 +4015,6 @@ msgid ""
 msgstr ""
 "現在、コンテンツホストはありません。新しいコンテンツホストは、メインメニューからコンテンツホストを選択し、右側のボタンをクリックして作成できます。"
 
-#: app/assets/javascripts/bastion_katello/files/views/files.html
-msgid "You currently don't have any Files."
-msgstr "現在、ファイルはありません。"
-
 #: app/assets/javascripts/bastion_katello/host-collections/views/host-collections.html
 msgid ""
 "You currently don't have any Host Collections, you can add Host Collections "
@@ -4102,10 +4096,6 @@ msgstr "エラータの検索結果はありません。"
 msgid "Your search returned zero Erratum."
 msgstr "エラータの検索結果はありません。"
 
-#: app/assets/javascripts/bastion_katello/files/views/files.html
-msgid "Your search returned zero Files."
-msgstr "ファイルの検索結果はありません。"
-
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/views/host-collections.html
 msgid "Your search returned zero Host Collections."
@@ -4171,3 +4161,11 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
 msgid "Yum Repositories <div>{{ library.counts.yum_repositories || 0 }}</div>"
 msgstr "Yum リポジトリー <div>{{ library.counts.yum_repositories || 0 }}</div>"
+
+#: app/assets/javascripts/bastion_katello/files/views/files.html
+msgid "You currently don't have any Files."
+msgstr "現在、ファイルはありません。"
+
+#: app/assets/javascripts/bastion_katello/files/views/files.html
+msgid "Your search returned zero Files."
+msgstr "ファイルの検索結果はありません。"
