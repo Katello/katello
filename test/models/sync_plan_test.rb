@@ -114,6 +114,72 @@ module Katello
       end
     end
 
+    def test_reenable_disabled_recurring_logic_without_scheduled_task
+      @plan.save_with_logic!(false)
+      old_rec_logic = @plan.foreman_tasks_recurring_logic
+      old_rec_logic.tasks.find_by!(state: 'scheduled').destroy!
+      assert_equal 'disabled', old_rec_logic.reload.state
+      refute old_rec_logic.tasks.exists?(state: 'scheduled')
+
+      @plan.update_attributes_with_logics!(enabled: true)
+
+      assert @plan.reload.enabled?
+      assert_not_equal old_rec_logic.id, @plan.foreman_tasks_recurring_logic_id
+      assert @plan.foreman_tasks_recurring_logic.tasks.exists?(state: 'scheduled')
+      assert old_rec_logic.reload.cancelled?
+    end
+
+    def test_reenable_cancelled_recurring_logic
+      @plan.save_with_logic!(false)
+      old_rec_logic = @plan.foreman_tasks_recurring_logic
+      old_rec_logic.cancel
+      assert_equal 'cancelled', old_rec_logic.reload.state
+
+      @plan.update_attributes_with_logics!(enabled: true)
+
+      assert @plan.reload.enabled?
+      assert_not_equal old_rec_logic.id, @plan.foreman_tasks_recurring_logic_id
+      assert @plan.foreman_tasks_recurring_logic.tasks.exists?(state: 'scheduled')
+    end
+
+    def test_reenable_missing_recurring_logic
+      @plan.save_with_logic!(false)
+      old_rec_logic = @plan.foreman_tasks_recurring_logic
+      old_rec_logic.cancel
+      @plan.update!(foreman_tasks_recurring_logic: nil)
+      assert_nil @plan.reload.foreman_tasks_recurring_logic
+
+      @plan.update_attributes_with_logics!(enabled: true)
+
+      assert @plan.reload.enabled?
+      assert_not_equal old_rec_logic.id, @plan.foreman_tasks_recurring_logic_id
+      assert @plan.foreman_tasks_recurring_logic.tasks.exists?(state: 'scheduled')
+    end
+
+    def test_disable_missing_recurring_logic_is_noop
+      @plan.save_with_logic!(false)
+      old_rec_logic = @plan.foreman_tasks_recurring_logic
+      old_rec_logic.cancel
+      @plan.update!(foreman_tasks_recurring_logic: nil)
+      assert_nil @plan.reload.foreman_tasks_recurring_logic
+
+      assert_nothing_raised { @plan.update_attributes_with_logics!(enabled: false) }
+
+      refute @plan.reload.enabled?
+    end
+
+    def test_schedule_only_update_preserves_disabled_state
+      @plan.save_with_logic!(false)
+      old_rec_logic = @plan.foreman_tasks_recurring_logic
+      assert_equal 'disabled', old_rec_logic.reload.state
+
+      @plan.update_attributes_with_logics!(interval: 'weekly')
+
+      refute @plan.reload.enabled?
+      assert_not_equal old_rec_logic.id, @plan.foreman_tasks_recurring_logic_id
+      assert_equal 'disabled', @plan.foreman_tasks_recurring_logic.state
+    end
+
     def test_destroy
       @plan.save_with_logic!
       @plan.foreman_tasks_recurring_logic.destroy!
