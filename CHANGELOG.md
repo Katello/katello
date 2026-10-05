@@ -1,3 +1,19 @@
+# 4.21.2 (2026-10-05)
+
+## Bug Fixes
+
+### Content Views
+ * CVE-2026-79654: Restrict content-view history results to readable views ([#39701](https://projects.theforeman.org/issues/39701), [88ffc375](https://github.com/Katello/katello.git/commit/88ffc375ecdb6e0daeda9d51ded3eeda507eca7a))
+
+### Repositories
+ * Repeated recalculation of Katello::RepositoryTypeManager.enabled_repository_types makes katello:correct_repositories very slow ([#38838](https://projects.theforeman.org/issues/38838), [a049b9c3](https://github.com/Katello/katello.git/commit/a049b9c35eee9f08f21f01fc8d1521f6363b0e7d))
+
+### Alternate Content Sources
+ * Using a custom CDN configuration with alternate Red Hat CDN URLs causes certificate errors ([#39303](https://projects.theforeman.org/issues/39303), [c0e96bef](https://github.com/Katello/katello.git/commit/c0e96bef69b2b80c4ed8f710f035a8ac94a4c154), [fc753ddc](https://github.com/Katello/katello.git/commit/fc753ddc38d4a3c84ad028dd7ac45798e80896db))
+
+### Subscriptions
+ * Non-admin users cannot access /rhsm/ endpoints despite having proper permissions ([#39313](https://projects.theforeman.org/issues/39313), [c742c1cf](https://github.com/Katello/katello.git/commit/c742c1cf8f4d97d21b52a0da8ba88eb271e55b16))
+
 # 4.21.1 (2026-08-10)
 
 ## Bug Fixes
