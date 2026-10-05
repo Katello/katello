@@ -1,3 +1,16 @@
+# 5.0.1 (2026-10-05)
+
+## Bug Fixes
+
+### Upgrades
+ * Pin foreman_remote_execution upper bound to < 18.0.0 on KATELLO-5.0 ([#39810](https://projects.theforeman.org/issues/39810))
+
+### Content Views
+ * Module stream count is duplicated on CV version UI ([#39612](https://projects.theforeman.org/issues/39612), [3425185a](https://github.com/Katello/katello.git/commit/3425185ab6e7470953498daae43b0f62b86fd2f9))
+ * CVE-2026-79654: Restrict content-view history results to readable views ([#39701](https://projects.theforeman.org/issues/39701), [88ffc375](https://github.com/Katello/katello.git/commit/88ffc375ecdb6e0daeda9d51ded3eeda507eca7a))
+
+### Reporting
+ * Host - Available Errata report generation consumes too much memory ([#39585](https://projects.theforeman.org/issues/39585), [583462de](https://github.com/Katello/katello.git/commit/583462de4feb3305b283d51802a757d5536ee02d))
 # 5.0.0 (2026-09-08)
 
 ## Features
