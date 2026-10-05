@@ -19,6 +19,22 @@ module Katello
   end
 
   class ContentFacetTest < ContentFacetBase
+    def test_trigger_applicability_generation_batches_unique_hosts
+      Setting.stubs(:[]).with("applicability_batch_size").returns(2)
+      ForemanTasks.expects(:async_task)
+                  .with(::Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: [1, 2])
+      ForemanTasks.expects(:async_task)
+                  .with(::Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: [3])
+
+      Katello::Host::ContentFacet.trigger_applicability_generation([1, 2, 2, nil, 3])
+    end
+
+    def test_trigger_applicability_generation_ignores_empty_input
+      ForemanTasks.expects(:async_task).never
+
+      Katello::Host::ContentFacet.trigger_applicability_generation([])
+    end
+
     def test_create
       cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view.id, library.id)
       empty_host.content_facet = Katello::Host::ContentFacet.create!(:content_view_environment_ids => [cvenv.id], :host => empty_host)
