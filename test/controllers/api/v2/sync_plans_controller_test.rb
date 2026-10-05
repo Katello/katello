@@ -170,6 +170,22 @@ module Katello
       assert_not_equal old_rec_logic, assigns[:sync_plan].foreman_tasks_recurring_logic_id
     end
 
+    def test_reenable_disabled_recurring_logic_without_scheduled_task
+      @sync_plan.enabled = false
+      old_rec_logic = @sync_plan.foreman_tasks_recurring_logic
+      old_rec_logic.tasks.find_by!(state: 'scheduled').destroy!
+      assert_equal 'disabled', old_rec_logic.reload.state
+      refute old_rec_logic.tasks.exists?(state: 'scheduled')
+
+      put :update, params: { id: @sync_plan.id, sync_plan: { enabled: true } }
+
+      assert_response :success
+      assert @sync_plan.reload.enabled?
+      assert_not_equal old_rec_logic.id, @sync_plan.foreman_tasks_recurring_logic_id
+      assert @sync_plan.foreman_tasks_recurring_logic.tasks.exists?(state: 'scheduled')
+      assert old_rec_logic.reload.cancelled?
+    end
+
     def test_recurring_logic_update_with_interval
       update_attrs = {
         :interval => 'weekly',

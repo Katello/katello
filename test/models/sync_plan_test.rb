@@ -114,6 +114,21 @@ module Katello
       end
     end
 
+    def test_reenable_disabled_recurring_logic_without_scheduled_task
+      @plan.save_with_logic!(false)
+      old_rec_logic = @plan.foreman_tasks_recurring_logic
+      old_rec_logic.tasks.find_by!(state: 'scheduled').destroy!
+      assert_equal 'disabled', old_rec_logic.reload.state
+      refute old_rec_logic.tasks.exists?(state: 'scheduled')
+
+      @plan.update_attributes_with_logics!(enabled: true)
+
+      assert @plan.reload.enabled?
+      assert_not_equal old_rec_logic.id, @plan.foreman_tasks_recurring_logic_id
+      assert @plan.foreman_tasks_recurring_logic.tasks.exists?(state: 'scheduled')
+      assert old_rec_logic.reload.cancelled?
+    end
+
     def test_destroy
       @plan.save_with_logic!
       @plan.foreman_tasks_recurring_logic.destroy!

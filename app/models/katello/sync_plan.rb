@@ -74,11 +74,12 @@ module Katello
     end
 
     def update_attributes_with_logics!(params)
+      params = params.with_indifferent_access if params.respond_to?(:with_indifferent_access)
       transaction do
         fail _("No recurring logic tied to the sync plan.") if self.foreman_tasks_recurring_logic.nil?
         params["cron_expression"] = '' if (params.key?("interval") && !params["interval"].eql?(CUSTOM_CRON) && self.interval.eql?(CUSTOM_CRON))
         self.update!(params.except(:enabled))
-        if (rec_logic_changed? || (params["enabled"] && !self.enabled? && self.foreman_tasks_recurring_logic.cancelled?))
+        if (rec_logic_changed? || (params[:enabled] && !self.enabled? && recurring_logic_needs_rebuild?))
           old_rec_logic = self.foreman_tasks_recurring_logic
           associate_recurring_logic
           ::Katello::Util::Support.active_record_retry do
@@ -93,6 +94,11 @@ module Katello
 
     def associate_recurring_logic
       self.foreman_tasks_recurring_logic = add_recurring_logic_to_sync_plan(self.sync_date, self.interval, self.cron_expression)
+    end
+
+    def recurring_logic_needs_rebuild?
+      foreman_tasks_recurring_logic.nil? || foreman_tasks_recurring_logic.cancelled? ||
+        !foreman_tasks_recurring_logic.tasks.exists?(state: 'scheduled')
     end
 
     def toggle_enabled(value = false)
