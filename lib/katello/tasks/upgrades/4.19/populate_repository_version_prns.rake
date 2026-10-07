@@ -11,7 +11,7 @@ namespace :katello do
           updates << { version_href: repo_version.pulp_href, prn: repo_version.prn }
         end
 
-        return if updates.empty?
+        next if updates.empty?
 
         updates.each_slice(10_000) do |batch|
           when_clauses = batch.map do |update|
