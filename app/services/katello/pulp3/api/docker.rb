@@ -21,8 +21,10 @@ module Katello
         end
 
         def container_push_repo_for_name(name)
-          # There should be only one repository in Pulp with the requested name
-          container_push_api.list(name: name)&.results&.first
+          # There should be only one repository in Pulp with the requested name, but newer pulp_container
+          # versions no longer create it as a push-specific repository, so fall back to the regular one.
+          container_push_api.list(name: name)&.results&.first ||
+            repositories_api.list(name: name)&.results&.first
         end
 
         def container_push_distribution_for_repository(repository_href)
