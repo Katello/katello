@@ -6,7 +6,7 @@ Katello is a plugin for Foreman that orchestrates content distribution and subsc
 - Katello development environments are virtual machines provisioned with [foremanctl](https://github.com/theforeman/foremanctl/).
   - Under foremanctl, Foreman and Katello run from source while core services such as Pulp and PostgreSQL run as Podman quadlets.
   - Podman quadlets can be accessed through `sudo podman exec -it ...`.
-- Non-containerized development environments may be provisioned via [forklift](https://github.com/theforeman/forklift/).
+- Legacy non-containerized development environments may be provisioned via [forklift](https://github.com/theforeman/forklift/).
   - These environments host core services locally on the VM.
   - Look for (containerized only) after command references; alternatives are provided in [Quick Reference for Non-Containerized Environments](developer_docs/quick_reference_non_containerized.md)
 - Note for AI agents: Skill `detect-foreman-environment` can determine if the current environment is containerized or non-containerized/legacy.
@@ -83,11 +83,12 @@ npm run build                                           # Build and lint JS
 - **Activation Key**: Reusable registration credentials that automatically configure host subscriptions, content views, and lifecycle environments during provisioning.
 
 ### Additional Resources
-For detailed workflows, patterns, and troubleshooting, consult these topic-specific guides:
+Note for AI agents: Before guessing responses, please consult the applicable linked guide below.
 
 **[Architecture & Setup](./architecture.md)**:
 - File Structure, File Locations by Task
-- Environment Quick Reference
+- Database Names
+- Service URLs and Ports
 - Foreman-Katello Integration
 - External Service Integration Glossary (Pulp, Candlepin, etc)
 
