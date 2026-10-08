@@ -4,6 +4,8 @@ import { Route } from 'react-router-dom';
 import { assertNockRequest, nockInstance } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import ACSExpandableDetails from '../ACSExpandableDetails';
+import ACSEditSmartProxies from '../EditModals/ACSEditSmartProxies';
+import smartProxyResult from '../../Create/__tests__/smartProxy.fixtures.json';
 import acsDetails from './acsDetails.fixtures';
 import simplifiedAcsDetails from './simplifiedAcsDetails.fixtures.json';
 import productsList from './acsProducts.fixtures.json';
@@ -11,6 +13,24 @@ import productsList from './acsProducts.fixtures.json';
 const acsDetailsURL = api.getApiUrl('/alternate_content_sources/1');
 const withACSRoute = component => <Route path="/alternate_content_sources/:id([0-9]+)">{component}</Route>;
 const productsURL = api.getApiUrl('/products');
+
+test('Loads available ACS smart proxies from the Pulp-enabled capsules endpoint', async () => {
+  const smartProxyScope = nockInstance
+    .get(api.getApiUrl('/capsules'))
+    .query(true)
+    .reply(200, smartProxyResult);
+
+  const { getByText } = renderWithRedux(<ACSEditSmartProxies
+    acsId={1}
+    onClose={jest.fn()}
+    acsDetails={{ smart_proxies: [], use_http_proxies: false }}
+  />);
+
+  await patientlyWaitFor(() => {
+    expect(getByText(smartProxyResult.results[0].name)).toBeInTheDocument();
+  });
+  assertNockRequest(smartProxyScope);
+});
 
 test('Can show custom ACS details expandable sections with edit buttons', async (done) => {
   const renderOptions = {

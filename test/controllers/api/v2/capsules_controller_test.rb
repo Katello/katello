@@ -35,6 +35,31 @@ module Katello
       assert_response :success
     end
 
+    def test_index_only_includes_pulp_smart_proxies
+      non_pulp_proxy = FactoryBot.create(:smart_proxy)
+      non_pulp_proxy.organizations = @organization
+      non_pulp_proxy.locations = @location
+      non_pulp_proxy.smart_proxy_features.where(feature: Feature.find_by(name: ::SmartProxy::PULP3_FEATURE)).destroy_all
+      non_pulp_proxy.reload
+      refute non_pulp_proxy.pulp3_enabled?
+
+      get :index, params: { per_page: 'all' }
+
+      assert_response :success
+      proxy_ids = JSON.parse(response.body)['results'].map { |proxy| proxy['id'] }
+      assert_includes proxy_ids, proxy_with_pulp.id
+      refute_includes proxy_ids, non_pulp_proxy.id
+    end
+
+    def test_index_with_numeric_per_page
+      FactoryBot.create(:smart_proxy, :with_pulp3, organizations: @organization, locations: @location)
+
+      get :index, params: { per_page: 1 }
+
+      assert_response :success
+      assert_equal 1, JSON.parse(response.body)['results'].length
+    end
+
     def test_admin_show
       get :show, params: { :id => proxy_with_pulp.id}
       assert_response :success

@@ -228,6 +228,48 @@ module Katello
       assert_response :unprocessable_entity
     end
 
+    def test_create_with_non_pulp_smart_proxies
+      non_pulp_proxy = FactoryBot.create(:smart_proxy)
+      non_pulp_proxy.smart_proxy_features.where(feature: Feature.find_by(name: ::SmartProxy::PULP3_FEATURE)).destroy_all
+      non_pulp_proxy.reload
+      refute non_pulp_proxy.pulp3_enabled?
+      @controller.expects(:sync_task).never
+
+      [{ smart_proxy_ids: [@smart_proxy.id, non_pulp_proxy.id] },
+       { smart_proxy_names: [@smart_proxy.name, non_pulp_proxy.name] }].each do |proxy_params|
+        post :create, params: {
+          name: 'acs_with_non_pulp_proxy',
+          content_type: @acs.content_type,
+          base_url: @acs.base_url,
+          alternate_content_source_type: @acs.alternate_content_source_type,
+          verify_ssl: @acs.verify_ssl,
+        }.merge(proxy_params)
+
+        assert_response :unprocessable_entity
+        assert_includes response.body, 'Smart proxies must have the Pulp feature'
+        assert_includes response.body, non_pulp_proxy.name
+        refute AlternateContentSource.exists?(name: 'acs_with_non_pulp_proxy')
+      end
+    end
+
+    def test_create_with_pulp_smart_proxy_names
+      ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs)
+      assert_sync_task(::Actions::Katello::AlternateContentSource::Create) do |_acs, smart_proxies|
+        assert_equal [@smart_proxy.id], smart_proxies.pluck(:id)
+      end
+
+      post :create, params: {
+        name: 'acs_with_pulp_proxy_name',
+        smart_proxy_names: [@smart_proxy.name],
+        content_type: @acs.content_type,
+        base_url: @acs.base_url,
+        alternate_content_source_type: @acs.alternate_content_source_type,
+        verify_ssl: @acs.verify_ssl,
+      }
+
+      assert_response :success
+    end
+
     def test_create_bad_subpaths
       @acs.subpaths = ['not a path', '/not a path']
       ::Katello::AlternateContentSource.any_instance.stubs(:reload).returns(@acs)
@@ -382,6 +424,35 @@ module Katello
         upstream_password: @acs.upstream_password,
       }
       assert_response :unprocessable_entity
+    end
+
+    def test_update_with_non_pulp_smart_proxies
+      non_pulp_proxy = FactoryBot.create(:smart_proxy)
+      non_pulp_proxy.smart_proxy_features.where(feature: Feature.find_by(name: ::SmartProxy::PULP3_FEATURE)).destroy_all
+      non_pulp_proxy.reload
+      refute non_pulp_proxy.pulp3_enabled?
+      original_proxy_ids = @acs.smart_proxies.map(&:id)
+      @controller.expects(:sync_task).never
+
+      [{ smart_proxy_ids: [@smart_proxy.id, non_pulp_proxy.id] },
+       { smart_proxy_names: [@smart_proxy.name, non_pulp_proxy.name] }].each do |proxy_params|
+        put :update, params: { id: @acs.id }.merge(proxy_params)
+
+        assert_response :unprocessable_entity
+        assert_includes response.body, 'Smart proxies must have the Pulp feature'
+        assert_includes response.body, non_pulp_proxy.name
+        assert_equal original_proxy_ids, @acs.reload.smart_proxies.map(&:id)
+      end
+    end
+
+    def test_update_with_pulp_smart_proxy_names
+      assert_sync_task(::Actions::Katello::AlternateContentSource::Update) do |_acs, smart_proxies|
+        assert_equal [@smart_proxy.id], smart_proxies.pluck(:id)
+      end
+
+      put :update, params: { id: @acs.id, smart_proxy_names: [@smart_proxy.name] }
+
+      assert_response :success
     end
 
     def test_update_bad_subpaths
