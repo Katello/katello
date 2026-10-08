@@ -28,7 +28,7 @@ Gem::Specification.new do |gem|
 
   # Core Dependencies
   gem.add_dependency "rails"
-  gem.add_dependency "json"
+  gem.add_dependency "json", "< 3.0"
   gem.add_dependency "oauth"
   gem.add_dependency "rest-client"
 
