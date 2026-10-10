@@ -82,8 +82,8 @@ module Katello
             lifecycle_environments = content_facet.try(:lifecycle_environments) || host.try(:lifecycle_environments)
           end
         when ::Katello::Hostgroup::ContentFacet
-          content_views = [content_facet.try(:content_view), host.try(:content_views)].flatten.compact
-          lifecycle_environments = [content_facet.try(:lifecycle_environment), host.try(:lifecycle_environments)].flatten.compact
+          content_views = hostgroup_facet_values(content_facet, host, :content_view)
+          lifecycle_environments = hostgroup_facet_values(content_facet, host, :lifecycle_environment)
         end
         if content_views.present? && lifecycle_environments.present? && host.os && host.architecture
           Katello::Repository.in_environment(lifecycle_environments).in_content_views(content_views).
@@ -93,6 +93,13 @@ module Katello
         else
           Katello::Repository.none
         end
+      end
+
+      private
+
+      # A nested host group's facet leaves inherited values unset; the host group returns them
+      def hostgroup_facet_values(content_facet, hostgroup, attribute)
+        [content_facet.try(attribute) || hostgroup.try(attribute)].compact
       end
     end
   end
