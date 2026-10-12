@@ -423,7 +423,7 @@ module Katello
       latest_version_href = push_repo_api_response&.latest_version_href
       pulp_repo_href = push_repo_api_response&.pulp_href
 
-      if latest_version_href.empty? || pulp_repo_href.empty?
+      if latest_version_href.blank? || pulp_repo_href.blank?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
           _("Could not locate repository properties for content indexing."),
@@ -454,7 +454,7 @@ module Katello
       pulp_distribution_href = distribution_api_response&.pulp_href
       pulp_distribution_prn = distribution_api_response&.prn
 
-      if pulp_distribution_href.empty?
+      if pulp_distribution_href.blank?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
           _("Could not locate Pulp distribution."),
@@ -758,7 +758,6 @@ module Katello
       end
 
       save_push_repo_hrefs if pulp_response.code.between?(200, 299)
-      # Indexing content is only needed after pushing manifests
       root_repository.library_instance.index_content
       head pulp_response.code
     end
