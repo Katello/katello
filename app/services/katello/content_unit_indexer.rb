@@ -214,7 +214,7 @@ module Katello
 
       return if tag_ids_to_remove.empty?
       Rails.logger.info("Removing #{tag_ids_to_remove.count} duplicate docker tag associations in repository '#{@repository.label}'")
-      Katello::DockerTag.where(id: tag_ids_to_remove).destroy_all
+      @repository.repository_docker_tags.where(docker_tag_id: tag_ids_to_remove).delete_all
     end
 
     def upsert_with_deadlock_retry(to_insert)

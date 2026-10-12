@@ -11,8 +11,8 @@ module Actions
           action_subject(repository)
 
           sequence do
-            # Container push repositories will already be in pulp. The version_href is
-            # directly updated after a push.
+            # Pulp creates container repositories during the initial registry push.
+            # Katello saves the repository and version hrefs after the push succeeds.
             unless repository.root.is_container_push && repository.in_default_view?
               create_action = plan_action(Pulp3::Orchestration::Repository::Create,
                                           repository, SmartProxy.pulp_primary, force_repo_create)

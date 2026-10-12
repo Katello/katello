@@ -45,11 +45,16 @@ module Katello
         end
 
         def distribution_options(path)
-          {
+          options = {
             base_path: path,
-            repository_version: repo.version_href,
             name: "#{generate_backend_object_name}",
           }
+          if root.is_container_push && repo.in_default_view?
+            options[:repository] = repository_reference.repository_href
+          else
+            options[:repository_version] = repo.version_href
+          end
+          options
         end
 
         def create_version(options = {})
