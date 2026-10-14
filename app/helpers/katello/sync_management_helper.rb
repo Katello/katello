@@ -1,5 +1,19 @@
 module Katello
   module SyncManagementHelper
+    module VersionSort
+      # Compare version-like labels (e.g. "8.9" vs "8.10") and names that embed
+      # them (e.g. "RHEL 8" vs "RHEL 10"). Uses Package.sortable_version, then
+      # a case-insensitive string tie-break.
+      def version_aware_compare(left, right)
+        left_key = ::Katello::Util::Package.sortable_version(left.to_s)
+        right_key = ::Katello::Util::Package.sortable_version(right.to_s)
+        cmp = left_key <=> right_key
+        cmp.zero? ? left.to_s.downcase <=> right.to_s.downcase : cmp
+      end
+    end
+
+    include VersionSort
+
     def product_id(prod_id)
       "product-#{prod_id}".tr(".", "_") #jquery treetable doesn't support periods
     end
@@ -29,6 +43,8 @@ module Katello
     end
 
     module RepoMethods
+      include Katello::SyncManagementHelper::VersionSort
+
       # Format a repository as a hash for the API
       def format_repo(repo)
         {
@@ -57,30 +73,32 @@ module Katello
       end
 
       # returns all repos in hash representation with minors and arch children included
+      # Repos without a minor and repos under each arch are version-aware sorted.
       def collect_repos(products, env, include_feedless = true)
         products.map do |prod|
           minor_repos, repos_without_minor = collect_minor(prod.repos(env, nil, include_feedless))
           { :name => prod.name, :object => prod, :id => prod.id, :type => "product",
-            :repos => repos_without_minor.map { |r| format_repo(r) },
+            :repos => repos_without_minor.sort { |a, b| version_aware_compare(a.name, b.name) }.map { |r| format_repo(r) },
             :children => minors(minor_repos, prod.id), :organization => prod.organization.name }
         end
       end
 
       # returns all minors in hash representation with arch children included
+      # Minor names are sorted in numeric/version order, not lexicographically.
       def minors(minor_repos, product_id)
-        minor_repos.map do |minor, repos|
+        minor_repos.sort { |(a, _), (b, _)| version_aware_compare(a, b) }.map do |minor, repos|
           minor_id = "#{product_id}-#{minor}"
           { :name => minor, :id => minor_id, :type => "minor",
             :children => arches(repos, minor_id), :repos => [] }
         end
       end
 
-      # returns all archs in hash representation
+      # returns all archs in hash representation, sorted case-insensitively by arch name.
       def arches(arch_repos, parent_id)
-        collect_arches(arch_repos).map do |arch, repos|
+        collect_arches(arch_repos).sort { |(a, _), (b, _)| a.to_s.downcase <=> b.to_s.downcase }.map do |arch, repos|
           arch_id = "#{parent_id}-#{arch}"
           { :name => arch, :id => arch_id, :type => "arch", :children => [],
-            :repos => repos.map { |r| format_repo(r) } }
+            :repos => repos.sort { |a, b| version_aware_compare(a.name, b.name) }.map { |r| format_repo(r) } }
         end
       end
 
