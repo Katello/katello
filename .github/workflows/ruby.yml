@@ -23,10 +23,11 @@ jobs:
   test:
     name: Ruby
     needs: rubocop
-    uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v0
+    uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v1
     with:
       plugin: katello
       foreman_version: develop # set to the Foreman release branch after branching :)
+      runner: ubuntu-26.04
 
   angular:
     name: Angular ${{ matrix.engine }} - NodeJS ${{ matrix.node }}
