@@ -22,6 +22,17 @@ module Katello
       assert_equal 0, cvenv2.priority(@activation_key)
     end
 
+    def test_new_activation_key_assigns_content_view_environment_priorities
+      cvenv1 = katello_content_view_environments(:library_dev_view_dev)
+      cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
+      activation_key = ActivationKey.new(name: 'prioritized activation key', organization: @activation_key.organization)
+
+      activation_key.content_view_environments = [cvenv2, cvenv1]
+
+      assert_equal [[cvenv2.id, 0], [cvenv1.id, 1]],
+                   (activation_key.content_view_environment_activation_keys.map { |cveak| [cveak.content_view_environment_id, cveak.priority] })
+    end
+
     def test_content_view_environments_deduplicates
       cvenv1 = katello_content_view_environments(:library_dev_view_dev)
       cvenv2 = katello_content_view_environments(:library_dev_staging_view_dev)
