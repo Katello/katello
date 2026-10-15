@@ -1,6 +1,6 @@
 # rubocop:disable Lint/SuppressedException
-require 'fileutils'
 require 'English'
+require 'fileutils'
 
 module Actions
   module Katello
@@ -12,9 +12,6 @@ module Actions
         def plan(repository, files, content_type = nil, options = {})
           action_subject(repository)
           repository.check_ready_to_act!
-          repository.clear_smart_proxy_sync_histories
-          tmp_files = prepare_tmp_files(files)
-
           content_type ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
           ::Katello::RepositoryTypeManager.check_content_matches_repo_type!(repository, content_type)
 
@@ -24,12 +21,15 @@ module Actions
             unit_type_id = SmartProxy.pulp_primary.content_service(content_type)::CONTENT_TYPE
           end
 
+          repository.clear_smart_proxy_sync_histories
+          staged_files = stage_files(files, repository)
+
           upload_actions = []
 
           generate_applicability = options.fetch(:generate_applicability, repository.yum?)
 
           sequence do
-            tmp_files.each do |file|
+            staged_files.each do |file|
               sequence do
                 upload_action = plan_action(Pulp3::Orchestration::Repository::UploadContent,
                                                  repository, SmartProxy.pulp_primary!, file, unit_type_id)
@@ -39,16 +39,16 @@ module Actions
             end
 
             plan_action(FinishUpload, repository, content_type: content_type, upload_actions: upload_actions)
-            plan_self(tmp_files: tmp_files)
+            plan_self(staged_files: staged_files)
             plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
 
             # Refresh rolling CVs that have this repository
             update_rolling_content_views(repository)
           end
         ensure
-          # Delete tmp files when some exception occurred. Would be
+          # Delete staged files when some exception occurred. Would be
           # nice to have other ways to do that: https://github.com/Dynflow/dynflow/issues/130
-          delete_tmp_files(tmp_files) if $ERROR_INFO && tmp_files
+          purge_staged_files(staged_files) if $ERROR_INFO && staged_files
         end
 
         def run
@@ -62,7 +62,12 @@ module Actions
         end
 
         def finalize
-          delete_tmp_files(input[:tmp_files])
+          purge_staged_files(input[:staged_files] || input[:tmp_files])
+          if ::Katello::UploadStaging.supported?
+            # Also recover copies created before a crash while planning, before
+            # their IDs could be serialized into the root action input.
+            ::Katello::UploadStaging.where(execution_plan_uuid: execution_plan.id, legacy_path: nil).find_each(&:purge!)
+          end
         end
 
         def rescue_strategy
@@ -71,30 +76,54 @@ module Actions
 
         private
 
-        def tmp_dir
-          File.join(Rails.root, 'tmp', 'uploads').tap do |tmp_dir|
-            FileUtils.mkdir_p(tmp_dir) unless File.exist?(tmp_dir)
-          end
-        end
-
-        def prepare_tmp_files(files)
+        def stage_files(files, repository)
+          staged_files = []
           files.each do |file|
-            tmp_file = File.join(tmp_dir, File.basename(file[:path]))
-            FileUtils.copy(file[:path], tmp_file)
-            file[:path] = tmp_file
+            if ::Katello::UploadStaging.supported?
+              staging = ::Katello::UploadStaging.store!(file[:path], repository: repository,
+                execution_plan_uuid: execution_plan.id, filename: file[:filename])
+              staged_files << staging.metadata
+            else
+              FileUtils.mkdir_p(::Katello::UploadStaging.legacy_root)
+              path = File.join(::Katello::UploadStaging.legacy_root, File.basename(file[:path]))
+              FileUtils.cp(file[:path], path)
+              staged_files << file.merge(path: path)
+            end
           end
+          staged_files
+        rescue
+          purge_staged_files(staged_files)
+          raise
         end
 
-        def delete_tmp_files(files)
-          files.each { |file| File.delete(file[:path]) }
+        def purge_staged_files(files)
+          Array(files).each do |file|
+            file = file.with_indifferent_access
+            if ::Katello::UploadStaging.supported?
+              # Never resolve an arbitrary blob ID: staging belongs to this plan.
+              scope = ::Katello::UploadStaging.where(execution_plan_uuid: execution_plan.id)
+              scope = scope.where(repository_id: input[:repository][:id]) if input[:repository]
+              staging = file[:staging_id] ? scope.find_by(id: file[:staging_id]) : scope.find_by(legacy_path: File.expand_path(file[:path]))
+              if staging
+                staging.legacy_path ? staging.update!(finished_at: Time.current) : staging.purge!
+                next
+              end
+            end
+            if file[:path].present? && File.exist?(file[:path])
+              path = File.expand_path(file[:path])
+              fail 'Refusing to remove a file outside Katello upload staging' unless File.dirname(path) == ::Katello::UploadStaging.legacy_root && !File.symlink?(path)
+
+              File.delete(path)
+            end
+          end
         end
 
         def unit_key(file, repository)
           return {} unless repository.file?
           {
-            :checksum => Digest::SHA256.hexdigest(File.read(file[:path])),
+            :checksum => file[:sha256] || Digest::SHA256.file(file[:path]).hexdigest,
             :name => file[:filename],
-            :size => File.size(file[:path]),
+            :size => file[:byte_size] || File.size(file[:path]),
           }
         end
       end
