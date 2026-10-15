@@ -72,17 +72,6 @@ module Katello
         stringify(params.keys) - stringify(rule.keys)
       end
 
-      def self.with_db_connection(logger = Rails.logger)
-        yield
-      rescue PG::ConnectionBad, ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished => e
-        logger.error(e.message)
-        logger.error("Lost database connection. Attempting reconnect.")
-
-        active_record_retry_connect(logger)
-
-        retry
-      end
-
       def self.active_record_retry_connect(logger)
         sleep 3
         ActiveRecord::Base.connection.reconnect!
