@@ -1,3 +1,9 @@
+const path = require('path');
+
 module.exports = {
-  presets: ['@theforeman/builder/babel'],
+  presets: [
+    require.resolve('@theforeman/builder/babel', {
+      paths: [path.resolve(__dirname, '../foreman')],
+    }),
+  ],
 };
