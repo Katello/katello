@@ -38,6 +38,7 @@ module Katello
     define_model_callbacks :sync, :only => :after
 
     belongs_to :root, :inverse_of => :repositories, :class_name => "Katello::RootRepository"
+    has_many :upload_stagings, class_name: 'Katello::UploadStaging', dependent: :restrict_with_exception, inverse_of: :repository
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
     belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse
     has_many :library_instances_inverse,

@@ -16,6 +16,9 @@ module Actions
           delete_empty_repo_filters = options.fetch(:delete_empty_repo_filters, true)
           docker_cleanup = options.fetch(:docker_cleanup, true)
           action_subject(repository)
+          if repository.upload_stagings.exists?
+            fail _('Repository cannot be deleted while upload stagings exist.')
+          end
           check_destroyable!(repository, remove_from_content_view_versions)
           remove_generated_content_views(repository)
 
