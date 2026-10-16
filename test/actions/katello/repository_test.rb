@@ -539,6 +539,38 @@ module ::Actions::Katello::Repository
                                 ::Actions::Katello::Applicability::Repository::Regenerate,
                                 :repo_ids => [custom_repository.id]
     end
+
+    it 'stages uploads with Active Storage and purges them after use' do
+      action = create_action action_class
+      path = File.join(::Katello::Engine.root, "test", "fixtures", "files", "squirrel-0.3-0.8.noarch.rpm")
+
+      staged_file = action.send(:stage_files, [{:path => path, :filename => 'squirrel.rpm'}], custom_repository).first
+      staging = ::Katello::UploadStaging.find(staged_file[:staging_id])
+      blob = staging.file.blob
+
+      assert_equal File.binread(path), blob.download
+      assert_equal Digest::SHA256.file(path).hexdigest, staged_file[:sha256]
+      assert_equal File.size(path), staged_file[:byte_size]
+      refute staged_file.key?(:path)
+
+      action.send(:purge_staged_files, [staged_file])
+      refute ActiveStorage::Blob.exists?(blob.id)
+    ensure
+      blob&.purge if blob&.persisted?
+    end
+
+    it 'removes only its own partial staging when the next file fails' do
+      path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'squirrel-0.3-0.8.noarch.rpm')
+      owned = ::Katello::UploadStaging.store!(path, repository: custom_repository, execution_plan_uuid: action.execution_plan.id)
+      unrelated = ::Katello::UploadStaging.store!(path, repository: custom_repository, execution_plan_uuid: SecureRandom.uuid)
+      ::Katello::UploadStaging.expects(:store!).returns(owned).then.raises(IOError)
+
+      assert_raises(IOError) { action.send(:stage_files, [{path: path}, {path: path}], custom_repository) }
+      refute ::Katello::UploadStaging.exists?(owned.id)
+      assert unrelated.reload.file.attached?
+    ensure
+      unrelated.purge! if unrelated&.persisted?
+    end
   end
 
   class UploadFilesTest < TestBase
@@ -561,7 +593,7 @@ module ::Actions::Katello::Repository
 
       plan_action action, repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'file'
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::UploadFile,
-                                repository_pulp3, proxy, file)
+                                repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'})
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
                                 {:path => file, :filename => 'puppet_module.tar.gz'},
                                 repository_pulp3, proxy,
@@ -611,7 +643,7 @@ module ::Actions::Katello::Repository
 
       plan_action action, repository_python_pulp3, proxy, {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'}, 'python_package'
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::UploadFile,
-                                repository_python_pulp3, proxy, file)
+                                repository_python_pulp3, proxy, {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'})
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
                                 {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'},
                                 repository_python_pulp3, proxy,
