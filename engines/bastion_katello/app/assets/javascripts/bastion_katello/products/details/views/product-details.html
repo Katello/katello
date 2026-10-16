@@ -2,7 +2,7 @@
 
 <div data-extend-template="layouts/details-page-with-breadcrumbs.html">
   <header data-block="header">
-    <h2 translate>{{ product.name }}</h2>
+    <h2 translate>{{ product.name }} <span ng-show="product.orphaned">(Orphaned)</span></h2>
   </header>
 
   <nav data-block="item-actions" bst-feature-flag="custom_products">

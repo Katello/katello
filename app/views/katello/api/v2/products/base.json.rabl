@@ -24,3 +24,7 @@ end
 node :repository_count do |product|
   product.root_repositories.count
 end
+
+node :orphaned do |product|
+  product.orphaned?
+end

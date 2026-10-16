@@ -70,6 +70,19 @@ describe('SyncStatusTable', () => {
     expect(screen.getByText('Test Product')).toBeInTheDocument();
   });
 
+  it('renders an Orphaned label for an orphaned product', () => {
+    const orphanedProducts = [{ ...mockProducts[0], orphaned: true }];
+    render(<SyncStatusTable {...mockProps} products={orphanedProducts} />);
+
+    expect(screen.getByText('Orphaned')).toBeInTheDocument();
+  });
+
+  it('does not render an Orphaned label for a non-orphaned product', () => {
+    render(<SyncStatusTable {...mockProps} />);
+
+    expect(screen.queryByText('Orphaned')).not.toBeInTheDocument();
+  });
+
   it('expands rows when clicked', () => {
     render(<SyncStatusTable {...mockProps} />);
 

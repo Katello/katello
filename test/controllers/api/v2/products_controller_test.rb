@@ -140,6 +140,22 @@ module Katello
       assert_template 'api/v2/products/show'
     end
 
+    def test_show_orphaned
+      Product.any_instance.stubs(:orphaned?).returns(true)
+      get :show, params: { :id => @product.id }
+
+      assert_response :success
+      assert JSON.parse(response.body)['orphaned']
+    end
+
+    def test_show_not_orphaned
+      Product.any_instance.stubs(:orphaned?).returns(false)
+      get :show, params: { :id => @product.id }
+
+      assert_response :success
+      refute JSON.parse(response.body)['orphaned']
+    end
+
     def test_show_protected
       allowed_perms = [@read_permission]
       denied_perms = [@update_permission, @create_permission, @delete_permission]

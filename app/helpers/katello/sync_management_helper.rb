@@ -61,6 +61,7 @@ module Katello
         products.map do |prod|
           minor_repos, repos_without_minor = collect_minor(prod.repos(env, nil, include_feedless))
           { :name => prod.name, :object => prod, :id => prod.id, :type => "product",
+            :orphaned => prod.orphaned?,
             :repos => repos_without_minor.map { |r| format_repo(r) },
             :children => minors(minor_repos, prod.id), :organization => prod.organization.name }
         end

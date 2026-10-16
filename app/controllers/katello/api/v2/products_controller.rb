@@ -41,7 +41,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Product)
     def index
-      options = {:includes => [:sync_plan, :provider]}
+      options = {:includes => [:sync_plan, :provider, :pool_products]}
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc, options))
     end
 

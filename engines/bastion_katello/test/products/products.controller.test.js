@@ -1,6 +1,7 @@
 describe('Controller: ProductsController', function() {
     var $scope,
         $uibModal,
+        $compile,
         Notification,
         ProductBulkAction,
         Nutupane;
@@ -67,9 +68,10 @@ describe('Controller: ProductsController', function() {
         };
     });
 
-    beforeEach(inject(function (_Notification_, $controller, $rootScope, $location) {
+    beforeEach(inject(function (_Notification_, _$compile_, $controller, $rootScope, $location) {
         $scope = $rootScope.$new();
         Notification = _Notification_;
+        $compile = _$compile_;
 
         $controller('ProductsController', {
             $scope: $scope,
@@ -85,6 +87,31 @@ describe('Controller: ProductsController', function() {
 
     it('attaches the nutupane table to the scope', function () {
         expect($scope.table).toBeDefined();
+    });
+
+    it('shows an Orphaned suffix next to the product name when orphaned', function () {
+        $scope.product = { name: 'Orphaned Product', orphaned: true };
+
+        var element = $compile(
+            '<a>{{ product.name }} <span ng-show="product.orphaned" translate>(Orphaned)</span></a>'
+        )($scope);
+        $scope.$digest();
+
+        expect(element.text()).toContain('Orphaned Product');
+        expect(element.text()).toContain('(Orphaned)');
+        expect(element.find('span').hasClass('ng-hide')).toBe(false);
+    });
+
+    it('does not show the Orphaned suffix when not orphaned', function () {
+        $scope.product = { name: 'Normal Product', orphaned: false };
+
+        var element = $compile(
+            '<a>{{ product.name }} <span ng-show="product.orphaned" translate>(Orphaned)</span></a>'
+        )($scope);
+        $scope.$digest();
+
+        expect(element.text()).toContain('Normal Product');
+        expect(element.find('span').hasClass('ng-hide')).toBe(true);
     });
 
     it('properly detects most important sync state error', function () {
