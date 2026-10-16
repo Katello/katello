@@ -63,6 +63,13 @@ module Katello
       assert_template 'api/v2/flatpak_remote_repositories/show'
     end
 
+    def test_show_missing
+      get :show, params: { :id => -1 }
+
+      assert_response :not_found
+      assert_include JSON.parse(response.body)['message'], "Potential missing permissions: "
+    end
+
     def test_show_with_manifest
       get :show, params: { :id => @redhat_remote_runtime_repository.id, :manifests => true }
 
@@ -74,7 +81,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:show, allowed_perms, denied_perms, [@organization]) do
         get :show, params: { :id => @redhat_remote_runtime_repository.id }
       end
     end
