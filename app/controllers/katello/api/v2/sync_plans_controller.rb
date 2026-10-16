@@ -71,7 +71,7 @@ module Katello
     def update
       sync_date = sync_plan_params.try(:[], :sync_date).try(:to_time)
       params[:enabled] = params[:enabled] || params[:sync_plan][:enabled]
-      toggle_enabled = (@sync_plan.enabled? != params[:enabled]) && !params[:enabled].nil? && !@sync_plan.foreman_tasks_recurring_logic.cancelled?
+      toggle_enabled = (@sync_plan.enabled? != params[:enabled]) && !params[:enabled].nil? && !@sync_plan.recurring_logic_needs_rebuild?
       @sync_plan.foreman_tasks_recurring_logic.enabled = params[:enabled] if toggle_enabled
       if !sync_date.nil? && !sync_date.is_a?(Time)
         fail _("Date format is incorrect.")
