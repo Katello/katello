@@ -22,6 +22,30 @@ module Katello
           assert_equal docker_repo_service.distribution_options(docker_repo_service.relative_path)[:base_path], "a repo name"
         end
 
+        def test_push_distribution_tracks_repository_instead_of_fixed_version
+          @docker_repo.root.stubs(:is_container_push).returns(true)
+          @docker_repo.stubs(:in_default_view?).returns(true)
+          service = @docker_repo.backend_service(@mock_smart_proxy)
+          service.stubs(:repository_reference).returns(stub(repository_href: '/pulp/api/v3/repositories/container/container/repo/'))
+
+          options = service.distribution_options('org/product/image')
+
+          assert_equal '/pulp/api/v3/repositories/container/container/repo/', options[:repository]
+          refute options.key?(:repository_version)
+        end
+
+        def test_promoted_push_distribution_serves_fixed_version
+          @docker_repo.root.stubs(:is_container_push).returns(true)
+          @docker_repo.stubs(:in_default_view?).returns(false)
+          @docker_repo.stubs(:version_href).returns('/pulp/api/v3/repositories/container/container/repo/versions/1/')
+          service = @docker_repo.backend_service(@mock_smart_proxy)
+
+          options = service.distribution_options('promoted/image')
+
+          assert_equal @docker_repo.version_href, options[:repository_version]
+          refute options.key?(:repository)
+        end
+
         def test_instance_for_type_loads_type_missing_from_cache
           repository_type_manager = ::Katello::RepositoryTypeManager
           original_repository_types = repository_type_manager.enabled_repository_types(false)

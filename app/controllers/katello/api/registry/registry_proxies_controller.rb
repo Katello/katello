@@ -423,7 +423,7 @@ module Katello
       latest_version_href = push_repo_api_response&.latest_version_href
       pulp_repo_href = push_repo_api_response&.pulp_href
 
-      if latest_version_href.empty? || pulp_repo_href.empty?
+      if latest_version_href.blank? || pulp_repo_href.blank?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
           _("Could not locate repository properties for content indexing."),
@@ -454,7 +454,7 @@ module Katello
       pulp_distribution_href = distribution_api_response&.pulp_href
       pulp_distribution_prn = distribution_api_response&.prn
 
-      if pulp_distribution_href.empty?
+      if pulp_distribution_href.blank?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
           _("Could not locate Pulp distribution."),
@@ -474,6 +474,7 @@ module Katello
                                                        prn: pulp_distribution_prn,
                                                        repository_id: instance_repo.id)
       end
+      true
     end
 
     def save_push_repo_hrefs
@@ -713,7 +714,7 @@ module Katello
         response.header[key.to_s] = value
       end
 
-      save_push_repo_hrefs if pulp_response.code.between?(200, 299)
+      return if pulp_response.code.between?(200, 299) && !save_push_repo_hrefs
       head pulp_response.code
     end
 
@@ -729,7 +730,7 @@ module Katello
         response.header[key.to_s] = value
       end
 
-      save_push_repo_hrefs if pulp_response.code.between?(200, 299)
+      return if pulp_response.code.between?(200, 299) && !save_push_repo_hrefs
       head pulp_response.code
     end
 
@@ -744,7 +745,7 @@ module Katello
         response.header[key.to_s] = value
       end
 
-      save_push_repo_hrefs if pulp_response.code.between?(200, 299)
+      return if pulp_response.code.between?(200, 299) && !save_push_repo_hrefs
       head pulp_response.code
     end
 
@@ -757,9 +758,9 @@ module Katello
         response.header[key.to_s] = value
       end
 
-      save_push_repo_hrefs if pulp_response.code.between?(200, 299)
-      # Indexing content is only needed after pushing manifests
-      root_repository.library_instance.index_content
+      return if pulp_response.code.between?(200, 299) && !save_push_repo_hrefs
+      # Index content only after Pulp accepts the manifest and its hrefs are saved.
+      root_repository.library_instance.index_content if pulp_response.code.between?(200, 299)
       head pulp_response.code
     end
 

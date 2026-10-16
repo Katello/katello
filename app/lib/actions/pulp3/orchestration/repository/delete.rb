@@ -9,8 +9,11 @@ module Actions
               plan_action(Actions::Pulp3::Repository::DeleteDistributions, repository.id, smart_proxy)
 
               if repository.content_view.default?
-                # Container push repositories must be deleted through the distribution
-                return if repository.root.is_container_push
+                # Legacy Pulp push repositories are deleted through the distribution.
+                if repository.root.is_container_push
+                  reference = repository.backend_service(smart_proxy).repository_reference
+                  return if reference&.repository_href&.include?('/container/container-push/')
+                end
 
                 # We're deleting the library instance, so just delete the whole pulp3 repo
                 plan_action(Actions::Pulp3::Repository::Delete, repository.id, smart_proxy)
