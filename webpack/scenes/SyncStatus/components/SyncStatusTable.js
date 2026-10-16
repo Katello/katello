@@ -282,7 +282,6 @@ const SyncStatusTable = ({
               {__('Orphaned')}
             </Label>
           )}
-          {row.organization && ` (${row.organization})`}
         </Td>
         <Td dataLabel={__('Started at')}>
           {isRepo && status?.start_time && (
