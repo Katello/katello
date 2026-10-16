@@ -10,7 +10,7 @@ import {
   TreeRowWrapper,
   ActionsColumn,
 } from '@patternfly/react-table';
-import { Checkbox } from '@patternfly/react-core';
+import { Checkbox, Label } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import SyncProgressCell from './SyncProgressCell';
 import SyncResultCell from './SyncResultCell';
@@ -277,6 +277,11 @@ const SyncStatusTable = ({
           >
             {row.name}
           </span>
+          {isProduct && row.orphaned && (
+            <Label color="orange" isCompact style={{ marginLeft: '0.5rem' }}>
+              {__('Orphaned')}
+            </Label>
+          )}
           {row.organization && ` (${row.organization})`}
         </Td>
         <Td dataLabel={__('Started at')}>

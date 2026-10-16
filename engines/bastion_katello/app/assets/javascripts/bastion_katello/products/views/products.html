@@ -103,6 +103,7 @@
         <td bst-table-cell>
           <a ui-sref="product.repositories({productId: product.id})">
             {{ product.name }}
+            <span ng-show="product.orphaned" translate>(Orphaned)</span>
           </a>
         </td>
         <td bst-table-cell>{{ product.description }}</td>

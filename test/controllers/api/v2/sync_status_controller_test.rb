@@ -37,6 +37,16 @@ module Katello
       assert_response :success
     end
 
+    def test_index_orphaned
+      Product.any_instance.stubs(:orphaned?).returns(true)
+
+      get :index, params: { :organization_id => @organization.id }
+
+      assert_response :success
+      product_node = JSON.parse(response.body)['products'].find { |p| p['id'] == @product.id }
+      assert product_node['orphaned']
+    end
+
     def test_poll
       @controller.expects(:format_sync_progress).returns({})
 
