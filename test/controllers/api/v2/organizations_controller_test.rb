@@ -70,6 +70,19 @@ module Katello
       assert_match Regexp.new("Couldn't find"), response.body
     end
 
+    def test_create_preserves_backend_exception
+      Katello::OrganizationCreator.any_instance
+        .expects(:create!)
+        .raises(StandardError, 'Simulated backend failure')
+
+      organization = { :name => 'backend_exception_repro', :label => 'backend_exception_repro' }
+      post(:create, params: { :organization => organization })
+
+      assert_response :internal_server_error
+      assert_match 'Simulated backend failure', response.body
+      refute_match 'resource have no errors', response.body
+    end
+
     def test_create_duplicate_name
       stub_organization_creator
 
