@@ -3,8 +3,6 @@ module Actions
     module Applicability
       module Host
         class Generate < Actions::EntryAction
-          # This should be run through Katello::Events::GenerateHostApplicability
-
           input_format do
             param :host_id, Integer
           end
