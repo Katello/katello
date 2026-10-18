@@ -4,6 +4,11 @@ module Katello
 
     include Api::V2::Rendering
     include ForemanTasks::Triggers
+
+    rescue_from ::Katello::Errors::CandlepinCryptoConflict do |error|
+      render_error 'standard_error', :status => :unprocessable_entity, :locals => { :exception => error }
+    end
+
     LOCAL_FIND_TAXONOMY_ACTIONS = %w(repo_discover cancel_repo_discover download_debug_certificate
                                      cdn_configuration redhat_provider update releases key_algorithms).freeze
 
