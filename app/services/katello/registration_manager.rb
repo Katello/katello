@@ -4,11 +4,19 @@ module Katello
   class RegistrationManager
     # Facts strictly required at registration time so that RhelLifecycleStatus can be
     # computed immediately. These drive OS and architecture detection in HostFactImporter.
-    # All remaining facts arrive via the subsequent PUT /rhsm/consumers/:id call (step 6).
+    # Also includes network interface facts required for assigning remote execution
+    # interface during global registration flow. All remaining facts arrive via the
+    # subsequent PUT /rhsm/consumers/:id call (step 6).
+
     REGISTRATION_CRITICAL_FACTS = %w[
       distribution.name
       distribution.version
       uname.machine
+      net.interface.*.mac_address
+      net.interface.*.permanent_mac_address
+      net.interface.*.ipv4_address
+      net.interface.*.ipv6_address.global
+      net.interface.*.ipv6_address.host
     ].freeze
 
     class << self
@@ -323,9 +331,17 @@ module Katello
       end
 
       def import_critical_registration_facts(host, facts)
-        critical = facts&.slice(*REGISTRATION_CRITICAL_FACTS)
+        critical = facts&.select do |name, _value|
+          REGISTRATION_CRITICAL_FACTS.any? do |pattern|
+            File.fnmatch?(pattern, name)
+          end
+        end
+
         return if critical.blank?
-        ::Katello::Host::SubscriptionFacet.update_facts(host, critical, additive: true)
+
+        ::Katello::Host::SubscriptionFacet.update_facts(
+          host, critical, additive: true
+        )
       end
 
       def remove_host_artifacts(host, clear_content_facet: true, preserve_for_provisioning: false)

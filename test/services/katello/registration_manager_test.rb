@@ -604,6 +604,198 @@ module Katello
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, [@content_view_environment])
         end
       end
+
+      def test_reregistration_preserves_interface_identity_and_imports_addresses # rubocop:disable Metrics/MethodLength
+        stub_interface_registration_dependencies
+        host = new_interface_registration_host
+
+        facts = interface_registration_os_facts.merge(
+          'net.interface.enp1s0.mac_address' => '02:00:00:00:00:10',
+          'net.interface.enp1s0.ipv4_address' => '192.0.2.10',
+          'net.interface.enp1s0.ipv6_address.global' => '2001:db8::10',
+
+          # The bond member reports the bond's current MAC and its own permanent MAC.
+          'net.interface.enp2s0.mac_address' => '02:00:00:00:00:20',
+          'net.interface.enp2s0.permanent_mac_address' => '02:00:00:00:00:11',
+
+          'net.interface.bond0.mac_address' => '02:00:00:00:00:20',
+          'net.interface.bond0.ipv4_address' => '198.51.100.20',
+          'net.interface.bond0.ipv6_address.global' => '2001:db8:1::20'
+        )
+
+        register_with_interface_facts(host, facts)
+
+        original_ids = host.reload.interfaces.pluck(:identifier, :id).to_h
+        assert_equal %w[bond0 enp1s0 enp2s0], original_ids.keys.sort
+
+        assert_interface_addresses(
+          host, 'enp1s0',
+          '02:00:00:00:00:10', '192.0.2.10', '2001:db8::10'
+        )
+        assert_interface_addresses(
+          host, 'enp2s0',
+          '02:00:00:00:00:11', nil, nil
+        )
+        assert_interface_addresses(
+          host, 'bond0',
+          '02:00:00:00:00:20', '198.51.100.20', '2001:db8:1::20'
+        )
+
+        # Changed addresses prove that the second registration imports fresh facts.
+        # Merely checking unchanged addresses could pass if that import were skipped.
+        updated_facts = facts.merge(
+          'net.interface.enp1s0.ipv4_address' => '192.0.2.30',
+          'net.interface.enp1s0.ipv6_address.global' => '2001:db8::30',
+          'net.interface.bond0.ipv4_address' => '198.51.100.40',
+          'net.interface.bond0.ipv6_address.global' => '2001:db8:1::40'
+        )
+
+        register_with_interface_facts(host, updated_facts)
+
+        assert_equal original_ids, host.reload.interfaces.pluck(:identifier, :id).to_h
+
+        assert_interface_addresses(
+          host, 'enp1s0',
+          '02:00:00:00:00:10', '192.0.2.30', '2001:db8::30'
+        )
+        assert_interface_addresses(
+          host, 'enp2s0',
+          '02:00:00:00:00:11', nil, nil
+        )
+        assert_interface_addresses(
+          host, 'bond0',
+          '02:00:00:00:00:20', '198.51.100.40', '2001:db8:1::40'
+        )
+      end
+
+      def test_registration_imports_dotted_interface_names_and_defers_unrelated_facts
+        stub_interface_registration_dependencies
+        host = new_interface_registration_host
+
+        critical_facts = interface_registration_os_facts.merge(
+          'net.interface.enp1s0.mac_address' => '02:00:00:00:00:10',
+          'net.interface.enp1s0.ipv4_address' => '192.0.2.10',
+
+          'net.interface.enp1s0.100.mac_address' => '02:00:00:00:00:10',
+          'net.interface.enp1s0.100.ipv4_address' => '192.0.2.100',
+          'net.interface.enp1s0.100.ipv6_address.global' => '2001:db8::100',
+
+          # This verifies selection of the host-scope fact without creating a loopback NIC.
+          'net.interface.lo.ipv6_address.host' => '::1'
+        )
+
+        deferred_facts = {
+          'network.hostname' => host.name,
+          'memory.memtotal' => '8388608',
+          'net.interface.enp1s0.100.ipv4_address_list' => '192.0.2.100',
+          'net.interface.enp1s0.100.ipv4_broadcast' => '192.0.2.255',
+          'net.interface.enp1s0.100.ipv4_netmask' => '255.255.255.0',
+          'net.interface.enp1s0.100.ipv6_address.global_list' => '2001:db8::100',
+          'net.interface.enp1s0.100.ipv6_address.link' => 'fe80::100',
+          'net.interface.enp1s0.100.ipv6_netmask.global' => '64',
+
+          # Near matches must also remain deferred.
+          'other.net.interface.enp1s0.mac_address' => '02:00:00:00:00:99',
+          'net.interface.enp1s0.100.mac_address.extra' => '02:00:00:00:00:99',
+        }
+
+        register_with_interface_facts(host, critical_facts.merge(deferred_facts))
+
+        assert_equal(
+          %w[enp1s0 enp1s0.100],
+          host.reload.interfaces.order(:identifier).pluck(:identifier)
+        )
+
+        vlan = host.interfaces.find_by!(identifier: 'enp1s0.100')
+        assert vlan.virtual?
+        assert_equal 'enp1s0', vlan.attached_to
+        assert_equal '100', vlan.tag
+
+        assert_interface_addresses(
+          host, 'enp1s0.100',
+          '02:00:00:00:00:10', '192.0.2.100', '2001:db8::100'
+        )
+
+        # RHSM fact names are stored with "::" separators, including dots within
+        # interface names. Structured parent facts may also be present.
+        stored_facts = host.rhsm_fact_values.pluck('fact_names.name', :value).to_h
+
+        critical_facts.each do |name, value|
+          stored_name = name.split('.').join('::')
+          assert_equal value, stored_facts[stored_name], "Missing or incorrect fact: #{name}"
+        end
+
+        deferred_facts.each_key do |name|
+          stored_name = name.split('.').join('::')
+          refute stored_facts.key?(stored_name), "Unexpected registration-time fact: #{name}"
+        end
+      end # rubocop:enable Metrics/MethodLength
+
+      private
+
+      def stub_interface_registration_dependencies
+        Setting[:ignore_puppet_facts_for_provisioning] = false
+        Setting[:ignored_interface_identifiers] = ['lo']
+        # Setting[:excluded_facts] = []
+        FactImporter.stubs(:excluded_facts_regex).returns(Regexp.union)
+
+        @interface_registration_uuid = SecureRandom.uuid
+
+        ::Katello::Resources::Candlepin::Consumer.stubs(:create).returns(
+          {'uuid' => @interface_registration_uuid}.with_indifferent_access
+        )
+        ::Katello::Resources::Candlepin::Consumer.stubs(:destroy)
+        ::Katello::Resources::Candlepin::Consumer.stubs(:update)
+
+        ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_hypervisor)
+        ::Katello::Host::SubscriptionFacet.any_instance.stubs(:update_guests)
+        ::Katello::Host::ContentFacet.any_instance.stubs(:calculate_and_import_applicability)
+        ::Host::Managed.any_instance.stubs(:refresh_statuses)
+
+        # Keep primary-interface selection deterministic.
+        Resolv::DNS.any_instance.stubs(:getnames).returns([])
+      end
+
+      def new_interface_registration_host
+        ::Host::Managed.new(
+          name: 'registration-interfaces.example.com',
+          organization: @org,
+          location: taxonomies(:location1),
+          managed: false,
+          build: false
+        )
+      end
+
+      def interface_registration_os_facts
+        {
+          'distribution.name' => 'Red Hat Enterprise Linux',
+          'distribution.version' => '10.0',
+          'uname.machine' => 'x86_64',
+        }
+      end
+
+      def register_with_interface_facts(host, facts)
+        consumer_params = {
+          name: host.name,
+          uuid: @interface_registration_uuid,
+          type: 'system',
+          facts: facts,
+        }.with_indifferent_access
+
+        ::Katello::RegistrationManager.register_host(
+          host, consumer_params, [@content_view_environment]
+        )
+      end
+
+      def assert_interface_addresses(host, identifier, mac, ipv4, ipv6)
+        interface = host.reload.interfaces.find_by!(identifier: identifier)
+
+        assert_equal(
+          [mac, ipv4, ipv6],
+          [interface.mac, interface.ip, interface.ip6],
+          "Unexpected addresses for #{identifier}"
+        )
+      end
     end # rubocop:enable Metrics/ClassLength
 
     class CheckRegistrationServicesTest < ActiveSupport::TestCase
