@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0",
+        "Project-Id-Version": "katello 5.0.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026",
+        "Last-Translator": "Ondřej Gajdušek, 2026",
         "Language-Team": "Korean (https://app.transifex.com/foreman/teams/114/ko/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -1269,7 +1269,7 @@
         "비합성 콘텐츠 뷰에 자동 게시를 설정할 수 없습니다."
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        ""
+        "yum/deb가 아닌 저장소에서는 메타데이터 확인을 건너뛸 수 없습니다."
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "온디멘드 다운로드 정책을 사용하여 file:// 리포지토리를 동기화할 수 없습니다."
@@ -3204,7 +3204,7 @@
         "필요에 따라 원하는 리포지토리에 대한 RHUI 인증서를 생성합니다."
       ],
       "Generate and Download": [
-        ""
+        "생성 및 다운로드 "
       ],
       "Generate containerfile install command (%s package selected)": [
         "Containerfile 설치 명령 생성 실패 (%s 패키지 선택됨)"
@@ -7374,7 +7374,7 @@
         "${lowerCase(pluralLabel)}! ${getResponseErrorMsgs(error.response)}를 가져오는 동안 오류가 발생했습니다."
       ],
       "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "파일을 가져오는 동안 오류가 발생했습니다! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
         "rpm 패키지를 가져오는 동안 오류가 발생했습니다! ${getResponseErrorMsgs(error.response)}"
@@ -7458,7 +7458,7 @@
         "오류를 검색하는 동안 오류가 발생했습니다! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "파일을 검색하는 동안 오류가 발생했습니다! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
         "호스트를 검색하는 동안 오류가 발생했습니다! ${getResponseErrorMsgs(error.response)}"
@@ -9471,7 +9471,7 @@
         "디스크"
       ],
       "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
-        ""
+        "deb, docker, file 및 yum 리포지토리('immediate' 또는 'on_demand')에 대한 다운로드 정책"
       ],
       "edit the content source": [
         "콘텐츠 소스 편집"

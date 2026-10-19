@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0",
+        "Project-Id-Version": "katello 5.0.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2026",
@@ -1271,7 +1271,7 @@
         ""
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        ""
+        "არა-yum/deb რეპოზიორიების მეტამონაცემების შემოწმების გამოტოვება შეუძლებელია."
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         ""
@@ -3206,7 +3206,7 @@
         ""
       ],
       "Generate and Download": [
-        ""
+        "გენერაცია და გადმოწერა"
       ],
       "Generate containerfile install command (%s package selected)": [
         "",

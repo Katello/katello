@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0",
+        "Project-Id-Version": "katello 5.0.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2026",
+        "Last-Translator": "Ondřej Gajdušek, 2026",
         "Language-Team": "French (https://app.transifex.com/foreman/teams/114/fr/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -587,7 +587,7 @@
         "Autoriser les nouveaux enregistrements d'hôtes à assumer des profils enregistrés avec un nom d'hôte correspondant tant que l'UUID du DMI d'enregistrement n'est pas utilisé par un autre hôte."
       ],
       "Also include the latest upgradable package version for each host package": [
-        "Inclure également la dernière version de package de mise à jour pour chaque package d’hôte"
+        "Inclure également la dernière version de paquet de mise à jour pour chaque paquet d’hôte."
       ],
       "Alter a host's host collections": [
         "Modifier les collections d'hôtes d'un hôte"
@@ -1273,7 +1273,7 @@
         "Impossible de régler la publication automatique sur une vue de contenu non composite"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        ""
+        "Impossible d'ignorer la vérification des métadonnées sur les référentiels d'archives non-yum/deb."
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "Impossible de synchroniser les référentiels file:// avec les politiques de téléchargement à la demande"
@@ -1831,7 +1831,7 @@
         "Copier une clé d'activation|"
       ],
       "Copy content": [
-        "Copier l’affichage de contenu"
+        "Copier le contenu"
       ],
       "Copy content view": [
         "Copier l’affichage de contenu"
@@ -1846,7 +1846,7 @@
         "Copier dans le presse-papiers"
       ],
       "Copy version": [
-        "Version de copie"
+        "Copier la version"
       ],
       "Copy version units to library": [
         "Copier les unités de version dans la bibliothèque"
@@ -2389,7 +2389,7 @@
         "Supprimer les versions orphelines du référentiel"
       ],
       "Delete remote": [
-        "Créer un item à distance"
+        "Supprimer l'item à distance"
       ],
       "Delete repository references": [
         "Supprimer les références du référentiel"
@@ -3169,7 +3169,7 @@
         "Forcer promotion"
       ],
       "Force regenerate applicability.": [
-        "Regénérer forcée de l'applicabilité."
+        "Regénération forcée de l'applicabilité."
       ],
       "Force sync even if no upstream changes are detected. Non-yum repositories are skipped.": [
         ""
@@ -3208,7 +3208,7 @@
         "Générez les certificats RHUI pour les référentiels souhaités, si nécessaire."
       ],
       "Generate and Download": [
-        ""
+        "Générer et télécharger"
       ],
       "Generate containerfile install command (%s package selected)": [
         "Génération de la commande d'installation du fichier conteneur (%s paquet sélectionné)",
@@ -3417,7 +3417,7 @@
         "Cet hôte n'est pas enregistré dans le subscription-manager"
       ],
       "Host has not been registered with subscription-manager.": [
-        "Cet hôte n'est pas enregistré dans le subscription-manager."
+        "Cet hôte n'est pas enregistré dans subscription-manager."
       ],
       "Host id to list applicable deb packages for": [
         "Identifiant de l'hôte pour lister les paquets applicables"
@@ -3558,7 +3558,7 @@
         "Id d'un flux de modules pour trouver les référentiels contenant ce flux de modules."
       ],
       "Id of a rpm package to find repositories that contain the rpm": [
-        "Id d'un package rpm pour trouver les référentiels qui contiennent le rpm"
+        "Id d'un paquet rpm pour trouver les référentiels qui contiennent le rpm"
       ],
       "Id of an ansible collection to find repositories that contain the ansible collection": [
         "Id d'une collection ansible pour trouver les référentiels qui contiennent la collection ansible"
@@ -3894,7 +3894,7 @@
         "La mise à jour incrémentale n'ajoutera aucun nouveau contenu. Le contenu spécifié est déjà présent."
       ],
       "Index content": [
-        "Contenu d'index"
+        "Indexer le contenu"
       ],
       "Index errata": [
         "Errata d'index"
@@ -5903,7 +5903,7 @@
         "Un pool avec l’identification %s n'a pas de droit d’accès en amont"
       ],
       "Provisioning template IDs": [
-        "IDs des modèles de provisionnement"
+        "IDs des modèles d'attribution"
       ],
       "Proxies": [
         "Proxies"
@@ -6110,7 +6110,7 @@
         "Red Hat CDN"
       ],
       "Red Hat CDN URL": [
-        "URL du CDN (« Content Distribution Network », réseau de distribution de contenu) de Red Hat"
+        "Red Hat CDN URL"
       ],
       "Red Hat Repositories": [
         "Référentiels Red Hat"
@@ -6362,7 +6362,7 @@
         "Supprimer les produits du plan de sync"
       ],
       "Remove rolling repo clone": [
-        "Ajouter un clone de référentiel continu"
+        "Supprimer un clone de référentiel continu"
       ],
       "Remove units": [
         "Supprimer les unités"
@@ -6836,7 +6836,7 @@
         "Numériser une télécommande Flatpak"
       ],
       "Scan cdn": [
-        "Scan cdn"
+        "Analyser le CDN"
       ],
       "Scan remote": [
         "Scanner item à distance"
@@ -7354,7 +7354,7 @@
         "Une erreur s'est produite lors de l'ajout de règles de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while creating the filter! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de la création du filtre !{getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la création du filtre !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while deleting alternate content sources: ${getResponseErrorMsgs(error.response)}": [
         "Un problème est survenu lors de la suppression des sources de contenu alternatives : ${getResponseErrorMsgs(error.response)}"
@@ -7384,10 +7384,10 @@
         "Une erreur s'est produite lors de la récupération de ${lowerCase(pluralLabel)} ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "Une erreur s'est produite lors de la récupération des fichiers !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de la récupération des paquets rpm !{getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la récupération des paquets rpm !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting container manifest lists! ${getResponseErrorMsgs(error.response)}": [
         "Une erreur s'est produite lors de l'obtention des listes de manifestes de conteneurs ! ${getResponseErrorMsgs(error.response)}"
@@ -7402,7 +7402,7 @@
         "Une erreur s'est produite lors de l'obtention de l'errata ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting module streams! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de l'obtention des flux de modules !{getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de l'obtention des flux de modules !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting repositories! ${getResponseErrorMsgs(error.response)}": [
         "Une erreur s'est produite lors de l'obtention des référentiels !${getResponseErrorMsgs(error.response)}"
@@ -7429,7 +7429,7 @@
         "Une erreur s'est produite lors de la suppression d'une règle de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while removing component! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de la suppression du composant !{getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la suppression du composant !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving package groups! ${getResponseErrorMsgs(error.response)}": [
         "Une erreur s'est produite lors de la récupération des groupes de packages ! ${getResponseErrorMsgs(error.response)}"
@@ -7468,7 +7468,7 @@
         "Un problème est survenu lors de la récupération de l'errata ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "Un problème est survenu lors de la récupération des fichiers ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
         "Un problème est survenu lors de la récupération des fichiers ! ${getResponseErrorMsgs(error.response)}"
@@ -9483,7 +9483,7 @@
         "disque"
       ],
       "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
-        ""
+        "politique de téléchargement pour les référentiels deb, docker, file et yum (soit « immédiat » ou « à la demande »)"
       ],
       "edit the content source": [
         "modifier le contenu source"

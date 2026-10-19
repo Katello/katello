@@ -5,7 +5,7 @@
       "": {
         "Project-Id-Version": "katello 1.0.0",
         "Report-Msgid-Bugs-To": "",
-        "PO-Revision-Date": "2026-10-02 19:36+0000",
+        "PO-Revision-Date": "2026-10-19 16:00+0000",
         "Last-Translator": "FULL NAME <EMAIL@ADDRESS>",
         "Language-Team": "LANGUAGE <LL@li.org>",
         "Language": "",
