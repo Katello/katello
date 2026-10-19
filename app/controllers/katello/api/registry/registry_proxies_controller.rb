@@ -665,7 +665,8 @@ module Katello
     end
 
     def check_blob
-      pulp_response = Resources::Registry::Proxy.get(@_request.fullpath, 'Accept' => request.headers['Accept'])
+      # Clients probe blobs without an Accept header; forward */* rather than an empty one, which Pulp rejects with 406.
+      pulp_response = Resources::Registry::Proxy.get(@_request.fullpath, 'Accept' => request.headers['Accept'].presence || '*/*')
       response.headers['Content-Type'] = pulp_response.headers[:content_type] if pulp_response.headers[:content_type]
       response.headers['Content-Length'] = pulp_response.headers[:content_length] if pulp_response.headers[:content_length]
       head pulp_response.code
