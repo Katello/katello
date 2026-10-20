@@ -5,14 +5,11 @@
   "scripts": {
     "storybook": "cross-env NODE_ENV=storybook start-storybook -p 6007",
     "storybook:deploy": "cross-env NODE_ENV=storybook storybook-to-ghpages",
-    "test": "tfm-test --plugin --config jest.config.js",
-    "test:watch": "tfm-test --plugin --config jest.config.js --watchAll",
-    "test:current": "tfm-test --plugin --config jest.config.js --watch",
     "format": "prettier --single-quote --trailing-comma es5 --write 'webpack/**/*.js'",
     "build": "npm run format && npm run lint",
     "lint": "npx eslint --rulesdir webpack/eslint-rules webpack/",
     "lint:fix": "npx eslint --rulesdir webpack/eslint-rules --fix webpack/",
-    "lint:test": "npm run lint && npm test",
+    "lint:test": "npm run lint",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
@@ -23,16 +20,13 @@
     "url": "https://projects.theforeman.org/projects/katello/issues"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.0",
     "@babel/eslint-parser": "^7.15.0",
     "@babel/eslint-plugin": "^7.14.5",
     "@sheerun/mutationobserver-shim": "^0.3.3",
     "@testing-library/jest-dom": "^5.3.0",
     "@testing-library/react": "^10.0.2",
     "@testing-library/user-event": "^13.5.0",
-    "@theforeman/builder": ">= 6.0.0",
-    "@theforeman/eslint-plugin-rules": "^12.2.0",
-    "@theforeman/find-foreman": "^4.8.0",
-    "@theforeman/test": ">= 15.0.1",
     "axios-mock-adapter": "^1.10.0",
     "eslint": "^6.2.2",
     "eslint-config-airbnb": "^16.0.0",
