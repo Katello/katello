@@ -51,6 +51,20 @@ module Katello
       assert_equal({status: 'FAIL', message: 'Candlepin is not running properly'}, Katello::Ping.ping_candlepin_without_auth({}))
     end
 
+    def test_backend_status_passes_force_direct
+      ::Cert::Certs.stubs(:backend_ca_cert_file).returns(nil)
+      mock_response = stub(empty?: false)
+      mock_response.stubs(:to_s).returns('{"mode":"NORMAL"}')
+      JSON.stubs(:parse).returns({'mode' => 'NORMAL'})
+
+      RestClient::Resource.expects(:new).with(
+        'http://localhost/status/',
+        has_entry(:force_direct, true)
+      ).returns(stub(get: mock_response))
+
+      Katello::Ping.send(:backend_status, 'http://localhost', :candlepin)
+    end
+
     def test_ping_katello_events
       Katello::EventDaemon::Runner
         .expects(:service_status).with(:katello_events)
