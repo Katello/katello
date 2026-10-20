@@ -1,4 +1,3 @@
-/* eslint-disable @theforeman/rules/require-ouiaid */
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';

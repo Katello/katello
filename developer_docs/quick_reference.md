@@ -45,11 +45,10 @@ cd $GITDIR/katello
 foreman-test /path/to/test_file.rb                      # (containerized only) Specific file
 foreman-test /path/to/test_file.rb -n test_method_name  # (containerized only) Specific method
 
-# JavaScript testing:
-cd $GITDIR/katello
-npm test                                                # All JS tests
-npx jest webpack/path/to/file.test.js                   # Individual test file
-npm run test:watch                                      # Watch mode
+# JavaScript testing (from Foreman root):
+cd $GITDIR/foreman
+npm run test:plugins katello                            # All Katello JS tests
+npm run test:plugins katello -- webpack/path/to/file.test.js  # Individual test file
 ```
 
 **Code Quality:**
