@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0",
+        "Project-Id-Version": "katello 5.0.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026",
+        "Last-Translator": "Ondřej Gajdušek, 2026",
         "Language-Team": "Japanese (https://app.transifex.com/foreman/teams/114/ja/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -963,7 +963,7 @@
         "割り当てにエンタイトルメントをバインドします"
       ],
       "Bookmark this search": [
-        "この検索をブックマーク"
+        "この検索をブックマークする"
       ],
       "Bookmarks marked as public are available to all users": [
         "パブリックと識別されたブックマークは、すべてのユーザーが利用できます"
@@ -1269,7 +1269,7 @@
         "複合コンテンツビュー以外には自動公開を設定できません"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        ""
+        "yum/deb 以外のリポジトリーではメタデータチェックをスキップできません。"
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "file:// リポジトリーをオンデマンドダウンロードポリシーと同期できません"
@@ -1842,10 +1842,10 @@
         "クリップボードにコピー"
       ],
       "Copy version": [
-        "コピーバージョン"
+        "バージョンをコピーする"
       ],
       "Copy version units to library": [
-        "バージョンユニットのライブラリーへのコピー"
+        "バージョンユニットをライブラリーへコピーする"
       ],
       "Cores per socket": [
         "1 ソケットあたりのコア数"
@@ -2469,7 +2469,7 @@
         "コンテンツ認証情報の破棄"
       ],
       "Destroy a custom repository": [
-        "カスタムリポジトリーを破棄します"
+        "カスタムリポジトリーの破棄"
       ],
       "Destroy a host collection": [
         "ホストコレクションの破棄"
@@ -3204,7 +3204,7 @@
         "必要に応じて、必要なリポジトリーの RHUI 証明書を生成します。"
       ],
       "Generate and Download": [
-        ""
+        "生成してダウンロード"
       ],
       "Generate containerfile install command (%s package selected)": [
         "containerfile install コマンドを生成します (%s 個のパッケージを選択済み)"
@@ -3240,7 +3240,7 @@
         "現在の Smart Proxy の同期ステータスを取得します"
       ],
       "Get info about a repository set": [
-        "リポジトリーセットの情報を取得します"
+        "リポジトリーセットの情報取得"
       ],
       "Get list of available repositories for the repository set": [
         "リポジトリーセットの利用可能なリポジトリーの一覧を取得します"
@@ -3498,7 +3498,7 @@
         "組織の ID"
       ],
       "ID of an organization to show repositories in": [
-        "リポジトリーを表示させる組織 ID"
+        "リポジトリーを表示させる組織の ID"
       ],
       "ID of flatpak remote to show repositories of": [
         "リポジトリーを表示する flatpak リモートの ID"
@@ -4581,7 +4581,7 @@
         "アクションを実行するバージョンの一覧"
       ],
       "List organization subscriptions": [
-        "組織サブスクリプションを一覧表示します"
+        "組織サブスクリプションの一覧表示"
       ],
       "List packages": [
         "パッケージを一覧表示します"
@@ -5175,7 +5175,7 @@
         "マッチする項目が "
       ],
       "No matching ${name} found.": [
-        "マッチする {name} が見つかりませんでした。"
+        "マッチする ${name} が見つかりませんでした。"
       ],
       "No matching ${selectedContentType} found": [
         "マッチする ${selectedContentType} が見つかりませんでした"
@@ -7374,7 +7374,7 @@
         "${lowerCase(pluralLabel)} の取得中に問題が発生しました! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "ファイルの取得中に問題が発生しました! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
         "rpm パッケージの取得中に問題が発生しました! ${getResponseErrorMsgs(error.response)}"
@@ -7458,7 +7458,7 @@
         "エラータの取得中に問題が発生しました! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "ファイルの取得中に問題が発生しました! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
         "ホストの取得中に問題が発生しました! ${getResponseErrorMsgs(error.response)}"
@@ -8619,7 +8619,7 @@
         "Smart Proxy のコンテンツ数を更新します"
       ],
       "Update content urls": [
-        "コンテンツ url の更新"
+        "コンテンツ url を更新する"
       ],
       "Update content view environments for host": [
         "ホストのコンテンツビュー環境の更新"
@@ -8634,10 +8634,10 @@
         "ホストの手動更新"
       ],
       "Update http proxy": [
-        "http プロキシーの更新"
+        "http プロキシーを更新する"
       ],
       "Update http proxy details": [
-        "HTTP プロキシーの詳細更新"
+        "HTTP プロキシーの詳細を更新する"
       ],
       "Update installed packages, enabled repos, module inventory": [
         "インストール済みパッケージ、有効なリポジトリー、モジュールインベントリーの更新"
@@ -8655,7 +8655,7 @@
         "Katello インターフェイスでのパッケージの更新"
       ],
       "Update redhat repository": [
-        "redhat リポジトリーの更新"
+        "redhat リポジトリーを更新する"
       ],
       "Update release version for host": [
         "ホストのリリースバージョンの更新"
@@ -8847,7 +8847,7 @@
         "HTTP プロキシーの使用"
       ],
       "Use container certificates for container registry authentication. If it is set to true, container registry certificates will be installed on the host": [
-        "コンテナーレジストリーの認証にコンテナー証明書を使用します。true に設定すると、コンテナーレジストリー証明書がホストにインストールされます"
+        "コンテナーレジストリー認証にコンテナー証明書を使用します。true に設定すると、コンテナーレジストリー証明書がホストにインストールされます"
       ],
       "Used as": [
         "以下として使用: "
@@ -8907,7 +8907,7 @@
         "SSL の確認"
       ],
       "Verify checksum": [
-        "チェックサムの確認"
+        "チェックサムを確認する"
       ],
       "Verify checksum for content on smart proxy": [
         "Smart Proxy 上のコンテンツのチェックサムを確認する"
@@ -9060,7 +9060,7 @@
         "subscription-manager でホストを登録すると、指定のファクトを強制的に使用します ('fact.fact' の形式)"
       ],
       "When set to 'True' repository types that are creatable will be returned": [
-        "'True' に設定すると、作成可能なリポジトリータイプが返されます"
+        "「True」に設定すると、作成可能なリポジトリータイプが返されます"
       ],
       "When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host such as virtual machines and DNS records may also be deleted.": [
         "subscription-manager でホストの登録を解除すると、ホストの記録も削除されます。仮想マシンや DNS レコードなど、ホストに関連付けられている管理対象のリソースも削除される可能性があります。"
@@ -9471,7 +9471,7 @@
         "ディスク"
       ],
       "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
-        ""
+        "deb、docker、ファイル、yum リポジトリーのダウンロードポリシー ('即時' または 'オンデマンド')"
       ],
       "edit the content source": [
         "コンテンツソースを編集する"
@@ -9558,7 +9558,7 @@
         "リポジトリーの場合には、'%{name}' は一意ではなく、'%{env}' で作成できません。コンテナーリポジトリー名 ({%{container_name}) が既存のリポジトリーと競合します。ライフサイクル環境のレジストリー名パターンをより具体的なパターンに変更することを検討してください。"
       ],
       "force content view promotion and bypass lifecycle environment restriction": [
-        "コンテンツビューを強制的にプロモートしてライフサイクル環境の制限を無視する"
+        "コンテンツビューを強制的にプロモートしてライフサイクル環境の制限を無視します"
       ],
       "foreman-tasks service not running or is not ready yet": [
         "foreman-tasks サービスが実行されていないか、まだ準備が整っていません"

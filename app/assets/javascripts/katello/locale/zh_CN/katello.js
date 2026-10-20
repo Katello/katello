@@ -3,10 +3,10 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0",
+        "Project-Id-Version": "katello 5.0.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Bryan Kearney <bryan.kearney@gmail.com>, 2026",
+        "Last-Translator": "Ondřej Gajdušek, 2026",
         "Language-Team": "Chinese (China) (https://app.transifex.com/foreman/teams/114/zh_CN/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -1269,7 +1269,7 @@
         "无法将自动发布设置为非复合内容视图"
       ],
       "Cannot skip metadata check on non-yum/deb repositories.": [
-        ""
+        "无法在非 yum/deb 仓库上跳过元数据检查。"
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "无法同步带有按需下载策略的 file:// 仓库"
@@ -1701,7 +1701,7 @@
         "内容视图"
       ],
       "Content view ${name} created": [
-        "内容视图 {name} 已创建"
+        "内容视图 ${name} 已创建"
       ],
       "Content view '%{content_view}' is not attached to the environment.": [
         "内容视图 '%{content_view}' 没有附加到环境。"
@@ -2517,7 +2517,7 @@
         "%s 详情"
       ],
       "Determining settings for ${truncate(name)}": [
-        "确定 {truncate(name)} 的设置"
+        "确定 ${truncate(name)} 的设置"
       ],
       "Digest": [
         "文摘值"
@@ -3204,7 +3204,7 @@
         "根据需要为所需的仓库生成 RHUI 证书。"
       ],
       "Generate and Download": [
-        ""
+        "生成并下载"
       ],
       "Generate containerfile install command (%s package selected)": [
         "生成 containerfile 安装命令 (选择了 %s 软件包)"
@@ -5178,7 +5178,7 @@
         "没有找到匹配的 ${name}。"
       ],
       "No matching ${selectedContentType} found": [
-        "没有找到匹配的 {selectedContentType}"
+        "没有找到匹配的 ${selectedContentType}"
       ],
       "No matching DEB found.": [
         "未找到匹配的 DEB。"
@@ -5676,7 +5676,7 @@
         "权限被拒绝。用户 '%{user}' 没有访问机构 '%{org}' 的权限。"
       ],
       "Persistence": [
-        "持久"
+        "持久化"
       ],
       "Persistence must be one of: %s": [
         "持久性必须是以下之一：%s"
@@ -6987,7 +6987,7 @@
         "为 ${akDetails.name} 选择属性"
       ],
       "Select available version of ${truncate(cvName)} to use": [
-        "选择一个可用的 {truncate(cvName)} 版本来使用"
+        "选择一个可用的 ${truncate(cvName)} 版本来使用"
       ],
       "Select available version of content views to use": [
         "选择要使用的内容视图的可用版本"
@@ -7374,7 +7374,7 @@
         "获取 ${lowerCase(pluralLabel)} 时出错! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "获取文件时出错！${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
         "获取 rpm 软件包时发生错误！${getResponseErrorMsgs(error.response)}"
@@ -7458,7 +7458,7 @@
         "获取勘误时出错！${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the files! ${getResponseErrorMsgs(error.response)}": [
-        ""
+        "获取文件时出错！${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}": [
         "获取主机时出错！${getResponseErrorMsgs(error.response)}"
@@ -9471,7 +9471,7 @@
         "磁盘"
       ],
       "download policy for deb, docker, file and yum repos (either 'immediate' or 'on_demand')": [
-        ""
+        "下载对 deb、docker、file 和 yum 仓库（ 'immediate' 或 'on_demand'）的下载策略"
       ],
       "edit the content source": [
         "编辑内容源"

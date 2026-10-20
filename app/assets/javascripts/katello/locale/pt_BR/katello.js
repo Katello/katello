@@ -3,7 +3,7 @@
   "locale_data": {
     "katello": {
       "": {
-        "Project-Id-Version": "katello 5.0.0",
+        "Project-Id-Version": "katello 5.0.1",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
         "Last-Translator": "Amit Upadhye <aupadhye@redhat.com>, 2026",
@@ -3208,7 +3208,7 @@
         ""
       ],
       "Generate and Download": [
-        ""
+        "Gerar e Baixar"
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
