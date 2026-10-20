@@ -54,10 +54,10 @@
         " Le chemin de base doit être une adresse web pointant vers le répertoire racine du contenu de RHUI."
       ],
       " View task details ": [
-        " Détails de la tâche "
+        " Afficher les détails de la tâche "
       ],
       " ago": [
-        " Il y a"
+        " il y a"
       ],
       " ago.": [
         "Il y a "
@@ -247,12 +247,6 @@
       "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
         "Liste de balises séparées par des virgules à exclure lors d'une synchronisation ostree. Les caractères génériques *, ? sont reconnus. 'exclude_refs' est évalué après 'include_refs'."
       ],
-      "A content view environment is a combination of a particular lifecycle environment and content view.": [
-        "Un environnement d'affichage de contenu est une combinaison d'un environnement de cycle de vie particulier et d'un affichage de contenu."
-      ],
-      "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host.": [
-        "Un environnement d'affichage de contenu est une combinaison d'un environnement de cycle de vie particulier et d'un affichage de contenu. Sélectionnez un environnement d'affichage de contenu à attribuer à cet hôte."
-      ],
       "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content.": [
         "Un environnement d'affichage de contenu est une combinaison d'un environnement de cycle de vie particulier et d'un affichage de contenu. Sélectionnez les environnements d'affichage de contenu à attribuer à cet hôte. Vous pouvez attribuer plusieurs environnements d'affichage de contenu afin de donner accès à différents ensembles de contenu."
       ],
@@ -261,9 +255,6 @@
       ],
       "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.": [
         "Un environnement d'affichage de contenu est une combinaison d'un environnement de cycle de vie particulier et d'un affichage de contenu. Vous pouvez attribuer plusieurs environnements d'affichage de contenu afin de donner accès à différents ensembles de contenu."
-      ],
-      "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}.": [
-        "Un environnement d'affichage de contenu est une combinaison d'un environnement de cycle de vie particulier et d'un affichage de contenu. Votre sélection ici va {replace} tous les environnements d’affichage de contenu existants sur {hosts}."
       ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
         "Un grand nombre d'errata n'est pas appliqué dans cet affichage de contenu. Seuls les 100 premiers sont affichés."
@@ -354,9 +345,6 @@
       ],
       "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.": [
         "Clé d'activation%s possède plusieurs environnements de cycle de vie. Utilisez plutôt #lifecycle_environments."
-      ],
-      "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
-        "Clé d'activation '%s ' est associé à plusieurs environnements et l'enregistrement dans plusieurs environnements n'est pas activé."
       ],
       "Activation key content view environments updated": [
         "Environnements d'affichage du contenu de clé d’activation mis à jour."
@@ -473,7 +461,7 @@
         "Ajouter des référentiels avec des groupes de paquets à l’affichage de contenu pour les sélectionner ici."
       ],
       "Add rolling repo clone": [
-        ""
+        "Ajouter un clone de référentiel continu"
       ],
       "Add rule": [
         "Ajouter une règle"
@@ -574,26 +562,20 @@
       "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.": [
         "Permettre aux enregistrements d'hôtes de contourner la \\\"Profile d’hôte Assume'\\\" tant que l'hôte est en mode build."
       ],
-      "Allow hosts or activation keys to be associated with multiple content view environments": [
-        "Autoriser l'association d'hôtes ou de clés d'activation à plusieurs environnements d'affichage de contenu"
-      ],
       "Allow hosts to re-register themselves only when they are in build mode": [
         "Autoriser les hôtes à se réenregistrer uniquement lorsqu'ils sont en mode \\\"build\\\""
-      ],
-      "Allow multiple content views": [
-        "Permettre l'affichage de plusieurs contenus"
       ],
       "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host.": [
         "Autoriser les nouveaux enregistrements d'hôtes à assumer des profils enregistrés avec un nom d'hôte correspondant tant que l'UUID du DMI d'enregistrement n'est pas utilisé par un autre hôte."
       ],
       "Allow this smart proxy to authenticate to the container registry using its SSL client certificate": [
-        ""
+        "Autorisez ce proxy intelligent à s'authentifier auprès du registre de conteneurs à l'aide de son certificat client SSL."
       ],
       "Allow this smart proxy to pull and push container images using its SSL client certificate.": [
-        ""
+        "Autorisez ce proxy intelligent à télécharger et à envoyer des images de conteneurs en utilisant son certificat client SSL."
       ],
       "Also include the latest upgradable package version for each host package": [
-        "Inclure également la dernière version de package de mise à jour pour chaque package d’hôte"
+        "Inclure également la dernière version de paquet de mise à jour pour chaque paquet d’hôte."
       ],
       "Alter a host's host collections": [
         "Modifier les collections d'hôtes d'un hôte"
@@ -769,17 +751,17 @@
       "Array of content view environment IDs": [
         "Tableau d'identifiants d'environnement de visualisation de contenu"
       ],
-      "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
-        "Tableau d'identifiants d'environnement d'affichage de contenu à associer à l'hôte. Nécessite que le paramètre allow_multiple_content_views soit activé."
+      "Array of content view environment IDs to be associated with the hosts.": [
+        ""
       ],
-      "Array of content view environment ids associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
-        "Tableau des identifiants d'environnement d'affichage de contenu associés à la clé d'activation. Nécessite que le paramètre allow_multiple_content_views soit activé."
+      "Array of content view environment ids associated with the activation key.": [
+        ""
       ],
-      "Array of content view environment ids to be associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
-        "Tableau d'identifiants d'environnements d'affichage de contenu à associer à la clé d'activation. Nécessite que le paramètre allow_multiple_content_views soit activé."
+      "Array of content view environment ids to be associated with the activation key.": [
+        ""
       ],
-      "Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on.": [
-        "Tableau d'identifiants d'environnements de visualisation de contenu à associer à l'hôte. Nécessite que le paramètre allow_multiple_content_views soit activé."
+      "Array of content view environment ids to be associated with the host.": [
+        ""
       ],
       "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         "Tableau d'étiquettes d'environnement de visualisation de contenu au format « étiquette_environnement_cycle_de_vie/étiquette_visualisation_contenu ». Ignoré si content_view_environment_ids est spécifié."
@@ -808,9 +790,6 @@
       "Assign another content view environment": [
         "Assigner un autre environnement d'affichage de contenu"
       ],
-      "Assign content view environment": [
-        "Assigner l’environnement d’affichage de contenu"
-      ],
       "Assign content view environments": [
         "Assigner des environnement d’affichage de contenu"
       ],
@@ -830,12 +809,6 @@
       ],
       "Assign the release version to one or more hosts": [
         "Attribuer la version de diffusion à un ou plusieurs hôtes"
-      ],
-      "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        "L'affectation d'un hôte à plusieurs environnements d'affichage de contenu n'est pas activée. Pour l'activer, définissez le paramètre allow_multiple_content_views."
-      ],
-      "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        "L'attribution d'une clé d'activation à plusieurs environnements d'affichage de contenu n'est pas activée. Pour l'activer, définissez le paramètre allow_multiple_content_views."
       ],
       "Associated content view environments": [
         "Environnements d’affichage de contenu associés"
@@ -1108,7 +1081,7 @@
         "La réponse d'enregistrement du consommateur Candlepin ne contient pas d'UUID."
       ],
       "Candlepin could not generate a certificate with the requested cryptographic capabilities.": [
-        ""
+        "Candlepin n'a pas pu générer de certificat possédant les capacités cryptographiques requises."
       ],
       "Candlepin is not running properly": [
         "Candlepin ne fonctionne pas correctement"
@@ -1282,7 +1255,7 @@
         "Impossible de régler la publication automatique sur une vue de contenu non composite"
       ],
       "Cannot skip metadata check on non-yum/deb/file repositories.": [
-        ""
+        "Impossible d'ignorer la vérification des métadonnées sur les référentiels autres que yum/deb/file."
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "Impossible de synchroniser les référentiels file:// avec les politiques de téléchargement à la demande"
@@ -1372,7 +1345,7 @@
         "Nettoyer les Objects Backend"
       ],
       "Clear": [
-        ""
+        "Effacer"
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "Effacez tout enregistrement précédent et exécutez subscription-manager avec --force."
@@ -1411,19 +1384,19 @@
         "Réduire tout"
       ],
       "Collapse group": [
+        "Groupe d'effondrement"
+      ],
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
-      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
-        "Liste, séparée par des virgules, des étiquettes d'environnement d'affichage de contenu associées à la clé d'activation, au format « étiquette_environnement_cycle_de_vie/étiquette_affichage_contenu ». Ignorée si content_view_environment_ids est spécifié. Nécessite que le paramètre allow_multiple_content_views soit activé."
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
+        ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
-        "Liste, séparée par des virgules, des libellés d'environnement d'affichage de contenu à associer à la clé d'activation, au format « libellé_environnement_cycle_de_vie/libellé_affichage_contenu ». Ignorée si content_view_environment_ids est spécifié. Nécessite que le paramètre allow_multiple_content_views soit activé."
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
+        ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
-        "Liste, séparée par des virgules, des étiquettes d'environnement d'affichage de contenu à associer à l'hôte, au format « étiquette_environnement_cycle_de_vie/étiquette_affichage_contenu ». Ignorée si content_view_environment_ids est spécifié. Nécessite que le paramètre allow_multiple_content_views soit activé."
-      ],
-      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
-        "Liste séparée par des virgules des libellés d'environnement d'affichage de contenu à associer aux hôtes, au format « lifecycle_environment_label/content_view_label ». Ignoré si content_view_environment_ids est spécifié. Nécessite que le paramètre allow_multiple_content_views soit activé."
+      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
+        ""
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
         "Liste de sous-chemins séparés par des virgules. Tous les sous-chemins doivent avoir une barre oblique à la fin et aucune au début."
@@ -1438,7 +1411,7 @@
         "La commande contient %(packageCount)s parmi %(selectedCount)s sélectionnés %(selectedWord)s"
       ],
       "Commit upload": [
-        ""
+        "Téléchargement du commit"
       ],
       "Compare": [
         "Comparez"
@@ -1477,7 +1450,7 @@
         "Configuration mise à jour sur Foreman"
       ],
       "Confirm": [
-        ""
+        "Confirmer"
       ],
       "Confirm Deletion": [
         "Confirmer la suppression"
@@ -1507,7 +1480,7 @@
         "Images de conteneurs"
       ],
       "Container Registry Authentication": [
-        ""
+        "Authentification du registre de conteneurs"
       ],
       "Container image tag": [
         "Balise d'image de conteneur"
@@ -1603,7 +1576,7 @@
         "Filtre d'affichage de contenu Identifiant. Utilisez ce filtre pour filtrer par ID"
       ],
       "Content View ID": [
-        "ID de la vue de contenu"
+        "ID d’affichage de contenu"
       ],
       "Content View Name": [
         "Nom de la vue de contenu"
@@ -1750,7 +1723,7 @@
         "ID d'environnement de visualisation du contenu"
       ],
       "Content view environment identifier": [
-        ""
+        "identificateur d'environnement de visualisation du contenu"
       ],
       "Content view environments": [
         "Environnements d'affichage de contenu"
@@ -1837,13 +1810,13 @@
         "Copie"
       ],
       "Copy all units": [
-        ""
+        "Copier toutes les unités"
       ],
       "Copy an activation key": [
         "Copier une clé d'activation|"
       ],
       "Copy content": [
-        ""
+        "Copier le contenu"
       ],
       "Copy content view": [
         "Copier l’affichage de contenu"
@@ -1858,7 +1831,7 @@
         "Copier dans le presse-papiers"
       ],
       "Copy version": [
-        ""
+        "Copier la version"
       ],
       "Copy version units to library": [
         "Copier les unités de version dans la bibliothèque"
@@ -2086,7 +2059,7 @@
         "Créer Affichage du contenu"
       ],
       "Create exporter": [
-        ""
+        "Créer un exportateur"
       ],
       "Create filter": [
         "Créer un filtre"
@@ -2095,10 +2068,10 @@
         "Créer Collection d'hôtes"
       ],
       "Create import": [
-        ""
+        "Créer une importation"
       ],
       "Create importer": [
-        ""
+        "Créer un importateur"
       ],
       "Create new activation key": [
         "Créer une nouvelle clé d'activation"
@@ -2107,10 +2080,10 @@
         "Créer une organisation"
       ],
       "Create publication": [
-        ""
+        "Créer une publication"
       ],
       "Create remote": [
-        ""
+        "Créer un item à distance"
       ],
       "Creation": [
         "Création"
@@ -2179,7 +2152,7 @@
         "Package Deb"
       ],
       "Deb Packages": [
-        "Packages Deb"
+        "Paquets Deb"
       ],
       "Deb name": [
         "Nom Deb"
@@ -2380,7 +2353,7 @@
         "Supprimez les filtres d'affichage de contenu qui ont ce référentiel comme dernier référentiel associé. La valeur par défaut est vrai. S'ils sont sur faux, ces filtres s'appliqueront désormais à tous les référentiels dans la vue du contenu."
       ],
       "Delete distributions": [
-        ""
+        "Supprimer les distributions"
       ],
       "Delete manifest from Red Hat provider": [
         "Supprimer le fichier manifeste du fournisseur Red Hat"
@@ -2389,22 +2362,22 @@
         "Supprimer plusieurs filtres d'affichage de contenu"
       ],
       "Delete orphan alternate content sources": [
-        ""
+        "Supprimer les sources de contenu alternatives orphelines"
       ],
       "Delete orphan distributions": [
-        ""
+        "Supprimer les distributions orphelines"
       ],
       "Delete orphan remotes": [
-        ""
+        "Supprimer les items à distance orphelines"
       ],
       "Delete orphan repository versions": [
-        ""
+        "Supprimer les versions orphelines du référentiel"
       ],
       "Delete remote": [
-        ""
+        "Supprimer l'item à distance"
       ],
       "Delete repository references": [
-        ""
+        "Supprimer les références du référentiel"
       ],
       "Delete version": [
         "Supprimer la version"
@@ -2509,10 +2482,10 @@
         "Détruire un environnement dans une organisation"
       ],
       "Destroy exporter": [
-        ""
+        "Détruire l'exportateur"
       ],
       "Destroy importer": [
-        ""
+        "Détruire l'importateur"
       ],
       "Destroy one or more alternate content sources": [
         "Détruire une ou plusieurs sources de contenu alternatives"
@@ -2590,7 +2563,7 @@
         "Limite du débit de téléchargement"
       ],
       "Drag here": [
-        ""
+        "Faites glisser ici"
       ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
         "En raison d'un changement dans vos organisations, ce nom de conteneur est devenu ambigu (nom de l'organisation '%{org_label} '). Si vous souhaitez continuer à utiliser ce nom de conteneur, détruisez l'organisation en conflit avec '%{o_name} (identifiant%{o_id} ). Si vous souhaitez conserver les deux organisations, détruisez '%{o_label} /%{prod_label} /%{root_repo_label} \\\" et réessayez votre push en utilisant le format id."
@@ -2634,9 +2607,6 @@
       "Edit activation key": [
         "Modifier la clé d'activation"
       ],
-      "Edit content view environment": [
-        "Modifier l’environnement d’affichage de contenu"
-      ],
       "Edit credentials": [
         "Modifier les informations d'identification"
       ],
@@ -2644,7 +2614,7 @@
         "Modifier les détails"
       ],
       "Edit entitlements": [
-        ""
+        "Modifier les droits"
       ],
       "Edit filter rule": [
         "Modifier la règle de filtrage"
@@ -2773,7 +2743,7 @@
         "L'environnement ne peut pas se trouver dans son propre chemin de promotion"
       ],
       "Environment contents refresh": [
-        ""
+        "Actualisation du contenu de l'environnement"
       ],
       "Environment identifier": [
         "Identifiant d'environnement"
@@ -2878,7 +2848,7 @@
         "Tout agrandir"
       ],
       "Expand group": [
-        ""
+        "Développer le groupe"
       ],
       "Expire soon days": [
         "Expiration prochaine en jours"
@@ -3181,13 +3151,13 @@
         "Forcer promotion"
       ],
       "Force regenerate applicability.": [
-        "Regénérer forcée de l'applicabilité."
+        "Regénération forcée de l'applicabilité."
       ],
       "Force sync even if no upstream changes are detected.": [
-        ""
+        "Forcer la synchronisation même si aucune modification en amont n'est détectée."
       ],
       "Force sync even if no upstream changes are detected. Only used with yum, deb, or file repositories.": [
-        ""
+        "Forcer la synchronisation même si aucune modification en amont n'est détectée. À utiliser uniquement avec les référentiels yum, deb ou de fichiers."
       ],
       "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy.": [
         "Force une republication du référentiel spécifié, en régénérant les métadonnées et les liens symboliques sur le système de fichiers. Non autorisé pour les référentiels avec la politique de mise en miroir « Mise en miroir complète »."
@@ -3234,7 +3204,7 @@
         "Générer l'applicabilité à l'hôte"
       ],
       "Generate metadata": [
-        ""
+        "Générer des métadonnées"
       ],
       "Generate repository applicability": [
         "Générer l'applicabilité du référentiel"
@@ -3294,7 +3264,7 @@
         "Plus grand que"
       ],
       "Guests of %s": [
-        ""
+        "Invités de %s"
       ],
       "HTTP Proxies": [
         "Proxies HTTP"
@@ -3420,7 +3390,7 @@
         "IDs des groupes"
       ],
       "Host group identifier": [
-        ""
+        "Identifiant du groupe hôte"
       ],
       "Host groups": [
         "Groupes d'hôtes"
@@ -3429,7 +3399,7 @@
         "Cet hôte n'est pas enregistré dans le subscription-manager"
       ],
       "Host has not been registered with subscription-manager.": [
-        "Cet hôte n'est pas enregistré dans le subscription-manager."
+        "Cet hôte n'est pas enregistré dans subscription-manager."
       ],
       "Host id to list applicable deb packages for": [
         "Identifiant de l'hôte pour lister les paquets applicables"
@@ -3570,7 +3540,7 @@
         "Id d'un flux de modules pour trouver les référentiels contenant ce flux de modules."
       ],
       "Id of a rpm package to find repositories that contain the rpm": [
-        "Id d'un package rpm pour trouver les référentiels qui contiennent le rpm"
+        "Id d'un paquet rpm pour trouver les référentiels qui contiennent le rpm"
       ],
       "Id of an ansible collection to find repositories that contain the ansible collection": [
         "Id d'une collection ansible pour trouver les référentiels qui contiennent la collection ansible"
@@ -3798,7 +3768,7 @@
         "Importez un manifeste d'abonnement pour permettre aux hôtes d'accéder au contenu Red Hat."
       ],
       "Import migration": [
-        ""
+        "Migration d'importation"
       ],
       "Import new manifest": [
         "Importer un nouveau manifeste"
@@ -3810,10 +3780,10 @@
         "Les affichages de contenu importés ne peuvent pas être publiés directement. Le contenu ne peut être mis à jour qu'en l'important dans la vue."
       ],
       "Import repository upload": [
-        ""
+        "Téléchargement du référentiel d'importation"
       ],
       "Import upload": [
-        ""
+        "Importer le téléchargement"
       ],
       "Import uploads into a repository": [
         "Importer les téléchargements dans un référentiel"
@@ -3906,7 +3876,7 @@
         "La mise à jour incrémentale n'ajoutera aucun nouveau contenu. Le contenu spécifié est déjà présent."
       ],
       "Index content": [
-        "Contenu d'index"
+        "Indexer le contenu"
       ],
       "Index errata": [
         "Errata d'index"
@@ -4412,7 +4382,7 @@
         "Lister les autres sources de contenu."
       ],
       "List available key algorithms for debug certificates": [
-        ""
+        "Liste des algorithmes de clés disponibles pour les certificats de débogage"
       ],
       "List available releases in the organization": [
         "Liste des communiqués disponibles dans l'organisation"
@@ -4718,7 +4688,7 @@
         "Le manifeste expire bientôt"
       ],
       "Manifest history table": [
-        ""
+        "Tableau d'historique des manifestes"
       ],
       "Manifest imported": [
         "Manifeste importé"
@@ -4868,13 +4838,13 @@
         "Environnement d'affichage multi-contenu"
       ],
       "Multi copy all units": [
-        ""
+        "Copie multiple de toutes les unités"
       ],
       "Multi copy content": [
-        ""
+        "Contenu multicopie"
       ],
       "Multi copy units": [
-        ""
+        "Unités multicopies"
       ],
       "Multi-entitlement": [
         "Droits d’accès multiples"
@@ -5480,7 +5450,7 @@
         "Un ou plusieurs processus doivent être relancés"
       ],
       "Only .zip manifest files are accepted": [
-        ""
+        "Seuls les fichiers manifestes .zip sont acceptés."
       ],
       "Only On Demand repositories may have space reclaimed.": [
         "Seuls les référentiels Sur demande peuvent récupérer de l’espace."
@@ -5501,10 +5471,10 @@
         "Opérateurs"
       ],
       "Optional key algorithm OID strings": [
-        ""
+        "Chaînes OID d'algorithme de clé optionnelles"
       ],
       "Optional signature algorithm OID strings": [
-        ""
+        "Chaînes OID d'algorithme de signature optionnelles"
       ],
       "Organization": [
         "Organisation"
@@ -5530,9 +5500,6 @@
       "Organization id": [
         "ID de l’organisation"
       ],
-      "Organization id not found: '%s'": [
-        "ID Organisation non trouvée : '%s '"
-      ],
       "Organization identifier": [
         "identifiant de l'organisation"
       ],
@@ -5548,14 +5515,14 @@
       "Organization not found": [
         "Organisation non trouvée"
       ],
-      "Organization not found: '%s'": [
-        "Organisation non trouvée : '%s '"
-      ],
       "Organization required": [
         "Organisation requise"
       ],
       "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.": [
         "Orphan Cleanup n'a pas réussi à supprimer certaines versions du référentiel Pulp. Consultez les journaux pour plus de détails."
+      ],
+      "Orphaned": [
+        ""
       ],
       "Orphaned Content Protection Time": [
         "Temps de protection du contenu orphelin"
@@ -5600,7 +5567,7 @@
         "Valeur d'annulation. Fournir une valeur booléenne si le nom est \\\"activé\\\""
       ],
       "Package": [
-        "Package"
+        "Paquet"
       ],
       "Package Group": [
         "Groupe de packages"
@@ -5633,7 +5600,7 @@
         "Types de paquets à synchroniser pour le contenu Python, séparés par une virgule. Laissez vide pour obtenir tous les types de paquets. Les types de paquets sont : bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist."
       ],
       "Packages": [
-        "Packages"
+        "Paquets"
       ],
       "Packages must be provided": [
         "Des paquets doivent être fournis"
@@ -5842,9 +5809,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "L'identifiant du produit tel qu'il figure dans la liste des produits installés sur l'hôte, \\\\\\n        il ne s'agit pas du même numéro d'identification que celui des produits renvoyés par l'api"
       ],
-      "Product id not found: '%s'": [
-        "ID produit non trouvé : ’%s '"
-      ],
       "Product label": [
         "Étiquette du produit"
       ],
@@ -5859,9 +5823,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "Nom du produit tel qu'il figure dans la liste des produits installés sur l'hôte"
-      ],
-      "Product not found: '%s'": [
-        "Produit non trouvé : '%s '"
       ],
       "Product the repository belongs to": [
         "Produit auquel le référentiel appartient"
@@ -5936,7 +5897,7 @@
         "Un pool avec l’identification %s n'a pas de droit d’accès en amont"
       ],
       "Provisioning template IDs": [
-        "IDs des modèles de provisionnement"
+        "IDs des modèles d'attribution"
       ],
       "Proxies": [
         "Proxies"
@@ -6008,7 +5969,7 @@
         "Erreur de tâche pulp"
       ],
       "Purge completed tasks": [
-        ""
+        "Purger les tâches terminées"
       ],
       "Python Package": [
         "Paquet Python"
@@ -6119,7 +6080,7 @@
         "Récupération d’espace"
       ],
       "Reclaim space": [
-        ""
+        "Récupération d’espace"
       ],
       "Reclaim space from On Demand repositories": [
         "Récupérer l’espace en provenance des référentiels Sur demande"
@@ -6143,7 +6104,7 @@
         "Red Hat CDN"
       ],
       "Red Hat CDN URL": [
-        "URL du CDN (« Content Distribution Network », réseau de distribution de contenu) de Red Hat"
+        "Red Hat CDN URL"
       ],
       "Red Hat Repositories": [
         "Référentiels Red Hat"
@@ -6194,7 +6155,7 @@
         "Actualiser toutes les sources de contenu alternatives"
       ],
       "Refresh all distributions": [
-        ""
+        "Actualiser toutes les distributions"
       ],
       "Refresh alternate content sources": [
         "Réactualiser les sources de contenu alternatives"
@@ -6209,13 +6170,13 @@
         "Actualiser le nombre"
       ],
       "Refresh distribution": [
-        ""
+        "Actualiser la distribution"
       ],
       "Refresh errata applicability": [
         "Actualiser l'applicabilité des errata"
       ],
       "Refresh if needed": [
-        ""
+        "Actualiser si nécessaire"
       ],
       "Refresh package applicability": [
         "Actualiser l’applicabilité du package"
@@ -6224,10 +6185,10 @@
         "Actualiser le fichier manifeste importé précédemment pour le fournisseur de Red Hat"
       ],
       "Refresh remote": [
-        ""
+        "Actualiser les items à distance"
       ],
       "Refresh repos": [
-        ""
+        "Actualiser les référentiels"
       ],
       "Refresh source": [
         "Source de rafraîchissement"
@@ -6252,9 +6213,6 @@
       ],
       "Registered to": [
         "Enregistré par"
-      ],
-      "Registering to multiple environments is not enabled.": [
-        "L'enregistrement à multiples environnements n'est pas activé."
       ],
       "Registration details": [
         "Détails de l'inscription"
@@ -6290,7 +6248,7 @@
         "Vues de contenu associées : "
       ],
       "Release": [
-        "Sortie"
+        "Version"
       ],
       "Release version": [
         "Version de sortie"
@@ -6377,7 +6335,7 @@
         "Supprimer un ou plusieurs abonnements d'un manifeste amont"
       ],
       "Remove orphans": [
-        ""
+        "Supprimer les orphelins"
       ],
       "Remove package group via Katello interface": [
         "Supprimer un groupe de packages via l'interface Katello"
@@ -6395,13 +6353,13 @@
         "Supprimer les produits du plan de sync"
       ],
       "Remove rolling repo clone": [
-        ""
+        "Supprimer un clone de référentiel continu"
       ],
       "Remove units": [
-        ""
+        "Supprimer les unités"
       ],
       "Remove unneeded repos": [
-        ""
+        "Supprimer les référentiels inutiles"
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "Supprimer les versions et/ou les environnements de l'affichage de contenu et assigner les systèmes et les clés à nouveau"
@@ -6425,7 +6383,7 @@
         "Supprimer cette version de tous les environnement n’aura pas pour effet de supprimer la version. La version sera toujours disponible pour une promotion ultérieure."
       ],
       "Repair": [
-        ""
+        "Réparation"
       ],
       "Replace content source on the target machine": [
         "Remplacer la source de contenu sur la machine cible"
@@ -6446,7 +6404,7 @@
         "Les référentiels ne sont pas disponibles pour l'activation lorsque la configuration du CDN est définie sur Air-gapped (déconnecté)."
       ],
       "Repositories certs reset": [
-        ""
+        "Réinitialisation des certificats des référentiels"
       ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "Les référentiels communs aux versions d'affichage de contenu sélectionnées fusionneront, ce qui donnera une vue de contenu composite qui est une union de tout le contenu de chacune des versions d'affichage de contenu."
@@ -6455,7 +6413,7 @@
         "Les référentiels des affichages de contenu publiés ne sont pas autorisés."
       ],
       "Repositories gpg reset": [
-        ""
+        "Réinitialisation des gpg"
       ],
       "Repositories table": [
         "Tableau des référentiels"
@@ -6570,6 +6528,9 @@
       ],
       "Requested access to '%s' is denied": [
         "Accès demandé à '%s \\\" est refusé"
+      ],
+      "Requested repository name is unknown to the registry.": [
+        ""
       ],
       "Requirements is not valid yaml.": [
         "Les exigences ne sont pas valides pour yalm."
@@ -6836,28 +6797,28 @@
         "Sauvegarder les environnements"
       ],
       "Save artifact": [
-        ""
+        "Sauvegarder l'artefact"
       ],
       "Save distribution references": [
-        ""
+        "Enregistrer les références de distribution"
       ],
       "Save publication": [
-        ""
+        "Enregistrer la publication"
       ],
       "Save version": [
-        ""
+        "Sauvegarder la version"
       ],
       "Save versions": [
-        ""
+        "Sauvegarder les versions"
       ],
       "Saving alternate content source...": [
         "Mise à jour de la source de contenu alternatif..."
       ],
       "Saving subscription quantities...": [
-        ""
+        "Enregistrement des quantités d'abonnement..."
       ],
       "Saving...": [
-        ""
+        "Économie..."
       ],
       "Scan": [
         "Scan"
@@ -6866,10 +6827,10 @@
         "Numériser une télécommande Flatpak"
       ],
       "Scan cdn": [
-        ""
+        "Analyser le CDN"
       ],
       "Scan remote": [
-        ""
+        "Scanner item à distance"
       ],
       "Schema version 1": [
         "Schéma Version 1"
@@ -7196,7 +7157,7 @@
         "Afficher un composant d'affichage de contenu"
       ],
       "Show a content view environment": [
-        ""
+        "Afficher un environnement de visualisation de contenu"
       ],
       "Show a content view's history": [
         "Afficher un historique d'affichage de contenu"
@@ -7320,6 +7281,9 @@
       "Smart proxies": [
         "Smart Proxies"
       ],
+      "Smart proxies must have the Pulp feature to be used with alternate content sources: %s": [
+        ""
+      ],
       "Smart proxy ID": [
         "ID smart proxy"
       ],
@@ -7384,7 +7348,7 @@
         "Une erreur s'est produite lors de l'ajout de règles de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while creating the filter! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de la création du filtre !{getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la création du filtre !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while deleting alternate content sources: ${getResponseErrorMsgs(error.response)}": [
         "Un problème est survenu lors de la suppression des sources de contenu alternatives : ${getResponseErrorMsgs(error.response)}"
@@ -7414,7 +7378,7 @@
         "Une erreur s'est produite lors de la récupération de ${lowerCase(pluralLabel)} ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de la récupération des paquets rpm !{getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la récupération des paquets rpm !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting container manifest lists! ${getResponseErrorMsgs(error.response)}": [
         "Une erreur s'est produite lors de l'obtention des listes de manifestes de conteneurs ! ${getResponseErrorMsgs(error.response)}"
@@ -7429,7 +7393,7 @@
         "Une erreur s'est produite lors de l'obtention de l'errata ! ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting module streams! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de l'obtention des flux de modules !{getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de l'obtention des flux de modules !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while getting repositories! ${getResponseErrorMsgs(error.response)}": [
         "Une erreur s'est produite lors de l'obtention des référentiels !${getResponseErrorMsgs(error.response)}"
@@ -7456,7 +7420,7 @@
         "Une erreur s'est produite lors de la suppression d'une règle de filtrage ${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while removing component! ${getResponseErrorMsgs(error.response)}": [
-        "Une erreur s'est produite lors de la suppression du composant !{getResponseErrorMsgs(error.response)}"
+        "Une erreur s'est produite lors de la suppression du composant !${getResponseErrorMsgs(error.response)}"
       ],
       "Something went wrong while retrieving package groups! ${getResponseErrorMsgs(error.response)}": [
         "Une erreur s'est produite lors de la récupération des groupes de packages ! ${getResponseErrorMsgs(error.response)}"
@@ -7528,7 +7492,7 @@
         "RPM source"
       ],
       "Source RPMs": [
-        "RPM source"
+        "RPMs source"
       ],
       "Source type": [
         "Type de source"
@@ -7729,7 +7693,7 @@
         "Plan de Sync :"
       ],
       "Sync Plans": [
-        "Plans de sync"
+        "Plans de Sync"
       ],
       "Sync Repository on Smart Proxy(ies)": [
         "Sync Référentiel sur le(s) proxy(s) smart"
@@ -8662,7 +8626,7 @@
         "Mettre à jour les environnements d'affichage de contenu pour l'hôte %s"
       ],
       "Update distributions": [
-        ""
+        "Mise à jour des distributions"
       ],
       "Update hosts manually": [
         "Mettre à jour les hôtes manuellement"
@@ -8698,10 +8662,10 @@
         "Mettre à jour la version de publication pour l'hôte %s"
       ],
       "Update remote": [
-        ""
+        "Mise à jour des items à distance"
       ],
       "Update repository": [
-        ""
+        "Mise à jour du référentiel"
       ],
       "Update services requiring restart": [
         "Mise à jour des services nécessitant un redémarrage"
@@ -8784,7 +8748,7 @@
         "Mettre à niveau via exécution à distante"
       ],
       "Upload": [
-        ""
+        "Télécharger"
       ],
       "Upload Content Credential contents": [
         "Télécharger les identifiants de contenu"
@@ -8796,10 +8760,10 @@
         "Télécharger un fichier manifeste d'abonnement"
       ],
       "Upload a zip file": [
-        ""
+        "Téléversez un fichier zip"
       ],
       "Upload content": [
-        ""
+        "Télécharger du contenu"
       ],
       "Upload file": [
         "Téléverser un fichier"
@@ -8820,7 +8784,7 @@
         "Télécharger l'id de requête"
       ],
       "Upload tag": [
-        ""
+        "Balise de téléchargement"
       ],
       "Upstream Candlepin": [
         "Chandelle en amont"
@@ -9171,7 +9135,7 @@
         "Vous n'avez actuellement aucune vue de contenu à afficher"
       ],
       "You do not have permission to view this organization.": [
-        ""
+        "Vous n'êtes pas autorisé à consulter cette organisation."
       ],
       "You do not have permissions to delete %s": [
         "Vous ne disposez pas des droits nécessaires pour supprimer %s"
@@ -9507,7 +9471,7 @@
         "disque"
       ],
       "download policy for deb, docker, file, python, and yum repos (either 'immediate' or 'on_demand')": [
-        ""
+        "Politique de téléchargement pour les dépôts deb, docker, fichiers, python et yum (soit « immédiat », soit « à la demande »)"
       ],
       "edit the content source": [
         "modifier le contenu source"
@@ -9606,10 +9570,10 @@
         "a déjà été pris comme produit dans cette organisation."
       ],
       "has already been taken for this activation key": [
-        ""
+        "Cette clé d'activation a déjà été utilisée."
       ],
       "has already been taken for this host": [
-        ""
+        "a déjà été pris pour cet hôte"
       ],
       "has already been taken for this product.": [
         "a déjà été pris pour ce produit."
@@ -9699,7 +9663,7 @@
         "libellé du référentiel"
       ],
       "latest": [
-        ""
+        "les plus récents"
       ],
       "limit to only repositories with this download policy": [
         "limiter aux référentiels ayant cette politique de téléchargement"

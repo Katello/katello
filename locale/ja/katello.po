@@ -5,8 +5,8 @@
 #
 # Translators:
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2020
-# Bryan Kearney <bryan.kearney@gmail.com>, 2026
 # Amit Upadhye <aupadhye@redhat.com>, 2026
+# Bryan Kearney <bryan.kearney@gmail.com>, 2026
 # Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2026
 # Ondřej Gajdušek, 2026
 #
@@ -188,7 +188,7 @@ msgid "%{subject}'s disk is %{percentage} full. Since this proxy is running Pulp
 msgstr "%{subject} のディスクは %{percentage} % 使用済みです。このプロキシーでは Pulp を実行しているので、コンテンツの表示にディスクの領域が必要です。ディスクがいっぱいにならないようにしてください。"
 
 msgid "%{unused_substitutions} cannot be specified for %{content_name} as that information is not substitutable in %{content_url} "
-msgstr "%{unused_substitutions} は、%{content_url} と置き換えることができないため、%{content_name} に指定できません。 "
+msgstr "%{unused_substitutions} は、%{content_url} と置き換えることができないため、%{content_name} に指定できません "
 
 msgid "%{used} of %{total}"
 msgstr "%{used} / %{total}"
@@ -256,12 +256,6 @@ msgstr "ostree 同期中に追加する参照のコンマ区切りリスト。�
 msgid "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
 msgstr "ostree 同期中に除外するタグのコンマ区切りリスト。ワイルドカード *, ? が認識されます。'exclude_refs' は 'include_refs' の後に評価されます。"
 
-msgid "A content view environment is a combination of a particular lifecycle environment and content view."
-msgstr "コンテンツビュー環境は、特定のライフサイクル環境とコンテンツビューの組み合わせです。"
-
-msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host."
-msgstr "コンテンツビュー環境は、特定のライフサイクル環境とコンテンツビューの組み合わせです。このホストに割り当てるコンテンツビュー環境を選択します。"
-
 msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content."
 msgstr "コンテンツビュー環境は、特定のライフサイクル環境とコンテンツビューの組み合わせです。このホストに割り当てるコンテンツビュー環境を選択します。複数のコンテンツビュー環境を割り当てることで、異なるコンテンツのセットへのアクセスを提供できます。"
 
@@ -270,9 +264,6 @@ msgstr "コンテンツビュー環境は、特定のライフサイクル環境
 
 msgid "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content."
 msgstr "コンテンツビュー環境は、特定のライフサイクル環境とコンテンツビューの組み合わせです。複数のコンテンツビュー環境を割り当てることで、複数のコンテンツのセットへのアクセスをホストに提供できます。"
-
-msgid "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}."
-msgstr "コンテンツビュー環境は、特定のライフサイクル環境とコンテンツビューの組み合わせです。ここでの選択は、{hosts} 上にある既存のコンテンツビュー環境をすべて {replace} します。"
 
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
 msgstr "多数のエラータがこのコンテンツビューに適用されていません。そのため、最初の 100 件のみが表示されています。"
@@ -299,7 +290,7 @@ msgid "A notification about failed repository sync"
 msgstr "リポジトリー同期の失敗に関する通知"
 
 msgid "A post-promotion summary of hosts with installable errata"
-msgstr "ホストとインストール可能なエラータのプロモート後の概要"
+msgstr "インストール可能なエラータがあるホストのプロモート後の概要"
 
 msgid "A publish is already scheduled for this content view. Please wait for the scheduled publish to complete."
 msgstr "このコンテンツビューはすでに公開が予定されています。予定されている公開が完了するまでお待ちください。"
@@ -341,7 +332,7 @@ msgid "Action not allowed for the default smart proxy."
 msgstr "デフォルトの Smart Proxy で許可されないアクションです。"
 
 msgid "Action unauthorized to be performed in this organization."
-msgstr "この組織で実行権限がないアクション"
+msgstr "この組織ではこのアクションの実行が許可されていません。"
 
 msgid "Actions"
 msgstr "アクション"
@@ -363,9 +354,6 @@ msgstr "アクティベーションキー%s には、複数のコンテンツビ
 
 msgid "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead."
 msgstr "アクティベーションキー%sには複数のライフサイクル環境があります。代わりに #lifecycle_environments を使用してください。"
-
-msgid "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled."
-msgstr "アクティベーションキー '%s ' は複数の環境に関連付けられており、複数の環境への登録は有効になっていません。"
 
 msgid "Activation key content view environments updated"
 msgstr "アクティベーションキーのコンテンツビュー環境が更新される"
@@ -482,7 +470,7 @@ msgid "Add repositories with package groups to content view to select them here.
 msgstr "パッケージグループのあるリポジトリーをコンテンツビューに追加して、ここで選択します。"
 
 msgid "Add rolling repo clone"
-msgstr ""
+msgstr "ローリングリポジトリークローンを追加する"
 
 msgid "Add rule"
 msgstr "ルールの追加"
@@ -583,23 +571,17 @@ msgstr "公開済みコンテンツビューでのリポジトリー削除を許
 msgid "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode."
 msgstr "ホストがビルドモードである限り、ホスト登録が「ホストプロファイルの想定」をバイパスすることを許可します。"
 
-msgid "Allow hosts or activation keys to be associated with multiple content view environments"
-msgstr "ホストまたはアクティベーションキーを複数のコンテンツビュー環境に関連付けることを許可する"
-
 msgid "Allow hosts to re-register themselves only when they are in build mode"
 msgstr "ホストがビルドモードである場合にのみ、ホスト自体の再登録を許可します"
-
-msgid "Allow multiple content views"
-msgstr "複数のコンテンツビューを許可する"
 
 msgid "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host."
 msgstr "登録する DMI UUID が別のホストで使用されていない限り、新規ホストの登録時には、登録されているプロファイルはホスト名が一致すると想定できるようにする"
 
 msgid "Allow this smart proxy to authenticate to the container registry using its SSL client certificate"
-msgstr ""
+msgstr "このスマートプロキシーが SSL クライアント証明書を使用して、コンテナーレジストリーに対して認証を行うことを許可する"
 
 msgid "Allow this smart proxy to pull and push container images using its SSL client certificate."
-msgstr ""
+msgstr "このスマートプロキシーが、その SSL クライアント証明書を使用してコンテナーイメージをプルおよびプッシュできるようにします。"
 
 msgid "Also include the latest upgradable package version for each host package"
 msgstr "各ホストパッケージの最新のアップグレード可能なパッケージバージョンも含めます"
@@ -620,7 +602,7 @@ msgid "Alternate content source ID"
 msgstr "代替コンテンツソース ID"
 
 msgid "Alternate content source deleted"
-msgstr "代替コンテンツソースが削除されました。"
+msgstr "代替コンテンツソースが削除されました"
 
 msgid "Alternate content source edited"
 msgstr "代替コンテンツソースが編集されました"
@@ -786,17 +768,17 @@ msgstr "削除するコンテンツビューコンポーネント ID の配列�
 msgid "Array of content view environment IDs"
 msgstr "コンテンツビュー環境 ID の配列"
 
-msgid "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on."
-msgstr "ホストに関連付けられるコンテンツビュー環境 ID の配列。allow_multiple_content_views の設定をオンにする必要があります。"
+msgid "Array of content view environment IDs to be associated with the hosts."
+msgstr ""
 
-msgid "Array of content view environment ids associated with the activation key. Requires allow_multiple_content_views setting to be on."
-msgstr "アクティベーションキーに関連付けられたコンテンツビュー環境 ID の配列。allow_multiple_content_views の設定をオンにする必要があります。"
+msgid "Array of content view environment ids associated with the activation key."
+msgstr ""
 
-msgid "Array of content view environment ids to be associated with the activation key. Requires allow_multiple_content_views setting to be on."
-msgstr "アクティベーションキーに関連付けられるコンテンツビュー環境 ID の配列。allow_multiple_content_views の設定をオンにする必要があります。"
+msgid "Array of content view environment ids to be associated with the activation key."
+msgstr ""
 
-msgid "Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on."
-msgstr "ホストに関連付けられるコンテンツビュー環境 ID の配列。allow_multiple_content_views の設定をオンにする必要があります。"
+msgid "Array of content view environment ids to be associated with the host."
+msgstr ""
 
 msgid "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
 msgstr "'lifecycle_environment_label/content_view_label' 形式のコンテンツビュー環境ラベルの配列。content_view_environment_ids が指定されている場合は無視されます。"
@@ -825,9 +807,6 @@ msgstr "アーティファクト"
 msgid "Assign another content view environment"
 msgstr "別のコンテンツビュー環境の割り当て"
 
-msgid "Assign content view environment"
-msgstr "コンテンツビュー環境の割り当て"
-
 msgid "Assign content view environments"
 msgstr "コンテンツビュー環境の割り当て"
 
@@ -846,12 +825,6 @@ msgstr "1 台以上のホストに環境およびコンテンツビューを割�
 
 msgid "Assign the release version to one or more hosts"
 msgstr "1 台以上のホストにリリースバージョンを割り当てます"
-
-msgid "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
-msgstr "複数のコンテンツビュー環境にホストを割り当てる機能は有効ではありません。有効にするには、allow_multiple_content_views 設定を指定します。"
-
-msgid "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
-msgstr "複数のコンテンツビュー環境にアクティベーションキーを割り当てる機能は有効ではありません。有効にするには、allow_multiple_content_views 設定を指定します。"
 
 msgid "Associated content view environments"
 msgstr "関連するコンテンツビュー環境"
@@ -989,7 +962,7 @@ msgid "Bind entitlements to an allocation"
 msgstr "割り当てにエンタイトルメントをバインドします"
 
 msgid "Bookmark this search"
-msgstr "この検索をブックマーク"
+msgstr "この検索をブックマークする"
 
 msgid "Bookmarks marked as public are available to all users"
 msgstr "パブリックと識別されたブックマークは、すべてのユーザーが利用できます"
@@ -1124,7 +1097,7 @@ msgid "Candlepin consumer registration response is missing a uuid"
 msgstr "Candlepin のコンシューマー登録応答に UUID がありません"
 
 msgid "Candlepin could not generate a certificate with the requested cryptographic capabilities."
-msgstr ""
+msgstr "Candlepin は、要求された暗号化機能を備えた証明書を生成できませんでした。"
 
 msgid "Candlepin is not running properly"
 msgstr "Candlepin が正しく実行されていません"
@@ -1277,7 +1250,7 @@ msgid "Cannot register a system to the '%s' environment"
 msgstr "'%s' 環境にシステムを登録できません"
 
 msgid "Cannot remove '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}."
-msgstr "%{dependent}: %{names} が関連付けられているので、環境 '%{env}' から '%{view}' を削除できません"
+msgstr "%{dependent}: %{names} が関連付けられているので、環境 '%{env}' から '%{view}' を削除できません。"
 
 msgid "Cannot remove '%{view}' from lifecycle environment '%{env}' due to associated host groups: %{names}."
 msgstr "関連付けられたホストグループ %{names} が原因で、ライフサイクル環境 '%{env}' から '%{view}' を削除できません。"
@@ -1298,7 +1271,7 @@ msgid "Cannot set auto publish to a non-composite content view"
 msgstr "複合コンテンツビュー以外には自動公開を設定できません"
 
 msgid "Cannot skip metadata check on non-yum/deb/file repositories."
-msgstr ""
+msgstr "yum/deb/file 以外のリポジトリーではメタデータチェックをスキップできません。"
 
 msgid "Cannot sync file:// repositories with the On Demand Download Policy"
 msgstr "file:// リポジトリーをオンデマンドダウンロードポリシーと同期できません"
@@ -1388,7 +1361,7 @@ msgid "Clean Backend Objects"
 msgstr "バックエンドオブジェクトのクリーニング"
 
 msgid "Clear"
-msgstr ""
+msgstr "消去"
 
 msgid "Clear any previous registration and run subscription-manager with --force."
 msgstr "以前の登録をすべてクリアし、--force を指定して subscription-manager を実行します。"
@@ -1427,19 +1400,19 @@ msgid "Collapse all"
 msgstr "すべて折りたたむ"
 
 msgid "Collapse group"
+msgstr "グループを折りたたむ"
+
+msgid "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
 msgstr ""
 
-msgid "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
-msgstr "アクティベーションキーに関連付けられたコンテンツビュー環境ラベルのコンマ区切りのリスト ('lifecycle_environment_label/content_view_label' 形式)。content_view_environment_ids が指定されている場合は無視されます。allow_multiple_content_views の設定をオンにする必要があります。"
+msgid "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
+msgstr ""
 
-msgid "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
-msgstr "アクティベーションキーに関連付けられるコンテンツビュー環境ラベルのコンマ区切りのリスト ('lifecycle_environment_label/content_view_label' 形式)。content_view_environment_ids が指定されている場合は無視されます。allow_multiple_content_views の設定をオンにする必要があります。"
+msgid "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
+msgstr ""
 
-msgid "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
-msgstr "ホストに関連付けられるコンテンツビュー環境ラベルのコンマ区切りのリスト ('lifecycle_environment_label/content_view_label' 形式)。content_view_environment_ids が指定されている場合は無視されます。allow_multiple_content_views の設定をオンにする必要があります。"
-
-msgid "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
-msgstr "ホストに関連付けられるコンテンツビュー環境ラベルのコンマ区切りのリスト ('lifecycle_environment_label/content_view_label' 形式)。content_view_environment_ids が指定されている場合は無視されます。allow_multiple_content_views の設定をオンにする必要があります。"
+msgid "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
+msgstr ""
 
 msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
 msgstr "コンマ区切りのサブパスの一覧。すべてのサブパスには、必ず末尾にスラッシュが必要で、先頭には不要です"
@@ -1454,7 +1427,7 @@ msgid "Command contains %(packageCount)s of %(selectedCount)s selected %(selecte
 msgstr "コマンドには、選択された %(selectedCount)s 個の %(selectedWord)s のうち、%(packageCount)s 個が含まれています"
 
 msgid "Commit upload"
-msgstr ""
+msgstr "アップロードのコミット"
 
 msgid "Compare"
 msgstr "比較"
@@ -1493,7 +1466,7 @@ msgid "Configuration updated on Foreman"
 msgstr "Foreman で設定が更新されました"
 
 msgid "Confirm"
-msgstr ""
+msgstr "確認"
 
 msgid "Confirm Deletion"
 msgstr "削除の確定"
@@ -1523,7 +1496,7 @@ msgid "Container Images"
 msgstr "コンテナーイメージ"
 
 msgid "Container Registry Authentication"
-msgstr ""
+msgstr "コンテナーレジストリー認証"
 
 msgid "Container image tag"
 msgstr "コンテナーイメージタグ"
@@ -1766,16 +1739,16 @@ msgid "Content view environment ID"
 msgstr "コンテンツビュー環境 ID"
 
 msgid "Content view environment identifier"
-msgstr ""
+msgstr "コンテンツビュー環境の識別子"
 
 msgid "Content view environments"
 msgstr "コンテンツビュー環境"
 
 msgid "Content view environments and activation key must all belong to the same organization"
-msgstr "コンテンツビュー環境とアクティベーションキーはすべて同じ組織に属している必要があります。"
+msgstr "コンテンツビュー環境とアクティベーションキーはすべて同じ組織に属している必要があります"
 
 msgid "Content view environments must have both a content view and an environment"
-msgstr "コンテンツビュー環境には、コンテンツビューと環境の両方が必要です。"
+msgstr "コンテンツビュー環境には、コンテンツビューと環境の両方が必要です"
 
 msgid "Content view has repository label '%s' which is not specified in repos_units parameter."
 msgstr "コンテンツビューには '%s' のリポジトリーラベルが含まれていますが、このラベルは repos_units パラメーターで指定されていません。"
@@ -1853,13 +1826,13 @@ msgid "Copy"
 msgstr "コピー"
 
 msgid "Copy all units"
-msgstr ""
+msgstr "すべてのユニットをコピーする"
 
 msgid "Copy an activation key"
 msgstr "アクティベーションキーをコピーします"
 
 msgid "Copy content"
-msgstr ""
+msgstr "コンテンツをコピーする"
 
 msgid "Copy content view"
 msgstr "コンテンツビューのコピー"
@@ -1874,10 +1847,10 @@ msgid "Copy to clipboard"
 msgstr "クリップボードにコピー"
 
 msgid "Copy version"
-msgstr ""
+msgstr "バージョンをコピーする"
 
 msgid "Copy version units to library"
-msgstr "バージョンユニットのライブラリーへのコピー"
+msgstr "バージョンユニットをライブラリーへコピーする"
 
 msgid "Cores per socket"
 msgstr "1 ソケットあたりのコア数"
@@ -2102,7 +2075,7 @@ msgid "Create content view"
 msgstr "コンテンツビューの作成"
 
 msgid "Create exporter"
-msgstr ""
+msgstr "エクスポーターを作成する"
 
 msgid "Create filter"
 msgstr "フィルターの作成"
@@ -2111,10 +2084,10 @@ msgid "Create host collection"
 msgstr "ホストコレクションの作成"
 
 msgid "Create import"
-msgstr ""
+msgstr "インポートを作成する"
 
 msgid "Create importer"
-msgstr ""
+msgstr "インポーターを作成する"
 
 msgid "Create new activation key"
 msgstr "新規アクティベーションキーの作成"
@@ -2123,10 +2096,10 @@ msgid "Create organization"
 msgstr "組織の作成"
 
 msgid "Create publication"
-msgstr ""
+msgstr "パブリケーションを作成する"
 
 msgid "Create remote"
-msgstr ""
+msgstr "リモートを作成する"
 
 msgid "Creation"
 msgstr "作成"
@@ -2396,7 +2369,7 @@ msgid "Delete content view filters that have this repository as the last associa
 msgstr "このリポジトリーが関連付けられた最後のリポジトリーであるコンテンツビューフィルターを削除します。デフォルトは true です。false の場合、そのようなフィルターがコンテンツビュー内のすべてのリポジトリーに適用されます。"
 
 msgid "Delete distributions"
-msgstr ""
+msgstr "ディストリビューションを削除する"
 
 msgid "Delete manifest from Red Hat provider"
 msgstr "Red Hat プロバイダーからマニフェストを削除"
@@ -2405,22 +2378,22 @@ msgid "Delete multiple filters from a content view"
 msgstr "コンテンツビューから複数のフィルターを削除します"
 
 msgid "Delete orphan alternate content sources"
-msgstr ""
+msgstr "孤立した代替コンテンツソースを削除する"
 
 msgid "Delete orphan distributions"
-msgstr ""
+msgstr "孤立したディストリビューションを削除する"
 
 msgid "Delete orphan remotes"
-msgstr ""
+msgstr "孤立したリモートを削除する"
 
 msgid "Delete orphan repository versions"
-msgstr ""
+msgstr "孤立したリポジトリーバージョンを削除する"
 
 msgid "Delete remote"
-msgstr ""
+msgstr "リモートを削除する"
 
 msgid "Delete repository references"
-msgstr ""
+msgstr "リポジトリー参照を削除する"
 
 msgid "Delete version"
 msgstr "バージョンの削除"
@@ -2525,10 +2498,10 @@ msgid "Destroy an environment in an organization"
 msgstr "組織の環境を破棄"
 
 msgid "Destroy exporter"
-msgstr ""
+msgstr "エクスポーターを破棄する"
 
 msgid "Destroy importer"
-msgstr ""
+msgstr "インポーターを破棄する"
 
 msgid "Destroy one or more alternate content sources"
 msgstr "1 つ以上の代替コンテンツソースの破棄"
@@ -2606,7 +2579,7 @@ msgid "Download rate limit"
 msgstr "レート制限のダウンロード"
 
 msgid "Drag here"
-msgstr ""
+msgstr "ここにドラッグする"
 
 msgid "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format."
 msgstr "組織の変更により、このコンテナー名があいまいになりました (組織名 '%{org_label}')。このコンテナー名を引き続き使用する場合は、'%{o_name} (id %{o_id}) と競合する組織を破棄してください。両方の組織を保持する場合は、'%{o_label}/%{prod_label}/%{root_repo_label}' を破棄し、ID 形式を使用してプッシュを再試行してください。"
@@ -2650,9 +2623,6 @@ msgstr "URL およびサブパスの編集"
 msgid "Edit activation key"
 msgstr "アクティベーションキーの編集"
 
-msgid "Edit content view environment"
-msgstr "コンテンツビュー環境の編集"
-
 msgid "Edit credentials"
 msgstr "資格情報の編集"
 
@@ -2660,7 +2630,7 @@ msgid "Edit details"
 msgstr "詳細の編集"
 
 msgid "Edit entitlements"
-msgstr ""
+msgstr "エンタイトルメントを編集する"
 
 msgid "Edit filter rule"
 msgstr "フィルタールールの編集"
@@ -2696,10 +2666,10 @@ msgid "Either packages or groups must be provided"
 msgstr "パッケージまたはグループのいずれかを指定する必要があります"
 
 msgid "Either set the content view with the latest flag or set the content view version"
-msgstr "コンテンツビューに最新のフラグを設定するか、コンテンツビューバージョンを設定してください。"
+msgstr "コンテンツビューに最新のフラグを設定するか、コンテンツビューバージョンを設定してください"
 
 msgid "Either set the latest content view or the content view version. Cannot set both"
-msgstr "最新のコンテンツビューまたはコンテンツビューバージョンを設定します。両方設定することはできません。"
+msgstr "最新のコンテンツビューまたはコンテンツビューバージョンを設定します。両方設定することはできません"
 
 msgid "Either trace_search or trace_ids must be provided"
 msgstr "trace_search または trace_ids のいずれかを指定する必要があります"
@@ -2786,10 +2756,10 @@ msgid "Environment IDs"
 msgstr "環境 ID"
 
 msgid "Environment cannot be in its own promotion path"
-msgstr "同じ環境内のプロモートパスに環境を存在させることはできません。"
+msgstr "同じ環境内のプロモートパスに環境を存在させることはできません"
 
 msgid "Environment contents refresh"
-msgstr ""
+msgstr "環境コンテンツを更新する"
 
 msgid "Environment identifier"
 msgstr "環境 ID"
@@ -2894,7 +2864,7 @@ msgid "Expand All"
 msgstr "すべて展開"
 
 msgid "Expand group"
-msgstr ""
+msgstr "グループを展開する"
 
 msgid "Expire soon days"
 msgstr "日 (期限切れまでの日数)"
@@ -3204,10 +3174,10 @@ msgid "Force regenerate applicability."
 msgstr "適用可能なエラータを強制的に再生成します。"
 
 msgid "Force sync even if no upstream changes are detected."
-msgstr ""
+msgstr "アップストリームの変更が検出されない場合でも、強制的に同期します。"
 
 msgid "Force sync even if no upstream changes are detected. Only used with yum, deb, or file repositories."
-msgstr ""
+msgstr "アップストリームの変更が検出されない場合でも、強制的に同期します。yum、deb、またはファイルリポジトリーでのみ使用されます。"
 
 msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy."
 msgstr "指定のリポジトリーを強制的に再公開し、ファイルシステムのメタデータとシンボリックリンクを再生成します。'完全ミラーリング' ミラーリングポリシーを使用しているリポジトリーでは許可されません。"
@@ -3240,7 +3210,7 @@ msgid "Generate RHUI certificates for the desired repositories as necessary."
 msgstr "必要に応じて、必要なリポジトリーの RHUI 証明書を生成します。"
 
 msgid "Generate and download"
-msgstr "生成してダウンロード"
+msgstr "生成してダウンロードする"
 
 msgid "Generate containerfile install command (%s package selected)"
 msgid_plural "Generate containerfile install command (%s packages selected)"
@@ -3253,7 +3223,7 @@ msgid "Generate host applicability"
 msgstr "ホストに適用可能なエラータを生成します"
 
 msgid "Generate metadata"
-msgstr ""
+msgstr "メタデータを生成する"
 
 msgid "Generate repository applicability"
 msgstr "リポジトリーに適用可能なエラータを生成します"
@@ -3313,7 +3283,7 @@ msgid "Greater than"
 msgstr ">"
 
 msgid "Guests of %s"
-msgstr ""
+msgstr "%s のゲスト"
 
 msgid "HTTP Proxies"
 msgstr "HTTP プロキシー"
@@ -3439,7 +3409,7 @@ msgid "Host group IDs"
 msgstr "ホストグループ ID"
 
 msgid "Host group identifier"
-msgstr ""
+msgstr "ホストグループ識別子"
 
 msgid "Host groups"
 msgstr "ホストグループ"
@@ -3821,7 +3791,7 @@ msgid "Import a subscription manifest to give hosts access to Red Hat content."
 msgstr "サブスクリプションマニフェストをインポートして、ホストが Red Hat コンテンツにアクセスできるようにします。"
 
 msgid "Import migration"
-msgstr ""
+msgstr "移行をインポートする"
 
 msgid "Import new manifest"
 msgstr "新しいマニフェストのインポート"
@@ -3833,10 +3803,10 @@ msgid "Import only Content Views cannot be directly publsihed. Content can only 
 msgstr "インポートのみのコンテンツビューは直接公開できません。コンテンツは、ビューにインポートしなければ更新されません。"
 
 msgid "Import repository upload"
-msgstr ""
+msgstr "リポジトリーへのアップロードデータをインポートする"
 
 msgid "Import upload"
-msgstr ""
+msgstr "アップロードをインポートする"
 
 msgid "Import uploads into a repository"
 msgstr "アップロードのリポジトリーへのインポート"
@@ -4050,7 +4020,7 @@ msgid "Invalid content label: %s"
 msgstr "無効なコンテンツラベル: %s"
 
 msgid "Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}"
-msgstr "無効なコンテンツタイプ '%{content_type}' が指定されています。コンテンツタイプには %{content_types} のいずれかを指定できます。"
+msgstr "無効なコンテンツタイプ '%{content_type}' が指定されています。コンテンツタイプには %{content_types} のいずれかを指定できます"
 
 msgid "Invalid date range. The erratum filter rule start date must come before the end date"
 msgstr "無効な日付範囲です。エラータフィルタールールの開始日は、終了日より前である必要があります"
@@ -4059,7 +4029,7 @@ msgid "Invalid erratum filter rule specified, 'errata_id' cannot be specified in
 msgstr "無効なエラータフィルタールールが指定されました、'errata_id' を 'start_date'、'end_date' または 'types' と同じ組で指定することはできません"
 
 msgid "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date', 'types', or 'allow_other_types'"
-msgstr "無効なエラータフィルタールールが指定されました、'errata_id'、'start_date'、'end_date'、'types'、または 'allow_other_types' から少なくとも 1 つを指定する必要があります。"
+msgstr "無効なエラータフィルタールールが指定されました、'errata_id'、'start_date'、'end_date'、'types'、または 'allow_other_types' から少なくとも 1 つを指定する必要があります"
 
 msgid "Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}"
 msgstr "無効なエラータタイプ %{invalid_types} が指定されました。エラータタイプは %{valid_types} のいずれかに指定できます"
@@ -4275,7 +4245,7 @@ msgid "Labels | Annotations"
 msgstr "ラベル | アノテーション"
 
 msgid "Last check-in:"
-msgstr "最終チェックイン"
+msgstr "最終チェックイン:"
 
 msgid "Last checkin"
 msgstr "最終チェックイン"
@@ -4434,7 +4404,7 @@ msgid "List alternate content sources."
 msgstr "代替コンテンツソースを一覧表示します。"
 
 msgid "List available key algorithms for debug certificates"
-msgstr ""
+msgstr "デバッグ証明書で利用可能な鍵アルゴリズムをリスト表示する"
 
 msgid "List available releases in the organization"
 msgstr "組織で利用可能なリリースを一覧表示します"
@@ -4632,7 +4602,7 @@ msgid "List packages"
 msgstr "パッケージを一覧表示します"
 
 msgid "List packages installed on the host"
-msgstr "ホストにインストールされているパッケージの一覧表示"
+msgstr "ホストにインストールされているパッケージを一覧表示します"
 
 msgid "List products"
 msgstr "製品の一覧表示"
@@ -4674,7 +4644,7 @@ msgid "Loading versions"
 msgstr "バージョンの読み込み中"
 
 msgid "Loading..."
-msgstr "読み込み中..."
+msgstr "ロード中..."
 
 msgid "Low"
 msgstr "低"
@@ -4716,7 +4686,7 @@ msgid "Manage traces"
 msgstr "トレースの管理"
 
 msgid "Manifest"
-msgstr "Manifest (マニフェスト)"
+msgstr "マニフェスト"
 
 msgid "Manifest Details"
 msgstr "マニフェストの詳細"
@@ -4740,7 +4710,7 @@ msgid "Manifest expiring soon"
 msgstr "マニフェストがまもなく有効期限切れになります"
 
 msgid "Manifest history table"
-msgstr ""
+msgstr "マニフェスト履歴テーブル"
 
 msgid "Manifest imported"
 msgstr "マニフェストをインポートしました"
@@ -4894,13 +4864,13 @@ msgid "Multi Content View Environment"
 msgstr "マルチコンテンツビュー環境"
 
 msgid "Multi copy all units"
-msgstr ""
+msgstr "すべてのユニットをマルチコピーする"
 
 msgid "Multi copy content"
-msgstr ""
+msgstr "コンテンツをマルチコピーする"
 
 msgid "Multi copy units"
-msgstr ""
+msgstr "ユニットをマルチコピーする"
 
 msgid "Multi-entitlement"
 msgstr "マルチエンタイトルメント"
@@ -4943,7 +4913,7 @@ msgid ""
 "NOTE: Unable to fully export Content View Version '%{content_view} %{current}' it contains repositories with un-exportable content types. \n"
 " %{repos}"
 msgstr ""
-"注: コンテンツビューバージョン '%{content_view} %{current}' をすべてエクスポートできません。エクスポートできない。コンテンツタイプを使用するリポジトリーが含まれています。\n"
+"注: コンテンツビューバージョン '%{content_view} %{current}' をすべてエクスポートできません。エクスポートできない。コンテンツタイプを使用するリポジトリーが含まれています。 \n"
 " %{repos}"
 
 msgid ""
@@ -4960,7 +4930,7 @@ msgid "Name"
 msgstr "名前"
 
 msgid "Name and label of default content view should not be changed"
-msgstr "デフォルトのコンテンツビューの名前とラベルは変更しないでください。"
+msgstr "デフォルトのコンテンツビューの名前とラベルは変更しないでください"
 
 msgid "Name is a required parameter."
 msgstr "name は必須パラメーターです。"
@@ -5122,10 +5092,10 @@ msgid "No content view environments"
 msgstr "コンテンツビュー環境がありません"
 
 msgid "No content view environments found with ids: %{ids}"
-msgstr "ID が %{ids} のコンテンツビュー環境が見つかりません。"
+msgstr "ID が %{ids} のコンテンツビュー環境が見つかりません"
 
 msgid "No content view environments found with names: %{names}"
-msgstr "名前が %{names} のコンテンツビュー環境が見つかりません。"
+msgstr "名前が %{names} のコンテンツビュー環境が見つかりません"
 
 msgid "No content view environments yet"
 msgstr "コンテンツビュー環境はまだありません"
@@ -5236,7 +5206,7 @@ msgid "No matching "
 msgstr "マッチする項目が "
 
 msgid "No matching ${name} found."
-msgstr "マッチする {name} が見つかりませんでした"
+msgstr "マッチする ${name} が見つかりませんでした。"
 
 msgid "No matching ${selectedContentType} found"
 msgstr "マッチする ${selectedContentType} が見つかりませんでした"
@@ -5353,10 +5323,10 @@ msgid "No recurring logic tied to the sync plan."
 msgstr "同期プランに関連付けられた再帰論理はありません。"
 
 msgid "No repositories added yet"
-msgstr "追加するリポジトリーがまだありません。"
+msgstr "追加するリポジトリーがまだありません"
 
 msgid "No repositories available to add"
-msgstr "追加できるリポジトリーがありません。"
+msgstr "追加できるリポジトリーがありません"
 
 msgid "No repositories available."
 msgstr "利用可能なリポジトリーがありません。"
@@ -5446,7 +5416,7 @@ msgid "Note: Deleting a subscription manifest is STRONGLY discouraged."
 msgstr "注記: サブスクリプションマニフェストを削除することは、決して推奨されません。"
 
 msgid "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available."
-msgstr "注意: カッコ内の数字は、ホストで利用できないライブラリー環境からの適用可能なエラータすべてを反映しています。このコンテンツを適切なコンテンツビューにプロモートして公開できるようにする必要があります。"
+msgstr "注記: カッコ内の数字は、ホストで利用できないライブラリー環境からの適用可能なエラータすべてを反映しています。このコンテンツを適切なコンテンツビューにプロモートして利用できるようにする必要があります。"
 
 msgid "Nothing selected"
 msgstr "何も選択されていません"
@@ -5518,7 +5488,7 @@ msgid "One or more processes require restarting"
 msgstr "1 つ以上のプロセスを再起動する必要があります"
 
 msgid "Only .zip manifest files are accepted"
-msgstr ""
+msgstr ".zip 形式のマニフェストファイルのみが受け付けられます"
 
 msgid "Only On Demand repositories may have space reclaimed."
 msgstr "オンデマンドリポジトリーにしか再利用する領域がありません。"
@@ -5539,10 +5509,10 @@ msgid "Operators"
 msgstr "演算子"
 
 msgid "Optional key algorithm OID strings"
-msgstr ""
+msgstr "オプションのキーアルゴリズム OID 文字列"
 
 msgid "Optional signature algorithm OID strings"
-msgstr ""
+msgstr "オプションの署名アルゴリズム OID 文字列"
 
 msgid "Organization"
 msgstr "組織"
@@ -5568,9 +5538,6 @@ msgstr "組織を空白にしないでください。"
 msgid "Organization id"
 msgstr "組織 ID"
 
-msgid "Organization id not found: '%s'"
-msgstr "組織 ID が見つかりません: '%s'"
-
 msgid "Organization identifier"
 msgstr "組織 ID"
 
@@ -5586,14 +5553,14 @@ msgstr "製品を名前で指定する場合、組織を指定する必要があ
 msgid "Organization not found"
 msgstr "組織が見つかりません"
 
-msgid "Organization not found: '%s'"
-msgstr "組織が見つかりません: '%s'"
-
 msgid "Organization required"
 msgstr "必要な組織"
 
 msgid "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details."
 msgstr "孤立項目のクリーンアップで、一部の Pulp リポジトリーバージョンの削除に失敗しました。詳細はログを確認してください。"
+
+msgid "Orphaned"
+msgstr ""
 
 msgid "Orphaned Content Protection Time"
 msgstr "単独コンテンツの保護時間"
@@ -5827,7 +5794,7 @@ msgid "Prevent from further updates"
 msgstr "今後の更新を回避"
 
 msgid "Prior Content View Version specified in the metadata - '%{name}' does not exist. Please import the metadata for '%{name}' before importing '%{current}' "
-msgstr "メタデータ '%{name}' で指定された以前のコンテンツビューバージョンは存在しません。'%{current}' をインポートする前に、'%{name}' のメタデータをインポートしてください。 "
+msgstr "メタデータ '%{name}' で指定された以前のコンテンツビューバージョンは存在しません。'%{current}' をインポートする前に、'%{name}' のメタデータをインポートしてください "
 
 msgid "Problem searching"
 msgstr "検索中に問題が発生しました"
@@ -5884,9 +5851,6 @@ msgstr ""
 "ホストのインストール済み製品からリストされた製品 ID。\\\n"
 "        製品 API が返した製品 ID とは異なります"
 
-msgid "Product id not found: '%s'"
-msgstr "製品 ID が見つかりません: '%s'"
-
 msgid "Product label"
 msgstr "製品ラベル"
 
@@ -5901,9 +5865,6 @@ msgstr "製品名"
 
 msgid "Product name as listed from a host's installed products"
 msgstr "ホストのインストール済み製品からリストされた製品名"
-
-msgid "Product not found: '%s'"
-msgstr "製品が見つかりません: '%s'"
 
 msgid "Product the repository belongs to"
 msgstr "リポジトリーが属する製品"
@@ -6050,7 +6011,7 @@ msgid "Pulp task error"
 msgstr "Pulp タスクのエラー"
 
 msgid "Purge completed tasks"
-msgstr ""
+msgstr "完了したタスクをパージする"
 
 msgid "Python Package"
 msgstr "Python パッケージ"
@@ -6161,7 +6122,7 @@ msgid "Reclaim Space"
 msgstr "領域の再利用"
 
 msgid "Reclaim space"
-msgstr ""
+msgstr "空き容量を再確保する"
 
 msgid "Reclaim space from On Demand repositories"
 msgstr "オンデマンドリポジトリーからの領域の再利用"
@@ -6236,7 +6197,7 @@ msgid "Refresh all alternate content sources"
 msgstr "すべての代替コンテンツソースの更新"
 
 msgid "Refresh all distributions"
-msgstr ""
+msgstr "すべてのディストリビューションを更新する"
 
 msgid "Refresh alternate content sources"
 msgstr "代替コンテンツソースの更新"
@@ -6251,13 +6212,13 @@ msgid "Refresh counts"
 msgstr "更新回数"
 
 msgid "Refresh distribution"
-msgstr ""
+msgstr "ディストリビューションを更新する"
 
 msgid "Refresh errata applicability"
 msgstr "エラータの適用可能性の更新"
 
 msgid "Refresh if needed"
-msgstr ""
+msgstr "必要に応じて更新する"
 
 msgid "Refresh package applicability"
 msgstr "パッケージの適用可能性の更新"
@@ -6266,10 +6227,10 @@ msgid "Refresh previously imported manifest for Red Hat provider"
 msgstr "Red Hat プロバイダーの以前にインポートされたマニフェストを更新"
 
 msgid "Refresh remote"
-msgstr ""
+msgstr "リモートを更新する"
 
 msgid "Refresh repos"
-msgstr ""
+msgstr "リポジトリーを更新する"
 
 msgid "Refresh source"
 msgstr "ソースの更新"
@@ -6294,9 +6255,6 @@ msgstr "登録先"
 
 msgid "Registered to"
 msgstr "登録先:"
-
-msgid "Registering to multiple environments is not enabled."
-msgstr "複数の環境への登録が有効になっていません。"
 
 msgid "Registration details"
 msgstr "登録の詳細"
@@ -6419,7 +6377,7 @@ msgid "Remove one or more subscriptions from an upstream manifest"
 msgstr "アップストリームマニフェストから 1 つ以上のサブスクリプションを削除します"
 
 msgid "Remove orphans"
-msgstr ""
+msgstr "孤立したコンテンツを削除する"
 
 msgid "Remove package group via Katello interface"
 msgstr "Katello インターフェイスでのパッケージグループの削除"
@@ -6437,13 +6395,13 @@ msgid "Remove products from sync plan"
 msgstr "同期プランから製品を削除"
 
 msgid "Remove rolling repo clone"
-msgstr ""
+msgstr "ローリングリポジトリーのクローンを削除する"
 
 msgid "Remove units"
-msgstr ""
+msgstr "ユニットを削除する"
 
 msgid "Remove unneeded repos"
-msgstr ""
+msgstr "不要なリポジトリーを削除する"
 
 msgid "Remove versions and/or environments from a content view and reassign systems and keys"
 msgstr "コンテンツビューからバージョンおよび/または環境を削除し、システムおよびキーを再度割り当てます"
@@ -6467,7 +6425,7 @@ msgid "Removing this version from all environments will not delete the version. 
 msgstr "すべての環境からこのバージョンを削除しても、バージョンは削除されません。バージョンは引き続き以降のプロモーションの対象になります。"
 
 msgid "Repair"
-msgstr ""
+msgstr "修理"
 
 msgid "Replace content source on the target machine"
 msgstr "ターゲットマシン上のコンテンツソースの置き換え"
@@ -6488,7 +6446,7 @@ msgid "Repositories are not available for enablement while CDN configuration is 
 msgstr "CDN 設定がエアギャップ (切断) に設定されている間、リポジトリーは有効にできません。"
 
 msgid "Repositories certs reset"
-msgstr ""
+msgstr "リポジトリー証明書のリセット"
 
 msgid "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions."
 msgstr "選択したコンテンツビューバージョンに共通のリポジトリーがマージされます。その結果、各コンテンツビューバージョンのすべてのコンテンツが結合された複合コンテンツビューが作成されます。"
@@ -6497,7 +6455,7 @@ msgid "Repositories from published Content Views are not allowed."
 msgstr "公開されたコンテンツビューからのリポジトリーは許可されません。"
 
 msgid "Repositories gpg reset"
-msgstr ""
+msgstr "リポジトリー gpg のリセット"
 
 msgid "Repositories table"
 msgstr "リポジトリーテーブル"
@@ -6518,7 +6476,7 @@ msgid "Repository '%(repoName)s' has been disabled."
 msgstr "リポジトリー '%(repoName)s' が無効化されました。"
 
 msgid "Repository '%(repoName)s' has been enabled."
-msgstr "リポジトリー '%(repoName)s' が有効化されました"
+msgstr "リポジトリー '%(repoName)s' が有効化されました。"
 
 msgid "Repository ID"
 msgstr "リポジトリー ID"
@@ -6533,7 +6491,7 @@ msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "リポジトリーはすでにプロモート済みのため無効にできません。"
 
 msgid "Repository has already been cloned to %{cv_name} in environment %{to_env}"
-msgstr "リポジトリーのクローンはすでに環境 %{to_env} の %{cv_name} に作成されています。"
+msgstr "リポジトリーのクローンはすでに環境 %{to_env} の %{cv_name} に作成されています"
 
 msgid "Repository id"
 msgstr "リポジトリー ID"
@@ -6612,6 +6570,9 @@ msgstr "リポジトリーメタデータの再公開"
 
 msgid "Requested access to '%s' is denied"
 msgstr "'%s' へのアクセス要求が拒否されました"
+
+msgid "Requested repository name is unknown to the registry."
+msgstr ""
 
 msgid "Requirements is not valid yaml."
 msgstr "要件は有効な yaml ではありません。"
@@ -6878,28 +6839,28 @@ msgid "Save Environments"
 msgstr "環境の保存"
 
 msgid "Save artifact"
-msgstr ""
+msgstr "アーティファクトを保存する"
 
 msgid "Save distribution references"
-msgstr ""
+msgstr "ディストリビューション参照を保存する"
 
 msgid "Save publication"
-msgstr ""
+msgstr "パブリケーションを保存する"
 
 msgid "Save version"
-msgstr ""
+msgstr "バージョンを保存する"
 
 msgid "Save versions"
-msgstr ""
+msgstr "バージョンを保存する"
 
 msgid "Saving alternate content source..."
-msgstr "代替コンテンツソースの保存"
+msgstr "代替コンテンツソースの保存中..."
 
 msgid "Saving subscription quantities..."
-msgstr ""
+msgstr "サブスクリプションの数量を保存中..."
 
 msgid "Saving..."
-msgstr ""
+msgstr "保存中..."
 
 msgid "Scan"
 msgstr "スキャン"
@@ -6908,10 +6869,10 @@ msgid "Scan a flatpak remote"
 msgstr "flatpak リモートをスキャンする"
 
 msgid "Scan cdn"
-msgstr ""
+msgstr "cdn をスキャンする"
 
 msgid "Scan remote"
-msgstr ""
+msgstr "リモートをスキャンする"
 
 msgid "Schema version 1"
 msgstr "スキーマバージョン 1"
@@ -7238,7 +7199,7 @@ msgid "Show a content view component"
 msgstr "コンテンツビューのコンポーネントの表示"
 
 msgid "Show a content view environment"
-msgstr ""
+msgstr "コンテンツビュー環境を表示する"
 
 msgid "Show a content view's history"
 msgstr "コンテンツビューの履歴を表示"
@@ -7361,6 +7322,9 @@ msgstr "Smart Proxy '%{proxy}': RHSM の URL は HTTPS プロトコルを使用�
 msgid "Smart proxies"
 msgstr "Smart Proxy"
 
+msgid "Smart proxies must have the Pulp feature to be used with alternate content sources: %s"
+msgstr ""
+
 msgid "Smart proxy ID"
 msgstr "Smart Proxy ID"
 
@@ -7476,16 +7440,16 @@ msgid "Something went wrong while getting repositories! ${getResponseErrorMsgs(e
 msgstr "リポジトリーの取得中に問題が発生しました! ${getResponseErrorMsgs(error.response)}"
 
 msgid "Something went wrong while getting the data. See the logs for more information"
-msgstr "データの取得中に問題が発生しました。詳細についてはログを参照してください。"
+msgstr "データの取得中に問題が発生しました。詳細についてはログを参照してください"
 
 msgid "Something went wrong while getting version details. ${getResponseErrorMsgs(error.response)}"
 msgstr "バージョン情報の取得中に問題が発生しました。 ${getResponseErrorMsgs(error.response)}"
 
 msgid "Something went wrong while loading the Smart Proxy. See the logs for more information"
-msgstr "Smart Proxy のロード中に問題が発生しました。詳細はログを参照してください。"
+msgstr "Smart Proxy のロード中に問題が発生しました。詳細はログを参照してください"
 
 msgid "Something went wrong while loading the content views. See the logs for more information"
-msgstr "コンテンツビューのロード中に問題が発生しました。詳細についてはログを参照してください。"
+msgstr "コンテンツビューのロード中に問題が発生しました。詳細についてはログを参照してください"
 
 msgid "Something went wrong while refreshing alternate content sources: "
 msgstr "代替コンテンツソースの更新中に問題が発生しました: "
@@ -7554,7 +7518,7 @@ msgid "Something went wrong while retrieving the repository types! ${getResponse
 msgstr "リポジトリータイプの取得時にエラーが発生しました! ${getResponseErrorMsgs(error.response)}"
 
 msgid "Something went wrong while updating the content source. See the logs for more information"
-msgstr "コンテンツソースの更新中に問題が発生しました。詳細についてはログを参照してください。"
+msgstr "コンテンツソースの更新中に問題が発生しました。詳細についてはログを参照してください"
 
 msgid "Something went wrong while verifying content checksums: ${getResponseErrorMsgs(error?.response)}"
 msgstr "コンテンツチェックサムの検証中にエラーが発生しました: ${getResponseErrorMsgs(error?.response)}"
@@ -7596,7 +7560,7 @@ msgid "Start Date"
 msgstr "開始日"
 
 msgid "Start Date and Time can't be blank"
-msgstr "開始日時を空白にしないでください。"
+msgstr "開始日時を空白にしないでください"
 
 msgid "Start Time"
 msgstr "開始時刻"
@@ -7614,7 +7578,7 @@ msgid "State"
 msgstr "状態"
 
 msgid "Status"
-msgstr "ステータス"
+msgstr "状態"
 
 msgid "Status must be one of: %s"
 msgstr "ステータスは %s のいずれかに指定する必要があります"
@@ -7689,7 +7653,7 @@ msgid "Subscription not found"
 msgstr "サブスクリプションが見つかりません"
 
 msgid "Subscription was not persisted - %{error_message}"
-msgstr "サブスクリプションが保存されませんでした: %{error_message}"
+msgstr "サブスクリプションが保存されませんでした - %{error_message}"
 
 msgid "Subscriptions"
 msgstr "サブスクリプション"
@@ -8044,7 +8008,7 @@ msgid "The manifest imported within Organization %{subject} is no longer valid. 
 msgstr "組織 %{subject} 内にインポートされていたマニフェストは無効になりました。新しいマニフェストをインポートしてください。"
 
 msgid "The maximum number of second that Pulp can take to do a single sync operation, e.g., download a single metadata file."
-msgstr "Pulp が 1 回の同期操作 (例: 1 つのメタデータファイルのダウンロード) に使用できる最大秒数"
+msgstr "Pulp が 1 回の同期操作 (例: 1 つのメタデータファイルのダウンロード) に使用できる最大秒数。"
 
 msgid "The maximum number of seconds for Pulp to connect to a peer for a new connection not given from a pool."
 msgstr "Pulp がプールから指定されていない新しい接続のピアに接続するための最大秒数。"
@@ -8078,7 +8042,7 @@ msgstr ""
 " %{repos}"
 
 msgid "The page you are attempting to access requires selecting a specific organization."
-msgstr "アクセス先のページには、特定の組織を選択する必要があります。"
+msgstr "アクセスしようとしているページでは、特定の組織を選択する必要があります。"
 
 msgid "The path %{real_path} does not seem to be a valid repository. If you think this is an error, please try refreshing your manifest."
 msgstr "パス %{real_path} は、有効なリポジトリーではないようです。これがエラーだと思われる場合には、マニフェストを更新してみてください。"
@@ -8141,7 +8105,7 @@ msgid "The value will be available in templates as @host.params['kt_activation_k
 msgstr "値は、テンプレートで @host.params['kt_activation_keys'] という形で使用できるようになります"
 
 msgid "There are no Manifests to display"
-msgstr "表示するマニフェストはありません。"
+msgstr "表示するマニフェストはありません"
 
 msgid "There are no Subscriptions to display"
 msgstr "表示するサブスクリプションはありません"
@@ -8219,7 +8183,7 @@ msgid "This activation key is associated to one or more Hosts/Hostgroups. Search
 msgstr "このアクティべーションキーは 1 つ以上のホスト/ホストグループに関連付けられます。削除前に params.kt_activation_keys ~ \"%{name}\" を使用してホスト/ホストグループを検索し、関連付け解除します。"
 
 msgid "This application requires a host reboot"
-msgstr "このアプリケーションは、ホストを再起動する必要があります。"
+msgstr "このアプリケーションは、ホストを再起動する必要があります"
 
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
 msgstr "この証明書により、ユーザーはすべての環境のリポジトリーをブラウザーから閲覧できます。"
@@ -8351,13 +8315,13 @@ msgid "To enable the synced content option, this host must use a content source,
 msgstr "同期コンテンツオプションを有効にするには、このホストが、選択したアーキテクチャーおよびオペレーティングシステム用の同期済みキックスタートリポジトリーを含むコンテンツソース、コンテンツビュー、およびライフサイクル環境を使用している必要があります。"
 
 msgid "To enable them, add the lifecycle environment to the host's content source, or "
-msgstr "これを有効にするには、ライフサイクル環境をホストのコンテンツソースに追加します。または、 "
+msgstr "これを有効にするには、ライフサイクル環境をホストのコンテンツソースに追加します。または "
 
 msgid "To finish the process of changing the content source, run the following script manually on {hosts}."
 msgstr "コンテンツソースの変更プロセスを完了するには、次のスクリプトを {hosts} で手動で実行します。"
 
 msgid "To get started, add a filter rule to this filter"
-msgstr "まず、フィルタールールをこのフィルターに追加します。"
+msgstr "まず、フィルタールールをこのフィルターに追加します"
 
 msgid "To get started, add this host to a host collection."
 msgstr "まず、このホストをホストコレクションに追加します。"
@@ -8624,7 +8588,7 @@ msgid "Unregister host %s before assigning an organization."
 msgstr "組織を割り当てる前にホスト %s の登録を解除してください。"
 
 msgid "Unregister the host as a subscription consumer"
-msgstr "ホストからサブスクリプション登録の解除"
+msgstr "サブスクリプションコンシューマーとしてのホストを登録解除します"
 
 msgid "Unspecified"
 msgstr "指定されていません"
@@ -8702,7 +8666,7 @@ msgid "Update content counts for the smart proxy"
 msgstr "Smart Proxy のコンテンツ数を更新します"
 
 msgid "Update content urls"
-msgstr "コンテンツ url の更新"
+msgstr "コンテンツ url を更新する"
 
 msgid "Update content view environments for host"
 msgstr "ホストのコンテンツビュー環境の更新"
@@ -8711,16 +8675,16 @@ msgid "Update content view environments for host %s"
 msgstr "ホスト %s のコンテンツビュー環境の更新"
 
 msgid "Update distributions"
-msgstr ""
+msgstr "ディストリビューションを更新する"
 
 msgid "Update hosts manually"
 msgstr "ホストの手動更新"
 
 msgid "Update http proxy"
-msgstr "http プロキシーの更新"
+msgstr "http プロキシーを更新する"
 
 msgid "Update http proxy details"
-msgstr "HTTP プロキシーの詳細更新"
+msgstr "HTTP プロキシーの詳細を更新する"
 
 msgid "Update installed packages, enabled repos, module inventory"
 msgstr "インストール済みパッケージ、有効なリポジトリー、モジュールインベントリーの更新"
@@ -8738,7 +8702,7 @@ msgid "Update packages via Katello interface"
 msgstr "Katello インターフェイスでのパッケージの更新"
 
 msgid "Update redhat repository"
-msgstr "redhat リポジトリーの更新"
+msgstr "redhat リポジトリーを更新する"
 
 msgid "Update release version for host"
 msgstr "ホストのリリースバージョンの更新"
@@ -8747,10 +8711,10 @@ msgid "Update release version for host %s"
 msgstr "ホスト %s のリリースバージョンの更新"
 
 msgid "Update remote"
-msgstr ""
+msgstr "リモートを更新する"
 
 msgid "Update repository"
-msgstr ""
+msgstr "リポジトリーを更新する"
 
 msgid "Update services requiring restart"
 msgstr "再起動が必要なサービスの更新"
@@ -8832,7 +8796,7 @@ msgid "Upgrade via remote execution"
 msgstr "リモート実行によるアップグレード"
 
 msgid "Upload"
-msgstr ""
+msgstr "アップロード"
 
 msgid "Upload Content Credential contents"
 msgstr "コンテンツ認証情報のコンテンツのアップロード"
@@ -8844,10 +8808,10 @@ msgid "Upload a subscription manifest"
 msgstr "サブスクリプションマニフェストのアップロード"
 
 msgid "Upload a zip file"
-msgstr ""
+msgstr "zip ファイルをアップロードする"
 
 msgid "Upload content"
-msgstr ""
+msgstr "コンテンツをアップロードする"
 
 msgid "Upload file"
 msgstr "ファイルのアップロード"
@@ -8868,7 +8832,7 @@ msgid "Upload request id"
 msgstr "要求 ID のアップロード"
 
 msgid "Upload tag"
-msgstr ""
+msgstr "アップロードタグ"
 
 msgid "Upstream Candlepin"
 msgstr "アップストリーム Candlepin"
@@ -8931,7 +8895,7 @@ msgid "Use HTTP proxies"
 msgstr "HTTP プロキシーの使用"
 
 msgid "Use container certificates for container registry authentication. If it is set to true, container registry certificates will be installed on the host"
-msgstr "コンテナーレジストリーの認証にコンテナー証明書を使用します。true に設定すると、コンテナーレジストリー証明書がホストにインストールされます"
+msgstr "コンテナーレジストリー認証にコンテナー証明書を使用します。true に設定すると、コンテナーレジストリー証明書がホストにインストールされます"
 
 msgid "Used as"
 msgstr "以下として使用: "
@@ -8991,7 +8955,7 @@ msgid "Verify SSL"
 msgstr "SSL の確認"
 
 msgid "Verify checksum"
-msgstr "チェックサムの確認"
+msgstr "チェックサムを確認する"
 
 msgid "Verify checksum for content on smart proxy"
 msgstr "Smart Proxy 上のコンテンツのチェックサムを確認する"
@@ -9057,7 +9021,7 @@ msgid "Versions will appear here when the content view is published."
 msgstr "コンテンツビューが公開されると、バージョンがここに表示されます。"
 
 msgid "View %{view} has not been promoted to %{env}"
-msgstr "ビュー %{view} は %{env} にプロモートされていません。"
+msgstr "ビュー %{view} は %{env} にプロモートされていません"
 
 msgid "View Filters"
 msgstr "フィルターの表示"
@@ -9219,7 +9183,7 @@ msgid "You currently have no content views to display"
 msgstr "現在、表示するコンテンツビューがありません"
 
 msgid "You do not have permission to view this organization."
-msgstr ""
+msgstr "この組織を表示する権限がありません。"
 
 msgid "You do not have permissions to delete %s"
 msgstr "%s を削除する権限がありません"
@@ -9267,7 +9231,7 @@ msgid "Your search returned no matching "
 msgstr "検索条件にマッチする項目はありませんでした "
 
 msgid "Your search returned no matching ${name}."
-msgstr "検索条件にマッチする ${name} はありませんでした"
+msgstr "検索条件にマッチする ${name} はありませんでした。"
 
 msgid "Your search returned no matching DEBs."
 msgstr "検索条件で一致する DEB が返されませんでした。"
@@ -9555,7 +9519,7 @@ msgid "disk"
 msgstr "ディスク"
 
 msgid "download policy for deb, docker, file, python, and yum repos (either 'immediate' or 'on_demand')"
-msgstr ""
+msgstr "deb、docker、file、python、yum リポジトリーのダウンロードポリシー ( 'immediate' または 'on_demand')"
 
 msgid "edit the content source"
 msgstr "コンテンツソースを編集する"
@@ -9642,7 +9606,7 @@ msgid "for repository '%{name}' is not unique and cannot be created in '%{env}'.
 msgstr "リポジトリーの場合には、'%{name}' は一意ではなく、'%{env}' で作成できません。コンテナーリポジトリー名 ({%{container_name}) が既存のリポジトリーと競合します。ライフサイクル環境のレジストリー名パターンをより具体的なパターンに変更することを検討してください。"
 
 msgid "force content view promotion and bypass lifecycle environment restriction"
-msgstr "コンテンツビューを強制的にプロモートしてライフサイクル環境の制限を無視する"
+msgstr "コンテンツビューを強制的にプロモートしてライフサイクル環境の制限を無視します"
 
 msgid "foreman-tasks service not running or is not ready yet"
 msgstr "foreman-tasks サービスが実行されていないか、まだ準備が整っていません"
@@ -9654,10 +9618,10 @@ msgid "has already been taken for a product in this organization."
 msgstr "この組織の製品に対してすでに使用されています。"
 
 msgid "has already been taken for this activation key"
-msgstr ""
+msgstr "このアクティベーションキーではすでに使用されています"
 
 msgid "has already been taken for this host"
-msgstr ""
+msgstr "このホストではすでに使用されています"
 
 msgid "has already been taken for this product."
 msgstr "この製品に対してすでに使用されています。"
@@ -9747,7 +9711,7 @@ msgid "label of the repository"
 msgstr "リポジトリーのラベル"
 
 msgid "latest"
-msgstr ""
+msgstr "最新"
 
 msgid "limit to only repositories with this download policy"
 msgstr "このダウンロードポリシーのあるリポジトリーのみに制限します"
@@ -9801,7 +9765,7 @@ msgid "must be one of: %s"
 msgstr "%s のいずれかでなければなりません"
 
 msgid "must be true or false"
-msgstr "true または false でなければなりません。"
+msgstr "true または false でなければなりません"
 
 msgid "must be unique within one organization"
 msgstr "1 つの組織内で一意である必要があります"
@@ -9907,7 +9871,7 @@ msgid "package_ids is not an array"
 msgstr "package_ids は配列ではありません"
 
 msgid "package_names_for_job_template: Action must be one of %s"
-msgstr "package_names_for_job_template: アクションは %s のいずれかでなければなりません。"
+msgstr "package_names_for_job_template: アクションは %s のいずれかでなければなりません"
 
 msgid "params 'show_all_for' and 'available_for' must be used independently"
 msgstr "パラメーター 'show_all_for 'と' available_for 'は個別に使用する必要があります"

@@ -245,12 +245,6 @@
       "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
         "在 ostree 同步期间要排除的以逗号分隔的标签列表。通配符 *, ? 可以被识别。'exclude_refs' 在 'include_refs' 后被评估。"
       ],
-      "A content view environment is a combination of a particular lifecycle environment and content view.": [
-        "内容视图环境是特定生命周期环境和内容视图的组合。"
-      ],
-      "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host.": [
-        "内容视图环境是特定生命周期环境和内容视图的组合。选择要分配给此主机的内容视图环境。"
-      ],
       "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content.": [
         "内容视图环境是特定生命周期环境和内容视图的组合。选择要分配给此主机的内容视图环境。您可以分配多个内容视图环境来提供对不同内容集合的访问。"
       ],
@@ -259,9 +253,6 @@
       ],
       "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.": [
         "内容视图环境是特定生命周期环境和内容视图的组合。您可以分配多个内容视图环境，以提供对多组内容的主机访问。"
-      ],
-      "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}.": [
-        "内容视图环境是特定生命周期环境和内容视图的组合。您的选择将 {replace} 中的所有现有内容视图环境 {hosts}。"
       ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
         "此内容视图中未应用大量勘误，因此仅显示前 100 个。"
@@ -352,9 +343,6 @@
       ],
       "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.": [
         "激活码 %s 有多个生命周期环境。使用 #lifecycle_environments 替代。"
-      ],
-      "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
-        "激活码 '%s' 与多个环境关联，但没有启用注册到多个环境。"
       ],
       "Activation key content view environments updated": [
         "激活码内容视图环境已更新"
@@ -471,7 +459,7 @@
         "将含有软件包组的存储库添加到内容视图，以在此处选择它们。"
       ],
       "Add rolling repo clone": [
-        ""
+        "添加滚动仓库克隆"
       ],
       "Add rule": [
         "添加规则"
@@ -572,23 +560,17 @@
       "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.": [
         "只要主机处于构建模式，允许主机注册绕过 'Host Profile Assume'。"
       ],
-      "Allow hosts or activation keys to be associated with multiple content view environments": [
-        "允许主机或激活码与多个内容视图环境关联"
-      ],
       "Allow hosts to re-register themselves only when they are in build mode": [
         "仅当主机处于构建模式时才允许主机重新注册"
-      ],
-      "Allow multiple content views": [
-        "由多个组件内容视图组成"
       ],
       "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host.": [
         "只要其他主机未使用注册的 DMI UUID，就允许新的主机注册假定注册的配置文件具有匹配的主机名。"
       ],
       "Allow this smart proxy to authenticate to the container registry using its SSL client certificate": [
-        ""
+        "允许此智能代理使用其 SSL 客户端证书向容器 registry 进行身份验证"
       ],
       "Allow this smart proxy to pull and push container images using its SSL client certificate.": [
-        ""
+        "允许此智能代理使用其 SSL 客户端证书拉取和推送容器镜像。"
       ],
       "Also include the latest upgradable package version for each host package": [
         "还包括每个主机软件包的最新可升级软件包版本"
@@ -767,17 +749,17 @@
       "Array of content view environment IDs": [
         "内容视图环境 ID 数组"
       ],
-      "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
-        "要与主机关联的内容视图环境 ID 的数组。需要 allow_multiple_content_views 设置为 on。"
+      "Array of content view environment IDs to be associated with the hosts.": [
+        ""
       ],
-      "Array of content view environment ids associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
-        "要与激活密钥关联的内容视图环境 ID 的数组。需要将 allow_multiple_content_views 设置为 on。"
+      "Array of content view environment ids associated with the activation key.": [
+        ""
       ],
-      "Array of content view environment ids to be associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
-        "要与激活密钥关联的内容视图环境 ID 的数组。需要 allow_multiple_content_views 设置为 on。"
+      "Array of content view environment ids to be associated with the activation key.": [
+        ""
       ],
-      "Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on.": [
-        "要与主机关联的内容视图环境 ID 的数组。需要 allow_multiple_content_views 设置为 on。"
+      "Array of content view environment ids to be associated with the host.": [
+        ""
       ],
       "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         "内容视图环境标签数组，格式为fecycle_environment_label/content_view_label'. 如果指定了 content_view_environment_ids，则被忽略。"
@@ -806,9 +788,6 @@
       "Assign another content view environment": [
         "分配另一个内容视图环境"
       ],
-      "Assign content view environment": [
-        "分配内容视图环境"
-      ],
       "Assign content view environments": [
         "分配内容视图环境"
       ],
@@ -826,12 +805,6 @@
       ],
       "Assign the release version to one or more hosts": [
         "将发行版本分配给一个或多个主机"
-      ],
-      "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        "没有启用将一个主机分配给多个内容视图环境。要启用它，请设置 allow_multiple_content_views 设置。"
-      ],
-      "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        "没有启用将激活密钥分配给多个内容视图环境。要启用它，请设置 allow_multiple_content_views 设置。"
       ],
       "Associated content view environments": [
         "关联的内容视图环境"
@@ -1104,7 +1077,7 @@
         "Candlepin 消费者注册相应缺失了 uuid"
       ],
       "Candlepin could not generate a certificate with the requested cryptographic capabilities.": [
-        ""
+        "Candlepin 无法生成具有请求的加密功能的证书。"
       ],
       "Candlepin is not running properly": [
         "Candlepin 没有正常运行"
@@ -1278,7 +1251,7 @@
         "无法将自动发布设置为非复合内容视图"
       ],
       "Cannot skip metadata check on non-yum/deb/file repositories.": [
-        ""
+        "无法跳过非 yum/deb/file 存储库的元数据检查。"
       ],
       "Cannot sync file:// repositories with the On Demand Download Policy": [
         "无法同步带有按需下载策略的 file:// 仓库"
@@ -1368,7 +1341,7 @@
         "清理后端对象"
       ],
       "Clear": [
-        ""
+        "清除"
       ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "清除之前的所有注册，并使用 --force 运行 subscription-manager。"
@@ -1407,19 +1380,19 @@
         "全部折叠"
       ],
       "Collapse group": [
+        "折叠组"
+      ],
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
-      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
-        "要与激活密钥关联的内容视图环境标签的以逗号分隔的列表，格式为 'lifecycle_environment_label/content_view_label'。如果指定了 content_view_environment_ids，则忽略它。需要将 allow_multiple_content_views 设置为 on。"
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
+        ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
-        "要与激活密钥关联的内容视图环境标签的以逗号分隔的列表，格式为 'lifecycle_environment_label/content_view_label'。如果指定了 content_view_environment_ids，则忽略它。需要将 allow_multiple_content_views 设置为 on。"
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
+        ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
-        "要与主机关联的内容视图环境标签的逗号分隔列表，格式为 'lifecycle_environment_label/content_view_label'。如果指定了 content_view_environment_ids，则忽略它。需要将 allow_multiple_content_views 设置为 on。"
-      ],
-      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
-        "要与主机关联的内容视图环境标签的逗号分隔列表，格式为 'lifecycle_environment_label/content_view_label'。如果指定了 content_view_environment_ids，则忽略它。需要将 allow_multiple_content_views 设置为 on。"
+      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
+        ""
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
         "以逗号分隔的子路径列表。所有子路径都必须在结尾有一个斜杠，且在开头没有斜杠。"
@@ -1434,7 +1407,7 @@
         "命令包含选择 %(packageCount)s 个（共 %(selectedCount)s）选择的 %(selectedWord)s"
       ],
       "Commit upload": [
-        ""
+        "提交上传"
       ],
       "Compare": [
         "比较"
@@ -1473,7 +1446,7 @@
         "Foreman 上更新的配置"
       ],
       "Confirm": [
-        ""
+        "确认"
       ],
       "Confirm Deletion": [
         "确认删除"
@@ -1503,7 +1476,7 @@
         "容器镜像"
       ],
       "Container Registry Authentication": [
-        ""
+        "容器 Registry 身份验证"
       ],
       "Container image tag": [
         "容器镜像标签"
@@ -1713,7 +1686,7 @@
         "内容视图"
       ],
       "Content view ${name} created": [
-        "内容视图 {name} 已创建"
+        "内容视图 ${name} 已创建"
       ],
       "Content view '%{content_view}' is not attached to the environment.": [
         "内容视图 '%{content_view}' 没有附加到环境。"
@@ -1746,7 +1719,7 @@
         "内容视图环境 ID"
       ],
       "Content view environment identifier": [
-        ""
+        "内容视图环境标识符"
       ],
       "Content view environments": [
         "内容视图环境"
@@ -1833,13 +1806,13 @@
         "复制"
       ],
       "Copy all units": [
-        ""
+        "复制所有单元"
       ],
       "Copy an activation key": [
         "复制激活码"
       ],
       "Copy content": [
-        ""
+        "复制内容"
       ],
       "Copy content view": [
         "复制内容视图"
@@ -1854,7 +1827,7 @@
         "复制到剪贴板"
       ],
       "Copy version": [
-        ""
+        "复制版本"
       ],
       "Copy version units to library": [
         "将版本单位复制到库"
@@ -2082,7 +2055,7 @@
         "创建內容视图"
       ],
       "Create exporter": [
-        ""
+        "创建导出器"
       ],
       "Create filter": [
         "创建过滤器"
@@ -2091,10 +2064,10 @@
         "创建主机集"
       ],
       "Create import": [
-        ""
+        "创建导入"
       ],
       "Create importer": [
-        ""
+        "创建导入器"
       ],
       "Create new activation key": [
         "创建新的激活码"
@@ -2103,10 +2076,10 @@
         "创建机构"
       ],
       "Create publication": [
-        ""
+        "创建发布"
       ],
       "Create remote": [
-        ""
+        "创建远程"
       ],
       "Creation": [
         "创建"
@@ -2376,7 +2349,7 @@
         "删除将此存储库作为最后一个关联的存储库的内容视图过滤器。默认为 true。如果为 false，则此类过滤器现在应用到内容视图中的所有存储库。"
       ],
       "Delete distributions": [
-        ""
+        "删除分发版"
       ],
       "Delete manifest from Red Hat provider": [
         "從 Red Hat 供應者中刪除清單"
@@ -2385,22 +2358,22 @@
         "从内容视图中删除多个过滤器"
       ],
       "Delete orphan alternate content sources": [
-        ""
+        "删除孤立替代内容源"
       ],
       "Delete orphan distributions": [
-        ""
+        "删除孤立分发包"
       ],
       "Delete orphan remotes": [
-        ""
+        "删除孤立远程源"
       ],
       "Delete orphan repository versions": [
-        ""
+        "删除孤立存储库版本"
       ],
       "Delete remote": [
-        ""
+        "删除远程源"
       ],
       "Delete repository references": [
-        ""
+        "删除存储库引用"
       ],
       "Delete version": [
         "删除版本"
@@ -2505,10 +2478,10 @@
         "銷毀組織中的一個環境"
       ],
       "Destroy exporter": [
-        ""
+        "销毁导出器"
       ],
       "Destroy importer": [
-        ""
+        "销毁导入器"
       ],
       "Destroy one or more alternate content sources": [
         "销毁一个或多个备用内容源"
@@ -2529,7 +2502,7 @@
         "%s 详情"
       ],
       "Determining settings for ${truncate(name)}": [
-        "确定 {truncate(name)} 的设置"
+        "确定 ${truncate(name)} 的设置"
       ],
       "Digest": [
         "文摘值"
@@ -2586,7 +2559,7 @@
         "下载速率限制"
       ],
       "Drag here": [
-        ""
+        "拖放此处"
       ],
       "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format.": [
         "由于机构发生了变化，此容器名称已经变得不明确（机构名称 '%{org_label}'）。如果您希望继续使用此容器名称，请销毁有冲突的机构 '%{o_name}(id %{o_id})。如果您想要同时保留这些机构，请销毁 '%{o_label}/%{prod_label}/%{root_repo_label}' 并使用 id 格式尝试重试推送。"
@@ -2630,9 +2603,6 @@
       "Edit activation key": [
         "编辑激活码"
       ],
-      "Edit content view environment": [
-        "编辑内容视图环境"
-      ],
       "Edit credentials": [
         "编辑凭证"
       ],
@@ -2640,7 +2610,7 @@
         "编辑详情"
       ],
       "Edit entitlements": [
-        ""
+        "编辑权利"
       ],
       "Edit filter rule": [
         "列表过滤规则"
@@ -2769,7 +2739,7 @@
         "環境不能位於自己的推送路徑上"
       ],
       "Environment contents refresh": [
-        ""
+        "环境内容刷新"
       ],
       "Environment identifier": [
         "环境标识符"
@@ -2874,7 +2844,7 @@
         "展开全部"
       ],
       "Expand group": [
-        ""
+        "展开组"
       ],
       "Expire soon days": [
         "即将过期天数"
@@ -3180,10 +3150,10 @@
         "强制重新生成适用性。"
       ],
       "Force sync even if no upstream changes are detected.": [
-        ""
+        "即使没有检测到上游更改，也强制同步。"
       ],
       "Force sync even if no upstream changes are detected. Only used with yum, deb, or file repositories.": [
-        ""
+        "如果没有检测到上游更改，也强制同步。只与 yum、deb 或 file 存储库一起使用。"
       ],
       "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy.": [
         "强制重新发布指定存储库，在文件系统上重新生成元数据和符号链接。不允许使用\\\"Complete Mirroring' 镜像\\\"镜像策略的存储库。"
@@ -3228,7 +3198,7 @@
         "产生主机适用性"
       ],
       "Generate metadata": [
-        ""
+        "生成元数据"
       ],
       "Generate repository applicability": [
         "生成仓库适用性"
@@ -3288,7 +3258,7 @@
         "大于"
       ],
       "Guests of %s": [
-        ""
+        "%s 的客户机"
       ],
       "HTTP Proxies": [
         "HTTP 代理服务器"
@@ -3414,7 +3384,7 @@
         "主机组 ID"
       ],
       "Host group identifier": [
-        ""
+        "主机组标识符"
       ],
       "Host groups": [
         "主机组"
@@ -3792,7 +3762,7 @@
         "导入订阅清单，为主机授予红帽内容的访问权限。"
       ],
       "Import migration": [
-        ""
+        "导入迁移"
       ],
       "Import new manifest": [
         "导入新清单"
@@ -3804,10 +3774,10 @@
         "仅导入不能直接发布的内容视图。内容只能通过导入至视图来更新。"
       ],
       "Import repository upload": [
-        ""
+        "导入存储库上传"
       ],
       "Import upload": [
-        ""
+        "导入上传"
       ],
       "Import uploads into a repository": [
         "将上传文件导入仓库"
@@ -4404,7 +4374,7 @@
         "备用内容源列表。"
       ],
       "List available key algorithms for debug certificates": [
-        ""
+        "列出调试证书的可用密钥算法"
       ],
       "List available releases in the organization": [
         "列出机构中的可用版本"
@@ -4710,7 +4680,7 @@
         "清单即将过期"
       ],
       "Manifest history table": [
-        ""
+        "清单历史记录表"
       ],
       "Manifest imported": [
         "导入的清单"
@@ -4860,13 +4830,13 @@
         "多内容视图环境"
       ],
       "Multi copy all units": [
-        ""
+        "批量复制所有单元"
       ],
       "Multi copy content": [
-        ""
+        "批量复制内容"
       ],
       "Multi copy units": [
-        ""
+        "批量复制单元"
       ],
       "Multi-entitlement": [
         "多权利"
@@ -5193,7 +5163,7 @@
         "没有找到匹配的 ${name}。"
       ],
       "No matching ${selectedContentType} found": [
-        "没有找到匹配的 {selectedContentType}"
+        "没有找到匹配的 ${selectedContentType}"
       ],
       "No matching DEB found.": [
         "未找到匹配的 DEB。"
@@ -5472,7 +5442,7 @@
         "一个或多个进程需要重新启动"
       ],
       "Only .zip manifest files are accepted": [
-        ""
+        "只接受 .zip 清单文件"
       ],
       "Only On Demand repositories may have space reclaimed.": [
         "只有 On Demand 存储库可能才有可以重新声明的空间。"
@@ -5493,10 +5463,10 @@
         "Operators"
       ],
       "Optional key algorithm OID strings": [
-        ""
+        "可选的密钥算法 OID 字符串"
       ],
       "Optional signature algorithm OID strings": [
-        ""
+        "可选的签名算法 OID 字符串"
       ],
       "Organization": [
         "机构"
@@ -5522,9 +5492,6 @@
       "Organization id": [
         "組織 ID"
       ],
-      "Organization id not found: '%s'": [
-        "机构 id 没有找到: '%s'"
-      ],
       "Organization identifier": [
         "机构标识符"
       ],
@@ -5540,14 +5507,14 @@
       "Organization not found": [
         "没有找到机构"
       ],
-      "Organization not found: '%s'": [
-        "没有找到机构：'%s'"
-      ],
       "Organization required": [
         "需要的机构"
       ],
       "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.": [
         "对孤立项进行清理时无法删除一些 Pulp 仓库版本。请检查日志以了解更多详细信息。"
+      ],
+      "Orphaned": [
+        ""
       ],
       "Orphaned Content Protection Time": [
         "孤立的内容保护时间"
@@ -5703,7 +5670,7 @@
         "权限被拒绝。用户 '%{user}' 没有访问机构 '%{org}' 的权限。"
       ],
       "Persistence": [
-        "持久"
+        "持久化"
       ],
       "Persistence must be one of: %s": [
         "持久性必须是以下之一：%s"
@@ -5834,9 +5801,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "产品 id，与列出的主机安装的产品一样，\\\\\\n        而不是 products api 返回的 product id"
       ],
-      "Product id not found: '%s'": [
-        "没有找到产品 id: '%s'"
-      ],
       "Product label": [
         "产品标签"
       ],
@@ -5851,9 +5815,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "产品名称，与列出的主机安装的产品一样"
-      ],
-      "Product not found: '%s'": [
-        "未找到产品：'%s'"
       ],
       "Product the repository belongs to": [
         "仓库所属的产品"
@@ -6000,7 +5961,7 @@
         "Pulp 任务错误"
       ],
       "Purge completed tasks": [
-        ""
+        "清除完成的任务"
       ],
       "Python Package": [
         "Python 软件包"
@@ -6111,7 +6072,7 @@
         "重新声明空间"
       ],
       "Reclaim space": [
-        ""
+        "重新声明空间"
       ],
       "Reclaim space from On Demand repositories": [
         "重新声明来自 On Demand 软件仓库的空间"
@@ -6186,7 +6147,7 @@
         "刷新所有备用内容源"
       ],
       "Refresh all distributions": [
-        ""
+        "刷新所有分发包"
       ],
       "Refresh alternate content sources": [
         "销毁备用内容源"
@@ -6201,13 +6162,13 @@
         "刷新计数"
       ],
       "Refresh distribution": [
-        ""
+        "刷刷新分发包"
       ],
       "Refresh errata applicability": [
         "刷新勘误适用性"
       ],
       "Refresh if needed": [
-        ""
+        "按需刷新"
       ],
       "Refresh package applicability": [
         "刷新软件包适用性"
@@ -6216,10 +6177,10 @@
         "為 Red Hat 供應者更新之前匯入的清單"
       ],
       "Refresh remote": [
-        ""
+        "刷新远程源"
       ],
       "Refresh repos": [
-        ""
+        "刷新存储库"
       ],
       "Refresh source": [
         "刷新源"
@@ -6244,9 +6205,6 @@
       ],
       "Registered to": [
         "注册到"
-      ],
-      "Registering to multiple environments is not enabled.": [
-        "未启用注册到多个环境。"
       ],
       "Registration details": [
         "注册详情"
@@ -6369,7 +6327,7 @@
         "从上游清单中删除一个或多个订阅"
       ],
       "Remove orphans": [
-        ""
+        "删除孤立项"
       ],
       "Remove package group via Katello interface": [
         "通过 Katello 接口删除软件包组"
@@ -6387,13 +6345,13 @@
         "从同步计划中删除产品"
       ],
       "Remove rolling repo clone": [
-        ""
+        "删除滚动仓库克隆"
       ],
       "Remove units": [
-        ""
+        "删除单元"
       ],
       "Remove unneeded repos": [
-        ""
+        "删除不需要的存储库"
       ],
       "Remove versions and/or environments from a content view and reassign systems and keys": [
         "从内容视图中删除版本和/或环境，并重新分配系统和密钥"
@@ -6417,7 +6375,7 @@
         "从所有环境中移出此版本不会删除此版本。版本仍可用于以后的提升。"
       ],
       "Repair": [
-        ""
+        "修复"
       ],
       "Replace content source on the target machine": [
         "替换目标机器上的内容源"
@@ -6438,7 +6396,7 @@
         "当 CDN 配置设置为 Air-gapped（断开连接）时，仓库不可用。"
       ],
       "Repositories certs reset": [
-        ""
+        "存储库证书重置"
       ],
       "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions.": [
         "所选内容视图版本常见的存储库将合并，生成复合内容视图，该视图是每个内容视图版本中的所有内容。"
@@ -6447,7 +6405,7 @@
         "不允许来自发布的内容视图中的仓库。"
       ],
       "Repositories gpg reset": [
-        ""
+        "存储库 GPG 密钥重置"
       ],
       "Repositories table": [
         "存储库表"
@@ -6562,6 +6520,9 @@
       ],
       "Requested access to '%s' is denied": [
         "请求对 '%s' 的访问被拒绝"
+      ],
+      "Requested repository name is unknown to the registry.": [
+        ""
       ],
       "Requirements is not valid yaml.": [
         "Requirements 不是有效的 yaml。"
@@ -6828,28 +6789,28 @@
         "保存环境"
       ],
       "Save artifact": [
-        ""
+        "保存工件"
       ],
       "Save distribution references": [
-        ""
+        "保存分发引用"
       ],
       "Save publication": [
-        ""
+        "保存发布"
       ],
       "Save version": [
-        ""
+        "保存版本"
       ],
       "Save versions": [
-        ""
+        "保存版本"
       ],
       "Saving alternate content source...": [
         "更新备用内容源..."
       ],
       "Saving subscription quantities...": [
-        ""
+        "保存订阅数量..."
       ],
       "Saving...": [
-        ""
+        "保存..."
       ],
       "Scan": [
         "扫描"
@@ -6858,10 +6819,10 @@
         "扫描 flatpak 远程"
       ],
       "Scan cdn": [
-        ""
+        "扫描 CDN"
       ],
       "Scan remote": [
-        ""
+        "扫描远程"
       ],
       "Schema version 1": [
         "Schema 版本 1"
@@ -7017,7 +6978,7 @@
         "为 ${akDetails.name} 选择属性"
       ],
       "Select available version of ${truncate(cvName)} to use": [
-        "选择一个可用的 {truncate(cvName)} 版本来使用"
+        "选择一个可用的 ${truncate(cvName)} 版本来使用"
       ],
       "Select available version of content views to use": [
         "选择要使用的内容视图的可用版本"
@@ -7188,7 +7149,7 @@
         "显示内容视图组件"
       ],
       "Show a content view environment": [
-        ""
+        "显示内容视图环境"
       ],
       "Show a content view's history": [
         "显示内容视图的历史记录"
@@ -7309,6 +7270,9 @@
       ],
       "Smart proxies": [
         "智能代理"
+      ],
+      "Smart proxies must have the Pulp feature to be used with alternate content sources: %s": [
+        ""
       ],
       "Smart proxy ID": [
         "智能代理 ID"
@@ -8652,7 +8616,7 @@
         "为主机 %s 更新内容视图环境"
       ],
       "Update distributions": [
-        ""
+        "更新分发版"
       ],
       "Update hosts manually": [
         "手动更新主机"
@@ -8688,10 +8652,10 @@
         "为主机 %s 更新发行版本"
       ],
       "Update remote": [
-        ""
+        "更新远程"
       ],
       "Update repository": [
-        ""
+        "更新存储库"
       ],
       "Update services requiring restart": [
         "更新服务需要重启"
@@ -8772,7 +8736,7 @@
         "通过远程执行升级"
       ],
       "Upload": [
-        ""
+        "上载"
       ],
       "Upload Content Credential contents": [
         "上传内容凭证内容"
@@ -8784,10 +8748,10 @@
         "上载订阅清单"
       ],
       "Upload a zip file": [
-        ""
+        "上传 zip 文件"
       ],
       "Upload content": [
-        ""
+        "上传内容"
       ],
       "Upload file": [
         "上传文件"
@@ -8808,7 +8772,7 @@
         "上传请求 ID"
       ],
       "Upload tag": [
-        ""
+        "上传标签"
       ],
       "Upstream Candlepin": [
         "上游 Candlepin"
@@ -9159,7 +9123,7 @@
         "您目前没有要显示的内容视图"
       ],
       "You do not have permission to view this organization.": [
-        ""
+        "您没有权利查看这个机构。"
       ],
       "You do not have permissions to delete %s": [
         "您没有权限删除 %s"
@@ -9495,7 +9459,7 @@
         "磁盘"
       ],
       "download policy for deb, docker, file, python, and yum repos (either 'immediate' or 'on_demand')": [
-        ""
+        "deb、docker、file、python 和 yum 存储库（即 'immediate' 或 'on_demand'）的下载策略"
       ],
       "edit the content source": [
         "编辑内容源"
@@ -9594,10 +9558,10 @@
         "已被该机构的产品采用。"
       ],
       "has already been taken for this activation key": [
-        ""
+        "已为此激活码使用"
       ],
       "has already been taken for this host": [
-        ""
+        "已为此主机执行"
       ],
       "has already been taken for this product.": [
         "已經為此產品使用。"
@@ -9687,7 +9651,7 @@
         "仓库标签"
       ],
       "latest": [
-        ""
+        "最新"
       ],
       "limit to only repositories with this download policy": [
         "限制为仅具有此下载策略的仓库"
