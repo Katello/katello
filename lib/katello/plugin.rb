@@ -2,7 +2,7 @@ require 'katello/permission_creator'
 # rubocop:disable Metrics/BlockLength
 
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 3.18'
+  requires_foreman '>= 5.1'
   register_gettext
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
