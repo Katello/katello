@@ -22,7 +22,6 @@ import {
   DropdownPosition,
 } from '@patternfly/react-core/deprecated';
 import { STATUS } from 'foremanReact/constants';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import { getContentCredentialDetails } from './ContentCredentialsDetailsActions';
@@ -147,20 +146,6 @@ const ContentCredentialsDetails = () => {
           </GridItem>
           <GridItem md={4} sm={12}>
             <Flex justifyContent={{ lg: 'justifyContentFlexEnd', sm: 'justifyContentFlexStart' }}>
-              <FlexItem>
-                <Button
-                  ouiaId="credential-details-view-tasks-button"
-                  component="a"
-                  aria-label={__('view tasks button')}
-                  href={'/foreman_tasks/tasks?search=resource_type%3D+Katello%3A%3A' +
-                        `ContentCredential+resource_id%3D${credentialId}`}
-                  target="_blank"
-                  variant="secondary"
-                >
-                  {__('View tasks ')}
-                  <ExternalLinkAltIcon />
-                </Button>
-              </FlexItem>
               <FlexItem>
                 <Dropdown
                   position={DropdownPosition.right}
