@@ -104,5 +104,25 @@ module Katello
       RestClient::Resource.any_instance.expects(:delete).with({}).returns(mock_response)
       TestHttpResource.delete('/path')
     end
+
+    def test_rest_client_passes_force_direct
+      TestHttpResource.consumer_key = 'key'
+      TestHttpResource.consumer_secret = 'secret'
+      TestHttpResource.force_direct = true
+
+      RestClient::Resource.expects(:new).with(anything, has_entry(:force_direct, true)).returns(stub)
+      TestHttpResource.rest_client(Net::HTTP::Get, :get, '/path')
+    ensure
+      TestHttpResource.force_direct = nil
+    end
+
+    def test_rest_client_omits_force_direct_when_nil
+      TestHttpResource.consumer_key = 'key'
+      TestHttpResource.consumer_secret = 'secret'
+      TestHttpResource.force_direct = nil
+
+      RestClient::Resource.expects(:new).with(anything, Not(has_key(:force_direct))).returns(stub)
+      TestHttpResource.rest_client(Net::HTTP::Get, :get, '/path')
+    end
   end
 end

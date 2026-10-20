@@ -19,7 +19,7 @@ module Katello
     include Katello::Concerns::FilterSensitiveData
 
     class_attribute :consumer_secret, :consumer_key, :prefix, :site, :default_headers,
-                    :ssl_client_cert, :ssl_client_key, :ssl_ca_file
+                    :ssl_client_cert, :ssl_client_key, :ssl_ca_file, :force_direct
 
     attr_reader :json
 
@@ -152,6 +152,7 @@ module Katello
         options[:ssl_ca_file] = self.ssl_ca_file unless self.ssl_ca_file.nil?
         options[:ssl_client_cert] = self.ssl_client_cert unless self.ssl_client_cert.nil?
         options[:ssl_client_key] = self.ssl_client_key unless self.ssl_client_key.nil?
+        options[:force_direct] = self.force_direct unless self.force_direct.nil?
 
         RestClient::Resource.new(url, options)
       end
