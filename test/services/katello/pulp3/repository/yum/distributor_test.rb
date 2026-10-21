@@ -17,7 +17,7 @@ module Katello
 
         def distribution_data(bootable)
           images = bootable ? [PulpRpmClient::ImageResponse.new(path: 'images/pxeboot/vmlinuz')] : [PulpRpmClient::ImageResponse.new(path: 'D:\OS2\BOOT\CDFS.IFS')]
-          variants = [PulpRpmClient::VariantResponse.new(name: 'MyOS_variant_name')]
+          variants = [PulpRpmClient::VariantResponse.new(variant_id: 'myos-variant-id', name: 'MyOS_variant_name')]
           rpm_dist_tree = PulpRpmClient::RpmDistributionTreeResponse.new(pulp_href: "/a/uuid/", release_version: "a version", arch: "h8300", release_name: "MyOS", images: images, variants: variants)
           PulpRpmClient::PaginatedrpmDistributionTreeResponseList.new(results: [rpm_dist_tree])
         end
