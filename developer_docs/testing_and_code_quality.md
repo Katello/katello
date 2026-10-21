@@ -102,8 +102,8 @@ Note for AI agents: The `record_vcr` command is available to assist with VCR rec
 6. Important: Any re-records after running ktest require step 4 to be repeated, as VCR errors may pollute dev, test, and/or Pulp databases due to failing test cleanup.
 
 ### Code Quality Standards
-- **Ruby**: Uses `theforeman-rubocop` with lenient configuration, plus a Katello-local cop (`Katello/CveAbbreviation`, in `lib/rubocop/cop/katello/cve_abbreviation.rb`) that flags "cve" used as shorthand for "content view environment" (see the CVE/CVEnv naming rule in `CLAUDE.md`, including its exclude list for legitimate errata/security CVE files)
-- **JavaScript**: ESLint with Airbnb config, Prettier formatting, plus a Katello-local rule (`no-cve-abbreviation`, in `webpack/eslint-rules/`, loaded via `--rulesdir`) that flags "cve" used as shorthand for "content view environment" (see the CVE/CVEnv naming rule in `CLAUDE.md`, including its exclude list for legitimate errata/security CVE files)
+- **Ruby**: Uses `theforeman-rubocop` with lenient configuration, plus Katello-local cops in `lib/rubocop/cop/katello/`
+- **JavaScript**: ESLint with Airbnb config, Prettier formatting, plus Katello-local rules in `webpack/eslint-rules/`
 - **React**: Components in `webpack/`, Patternfly UI framework
 - **Legacy**: AngularJS in `engines/bastion_katello/`
 
