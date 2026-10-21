@@ -27,9 +27,7 @@
       <tr bst-table-head>
         <th bst-table-column="name" sortable><span translate>Name</span></th>
         <th bst-table-column="consumed"><span translate>Host Limit</span></th>
-        <th bst-table-column="environment"><span translate>Environment</span></th>
-        <th bst-table-column="contentView"><span translate>Content View</span></th>
-        <th bst-table-column="multi-cv"><span translate>Multi Content View Environment</span></th>
+        <th bst-table-column="contentViewEnvironments"><span translate>Content View Environments</span></th>
       </tr>
       </thead>
 
@@ -47,9 +45,15 @@
           <i class="fa fa-chevron-right selected-icon" ng-show="activationKey.selected"></i>
         </td>
         <td bst-table-cell>{{ activationKey | activationKeyConsumedFilter }}</td>
-        <td bst-table-cell>{{ activationKey.environment.name || "" }}</td>
-        <td bst-table-cell>{{ activationKey.content_view.name || "" }}</td>
-        <td bst-table-cell>{{ activationKey.multi_content_view_environment ? 'Yes' : 'No' }}</td>
+        <td bst-table-cell>
+          <span ng-repeat="cve in activationKey.content_view_environments | limitTo:3">
+            {{ cve.label }}<span ng-if="!$last">, </span>
+          </span>
+          <span ng-if="activationKey.content_view_environments.length > 3"
+                title="{{ activationKey.content_view_environment_labels }}">
+            (+ {{ activationKey.content_view_environments.length - 3 }} more)
+          </span>
+        </td>
       </tr>
       </tbody>
     </table>
