@@ -27,6 +27,7 @@ jobs:
     with:
       plugin: katello
       foreman_version: develop # set to the Foreman release branch after branching :)
+      generate_apidoc: ${{ github.event_name == 'push' }}
 
   angular:
     name: Angular ${{ matrix.engine }} - NodeJS ${{ matrix.node }}
