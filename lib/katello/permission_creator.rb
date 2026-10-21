@@ -362,7 +362,7 @@ module Katello
                          {
                            'katello/api/v2/upstream_subscriptions' => [:index, :create, :destroy, :update, :ping],
                          },
-                         :resource_type => 'Katello::Subscription'
+                         :resource_type => 'Organization'
     end
 
     def sync_plan_permissions
