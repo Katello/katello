@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::UpstreamSubscriptionsController < Api::V2::ApiController
     before_action :find_organization
+    before_action :check_authorized
     before_action :check_upstream_connection
     resource_description do
       description "Red Hat subscriptions management platform."
@@ -102,6 +103,10 @@ module Katello
       params.permit(pools: [:id, :quantity])[:pools].map do |pool|
         { "pool" => pool[:id], "quantity" => pool[:quantity] } if pool
       end
+    end
+
+    def check_authorized
+      fail HttpErrors::Forbidden, _("Action unauthorized to be performed in this organization.") unless @organization.authorized?(:manage_subscription_allocations)
     end
   end
 end
