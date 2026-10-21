@@ -72,6 +72,28 @@ module Katello
       end
     end
 
+    def test_index_respects_organization_filter
+      organization_a = taxonomies(:organization1)
+      organization_b = taxonomies(:organization2)
+      user = User.find(users(:restricted).id)
+      role = create_role_with_permissions([{ name: permission, search: "id = #{organization_a.id}" }])
+      role.organizations = [organization_a]
+      role.save!
+      as_admin do
+        user.update!(organizations: [organization_a, organization_b], roles: [role])
+      end
+      login_user(user)
+
+      UpstreamPool.expects(:fetch_pools).with({ 'per_page' => Setting[:entries_per_page] }).returns({})
+      get :index, params: { organization_id: organization_a.id }
+
+      assert_response :success
+
+      get :index, params: { organization_id: organization_b.id }
+
+      assert_response :forbidden
+    end
+
     def test_destroy
       params = { pool_ids: %w(1 2 3), organization_id: @organization.id }
       assert_async_task ::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements do |entitlement_ids|
