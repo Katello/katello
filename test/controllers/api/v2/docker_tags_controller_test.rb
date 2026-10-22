@@ -9,9 +9,17 @@ module Katello
       @meta_tag = DockerMetaTag.create!(:name => @tag.name, :schema1 => @tag, :repositories => [@repo])
     end
 
+    def permissions
+      @view_permission = :view_products
+      @create_permission = :create_products
+      @update_permission = :edit_products
+      @destroy_permission = :destroy_products
+    end
+
     def setup
       setup_controller_defaults_api
       models
+      permissions
     end
 
     def test_autocomplete_name
@@ -33,6 +41,15 @@ module Katello
       get :index, params: { :organization_id => @repo.organization.id }
       assert_response :success
       assert_template "katello/api/v2/docker_tags/index"
+    end
+
+    def test_index_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:index, allowed_perms, denied_perms, [@repo.organization]) do
+        get :index, params: { :organization_id => @repo.organization.id, :repository_id => @repo.id }
+      end
     end
 
     def test_grouped_index
@@ -86,6 +103,21 @@ module Katello
       related_tag = JSON.parse(response.body)['related_tags'].first
       refute_nil related_tag['id']
       assert_equal 'wat', related_tag['name']
+    end
+
+    def test_repositories
+      get :repositories, params: { :id => @meta_tag.id }
+      assert_response :success
+      assert_template "katello/api/v2/repositories/index"
+    end
+
+    def test_repositories_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:repositories, allowed_perms, denied_perms, [@repo.organization]) do
+        get :repositories, params: { :id => @meta_tag.id }
+      end
     end
 
     def test_compare
