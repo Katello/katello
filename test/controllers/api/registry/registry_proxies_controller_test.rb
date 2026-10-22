@@ -560,13 +560,40 @@ module Katello
                                                      content_length: '127225440',
                                                    })
 
-        Resources::Registry::Proxy.expects(:get).returns(mock_pulp_response)
+        Resources::Registry::Proxy.expects(:get).with(anything, 'Accept' => 'application/json').returns(mock_pulp_response)
 
+        @request.headers['Accept'] = 'application/json'
         head :check_blob, params: { repository: @docker_repo.name, digest: @digest }
 
         assert_response 200
         assert_equal 'application/octet-stream', response.headers['Content-Type']
         assert_equal '127225440', response.headers['Content-Length']
+      end
+
+      it "forwards */* instead of a blank Accept header, which Pulp rejects with 406" do
+        mock_pulp_response = mock
+        mock_pulp_response.stubs(:code).returns(200)
+        mock_pulp_response.stubs(:headers).returns({})
+
+        Resources::Registry::Proxy.expects(:get).with(anything, 'Accept' => '*/*').returns(mock_pulp_response)
+
+        @request.headers['Accept'] = ''
+        head :check_blob, params: { repository: @docker_repo.name, digest: @digest }
+
+        assert_response 200
+      end
+
+      it "forwards */* when the Accept header is missing" do
+        mock_pulp_response = mock
+        mock_pulp_response.stubs(:code).returns(200)
+        mock_pulp_response.stubs(:headers).returns({})
+
+        Resources::Registry::Proxy.expects(:get).with(anything, 'Accept' => '*/*').returns(mock_pulp_response)
+
+        @request.env.delete('HTTP_ACCEPT')
+        head :check_blob, params: { repository: @docker_repo.name, digest: @digest }
+
+        assert_response 200
       end
     end
 
