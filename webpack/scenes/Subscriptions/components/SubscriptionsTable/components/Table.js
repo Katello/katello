@@ -11,7 +11,7 @@ import {
   TextInput,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { AngleDownIcon, AngleRightIcon } from '@patternfly/react-icons';
+import { AngleDownIcon, AngleRightIcon, PencilAltIcon } from '@patternfly/react-icons';
 import { Tr, Td } from '@patternfly/react-table';
 import TableIndexPage from 'foremanReact/components/PF4/TableIndexPage/TableIndexPage';
 import { Table as TableIndexTable } from 'foremanReact/components/PF4/TableIndexPage/Table/Table';
@@ -108,7 +108,8 @@ const renderEntitlementsCell = (rowData, rowIndex, inlineEditController) => {
           aria-label={__('Edit entitlements')}
           tabIndex={0}
         >
-          {displayValue}
+          <span>{displayValue}</span>
+          <PencilAltIcon className="entitlements-edit-icon" aria-hidden="true" />
         </div>
       ) : displayValue}
     </Td>
