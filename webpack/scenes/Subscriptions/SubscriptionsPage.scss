@@ -69,6 +69,24 @@ h1[data-ouia-component-id="subscriptions-title"] {
 }
 
 #subscriptions-table {
+  td.editable .input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+
+    .entitlements-edit-icon {
+      display: none;
+      margin-inline-start: var(--pf-v5-global--spacer--sm);
+      flex-shrink: 0;
+    }
+
+    &:hover .entitlements-edit-icon,
+    &:focus .entitlements-edit-icon {
+      display: inline-block;
+    }
+  }
+
   .editable.changed {
     font-weight: var(--pf-v5-global--FontWeight--bold);
   }
