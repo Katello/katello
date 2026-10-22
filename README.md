@@ -24,6 +24,9 @@ Please see our [development guidelines](https://www.theforeman.org/plugins/katel
 * [Ruby guidelines](https://theforeman.org/handbook.html#Ruby)
 * [Javascript guidelines](https://theforeman.org/handbook.html#JavaScript)
 
+The [applicability queue guide](developer_docs/applicability_queue.md) describes
+cross-request batching, Dynflow processing, recovery, and upgrade requirements.
+
 If you have questions about or issues with deploying a development environment, feel free to ask for assistance in our [matrix channel](https://matrix.to/#/#theforeman:matrix.org) or our [community forum](https://community.theforeman.org/)
 
 ## Annotated Pulp and Candlepin Workflows and test Scenarios
