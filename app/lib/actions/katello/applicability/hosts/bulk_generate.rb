@@ -9,13 +9,15 @@ module Actions
 
           def run
             error = false
-            input[:host_ids].each do |host_id|
-              content_facet = ::Katello::Host::ContentFacet.find_by_host_id(host_id)
-              if content_facet.present?
-                # Catch errors and log them, but continue processing the rest of the hosts
-                content_facet.calculate_and_import_applicability
-              else
-                Rails.logger.warn(_("Content Facet for host with id %s is non-existent. Skipping applicability calculation.") % host_id)
+            input[:host_ids].sort.each do |host_id|
+              ::Katello::ApplicableHostQueue.with_host_lock(host_id) do
+                content_facet = ::Katello::Host::ContentFacet.find_by_host_id(host_id)
+                if content_facet.present?
+                  # Catch errors and log them, but continue processing the rest of the hosts
+                  content_facet.calculate_and_import_applicability
+                else
+                  Rails.logger.warn(_("Content Facet for host with id %s is non-existent. Skipping applicability calculation.") % host_id)
+                end
               end
             rescue NoMethodError, PG::Error => e
               Rails.logger.error("Error calculating applicability for host #{host_id}: #{e.message}")
