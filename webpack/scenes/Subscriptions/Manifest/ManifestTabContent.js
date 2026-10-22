@@ -219,7 +219,7 @@ const ManifestTabContent = ({
                         validated={manifestUploadValidated}
                         isDisabled={actionInProgress}
                         onFileInputChange={handleManifestFileChange}
-                        onClearClick={handleManifestFileClear}
+                        onClearButtonClick={handleManifestFileClear}
                         dropzoneProps={{
                           accept: MANIFEST_UPLOAD_ACCEPT,
                           onReadFinished: () =>
