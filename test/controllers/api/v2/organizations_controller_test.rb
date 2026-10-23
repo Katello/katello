@@ -241,6 +241,22 @@ module Katello
       assert_includes response.body, cert_data[:cert]
     end
 
+    def test_download_debug_certificate_with_bad_oid_values
+      message = "Unable to generate an ueber certificate compatible with the provided cryptographic capabilities"
+      Organization.any_instance.expects(:generate_debug_cert_with_algorithms).with(
+        key_algorithms: ['1.2.3'],
+        signature_algorithms: []
+      ).raises(Katello::Errors::CandlepinCryptoConflict.new(message))
+
+      get :download_debug_certificate, params: {
+        id: @organization.title,
+        key_algorithms: ['1.2.3'],
+      }
+      assert_response :unprocessable_entity
+      assert_equal message, JSON.parse(response.body)['error']['message']
+      assert_response :unprocessable_entity # 422
+    end
+
     context "create_organization" do
       setup do
         stub_organization_creator

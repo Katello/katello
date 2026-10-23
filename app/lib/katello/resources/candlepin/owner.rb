@@ -109,6 +109,9 @@ module Katello
               ueber_cert_json = self.post(join_path(path(key), "uebercert"), body.to_json, self.default_headers).body
             rescue RestClient::Conflict => e
               raise ::Katello::Errors::CandlepinCryptoConflict.from_exception(e) || ::Katello::Errors::CandlepinCryptoConflict.new(_("Candlepin could not generate a certificate with the requested cryptographic capabilities."))
+            rescue ::Katello::HttpResource::RestClientException => e
+              raise unless e.code.to_s == '409'
+              raise ::Katello::Errors::CandlepinCryptoConflict, e.message
             end
 
             JSON.parse(ueber_cert_json).with_indifferent_access
