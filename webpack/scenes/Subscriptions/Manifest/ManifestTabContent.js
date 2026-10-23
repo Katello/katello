@@ -114,13 +114,6 @@ const ManifestTabContent = ({
     upload(file);
   };
 
-  const handleManifestFileClear = () => {
-    setManifestUploadValidated('default');
-    setManifestFilename('');
-    setManifestFile(null);
-    skipDuplicateUploadRef.current = false;
-  };
-
   const handleManifestFileRejected = () => {
     setManifestUploadValidated('error');
   };
@@ -214,12 +207,10 @@ const ManifestTabContent = ({
                         filename={manifestFilename}
                         hideDefaultPreview
                         browseButtonText={__('Upload')}
-                        clearButtonText={__('Clear')}
                         filenamePlaceholder={__('Drag here')}
                         validated={manifestUploadValidated}
                         isDisabled={actionInProgress}
                         onFileInputChange={handleManifestFileChange}
-                        onClearClick={handleManifestFileClear}
                         dropzoneProps={{
                           accept: MANIFEST_UPLOAD_ACCEPT,
                           onReadFinished: () =>
