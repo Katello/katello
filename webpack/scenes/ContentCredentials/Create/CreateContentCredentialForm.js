@@ -144,7 +144,7 @@ const CreateContentCredentialForm = ({ setModalOpen, setFormState, refreshTable 
         </FormSelect>
       </FormGroup>
 
-      <FormGroup label={__('Content')} fieldId="content">
+      <FormGroup label={__('Content')} fieldId="content" className="cc-create-content-group">
         <TextArea
           id="content"
           name="content"
