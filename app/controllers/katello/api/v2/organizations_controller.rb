@@ -94,7 +94,11 @@ module Katello
       # Force @organization.errors to be populated
       # Organization.new may raise so @organization may not be set
       @organization&.valid?
-      process_resource_error(message: e.message, resource: @organization)
+      if @organization&.errors&.any?
+        process_resource_error(message: e.message, resource: @organization)
+      else
+        raise e
+      end
     end
 
     api :DELETE, '/organizations/:id', N_('Delete an organization')
