@@ -11,7 +11,7 @@ module Katello
     end
 
     def test_refresh_repos_on_smart_proxies
-      ::ForemanTasks.expects(:async_task).with(::Actions::BulkAction, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, SmartProxy.all)
+      ::ForemanTasks.expects(:async_task).with(::Actions::BulkAction, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, SmartProxy.with_content)
       Rake.application.invoke_task('katello:refresh_repos')
     end
   end
