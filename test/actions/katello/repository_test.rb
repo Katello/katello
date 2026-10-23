@@ -414,6 +414,40 @@ module ::Actions::Katello::Repository
       end
     end
 
+    it 'rejects staged uploads before planning any backend deletion' do
+      staging = unpublished_repository.upload_stagings.create!(
+        execution_plan_uuid: SecureRandom.uuid, filename: 'content.txt',
+        sha256: Digest::SHA256.hexdigest('content')
+      )
+
+      [{}, {organization_destroy: true}].each do |options|
+        action = create_action action_class
+        action.stubs(:action_subject).with(unpublished_repository)
+        action.expects(:plan_action).never
+        action.expects(:remove_generated_content_views).never
+
+        error = assert_raises(RuntimeError) { plan_action action, unpublished_repository, options }
+
+        assert_equal 'Repository cannot be deleted while upload stagings exist.', error.message
+        assert ::Katello::Repository.exists?(unpublished_repository.id)
+        assert ::Katello::UploadStaging.exists?(staging.id)
+      end
+    end
+
+    it 'allows backend deletion after upload staging is removed' do
+      staging = unpublished_repository.upload_stagings.create!(
+        execution_plan_uuid: SecureRandom.uuid, filename: 'content.txt',
+        sha256: Digest::SHA256.hexdigest('content')
+      )
+      staging.destroy!
+      action = create_action action_class
+      action.stubs(:action_subject).with(unpublished_repository)
+
+      plan_action action, unpublished_repository
+
+      assert_action_planned_with action, pulp3_action_class, unpublished_repository, proxy
+    end
+
     it 'does not plan ACS product removal when deleting one of many repos with URL' do
       ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: simplified_acs.id, smart_proxy_id: proxy.id, repository_id: published_repository.id)
       action = create_action action_class
@@ -539,6 +573,39 @@ module ::Actions::Katello::Repository
                                 ::Actions::Katello::Applicability::Repository::Regenerate,
                                 :repo_ids => [custom_repository.id]
     end
+
+    it 'stages uploads with Active Storage and purges them after use' do
+      action = create_action action_class
+      action.expects(:execution_plan).never
+      path = File.join(::Katello::Engine.root, "test", "fixtures", "files", "squirrel-0.3-0.8.noarch.rpm")
+
+      staged_file = action.send(:stage_files, [{:path => path, :filename => 'squirrel.rpm'}], custom_repository).first
+      staging = ::Katello::UploadStaging.find(staged_file[:staging_id])
+      blob = staging.file.blob
+
+      assert_equal File.binread(path), blob.download
+      assert_equal Digest::SHA256.file(path).hexdigest, staged_file[:sha256]
+      assert_equal File.size(path), staged_file[:byte_size]
+      refute staged_file.key?(:path)
+
+      action.send(:purge_staged_files, [staged_file])
+      refute ActiveStorage::Blob.exists?(blob.id)
+    ensure
+      blob&.purge if blob&.persisted?
+    end
+
+    it 'removes only its own partial staging when the next file fails' do
+      path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'squirrel-0.3-0.8.noarch.rpm')
+      owned = ::Katello::UploadStaging.store!(path, repository: custom_repository, execution_plan_uuid: action.execution_plan_id)
+      unrelated = ::Katello::UploadStaging.store!(path, repository: custom_repository, execution_plan_uuid: SecureRandom.uuid)
+      ::Katello::UploadStaging.expects(:store!).twice.returns(owned).then.raises(IOError)
+
+      assert_raises(IOError) { action.send(:stage_files, [{path: path}, {path: path}], custom_repository) }
+      refute ::Katello::UploadStaging.exists?(owned.id)
+      assert unrelated.reload.file.attached?
+    ensure
+      unrelated.purge! if unrelated&.persisted?
+    end
   end
 
   class UploadFilesTest < TestBase
@@ -549,6 +616,7 @@ module ::Actions::Katello::Repository
       ::Katello::Pulp3::Api::Core.any_instance.stubs(:artifacts_api).returns(stub(:list => stub(:results => nil)))
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
+      metadata = {:path => file, :filename => 'puppet_module.tar.gz', :sha256 => Digest::SHA256.file(file).hexdigest}
       action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::UploadFile) do |content_create|
         content_create.stubs(output: { pulp_tasks: [{href: "demo_task/href"}] })
       end
@@ -561,9 +629,9 @@ module ::Actions::Katello::Repository
 
       plan_action action, repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'file'
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::UploadFile,
-                                repository_pulp3, proxy, file)
+                                repository_pulp3, proxy, metadata)
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
-                                {:path => file, :filename => 'puppet_module.tar.gz'},
+                                metadata,
                                 repository_pulp3, proxy,
                                 [{href: "demo_task/href"}],
                                 "file")
@@ -574,20 +642,69 @@ module ::Actions::Katello::Repository
                                 tasks: [{href: "demo_task/version_href"}])
     end
 
-    it 'plans for Pulp3 with duplicate' do
-      SmartProxy.any_instance.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => [stub(:pulp_href => "demo_content/href")]))))
+    it 'recomputes path checksums before duplicate content lookup' do
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
+      source = {path: file, filename: 'puppet_module.tar.gz', sha256: 'stale-checksum'}
+      metadata = source.merge(sha256: Digest::SHA256.file(file).hexdigest)
+      ::Katello::Pulp3::PulpContentUnit.expects(:find_duplicate_unit).
+        with(repository_pulp3, 'file', metadata, metadata[:sha256]).
+        returns(stub(results: [stub(pulp_href: 'demo_content/href')]))
       action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
         import_upload.stubs(output: { pulp_tasks: [{href: "demo_task/version_href"}] })
       end
 
-      plan_action action, repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'file'
+      plan_action action, repository_pulp3, proxy, source, 'file'
+      assert_equal 'stale-checksum', source[:sha256]
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::ImportUpload,
                                 {content_unit_href: "demo_content/href"}, repository_pulp3, proxy)
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
+    end
+
+    it 'recomputes path checksums before reusing a Pulp artifact' do
+      action = create_action pulp3_action_class
+      file = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'puppet_module.tar.gz')
+      source = {path: file, filename: 'puppet_module.tar.gz', sha256: 'stale-checksum'}
+      metadata = source.merge(sha256: Digest::SHA256.file(file).hexdigest)
+      ::Katello::Pulp3::PulpContentUnit.expects(:find_duplicate_unit).returns(stub(results: nil))
+      artifacts_api = mock
+      artifacts_api.expects(:list).with(sha256: metadata[:sha256]).
+        returns(stub(results: [stub(pulp_href: 'demo_artifact/href')]))
+      ::Katello::Pulp3::Api::Core.any_instance.stubs(:artifacts_api).returns(artifacts_api)
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::SaveArtifact) do |save_artifact|
+        save_artifact.stubs(output: {pulp_tasks: [{href: 'demo_task/artifact_href'}]})
+      end
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
+        import_upload.stubs(output: {pulp_tasks: [{href: 'demo_task/version_href'}]})
+      end
+
+      plan_action action, repository_pulp3, proxy, source, 'file'
+
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
+                                metadata, repository_pulp3, proxy, nil, 'file', artifact_href: 'demo_artifact/href')
+      refute_action_planned action, ::Actions::Pulp3::Repository::UploadFile
+    end
+
+    it 'uses owned staging metadata without reopening its legacy path' do
+      action = create_action pulp3_action_class
+      source = {staging_id: 123, path: '/missing/legacy/path', sha256: 'untrusted-checksum'}
+      metadata = {staging_id: 123, filename: 'content.txt', sha256: 'owned-checksum'}
+      ::Katello::UploadStaging.stubs(:supported?).returns(true)
+      ::Katello::UploadStaging.expects(:resolve).with(source, repository_pulp3.id, action.execution_plan_id).
+        returns(stub(metadata: metadata))
+      ::Katello::Pulp3::PulpContentUnit.expects(:find_duplicate_unit).
+        with(repository_pulp3, 'file', metadata, metadata[:sha256]).
+        returns(stub(results: [stub(pulp_href: 'demo_content/href')]))
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
+        import_upload.stubs(output: {pulp_tasks: [{href: 'demo_task/version_href'}]})
+      end
+
+      plan_action action, repository_pulp3, proxy, source, 'file'
+
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+                                {content_unit_href: 'demo_content/href'}, repository_pulp3, proxy)
     end
   end
 
@@ -599,6 +716,7 @@ module ::Actions::Katello::Repository
       ::Katello::Pulp3::Api::Core.any_instance.stubs(:artifacts_api).returns(stub(:list => stub(:results => nil)))
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "shelf_reader-0.1-py2-none-any.whl")
+      metadata = {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl', :sha256 => Digest::SHA256.file(file).hexdigest}
       action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::UploadFile) do |content_create|
         content_create.stubs(output: { pulp_tasks: [{href: "demo_task/href"}] })
       end
@@ -611,9 +729,9 @@ module ::Actions::Katello::Repository
 
       plan_action action, repository_python_pulp3, proxy, {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'}, 'python_package'
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::UploadFile,
-                                repository_python_pulp3, proxy, file)
+                                repository_python_pulp3, proxy, metadata)
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
-                                {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'},
+                                metadata,
                                 repository_python_pulp3, proxy,
                                 [{href: "demo_task/href"}],
                                 "python_package")
