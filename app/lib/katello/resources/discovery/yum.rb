@@ -46,7 +46,7 @@ module Katello
           details = {}
 
           if proxy
-            details[:host] = proxy_host
+            details[:host] = proxy_hostname
             details[:port] = proxy_port
             details[:user] = proxy.username
             details[:password] = proxy.password
