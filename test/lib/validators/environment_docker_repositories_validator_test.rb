@@ -120,5 +120,97 @@ module Katello
         hq_repo.save!
       end
     end
+
+    test "fails when registry pattern creates overlapping paths" do
+      hq_cvv_multi_repo = create(:registry_content_view_version, :hq_cvv_multi_repo,
+                                  content_view: @hq_cv_multi_repo)
+      parent_repo = create(:registry_repository, :hq_repo_alpha,
+                           environment: @hq_env_dev,
+                           product: @hq_product,
+                           content_view_version: hq_cvv_multi_repo)
+      parent_repo.root.update!(docker_upstream_name: "parent")
+
+      child_repo = create(:registry_repository, :hq_repo_beta,
+                          environment: @hq_env_dev,
+                          product: @hq_product,
+                          content_view_version: hq_cvv_multi_repo)
+      child_repo.root.update!(docker_upstream_name: "parent/child")
+
+      @hq_env_dev.registry_name_pattern = "<%= organization.label %>/<%= repository.docker_upstream_name %>"
+      @validator.validate(@hq_env_dev)
+
+      assert_includes @hq_env_dev.errors[:registry_name_pattern].first,
+                      "Registry name pattern results in overlapping container image paths"
+      assert_includes @hq_env_dev.errors[:registry_name_pattern].first, "headquarters/parent"
+      assert_includes @hq_env_dev.errors[:registry_name_pattern].first, "headquarters/parent/child"
+    end
+
+    test "passes when paths don't overlap" do
+      hq_cvv_multi_repo = create(:registry_content_view_version, :hq_cvv_multi_repo,
+                                  content_view: @hq_cv_multi_repo)
+      repo1 = create(:registry_repository, :hq_repo_alpha,
+                     environment: @hq_env_dev,
+                     product: @hq_product,
+                     content_view_version: hq_cvv_multi_repo)
+      repo1.root.update!(docker_upstream_name: "alpha")
+
+      repo2 = create(:registry_repository, :hq_repo_beta,
+                     environment: @hq_env_dev,
+                     product: @hq_product,
+                     content_view_version: hq_cvv_multi_repo)
+      repo2.root.update!(docker_upstream_name: "beta")
+
+      @hq_env_dev.registry_name_pattern = "<%= organization.label %>/<%= repository.docker_upstream_name %>"
+      @validator.validate(@hq_env_dev)
+
+      assert_empty @hq_env_dev.errors[:registry_name_pattern]
+    end
+
+    test "detects all overlaps when multiple exist" do
+      hq_cvv_multi_repo = create(:registry_content_view_version, :hq_cvv_multi_repo,
+                                  content_view: @hq_cv_multi_repo)
+
+      # Create parent, child1, and child2 repos
+      parent = create(:registry_repository, :hq_repo_alpha,
+                      environment: @hq_env_dev,
+                      product: @hq_product,
+                      content_view_version: hq_cvv_multi_repo)
+      parent.root.update!(docker_upstream_name: "app")
+
+      child1 = create(:registry_repository, :hq_repo_beta,
+                      environment: @hq_env_dev,
+                      product: @hq_product,
+                      content_view_version: hq_cvv_multi_repo)
+      child1.root.update!(docker_upstream_name: "app/frontend")
+
+      @hq_env_dev.registry_name_pattern = "<%= organization.label %>/<%= repository.docker_upstream_name %>"
+      @validator.validate(@hq_env_dev)
+
+      errors = @hq_env_dev.errors[:registry_name_pattern]
+      # Should detect the overlap between app and app/frontend
+      assert(errors.any? { |e| e.include?("overlapping container image paths") })
+      assert(errors.any? { |e| e.include?("headquarters/app") && e.include?("headquarters/app/frontend") })
+    end
+
+    test "passes when paths share prefix but no slash separator" do
+      hq_cvv_multi_repo = create(:registry_content_view_version, :hq_cvv_multi_repo,
+                                  content_view: @hq_cv_multi_repo)
+      repo1 = create(:registry_repository, :hq_repo_alpha,
+                     environment: @hq_env_dev,
+                     product: @hq_product,
+                     content_view_version: hq_cvv_multi_repo)
+      repo1.root.update!(docker_upstream_name: "app")
+
+      repo2 = create(:registry_repository, :hq_repo_beta,
+                     environment: @hq_env_dev,
+                     product: @hq_product,
+                     content_view_version: hq_cvv_multi_repo)
+      repo2.root.update!(docker_upstream_name: "application")
+
+      @hq_env_dev.registry_name_pattern = "<%= organization.label %>/<%= repository.docker_upstream_name %>"
+      @validator.validate(@hq_env_dev)
+
+      assert_empty @hq_env_dev.errors[:registry_name_pattern]
+    end
   end
 end

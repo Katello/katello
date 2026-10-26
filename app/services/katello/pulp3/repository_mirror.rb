@@ -257,11 +257,14 @@ module Katello
       end
 
       def retry_distribution_create_with_publication(error, dist_options)
+        # Check for prefix overlap error (Pulp 3.117+)
+        if error.message.include?("is prefixed by an existing base_path")
+          fail Katello::Errors::Pulp3Error, _("Container path conflict: '%{path}' overlaps with an existing path. Update the lifecycle environment's registry name pattern to avoid overlapping paths.") % {path: repo_service.repo.relative_path}
         # REMOVE when N-2 capsules use Pulp >= 3.105
         # If repository_version is not supported (old Pulp), retry with publication
-        if repo_service.repo.repository_type.pulp3_transitioning_from_publication &&
-           error.code == 400 &&
-           (error.message.include?("repository_version") || error.message.include?("publication"))
+        elsif repo_service.repo.repository_type.pulp3_transitioning_from_publication &&
+              error.code == 400 &&
+              (error.message.include?("repository_version") || error.message.include?("publication"))
           dist_options.delete(:repository_version)
           dist_options[:publication] = publication_href_or_create
           distribution_data = api.distribution_class.new(dist_options)

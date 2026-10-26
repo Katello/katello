@@ -281,9 +281,12 @@ module Katello
         begin
           create_distribution(relative_path)
         rescue api.client_module::ApiError => e
+          # Check for prefix overlap error (Pulp 3.117+)
+          if e.message.include?("is prefixed by an existing base_path")
+            raise Katello::Errors::Pulp3Error, _("Container path conflict: '%{path}' overlaps with an existing path. Update the lifecycle environment's registry name pattern to avoid overlapping paths.") % {path: repo.relative_path}
           # Now it seems there is a distribution. Fetch it and save the reference.
-          if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
-              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
+          elsif e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
+                e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
             dist = lookup_distributions(base_path: repo.relative_path).first
             save_distribution_references([dist.pulp_href])
             return update_distribution
