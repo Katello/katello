@@ -3,6 +3,7 @@ module Actions
     module Repository
       class CreateRoot < Actions::EntryAction
         def plan(root)
+          ::Katello::Validators::RepositoryContainerPathValidator.validate_create!(root, user: ::User.current)
           root.save!
           repository = ::Katello::Repository.new(:environment => root.organization.library,
                                                  :content_view_version => root.organization.library.default_content_view_version,

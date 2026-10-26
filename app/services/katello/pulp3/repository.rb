@@ -40,6 +40,16 @@ module Katello
         "prn:#{pulp_plugin}.#{pulp_model}:#{uuid}"
       end
 
+      # Pulp can report a distribution base_path overlap from three sources:
+      # 1. API serializer validation: "Overlaps with an existing distribution."
+      # 2. PostgreSQL exclusion constraint (concurrent writes): "is prefixed by an existing base_path"
+      # 3. Older pulpcore wording (N-2 capsules): "Overlaps with existing distribution"
+      def self.distribution_overlap_error?(error_message)
+        error_message.include?("Overlaps with an existing distribution.") ||
+          error_message.include?("Overlaps with existing distribution") ||
+          error_message.include?("is prefixed by an existing base_path")
+      end
+
       def partial_repo_path
         fail NotImplementedError
       end
@@ -255,11 +265,8 @@ module Katello
       end
 
       def refresh_distributions
-        if repo.docker?
-          dist = lookup_distributions(base_path: repo.container_repository_name).first
-        else
-          dist = lookup_distributions(base_path: repo.relative_path).first
-        end
+        # Docker repositories use a reference-first override in Pulp3::Repository::Docker
+        dist = lookup_distributions(base_path: repo.relative_path).first
         dist_ref = distribution_reference
 
         if dist && !dist_ref
@@ -281,12 +288,14 @@ module Katello
         begin
           create_distribution(relative_path)
         rescue api.client_module::ApiError => e
-          # Now it seems there is a distribution. Fetch it and save the reference.
-          if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
-              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
+          # A distribution with this exact base_path already exists: adopt it and update.
+          # Overlap errors are NOT rescued here; they must surface as path conflicts.
+          if e.message.include?("\"base_path\":[\"This field must be unique.\"]")
             dist = lookup_distributions(base_path: repo.relative_path).first
             save_distribution_references([dist.pulp_href])
             return update_distribution
+          elsif self.class.distribution_overlap_error?(e.message)
+            raise ::Katello::Errors::Pulp3Error, ::Katello::Validators::ContainerPathOverlapValidator.late_overlap_message(repo)
           else
             raise e
           end
@@ -326,8 +335,20 @@ module Katello
           end
 
           content_guard_prn = options.delete(:content_guard_prn) # Extract PRN and remove from options
-          distribution_reference.update(:content_guard_href => options[:content_guard], :content_guard_prn => content_guard_prn)
-          response = api.distributions_api.partial_update(distribution_reference.href, options)
+          # Docker distributions never send a content guard (Pulp manages container
+          # guards itself, see Docker#secure_distribution_options), so writing the
+          # absent values here would clear the guard fields on the reference. Docker
+          # references are instead reconciled from Pulp after the operation completes
+          # (SaveDistributionReferences).
+          unless repo.docker?
+            distribution_reference.update(:content_guard_href => options[:content_guard], :content_guard_prn => content_guard_prn)
+          end
+          begin
+            response = api.distributions_api.partial_update(distribution_reference.href, options)
+          rescue api.client_module::ApiError => e
+            raise e unless self.class.distribution_overlap_error?(e.message)
+            raise ::Katello::Errors::Pulp3Error, ::Katello::Validators::ContainerPathOverlapValidator.late_overlap_message(repo)
+          end
           # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
           (response.respond_to?(:task) && response.task.present?) ? [response] : []
         end
