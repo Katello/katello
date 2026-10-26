@@ -381,7 +381,7 @@ module Katello
     def check_ready_to_promote!(to_env)
       fail _("Default and Rolling content view versions cannot be promoted") if default? || rolling?
       content_view.check_composite_action_allowed!(to_env)
-      content_view.check_docker_repository_names!(to_env)
+      content_view.check_docker_repository_names!(to_env, self)
       content_view.check_orphaned_content_facets!(environments: [to_env])
     end
 
