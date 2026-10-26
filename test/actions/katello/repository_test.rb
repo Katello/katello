@@ -276,6 +276,46 @@ module ::Actions::Katello::Repository
       simplified_acs.reload
       assert_equal(0, simplified_acs.products.length)
     end
+
+    it 'validates docker repository update does not create overlapping paths' do
+      redis = docker_repository
+      skip "Test requires docker repository with environment" unless redis&.docker? && redis&.environment
+
+      action = create_action action_class
+
+      # Create a conflicting repo in the same environment
+      product = redis.product
+      conflicting_root = Katello::RootRepository.create!(
+        product: product,
+        name: "conflict_test_#{SecureRandom.hex(4)}",
+        label: "conflict_test_#{SecureRandom.hex(4)}",
+        content_type: 'docker',
+        url: 'https://quay.io',
+        docker_upstream_name: 'parent',
+        unprotected: true,
+        mirroring_policy: 'mirror_content_only',
+        download_policy: 'immediate'
+      )
+
+      conflicting_repo = Katello::Repository.create!(
+        root: conflicting_root,
+        environment: redis.environment,
+        content_view_version: redis.content_view_version,
+        relative_path: "test/conflict"
+      )
+      conflicting_repo.update_column(:container_repository_name, "myorg/parent")
+
+      # Stub render to return overlapping path
+      action.stubs(:render_new_container_path).returns("myorg/parent/child")
+
+      # Should raise conflict error
+      error = assert_raises(Katello::HttpErrors::Conflict) do
+        action.send(:validate_docker_distribution_path!, redis, redis.root, {docker_upstream_name: 'parent/child'})
+      end
+
+      assert_match(/overlapping container image paths/, error.message)
+      assert_match(%r{myorg/parent}, error.message)
+    end
   end
 
   class DestroyTest < TestBase

@@ -381,8 +381,13 @@ module Katello
     def check_ready_to_promote!(to_env)
       fail _("Default and Rolling content view versions cannot be promoted") if default? || rolling?
       content_view.check_composite_action_allowed!(to_env)
-      content_view.check_docker_repository_names!(to_env)
-      content_view.check_orphaned_content_facets!(environments: [to_env])
+      # Skip docker validation for composite CVs ONLY in Library environment
+      # Composites reference component distributions in Library (no validation needed)
+      # But composites create archived repository clones in Dev/QA/Prod (validation IS needed)
+      envs_array = Array(to_env)
+      skip_validation = content_view.composite? && envs_array.all?(&:library?)
+      content_view.check_docker_repository_names!(envs_array, self) unless skip_validation
+      content_view.check_orphaned_content_facets!(environments: envs_array)
     end
 
     def validate_destroyable!(skip_environment_check: false)

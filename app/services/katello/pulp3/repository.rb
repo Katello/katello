@@ -40,6 +40,15 @@ module Katello
         "prn:#{pulp_plugin}.#{pulp_model}:#{uuid}"
       end
 
+      # Check if an error message indicates a distribution path overlap
+      # Pulp can return overlap errors from two sources:
+      # 1. API serializer validation: "Overlaps with an existing distribution."
+      # 2. PostgreSQL exclusion constraint: "is prefixed by an existing base_path"
+      def self.distribution_overlap_error?(error_message)
+        error_message.include?("Overlaps with an existing distribution.") ||
+          error_message.include?("is prefixed by an existing base_path")
+      end
+
       def partial_repo_path
         fail NotImplementedError
       end
@@ -255,12 +264,8 @@ module Katello
       end
 
       def refresh_distributions
-        if repo.docker?
-          dist = lookup_distributions(base_path: repo.container_repository_name).first
-        else
-          dist = lookup_distributions(base_path: repo.relative_path).first
-        end
         dist_ref = distribution_reference
+        dist = lookup_distributions(base_path: repo.relative_path).first
 
         if dist && !dist_ref
           save_distribution_references([dist.pulp_href])
@@ -268,7 +273,7 @@ module Katello
         end
 
         if dist && dist_ref
-          # If the saved distribution reference is wrong, delete it and use the existing distribution
+          # Update the saved reference if it changed
           if dist.pulp_href != dist_ref.href
             dist_ref.destroy
             save_distribution_references([dist.pulp_href])
@@ -281,9 +286,10 @@ module Katello
         begin
           create_distribution(relative_path)
         rescue api.client_module::ApiError => e
-          # Now it seems there is a distribution. Fetch it and save the reference.
-          if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
-              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
+          # If a distribution with this exact base_path already exists (e.g., from a prior failed operation),
+          # fetch it and retry as an update instead of failing.
+          # Note: We do NOT catch overlap errors here - those should propagate up as validation errors.
+          if e.message.include?("\"base_path\":[\"This field must be unique.\"]")
             dist = lookup_distributions(base_path: repo.relative_path).first
             save_distribution_references([dist.pulp_href])
             return update_distribution
@@ -330,6 +336,13 @@ module Katello
           response = api.distributions_api.partial_update(distribution_reference.href, options)
           # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
           (response.respond_to?(:task) && response.task.present?) ? [response] : []
+        end
+      rescue api.client_module::ApiError => e
+        # Check for overlap error from pre-existing overlapping distributions (from serializer or database constraint)
+        if self.class.distribution_overlap_error?(e.message)
+          raise Katello::Errors::Pulp3Error, ::Katello::ContentView.distribution_path_conflict_error(repo)
+        else
+          raise e
         end
       end
 
@@ -419,21 +432,31 @@ module Katello
 
           if distribution_reference
             found_distribution = read_distribution(distribution_reference.href)
-            unless found_distribution
+            if found_distribution
+              # Update existing reference with current Pulp data
+              # This ensures path stays in sync when docker_upstream_name or registry patterns change
+              distribution_reference.update!(
+                path: path,
+                content_guard_href: content_guard_href,
+                content_guard_prn: content_guard_prn
+              )
+              next # Reference updated, move to next href
+            else
+              # Distribution was deleted in Pulp, remove stale reference and create new one below
               distribution_reference.destroy
             end
           end
-          unless distribution_reference
-            # Ensure that duplicates won't be created in the case of a race condition
-            DistributionReference.where(
-              path: path,
-              href: href,
-              prn: prn,
-              repository_id: repo.id,
-              content_guard_href: content_guard_href,
-              content_guard_prn: content_guard_prn
-            ).first_or_create!
-          end
+
+          # Create new reference (either no reference existed, or old one was destroyed above)
+          # Ensure that duplicates won't be created in the case of a race condition
+          DistributionReference.where(
+            path: path,
+            href: href,
+            prn: prn,
+            repository_id: repo.id,
+            content_guard_href: content_guard_href,
+            content_guard_prn: content_guard_prn
+          ).first_or_create!
         end
       end
 

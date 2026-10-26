@@ -117,6 +117,7 @@ module Katello
       _("for repository '%{name}' is not unique and cannot be created in '%{env}'. Its Container Repository Name (%{container_name}) conflicts with an existing repository.  Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.") %
           {name: object.name, container_name: object.container_repository_name, :env => object.environment.name}
     end}
+    validate :docker_repository_path_no_overlaps, if: :docker?
 
     before_validation :set_pulp_id
     before_validation :set_container_repository_name, :unless => :skip_container_name?
@@ -274,6 +275,35 @@ module Katello
 
     def set_container_repository_name
       self.container_repository_name = Repository.safe_render_container_name(self)
+    end
+
+    def docker_repository_path_no_overlaps
+      return unless container_repository_name.present? && environment.present?
+      # Only validate library repositories (direct API/hammer creates)
+      # CVV repositories are validated by ContentView.check_docker_repository_names!
+      return unless environment.library?
+      # Only validate when creating new repo or when container_repository_name changes
+      # We validate the NEW path - this prevents creating new overlaps while allowing fixes to existing overlaps
+      return unless new_record? || container_repository_name_changed?
+
+      normalized_path = container_repository_name.sub(%r{/+$}, '')
+
+      # Check against all other docker repositories in this environment
+      Repository.docker_type
+                .where(environment_id: environment_id)
+                .where.not(id: id)
+                .each do |other_repo|
+        other_path = other_repo.container_repository_name&.sub(%r{/+$}, '')
+        next if other_path.blank?
+
+        # Check for overlaps (parent/child relationship)
+        if normalized_path.start_with?(other_path + '/') || other_path.start_with?(normalized_path + '/')
+          parent_path, child_path = normalized_path.size < other_path.size ? [normalized_path, other_path] : [other_path, normalized_path]
+          error_msg = ContentView.container_overlap_error(parent_path, child_path)
+          errors.add(:container_repository_name, error_msg + "  " + ContentView.consider_changing_pattern_message)
+          break
+        end
+      end
     end
 
     def content_view

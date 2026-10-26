@@ -53,6 +53,31 @@ module Katello
             refute_includes options.keys, :keep_latest_packages
             assert_equal ['pip'], options[:includes]
           end
+
+          def test_distribution_overlap_error_detects_serializer_error
+            message = "Overlaps with an existing distribution."
+            assert Katello::Pulp3::Repository.distribution_overlap_error?(message)
+          end
+
+          def test_distribution_overlap_error_detects_serializer_error_in_json
+            message = '{"base_path":["Overlaps with an existing distribution."]}'
+            assert Katello::Pulp3::Repository.distribution_overlap_error?(message)
+          end
+
+          def test_distribution_overlap_error_detects_postgres_constraint
+            message = "is prefixed by an existing base_path"
+            assert Katello::Pulp3::Repository.distribution_overlap_error?(message)
+          end
+
+          def test_distribution_overlap_error_rejects_old_format
+            message = "Overlaps with existing distribution"
+            refute Katello::Pulp3::Repository.distribution_overlap_error?(message)
+          end
+
+          def test_distribution_overlap_error_rejects_unrelated_errors
+            message = "Some other Pulp3 error occurred"
+            refute Katello::Pulp3::Repository.distribution_overlap_error?(message)
+          end
         end
       end
     end

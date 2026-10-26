@@ -14,7 +14,19 @@ module Actions
 
           # Keep the old URL for RPM vs ULN remote cleanup
           old_url = root.url
+
+          # Validate docker repository distribution paths before updating
+          # This catches both pre-existing overlaps (from before Pulp 3.105) and new overlaps
+          # from name changes, preventing paused tasks during RefreshDistribution
+          validate_docker_distribution_path!(repository, root, repo_params) if repository.docker?
+
           root.update!(repo_params)
+
+          # For docker repos, recalculate container_repository_name on library instance after root changes
+          # Reload clears cached root association so before_validation callback sees new docker_upstream_name
+          if repository.docker? && repo_params.key?(:docker_upstream_name)
+            repository.reload.save!
+          end
 
           if update_content?(repository)
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
@@ -100,6 +112,64 @@ module Actions
 
         def delete_acs?(old_url, new_url)
           old_url.present? && (new_url.nil? || new_url.start_with?('uln'))
+        end
+
+        def validate_docker_distribution_path!(_repository, root, repo_params)
+          # Validate across ALL environments where this root has repositories
+          # When updating docker_upstream_name, it affects all repos of this root across all environments
+          environments_to_check = root.repositories.where.not(environment_id: nil).pluck(:environment_id).uniq
+          return if environments_to_check.empty?
+
+          environments_to_check.each do |env_id|
+            environment = ::Katello::KTEnvironment.find(env_id)
+            registry_pattern = environment.registry_name_pattern
+
+            # Find the repository in this environment (if it exists)
+            repo_in_env = root.repositories.find_by(environment_id: env_id)
+            next unless repo_in_env
+
+            # Get all docker repositories in this environment, excluding repos from this root
+            existing_repos = environment.repositories.docker_type.where.not(root_id: root.id)
+
+            # Render what the NEW path will be after applying repo_params
+            new_path = normalize_path(render_new_container_path(repo_in_env, root, repo_params, registry_pattern, environment))
+            next if new_path.blank? # Nothing to validate if path is blank
+
+            # Check if new path would overlap with any existing repo
+            existing_repos.each do |existing_repo|
+              existing_path = normalize_path(existing_repo.container_repository_name)
+              next if existing_path.blank? # Skip repos without a path
+
+              # Check both directions: new could be parent or child of existing
+              if new_path.start_with?(existing_path + '/') || existing_path.start_with?(new_path + '/')
+                parent_path, child_path = new_path.size < existing_path.size ? [new_path, existing_path] : [existing_path, new_path]
+                error_msg = ::Katello::ContentView.container_overlap_error(parent_path, child_path)
+                fail ::Katello::HttpErrors::Conflict, [error_msg, ::Katello::ContentView.consider_changing_pattern_message].join("  ")
+              end
+
+              # Check for exact duplicates
+              if new_path == existing_path
+                error_msg = _("Repository name would result in duplicate container image path '%{path}' with repository '%{name}'.") % { path: new_path, name: existing_repo.name }
+                fail ::Katello::HttpErrors::Conflict, [error_msg, ::Katello::ContentView.consider_changing_pattern_message].join("  ")
+              end
+            end
+          end
+        end
+
+        def normalize_path(path)
+          # Remove trailing slashes to ensure consistent comparison
+          path&.sub(%r{/+$}, '')
+        end
+
+        def render_new_container_path(repository, root, repo_params, registry_pattern, _environment)
+          # Use dup to safely apply new params without modifying the original objects
+          # This lets us render what the path WILL BE after update, before actually updating
+          temp_root = root.dup
+          temp_root.assign_attributes(repo_params.slice(:name, :docker_upstream_name))
+          temp_repo = repository.dup
+          temp_repo.root = temp_root
+
+          ::Katello::Repository.safe_render_container_name(temp_repo, registry_pattern)
         end
       end
     end
