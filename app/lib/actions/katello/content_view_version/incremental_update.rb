@@ -100,10 +100,12 @@ module Actions
                         end
                         copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
                                                            dependency_solving: dep_solve).output
+                        # Unchanged repos keep the publication reused by CloneToVersion; republishing them is expensive.
+                        copied_dest_repo_ids = extended_repo_mapping.values.map { |repo_map| repo_map[:dest_repo] }
                         repos_to_clone.each do |source_repos|
-                          if separated_repo_map[mapping].keys.include?(source_repos)
-                            copy_repos(repository_mapping[source_repos])
-                          end
+                          next unless separated_repo_map[mapping].keys.include?(source_repos)
+                          new_repo = repository_mapping[source_repos]
+                          copy_repos(new_repo) if copied_dest_repo_ids.include?(new_repo.id)
                         end
                       end
                     end

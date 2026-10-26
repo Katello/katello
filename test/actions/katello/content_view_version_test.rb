@@ -77,7 +77,7 @@ module ::Actions::Katello::ContentViewVersion
         katello_repositories(:rhel_7_x86_64)
       end
 
-      def pulp3_cvv_setup
+      def pulp3_cvv_setup(extra_repository_mapping = {})
         SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
         content_view_version.repositories.where(version_href: nil).update(version_href: 'not-nil-href/1/')
         stub_remote_user
@@ -89,6 +89,7 @@ module ::Actions::Katello::ContentViewVersion
         library_repo.update(version_href: "/library_test/versions/1/")
         new_repo.save!
         repository_mapping[[library_repo]] = new_repo
+        repository_mapping.merge!(extra_repository_mapping)
         Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
         ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
         task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
@@ -124,6 +125,29 @@ module ::Actions::Katello::ContentViewVersion
                                   { :debs => [], :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => true)
         refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
+      end
+
+      it 'only publishes and indexes repos that received content' do
+        unchanged_library_repo = katello_repositories(:rhel_6_x86_64)
+        unchanged_old_repo = katello_repositories(:rhel_6_x86_64_dev_archive)
+        unchanged_new_repo = ::Katello::Repository.new(:pulp_id => 388, :library_instance_id => unchanged_library_repo.id, :root => unchanged_library_repo.root)
+        unchanged_new_repo.update!(content_view_version_id: katello_content_view_versions(:library_view_version_1).id, relative_path: "blah_unchanged")
+
+        pulp3_cvv_setup([unchanged_library_repo] => unchanged_new_repo)
+        # Same version as its library instance means nothing is copied into it.
+        unchanged_library_repo.update!(version_href: "/unchanged/versions/1/")
+        unchanged_old_repo.update!(version_href: "/unchanged/versions/1/")
+        ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
+
+        action.expects(:copy_repos).with(new_repo).once
+        action.expects(:copy_repos).with(unchanged_new_repo).never
+        plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
+
+        pulp3_repo_map = { [library_repo.id] => { :dest_repo => new_repo.id, :base_version => nil } }
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+                                  pulp3_repo_map,
+                                  { :debs => [], :errata => [], :rpms => [old_rpm.id] },
+                                  :dependency_solving => false)
       end
     end
   end
