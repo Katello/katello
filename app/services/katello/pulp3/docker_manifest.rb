@@ -4,6 +4,8 @@ module Katello
       include LazyAccessor
       CONTENT_TYPE = "docker_manifest".freeze
       PULPCORE_CONTENT_TYPE = "container.manifest".freeze
+      # is_bootable/is_flatpak are read before falling back to type, and are deprecated but still declared.
+      SPECIFIC_INDEXED_FIELDS = %w(digest schema_version annotations labels is_bootable is_flatpak type).freeze
 
       def self.content_api
         PulpContainerClient::ContentManifestsApi.new(Katello::Pulp3::Api::Docker.new(SmartProxy.pulp_primary!).api_client)
