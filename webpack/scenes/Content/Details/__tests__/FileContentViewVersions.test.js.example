@@ -1,0 +1,69 @@
+// Optional tests: remove .example and uncomment to enable.
+// import React from 'react';
+// import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+// import { nockInstance, mockAutocomplete } from '../../../../test-utils/nockWrapper';
+// import api from '../../../../services/api';
+// import { CONTENT_VIEW_VERSIONS_KEY } from '../../ContentConstants';
+// import FileContentViewVersions from '../FileContentViewVersions';
+//
+// const endpoint = api.getApiUrl('/content_view_versions');
+// const metadata = {
+//   total: 1, subtotal: 1, page: 1, per_page: 20,
+// };
+//
+// beforeEach(() => {
+//   mockAutocomplete(nockInstance, '/content_view_versions/auto_complete_search');
+// });
+//
+// test('shows content view versions and links outside the tab router', async () => {
+//   const scope = nockInstance.get(endpoint)
+//     .query(query => query.file_id === '248' &&
+//       query.nondefault === 'true' && query.organization_id !== undefined)
+//     .reply(200, {
+//       ...metadata,
+//       results: [{
+//         id: 10,
+//         version: '1.0',
+//         content_view: { id: 5, name: 'Test content view' },
+//         environments: [{ id: 1, name: 'Library' }],
+//       }],
+//     });
+//   const { getByText } = renderWithRedux(
+//     <FileContentViewVersions id={248} />,
+//     { apiNamespace: CONTENT_VIEW_VERSIONS_KEY },
+//   );
+//   await patientlyWaitFor(() => {
+//     expect(getByText('Test content view')).toHaveAttribute('href', '/content_views/5/');
+//     expect(getByText('1.0')).toBeInTheDocument();
+//     expect(getByText('Library')).toBeInTheDocument();
+//   });
+//   scope.done();
+// });
+//
+// test('shows an empty state when no content view versions contain the file', async () => {
+//   const scope = nockInstance.get(endpoint).query(true).reply(200, {
+//     ...metadata, total: 0, subtotal: 0, results: [],
+//   });
+//   const { getByText } = renderWithRedux(
+//     <FileContentViewVersions id={248} />,
+//     { apiNamespace: CONTENT_VIEW_VERSIONS_KEY },
+//   );
+//   await patientlyWaitFor(() => {
+//     expect(getByText('No Content Views contain this File')).toBeInTheDocument();
+//   });
+//   scope.done();
+// });
+//
+// test('shows an API error instead of an empty result', async () => {
+//   const scope = nockInstance.get(endpoint).query(true).reply(500, {
+//     error: { message: 'Unable to load content view versions', details: '' },
+//   });
+//   const { getByText } = renderWithRedux(
+//     <FileContentViewVersions id={248} />,
+//     { apiNamespace: CONTENT_VIEW_VERSIONS_KEY },
+//   );
+//   await patientlyWaitFor(() => {
+//     expect(getByText('Unable to load content view versions')).toBeInTheDocument();
+//   });
+//   scope.done();
+// });

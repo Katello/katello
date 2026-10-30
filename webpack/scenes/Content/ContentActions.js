@@ -1,6 +1,6 @@
 import { API_OPERATIONS, get } from 'foremanReact/redux/API';
 import api, { orgId } from '../../services/api';
-import { CONTENT_KEY, CONTENT_TYPES_KEY, CONTENT_ID_KEY, REPOSITORY_CONTENT_ID_KEY } from './ContentConstants';
+import { CONTENT_KEY, CONTENT_TYPES_KEY, CONTENT_ID_KEY, REPOSITORY_CONTENT_ID_KEY, CONTENT_VIEW_VERSIONS_KEY } from './ContentConstants';
 
 export const getContent = (contentType, params) => get({
   type: API_OPERATIONS.GET,
@@ -35,6 +35,18 @@ export const getRepositoryContentDetails = (contentType, id, params) => get({
     organization_id: orgId(),
   },
   url: api.getApiUrl(`/repositories?${contentType}_id=${id}`),
+});
+
+export const getFileContentViewVersions = (id, params) => get({
+  type: API_OPERATIONS.GET,
+  key: CONTENT_VIEW_VERSIONS_KEY,
+  params: {
+    ...params,
+    organization_id: orgId(),
+    file_id: id,
+    nondefault: true,
+  },
+  url: api.getApiUrl('/content_view_versions'),
 });
 
 export default getContent;
