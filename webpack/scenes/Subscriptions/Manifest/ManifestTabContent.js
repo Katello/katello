@@ -21,6 +21,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
+import './ManifestTabContent.scss';
 
 const MANIFEST_UPLOAD_ACCEPT = {
   'application/zip': ['.zip'],
@@ -114,13 +115,6 @@ const ManifestTabContent = ({
     upload(file);
   };
 
-  const handleManifestFileClear = () => {
-    setManifestUploadValidated('default');
-    setManifestFilename('');
-    setManifestFile(null);
-    skipDuplicateUploadRef.current = false;
-  };
-
   const handleManifestFileRejected = () => {
     setManifestUploadValidated('error');
   };
@@ -210,16 +204,15 @@ const ManifestTabContent = ({
                     <GridItem span={8}>
                       <FileUpload
                         id="manifest-file-upload"
+                        className="manifest-file-upload"
                         value={manifestFile}
                         filename={manifestFilename}
                         hideDefaultPreview
                         browseButtonText={__('Upload')}
-                        clearButtonText={__('Clear')}
                         filenamePlaceholder={__('Drag here')}
                         validated={manifestUploadValidated}
                         isDisabled={actionInProgress}
                         onFileInputChange={handleManifestFileChange}
-                        onClearClick={handleManifestFileClear}
                         dropzoneProps={{
                           accept: MANIFEST_UPLOAD_ACCEPT,
                           onReadFinished: () =>
