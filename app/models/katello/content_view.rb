@@ -710,12 +710,14 @@ module Katello
         publish_repositories do |all_repositories|
           repositories += all_repositories.keep_if { |repository| repository.content_type == Katello::Repository::DOCKER_TYPE }
         end
+        # Include existing docker repositories in the environment to detect overlaps
+        repositories = (repositories + environment.repositories.docker_type).uniq
         next if repositories.empty?
 
-        error_messages = ::Katello::Validators::EnvironmentDockerRepositoriesValidator.validate_repositories(environment.registry_name_pattern, repositories)
+        error_messages = ::Katello::Validators::EnvironmentDockerRepositoriesValidator.validate_repositories(environment.registry_name_pattern, repositories, environment)
         unless error_messages.empty?
           error_messages << _("Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.")
-          fail error_messages.join("  ")
+          fail Katello::HttpErrors::Conflict, error_messages.join("  ")
         end
       end
       true

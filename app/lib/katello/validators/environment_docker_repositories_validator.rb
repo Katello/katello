@@ -9,7 +9,7 @@ module Katello
           return false
         end
 
-        error_messages = EnvironmentDockerRepositoriesValidator.validate_repositories(environment.registry_name_pattern, environment.repositories.docker_type)
+        error_messages = EnvironmentDockerRepositoriesValidator.validate_repositories(environment.registry_name_pattern, environment.repositories.docker_type, environment)
         return true if error_messages.empty?
 
         error_messages.each do |message|
@@ -18,11 +18,23 @@ module Katello
         false
       end
 
-      def self.validate_repositories(registry_name_pattern, repositories)
+      # Render container name using the provided environment to validate promotion target paths
+      def self.render_container_name(repository, pattern, environment)
+        original_env = repository.environment
+        begin
+          repository.environment = environment if environment
+          Katello::Repository.safe_render_container_name(repository, pattern)
+        ensure
+          repository.environment = original_env
+        end
+      end
+
+      def self.validate_repositories(registry_name_pattern, repositories, environment = nil)
         error_messages = []
         name_to_repos = {}
         repositories.each do |repository|
-          name = Katello::Repository.safe_render_container_name(repository, registry_name_pattern)
+          name = render_container_name(repository, registry_name_pattern, environment)
+
           unless ContainerImageNameValidator.validate_name(name)
             error_messages << N_("Registry name pattern results in invalid container image name of member repository '%{name}'") % {name: repository.name}
             return error_messages
@@ -38,7 +50,17 @@ module Katello
           return error_messages
         end
 
-        []
+        # Check for prefix overlaps (Pulp 3.117+ restriction)
+        paths = name_to_repos.keys.sort
+        paths.each_with_index do |path, index|
+          paths[(index + 1)..].each do |other_path|
+            if other_path.start_with?(path + '/')
+              error_messages << N_("Registry name pattern results in overlapping container image paths: '%{parent}' overlaps with '%{child}'.") % {parent: path, child: other_path}
+            end
+          end
+        end
+
+        error_messages
       end
 
       def test_repository
