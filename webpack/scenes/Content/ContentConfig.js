@@ -4,6 +4,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import ContentInfo from './Details/ContentInfo';
 import LastSync from '../ContentViews/Details/Repositories/LastSync';
 import ContentRepositories from './Details/ContentRepositories';
+import FileContentViewVersions from './Details/FileContentViewVersions';
 import ContentCounts from '../ContentViews/Details/Repositories/ContentCounts';
 import ModuleStreamDetailProfiles from '../ModuleStreams/Details/Profiles/ModuleStreamDetailProfiles';
 import ModuleStreamDetailArtifacts from '../ModuleStreams/Details/ModuleStreamDetailArtifacts';
@@ -300,9 +301,63 @@ export default [
       capsuleCountLabel: 'file',
     },
     columnHeaders: [
-      { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`files/${unit?.id}`, '')}>{unit?.name}</a>) },
+      { title: __('Name'), getProperty: unit => (<a href={urlBuilder(`content/files/${unit?.id}`, '')}>{unit?.name}</a>) },
       { title: __('Path'), getProperty: unit => unit?.path },
       { title: __('Checksum'), getProperty: unit => unit?.checksum },
+    ],
+    headerFields: [
+      { title: __('Path'), getProperty: unit => unit?.path, md: 4 },
+      { title: __('Checksum'), getProperty: unit => unit?.checksum, md: 8 },
+    ],
+    tabs: [
+      {
+        tabKey: 'repositories',
+        title: __('Library repositories'),
+        bookmarkController: null,
+        stripedRows: true,
+        insetTable: true,
+        getContent: (contentType, id, tabKey) =>
+          <ContentRepositories {...{ contentType, id, tabKey }} />,
+        columnHeaders: [
+          {
+            title: __('Name'),
+            getProperty: unit => (
+              <a href={urlBuilder(`products/${unit?.product.id}/repositories/${unit?.id}`, '')}>
+                {unit?.name}
+              </a>
+            ),
+          },
+          {
+            title: __('Type'),
+            getProperty: unit => unit?.content_type,
+          },
+          {
+            title: __('Product'),
+            getProperty: unit => (
+              <a href={urlBuilder(`products/${unit?.product.id}`, '')}>
+                {unit?.product.name}
+              </a>
+            ),
+          },
+          {
+            title: __('Last sync'),
+            getProperty: unit => (
+              <LastSync
+                startedAt={unit?.last_sync?.started_at}
+                lastSyncWords={unit?.last_sync_words}
+                lastSync={unit?.last_sync}
+              />
+            ),
+          },
+        ],
+      },
+      {
+        tabKey: 'content_views',
+        title: __('Content views'),
+        permission: 'view_content_views',
+        getContent: (_contentType, id) =>
+          <FileContentViewVersions id={id} />,
+      },
     ],
   },
 ];

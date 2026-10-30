@@ -11,6 +11,19 @@ import pythonPackageRepositoryDetailsResponse from './pythonPackageRepositoryDet
 import ansibleCollectionDetailsResponse from './ansibleCollectionDetails.fixtures.json';
 import ansibleCollectionRepositoryDetailsResponse from './ansibleCollectionRepositoryDetails.fixtures.json';
 
+jest.mock('foremanReact/Root/Context/ForemanContext', () => ({
+  ...jest.requireActual('foremanReact/Root/Context/ForemanContext'),
+  useForemanPermissions: jest.fn(),
+  useForemanSettings: () => ({ perPage: 20 }),
+}));
+
+const { useForemanPermissions } = require('foremanReact/Root/Context/ForemanContext');
+
+beforeEach(() => {
+  window.history.replaceState({}, '', '/');
+  useForemanPermissions.mockReturnValue(new Set(['view_content_views']));
+});
+
 const pythonPackageDetailsPath = api.getApiUrl('/python_packages/1491');
 const ansibleCollectionDetailsPath = api.getApiUrl('/ansible_collections/51');
 const contentRepositoryDetailsPath = api.getApiUrl('/repositories');
@@ -143,3 +156,92 @@ test('Can call API for Ansible collection repository details and show repositori
   assertNockRequest(ansibleCollectionRepositoryDetailsScope);
   done();
 });
+
+test('shows File metadata above the content views tab', async () => {
+  window.history.replaceState({}, '', '/#/content_views');
+  const detailsScope = nockInstance.get(api.getApiUrl('/files/248'))
+    .query(true).reply(200, {
+      id: 248, name: '100.iso', path: 'images/100.iso', checksum: 'abc123',
+    });
+  const versionsScope = nockInstance.get(api.getApiUrl('/content_view_versions'))
+    .query(query => query.file_id === '248').reply(200, {
+      results: [], total: 0, subtotal: 0, page: 1, per_page: 20,
+    });
+  const autocompleteScope = mockAutocomplete(
+    nockInstance,
+    '/content_view_versions/auto_complete_search',
+  );
+  const { getByText, getByLabelText } = renderWithRedux(
+    withContentRoute(<ContentDetails />),
+    {
+      apiNamespace: CONTENT_ID_KEY,
+      routerParams: {
+        initialEntries: [{ pathname: '/content/files/248', hash: '#/content_views' }],
+      },
+    },
+  );
+  await patientlyWaitFor(() => {
+    expect(getByText('images/100.iso')).toBeInTheDocument();
+    expect(getByText('abc123')).toBeInTheDocument();
+    expect(getByText('abc123').closest('.pf-v5-c-content')).toBeNull();
+    expect(getByText('images/100.iso').closest('.pf-v5-c-content')).toBeNull();
+    expect(getByText('Content views')).toBeInTheDocument();
+    expect(getByLabelText('content_breadcrumb_content')).toHaveTextContent('100.iso');
+    expect(getByText('No content views contain this file')).toBeInTheDocument();
+  });
+  detailsScope.done();
+  versionsScope.done();
+  autocompleteScope.done();
+});
+
+test('shows an error when File details cannot be loaded', async () => {
+  const scope = nockInstance.get(api.getApiUrl('/files/999999999'))
+    .query(true).reply(404, {
+      error: { message: 'File not found', details: '' },
+    });
+  const { getByText } = renderWithRedux(
+    withContentRoute(<ContentDetails />),
+    {
+      apiNamespace: CONTENT_ID_KEY,
+      routerParams: {
+        initialEntries: [{ pathname: '/content/files/999999999' }],
+      },
+    },
+  );
+  await patientlyWaitFor(() => {
+    expect(getByText('File not found')).toBeInTheDocument();
+  });
+  scope.done();
+});
+
+
+test.each(['#/repositories', '#/content_views'])(
+  'hides the Content views tab without permission, including direct links: %s',
+  async (hash) => {
+    window.history.replaceState({}, '', `/${hash}`);
+    useForemanPermissions.mockReturnValue(new Set(['view_products']));
+    const detailsScope = nockInstance.get(api.getApiUrl('/files/248'))
+      .query(true).reply(200, { id: 248, name: '100.iso', path: '100.iso' });
+    const repositoriesScope = nockInstance.get(contentRepositoryDetailsPath)
+      .query(query => query.file_id === '248').reply(200, {
+        results: [], total: 0, subtotal: 0, page: 1, per_page: 20,
+      });
+    const autocompleteScope = mockAutocomplete(nockInstance, '/repositories/auto_complete_search');
+    const { getByRole, queryByRole, getByText } = renderWithRedux(
+      withContentRoute(<ContentDetails />),
+      {
+        apiNamespace: CONTENT_ID_KEY,
+        routerParams: { initialEntries: [{ pathname: '/content/files/248', hash }] },
+      },
+    );
+    await patientlyWaitFor(() => {
+      expect(getByRole('tab', { name: 'Library repositories' })).toBeInTheDocument();
+      expect(queryByRole('tab', { name: 'Content views' })).toBeNull();
+      expect(getByText("You currently don't have any repositories associated with this content."))
+        .toBeInTheDocument();
+    });
+    detailsScope.done();
+    repositoriesScope.done();
+    autocompleteScope.done();
+  },
+);

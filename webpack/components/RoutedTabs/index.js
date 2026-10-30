@@ -47,7 +47,11 @@ const RoutedTabs = ({
               <Route key={`${key}-route`} path={`/${key}`}>
                 {content}
               </Route>))}
-            <Redirect to={`/${currentTabFromUrl || tabs[defaultTabIndex]?.key}`} />
+            <Redirect
+              to={`/${tabs.some(tab => tab.key === currentTabFromUrl)
+                ? currentTabFromUrl
+                : tabs[defaultTabIndex]?.key}`}
+            />
           </Switch>
         </HashRouter>
       </div>
