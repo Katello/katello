@@ -50,6 +50,15 @@ module Katello
       joins(:content).where("#{self.content_table_name}.cp_content_id" => content_ids + deb_content_ids)
     end
 
+    # Repository sets subscription-manager can enable. Matches ProductContentFinder,
+    # which keeps yum and ostree roots plus deb library repositories.
+    def self.subscribable_for(organization)
+      content_ids = Katello::RootRepository.in_organization(organization).subscribable.
+        where.not(:content_type => Katello::Repository::DEB_TYPE).where.not(:content_id => nil).pluck(:content_id)
+      deb_content_ids = Katello::Repository.in_organization(organization).library.deb_type.pluck(:content_id)
+      joins(:content).where("#{self.content_table_name}.cp_content_id" => content_ids + deb_content_ids)
+    end
+
     def self.with_valid_subscription(organization)
       where(:product_id => Katello::PoolProduct.where(:pool_id => organization.pools).select(:product_id))
     end
