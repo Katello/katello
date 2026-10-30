@@ -41,7 +41,6 @@ module Katello
         "Katello::DockerMetaTag",
         "Katello::EnvironmentPrior",
         "Katello::ErratumBugzilla",
-        "Katello::Event",
         "Katello::HostInstalledDeb",
         "Katello::HostInstalledPackage",
         "Katello::HostQueueElement",
