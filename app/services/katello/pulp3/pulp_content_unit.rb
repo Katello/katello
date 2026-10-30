@@ -114,12 +114,19 @@ module Katello
         end
       end
 
+      COMMON_INDEXED_FIELDS = %w(pulp_href prn).freeze
+
+      def self.indexed_fields
+        return unless const_defined?(:SPECIFIC_INDEXED_FIELDS, false)
+        COMMON_INDEXED_FIELDS + const_get(:SPECIFIC_INDEXED_FIELDS)
+      end
+
       def self.pulp_units_batch_for_repo(repository, options = {})
         fetch_identifiers = options.fetch(:fetch_identifiers, false)
         page_size = options.fetch(:page_size, Setting[:bulk_load_size])
         repository_version_href = repository.version_href
         page_opts = { "offset" => 0, repository_version: repository_version_href, limit: page_size }
-        page_opts[:fields] = self.const_get(:PULP_INDEXED_FIELDS).join(",") if self.constants.include?(:PULP_INDEXED_FIELDS)
+        page_opts[:fields] = indexed_fields.join(",") if indexed_fields
         page_opts[:fields] = 'pulp_href' if fetch_identifiers
         response = {}
         Enumerator.new do |yielder|

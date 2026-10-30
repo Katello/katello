@@ -1221,7 +1221,7 @@ http_interactions:
   recorded_at: Fri, 18 Sep 2026 16:09:19 GMT
 - request:
     method: get
-    uri: https://localhost.localdomain/pulp/api/v3/content/container/manifests/?limit=2000&media_type=application/vnd.oci.image.manifest.v1%2Bjson&offset=0&repository_version=/pulp/api/v3/repositories/container/container/01a0b547-8267-73c5-a1db-e7b78747749e/versions/1/
+    uri: https://localhost.localdomain/pulp/api/v3/content/container/manifests/?fields=pulp_href,prn,digest,schema_version,annotations,labels,is_bootable,is_flatpak,type&limit=2000&media_type=application/vnd.oci.image.manifest.v1%2Bjson&offset=0&repository_version=/pulp/api/v3/repositories/container/container/01a0b547-8267-73c5-a1db-e7b78747749e/versions/1/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1453,7 +1453,7 @@ http_interactions:
   recorded_at: Fri, 18 Sep 2026 16:09:20 GMT
 - request:
     method: get
-    uri: https://localhost.localdomain/pulp/api/v3/content/container/manifests/?limit=2000&media_type=application/vnd.oci.image.index.v1%2Bjson&offset=0&repository_version=/pulp/api/v3/repositories/container/container/01a0b547-8267-73c5-a1db-e7b78747749e/versions/1/
+    uri: https://localhost.localdomain/pulp/api/v3/content/container/manifests/?fields=pulp_href,prn,digest,schema_version,annotations,labels,is_bootable,is_flatpak,type,listed_manifests&limit=2000&media_type=application/vnd.oci.image.index.v1%2Bjson&offset=0&repository_version=/pulp/api/v3/repositories/container/container/01a0b547-8267-73c5-a1db-e7b78747749e/versions/1/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1548,7 +1548,7 @@ http_interactions:
   recorded_at: Fri, 18 Sep 2026 16:09:20 GMT
 - request:
     method: get
-    uri: https://localhost.localdomain/pulp/api/v3/content/container/tags/?limit=2000&offset=0&repository_version=/pulp/api/v3/repositories/container/container/01a0b547-8267-73c5-a1db-e7b78747749e/versions/1/
+    uri: https://localhost.localdomain/pulp/api/v3/content/container/tags/?fields=pulp_href,prn,name,tagged_manifest&limit=2000&offset=0&repository_version=/pulp/api/v3/repositories/container/container/01a0b547-8267-73c5-a1db-e7b78747749e/versions/1/
     body:
       encoding: US-ASCII
       base64_string: ''
