@@ -24,6 +24,15 @@ module Katello
       assert Deb.find_by_pulp_id(pulp_id)
     end
 
+    def test_copy_repository_associations_writes_timestamps
+      destination = katello_repositories(:debian_10_amd64_dev)
+      Katello::Deb.copy_repository_associations(@repo, destination)
+
+      row = Katello::RepositoryDeb.find_by!(:repository_id => destination.id, :deb_id => @deb_two.id)
+      refute_nil row.created_at
+      refute_nil row.updated_at
+    end
+
     def test_with_identifiers
       set = Deb.with_identifiers([@deb_one.id, @deb_two.pulp_id])
       assert_equal 2, set.size
