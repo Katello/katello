@@ -4,6 +4,7 @@ module Actions
       class CloneToVersion < Actions::Base
         def plan(repositories, content_view_version, destination_repository, options = {})
           incremental = options.fetch(:incremental, false)
+          generate_metadata = options.fetch(:generate_metadata, true)
           content_view = content_view_version.content_view
           filters = incremental ? [] : content_view.filters.applicable(repositories.first)
           rpm_filenames = extract_rpm_filenames(options.fetch(:repos_units, nil), repositories.first.label)
@@ -23,7 +24,7 @@ module Actions
                         rpm_filenames: rpm_filenames,
                         copy_contents: copy_contents,
                         solve_dependencies: content_view.solve_dependencies,
-                        generate_metadata: true)
+                        generate_metadata: generate_metadata)
           end
         end
 
