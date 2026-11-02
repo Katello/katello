@@ -20,8 +20,14 @@ module Actions
                           filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
             end
 
-            matching_content = check_matching_content(new_repository, source_repositories)
-            metadata_generate(source_repositories, new_repository, filters, rpm_filenames, matching_content) if generate_metadata
+            if generate_metadata
+              matching_content = check_matching_content(new_repository, source_repositories)
+              metadata_generate(source_repositories, new_repository, filters, rpm_filenames, matching_content)
+            else
+              # Metadata is generated after the delta lands; the checksum type is
+              # not part of it and would otherwise be lost.
+              propagate_checksum_type(source_repositories.first, new_repository)
+            end
 
             index_options = {id: new_repository.id, force_index: true}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
@@ -53,10 +59,13 @@ module Actions
           end
 
           plan_action(Katello::Repository::MetadataGenerate, new_repository, metadata_options)
-          unless source_repositories.first.saved_checksum_type == new_repository.saved_checksum_type
-            plan_self(:source_checksum_type => source_repositories.first.saved_checksum_type,
-                      :target_repo_id => new_repository.id)
-          end
+          propagate_checksum_type(source_repositories.first, new_repository)
+        end
+
+        def propagate_checksum_type(source_repository, new_repository)
+          return if source_repository.saved_checksum_type == new_repository.saved_checksum_type
+          plan_self(:source_checksum_type => source_repository.saved_checksum_type,
+                    :target_repo_id => new_repository.id)
         end
 
         def finalize
