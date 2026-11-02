@@ -3,10 +3,11 @@ module Katello
     class ApplicableContentHelper
       attr_accessor :content_facet, :content_unit_class, :bound_library_instance_repos
 
-      def initialize(content_facet, content_unit_class, bound_library_instance_repos)
+      def initialize(content_facet, content_unit_class, bound_library_instance_repos, content_scope = nil)
         self.content_facet = content_facet
         self.content_unit_class = content_unit_class
         self.bound_library_instance_repos = bound_library_instance_repos
+        @content_scope = content_scope
       end
 
       def calculate_and_import
@@ -31,60 +32,62 @@ module Katello
         end
       end
 
+      def content_index_ids
+        content_scope[0]
+      end
+
+      def unindexed_repository_ids
+        content_scope[1]
+      end
+
+      def content_scope
+        @content_scope ||= ::Katello::ContentIndex.scope_for_repositories(bound_library_instance_repos)
+      end
+
+      def no_content_sources?
+        content_index_ids.empty? && unindexed_repository_ids.empty?
+      end
+
+      def source_ids_sql(unit_table, unit_field, repository_table)
+        parts = []
+        parts << "SELECT #{unit_field} FROM #{unit_table} WHERE content_index_id IN (#{content_index_ids.join(',')})" if content_index_ids.any?
+        parts << "SELECT #{unit_field} FROM #{repository_table} WHERE repository_id IN (#{unindexed_repository_ids.join(',')})" if unindexed_repository_ids.any?
+        # Callers only use this inside IN; duplicates cost nothing there.
+        parts.join(" UNION ALL ")
+      end
+
       def fetch_errata_content_ids
-        # Query for all Errata ids that are attached to the host's applicable packages
-        query = 'SELECT DISTINCT katello_repository_errata.erratum_id AS id FROM katello_repository_errata
-                     INNER JOIN katello_erratum_packages
-                        ON katello_repository_errata.erratum_id = katello_erratum_packages.erratum_id
+        return [] if no_content_sources?
+        source = source_ids_sql('katello_content_index_errata', 'erratum_id', 'katello_repository_errata')
+        query = "SELECT DISTINCT katello_erratum_packages.erratum_id AS id FROM katello_erratum_packages
                      INNER JOIN katello_rpms
                         ON katello_rpms.nvra = katello_erratum_packages.nvrea
                      INNER JOIN katello_content_facet_applicable_rpms
                         ON katello_content_facet_applicable_rpms.rpm_id = katello_rpms.id
-                     WHERE katello_content_facet_applicable_rpms.content_facet_id = :content_facet_id
-                        AND katello_repository_errata.repository_id IN (:repo_ids)'
-
-        return Katello::Erratum.find_by_sql([query, { content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos }]).map(&:id)
+                     WHERE katello_content_facet_applicable_rpms.content_facet_id = #{content_facet.id}
+                        AND katello_erratum_packages.erratum_id IN (#{source})"
+        Katello::Erratum.find_by_sql(query).map(&:id)
       end
 
       def fetch_module_stream_content_ids
-        # Query for all applicable module stream ids
-        query = 'SELECT DISTINCT katello_repository_module_streams.module_stream_id AS id FROM katello_repository_module_streams
-                     INNER JOIN katello_module_stream_rpms
-                        ON katello_repository_module_streams.module_stream_id = katello_module_stream_rpms.module_stream_id
+        return [] if no_content_sources?
+        source = source_ids_sql('katello_content_index_module_streams', 'module_stream_id', 'katello_repository_module_streams')
+        query = "SELECT DISTINCT katello_module_stream_rpms.module_stream_id AS id FROM katello_module_stream_rpms
                      INNER JOIN katello_rpms
                         ON katello_rpms.id = katello_module_stream_rpms.rpm_id
                      INNER JOIN katello_content_facet_applicable_rpms
                         ON katello_content_facet_applicable_rpms.rpm_id = katello_rpms.id
-                     WHERE katello_content_facet_applicable_rpms.content_facet_id = :content_facet_id
-                        AND katello_repository_module_streams.repository_id IN (:repo_ids)'
-
-        return Katello::ModuleStream.find_by_sql([query, { content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos }]).map(&:id)
-      end
-
-      def fetch_deb_content_ids
-        repo_deb = ::Katello::RepositoryDeb.arel_table
-        deb = ::Katello::Deb.arel_table
-        installed_deb = Katello::InstalledDeb.arel_table
-        host_installed_deb = Katello::HostInstalledDeb.arel_table
-        deb_version_compare = Arel::Nodes::NamedFunction.new('deb_version_cmp', [deb[:version], installed_deb[:version]]).gt(0)
-
-        content = deb.join(repo_deb).on(repo_deb[:deb_id].eq(deb[:id]))
-                     .join(installed_deb).on(installed_deb[:name].eq(deb[:name]), installed_deb[:architecture].eq(deb[:architecture]))
-                     .join(host_installed_deb).on(host_installed_deb[:installed_deb_id].eq(installed_deb[:id]))
-                     .where(deb_version_compare)
-                     .where(host_installed_deb[:host_id].eq(self.content_facet.host.id))
-                     .distinct
-                     .project(deb[Arel.star])
-
-        ::Katello::Deb.find_by_sql(content.to_sql).pluck(:id)
+                     WHERE katello_content_facet_applicable_rpms.content_facet_id = #{content_facet.id}
+                        AND katello_module_stream_rpms.module_stream_id IN (#{source})"
+        Katello::ModuleStream.find_by_sql(query).map(&:id)
       end
 
       def fetch_rpm_content_ids
+        return [] if no_content_sources?
         enabled_module_stream_ids = fetch_enabled_module_stream_ids
+        source = source_ids_sql('katello_content_index_rpms', 'rpm_id', 'katello_repository_rpms')
 
         ::Katello::Rpm.
-          joins("INNER JOIN katello_repository_rpms ON
-            katello_rpms.id = katello_repository_rpms.rpm_id").
           joins("INNER JOIN katello_installed_packages ON
             katello_rpms.name = katello_installed_packages.name AND
             katello_rpms.arch = katello_installed_packages.arch AND
@@ -94,8 +97,7 @@ module Katello
             katello_rpms.id = katello_module_stream_rpms.rpm_id").
           joins("INNER JOIN katello_host_installed_packages ON
             katello_installed_packages.id = katello_host_installed_packages.installed_package_id").
-          where("katello_repository_rpms.repository_id in (:bound_library_repos)",
-            :bound_library_repos => self.bound_library_instance_repos).
+          where("katello_rpms.id IN (#{source})").
           where("katello_host_installed_packages.host_id = :content_facet_id",
             :content_facet_id => self.content_facet.host.id).
           where("(katello_module_stream_rpms.module_stream_id IS NULL AND
@@ -104,6 +106,25 @@ module Katello
             AND katello_installed_packages.id IN (:locked_modular_installed_packages))",
             :enabled_module_streams => enabled_module_stream_ids,
             :locked_modular_installed_packages => locked_modular_installed_packages(enabled_module_stream_ids)).pluck(:id).uniq
+      end
+
+      def fetch_deb_content_ids
+        return [] if no_content_sources?
+        source = source_ids_sql('katello_content_index_debs', 'deb_id', 'katello_repository_debs')
+        deb = ::Katello::Deb.arel_table
+        installed_deb = Katello::InstalledDeb.arel_table
+        host_installed_deb = Katello::HostInstalledDeb.arel_table
+        deb_version_compare = Arel::Nodes::NamedFunction.new('deb_version_cmp', [deb[:version], installed_deb[:version]]).gt(0)
+
+        content = deb.join(installed_deb).on(installed_deb[:name].eq(deb[:name]), installed_deb[:architecture].eq(deb[:architecture]))
+                     .join(host_installed_deb).on(host_installed_deb[:installed_deb_id].eq(installed_deb[:id]))
+                     .where(deb_version_compare)
+                     .where(Arel.sql("#{deb.name}.id IN (#{source})"))
+                     .where(host_installed_deb[:host_id].eq(self.content_facet.host.id))
+                     .distinct
+                     .project(deb[Arel.star])
+
+        ::Katello::Deb.find_by_sql(content.to_sql).pluck(:id)
       end
 
       def fetch_enabled_module_stream_ids
