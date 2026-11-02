@@ -1,0 +1,9 @@
+.manifest-file-upload {
+  // The manifest uploads automatically on selection, so the PatternFly
+  // clear button is never usable. PatternFly always renders it, so hide it.
+  .pf-v5-c-file-upload__file-select
+    > .pf-v5-c-input-group
+    > .pf-v5-c-input-group__item:last-child {
+    display: none;
+  }
+}
