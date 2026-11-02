@@ -804,7 +804,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository_pulp3)
       plan_action action, repository_pulp3, proxy, :contents_changed => true
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_pulp3, proxy, :contents_changed => true)
-      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_pulp3, proxy, :contents_changed => true)
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_pulp3, proxy, :contents_changed => true, :assume_content_guard_exists => true)
     end
 
     it 'plans pulp3 orchestration actions with apt repo' do
@@ -821,7 +821,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository_apt_pulp3)
       plan_action action, repository_apt_pulp3, proxy, :contents_changed => true
       assert_action_planned_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_apt_pulp3, proxy, :contents_changed => true)
-      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_apt_pulp3, proxy, :contents_changed => true)
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_apt_pulp3, proxy, :contents_changed => true, :assume_content_guard_exists => true)
     end
 
     it 'plans pulp3 ansible collection metadata generate without publication ' do
@@ -829,7 +829,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository_ansible_collection_pulp3)
       plan_action action, repository_ansible_collection_pulp3, proxy, :contents_changed => true
       refute_action_planned action, ::Actions::Pulp3::Repository::CreatePublication
-      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_ansible_collection_pulp3, proxy, :contents_changed => true)
+      assert_action_planned_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_ansible_collection_pulp3, proxy, :contents_changed => true, :assume_content_guard_exists => true)
     end
 
     describe 'pulp3 progress' do
