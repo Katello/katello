@@ -127,7 +127,7 @@ module ::Actions::Katello::ContentViewVersion
         refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
       end
 
-      it 'only publishes and indexes repos that received content' do
+      it 'only pre-copies, publishes and indexes repos that received content' do
         unchanged_library_repo = katello_repositories(:rhel_6_x86_64)
         unchanged_old_repo = katello_repositories(:rhel_6_x86_64_dev_archive)
         unchanged_new_repo = ::Katello::Repository.new(:pulp_id => 388, :library_instance_id => unchanged_library_repo.id, :root => unchanged_library_repo.root)
@@ -141,6 +141,8 @@ module ::Actions::Katello::ContentViewVersion
 
         action.expects(:copy_repos).with(new_repo).once
         action.expects(:copy_repos).with(unchanged_new_repo).never
+        # The pre-copy is the only place that asks the destination repo whether it is a soft copy.
+        unchanged_new_repo.expects(:soft_copy_of_library?).never
         plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
 
         pulp3_repo_map = { [library_repo.id] => { :dest_repo => new_repo.id, :base_version => nil } }
@@ -148,6 +150,7 @@ module ::Actions::Katello::ContentViewVersion
                                   pulp3_repo_map,
                                   { :debs => [], :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => false)
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::CopyContent, library_repo, SmartProxy.pulp_primary, new_repo, copy_all: true, remove_all: true)
       end
     end
   end
