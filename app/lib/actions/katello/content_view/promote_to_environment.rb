@@ -2,7 +2,7 @@ module Actions
   module Katello
     module ContentView
       class PromoteToEnvironment < Actions::EntryAction
-        execution_plan_hooks.use :trigger_capsule_sync, :on => :success
+        execution_plan_hooks.use :trigger_post_tasks, :on => :success
         def plan(version, environment, description, incremental_update = false)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                           :environment => environment, :task => self.task,
@@ -45,20 +45,21 @@ module Actions
         end
 
         def finalize
-          environment = ::Katello::KTEnvironment.find(input[:environment_id])
-          ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
-
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
         end
 
-        def trigger_capsule_sync(_execution_plan)
+        def trigger_post_tasks(_execution_plan)
+          content_view = ::Katello::ContentView.find(input[:content_view_id])
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
+
+          ForemanTasks.async_task(ContentView::UpdateHostStatus,
+                                  content_view, environment)
+
           if !input[:incremental_update] && sync_proxies?(environment) && Setting[:foreman_proxy_content_auto_sync]
             ForemanTasks.async_task(ContentView::CapsuleSync,
-                                    ::Katello::ContentView.find(input[:content_view_id]),
-                                    environment)
+                                    content_view, environment)
           end
         end
 
