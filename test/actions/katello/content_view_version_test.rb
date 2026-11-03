@@ -127,16 +127,26 @@ module ::Actions::Katello::ContentViewVersion
         refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
       end
 
-      it 'only pre-copies, publishes and indexes repos that received content' do
+      # A second repo whose archived copy already matches its library instance, i.e. nothing is copied into it.
+      def pulp3_unchanged_repo_setup
         unchanged_library_repo = katello_repositories(:rhel_6_x86_64)
         unchanged_old_repo = katello_repositories(:rhel_6_x86_64_dev_archive)
         unchanged_new_repo = ::Katello::Repository.new(:pulp_id => 388, :library_instance_id => unchanged_library_repo.id, :root => unchanged_library_repo.root)
         unchanged_new_repo.update!(content_view_version_id: katello_content_view_versions(:library_view_version_1).id, relative_path: "blah_unchanged")
 
         pulp3_cvv_setup([unchanged_library_repo] => unchanged_new_repo)
-        # Same version as its library instance means nothing is copied into it.
         unchanged_library_repo.update!(version_href: "/unchanged/versions/1/")
         unchanged_old_repo.update!(version_href: "/unchanged/versions/1/")
+        [unchanged_library_repo, unchanged_old_repo, unchanged_new_repo]
+      end
+
+      def assert_cloned_to_version(sources, dest_repo)
+        assert_action_planned_with(action, ::Actions::Katello::Repository::CloneToVersion,
+                                   sources, action.new_content_view_version, dest_repo, incremental: true)
+      end
+
+      it 'only pre-copies, publishes and indexes repos that received content' do
+        _unchanged_library_repo, _unchanged_old_repo, unchanged_new_repo = pulp3_unchanged_repo_setup
         ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
 
         action.expects(:copy_repos).with(new_repo).once
@@ -151,6 +161,69 @@ module ::Actions::Katello::ContentViewVersion
                                   { :debs => [], :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => false)
         assert_action_planned_with(action, ::Actions::Pulp3::Repository::CopyContent, library_repo, SmartProxy.pulp_primary, new_repo, copy_all: true, remove_all: true)
+      end
+
+      it 'still clones repos that receive no content' do
+        unchanged_library_repo, _unchanged_old_repo, unchanged_new_repo = pulp3_unchanged_repo_setup
+        ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
+        action.stubs(:copy_repos)
+
+        plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
+
+        assert_cloned_to_version([library_repo], new_repo)
+        assert_cloned_to_version([unchanged_library_repo], unchanged_new_repo)
+      end
+
+      it 'copies into a repo whose archived version differs from its library instance' do
+        unchanged_library_repo, unchanged_old_repo, unchanged_new_repo = pulp3_unchanged_repo_setup
+        unchanged_old_repo.update!(version_href: "/unchanged/versions/0/")
+        ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
+
+        action.expects(:copy_repos).with(new_repo).once
+        action.expects(:copy_repos).with(unchanged_new_repo).once
+        plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
+
+        pulp3_repo_map = {
+          [library_repo.id] => { :dest_repo => new_repo.id, :base_version => nil },
+          [unchanged_library_repo.id] => { :dest_repo => unchanged_new_repo.id, :base_version => nil },
+        }
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+                                  pulp3_repo_map,
+                                  { :debs => [], :errata => [], :rpms => [old_rpm.id] },
+                                  :dependency_solving => false)
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::CopyContent, library_repo, SmartProxy.pulp_primary, new_repo, copy_all: true, remove_all: true)
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::CopyContent, unchanged_library_repo, SmartProxy.pulp_primary, unchanged_new_repo, copy_all: true, remove_all: true)
+      end
+
+      it 'copies nothing when no repo received content' do
+        unchanged_library_repo, _unchanged_old_repo, unchanged_new_repo = pulp3_unchanged_repo_setup
+        old_library_repo_copy = content_view_version.repositories.archived.find_by(root_id: library_repo.root_id)
+        old_library_repo_copy.update!(version_href: library_repo.reload.version_href)
+        ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
+
+        action.expects(:copy_repos).never
+        plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
+
+        refute_action_planned(action, ::Actions::Pulp3::Repository::MultiCopyUnits)
+        refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
+        assert_cloned_to_version([library_repo], new_repo)
+        assert_cloned_to_version([unchanged_library_repo], unchanged_new_repo)
+      end
+
+      it 'copies without a pre-copy into a changed repo that already has its own version, next to an unchanged repo' do
+        _unchanged_library_repo, _unchanged_old_repo, unchanged_new_repo = pulp3_unchanged_repo_setup
+        ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(false)
+
+        action.expects(:copy_repos).with(new_repo).once
+        action.expects(:copy_repos).with(unchanged_new_repo).never
+        plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
+
+        pulp3_repo_map = { [library_repo.id] => { :dest_repo => new_repo.id, :base_version => 1 } }
+        assert_action_planned_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+                                  pulp3_repo_map,
+                                  { :debs => [], :errata => [], :rpms => [old_rpm.id] },
+                                  :dependency_solving => false)
+        refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
       end
     end
   end
