@@ -18,6 +18,8 @@ module Actions
         :source_repository => nil,
         :matching_content => false,
         :force_publication => false,
+        :contents_changed => true,
+        :assume_content_guard_exists => false,
       }
     end
 

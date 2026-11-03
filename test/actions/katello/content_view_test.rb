@@ -545,6 +545,36 @@ module ::Actions::Katello::ContentView
       assert_action_planned(action, Actions::Katello::ContentView::CapsuleSync)
     end
 
+    it 'ensures the content guard once for the promotion' do
+      action.stubs(:task).returns(success_task)
+      repository = katello_repositories(:fedora_17_x86_64)
+      repository.stubs(:unprotected).returns(false)
+      content_view_version.stubs(:archived_repos).returns([repository])
+
+      plan_action(action, content_view_version, environment, 'description')
+
+      assert_action_planned_with(action, ::Actions::Pulp3::ContentGuard::Refresh, SmartProxy.pulp_primary)
+      assert_action_planned(action, ::Actions::Katello::Repository::CloneToEnvironment)
+    end
+
+    it 'scopes contents_changed to the delta, treating a missing or empty set as every repository' do
+      changed = katello_repositories(:fedora_17_x86_64)
+      unchanged = katello_repositories(:feedless_fedora_17_x86_64)
+      [changed, unchanged].each { |repository| repository.stubs(:unprotected).returns(true) }
+      content_view_version.stubs(:archived_repos).returns([changed, unchanged])
+
+      { 'no delta' => nil, 'an empty delta' => [], 'a delta without the repository' => [changed.root_id] }.each do |_label, delta|
+        scoped_action = create_action(action_class)
+        scoped_action.stubs(:task).returns(success_task)
+
+        plan_action(scoped_action, content_view_version, environment, 'description', !delta.nil?, delta)
+
+        assert_action_planned_with(scoped_action, ::Actions::Katello::Repository::CloneToEnvironment, unchanged, environment,
+                                   :assume_content_guard_exists => false,
+                                   :contents_changed => delta.blank?)
+      end
+    end
+
     context 'finalize phase' do
       it 'updates errata counts and status' do
         content_facet = katello_content_facets(:content_facet_two)

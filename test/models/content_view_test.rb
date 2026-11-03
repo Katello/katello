@@ -710,6 +710,28 @@ module Katello
       end
     end
 
+    def test_update_host_statuses_scopes_to_changed_roots
+      facet = katello_content_facets(:content_facet_one)
+      cvenv = facet.content_view_environments.first
+      root_id = facet.bound_repositories.first.root_id
+
+      ::Katello::Host::ContentFacet.any_instance.expects(:update_applicability_counts).once
+      ::Katello::Host::ContentFacet.any_instance.expects(:update_errata_status).once
+
+      cvenv.content_view.update_host_statuses(cvenv.lifecycle_environment, [root_id])
+    end
+
+    def test_update_host_statuses_skips_untouched_roots
+      facet = katello_content_facets(:content_facet_one)
+      cvenv = facet.content_view_environments.first
+      untouched_root_id = facet.bound_repositories.first.root_id + 1
+
+      ::Katello::Host::ContentFacet.any_instance.expects(:update_applicability_counts).never
+      ::Katello::Host::ContentFacet.any_instance.expects(:update_errata_status).never
+
+      cvenv.content_view.update_host_statuses(cvenv.lifecycle_environment, [untouched_root_id])
+    end
+
     def test_unpublishable?
       default_content_view = ContentView.default.first
       import_only_content_view = FactoryBot.create(:katello_content_view, :import_only)
