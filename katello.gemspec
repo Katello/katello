@@ -15,7 +15,8 @@ Gem::Specification.new do |gem|
   gem.description = "Katello adds Content and Subscription Management to Foreman. For this it relies on Candlepin and Pulp."
   gem.required_ruby_version = '>= 3.0', '< 4'
 
-  gem.files = Dir["{app,webpack,vendor,lib,db,ca,config,locale}/**/*"] +
+  gem.files = Dir["{app,webpack,lib,db,ca,config,locale}/**/*"] +
+    Dir["vendor/{assets,plugins}/**/*"] +
     Dir['LICENSE.txt', 'README.md', 'package.json']
   gem.files += Dir["engines/bastion/{app,vendor,lib,config}/**/*"]
   gem.files += Dir["engines/bastion/{README.md}"]
