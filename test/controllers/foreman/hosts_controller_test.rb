@@ -105,7 +105,7 @@ class HostsControllerTest < ActionController::TestCase
 
     def test_index_csv_includes_katello_columns_for_new_hosts_path
       @request.path = '/new/hosts.csv'
-      # Select Katello content columns that user wants to see (in UI weight order)
+      # Simulate saved preferences that still reference removed columns after an upgrade
       User.current.table_preferences.create(
         name: 'hosts',
         columns: ['name', 'bootc_booted_image', 'rhel_lifecycle_status', 'installable_updates',
@@ -119,7 +119,7 @@ class HostsControllerTest < ActionController::TestCase
       buf = response.stream.instance_variable_get(:@buf)
       header_line = buf.next
 
-      # Verify Katello columns are included (in UI weight order)
+      # Export registered columns and ignore removed columns in saved preferences
       assert_includes header_line, "Image Type"
       assert_includes header_line, "Installable Updates - Security"
       assert_includes header_line, "Installable Updates - Bugfix"
@@ -127,8 +127,8 @@ class HostsControllerTest < ActionController::TestCase
       assert_includes header_line, "Installable Packages - Rpm"
       assert_includes header_line, "Last Checkin"
       assert_includes header_line, "Content View Environments"
-      assert_includes header_line, "Lifecycle Environment"
-      assert_includes header_line, "Content View"
+      refute_includes CSV.parse_line(header_line), "Lifecycle Environment"
+      refute_includes CSV.parse_line(header_line), "Content View"
       assert_includes header_line, "Content Source"
       assert_includes header_line, "Registered"
       assert_includes header_line, "Host Collections"

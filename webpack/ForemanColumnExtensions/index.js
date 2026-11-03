@@ -160,28 +160,6 @@ const hostsIndexColumnExtensions = [
     isSorted: true,
   },
   {
-    columnName: 'lifecycle_environment',
-    title: __('Lifecycle environment'),
-    wrapper: (hostDetails) => {
-      const lifecycleEnvironment =
-        hostDetails?.content_facet_attributes?.lifecycle_environment?.name;
-      return lifecycleEnvironment || '—';
-    },
-    weight: 2300,
-    isSorted: true,
-  },
-  {
-    columnName: 'content_view',
-    title: __('Content view'),
-    wrapper: (hostDetails) => {
-      const contentView =
-        hostDetails?.content_facet_attributes?.content_view?.name;
-      return contentView || '—';
-    },
-    weight: 2400,
-    isSorted: true,
-  },
-  {
     columnName: 'content_view_environments',
     title: __('Content view environments'),
     wrapper: (hostDetails) => {
