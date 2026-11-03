@@ -29,6 +29,8 @@ jobs:
       foreman_version: develop # set to the Foreman release branch after branching :)
       runner: ubuntu-26.04
       matrix_exclude: '[{"ruby":"3.0"}]'
+      environment_variables: |
+        PQC_REQUIRED=true
 
   test_ruby_30:
     name: Ruby 3.0
