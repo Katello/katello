@@ -4,6 +4,11 @@ module Katello
 
     include Api::V2::Rendering
     include ForemanTasks::Triggers
+
+    rescue_from ::Katello::Errors::CandlepinUnprocessableEntity do |error|
+      render_error 'standard_error', :status => :unprocessable_entity, :locals => { :exception => error }
+    end
+
     LOCAL_FIND_TAXONOMY_ACTIONS = %w(repo_discover cancel_repo_discover download_debug_certificate
                                      cdn_configuration redhat_provider update releases key_algorithms).freeze
 
@@ -94,7 +99,11 @@ module Katello
       # Force @organization.errors to be populated
       # Organization.new may raise so @organization may not be set
       @organization&.valid?
-      process_resource_error(message: e.message, resource: @organization)
+      if @organization&.errors&.any?
+        process_resource_error(message: e.message, resource: @organization)
+      else
+        raise e
+      end
     end
 
     api :DELETE, '/organizations/:id', N_('Delete an organization')

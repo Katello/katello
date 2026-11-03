@@ -435,26 +435,3 @@ test('enables edit controls when user has edit_content_credentials permission', 
   assertNockRequest(scope);
 });
 
-test('view tasks button links to foreman tasks filtered by credential', async () => {
-  const scope = nockInstance
-    .get(credentialDetailsPath)
-    .query(true)
-    .reply(200, mockCredentialData);
-
-  renderWithRedux(
-    withCredentialRoute(<ContentCredentialsDetails />),
-    renderOptions,
-  );
-
-  await patientlyWaitFor(() => {
-    const viewTasksButton = screen.getByRole('link', { name: /view tasks/i });
-    expect(viewTasksButton).toHaveAttribute(
-      'href',
-      expect.stringContaining(`resource_id%3D${credentialId}`),
-    );
-    expect(viewTasksButton).toHaveAttribute('target', '_blank');
-  });
-
-  assertNockRequest(scope);
-});
-

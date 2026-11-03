@@ -66,6 +66,17 @@ module ::Actions::Katello::Repository
       assert_action_planned_with action, candlepin_action_class, view_env_cp_id: "1", content_id: "69"
     end
 
+    it 'leaves backend repository and distribution creation to the initial Pulp push' do
+      repository.root.stubs(:is_container_push).returns(true)
+      repository.stubs(:in_default_view?).returns(true)
+
+      plan_action action, repository
+
+      refute_action_planned action, ::Actions::Pulp3::Orchestration::Repository::Create
+      refute_action_planned action, ::Actions::Pulp3::Repository::RefreshDistribution
+      refute_action_planned action, acs_create_action_class
+    end
+
     it 'plans acs creation if not cloning' do
       simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       simplified_acs.verify_ssl = nil
@@ -103,6 +114,36 @@ module ::Actions::Katello::Repository
       run_action plan
       assert_nil plan.run
       refute_action_planned action, candlepin_action_class
+    end
+  end
+
+  class ContainerPushBackendDeleteTest < TestBase
+    let(:action_class) { ::Actions::Pulp3::Orchestration::Repository::Delete }
+    let(:repository) { katello_repositories(:redis) }
+
+    before do
+      repository.root.stubs(:is_container_push).returns(true)
+      repository.content_view.stubs(:default?).returns(true)
+    end
+
+    it 'deletes regular Pulp repositories as well as their distributions' do
+      repository.backend_service(proxy).stubs(:repository_reference).returns(
+        stub(repository_href: '/pulp/api/v3/repositories/container/container/repo/'))
+
+      plan_action action, repository, proxy
+
+      assert_action_planned action, ::Actions::Pulp3::Repository::DeleteDistributions
+      assert_action_planned_with action, ::Actions::Pulp3::Repository::Delete, repository.id, proxy
+    end
+
+    it 'deletes legacy Pulp repositories through their distributions' do
+      repository.backend_service(proxy).stubs(:repository_reference).returns(
+        stub(repository_href: '/pulp/api/v3/repositories/container/container-push/repo/'))
+
+      plan_action action, repository, proxy
+
+      assert_action_planned action, ::Actions::Pulp3::Repository::DeleteDistributions
+      refute_action_planned action, ::Actions::Pulp3::Repository::Delete
     end
   end
 

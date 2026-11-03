@@ -27,6 +27,7 @@ jobs:
     with:
       plugin: katello
       foreman_version: develop # set to the Foreman release branch after branching :)
+      generate_apidoc: ${{ github.event_name == 'push' }}
       runner: ubuntu-26.04
       matrix_exclude: '[{"ruby":"3.0"}]'
       environment_variables: |

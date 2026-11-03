@@ -190,6 +190,7 @@ module Katello
         options = {}
         options[:ssl_ca_file] = ca_file unless ca_file.nil?
         options[:headers] = { 'Correlation-ID' => request_id } if request_id
+        options[:force_direct] = true
         client = RestClient::Resource.new("#{url}/status/", options)
 
         response = client.get

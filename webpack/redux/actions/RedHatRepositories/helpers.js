@@ -42,9 +42,9 @@ const recommendedRepositoriesSatTools = [
 ];
 
 const recommendedRepositoriesMisc = [
-  'satellite-utils-6.19-for-rhel-9-x86_64-rpms',
-  'satellite-maintenance-6.19-for-rhel-9-x86_64-rpms',
-  'satellite-capsule-6.19-for-rhel-9-x86_64-rpms',
+  'satellite-utils-6.20-for-rhel-9-x86_64-rpms',
+  'satellite-maintenance-6.20-for-rhel-9-x86_64-rpms',
+  'satellite-capsule-6.20-for-rhel-9-x86_64-rpms',
 ];
 
 const recommendedRepositorySetLables = recommendedRepositoriesRHEL

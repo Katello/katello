@@ -45,11 +45,16 @@ module Katello
         end
 
         def distribution_options(path)
-          {
+          options = {
             base_path: path,
-            repository_version: repo.version_href,
             name: "#{generate_backend_object_name}",
           }
+          if root.is_container_push && repo.in_default_view?
+            options[:repository] = repository_reference.repository_href
+          else
+            options[:repository_version] = repo.version_href
+          end
+          options
         end
 
         def create_version(options = {})
@@ -104,6 +109,10 @@ module Katello
           else
             copy_units_recursively(include_list_ids - exclude_list_ids, true)
           end
+        end
+
+        def legacy_container_push?
+          root.is_container_push && repository_reference&.repository_href&.include?('/container/container-push/')
         end
       end
     end

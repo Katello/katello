@@ -246,12 +246,6 @@
       "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
         ""
       ],
-      "A content view environment is a combination of a particular lifecycle environment and content view.": [
-        ""
-      ],
-      "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host.": [
-        ""
-      ],
       "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content.": [
         ""
       ],
@@ -259,9 +253,6 @@
         ""
       ],
       "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.": [
-        ""
-      ],
-      "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}.": [
         ""
       ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
@@ -352,9 +343,6 @@
         ""
       ],
       "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.": [
-        ""
-      ],
-      "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
         ""
       ],
       "Activation key content view environments updated": [
@@ -573,13 +561,7 @@
       "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.": [
         ""
       ],
-      "Allow hosts or activation keys to be associated with multiple content view environments": [
-        ""
-      ],
       "Allow hosts to re-register themselves only when they are in build mode": [
-        ""
-      ],
-      "Allow multiple content views": [
         ""
       ],
       "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host.": [
@@ -768,16 +750,16 @@
       "Array of content view environment IDs": [
         ""
       ],
-      "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment IDs to be associated with the hosts.": [
         ""
       ],
-      "Array of content view environment ids associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids associated with the activation key.": [
         ""
       ],
-      "Array of content view environment ids to be associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids to be associated with the activation key.": [
         ""
       ],
-      "Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids to be associated with the host.": [
         ""
       ],
       "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
@@ -807,9 +789,6 @@
       "Assign another content view environment": [
         ""
       ],
-      "Assign content view environment": [
-        ""
-      ],
       "Assign content view environments": [
         ""
       ],
@@ -827,12 +806,6 @@
         ""
       ],
       "Assign the release version to one or more hosts": [
-        ""
-      ],
-      "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        ""
-      ],
-      "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
         ""
       ],
       "Associated content view environments": [
@@ -1411,16 +1384,16 @@
       "Collapse group": [
         ""
       ],
-      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
@@ -2630,9 +2603,6 @@
         ""
       ],
       "Edit activation key": [
-        ""
-      ],
-      "Edit content view environment": [
         ""
       ],
       "Edit credentials": [
@@ -5526,9 +5496,6 @@
       "Organization id": [
         ""
       ],
-      "Organization id not found: '%s'": [
-        ""
-      ],
       "Organization identifier": [
         ""
       ],
@@ -5544,13 +5511,13 @@
       "Organization not found": [
         ""
       ],
-      "Organization not found: '%s'": [
-        ""
-      ],
       "Organization required": [
         ""
       ],
       "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.": [
+        ""
+      ],
+      "Orphaned": [
         ""
       ],
       "Orphaned Content Protection Time": [
@@ -5838,9 +5805,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         ""
       ],
-      "Product id not found: '%s'": [
-        ""
-      ],
       "Product label": [
         ""
       ],
@@ -5854,9 +5818,6 @@
         ""
       ],
       "Product name as listed from a host's installed products": [
-        ""
-      ],
-      "Product not found: '%s'": [
         ""
       ],
       "Product the repository belongs to": [
@@ -6249,9 +6210,6 @@
       "Registered to": [
         ""
       ],
-      "Registering to multiple environments is not enabled.": [
-        ""
-      ],
       "Registration details": [
         ""
       ],
@@ -6565,6 +6523,9 @@
         ""
       ],
       "Requested access to '%s' is denied": [
+        ""
+      ],
+      "Requested repository name is unknown to the registry.": [
         ""
       ],
       "Requirements is not valid yaml.": [
@@ -7314,6 +7275,9 @@
       ],
       "Smart proxies": [
         "Smarta proxies"
+      ],
+      "Smart proxies must have the Pulp feature to be used with alternate content sources: %s": [
+        ""
       ],
       "Smart proxy ID": [
         ""

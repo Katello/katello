@@ -11,7 +11,7 @@ module Katello
       org = @organization || current_organization_object
       fail HttpErrors::NotFound, _("Organization required") if org.nil?
 
-      products = org.library.products.readable
+      products = org.library.products.readable.includes(:pool_products)
       redhat_products, custom_products = products.partition(&:redhat?)
       redhat_products.sort_by! { |p| p.name.downcase }
       custom_products.sort_by! { |p| p.name.downcase }

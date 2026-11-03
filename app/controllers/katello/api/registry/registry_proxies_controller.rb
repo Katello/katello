@@ -423,7 +423,7 @@ module Katello
       latest_version_href = push_repo_api_response&.latest_version_href
       pulp_repo_href = push_repo_api_response&.pulp_href
 
-      if latest_version_href.empty? || pulp_repo_href.empty?
+      if latest_version_href.blank? || pulp_repo_href.blank?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
           _("Could not locate repository properties for content indexing."),
@@ -454,7 +454,7 @@ module Katello
       pulp_distribution_href = distribution_api_response&.pulp_href
       pulp_distribution_prn = distribution_api_response&.prn
 
-      if pulp_distribution_href.empty?
+      if pulp_distribution_href.blank?
         return render_podman_error(
           "BLOB_UPLOAD_UNKNOWN",
           _("Could not locate Pulp distribution."),
@@ -665,7 +665,8 @@ module Katello
     end
 
     def check_blob
-      pulp_response = Resources::Registry::Proxy.get(@_request.fullpath, 'Accept' => request.headers['Accept'])
+      # Clients probe blobs without an Accept header; forward */* rather than an empty one, which Pulp rejects with 406.
+      pulp_response = Resources::Registry::Proxy.get(@_request.fullpath, 'Accept' => request.headers['Accept'].presence || '*/*')
       response.headers['Content-Type'] = pulp_response.headers[:content_type] if pulp_response.headers[:content_type]
       response.headers['Content-Length'] = pulp_response.headers[:content_length] if pulp_response.headers[:content_length]
       head pulp_response.code
@@ -758,7 +759,6 @@ module Katello
       end
 
       save_push_repo_hrefs if pulp_response.code.between?(200, 299)
-      # Indexing content is only needed after pushing manifests
       root_repository.library_instance.index_content
       head pulp_response.code
     end

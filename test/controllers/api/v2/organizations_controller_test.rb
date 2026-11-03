@@ -70,6 +70,19 @@ module Katello
       assert_match Regexp.new("Couldn't find"), response.body
     end
 
+    def test_create_preserves_backend_exception
+      Katello::OrganizationCreator.any_instance
+        .expects(:create!)
+        .raises(StandardError, 'Simulated backend failure')
+
+      organization = { :name => 'backend_exception_repro', :label => 'backend_exception_repro' }
+      post(:create, params: { :organization => organization })
+
+      assert_response :internal_server_error
+      assert_match 'Simulated backend failure', response.body
+      refute_match 'resource have no errors', response.body
+    end
+
     def test_create_duplicate_name
       stub_organization_creator
 
@@ -239,6 +252,22 @@ module Katello
       assert_match(/attachment; filename="#{@organization.name}-key-cert.pem"/, response.headers['Content-Disposition'])
       assert_includes response.body, cert_data[:key]
       assert_includes response.body, cert_data[:cert]
+    end
+
+    def test_download_debug_certificate_with_bad_oid_values
+      message = "Unable to generate an ueber certificate compatible with the provided cryptographic capabilities"
+      Organization.any_instance.expects(:generate_debug_cert_with_algorithms).with(
+        key_algorithms: ['1.2.3'],
+        signature_algorithms: []
+      ).raises(Katello::Errors::CandlepinUnprocessableEntity.new(message))
+
+      get :download_debug_certificate, params: {
+        id: @organization.title,
+        key_algorithms: ['1.2.3'],
+      }
+      assert_response :unprocessable_entity
+      assert_equal message, JSON.parse(response.body)['error']['message']
+      assert_response :unprocessable_entity # 422
     end
 
     context "create_organization" do

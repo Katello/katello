@@ -259,12 +259,6 @@ msgstr "在 ostree 同步期间要包含的以逗号分隔的 refs 列表。可�
 msgid "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'."
 msgstr "在 ostree 同步期间要排除的以逗号分隔的标签列表。通配符 *, ? 可以被识别。'exclude_refs' 在 'include_refs' 后被评估。"
 
-msgid "A content view environment is a combination of a particular lifecycle environment and content view."
-msgstr "内容视图环境是特定生命周期环境和内容视图的组合。"
-
-msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host."
-msgstr "内容视图环境是特定生命周期环境和内容视图的组合。选择要分配给此主机的内容视图环境。"
-
 msgid "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content."
 msgstr "内容视图环境是特定生命周期环境和内容视图的组合。选择要分配给此主机的内容视图环境。您可以分配多个内容视图环境来提供对不同内容集合的访问。"
 
@@ -273,9 +267,6 @@ msgstr "内容视图环境是特定生命周期环境和内容视图的组合。
 
 msgid "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content."
 msgstr "内容视图环境是特定生命周期环境和内容视图的组合。您可以分配多个内容视图环境，以提供对多组内容的主机访问。"
-
-msgid "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}."
-msgstr "内容视图环境是特定生命周期环境和内容视图的组合。您的选择将 {replace} 中的所有现有内容视图环境 {hosts}。"
 
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
 msgstr "此内容视图中未应用大量勘误，因此仅显示前 100 个。"
@@ -366,9 +357,6 @@ msgstr "激活码 %s 有多个内容视图。使用 #content_views 替代。"
 
 msgid "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead."
 msgstr "激活码 %s 有多个生命周期环境。使用 #lifecycle_environments 替代。"
-
-msgid "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled."
-msgstr "激活码 '%s' 与多个环境关联，但没有启用注册到多个环境。"
 
 msgid "Activation key content view environments updated"
 msgstr "激活码内容视图环境已更新"
@@ -485,7 +473,7 @@ msgid "Add repositories with package groups to content view to select them here.
 msgstr "将含有软件包组的存储库添加到内容视图，以在此处选择它们。"
 
 msgid "Add rolling repo clone"
-msgstr ""
+msgstr "添加滚动仓库克隆"
 
 msgid "Add rule"
 msgstr "添加规则"
@@ -586,23 +574,17 @@ msgstr "允许删除公布的内容视图中的仓库"
 msgid "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode."
 msgstr "只要主机处于构建模式，允许主机注册绕过 'Host Profile Assume'。"
 
-msgid "Allow hosts or activation keys to be associated with multiple content view environments"
-msgstr "允许主机或激活码与多个内容视图环境关联"
-
 msgid "Allow hosts to re-register themselves only when they are in build mode"
 msgstr "仅当主机处于构建模式时才允许主机重新注册"
-
-msgid "Allow multiple content views"
-msgstr "由多个组件内容视图组成"
 
 msgid "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host."
 msgstr "只要其他主机未使用注册的 DMI UUID，就允许新的主机注册假定注册的配置文件具有匹配的主机名。"
 
 msgid "Allow this smart proxy to authenticate to the container registry using its SSL client certificate"
-msgstr ""
+msgstr "允许此智能代理使用其 SSL 客户端证书向容器 registry 进行身份验证"
 
 msgid "Allow this smart proxy to pull and push container images using its SSL client certificate."
-msgstr ""
+msgstr "允许此智能代理使用其 SSL 客户端证书拉取和推送容器镜像。"
 
 msgid "Also include the latest upgradable package version for each host package"
 msgstr "还包括每个主机软件包的最新可升级软件包版本"
@@ -789,17 +771,17 @@ msgstr "要删除的内容视图组件 ID 的数组。组件关联的标识符"
 msgid "Array of content view environment IDs"
 msgstr "内容视图环境 ID 数组"
 
-msgid "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on."
-msgstr "要与主机关联的内容视图环境 ID 的数组。需要 allow_multiple_content_views 设置为 on。"
+msgid "Array of content view environment IDs to be associated with the hosts."
+msgstr ""
 
-msgid "Array of content view environment ids associated with the activation key. Requires allow_multiple_content_views setting to be on."
-msgstr "要与激活密钥关联的内容视图环境 ID 的数组。需要将 allow_multiple_content_views 设置为 on。"
+msgid "Array of content view environment ids associated with the activation key."
+msgstr ""
 
-msgid "Array of content view environment ids to be associated with the activation key. Requires allow_multiple_content_views setting to be on."
-msgstr "要与激活密钥关联的内容视图环境 ID 的数组。需要 allow_multiple_content_views 设置为 on。"
+msgid "Array of content view environment ids to be associated with the activation key."
+msgstr ""
 
-msgid "Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on."
-msgstr "要与主机关联的内容视图环境 ID 的数组。需要 allow_multiple_content_views 设置为 on。"
+msgid "Array of content view environment ids to be associated with the host."
+msgstr ""
 
 msgid "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
 msgstr "内容视图环境标签数组，格式为fecycle_environment_label/content_view_label'. 如果指定了 content_view_environment_ids，则被忽略。"
@@ -828,9 +810,6 @@ msgstr "工件"
 msgid "Assign another content view environment"
 msgstr "分配另一个内容视图环境"
 
-msgid "Assign content view environment"
-msgstr "分配内容视图环境"
-
 msgid "Assign content view environments"
 msgstr "分配内容视图环境"
 
@@ -849,12 +828,6 @@ msgstr "将环境和内容视图分配给一个或多个主机"
 
 msgid "Assign the release version to one or more hosts"
 msgstr "将发行版本分配给一个或多个主机"
-
-msgid "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
-msgstr "没有启用将一个主机分配给多个内容视图环境。要启用它，请设置 allow_multiple_content_views 设置。"
-
-msgid "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting."
-msgstr "没有启用将激活密钥分配给多个内容视图环境。要启用它，请设置 allow_multiple_content_views 设置。"
 
 msgid "Associated content view environments"
 msgstr "关联的内容视图环境"
@@ -1127,7 +1100,7 @@ msgid "Candlepin consumer registration response is missing a uuid"
 msgstr "Candlepin 消费者注册相应缺失了 uuid"
 
 msgid "Candlepin could not generate a certificate with the requested cryptographic capabilities."
-msgstr ""
+msgstr "Candlepin 无法生成具有请求的加密功能的证书。"
 
 msgid "Candlepin is not running properly"
 msgstr "Candlepin 没有正常运行"
@@ -1301,7 +1274,7 @@ msgid "Cannot set auto publish to a non-composite content view"
 msgstr "无法将自动发布设置为非复合内容视图"
 
 msgid "Cannot skip metadata check on non-yum/deb/file repositories."
-msgstr ""
+msgstr "无法跳过非 yum/deb/file 存储库的元数据检查。"
 
 msgid "Cannot sync file:// repositories with the On Demand Download Policy"
 msgstr "无法同步带有按需下载策略的 file:// 仓库"
@@ -1391,7 +1364,7 @@ msgid "Clean Backend Objects"
 msgstr "清理后端对象"
 
 msgid "Clear"
-msgstr ""
+msgstr "清除"
 
 msgid "Clear any previous registration and run subscription-manager with --force."
 msgstr "清除之前的所有注册，并使用 --force 运行 subscription-manager。"
@@ -1430,19 +1403,19 @@ msgid "Collapse all"
 msgstr "全部折叠"
 
 msgid "Collapse group"
+msgstr "折叠组"
+
+msgid "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
 msgstr ""
 
-msgid "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
-msgstr "要与激活密钥关联的内容视图环境标签的以逗号分隔的列表，格式为 'lifecycle_environment_label/content_view_label'。如果指定了 content_view_environment_ids，则忽略它。需要将 allow_multiple_content_views 设置为 on。"
+msgid "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
+msgstr ""
 
-msgid "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
-msgstr "要与激活密钥关联的内容视图环境标签的以逗号分隔的列表，格式为 'lifecycle_environment_label/content_view_label'。如果指定了 content_view_environment_ids，则忽略它。需要将 allow_multiple_content_views 设置为 on。"
+msgid "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
+msgstr ""
 
-msgid "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
-msgstr "要与主机关联的内容视图环境标签的逗号分隔列表，格式为 'lifecycle_environment_label/content_view_label'。如果指定了 content_view_environment_ids，则忽略它。需要将 allow_multiple_content_views 设置为 on。"
-
-msgid "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on."
-msgstr "要与主机关联的内容视图环境标签的逗号分隔列表，格式为 'lifecycle_environment_label/content_view_label'。如果指定了 content_view_environment_ids，则忽略它。需要将 allow_multiple_content_views 设置为 on。"
+msgid "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified."
+msgstr ""
 
 msgid "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front."
 msgstr "以逗号分隔的子路径列表。所有子路径都必须在结尾有一个斜杠，且在开头没有斜杠。"
@@ -1457,7 +1430,7 @@ msgid "Command contains %(packageCount)s of %(selectedCount)s selected %(selecte
 msgstr "命令包含选择 %(packageCount)s 个（共 %(selectedCount)s）选择的 %(selectedWord)s"
 
 msgid "Commit upload"
-msgstr ""
+msgstr "提交上传"
 
 msgid "Compare"
 msgstr "比较"
@@ -1496,7 +1469,7 @@ msgid "Configuration updated on Foreman"
 msgstr "Foreman 上更新的配置"
 
 msgid "Confirm"
-msgstr ""
+msgstr "确认"
 
 msgid "Confirm Deletion"
 msgstr "确认删除"
@@ -1526,7 +1499,7 @@ msgid "Container Images"
 msgstr "容器镜像"
 
 msgid "Container Registry Authentication"
-msgstr ""
+msgstr "容器 Registry 身份验证"
 
 msgid "Container image tag"
 msgstr "容器镜像标签"
@@ -1736,7 +1709,7 @@ msgid "Content view"
 msgstr "内容视图"
 
 msgid "Content view ${name} created"
-msgstr "内容视图 {name} 已创建"
+msgstr "内容视图 ${name} 已创建"
 
 msgid "Content view '%{content_view}' is not attached to the environment."
 msgstr "内容视图 '%{content_view}' 没有附加到环境。"
@@ -1769,7 +1742,7 @@ msgid "Content view environment ID"
 msgstr "内容视图环境 ID"
 
 msgid "Content view environment identifier"
-msgstr ""
+msgstr "内容视图环境标识符"
 
 msgid "Content view environments"
 msgstr "内容视图环境"
@@ -1856,13 +1829,13 @@ msgid "Copy"
 msgstr "复制"
 
 msgid "Copy all units"
-msgstr ""
+msgstr "复制所有单元"
 
 msgid "Copy an activation key"
 msgstr "复制激活码"
 
 msgid "Copy content"
-msgstr ""
+msgstr "复制内容"
 
 msgid "Copy content view"
 msgstr "复制内容视图"
@@ -1877,7 +1850,7 @@ msgid "Copy to clipboard"
 msgstr "复制到剪贴板"
 
 msgid "Copy version"
-msgstr ""
+msgstr "复制版本"
 
 msgid "Copy version units to library"
 msgstr "将版本单位复制到库"
@@ -2105,7 +2078,7 @@ msgid "Create content view"
 msgstr "创建內容视图"
 
 msgid "Create exporter"
-msgstr ""
+msgstr "创建导出器"
 
 msgid "Create filter"
 msgstr "创建过滤器"
@@ -2114,10 +2087,10 @@ msgid "Create host collection"
 msgstr "创建主机集"
 
 msgid "Create import"
-msgstr ""
+msgstr "创建导入"
 
 msgid "Create importer"
-msgstr ""
+msgstr "创建导入器"
 
 msgid "Create new activation key"
 msgstr "创建新的激活码"
@@ -2126,10 +2099,10 @@ msgid "Create organization"
 msgstr "创建机构"
 
 msgid "Create publication"
-msgstr ""
+msgstr "创建发布"
 
 msgid "Create remote"
-msgstr ""
+msgstr "创建远程"
 
 msgid "Creation"
 msgstr "创建"
@@ -2399,7 +2372,7 @@ msgid "Delete content view filters that have this repository as the last associa
 msgstr "删除将此存储库作为最后一个关联的存储库的内容视图过滤器。默认为 true。如果为 false，则此类过滤器现在应用到内容视图中的所有存储库。"
 
 msgid "Delete distributions"
-msgstr ""
+msgstr "删除分发版"
 
 msgid "Delete manifest from Red Hat provider"
 msgstr "從 Red Hat 供應者中刪除清單"
@@ -2408,22 +2381,22 @@ msgid "Delete multiple filters from a content view"
 msgstr "从内容视图中删除多个过滤器"
 
 msgid "Delete orphan alternate content sources"
-msgstr ""
+msgstr "删除孤立替代内容源"
 
 msgid "Delete orphan distributions"
-msgstr ""
+msgstr "删除孤立分发包"
 
 msgid "Delete orphan remotes"
-msgstr ""
+msgstr "删除孤立远程源"
 
 msgid "Delete orphan repository versions"
-msgstr ""
+msgstr "删除孤立存储库版本"
 
 msgid "Delete remote"
-msgstr ""
+msgstr "删除远程源"
 
 msgid "Delete repository references"
-msgstr ""
+msgstr "删除存储库引用"
 
 msgid "Delete version"
 msgstr "删除版本"
@@ -2528,10 +2501,10 @@ msgid "Destroy an environment in an organization"
 msgstr "銷毀組織中的一個環境"
 
 msgid "Destroy exporter"
-msgstr ""
+msgstr "销毁导出器"
 
 msgid "Destroy importer"
-msgstr ""
+msgstr "销毁导入器"
 
 msgid "Destroy one or more alternate content sources"
 msgstr "销毁一个或多个备用内容源"
@@ -2552,7 +2525,7 @@ msgid "Details for %s"
 msgstr "%s 详情"
 
 msgid "Determining settings for ${truncate(name)}"
-msgstr "确定 {truncate(name)} 的设置"
+msgstr "确定 ${truncate(name)} 的设置"
 
 msgid "Digest"
 msgstr "文摘值"
@@ -2609,7 +2582,7 @@ msgid "Download rate limit"
 msgstr "下载速率限制"
 
 msgid "Drag here"
-msgstr ""
+msgstr "拖放此处"
 
 msgid "Due to a change in your organizations, this container name has become ambiguous (org name '%{org_label}'). If you wish to continue using this container name, destroy the organization in conflict with '%{o_name} (id %{o_id}). If you wish to keep both orgs, destroy '%{o_label}/%{prod_label}/%{root_repo_label}' and retry your push using the id format."
 msgstr "由于机构发生了变化，此容器名称已经变得不明确（机构名称 '%{org_label}'）。如果您希望继续使用此容器名称，请销毁有冲突的机构 '%{o_name}(id %{o_id})。如果您想要同时保留这些机构，请销毁 '%{o_label}/%{prod_label}/%{root_repo_label}' 并使用 id 格式尝试重试推送。"
@@ -2653,9 +2626,6 @@ msgstr "编辑 URL 和子路径"
 msgid "Edit activation key"
 msgstr "编辑激活码"
 
-msgid "Edit content view environment"
-msgstr "编辑内容视图环境"
-
 msgid "Edit credentials"
 msgstr "编辑凭证"
 
@@ -2663,7 +2633,7 @@ msgid "Edit details"
 msgstr "编辑详情"
 
 msgid "Edit entitlements"
-msgstr ""
+msgstr "编辑权利"
 
 msgid "Edit filter rule"
 msgstr "列表过滤规则"
@@ -2792,7 +2762,7 @@ msgid "Environment cannot be in its own promotion path"
 msgstr "環境不能位於自己的推送路徑上"
 
 msgid "Environment contents refresh"
-msgstr ""
+msgstr "环境内容刷新"
 
 msgid "Environment identifier"
 msgstr "环境标识符"
@@ -2897,7 +2867,7 @@ msgid "Expand All"
 msgstr "展开全部"
 
 msgid "Expand group"
-msgstr ""
+msgstr "展开组"
 
 msgid "Expire soon days"
 msgstr "即将过期天数"
@@ -3207,10 +3177,10 @@ msgid "Force regenerate applicability."
 msgstr "强制重新生成适用性。"
 
 msgid "Force sync even if no upstream changes are detected."
-msgstr ""
+msgstr "即使没有检测到上游更改，也强制同步。"
 
 msgid "Force sync even if no upstream changes are detected. Only used with yum, deb, or file repositories."
-msgstr ""
+msgstr "如果没有检测到上游更改，也强制同步。只与 yum、deb 或 file 存储库一起使用。"
 
 msgid "Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem. Not allowed for repositories with the 'Complete Mirroring' mirroring policy."
 msgstr "强制重新发布指定存储库，在文件系统上重新生成元数据和符号链接。不允许使用\"Complete Mirroring' 镜像\"镜像策略的存储库。"
@@ -3256,7 +3226,7 @@ msgid "Generate host applicability"
 msgstr "产生主机适用性"
 
 msgid "Generate metadata"
-msgstr ""
+msgstr "生成元数据"
 
 msgid "Generate repository applicability"
 msgstr "生成仓库适用性"
@@ -3316,7 +3286,7 @@ msgid "Greater than"
 msgstr "大于"
 
 msgid "Guests of %s"
-msgstr ""
+msgstr "%s 的客户机"
 
 msgid "HTTP Proxies"
 msgstr "HTTP 代理服务器"
@@ -3442,7 +3412,7 @@ msgid "Host group IDs"
 msgstr "主机组 ID"
 
 msgid "Host group identifier"
-msgstr ""
+msgstr "主机组标识符"
 
 msgid "Host groups"
 msgstr "主机组"
@@ -3824,7 +3794,7 @@ msgid "Import a subscription manifest to give hosts access to Red Hat content."
 msgstr "导入订阅清单，为主机授予红帽内容的访问权限。"
 
 msgid "Import migration"
-msgstr ""
+msgstr "导入迁移"
 
 msgid "Import new manifest"
 msgstr "导入新清单"
@@ -3836,10 +3806,10 @@ msgid "Import only Content Views cannot be directly publsihed. Content can only 
 msgstr "仅导入不能直接发布的内容视图。内容只能通过导入至视图来更新。"
 
 msgid "Import repository upload"
-msgstr ""
+msgstr "导入存储库上传"
 
 msgid "Import upload"
-msgstr ""
+msgstr "导入上传"
 
 msgid "Import uploads into a repository"
 msgstr "将上传文件导入仓库"
@@ -4437,7 +4407,7 @@ msgid "List alternate content sources."
 msgstr "备用内容源列表。"
 
 msgid "List available key algorithms for debug certificates"
-msgstr ""
+msgstr "列出调试证书的可用密钥算法"
 
 msgid "List available releases in the organization"
 msgstr "列出机构中的可用版本"
@@ -4743,7 +4713,7 @@ msgid "Manifest expiring soon"
 msgstr "清单即将过期"
 
 msgid "Manifest history table"
-msgstr ""
+msgstr "清单历史记录表"
 
 msgid "Manifest imported"
 msgstr "导入的清单"
@@ -4897,13 +4867,13 @@ msgid "Multi Content View Environment"
 msgstr "多内容视图环境"
 
 msgid "Multi copy all units"
-msgstr ""
+msgstr "批量复制所有单元"
 
 msgid "Multi copy content"
-msgstr ""
+msgstr "批量复制内容"
 
 msgid "Multi copy units"
-msgstr ""
+msgstr "批量复制单元"
 
 msgid "Multi-entitlement"
 msgstr "多权利"
@@ -5242,7 +5212,7 @@ msgid "No matching ${name} found."
 msgstr "没有找到匹配的 ${name}。"
 
 msgid "No matching ${selectedContentType} found"
-msgstr "没有找到匹配的 {selectedContentType}"
+msgstr "没有找到匹配的 ${selectedContentType}"
 
 msgid "No matching DEB found."
 msgstr "未找到匹配的 DEB。"
@@ -5521,7 +5491,7 @@ msgid "One or more processes require restarting"
 msgstr "一个或多个进程需要重新启动"
 
 msgid "Only .zip manifest files are accepted"
-msgstr ""
+msgstr "只接受 .zip 清单文件"
 
 msgid "Only On Demand repositories may have space reclaimed."
 msgstr "只有 On Demand 存储库可能才有可以重新声明的空间。"
@@ -5542,10 +5512,10 @@ msgid "Operators"
 msgstr "Operators"
 
 msgid "Optional key algorithm OID strings"
-msgstr ""
+msgstr "可选的密钥算法 OID 字符串"
 
 msgid "Optional signature algorithm OID strings"
-msgstr ""
+msgstr "可选的签名算法 OID 字符串"
 
 msgid "Organization"
 msgstr "机构"
@@ -5571,9 +5541,6 @@ msgstr "机构不能为空。"
 msgid "Organization id"
 msgstr "組織 ID"
 
-msgid "Organization id not found: '%s'"
-msgstr "机构 id 没有找到: '%s'"
-
 msgid "Organization identifier"
 msgstr "机构标识符"
 
@@ -5589,14 +5556,14 @@ msgstr "在按名称提供产品时，必须指定机构。"
 msgid "Organization not found"
 msgstr "没有找到机构"
 
-msgid "Organization not found: '%s'"
-msgstr "没有找到机构：'%s'"
-
 msgid "Organization required"
 msgstr "需要的机构"
 
 msgid "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details."
 msgstr "对孤立项进行清理时无法删除一些 Pulp 仓库版本。请检查日志以了解更多详细信息。"
+
+msgid "Orphaned"
+msgstr ""
 
 msgid "Orphaned Content Protection Time"
 msgstr "孤立的内容保护时间"
@@ -5752,7 +5719,7 @@ msgid "Permission Denied. User '%{user}' does not have permissions to access org
 msgstr "权限被拒绝。用户 '%{user}' 没有访问机构 '%{org}' 的权限。"
 
 msgid "Persistence"
-msgstr "持久"
+msgstr "持久化"
 
 msgid "Persistence must be one of: %s"
 msgstr "持久性必须是以下之一：%s"
@@ -5887,9 +5854,6 @@ msgstr ""
 "产品 id，与列出的主机安装的产品一样，\\\n"
 "        而不是 products api 返回的 product id"
 
-msgid "Product id not found: '%s'"
-msgstr "没有找到产品 id: '%s'"
-
 msgid "Product label"
 msgstr "产品标签"
 
@@ -5904,9 +5868,6 @@ msgstr "产品名称"
 
 msgid "Product name as listed from a host's installed products"
 msgstr "产品名称，与列出的主机安装的产品一样"
-
-msgid "Product not found: '%s'"
-msgstr "未找到产品：'%s'"
 
 msgid "Product the repository belongs to"
 msgstr "仓库所属的产品"
@@ -6053,7 +6014,7 @@ msgid "Pulp task error"
 msgstr "Pulp 任务错误"
 
 msgid "Purge completed tasks"
-msgstr ""
+msgstr "清除完成的任务"
 
 msgid "Python Package"
 msgstr "Python 软件包"
@@ -6164,7 +6125,7 @@ msgid "Reclaim Space"
 msgstr "重新声明空间"
 
 msgid "Reclaim space"
-msgstr ""
+msgstr "重新声明空间"
 
 msgid "Reclaim space from On Demand repositories"
 msgstr "重新声明来自 On Demand 软件仓库的空间"
@@ -6239,7 +6200,7 @@ msgid "Refresh all alternate content sources"
 msgstr "刷新所有备用内容源"
 
 msgid "Refresh all distributions"
-msgstr ""
+msgstr "刷新所有分发包"
 
 msgid "Refresh alternate content sources"
 msgstr "销毁备用内容源"
@@ -6254,13 +6215,13 @@ msgid "Refresh counts"
 msgstr "刷新计数"
 
 msgid "Refresh distribution"
-msgstr ""
+msgstr "刷刷新分发包"
 
 msgid "Refresh errata applicability"
 msgstr "刷新勘误适用性"
 
 msgid "Refresh if needed"
-msgstr ""
+msgstr "按需刷新"
 
 msgid "Refresh package applicability"
 msgstr "刷新软件包适用性"
@@ -6269,10 +6230,10 @@ msgid "Refresh previously imported manifest for Red Hat provider"
 msgstr "為 Red Hat 供應者更新之前匯入的清單"
 
 msgid "Refresh remote"
-msgstr ""
+msgstr "刷新远程源"
 
 msgid "Refresh repos"
-msgstr ""
+msgstr "刷新存储库"
 
 msgid "Refresh source"
 msgstr "刷新源"
@@ -6297,9 +6258,6 @@ msgstr "注册于"
 
 msgid "Registered to"
 msgstr "注册到"
-
-msgid "Registering to multiple environments is not enabled."
-msgstr "未启用注册到多个环境。"
 
 msgid "Registration details"
 msgstr "注册详情"
@@ -6422,7 +6380,7 @@ msgid "Remove one or more subscriptions from an upstream manifest"
 msgstr "从上游清单中删除一个或多个订阅"
 
 msgid "Remove orphans"
-msgstr ""
+msgstr "删除孤立项"
 
 msgid "Remove package group via Katello interface"
 msgstr "通过 Katello 接口删除软件包组"
@@ -6440,13 +6398,13 @@ msgid "Remove products from sync plan"
 msgstr "从同步计划中删除产品"
 
 msgid "Remove rolling repo clone"
-msgstr ""
+msgstr "删除滚动仓库克隆"
 
 msgid "Remove units"
-msgstr ""
+msgstr "删除单元"
 
 msgid "Remove unneeded repos"
-msgstr ""
+msgstr "删除不需要的存储库"
 
 msgid "Remove versions and/or environments from a content view and reassign systems and keys"
 msgstr "从内容视图中删除版本和/或环境，并重新分配系统和密钥"
@@ -6470,7 +6428,7 @@ msgid "Removing this version from all environments will not delete the version. 
 msgstr "从所有环境中移出此版本不会删除此版本。版本仍可用于以后的提升。"
 
 msgid "Repair"
-msgstr ""
+msgstr "修复"
 
 msgid "Replace content source on the target machine"
 msgstr "替换目标机器上的内容源"
@@ -6491,7 +6449,7 @@ msgid "Repositories are not available for enablement while CDN configuration is 
 msgstr "当 CDN 配置设置为 Air-gapped（断开连接）时，仓库不可用。"
 
 msgid "Repositories certs reset"
-msgstr ""
+msgstr "存储库证书重置"
 
 msgid "Repositories common to the selected content view versions will merge, resulting in a composite content view that is a union of all content from each of the content view versions."
 msgstr "所选内容视图版本常见的存储库将合并，生成复合内容视图，该视图是每个内容视图版本中的所有内容。"
@@ -6500,7 +6458,7 @@ msgid "Repositories from published Content Views are not allowed."
 msgstr "不允许来自发布的内容视图中的仓库。"
 
 msgid "Repositories gpg reset"
-msgstr ""
+msgstr "存储库 GPG 密钥重置"
 
 msgid "Repositories table"
 msgstr "存储库表"
@@ -6615,6 +6573,9 @@ msgstr "重新发布仓库元数据"
 
 msgid "Requested access to '%s' is denied"
 msgstr "请求对 '%s' 的访问被拒绝"
+
+msgid "Requested repository name is unknown to the registry."
+msgstr ""
 
 msgid "Requirements is not valid yaml."
 msgstr "Requirements 不是有效的 yaml。"
@@ -6881,28 +6842,28 @@ msgid "Save Environments"
 msgstr "保存环境"
 
 msgid "Save artifact"
-msgstr ""
+msgstr "保存工件"
 
 msgid "Save distribution references"
-msgstr ""
+msgstr "保存分发引用"
 
 msgid "Save publication"
-msgstr ""
+msgstr "保存发布"
 
 msgid "Save version"
-msgstr ""
+msgstr "保存版本"
 
 msgid "Save versions"
-msgstr ""
+msgstr "保存版本"
 
 msgid "Saving alternate content source..."
 msgstr "更新备用内容源..."
 
 msgid "Saving subscription quantities..."
-msgstr ""
+msgstr "保存订阅数量..."
 
 msgid "Saving..."
-msgstr ""
+msgstr "保存..."
 
 msgid "Scan"
 msgstr "扫描"
@@ -6911,10 +6872,10 @@ msgid "Scan a flatpak remote"
 msgstr "扫描 flatpak 远程"
 
 msgid "Scan cdn"
-msgstr ""
+msgstr "扫描 CDN"
 
 msgid "Scan remote"
-msgstr ""
+msgstr "扫描远程"
 
 msgid "Schema version 1"
 msgstr "Schema 版本 1"
@@ -7070,7 +7031,7 @@ msgid "Select attributes for ${akDetails.name}"
 msgstr "为 ${akDetails.name} 选择属性"
 
 msgid "Select available version of ${truncate(cvName)} to use"
-msgstr "选择一个可用的 {truncate(cvName)} 版本来使用"
+msgstr "选择一个可用的 ${truncate(cvName)} 版本来使用"
 
 msgid "Select available version of content views to use"
 msgstr "选择要使用的内容视图的可用版本"
@@ -7241,7 +7202,7 @@ msgid "Show a content view component"
 msgstr "显示内容视图组件"
 
 msgid "Show a content view environment"
-msgstr ""
+msgstr "显示内容视图环境"
 
 msgid "Show a content view's history"
 msgstr "显示内容视图的历史记录"
@@ -7363,6 +7324,9 @@ msgstr "Smart Proxy '%{proxy}': RHSM URL 必须使用 HTTPS 协议。URL 派生�
 
 msgid "Smart proxies"
 msgstr "智能代理"
+
+msgid "Smart proxies must have the Pulp feature to be used with alternate content sources: %s"
+msgstr ""
 
 msgid "Smart proxy ID"
 msgstr "智能代理 ID"
@@ -8710,7 +8674,7 @@ msgid "Update content view environments for host %s"
 msgstr "为主机 %s 更新内容视图环境"
 
 msgid "Update distributions"
-msgstr ""
+msgstr "更新分发版"
 
 msgid "Update hosts manually"
 msgstr "手动更新主机"
@@ -8746,10 +8710,10 @@ msgid "Update release version for host %s"
 msgstr "为主机 %s 更新发行版本"
 
 msgid "Update remote"
-msgstr ""
+msgstr "更新远程"
 
 msgid "Update repository"
-msgstr ""
+msgstr "更新存储库"
 
 msgid "Update services requiring restart"
 msgstr "更新服务需要重启"
@@ -8831,7 +8795,7 @@ msgid "Upgrade via remote execution"
 msgstr "通过远程执行升级"
 
 msgid "Upload"
-msgstr ""
+msgstr "上载"
 
 msgid "Upload Content Credential contents"
 msgstr "上传内容凭证内容"
@@ -8843,10 +8807,10 @@ msgid "Upload a subscription manifest"
 msgstr "上载订阅清单"
 
 msgid "Upload a zip file"
-msgstr ""
+msgstr "上传 zip 文件"
 
 msgid "Upload content"
-msgstr ""
+msgstr "上传内容"
 
 msgid "Upload file"
 msgstr "上传文件"
@@ -8867,7 +8831,7 @@ msgid "Upload request id"
 msgstr "上传请求 ID"
 
 msgid "Upload tag"
-msgstr ""
+msgstr "上传标签"
 
 msgid "Upstream Candlepin"
 msgstr "上游 Candlepin"
@@ -9218,7 +9182,7 @@ msgid "You currently have no content views to display"
 msgstr "您目前没有要显示的内容视图"
 
 msgid "You do not have permission to view this organization."
-msgstr ""
+msgstr "您没有权利查看这个机构。"
 
 msgid "You do not have permissions to delete %s"
 msgstr "您没有权限删除 %s"
@@ -9554,7 +9518,7 @@ msgid "disk"
 msgstr "磁盘"
 
 msgid "download policy for deb, docker, file, python, and yum repos (either 'immediate' or 'on_demand')"
-msgstr ""
+msgstr "deb、docker、file、python 和 yum 存储库（即 'immediate' 或 'on_demand'）的下载策略"
 
 msgid "edit the content source"
 msgstr "编辑内容源"
@@ -9653,10 +9617,10 @@ msgid "has already been taken for a product in this organization."
 msgstr "已被该机构的产品采用。"
 
 msgid "has already been taken for this activation key"
-msgstr ""
+msgstr "已为此激活码使用"
 
 msgid "has already been taken for this host"
-msgstr ""
+msgstr "已为此主机执行"
 
 msgid "has already been taken for this product."
 msgstr "已經為此產品使用。"
@@ -9746,7 +9710,7 @@ msgid "label of the repository"
 msgstr "仓库标签"
 
 msgid "latest"
-msgstr ""
+msgstr "最新"
 
 msgid "limit to only repositories with this download policy"
 msgstr "限制为仅具有此下载策略的仓库"

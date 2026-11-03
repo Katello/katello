@@ -21,8 +21,9 @@ module Katello
         end
 
         def container_push_repo_for_name(name)
-          # There should be only one repository in Pulp with the requested name
-          container_push_api.list(name: name)&.results&.first
+          # As of Pulp 2.29 `ContainerRepository` should be used.
+          repositories_api.list(name: name)&.results&.first ||
+            container_push_api.list(name: name)&.results&.first
         end
 
         def container_push_distribution_for_repository(repository_href)

@@ -8,6 +8,10 @@ msgstr ""
 msgid "-- select an interval --"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/views/products.html
+msgid "(Orphaned)"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ deb.hosts_applicable_count }} Host(s)"
 msgstr ""
@@ -77,7 +81,7 @@ msgid "{{ product.active_task_count }}"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
-msgid "{{ product.name }}"
+msgid "{{ product.name }} <span ng-show=\"product.orphaned\">(Orphaned)</span>"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-repositories.html
@@ -2915,7 +2919,7 @@ msgid "Select this option if treeinfo files or other kickstart content is failin
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
-msgid "Selecting \"Complete Sync\" will cause only yum/deb repositories of the selected product to be synced."
+msgid "Selecting \"Complete Sync\" will cause only yum/deb/file repositories of the selected product to be synced."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -3091,7 +3095,7 @@ msgid "Sync Enabled"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
-msgid "Sync even if the upstream metadata appears to have no change. This option is only relevant for yum/deb repositories and will take longer than an optimized sync. Choose this option if:"
+msgid "Sync even if the upstream metadata appears to have no change. This option is only relevant for yum/deb/file repositories and will take longer than an optimized sync. Choose this option if:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/partials/sync-status.html

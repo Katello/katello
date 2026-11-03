@@ -61,8 +61,11 @@ child :latest_dynflow_sync => :last_sync do |_object|
 end
 
 node :last_sync_words do |object|
-  if (object.latest_dynflow_sync.respond_to?('ended_at') && object.latest_dynflow_sync.ended_at)
-    time_ago_in_words(Time.parse(object.latest_dynflow_sync.ended_at.to_s))
+  sync = object.latest_dynflow_sync
+  if (sync.respond_to?('ended_at') && sync.ended_at)
+    time_ago_in_words(Time.parse(sync.ended_at.to_s))
+  elsif (sync.respond_to?('started_at') && sync.started_at)
+    time_ago_in_words(Time.parse(sync.started_at.to_s))
   elsif (audit = object.latest_sync_audit)
     time_ago_in_words(audit.created_at)
   end

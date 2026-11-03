@@ -69,6 +69,10 @@ module Katello
           assert headers.key?('accept'), "Headers should still include 'accept'"
           assert headers.key?('content-type'), "Headers should still include 'content-type'"
         end
+
+        def test_force_direct_is_nil
+          assert_nil UpstreamCandlepinResource.force_direct
+        end
       end
 
       class CandlepinResourceTest < ActiveSupport::TestCase
@@ -79,6 +83,10 @@ module Katello
 
           assert headers.key?('cp-user'), "CandlepinResource should include 'cp-user' header for local Candlepin"
           assert_equal 'admin', headers['cp-user']
+        end
+
+        def test_force_direct_is_true
+          assert CandlepinResource.force_direct
         end
       end
 

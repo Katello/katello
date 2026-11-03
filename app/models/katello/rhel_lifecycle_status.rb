@@ -16,17 +16,17 @@ module Katello
       'RHEL10' => {
         'full_support' => end_of_day('2030-05-31'),
         'maintenance_support' => end_of_day('2035-05-31'),
-        'extended_support' => end_of_day('2038-05-31'),
+        'extended_support' => end_of_day('2039-05-31'),
       },
       'RHEL9' => {
         'full_support' => end_of_day('2027-05-31'),
         'maintenance_support' => end_of_day('2032-05-31'),
-        'extended_support' => end_of_day('2035-05-31'),
+        'extended_support' => end_of_day('2036-05-31'),
       },
       'RHEL8' => {
         'full_support' => end_of_day('2024-05-31'),
         'maintenance_support' => end_of_day('2029-05-31'),
-        'extended_support' => end_of_day('2032-05-31'),
+        'extended_support' => end_of_day('2033-05-31'),
       },
       'RHEL7' => {
         'full_support' => end_of_day('2019-08-06'),

@@ -110,7 +110,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "{{ repository.content_counts.deb || 0 }} deb Packages"
-msgstr "{{ repository.content_counts.deb || 0 }} deb Packages"
+msgstr "{{ repository.content_counts.deb || 0 }} Packages deb"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid ""
@@ -465,7 +465,7 @@ msgstr "Sync Avancée"
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Advisory"
-msgstr "Avis"
+msgstr "Alerte"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "Affected Hosts"
@@ -1361,7 +1361,7 @@ msgstr "Créer Collection d'hôtes"
 #: app/assets/javascripts/bastion_katello/products/new/views/product-new.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid "Create Product"
-msgstr "Créer un produit"
+msgstr "Créer Produit"
 
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "Create Repositories"
@@ -1814,10 +1814,8 @@ msgstr "Fichier :"
 msgid "Filename"
 msgstr "Nom du fichier"
 
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/files/files.controller.js
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Files"
@@ -2243,7 +2241,7 @@ msgstr "Listes de manifestes"
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-info.html
 msgid "Manifest Type"
-msgstr "Types de manifestes"
+msgstr "Type de manifestes"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -2334,7 +2332,6 @@ msgstr "Sans objet"
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-content-views.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
@@ -2621,7 +2618,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/errata-type.filter.js
 msgid "Other Advisory"
-msgstr "Autre Avis"
+msgstr "Autre Alerte"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-repository-sets.controller.js
 msgid "Overridden"
@@ -2677,7 +2674,7 @@ msgstr "Package :"
 #: app/assets/javascripts/bastion_katello/packages/packages.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Packages"
-msgstr "Packages"
+msgstr "Paquets"
 
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
 msgid "Packages <div>{{ library.counts.packages || 0 }}</div>"
@@ -2715,7 +2712,6 @@ msgstr ""
 "d'authentification."
 
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
-#: app/assets/javascripts/bastion_katello/files/views/files.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-files.html
 msgid "Path"
 msgstr "Chemin"
@@ -2891,7 +2887,7 @@ msgstr "URL du registre"
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-module-streams.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-packages.html
 msgid "Release"
-msgstr "Sortie"
+msgstr "Version"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
@@ -3483,7 +3479,7 @@ msgstr "Réussi."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Successfully removed %s items."
-msgstr "%sitems supprimés."
+msgstr "Suppression réussie%s items."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-manage-content.controller.js
 msgid "Successfully removed 1 item."
@@ -4312,10 +4308,6 @@ msgstr ""
 "nouveaux hôtes de contenu en sélectionnant Hôte de contenu dans le menu "
 "principal et en cliquant sur le bouton de droite."
 
-#: app/assets/javascripts/bastion_katello/files/views/files.html
-msgid "You currently don't have any Files."
-msgstr "Vous n'avez actuellement aucun Fichier."
-
 #: app/assets/javascripts/bastion_katello/host-collections/views/host-collections.html
 msgid ""
 "You currently don't have any Host Collections, you can add Host Collections "
@@ -4408,10 +4400,6 @@ msgstr "Votre recherche a donné zéro Errata."
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-repositories.html
 msgid "Your search returned zero Erratum."
 msgstr "Votre recherche a donné zéro Erratum."
-
-#: app/assets/javascripts/bastion_katello/files/views/files.html
-msgid "Your search returned zero Files."
-msgstr "Votre recherche a donné zéro Fichier."
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 #: app/assets/javascripts/bastion_katello/host-collections/views/host-collections.html

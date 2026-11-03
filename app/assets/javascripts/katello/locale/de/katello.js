@@ -6,7 +6,7 @@
         "Project-Id-Version": "katello 5.1.0.pre.master",
         "Report-Msgid-Bugs-To": "",
         "PO-Revision-Date": "2017-12-19 20:14+0000",
-        "Last-Translator": "Ettore Atalan <atalanttore@googlemail.com>, 2026",
+        "Last-Translator": "pdolinic, 2026",
         "Language-Team": "German (https://app.transifex.com/foreman/teams/114/de/)",
         "MIME-Version": "1.0",
         "Content-Type": "text/plain; charset=UTF-8",
@@ -246,12 +246,6 @@
       "A comma-separated list of tags to exclude during an ostree sync. The wildcards *, ? are recognized. 'exclude_refs' is evaluated after 'include_refs'.": [
         ""
       ],
-      "A content view environment is a combination of a particular lifecycle environment and content view.": [
-        ""
-      ],
-      "A content view environment is a combination of a particular lifecycle environment and content view. Select a content view environment to assign to this host.": [
-        ""
-      ],
       "A content view environment is a combination of a particular lifecycle environment and content view. Select content view environments to assign to this host. You can assign multiple content view environments to provide access to different sets of content.": [
         ""
       ],
@@ -259,9 +253,6 @@
         ""
       ],
       "A content view environment is a combination of a particular lifecycle environment and content view. You can assign multiple content view environments to provide hosts access to multiple sets of content.": [
-        ""
-      ],
-      "A content view environment is a combination of a particular lifecycle environment and content view. Your selection here will {replace} all existing content view environments on {hosts}.": [
         ""
       ],
       "A large number of errata are unapplied in this content view, so only the first 100 are shown.": [
@@ -353,9 +344,6 @@
       ],
       "Activation key %s has more than one lifecycle environment. Use #lifecycle_environments instead.": [
         ""
-      ],
-      "Activation key '%s' is associated to multiple environments and registering to multiple environments is not enabled.": [
-        "Aktivierungsschlüssel '%s' ist mit mehreren Umgebungen verknüpft und das Registrieren in mehreren Umgebungen ist nicht aktiviert."
       ],
       "Activation key content view environments updated": [
         ""
@@ -573,14 +561,8 @@
       "Allow host registrations to bypass 'Host Profile Assume' as long as the host is in build mode.": [
         ""
       ],
-      "Allow hosts or activation keys to be associated with multiple content view environments": [
-        ""
-      ],
       "Allow hosts to re-register themselves only when they are in build mode": [
         "Erlauben Sie Hosts, sich nur neu zu registrieren, wenn sie sich im Build-Modus befinden"
-      ],
-      "Allow multiple content views": [
-        ""
       ],
       "Allow new host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host.": [
         ""
@@ -768,16 +750,16 @@
       "Array of content view environment IDs": [
         ""
       ],
-      "Array of content view environment IDs to be associated with the hosts. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment IDs to be associated with the hosts.": [
         ""
       ],
-      "Array of content view environment ids associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids associated with the activation key.": [
         ""
       ],
-      "Array of content view environment ids to be associated with the activation key. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids to be associated with the activation key.": [
         ""
       ],
-      "Array of content view environment ids to be associated with the host. Requires allow_multiple_content_views setting to be on.": [
+      "Array of content view environment ids to be associated with the host.": [
         ""
       ],
       "Array of content view environment labels in the format 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
@@ -807,9 +789,6 @@
       "Assign another content view environment": [
         ""
       ],
-      "Assign content view environment": [
-        ""
-      ],
       "Assign content view environments": [
         ""
       ],
@@ -828,12 +807,6 @@
       ],
       "Assign the release version to one or more hosts": [
         "Weisen Sie die Release-Version einem oder mehreren Hosts zu"
-      ],
-      "Assigning a host to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        ""
-      ],
-      "Assigning an activation key to multiple content view environments is not enabled. To enable, set the allow_multiple_content_views setting.": [
-        ""
       ],
       "Associated content view environments": [
         ""
@@ -1411,16 +1384,16 @@
       "Collapse group": [
         ""
       ],
-      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the activation key, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the host, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
-      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified. Requires allow_multiple_content_views setting to be on.": [
+      "Comma-separated list of content view environment labels to be associated with the hosts, in the format of 'lifecycle_environment_label/content_view_label'. Ignored if content_view_environment_ids is specified.": [
         ""
       ],
       "Comma-separated list of subpaths. All subpaths must have a slash at the end and none at the front.": [
@@ -2632,9 +2605,6 @@
       "Edit activation key": [
         ""
       ],
-      "Edit content view environment": [
-        ""
-      ],
       "Edit credentials": [
         "Anmeldeinformationen bearbeiten"
       ],
@@ -3218,7 +3188,7 @@
         ""
       ],
       "Generate and download": [
-        "Generieren und herunterladen"
+        ""
       ],
       "Generate containerfile install command (%s package selected)": [
         "",
@@ -3291,7 +3261,7 @@
         ""
       ],
       "Guests of %s": [
-        ""
+        "Gäste von %s"
       ],
       "HTTP Proxies": [
         "HTTP-Proxies"
@@ -5526,9 +5496,6 @@
       "Organization id": [
         "Organisations-ID"
       ],
-      "Organization id not found: '%s'": [
-        "Kennung der Organisation nicht gefunden: '%s'"
-      ],
       "Organization identifier": [
         "Organisations-ID"
       ],
@@ -5544,13 +5511,13 @@
       "Organization not found": [
         "Organisation nicht gefunden"
       ],
-      "Organization not found: '%s'": [
-        "Organisation nicht gefunden: '%s'"
-      ],
       "Organization required": [
         "Organisation erforderlich"
       ],
       "Orphan cleanup failed to delete some Pulp repository versions. Check the logs for more details.": [
+        ""
+      ],
+      "Orphaned": [
         ""
       ],
       "Orphaned Content Protection Time": [
@@ -5838,9 +5805,6 @@
       "Product id as listed from a host's installed products, \\\\\\n        this is not the same product id as the products api returns": [
         "Produkt-ID wie in den installierten Produkten eines Hosts aufgeführt, \\\\\\nDies ist nicht die gleiche Produkt-ID wie die Produkt-API, die zurückgegeben wird"
       ],
-      "Product id not found: '%s'": [
-        "Kennung des Produkts nicht gefunden: '%s'"
-      ],
       "Product label": [
         ""
       ],
@@ -5855,9 +5819,6 @@
       ],
       "Product name as listed from a host's installed products": [
         "Produktname wie aus den installierten Produkten eines Hosts aufgelistet"
-      ],
-      "Product not found: '%s'": [
-        "Produkt nicht gefunden: '%s'"
       ],
       "Product the repository belongs to": [
         "Produkt, zu dem das Repository gehört"
@@ -6249,9 +6210,6 @@
       "Registered to": [
         ""
       ],
-      "Registering to multiple environments is not enabled.": [
-        "Das Registrieren in mehrere Umgebungen ist nicht aktiviert."
-      ],
       "Registration details": [
         ""
       ],
@@ -6567,6 +6525,9 @@
       "Requested access to '%s' is denied": [
         "Angefragter Zugriff auf '%s' wurde verweigert"
       ],
+      "Requested repository name is unknown to the registry.": [
+        ""
+      ],
       "Requirements is not valid yaml.": [
         ""
       ],
@@ -6853,7 +6814,7 @@
         ""
       ],
       "Saving...": [
-        ""
+        "Speichern …"
       ],
       "Scan": [
         ""
@@ -7314,6 +7275,9 @@
       ],
       "Smart proxies": [
         "Smart-Proxys"
+      ],
+      "Smart proxies must have the Pulp feature to be used with alternate content sources: %s": [
+        ""
       ],
       "Smart proxy ID": [
         ""
@@ -8778,7 +8742,7 @@
         ""
       ],
       "Upload": [
-        ""
+        "Hochladen"
       ],
       "Upload Content Credential contents": [
         "Lade Kontent-Kredentials hoch"

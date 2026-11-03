@@ -12,6 +12,7 @@ module Katello
         self.consumer_secret = cfg[:oauth_secret]
         self.consumer_key = cfg[:oauth_key]
         self.ssl_ca_file = ::Cert::Certs.backend_ca_cert_file(:candlepin)
+        self.force_direct = true
 
         class << self
           def process_response(response)
@@ -84,6 +85,7 @@ module Katello
         extend ::Katello::Util::HttpProxy
 
         self.prefix = '/subscription'
+        self.force_direct = nil
 
         class << self
           delegate :[], to: :json_resource
