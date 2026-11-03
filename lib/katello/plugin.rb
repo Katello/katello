@@ -289,12 +289,6 @@ Foreman::Plugin.register :katello do
       add_pagelet :hosts_table_column_header, key: :content_view_environments, label: _('Content View Environments'), class: common_class, width: '15%',
                   export_data: CsvExporter::ExportDefinition.new('content_view_environment_labels', label: 'Content View Environments', callback: ->(host) { host.content_view_environment_labels })
       add_pagelet :hosts_table_column_content, key: :content_view_environments, class: common_class, callback: ->(host) { host.content_view_environment_labels }
-      add_pagelet :hosts_table_column_header, key: :lifecycle_environment, label: _('Lifecycle environment'), sortable: true, class: common_class, width: '10%',
-                  export_data: CsvExporter::ExportDefinition.new('single_lifecycle_environment', label: 'Lifecycle Environment', callback: ->(host) { host.content_facet&.single_lifecycle_environment&.name })
-      add_pagelet :hosts_table_column_content, key: :lifecycle_environment, class: common_class, callback: ->(host) { host.content_facet&.single_lifecycle_environment&.name }
-      add_pagelet :hosts_table_column_header, key: :content_view, label: _('Content view'), sortable: true, class: common_class, width: '10%',
-                  export_data: CsvExporter::ExportDefinition.new('single_content_view', label: 'Content View', callback: ->(host) { host.content_facet&.single_content_view&.name })
-      add_pagelet :hosts_table_column_content, key: :content_view, class: common_class, callback: ->(host) { host.content_facet&.single_content_view&.name }
       add_pagelet :hosts_table_column_header, key: :content_source, label: _('Content Source'), sortable: true, class: common_class, width: '12%',
                   export_data: CsvExporter::ExportDefinition.new('content_facet_attributes.content_source_name', label: 'Content Source')
       add_pagelet :hosts_table_column_content, key: :content_source, class: common_class, callback: ->(host) { host.content_facet&.content_source&.name }
