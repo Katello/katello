@@ -44,7 +44,7 @@ class PqcSupportTest < Minitest::Test
   private
 
   def without_ml_dsa(&block)
-    unavailable = ->(*) { raise OpenSSL::PKey::PKeyError, 'unsupported algorithm' }
+    unavailable = ->(*) { fail OpenSSL::PKey::PKeyError, 'unsupported algorithm' }
     OpenSSL::PKey.stub(:generate_key, unavailable, &block)
   end
 
