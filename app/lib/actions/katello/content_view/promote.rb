@@ -8,7 +8,13 @@ module Actions
 
         execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 
-        def plan(version, environments, is_force = false, description = nil, incremental_update = false)
+        def plan(version, environments, is_force = false, description = nil, options = {})
+          incremental_update, changed_root_ids =
+            if options.is_a?(Hash)
+              [options.fetch(:incremental_update, false), options[:changed_root_ids]]
+            else
+              [options.present?, nil]
+            end
           action_subject(version.content_view)
           version.check_ready_to_promote!(environments)
           ::Katello::Util::CandlepinRepositoryChecker.check_repositories_for_promote!(version)
@@ -20,7 +26,7 @@ module Actions
           environments.each do |environment|
             sequence do
               plan_action(Katello::ContentViewVersion::BeforePromoteHook, :id => version.id)
-              plan_action(ContentView::PromoteToEnvironment, version, environment, description, incremental_update)
+              plan_action(ContentView::PromoteToEnvironment, version, environment, description, incremental_update, changed_root_ids)
               plan_action(Katello::ContentViewVersion::AfterPromoteHook, :id => version.id)
             end
           end

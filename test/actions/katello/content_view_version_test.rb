@@ -65,6 +65,16 @@ module ::Actions::Katello::ContentViewVersion
       assert_action_planned_with(action, ::Actions::Katello::Repository::IndexContent, id: new_repo.id, force_index: false)
     end
 
+    it 'passes the changed roots to the promotion' do
+      action.expects(:plan_action).with(
+        ::Actions::Katello::ContentView::Promote,
+        content_view_version, [library], true, nil,
+        :incremental_update => true, :changed_root_ids => [42]
+      )
+
+      action.send(:promote, content_view_version, [library], [42])
+    end
+
     describe 'pulp3' do
       let(:old_rpm) do
         katello_rpms(:one)
