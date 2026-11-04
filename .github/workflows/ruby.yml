@@ -23,7 +23,7 @@ jobs:
   test:
     name: Ruby
     needs: rubocop
-    uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v1
+    uses: aidenfine/actions/.github/workflows/foreman_plugin.yml@psql-16
     with:
       plugin: katello
       foreman_version: develop # set to the Foreman release branch after branching :)
@@ -36,7 +36,7 @@ jobs:
   test_ruby_30:
     name: Ruby 3.0
     needs: rubocop
-    uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v1
+    uses: aidenfine/actions/.github/workflows/foreman_plugin.yml@psql-16
     with:
       plugin: katello
       foreman_version: develop # set to the Foreman release branch after branching :)
