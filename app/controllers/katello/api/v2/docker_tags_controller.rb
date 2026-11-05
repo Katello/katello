@@ -31,12 +31,15 @@ module Katello
       tag = DockerMetaTag.find(params[:id])
 
       if tag.repositories.size > 1 #pulp3
-        repos = tag.repositories.non_archived
+        repos = tag.repositories.readable.non_archived
         repos = repos.in_organization(@organization) if @organization
       else
         repos = []
         tag.related_tags.each do |related|
-          repos << related.repositories.non_archived
+          related_repos = related.repositories.readable.non_archived
+          related_repos = related_repos.in_organization(@organization) if @organization
+
+          repos << related_repos
         end
         repos.flatten!
       end
