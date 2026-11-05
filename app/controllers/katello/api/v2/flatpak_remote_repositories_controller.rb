@@ -78,7 +78,7 @@ module Katello
     end
 
     def find_remote_repository
-      @flatpak_remote_repository = FlatpakRemoteRepository.find(params[:id])
+      @flatpak_remote_repository = FlatpakRemoteRepository.readable.find_by(id: params[:id])
       throw_resource_not_found(name: 'flatpak_remote_repository', id: params[:id]) unless @flatpak_remote_repository
       @flatpak_remote_repository
     end
