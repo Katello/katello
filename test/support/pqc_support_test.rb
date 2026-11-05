@@ -1,45 +1,38 @@
-require 'minitest/autorun'
-require 'minitest/mock'
-require_relative 'pqc_support'
+require 'katello_test_helper'
 
 class PqcSupportTest < Minitest::Test
   include Katello::PqcSupport
 
   def test_supported_algorithm_runs
-    stub(:pqc_supported?, true) do
-      assert_nil pqc_required
-    end
+    stubs(:pqc_supported?).with('ML-DSA-65').returns(true)
+    assert_nil pqc_required
   end
 
   def test_missing_algorithm_skips_in_optional_environment
     with_pqc_required(nil) do
-      stub(:pqc_supported?, false) do
-        assert_raises(Minitest::Skip) { pqc_required }
-      end
+      stubs(:pqc_supported?).with('ML-DSA-65').returns(false)
+      assert_raises(Minitest::Skip) { pqc_required }
     end
   end
 
   def test_missing_algorithm_fails_in_required_environment
     with_pqc_required('true') do
-      stub(:pqc_supported?, false) do
-        assert_raises(Minitest::Assertion) { pqc_required }
-      end
+      stubs(:pqc_supported?).with('ML-DSA-65').returns(false)
+      assert_raises(Minitest::Assertion) { pqc_required }
     end
   end
 
   def test_missing_key_generation_api_skips
     with_pqc_required(nil) do
-      OpenSSL::PKey.stub(:respond_to?, false) do
-        assert_raises(Minitest::Skip) { pqc_required }
-      end
+      OpenSSL::PKey.expects(:respond_to?).with(:generate_key).returns(false)
+      assert_raises(Minitest::Skip) { pqc_required }
     end
   end
 
   def test_missing_key_generation_api_fails_in_required_environment
     with_pqc_required('true') do
-      OpenSSL::PKey.stub(:respond_to?, false) do
-        assert_raises(Minitest::Assertion) { pqc_required }
-      end
+      OpenSSL::PKey.expects(:respond_to?).with(:generate_key).returns(false)
+      assert_raises(Minitest::Assertion) { pqc_required }
     end
   end
 
