@@ -6,22 +6,31 @@
 # make tx-update - download and merge translations from Transifex
 # make clean - clean everything
 #
-DOMAIN = $(shell ruby -rrubygems -e 'puts Gem::Specification::load(Dir.glob("../*.gemspec")[0]).name')
-VERSION = $(shell ruby -rrubygems -e 'puts Gem::Specification::load(Dir.glob("../*.gemspec")[0]).version')
+DOMAIN = $(shell ruby -rrubygems -e 'puts Gem::Specification::load(Dir.glob("../*.gemspec")[0]).name' 2>/dev/null)
+VERSION = $(shell ruby -rrubygems -e 'puts Gem::Specification::load(Dir.glob("../*.gemspec")[0]).version' 2>/dev/null)
 POTFILE = $(DOMAIN).pot
 MOFILE = $(DOMAIN).mo
 POFILES = $(shell find . -name '$(DOMAIN).po')
-MOFILES = $(patsubst %.po,%.mo,$(POFILES))
+MOFILES = $(patsubst %/$(DOMAIN).po,%/LC_MESSAGES/$(MOFILE),$(POFILES))
 POXFILES = $(patsubst %.po,%.pox,$(POFILES))
 EDITFILES = $(patsubst %.po,%.edit.po,$(POFILES))
 JSFILES = $(shell find ../app/assets/javascripts/*/locale -name '$(DOMAIN).js')
 
-%.mo: %.po
-	mkdir -p $(shell dirname $@)/LC_MESSAGES
-	msgfmt -o $(shell dirname $@)/LC_MESSAGES/$(MOFILE) $<
+%/LC_MESSAGES/$(MOFILE): %/$(DOMAIN).po
+	mkdir -p $(dir $@)
+	msgfmt -o $@ $<
+
+# Without a domain, POFILES matches nothing and every target below would
+# quietly succeed having done no work, so fail instead.
+.PHONY: all-mo check-domain clean
+check-domain:
+	@test -n "$(DOMAIN)" || { \
+		echo "ERROR: cannot determine the gettext domain from ../*.gemspec" >&2; \
+		exit 1; \
+	}
 
 # Generate MO files from PO files
-all-mo: $(MOFILES)
+all-mo: check-domain $(MOFILES)
 
 # Check for malformed strings
 %.pox: %.po
@@ -71,3 +80,8 @@ mo-files: $(MOFILES)
 	@echo
 	@echo Changes commited!
 	@echo
+
+# Remove all MO files
+clean:
+	find . \( -name "*.mo" -o -name "*.pox" \) -delete
+	find . -type d -name LC_MESSAGES -exec rm -rf '{}' +
