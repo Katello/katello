@@ -30,22 +30,25 @@ module Katello
 
         def refresh
           found = list(name: default_name).results.first
-          if found && found.ca_certificate != ca_cert
-            partial_update(found.pulp_href)  # Still use pulp_href for API calls
+          if found
+            # Nothing changed, so avoid create()'s guaranteed-fail-then-relist path.
+            partial_update(found.pulp_href) if found.ca_certificate != ca_cert # Still use pulp_href for API calls
           else
             found = create
           end
           persist_if_needed(found)
+          found
         end
 
         def persist_if_needed(content_guard_obj)
           return if self.smart_proxy.pulp_mirror?
+          # create!, so a race raises into active_record_retry, which re-finds and updates.
           Katello::Util::Support.active_record_retry do
             found = Katello::Pulp3::ContentGuard.find_by(:name => default_name)
             if found
               found.update(pulp_href: content_guard_obj.pulp_href, pulp_prn: content_guard_obj.prn)
             else
-              Katello::Pulp3::ContentGuard.create(name: default_name, pulp_href: content_guard_obj.pulp_href, pulp_prn: content_guard_obj.prn)
+              Katello::Pulp3::ContentGuard.create!(name: default_name, pulp_href: content_guard_obj.pulp_href, pulp_prn: content_guard_obj.prn)
             end
           end
         end
