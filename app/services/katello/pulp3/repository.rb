@@ -40,6 +40,15 @@ module Katello
         "prn:#{pulp_plugin}.#{pulp_model}:#{uuid}"
       end
 
+      # Check if an error message indicates a distribution path overlap
+      # Pulp can return overlap errors from two sources:
+      # 1. API serializer validation: "Overlaps with an existing distribution."
+      # 2. PostgreSQL exclusion constraint: "is prefixed by an existing base_path"
+      def self.distribution_overlap_error?(error_message)
+        error_message.include?("Overlaps with an existing distribution.") ||
+          error_message.include?("is prefixed by an existing base_path")
+      end
+
       def partial_repo_path
         fail NotImplementedError
       end
@@ -255,12 +264,22 @@ module Katello
       end
 
       def refresh_distributions
-        if repo.docker?
-          dist = lookup_distributions(base_path: repo.container_repository_name).first
-        else
-          dist = lookup_distributions(base_path: repo.relative_path).first
-        end
         dist_ref = distribution_reference
+
+        # Use distribution_reference FIRST
+        # This ensures we update the existing distribution even if the path changed
+        dist = if dist_ref
+                 read_distribution(dist_ref.href)
+               end
+
+        # Fall back to lookup by path if no reference or distribution not found
+        if dist.nil?
+          if repo.docker?
+            dist = lookup_distributions(base_path: repo.container_repository_name).first
+          else
+            dist = lookup_distributions(base_path: repo.relative_path).first
+          end
+        end
 
         if dist && !dist_ref
           save_distribution_references([dist.pulp_href])
@@ -268,7 +287,7 @@ module Katello
         end
 
         if dist && dist_ref
-          # If the saved distribution reference is wrong, delete it and use the existing distribution
+          # Update the saved reference if it changed
           if dist.pulp_href != dist_ref.href
             dist_ref.destroy
             save_distribution_references([dist.pulp_href])
@@ -281,9 +300,10 @@ module Katello
         begin
           create_distribution(relative_path)
         rescue api.client_module::ApiError => e
-          # Now it seems there is a distribution. Fetch it and save the reference.
-          if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
-              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
+          # If a distribution with this exact base_path already exists (e.g., from a prior failed operation),
+          # fetch it and retry as an update instead of failing.
+          # Note: We do NOT catch overlap errors here - those should propagate up as validation errors.
+          if e.message.include?("\"base_path\":[\"This field must be unique.\"]")
             dist = lookup_distributions(base_path: repo.relative_path).first
             save_distribution_references([dist.pulp_href])
             return update_distribution
@@ -330,6 +350,13 @@ module Katello
           response = api.distributions_api.partial_update(distribution_reference.href, options)
           # Pulp 3.90+ returns polymorphic responses (PULP-734): task when changes occur, nil when no-op
           (response.respond_to?(:task) && response.task.present?) ? [response] : []
+        end
+      rescue api.client_module::ApiError => e
+        # Check for overlap error from pre-existing overlapping distributions (from serializer or database constraint)
+        if self.class.distribution_overlap_error?(e.message)
+          raise Katello::Errors::Pulp3Error, ::Katello::ContentView.container_path_conflict_error(repo.container_repository_name)
+        else
+          raise e
         end
       end
 

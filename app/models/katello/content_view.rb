@@ -11,6 +11,19 @@ module Katello
     CONTENT_DIR = "content_views".freeze
     IMPORT_LIBRARY = "Import-Library".freeze
     EXPORT_LIBRARY = "Export-Library".freeze
+
+    # Centralized error messages for container distribution path conflicts
+    def self.container_overlap_error(parent_path, child_path)
+      _("Registry name pattern results in overlapping container image paths: '%{parent}' overlaps with '%{child}'.") % { parent: parent_path, child: child_path }
+    end
+
+    def self.consider_changing_pattern_message
+      _("Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.")
+    end
+
+    def self.container_path_conflict_error(path)
+      _("Container path conflict: '%{path}' overlaps with an existing path. Update the lifecycle environment's registry name pattern to avoid overlapping paths.") % { path: path }
+    end
     belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"
 
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
@@ -704,22 +717,148 @@ module Katello
       end
     end
 
-    def check_docker_repository_names!(environments)
-      environments.each do |environment|
-        repositories = []
-        publish_repositories do |all_repositories|
-          repositories += all_repositories.keep_if { |repository| repository.content_type == Katello::Repository::DOCKER_TYPE }
-        end
-        next if repositories.empty?
+    def check_docker_repository_names!(environments, content_view_version = nil)
+      paths_to_create = collect_paths_to_create(environments, content_view_version)
+      return true if paths_to_create.empty?
 
-        error_messages = ::Katello::Validators::EnvironmentDockerRepositoriesValidator.validate_repositories(environment.registry_name_pattern, repositories)
-        unless error_messages.empty?
-          error_messages << _("Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.")
-          fail error_messages.join("  ")
-        end
-      end
+      existing_paths = collect_existing_paths(paths_to_create)
+      all_paths = paths_to_create + existing_paths
+
+      validate_path_conflicts(all_paths)
       true
     end
+
+    private
+
+    def collect_paths_to_create(environments, content_view_version)
+      paths = []
+      environments.each do |environment|
+        repositories = repositories_for_validation(content_view_version)
+        next if repositories.empty?
+
+        repositories.each do |repo|
+          path = ::Katello::Validators::EnvironmentDockerRepositoriesValidator.render_container_name(
+            repo, environment.registry_name_pattern, environment, content_view_version
+          )
+          # Normalize path to remove trailing slashes
+          normalized_path = path&.sub(%r{/+$}, '')
+          # Skip blank paths - they're invalid per model validation (allow_blank: false)
+          # and will be caught by Repository model validation
+          next if normalized_path.blank?
+          paths << { path: normalized_path, environment: environment, repository: repo, being_created: true }
+        end
+      end
+      paths
+    end
+
+    def repositories_for_validation(content_view_version)
+      if content_view_version
+        content_view_version.repositories.archived.docker_type.to_a
+      else
+        repos = []
+        publish_repositories do |all_repositories|
+          repos += all_repositories.keep_if { |repository| repository.content_type == Katello::Repository::DOCKER_TYPE }
+        end
+        repos
+      end
+    end
+
+    def collect_existing_paths(paths_to_create)
+      source_repo_ids = paths_to_create.map { |p| p[:repository].id }
+      source_root_ids = paths_to_create.map { |p| p[:repository].library_instance_id }.compact
+      target_env_ids = paths_to_create.map { |p| p[:environment].id }.compact.uniq
+
+      existing_repos = filter_existing_repos(source_repo_ids, source_root_ids, target_env_ids)
+
+      existing_repos.filter_map do |repo|
+        next unless repo.environment
+        # Normalize path to remove trailing slashes
+        normalized_path = repo.container_repository_name&.sub(%r{/+$}, '')
+        # Skip blank paths - they're invalid per model validation
+        next if normalized_path.blank?
+        { path: normalized_path, environment: repo.environment, repository: repo, being_created: false }
+      end
+    end
+
+    def filter_existing_repos(source_repo_ids, source_root_ids, target_env_ids)
+      # Get all docker repositories in the organization across all environments
+      repos = ::Katello::Repository.joins(:product)
+                                   .where(katello_products: { organization_id: organization.id })
+                                   .docker_type
+                                   .where.not(id: source_repo_ids)
+                                   .where.not(environment_id: nil) # Only repos in environments
+      return repos if source_root_ids.empty?
+
+      repos = repos.where.not(id: source_root_ids)
+
+      if composite?
+        repos.where.not(library_instance_id: source_root_ids)
+      else
+        # Only exclude repos in TARGET environments that belong to this CV with same library_instance
+        # Keep repos in OTHER environments for cross-LCE overlap detection
+        repos.joins(:content_view_version)
+             .where.not(
+               katello_content_view_versions: { content_view_id: id },
+               library_instance_id: source_root_ids,
+               environment_id: target_env_ids
+             )
+      end
+    end
+
+    def validate_path_conflicts(all_paths)
+      paths_to_create = all_paths.select { |entry| entry[:being_created] }
+      path_map = all_paths.group_by { |entry| entry[:path] }
+      error_messages = []
+
+      error_messages.concat(check_duplicate_paths(path_map))
+      error_messages.concat(check_overlapping_paths(path_map, paths_to_create))
+
+      return if error_messages.empty?
+
+      error_messages << self.class.consider_changing_pattern_message
+      fail Katello::HttpErrors::Conflict, error_messages.uniq.join("  ")
+    end
+
+    def check_duplicate_paths(path_map)
+      # Normalize paths before checking duplicates
+      normalized_map = {}
+      path_map.each do |path, entries|
+        normalized_path = path&.sub(%r{/+$}, '')
+        normalized_map[normalized_path] ||= []
+        normalized_map[normalized_path].concat(entries)
+      end
+
+      duplicates = normalized_map.select { |_path, entries| entries.count > 1 }
+      duplicates.map do |path, entries|
+        repos = entries.map { |e| e[:repository].name }.uniq.sort.join(', ')
+        _("Registry name pattern results in duplicate container image path '%{path}' for repositories: %{repos}.") % { path: path, repos: repos }
+      end
+    end
+
+    def check_overlapping_paths(path_map, paths_being_created)
+      # Normalize paths to remove trailing slashes for consistent comparison
+      normalized_map = path_map.transform_keys { |k| k&.sub(%r{/+$}, '') }
+      # Filter out nil paths before sorting
+      paths = normalized_map.keys.compact.sort
+      paths_being_created_set = paths_being_created.map { |p| p[:path]&.sub(%r{/+$}, '') }.to_set
+      overlap_errors = Set.new
+
+      paths.each_with_index do |path, index|
+        paths[(index + 1)..].each do |other_path|
+          next unless other_path.start_with?(path + '/')
+
+          # Only flag overlap if at least one of the paths is being created in this operation
+          # Don't fail the operation due to pre-existing overlaps between unrelated repos
+          next unless paths_being_created_set.include?(path) || paths_being_created_set.include?(other_path)
+
+          overlap_errors << self.class.container_overlap_error(path, other_path)
+        end
+      end
+
+      overlap_errors.to_a
+    end
+
+    public
 
     def check_composite_action_allowed!(env)
       if composite? && Setting['restrict_composite_view']
