@@ -28,6 +28,9 @@ If you have questions about or issues with deploying a development environment, 
 
 ## Annotated Pulp and Candlepin Workflows and test Scenarios
 
+Repository upload storage, legacy migration and safe cleanup are documented in
+[Upload staging](developer_docs/upload_staging.md).
+
 See the [annotation docs](./test/scenarios/annotations/README.md) for more information.
 
 ## Contact & Resources
