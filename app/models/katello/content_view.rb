@@ -472,7 +472,7 @@ module Katello
       # update errata applicability counts for all hosts in the CV & LE
       Location.no_taxonomy_scope do
         User.as_anonymous_admin do
-          ::Katello::Host::ContentFacet.with_content_views(self).with_environments(environment).each do |facet|
+          ::Katello::Host::ContentFacet.with_content_views(self).with_environments(environment).find_each do |facet|
             facet.update_applicability_counts
             facet.update_errata_status
           rescue NoMethodError

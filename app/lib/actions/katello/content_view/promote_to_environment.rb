@@ -36,6 +36,11 @@ module Actions
           end
         end
 
+        def run
+          environment = ::Katello::KTEnvironment.find(input[:environment_id])
+          ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
+        end
+
         def humanized_name
           _("Promotion to Environment")
         end
@@ -45,9 +50,6 @@ module Actions
         end
 
         def finalize
-          environment = ::Katello::KTEnvironment.find(input[:environment_id])
-          ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
-
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
