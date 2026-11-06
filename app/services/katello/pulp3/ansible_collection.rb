@@ -4,6 +4,9 @@ module Katello
       include LazyAccessor
       PULPCORE_CONTENT_TYPE = "ansible.collection_version".freeze
 
+      # Never add files/manifest/docs_blob/contents: fields= bypasses pulp-ansible's default redaction.
+      SPECIFIC_INDEXED_FIELDS = %w(sha256 namespace name version description tags).freeze
+
       def self.content_api
         PulpAnsibleClient::ContentCollectionVersionsApi.new(Katello::Pulp3::Api::AnsibleCollection.new(SmartProxy.pulp_primary!).api_client)
       end
