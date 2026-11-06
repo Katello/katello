@@ -65,19 +65,17 @@ This codebase follows Foreman plugin conventions and integrates deeply with Fore
   - Example: `'katello/api/v2/host_packages/containerfile_install_command'`
   - **Forgetting this will cause 403 errors even if controller authorization is correct**
 
-### Environment Quick Reference
-**Key Directories:**
-- Edit files: `/home/vagrant/katello`
-- Run commands: `/home/vagrant/foreman`
-- Database: PostgreSQL "katello" (dev), "katello_test" (test)
-Note: the databases above only apply when the development environment is set up by puppet-katello_devel (such as when using forklift/vagrant VM provisioning).
+### Database Names
+- PostgreSQL "foreman_development" (dev), "foreman_development_test" (test), containerized environments only
+- PostgreSQL "katello" (dev), "katello_test" (test), legacy non-containerized environments only
 
-**Services & URLs:**
+### Service URLs and Ports
 - Foreman UI: https://$(hostname) (port 443)
 - API: https://$(hostname)/api/
 - Katello API: https://$(hostname)/katello/api/
 - Pulp 3: $(hostname):24816
 - Candlepin: $(hostname):8443
+- PostgreSQL: $(hostname):5432 (database name depends on provisioning — see note above)
 - Quick status of database and all services: https://$(hostname)/api/v2/ping
 Note: `$(hostname)` is used because the vagrant VM hostname varies.
 
