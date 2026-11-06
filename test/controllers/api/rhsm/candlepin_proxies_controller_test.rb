@@ -75,6 +75,17 @@ module Katello
         assert_response :success
       end
 
+      it "preserves activation key order when multiple keys are provided" do
+        second_key = katello_activation_keys(:another_simple_key)
+        Resources::Candlepin::Consumer.expects(:get).never
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts}, nil, [second_key, @activation_key]).returns([@host, { 'uuid' => 'fake-uuid' }])
+
+        post(:consumer_activate, params: { :organization_id => @activation_key.organization.label,
+                                           :activation_keys => "#{second_key.name},#{@activation_key.name}", :facts => @facts })
+
+        assert_response :success
+      end
+
       it "should not register with dead services" do
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
         ::Katello::RegistrationManager.expects(:process_registration).never
