@@ -29,10 +29,10 @@ jobs:
       foreman_version: develop # set to the Foreman release branch after branching :)
       generate_apidoc: ${{ github.event_name == 'push' }}
       runner: ubuntu-26.04
-      postgresql_client_version: '16'
+      psql_client_version: '16'
       matrix_exclude: '[{"ruby":"3.0"}]'
       environment_variables: |
-        PQC_REQUIRED=true
+        PQC_ENABLED=true
 
   test_ruby_30:
     name: Ruby 3.0
@@ -42,7 +42,7 @@ jobs:
       plugin: katello
       foreman_version: develop # set to the Foreman release branch after branching :)
       runner: ubuntu-24.04
-      postgresql_client_version: '16'
+      psql_client_version: '16'
       matrix_exclude: '[{"ruby":"3.3"}]'
 
   angular:

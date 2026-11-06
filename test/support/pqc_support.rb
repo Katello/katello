@@ -2,14 +2,13 @@ require 'openssl'
 
 module Katello
   module PqcSupport
-    # Call before any assertions or mocks that require the algorithm. Probe the
-    # linked library so distro backports work regardless of the header version.
-    # PQC CI sets PQC_REQUIRED=true to prevent silently skipping its coverage.
+    # Call before any assertions or mocks that require the algorithm.
+    # PQC CI sets PQC_ENABLED=true to prevent skipping the PQC tests.
     def pqc_required(algorithm = 'ML-DSA-65')
       return if pqc_supported?(algorithm)
 
       message = "#{algorithm} is unavailable in #{OpenSSL::OPENSSL_LIBRARY_VERSION}"
-      flunk message if ENV['PQC_REQUIRED'] == 'true'
+      flunk message if ENV['PQC_ENABLED'] == 'true'
       skip message
     end
 
