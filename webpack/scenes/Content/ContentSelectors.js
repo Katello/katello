@@ -4,7 +4,7 @@ import {
   selectAPIResponse,
 } from 'foremanReact/redux/API/APISelectors';
 import { STATUS } from 'foremanReact/constants';
-import { CONTENT_KEY, CONTENT_TYPES_KEY, CONTENT_ID_KEY, REPOSITORY_CONTENT_ID_KEY } from './ContentConstants';
+import { CONTENT_KEY, CONTENT_TYPES_KEY, CONTENT_ID_KEY, REPOSITORY_CONTENT_ID_KEY, CONTENT_VIEW_VERSIONS_KEY } from './ContentConstants';
 
 export const selectContent = state =>
   selectAPIResponse(state, CONTENT_KEY) || {};
@@ -41,3 +41,12 @@ export const selectRepositoryContentDetailsStatus = state =>
 
 export const selectRepositoryContentDetailsError = state =>
   selectAPIError(state, REPOSITORY_CONTENT_ID_KEY);
+
+export const selectFileContentViewVersions = state =>
+  selectAPIResponse(state, CONTENT_VIEW_VERSIONS_KEY) || {};
+
+export const selectFileContentViewVersionsStatus = state =>
+  selectAPIStatus(state, CONTENT_VIEW_VERSIONS_KEY) || STATUS.PENDING;
+
+export const selectFileContentViewVersionsError = state =>
+  selectAPIError(state, CONTENT_VIEW_VERSIONS_KEY);

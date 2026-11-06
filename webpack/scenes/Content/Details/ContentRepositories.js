@@ -11,6 +11,7 @@ import {
 import contentConfig from '../ContentConfig';
 import { getRepositoryContentDetails } from '../ContentActions';
 import TableWrapper from '../../../components/Table/TableWrapper';
+import './ContentDetails.scss';
 
 /* eslint-disable react/no-array-index-key */
 const ContentRepositories = ({ contentType, id, tabKey }) => {
@@ -22,7 +23,13 @@ const ContentRepositories = ({ contentType, id, tabKey }) => {
 
   const config = contentConfig.find(type => type.names.pluralLabel === contentType);
   const typeSingularLabel = config.names.singularLabel;
-  const { columnHeaders } = config.tabs.find(header => header.tabKey === tabKey);
+  const {
+    columnHeaders,
+    hideSearch = false,
+    bookmarkController = 'katello_repositories',
+    stripedRows = false,
+    insetTable = false,
+  } = config.tabs.find(header => header.tabKey === tabKey);
 
   const emptyContentTitle = __("You currently don't have any repositories associated with this content.");
   const emptyContentBody = __('Please add some repositories.');
@@ -42,10 +49,13 @@ const ContentRepositories = ({ contentType, id, tabKey }) => {
         emptySearchBody,
         emptyContentBody,
       }}
+      hideSearch={hideSearch}
+      className={insetTable ? 'katello-pf4-table katello-content-details-table-inset' : 'katello-pf4-table'}
+      isStriped={stripedRows}
       ouiaId="content-repositories-table"
       variant={TableVariant.compact}
       autocompleteEndpoint="/katello/api/v2/repositories"
-      bookmarkController="katello_repositories"
+      bookmarkController={bookmarkController}
       fetchItems={useCallback(
         params => getRepositoryContentDetails(typeSingularLabel, id, params),
         [typeSingularLabel, id],
@@ -59,10 +69,15 @@ const ContentRepositories = ({ contentType, id, tabKey }) => {
       </Thead>
       <Tbody>
         {results?.map((details, idx) => (
-          <Tr key={details.id} ouiaId={`content-repositories-row-${idx}`}>
-            {columnHeaders.map((col, index) =>
-              <Td key={index}>{col.getProperty(details, typeSingularLabel)}</Td>)
-            }
+          <Tr
+            key={details.id}
+            ouiaId={`content-repositories-row-${idx}`}
+          >
+            {columnHeaders.map((col, index) => (
+              <Td key={index} dataLabel={col.title}>
+                {col.getProperty(details, typeSingularLabel)}
+              </Td>
+            ))}
           </Tr>
         ))
         }
