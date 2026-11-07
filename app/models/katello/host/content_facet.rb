@@ -267,10 +267,10 @@ module Katello
           repo.library_instance_id.nil? ? repo.id : repo.library_instance_id
         end
 
-        ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::Deb, bound_repos).calculate_and_import
-        ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::Rpm, bound_repos).calculate_and_import
-        ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::Erratum, bound_repos).calculate_and_import
-        ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::ModuleStream, bound_repos).calculate_and_import
+        content_scope = ::Katello::ContentIndex.scope_for_repositories(bound_repos)
+        [::Katello::Deb, ::Katello::Rpm, ::Katello::Erratum, ::Katello::ModuleStream].each do |content_unit_class|
+          ::Katello::Applicability::ApplicableContentHelper.new(self, content_unit_class, bound_repos, content_scope).calculate_and_import
+        end
         update_applicability_counts
         self.host&.refresh_statuses([::Katello::ErrataStatus, ::Katello::RhelLifecycleStatus])
       end

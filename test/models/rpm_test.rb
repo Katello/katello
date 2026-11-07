@@ -16,6 +16,16 @@ module Katello
 
       Rpm.any_instance.stubs(:backend_data).returns({})
     end
+
+    def create_content_index(rpms)
+      index = ::Katello::ContentIndex.create!(:version_href => "/pulp/api/v3/repositories/rpm/rpm/#{SecureRandom.uuid}/versions/1/")
+      rpms.each { |rpm| ::Katello::ContentIndexRpm.create!(:content_index_id => index.id, :rpm_id => rpm.id) }
+      index
+    end
+
+    def drop_repository_rows
+      ::Katello::RepositoryRpm.where(:repository_id => @repo.id).delete_all
+    end
   end
 
   class RpmTest < RpmTestBase
@@ -47,6 +57,31 @@ module Katello
       repo2.rpms = [@rpm_one, @rpm_two]
 
       assert_equal Rpm.in_repositories([@repo, repo2]).to_a.sort, [@rpm_one, @rpm_two].sort
+    end
+
+    def test_with_identifiers_does_not_modify_the_argument
+      ids = [@rpm_one.id.to_s]
+
+      Rpm.with_identifiers(ids)
+
+      assert_equal [@rpm_one.id.to_s], ids
+    end
+
+    def test_in_repositories_reads_an_indexed_repository_through_its_index
+      drop_repository_rows
+      index = create_content_index([@rpm_one])
+      @repo.update!(:version_href => index.version_href, :content_index_id => index.id)
+
+      assert_equal [@rpm_one], Rpm.in_repositories([@repo]).to_a
+    end
+
+    def test_in_repositories_unions_indexed_and_unindexed_repositories
+      index = create_content_index([@rpm_one])
+      @repo.update!(:version_href => index.version_href, :content_index_id => index.id)
+      unindexed_repo = katello_repositories(:rhel_7_x86_64)
+      unindexed_repo.rpms = [@rpm_two]
+
+      assert_equal [@rpm_one, @rpm_two].sort, Rpm.in_repositories([@repo, unindexed_repo]).to_a.sort
     end
 
     def test_search_version_greater_than_or_equal
