@@ -358,19 +358,15 @@ module Katello
         # https://projects.theforeman.org/issues/34437
         def filtered_errata(errata_filters, source_repository_ids)
           if errata_filters.whitelist.empty?
-            all_included_errata = ::Katello::Erratum.joins("inner join katello_repository_errata on katello_errata.id = katello_repository_errata.erratum_id").
-              joins("inner join katello_repositories on katello_repositories.id = katello_repository_errata.repository_id").
-              where("katello_repositories.id in (?)", source_repository_ids)
+            all_included_errata = ::Katello::Erratum.in_repositories(source_repository_ids)
           else
             all_included_errata = errata_filters.whitelist.collect do |filter|
-              ::Katello::Erratum.joins("inner join katello_repository_errata on katello_errata.id = katello_repository_errata.erratum_id").
-                where(filter.generate_clauses(nil)).where("katello_repository_errata.repository_id in (?)", source_repository_ids)
+              ::Katello::Erratum.in_repositories(source_repository_ids).where(filter.generate_clauses(nil))
             end
             all_included_errata.flatten!
           end
           all_excluded_errata = errata_filters.blacklist.collect do |filter|
-            ::Katello::Erratum.joins("inner join katello_repository_errata on katello_errata.id = katello_repository_errata.erratum_id").
-              where(filter.generate_clauses(nil)).where("katello_repository_errata.repository_id in (?)", source_repository_ids)
+            ::Katello::Erratum.in_repositories(source_repository_ids).where(filter.generate_clauses(nil))
           end
           all_excluded_errata.flatten!
           return all_included_errata, all_excluded_errata

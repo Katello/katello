@@ -17,7 +17,15 @@ module Actions
                         repository, smart_proxy,
                         :force_publication => force_publication,
                         :source_repository => source_repository,
-                        :matching_content => matching_content)
+                        :reuse_version => options.fetch(:reuse_version, false),
+                        :source_version_href => options[:source_version_href],
+                        :source_version_prn => options[:source_version_prn],
+                        :source_publication_href => options[:source_publication_href],
+                        :source_publication_prn => options[:source_publication_prn],
+                        :source_content_index_id => options[:source_content_index_id],
+                        :matching_content => matching_content,
+                        :contents_changed => options.fetch(:contents_changed, true),
+                        :assume_content_guard_exists => options.fetch(:assume_content_guard_exists, false))
 
           if repository.deb? && repository.content && !repository.content.content_url.end_with?(repository.deb_content_url_options)
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
