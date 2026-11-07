@@ -12,6 +12,8 @@ module ::Actions::Pulp3::Repository
     end
 
     def teardown
+      # These tests stub every backend call, so there is no Pulp state to reset.
+      return if @skip_backend_cleanup
       ensure_creatable(@repo1, @primary)
       ensure_creatable(@repo2, @primary)
     end
@@ -49,6 +51,47 @@ module ::Actions::Pulp3::Repository
       assert_empty task.output[:updated_repositories] - [@repo1.id, @repo2.id]
     end
 
+    def test_indexes_only_the_units_the_version_added
+      @skip_backend_cleanup = true
+      @repo1.update(version_href: "test_repo_1/1/")
+
+      mock_version = mock('version')
+      mock_version.stubs(:prn).returns('prn:core.repositoryversion:uuid-1')
+      mock_versions_api = mock('repository_versions_api')
+      mock_versions_api.stubs(:read).with("test_repo_1/2/", {fields: 'prn'}).returns(mock_version)
+      Katello::Pulp3::Repository.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+      Katello::Pulp3::Api::File.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+
+      ::Katello::Repository.any_instance.expects(:index_content).
+        with(:added_in_version => "test_repo_1/2/").once
+
+      tasks_map = [{ created_resources: ["test_repo_1/2/"] }]
+      ForemanTasks.sync_task(::Actions::Pulp3::Repository::SaveVersions, [@repo1.id],
+                             tasks: tasks_map)
+
+      assert_equal "test_repo_1/2/", @repo1.reload.version_href
+    end
+
+    def test_indexes_fully_when_the_copy_created_several_versions
+      @skip_backend_cleanup = true
+      @repo1.update(version_href: "test_repo_1/1/")
+
+      mock_version = mock('version')
+      mock_version.stubs(:prn).returns('prn:core.repositoryversion:uuid-3')
+      mock_versions_api = mock('repository_versions_api')
+      mock_versions_api.stubs(:read).with("test_repo_1/3/", {fields: 'prn'}).returns(mock_version)
+      Katello::Pulp3::Repository.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+      Katello::Pulp3::Api::File.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
+
+      ::Katello::Repository.any_instance.expects(:index_content).with().once
+
+      tasks_map = [{ created_resources: ["test_repo_1/2/"] }, { created_resources: ["test_repo_1/3/"] }]
+      ForemanTasks.sync_task(::Actions::Pulp3::Repository::SaveVersions, [@repo1.id],
+                             tasks: tasks_map)
+
+      assert_equal "test_repo_1/3/", @repo1.reload.version_href
+    end
+
     def test_save_new_version_from_lookup_with_nil_version_hrefs
       @repo1.update(version_href: nil)
       @repo2.update(version_href: nil)
@@ -76,7 +119,7 @@ module ::Actions::Pulp3::Repository
       Katello::Pulp3::Repository.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
       Katello::Pulp3::Api::File.any_instance.stubs(:repository_versions_api).returns(mock_versions_api)
 
-      ::Katello::Repository.any_instance.stubs(:index_content).returns(true)
+      ::Katello::Repository.any_instance.expects(:index_content).with.returns(true).twice
 
       task = ForemanTasks.sync_task(::Actions::Pulp3::Repository::SaveVersions, repos, tasks: tasks_map)
 
