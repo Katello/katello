@@ -8,42 +8,52 @@ module Actions
 
         def run
           return if input[:tasks].empty?
-          version_hrefs = input[:tasks].last[:created_resources]
+          # A chunked copy runs one task per chunk, each creating its own version.
+          version_hrefs = input[:tasks].flat_map { |task| task[:created_resources] }
           repositories = find_repositories(input[:repository_ids])
 
           output.merge!(contents_changed: false, updated_repositories: [])
           repositories.each do |repo|
             repo_backend_service = repo.backend_service(SmartProxy.pulp_primary)
-            if repo.version_href
-              # Chop off the version number to compare base repo strings
-              unversioned_href = repo.version_href[0..-2].rpartition('/').first
-              # Could have multiple version_hrefs for the same repo depending on the copy task
-              new_version_hrefs = version_hrefs.collect do |version_href|
-                version_href if unversioned_href == version_href[0..-2].rpartition('/').first
-              end
-
-              new_version_hrefs.compact!
-              if new_version_hrefs.size > 1
-                # Find latest version_href by its version number
-                new_version_href = version_map(new_version_hrefs).max_by { |_href, version| version }.first
-              else
-                new_version_href = new_version_hrefs.first
-              end
-
-              # Successive incremental updates won't generate a new repo version, so fetch the latest Pulp 3 repo version
-              new_version_href ||= latest_version_href(repo_backend_service)
-            else
-              new_version_href = latest_version_href(repo_backend_service)
-            end
+            new_version_href, from_copy = version_after_copy(repo, repo_backend_service, version_hrefs)
 
             unless new_version_href == repo.version_href
               version = repo_backend_service.api.repository_versions_api.read(new_version_href, {fields: 'prn'})
               repo.update(version_href: new_version_href, version_prn: version.prn)
-              repo.index_content
+              if from_copy
+                repo.index_content(:added_in_version => new_version_href)
+              else
+                # A looked-up version may have skipped intermediate versions; index it fully.
+                repo.index_content
+              end
               output[:contents_changed] = true
               output[:updated_repositories] << repo.id
             end
           end
+        end
+
+        # Returns the version to save and whether the copy task reported it.
+        def version_after_copy(repo, repo_backend_service, version_hrefs)
+          return [latest_version_href(repo_backend_service), false] if repo.version_href.nil?
+
+          # Chop off the version number to compare base repo strings
+          unversioned_href = repo.version_href[0..-2].rpartition('/').first
+          # Could have multiple version_hrefs for the same repo depending on the copy task
+          new_version_hrefs = version_hrefs.select do |version_href|
+            unversioned_href == version_href[0..-2].rpartition('/').first
+          end
+          new_version_href = if new_version_hrefs.size > 1
+                               # Find latest version_href by its version number
+                               version_map(new_version_hrefs).max_by { |_href, version| version }.first
+                             else
+                               new_version_hrefs.first
+                             end
+          # Only the last chunk's version holds the last chunk's delta, so several
+          # versions mean the delta is not the whole story.
+          return [new_version_href, new_version_hrefs.size == 1] if new_version_href
+
+          # Successive incremental updates won't generate a new repo version, so fetch the latest Pulp 3 repo version
+          [latest_version_href(repo_backend_service), false]
         end
 
         def version_map(version_hrefs)

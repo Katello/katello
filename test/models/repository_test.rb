@@ -784,5 +784,19 @@ module Katello
       view.generated_for_repository_export!
       refute_includes ::Katello::Repository.smart_proxy_syncable.map(&:pulp_id), repo.pulp_id
     end
+
+    def test_index_content_with_added_in_version_indexes_only_the_delta
+      repo = @fedora_17_x86_64
+      repo.stubs(:import_distribution_data)
+      indexer = mock('content_unit_indexer')
+      indexer.stubs(:import_all).with(true)
+      ::Katello::ContentUnitIndexer.expects(:new).
+        with(has_entries(:repository => repo, :added_in_version => 'version-2')).
+        at_least_once.returns(indexer)
+
+      repo.index_content(:added_in_version => 'version-2')
+
+      refute_nil repo.reload.last_indexed
+    end
   end
 end

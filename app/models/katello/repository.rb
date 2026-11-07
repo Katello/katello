@@ -1037,6 +1037,7 @@ module Katello
 
       full_index = options.fetch(:full_index, false)
       source_repository = options.fetch(:source_repository, nil)
+      added_in_version = options.fetch(:added_in_version, nil)
       if self.yum? && !self.primary?
         index_linked_repo
       elsif source_repository && !repository_type.unique_content_per_repo
@@ -1044,7 +1045,8 @@ module Katello
       else
         repository_type.content_types_to_index.each do |type|
           Katello::Logging.time("CONTENT_INDEX", data: {type: type.model_class}) do
-            Katello::ContentUnitIndexer.new(content_type: type, repository: self, optimized: !full_index).import_all
+            Katello::ContentUnitIndexer.new(content_type: type, repository: self, optimized: !full_index,
+                                            added_in_version: added_in_version).import_all(added_in_version.present?)
           end
         end
         repository_type.index_additional_data_proc&.call(self)
