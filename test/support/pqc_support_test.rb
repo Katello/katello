@@ -39,10 +39,10 @@ class PqcSupportTest < Minitest::Test
   private
 
   def with_pqc_required(value)
-    original = ENV['PQC_REQUIRED']
-    ENV['PQC_REQUIRED'] = value
+    original = ENV['PQC_ENABLED']
+    ENV['PQC_ENABLED'] = value
     yield
   ensure
-    ENV['PQC_REQUIRED'] = original
+    ENV['PQC_ENABLED'] = original
   end
 end
