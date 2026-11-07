@@ -52,6 +52,75 @@ module Katello
       assert_equal({erratum.id => 1}, ::Katello::Repository.errata_with_module_stream_counts(source_repo))
     end
 
+    def test_errata_counts_read_from_the_content_index
+      source_repo = katello_repositories(:fedora_17_x86_64)
+      source_repo.errata.destroy_all
+      module_stream = katello_module_streams(:river)
+      erratum = source_repo.errata.create! do |new_erratum|
+        new_erratum.pulp_id = "foo"
+        ep1 = ErratumPackage.new(:filename => @rpm_two.filename, :nvrea => 'foo', :name => 'foo')
+        ep1.module_streams = [module_stream]
+        ep2 = ErratumPackage.new(:filename => @rpm_one.filename, :nvrea => 'foo', :name => 'foo')
+        new_erratum.packages = [ep1, ep2]
+      end
+
+      index_repository_associations(source_repo)
+      ::Katello::RepositoryErratum.where(:repository_id => source_repo.id).delete_all
+      ::Katello::RepositoryRpm.where(:repository_id => source_repo.id).delete_all
+      ::Katello::RepositoryModuleStream.where(:repository_id => source_repo.id).delete_all
+
+      assert_equal({erratum.id => 2}, ::Katello::Repository.errata_with_package_counts(source_repo))
+      assert_equal({erratum.id => 1}, ::Katello::Repository.errata_with_module_stream_counts(source_repo))
+    end
+
+    def index_repository_associations(repository)
+      index = ::Katello::ContentIndex.create!(:version_href => "/pulp/api/v3/repositories/rpm/rpm/#{SecureRandom.uuid}/versions/1/")
+      [::Katello::Erratum, ::Katello::Rpm, ::Katello::ModuleStream].each do |unit_class|
+        rows = unit_class.repository_association_class.where(:repository_id => repository.id).map do |row|
+          row.attributes.except('id', 'repository_id').merge('content_index_id' => index.id)
+        end
+        unit_class.content_index_association_class.insert_all(rows) if rows.any?
+      end
+      repository.update!(:version_href => index.version_href, :content_index_id => index.id)
+      index
+    end
+
+    def test_errata_counts_ignore_an_index_for_another_version
+      source_repo = katello_repositories(:fedora_17_x86_64)
+      index_repository_associations(source_repo)
+      ::Katello::RepositoryErratum.where(:repository_id => source_repo.id).delete_all
+      ::Katello::RepositoryRpm.where(:repository_id => source_repo.id).delete_all
+      source_repo.update_columns(:version_href => '/pulp/api/v3/repositories/rpm/rpm/stale/versions/2/')
+
+      assert_empty ::Katello::Repository.errata_with_package_counts(source_repo)
+    end
+
+    def test_adopting_from_a_source_without_an_index_drops_the_stale_pointer
+      repository = katello_repositories(:fedora_17_x86_64)
+      source = katello_repositories(:fedora_17_x86_64_dev)
+      stale = ::Katello::ContentIndex.create!(:version_href => '/pulp/api/v3/repositories/rpm/rpm/old/versions/1/')
+      version_href = '/pulp/api/v3/repositories/rpm/rpm/new/versions/1/'
+      repository.update_columns(:version_href => version_href, :content_index_id => stale.id)
+      source.update_columns(:version_href => version_href, :content_index_id => nil)
+
+      repository.adopt_content_index(source)
+
+      assert_nil repository.reload.content_index_id
+    end
+
+    def test_adopting_does_not_use_an_index_for_another_version
+      repository = katello_repositories(:fedora_17_x86_64)
+      source = katello_repositories(:fedora_17_x86_64_dev)
+      stale = ::Katello::ContentIndex.create!(:version_href => '/pulp/api/v3/repositories/rpm/rpm/old/versions/1/')
+      version_href = '/pulp/api/v3/repositories/rpm/rpm/new/versions/1/'
+      repository.update_columns(:version_href => version_href, :content_index_id => nil)
+      source.update_columns(:version_href => version_href, :content_index_id => stale.id)
+
+      repository.adopt_content_index(source)
+
+      assert_nil repository.reload.content_index_id
+    end
+
     def test_fetch_package_errata_to_keep
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_x86_64_dev.errata.destroy_all
