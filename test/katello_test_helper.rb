@@ -14,6 +14,7 @@ require "#{Katello::Engine.root}/test/support/capsule_support"
 require "#{Katello::Engine.root}/test/support/export_support"
 require "#{Katello::Engine.root}/test/support/fixtures_support"
 require "#{Katello::Engine.root}/test/support/pulp3_support"
+require "#{Katello::Engine.root}/test/support/pqc_support"
 
 require 'dynflow/testing'
 Mocha::Mock.include Dynflow::Testing::Mimic
@@ -232,6 +233,7 @@ module DynflowFullTreePlanning
 end
 
 class ActiveSupport::TestCase
+  include Katello::PqcSupport
   extend Robottelo::Reporter::TestAttributes
   include FactoryBot::Syntax::Methods
   include FixtureTestCase
