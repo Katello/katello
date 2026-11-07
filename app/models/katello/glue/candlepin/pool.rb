@@ -96,7 +96,10 @@ module Katello
           when 'virt_only'
             pool_attributes[:virt_only] = attr[:value] == 'true'
           when 'virt_limit'
-            pool_attributes[:virt_who] = attr[:value].to_i > 0
+            # "unlimited" is the Candlepin value for Virtual Datacenters subscriptions.
+            # to_i would turn that string into 0 and mark virt-who as not required.
+            value = attr[:value].to_s
+            pool_attributes[:virt_who] = value.present? && value != '0'
           else
             if IMPORT_ATTRIBUTES.include?(attr[:name])
               pool_attributes[attr[:name]] = attr[:value]
