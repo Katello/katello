@@ -359,6 +359,10 @@ module Katello
             source_repo_version: source_repository.version_href,
             dest_repo: repository_reference.repository_href,
           }]
+          # The copy API defaults dependency_solving to true and this method never set
+          # it, so whole-version copies ran the solver with nothing to complete. Not
+          # every copy model has the attribute (ansible collections do not).
+          data.dependency_solving = false if data.respond_to?(:dependency_solving=)
           tasks << api.copy_api.copy_content(data)
           tasks
         else
