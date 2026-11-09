@@ -55,6 +55,57 @@ module Katello
           assert_equal data, data_dup
         end
 
+        def test_copy_all_disables_dependency_solving
+          source_repo = katello_repositories(:fedora_17_x86_64)
+          source_repo.stubs(:version_href).returns('/pulp/api/v3/repositories/rpm/rpm/source/versions/1/')
+          @repo_service.stubs(:repository_reference).returns(
+            stub(:repository_href => '/pulp/api/v3/repositories/rpm/rpm/dest/'))
+
+          copy_api = mock('copy_api')
+          Katello::Pulp3::Api::Yum.any_instance.stubs(:copy_api).returns(copy_api)
+          copy_api.expects(:copy_content).once.returns('copy_task').with do |data|
+            data.dependency_solving == false &&
+              data.config == [{
+                source_repo_version: '/pulp/api/v3/repositories/rpm/rpm/source/versions/1/',
+                dest_repo: '/pulp/api/v3/repositories/rpm/rpm/dest/',
+              }]
+          end
+
+          assert_equal ['copy_task'], @repo_service.copy_all(source_repo)
+        end
+
+        def test_copy_all_skips_dependency_solving_for_copy_models_without_it
+          source_repo = katello_repositories(:fedora_17_x86_64)
+          source_repo.stubs(:version_href).returns('/pulp/api/v3/repositories/rpm/rpm/source/versions/1/')
+          @repo_service.stubs(:repository_reference).returns(
+            stub(:repository_href => '/pulp/api/v3/repositories/rpm/rpm/dest/'))
+
+          copy_api = mock('copy_api')
+          Katello::Pulp3::Api::Yum.any_instance.stubs(:copy_api).returns(copy_api)
+          Katello::Pulp3::Api::Yum.stubs(:copy_class).returns(PulpAnsibleClient::Copy)
+          copy_api.expects(:copy_content).once.returns('copy_task')
+
+          assert_equal ['copy_task'], @repo_service.copy_all(source_repo)
+        end
+
+        def test_copy_all_removes_existing_content_first_when_asked
+          source_repo = katello_repositories(:fedora_17_x86_64)
+          source_repo.stubs(:version_href).returns('/pulp/api/v3/repositories/rpm/rpm/source/versions/1/')
+          @repo_service.stubs(:repository_reference).returns(
+            stub(:repository_href => '/pulp/api/v3/repositories/rpm/rpm/dest/'))
+
+          copy_api = mock('copy_api')
+          repositories_api = mock('repositories_api')
+          Katello::Pulp3::Api::Yum.any_instance.stubs(:copy_api).returns(copy_api)
+          Katello::Pulp3::Api::Yum.any_instance.stubs(:repositories_api).returns(repositories_api)
+          repositories_api.expects(:modify).once
+            .with('/pulp/api/v3/repositories/rpm/rpm/dest/', remove_content_units: ['*'])
+            .returns('remove_task')
+          copy_api.expects(:copy_content).once.returns('copy_task')
+
+          assert_equal %w(remove_task copy_task), @repo_service.copy_all(source_repo, remove_all: true)
+        end
+
         def test_copy_content_chunked_limits_units_copied
           data = PulpRpmClient::Copy.new
           data.config = []
