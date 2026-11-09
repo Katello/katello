@@ -1019,6 +1019,17 @@ module Katello
       end
     end
 
+    def index_added_content(version_href, base_version_href = nil)
+      repository_type.content_types_to_index.each do |type|
+        Katello::Logging.time("CONTENT_INDEX", data: {type: type.model_class}) do
+          Katello::ContentUnitIndexer.new(content_type: type, repository: self,
+                                          added_in_version: version_href,
+                                          base_version: base_version_href).import_all(true)
+        end
+      end
+      repository_type.index_additional_data_proc&.call(self)
+    end
+
     def index_linked_repo
       if (base_repo = self.target_repository)
         copy_indexed_data(base_repo)
@@ -1037,7 +1048,11 @@ module Katello
 
       full_index = options.fetch(:full_index, false)
       source_repository = options.fetch(:source_repository, nil)
-      if self.yum? && !self.primary?
+      added_in_version = options.fetch(:added_in_version, nil)
+      base_version = options.fetch(:base_version, nil)
+      if added_in_version.present?
+        index_added_content(added_in_version, base_version)
+      elsif self.yum? && !self.primary?
         index_linked_repo
       elsif source_repository && !repository_type.unique_content_per_repo
         copy_indexed_data(source_repository)
