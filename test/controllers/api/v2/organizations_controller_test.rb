@@ -53,7 +53,25 @@ module Katello
       assert_response :success
 
       assert_equal results['name'], @organization.name
+      assert_equal SETTINGS[:katello][:redhat_repository_url], results['cdn_configuration']['default_url']
+      assert_equal CdnConfiguration::REDHAT_CDN_URLS, results['cdn_configuration']['cdn_urls']
       assert_template 'api/v2/organizations/show'
+    end
+
+    def test_show_includes_the_configured_cdn_default_separately_from_the_selected_url
+      default_url = 'https://mirror.example.com'
+      original_default_url = SETTINGS[:katello][:redhat_repository_url]
+      SETTINGS[:katello][:redhat_repository_url] = default_url
+      @organization.cdn_configuration.update!(type: CdnConfiguration::CDN_TYPE, url: 'https://cdn-eu.redhat.com')
+
+      results = JSON.parse(get(:show, params: { :id => @organization.id }).body)
+
+      assert_response :success
+      assert_equal default_url, results['cdn_configuration']['default_url']
+      assert_equal 'https://cdn-eu.redhat.com', results['cdn_configuration']['url']
+      assert_includes results['cdn_configuration']['cdn_urls'], default_url
+    ensure
+      SETTINGS[:katello][:redhat_repository_url] = original_default_url
     end
 
     def test_show_protected
@@ -140,7 +158,34 @@ module Katello
         assert_equal params[:custom_cdn_auth_enabled], true
       end
 
-      put(:cdn_configuration, params: { :id => @organization.id, :url => url, :custom_cdn_auth_enabled => true })
+      put(:cdn_configuration, params: { :id => @organization.id, :type => CdnConfiguration::CUSTOM_CDN_TYPE,
+                                        :url => url, :custom_cdn_auth_enabled => true })
+      assert_response :success
+    end
+
+    def test_update_cdn_configuration_with_unsupported_redhat_url
+      @organization.cdn_configuration.update!(type: CdnConfiguration::CUSTOM_CDN_TYPE, url: 'https://upstream.example.com')
+      original_attributes = @organization.cdn_configuration.attributes
+      @controller.expects(:sync_task).never
+
+      ['https://unsupported.example.com', 'https://upstream.example.com'].each do |url|
+        put(:cdn_configuration, params: { :id => @organization.id, :type => CdnConfiguration::CDN_TYPE, :url => url })
+
+        assert_response :unprocessable_entity
+        assert_includes JSON.parse(response.body)['errors'].keys, 'url'
+        assert_equal original_attributes, @organization.cdn_configuration.reload.attributes
+      end
+    end
+
+    def test_update_cdn_configuration_with_supported_redhat_url
+      url = 'https://cdn-eu.redhat.com'
+      assert_sync_task(::Actions::Katello::CdnConfiguration::Update) do |configuration, params|
+        assert_equal @organization.cdn_configuration.id, configuration.id
+        assert_equal url, params[:url]
+      end
+
+      put(:cdn_configuration, params: { :id => @organization.id, :type => CdnConfiguration::CDN_TYPE, :url => url })
+
       assert_response :success
     end
 

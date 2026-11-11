@@ -41,6 +41,23 @@ module Katello
             assert_equal 'my key', options[:client_key]
           end
 
+          def test_ssl_remote_options_sovereign_redhat_cdn
+            repo = katello_repositories(:rhel_7_x86_64)
+            expected_ca = File.read(::Katello::Resources::CDN::CdnResource.ca_file)
+            ::Katello::RootRepository.any_instance.stubs(:http_proxy).returns(nil)
+            ::Katello::Product.any_instance.stubs(:certificate).returns('my cert')
+            ::Katello::Product.any_instance.stubs(:key).returns('my key')
+
+            url = 'https://cdn-eu.redhat.com'
+            repo.root.organization.cdn_configuration.update!(type: ::Katello::CdnConfiguration::CDN_TYPE, url: url)
+            repo.root.update!(url: "#{url}/content/dist/rhel/7/x86_64/os")
+            options = Katello::Pulp3::Repository::Yum.new(repo, @proxy).ssl_remote_options
+
+            assert_equal expected_ca, options[:ca_cert]
+            assert_equal 'my cert', options[:client_cert]
+            assert_equal 'my key', options[:client_key]
+          end
+
           def test_append_proxy_cacert_with_nil_ca_cert
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             proxy_cacert = File.read("#{Katello::Engine.root}/test/fixtures/certs/real-ca.crt").strip

@@ -820,6 +820,20 @@ collectionz:
       refute debian9.update(:deb_releases => "stretch")
     end
 
+    def test_redhat_url_accepts_configured_cdn_endpoints
+      original_default_url = SETTINGS[:katello][:redhat_repository_url]
+      SETTINGS[:katello][:redhat_repository_url] = 'https://mirror.example.com:8443/redhat'
+      rhel = katello_root_repositories(:rhel_6_x86_64_root)
+
+      CdnConfiguration.selectable_urls.each do |endpoint|
+        url = "#{endpoint}/content/dist/rhel/6/x86_64/os"
+        rhel.update!(url: url)
+        assert_equal url, rhel.reload.url
+      end
+    ensure
+      SETTINGS[:katello][:redhat_repository_url] = original_default_url
+    end
+
     def test_uln_upstream_auth_constraint
       uln_ovm2 = katello_root_repositories(:uln_ovm2_2_1_1_i386_patch_root)
       uln_ovm2.upstream_username = nil
