@@ -91,6 +91,22 @@ module ::Actions::Katello::CdnConfiguration
       assert_nil @cdn_configuration.upstream_organization_label
     end
 
+    def test_plans_existing_repository_updates_for_sovereign_endpoints
+      roots = ::Katello::RootRepository.redhat.in_organization(@organization).to_a
+      refute_empty roots
+
+      url = 'https://cdn-eu.redhat.com'
+      action = create_action(@action_class)
+      plan_action(action, @cdn_configuration, type: ::Katello::CdnConfiguration::CDN_TYPE, url: url)
+
+      assert_equal url, @cdn_configuration.reload.url
+      roots.each do |root|
+        content_path = root.library_instance.generate_content_path.delete_prefix('/')
+        assert_action_planned_with(action, ::Actions::Katello::Repository::Update,
+                                  root, url: "#{url}/#{content_path}")
+      end
+    end
+
     def test_plans_custom_cdn
       attrs = {
         type: ::Katello::CdnConfiguration::CUSTOM_CDN_TYPE,

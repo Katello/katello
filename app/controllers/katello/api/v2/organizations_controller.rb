@@ -176,7 +176,7 @@ module Katello
     api :PUT, "/organizations/:id/cdn_configuration", N_("Update the CDN configuration")
     param :id, String, :desc => N_("ID of the Organization"), :required => true
     param :type, String, :desc => N_("CDN configuration type. One of %s.") % CdnConfiguration::TYPES.join(", "), :required => true
-    param :url, String, :desc => N_("Upstream foreman server to sync CDN content from. Relevant only for 'upstream_server' type.")
+    param :url, String, :desc => N_("CDN URL to sync content from. A Red Hat CDN endpoint for 'redhat_cdn' type, the custom CDN for 'custom_cdn' type, or the upstream Foreman server for 'upstream_server' type.")
     param :username, String, :desc => N_("Username for authentication. Relevant only for 'upstream_server' type.")
     param :password, String, :desc => N_("Password for authentication. Relevant only for 'upstream_server' type.")
     param :upstream_organization_label, String, :desc => N_("Upstream organization to sync CDN content from. Relevant only for 'upstream_server' type.")
@@ -189,7 +189,18 @@ module Katello
                      :upstream_lifecycle_environment_label, :upstream_content_view_label, :custom_cdn_auth_enabled]
       config_params = params.slice(*config_keys).permit!.to_h
 
-      task = sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, config_params)
+      configuration = @organization.cdn_configuration
+      configuration.assign_attributes(config_params)
+      unless configuration.valid?
+        render json: {
+          message: configuration.errors.full_messages.to_sentence,
+          errors: configuration.errors.to_hash,
+          full_messages: configuration.errors.full_messages,
+        }, status: :unprocessable_entity
+        return
+      end
+
+      task = sync_task(::Actions::Katello::CdnConfiguration::Update, configuration, config_params)
 
       respond_for_async :resource => task
     end

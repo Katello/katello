@@ -86,7 +86,12 @@ module Katello
         end
 
         def self.redhat_cdn?(url)
-          url.include?(redhat_cdn_url)
+          target = url.to_s.chomp('/')
+          cdn_urls = (::Katello::CdnConfiguration::REDHAT_CDN_URLS + [redhat_cdn_url]).compact
+          cdn_urls.any? do |cdn_url|
+            base = cdn_url.chomp('/')
+            target == base || target.start_with?("#{base}/")
+          end
         end
 
         def proxy
