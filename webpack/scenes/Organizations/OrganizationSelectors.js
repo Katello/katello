@@ -8,8 +8,8 @@ import {
   UPDATE_CDN_CONFIGURATION_KEY,
 } from './OrganizationConstants';
 
-export const selectOrganizationState = state => state.katello.organization;
-export const selectOrgLoading = state => state.katello.organization.loading;
+export const selectOrganizationState = state => state.katello?.organization || {};
+export const selectOrgLoading = state => selectOrganizationState(state).loading;
 
 export const selectManifestName = state =>
   selectOrganizationState(state).owner_details?.upstreamConsumer?.name;

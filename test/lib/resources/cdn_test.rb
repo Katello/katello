@@ -1,5 +1,54 @@
 require 'katello_test_helper'
 class CdnResourceTest < ActiveSupport::TestCase
+  def test_redhat_cdn_recognizes_supported_endpoints
+    Katello::CdnConfiguration::REDHAT_CDN_URLS.each do |url|
+      assert Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
+      assert Katello::Resources::CDN::CdnResource.redhat_cdn?("#{url}/content/dist/rhel9/9/x86_64/baseos/os")
+    end
+
+    refute Katello::Resources::CDN::CdnResource.redhat_cdn?('https://cdn-apac.redhat.com')
+  end
+
+  def test_redhat_cdn_rejects_unrelated_or_invalid_urls
+    [
+      'https://cdn.example.com/content',
+      'https://cdn-eu.redhat.com.example.com/content',
+      'https://cdn-us.redhat.com@other.example.com/content',
+      'https://other.example.com/https://cdn.redhat.com/content',
+      'https://other.example.com/?url=https://cdn-us.redhat.com/content',
+      'http://cdn-eu.redhat.com/content',
+      'https://cdn-us.redhat.com:8443/content',
+      'https://',
+      'not a url',
+      nil,
+    ].each do |url|
+      refute Katello::Resources::CDN::CdnResource.redhat_cdn?(url), "Unexpected CDN match for #{url.inspect}"
+      assert_nil Katello::Repository.feed_ca_file(url)
+    end
+  end
+
+  def test_redhat_cdn_respects_the_configured_default_and_path_boundary
+    original_default_url = SETTINGS[:katello][:redhat_repository_url]
+    SETTINGS[:katello][:redhat_repository_url] = 'https://mirror.example.com:8443/redhat/'
+
+    ['https://mirror.example.com:8443/redhat',
+     'https://mirror.example.com:8443/redhat/',
+     'https://mirror.example.com:8443/redhat/content'].each do |url|
+      assert Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
+      assert_equal Katello::Resources::CDN::CdnResource.ca_file, Katello::Repository.feed_ca_file(url)
+    end
+
+    ['https://mirror.example.com:8443/redhat-mirror/content',
+     'https://mirror.example.com/redhat/content',
+     'https://mirror.example.com.evil.example:8443/redhat/content'].each do |url|
+      refute Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
+      assert_nil Katello::Repository.feed_ca_file(url)
+    end
+    assert Katello::Resources::CDN::CdnResource.redhat_cdn?('https://cdn-eu.redhat.com/content')
+  ensure
+    SETTINGS[:katello][:redhat_repository_url] = original_default_url
+  end
+
   def test_http_proxy_no_cacert
     proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000',
                               :username => 'admin',
