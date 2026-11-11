@@ -23,11 +23,27 @@ jobs:
   test:
     name: Ruby
     needs: rubocop
-    uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v1
+    uses: aidenfine/actions/.github/workflows/foreman_plugin.yml@psql-16
     with:
       plugin: katello
       foreman_version: develop # set to the Foreman release branch after branching :)
       generate_apidoc: ${{ github.event_name == 'push' }}
+      runner: ubuntu-26.04
+      psql_client_version: '13'
+      matrix_exclude: '[{"ruby":"3.0"}]'
+      environment_variables: |
+        PQC_ENABLED=true
+
+  test_ruby_30:
+    name: Ruby 3.0
+    needs: rubocop
+    uses: aidenfine/actions/.github/workflows/foreman_plugin.yml@psql-16
+    with:
+      plugin: katello
+      foreman_version: develop # set to the Foreman release branch after branching :)
+      runner: ubuntu-24.04
+      psql_client_version: '13'
+      matrix_exclude: '[{"ruby":"3.3"}]'
 
   angular:
     name: Angular ${{ matrix.engine }} - NodeJS ${{ matrix.node }}

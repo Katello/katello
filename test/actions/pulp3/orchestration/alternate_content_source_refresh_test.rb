@@ -35,7 +35,7 @@ module ::Actions::Pulp3
       @deb_acs.save!
       @yum_simplified_acs = katello_alternate_content_sources(:yum_simplified_alternate_content_source)
       @file_simplified_acs = katello_alternate_content_sources(:file_simplified_alternate_content_source)
-      ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
+      @yum_smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create!(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
     end
 
     def teardown
@@ -67,14 +67,14 @@ module ::Actions::Pulp3
 
     def test_yum_refresh
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_acs.name)
-      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
+      smart_proxy_acs = @yum_smart_proxy_acs
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
     end
 
     def test_yum_refresh_updates_remote
       ::Katello::Pulp3::AlternateContentSource.any_instance.stubs(:generate_backend_object_name).returns(@yum_acs.name)
-      smart_proxy_acs = ::Katello::SmartProxyAlternateContentSource.create(alternate_content_source_id: @yum_acs.id, smart_proxy_id: @primary.id)
+      smart_proxy_acs = @yum_smart_proxy_acs
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Create, smart_proxy_acs)
       @yum_acs.update!(verify_ssl: false)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::AlternateContentSource::Refresh, smart_proxy_acs)
