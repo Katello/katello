@@ -107,6 +107,24 @@ module Katello
       refute_includes repo_list, other_repo
     end
 
+    def test_distribution_repositories_hostgroup_facet_inherited
+      version = @repo_with_distro.distribution_version.split('.')
+      os = ::Redhat.create_operating_system(@my_distro.name, version[0], version[1])
+      parent = ::Hostgroup.find(hostgroups(:common).id)
+      cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(@repo_with_distro.content_view.id, @repo_with_distro.environment.id)
+      parent.content_view_environment_id = cvenv.id
+      parent.save!
+      child = ::Hostgroup.new(:name => 'inheriting_child', :parent => parent,
+                              :operatingsystem => os, :architecture => architectures(:x86_64))
+      child.build_content_facet
+      child.save!
+      assert_nil child.content_facet.content_view_id
+      assert_nil child.content_facet.lifecycle_environment_id
+
+      repo_list = os.distribution_repositories(child)
+      assert_includes repo_list, @repo_with_distro
+    end
+
     def test_distribution_repositories_fuzzy
       # make sure it matches 3 digit distro versions correctly
       # If I asked for available distros for OS x.y , it should match x.y and x.y.z
