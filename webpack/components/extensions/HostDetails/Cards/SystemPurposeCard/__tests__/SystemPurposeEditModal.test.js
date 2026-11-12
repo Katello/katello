@@ -1,8 +1,10 @@
 import React from 'react';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
+import { STATUS } from 'foremanReact/constants';
 import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import HOST_DETAILS from '../../../HostDetailsConstants';
 import SystemPurposeEditModal from '../SystemPurposeEditModal';
+import * as systemPurposeActions from '../SystemPurposeActions';
 import { assertNockRequest, nockInstance } from '../../../../../../test-utils/nockWrapper';
 import katelloApi, { foremanApi } from '../../../../../../services/api';
 import { ACTIVATION_KEY } from '../../../../../../scenes/ActivationKeys/Details/ActivationKeyConstants';
@@ -61,6 +63,147 @@ const renderOptions = (apiNamespace = HOST_DETAILS) => ({
       },
     },
   },
+});
+
+describe.each(['host', 'ak'])('System purpose editor requests for %s', (type) => {
+  const releaseKey = type === 'host' ? 'AVAILABLE_RELEASE_VERSIONS_1' : 'RELEASES_1';
+  const releaseUrl = type === 'host' ? availableReleaseVersions : akAvailableReleaseVersions;
+  let organizationSpy;
+  let releasesSpy;
+
+  beforeEach(() => {
+    organizationSpy = jest.spyOn(systemPurposeActions, 'getOrganization');
+    const releaseAction = type === 'host'
+      ? 'getHostAvailableReleaseVersions' : 'getAKAvailableReleaseVersions';
+    releasesSpy = jest.spyOn(systemPurposeActions, releaseAction);
+  });
+
+  afterEach(() => {
+    organizationSpy.mockRestore();
+    releasesSpy.mockRestore();
+  });
+
+  const ToggleModal = () => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    return (
+      <>
+        <button onClick={() => setIsOpen(true)}>Open editor</button>
+        <SystemPurposeEditModal
+          {...baseAttributes}
+          {...facetAttributes}
+          type={type}
+          isOpen={isOpen}
+          closeModal={() => setIsOpen(false)}
+        />
+      </>
+    );
+  };
+
+  test.each([STATUS.PENDING, STATUS.RESOLVED])('Reuses requests with status %s', async (status) => {
+    const { store } = renderWithRedux(
+      <SystemPurposeEditModal {...baseAttributes} {...facetAttributes} type={type} />,
+      {
+        initialState: {
+          API: {
+            ORGANIZATION_1: { status },
+            [releaseKey]: { status },
+          },
+        },
+      },
+    );
+
+    if (status === STATUS.PENDING) {
+      // A request already in progress must not retry if it fails during this opening.
+      await act(async () => {
+        store.dispatch({
+          type: 'ORGANIZATION_1_FAILURE',
+          key: 'ORGANIZATION_1',
+          response: { message: 'Forbidden' },
+        });
+        store.dispatch({
+          type: `${releaseKey}_FAILURE`,
+          key: releaseKey,
+          response: { message: 'Forbidden' },
+        });
+      });
+    }
+
+    expect(organizationSpy).not.toHaveBeenCalled();
+    expect(releasesSpy).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    [undefined, 403],
+    [STATUS.ERROR, 200],
+  ])('Retries only on reopening with initial status %s and retry HTTP %s', async (initialStatus, retryStatus) => {
+    const initialAPI = initialStatus ? {
+      ORGANIZATION_1: { status: initialStatus },
+      [releaseKey]: { status: initialStatus },
+    } : {};
+    const {
+      getByText, getByLabelText, queryByRole, store,
+    } = renderWithRedux(<ToggleModal />, { initialState: { API: initialAPI } });
+
+    expect(queryByRole('dialog')).not.toBeInTheDocument();
+    expect(organizationSpy).not.toHaveBeenCalled();
+    expect(releasesSpy).not.toHaveBeenCalled();
+
+    const scope = nockInstance
+      .get(organizationDetails)
+      .reply(403, { error: { message: 'Forbidden' } })
+      .get(releaseUrl)
+      .reply(403, { error: { message: 'Forbidden' } });
+
+    fireEvent.click(getByText('Open editor'));
+    await patientlyWaitFor(() => {
+      expect(scope.isDone()).toBe(true);
+      expect(store.getState().API.ORGANIZATION_1.status).toBe(STATUS.ERROR);
+      expect(store.getState().API[releaseKey].status).toBe(STATUS.ERROR);
+    });
+    expect(organizationSpy).toHaveBeenCalledTimes(1);
+    expect(releasesSpy).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(getByText('Cancel'));
+    expect(queryByRole('dialog')).not.toBeInTheDocument();
+    expect(organizationSpy).toHaveBeenCalledTimes(1);
+    expect(releasesSpy).toHaveBeenCalledTimes(1);
+
+    nockInstance
+      .get(organizationDetails)
+      .reply(retryStatus, {
+        id: 1,
+        system_purposes: {
+          roles: ['Custom organization role'],
+          usage: ['Custom organization usage'],
+        },
+        service_levels: ['Custom organization service level'],
+      })
+      .get(releaseUrl)
+      .reply(retryStatus, { results: ['9.99'] });
+
+    fireEvent.click(getByText('Open editor'));
+    const expectedStatus = retryStatus === 200 ? STATUS.RESOLVED : STATUS.ERROR;
+    await patientlyWaitFor(() => {
+      expect(scope.isDone()).toBe(true);
+      expect(store.getState().API.ORGANIZATION_1.status).toBe(expectedStatus);
+      expect(store.getState().API[releaseKey].status).toBe(expectedStatus);
+    });
+    expect(organizationSpy).toHaveBeenCalledTimes(2);
+    expect(releasesSpy).toHaveBeenCalledTimes(2);
+
+    if (retryStatus === 200) {
+      expect(getByLabelText('Role')).toHaveTextContent('Custom organization role');
+      expect(getByLabelText('Usage')).toHaveTextContent('Custom organization usage');
+      expect(getByLabelText('SLA')).toHaveTextContent('Custom organization service level');
+      expect(getByLabelText('Release version')).toHaveTextContent('9.99');
+
+      fireEvent.click(getByText('Cancel'));
+      fireEvent.click(getByText('Open editor'));
+      expect(organizationSpy).toHaveBeenCalledTimes(2);
+      expect(releasesSpy).toHaveBeenCalledTimes(2);
+      expect(getByLabelText('Release version')).toHaveTextContent('9.99');
+    }
+  });
 });
 
 describe('SystemPurposeEditModal', () => {

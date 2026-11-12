@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { STATUS } from 'foremanReact/constants';
+import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import {
   Modal,
@@ -15,10 +16,8 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
-  selectOrganizationStatus,
   selectOrganization,
   selectAvailableReleaseVersions,
-  selectAvailableReleaseVersionsStatus,
 } from './SystemPurposeSelectors';
 import { getHostAvailableReleaseVersions, getAKAvailableReleaseVersions, getOrganization, updateHostSysPurposeAttributes, updateAKSysPurposeAttributes } from './SystemPurposeActions';
 import HOST_DETAILS_KEY from '../../HostDetailsConstants';
@@ -38,6 +37,8 @@ const SystemPurposeEditModal = ({
   const [selectedServiceLevel, setSelectedServiceLevel] = useState(initialServiceLevel);
   const [selectedUsage, setSelectedUsage] = useState(initialPurposeUsage);
   const [selectedReleaseVersion, setSelectedReleaseVersion] = useState(initialReleaseVersion);
+  const checkedOrgId = useRef(null);
+  const checkedReleaseVersionsKey = useRef(null);
 
   const unmodified = (
     selectedRole === initialPurposeRole &&
@@ -47,7 +48,7 @@ const SystemPurposeEditModal = ({
   );
   const dispatch = useDispatch();
 
-  const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
+  const orgStatus = useSelector(state => selectAPIStatus(state, `ORGANIZATION_${orgId}`));
   const organizationDetails = useSelector(state => selectOrganization(state, orgId));
   const orgDetails = propsToCamelCase(organizationDetails ?? { systemPurposes: {} });
   const availableSyspurposeAttributes = orgDetails?.systemPurposes ?? {};
@@ -55,23 +56,39 @@ const SystemPurposeEditModal = ({
   const { roles: availableRoles, usage: availableUsages }
     = availableSyspurposeAttributes;
   const selectorAPIKey = type === 'host' ? 'AVAILABLE_RELEASE_VERSIONS' : 'RELEASES';
+  const releaseVersionsKey = `${selectorAPIKey}_${id}`;
 
   const availableReleaseVersionsStatus
-    = useSelector(state => selectAvailableReleaseVersionsStatus(state, id, selectorAPIKey));
+    = useSelector(state => selectAPIStatus(state, releaseVersionsKey));
   const availableReleaseVersions = useSelector(state =>
     selectAvailableReleaseVersions(state, id, selectorAPIKey))?.results ?? [];
   useEffect(() => {
-    if (orgId && orgStatus !== STATUS.RESOLVED) {
+    if (!isOpen) {
+      checkedOrgId.current = null;
+      return;
+    }
+    if (!orgId || checkedOrgId.current === orgId) return;
+
+    // Check once per opening, so a failed request can only retry after reopening.
+    checkedOrgId.current = orgId;
+    if (!orgStatus || orgStatus === STATUS.ERROR) {
       dispatch(getOrganization({ orgId }));
     }
-  }, [orgId, orgStatus, dispatch]);
+  }, [isOpen, orgId, orgStatus, dispatch]);
 
   const actionToDispatch = type === 'host' ? getHostAvailableReleaseVersions : getAKAvailableReleaseVersions;
   useEffect(() => {
-    if (id && availableReleaseVersionsStatus !== STATUS.RESOLVED) {
+    if (!isOpen) {
+      checkedReleaseVersionsKey.current = null;
+      return;
+    }
+    if (!id || checkedReleaseVersionsKey.current === releaseVersionsKey) return;
+
+    checkedReleaseVersionsKey.current = releaseVersionsKey;
+    if (!availableReleaseVersionsStatus || availableReleaseVersionsStatus === STATUS.ERROR) {
       dispatch(actionToDispatch({ id }));
     }
-  }, [type, id, availableReleaseVersionsStatus, actionToDispatch, dispatch]);
+  }, [isOpen, id, releaseVersionsKey, availableReleaseVersionsStatus, actionToDispatch, dispatch]);
 
   const refreshHostDetails = () => dispatch({
     type: 'API_GET',
