@@ -130,6 +130,12 @@ module Actions
           output[:content_view_version_id] = input[:content_view_version_id]
           output[:skip_promotion] = input[:skip_promotion]
           output[:history_id] = input[:history_id]
+          # update errata applicability counts for all hosts in the CV & Library
+          unless input[:skip_promotion]
+            environment = ::Katello::KTEnvironment.find(input[:environment_id])
+            bound_repos_to_delete = repos_to_delete(cv)
+            cv.update_host_statuses(environment, bound_repos_to_delete)
+          end
         end
 
         def rescue_strategy_for_self
@@ -140,11 +146,6 @@ module Actions
           version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
           version.update_content_counts!
           version.add_applied_filters!
-          # update errata applicability counts for all hosts in the CV & Library
-          unless input[:skip_promotion]
-            environment = ::Katello::KTEnvironment.find(input[:environment_id])
-            ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
-          end
 
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL

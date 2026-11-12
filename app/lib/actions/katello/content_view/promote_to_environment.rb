@@ -32,8 +32,15 @@ module Actions
             end
 
             plan_self(history_id: history.id, environment_id: environment.id, user_id: ::User.current.id,
-                      environment_name: environment.name, content_view_id: version.content_view.id, incremental_update: incremental_update)
+                      environment_name: environment.name, content_view_id: version.content_view.id, content_view_version_id: version.id, incremental_update: incremental_update)
           end
+        end
+
+        def run
+          environment = ::Katello::KTEnvironment.find(input[:environment_id])
+          version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
+          bound_repos_to_delete = repos_to_delete(version, environment)
+          ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment, bound_repos_to_delete)
         end
 
         def humanized_name
@@ -45,9 +52,6 @@ module Actions
         end
 
         def finalize
-          environment = ::Katello::KTEnvironment.find(input[:environment_id])
-          ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
-
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
