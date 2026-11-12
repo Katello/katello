@@ -86,10 +86,14 @@ module Actions
 
                     unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
                       sequence do
+                        # Repos left out of extended_repo_mapping are unchanged: they keep the version and
+                        # publication reused by CloneToVersion, so they need no pre-copy, publication or indexing.
+                        copied_dest_repo_ids = extended_repo_mapping.values.map { |repo_map| repo_map[:dest_repo] }
                         # Pre-copy content if dest_repo is a soft copy of its library instance.
                         # Don't use extended_repo_mapping because the source repositories are library instances.
                         # We want the old CV snapshot repositories here so as to not pull in excess new content.
                         separated_repo_map[mapping].each do |source_repos, dest_repo|
+                          next unless copied_dest_repo_ids.include?(dest_repo.id)
                           if dest_repo.soft_copy_of_library?
                             source_repos.each do |source_repo|
                               # remove_all flag is set to cover the case of incrementally updating more than once with different content.
@@ -101,9 +105,9 @@ module Actions
                         copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
                                                            dependency_solving: dep_solve).output
                         repos_to_clone.each do |source_repos|
-                          if separated_repo_map[mapping].keys.include?(source_repos)
-                            copy_repos(repository_mapping[source_repos])
-                          end
+                          next unless separated_repo_map[mapping].keys.include?(source_repos)
+                          new_repo = repository_mapping[source_repos]
+                          copy_repos(new_repo) if copied_dest_repo_ids.include?(new_repo.id)
                         end
                       end
                     end
