@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -50,6 +50,7 @@ const BulkSystemPurposeModal = ({
   const [isSaving, setIsSaving] = useState(false);
   const [sysPurposeDispatched, setSysPurposeDispatched] = useState(false);
   const [releaseVersionDispatched, setReleaseVersionDispatched] = useState(false);
+  const checkedOrgId = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -70,7 +71,15 @@ const BulkSystemPurposeModal = ({
     sysPurposeStatus === STATUS.PENDING || releaseVersionStatus === STATUS.PENDING;
 
   useEffect(() => {
-    if (isOpen && orgId && !orgStatus) {
+    if (!isOpen) {
+      checkedOrgId.current = null;
+      return;
+    }
+    if (!orgId || checkedOrgId.current === orgId) return;
+
+    // Check once per opening, so a failed request can only retry after reopening.
+    checkedOrgId.current = orgId;
+    if (!orgStatus || orgStatus === STATUS.ERROR) {
       dispatch(getOrganization({ orgId }));
     }
   }, [isOpen, orgId, orgStatus, dispatch]);
