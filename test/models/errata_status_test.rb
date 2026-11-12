@@ -6,6 +6,8 @@ module Katello
     let(:bugfix_errata) { katello_errata(:bugfix) }
     let(:repo) { katello_repositories(:rhel_6_x86_64) }
     let(:installed_package) { Katello::InstalledPackage.create(name: 'test-package', nvrea: 'test-package-1.0.x86_64', nvra: 'test-package-1.0.x86_64') }
+    let(:deb_repo) { katello_repositories(:debian_10_amd64) }
+    let(:installed_deb) { Katello::InstalledDeb.create(name: 'test-deb', version: '1.0', architecture: 'amd64') }
 
     let(:host) do
       FactoryBot.create(:host, :with_content, :content_view => katello_content_views(:library_dev_view),
@@ -61,6 +63,15 @@ module Katello
       host.content_facet.bound_repositories << repo
       host.installed_packages << installed_package
 
+      assert_equal Katello::ErrataStatus::UP_TO_DATE, status.to_status
+      assert_equal "All errata applied", status.to_label
+    end
+
+    def test_to_status_repos_debs_no_errata
+      host.content_facet.bound_repositories << deb_repo
+      host.installed_debs << installed_deb
+
+      assert_empty host.installed_packages
       assert_equal Katello::ErrataStatus::UP_TO_DATE, status.to_status
       assert_equal "All errata applied", status.to_label
     end
