@@ -241,11 +241,14 @@ module Katello
       end
 
       def retry_distribution_update_with_publication(error, distro, dist_options)
+        # Check for overlap error from pre-existing overlapping distributions (from serializer or database constraint)
+        if Repository.distribution_overlap_error?(error.message)
+          fail Katello::Errors::Pulp3Error, ::Katello::ContentView.distribution_path_conflict_error(repo_service.repo)
         # REMOVE when N-2 capsules use Pulp >= 3.105
         # If repository_version is not supported (old Pulp), retry with publication
-        if repo_service.repo.repository_type.pulp3_transitioning_from_publication &&
-           error.code == 400 &&
-           (error.message.include?("repository_version") || error.message.include?("publication"))
+        elsif repo_service.repo.repository_type.pulp3_transitioning_from_publication &&
+              error.code == 400 &&
+              (error.message.include?("repository_version") || error.message.include?("publication"))
           dist_options.delete(:repository_version)
           dist_options[:publication] = publication_href_or_create
           response = api.distributions_api.partial_update(distro.pulp_href, dist_options)
@@ -259,9 +262,10 @@ module Katello
       def retry_distribution_create_with_publication(error, dist_options)
         # REMOVE when N-2 capsules use Pulp >= 3.105
         # If repository_version is not supported (old Pulp), retry with publication
+        # Note: Overlap errors should propagate as validation errors, not be caught here
         if repo_service.repo.repository_type.pulp3_transitioning_from_publication &&
            error.code == 400 &&
-           (error.message.include?("repository_version") || error.message.include?("publication"))
+              (error.message.include?("repository_version") || error.message.include?("publication"))
           dist_options.delete(:repository_version)
           dist_options[:publication] = publication_href_or_create
           distribution_data = api.distribution_class.new(dist_options)

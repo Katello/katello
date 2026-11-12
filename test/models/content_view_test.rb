@@ -454,19 +454,54 @@ module Katello
       repo2_cv = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo2_lib.id)
       version2 = create(:katello_content_view_version, :content_view => view2, :repositories => [repo2_cv])
 
+      # Create a fresh environment without conflicting yum repos
+      test_env = create(:katello_environment, name: 'TestEnv', label: 'testenv', organization: @organization,
+                        priors: [@organization.library])
+
       composite.update(component_ids: [version1.id, version2.id])
       assert composite.valid?
-      assert composite.check_docker_repository_names!([@dev])
+      assert composite.check_docker_repository_names!([test_env])
 
       # ensure that all containers are stored with the proper auto-generated names
       [version1, version2].each do |version|
-        name = "#{@dev.organization.name.downcase.sub!(" ", "_")}/"\
+        name = "#{test_env.organization.name.downcase.sub!(" ", "_")}/"\
           "#{version.content_view.label.downcase}/"\
           "#{version.content_view.content_view_versions[0].version.sub!(".", "_")}/"\
           "#{version.repositories[0].product.label.downcase}/"\
           "#{version.repositories[0].name.downcase.sub!(" ", "_")}"
         assert_equal name, version.repositories[0].container_repository_name
       end
+    end
+
+    def test_docker_cross_type_overlap_detection
+      # Test that collect_existing_paths handles both docker and non-docker repos
+      # This enables cross-type validation (docker paths checked against yum/file/deb)
+      # Full integration testing is done in hammer test suite
+
+      org = @organization
+      product = create(:katello_product, provider: org.anonymous_provider, organization: org)
+
+      # Create a yum repo in Dev with a specific path
+      yum_repo = create(:katello_repository, product: product, content_type: 'yum',
+                        content_view_version: org.default_content_view.versions.first,
+                        environment: @dev)
+      yum_repo.relative_path = 'test/path'
+      yum_repo.save!
+
+      # Create a docker repo for validation
+      docker_repo = create(:docker_repository, product: product,
+                           content_view_version: org.default_content_view.versions.first,
+                           environment: org.library)
+
+      cv = create(:katello_content_view, organization: org)
+
+      # Verify that collect_existing_paths includes non-docker repos
+      paths_to_create = [{ path: 'test/path', environment: @dev, repository: docker_repo, being_created: true }]
+      existing_paths = cv.send(:collect_existing_paths, paths_to_create)
+
+      # Should find the yum repo even though we're validating docker repos
+      assert existing_paths.any? { |p| p[:repository].id == yum_repo.id },
+             "Cross-type validation should include non-docker repositories"
     end
 
     def test_unique_environments

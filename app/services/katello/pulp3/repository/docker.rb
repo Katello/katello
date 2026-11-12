@@ -114,6 +114,50 @@ module Katello
         def legacy_container_push?
           root.is_container_push && repository_reference&.repository_href&.include?('/container/container-push/')
         end
+
+        def refresh_distributions
+          dist_ref = distribution_reference
+
+          # For docker repos, check distribution_reference FIRST to handle path changes
+          # from docker_upstream_name or registry_name_pattern updates
+          dist = if dist_ref
+                   read_distribution(dist_ref.href)
+                 end
+
+          # Fall back to lookup by path if no reference or distribution not found
+          dist ||= lookup_distributions(base_path: repo.container_repository_name).first
+
+          if dist && !dist_ref
+            save_distribution_references([dist.pulp_href])
+            return update_distribution
+          end
+
+          if dist && dist_ref
+            # Update the saved reference if href changed
+            if dist.pulp_href != dist_ref.href
+              dist_ref.destroy
+              save_distribution_references([dist.pulp_href])
+            end
+            return update_distribution
+          end
+
+          # Since we got this far, we need to create a new distribution
+          # Note: the distribution reference can't be saved yet because distribution creation is async
+          begin
+            create_distribution(relative_path)
+          rescue api.client_module::ApiError => e
+            # If a distribution with this exact base_path already exists (e.g., from a prior failed operation),
+            # fetch it and retry as an update instead of failing.
+            # Note: We do NOT catch overlap errors here - those should propagate up as validation errors.
+            if e.message.include?("\"base_path\":[\"This field must be unique.\"]")
+              dist = lookup_distributions(base_path: repo.container_repository_name).first
+              save_distribution_references([dist.pulp_href])
+              return update_distribution
+            else
+              raise e
+            end
+          end
+        end
       end
     end
   end
