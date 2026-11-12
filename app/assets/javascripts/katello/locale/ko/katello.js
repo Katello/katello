@@ -1340,9 +1340,6 @@
       "Clean Backend Objects": [
         "백엔드 객체 정리"
       ],
-      "Clear": [
-        "삭제"
-      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "이전 등록을 모두 지우고 --force로 subscription-manager를 실행합니다."
       ],
@@ -1771,6 +1768,9 @@
       ],
       "Content view version is empty or content counts are not up to date": [
         "콘텐츠 뷰 버전이 비어 있거나 콘텐츠 수가 최신 상태가 아닙니다."
+      ],
+      "Content view versions containing this file will appear here.": [
+        ""
       ],
       "Content views": [
         "콘텐츠 뷰"
@@ -4274,6 +4274,9 @@
       "Library lifecycle environments may not be deleted.": [
         "라이브러라 라이프사이클 환경은 삭제할 수 없습니다. "
       ],
+      "Library repositories": [
+        ""
+      ],
       "Library repository id to restrict comparisons to": [
         "비교를 제한하기 위한 라이브러리 리포지터리 ID "
       ],
@@ -4297,9 +4300,6 @@
       ],
       "Lifecycle Environments": [
         "라이프사이클 환경 "
-      ],
-      "Lifecycle environment": [
-        "라이프사이클 환경"
       ],
       "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
         "라이프사이클 환경 %s에 연결된 호스트 그룹이 있습니다. 이 라이프사이클 환경을 삭제하기 전에 연결된 호스트 그룹을 변경하거나 제거하십시오."
@@ -5063,6 +5063,9 @@
       "No content views available for the selected lifecycle environment": [
         "선택한 라이프사이클 환경에 사용할 수 있는 콘텐츠 뷰가 없습니다"
       ],
+      "No content views contain this file": [
+        ""
+      ],
       "No content views to add yet": [
         "아직 추가할 콘텐츠 뷰가 없습니다."
       ],
@@ -5177,6 +5180,9 @@
       "No matching alternate content sources found": [
         "일치하는 대체 콘텐츠 소스를 찾을 수 없습니다."
       ],
+      "No matching content view versions found": [
+        ""
+      ],
       "No matching content views found": [
         "일치하는 콘텐츠 뷰가 없습니다."
       ],
@@ -5272,9 +5278,6 @@
       ],
       "No recently synced products": [
         "최근에 동기화된 제품 없음"
-      ],
-      "No recurring logic tied to the sync plan.": [
-        "동기화 계획에 반복되는 논리가 없습니다."
       ],
       "No repositories added yet": [
         "아직 추가된 리포지토리가 없습니다"
@@ -5514,7 +5517,7 @@
         "고아 리소스 정리(orphan cleanup) 중 일부 Pulp 저장소 버전을 삭제하지 못했습니다. 자세한 내용은 로그를 확인하세요."
       ],
       "Orphaned": [
-        ""
+        "종속된 패키지가 없음"
       ],
       "Orphaned Content Protection Time": [
         "Orphaned Content 보호 시간"
@@ -5917,6 +5920,9 @@
       ],
       "Publish new version - ": [
         "새로운 버전 게시 - "
+      ],
+      "Published": [
+        ""
       ],
       "Published date": [
         "게시 날짜"
@@ -9973,9 +9979,6 @@
       ],
       "view content view tabs.": [
         "콘텐츠 뷰 탭에처 참조."
-      ],
-      "view tasks button": [
-        "작업 보기 버튼"
       ],
       "waiting for %s to finish the task": [
         "%s 작업 완료 대기 중"

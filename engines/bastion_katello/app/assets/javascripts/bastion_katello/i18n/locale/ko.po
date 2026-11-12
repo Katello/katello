@@ -1,14 +1,14 @@
 # Translators:
 # 진선재, 2022
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2023
-# Bryan Kearney <bryan.kearney@gmail.com>, 2023
 # Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
 # Ondřej Gajdušek, 2026
+# Bryan Kearney <bryan.kearney@gmail.com>, 2026
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: Ondřej Gajdušek, 2026\n"
+"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2026\n"
 "Language-Team: Korean (https://app.transifex.com/foreman/teams/114/ko/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,6 +18,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
 msgid "-- select an interval --"
 msgstr "-- 간격 선택 --"
+
+#: app/assets/javascripts/bastion_katello/products/views/products.html
+msgid "(Orphaned)"
+msgstr "(종속된 패키지가 없음)"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ deb.hosts_applicable_count }} Host(s)"
@@ -88,8 +92,8 @@ msgid "{{ product.active_task_count }}"
 msgstr "{{ product.active_task_count }}"
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
-msgid "{{ product.name }}"
-msgstr "{{ product.name }}"
+msgid "{{ product.name }} <span ng-show=\"product.orphaned\">(Orphaned)</span>"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-repositories.html
 msgid "{{ repo.last_sync_words }} ago"
@@ -3100,9 +3104,9 @@ msgstr "treeinfo 파일이나 기타 kickstart 컨텐츠가 업스트림 리포�
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
 msgid ""
-"Selecting \"Complete Sync\" will cause only yum/deb repositories of the "
-"selected product to be synced."
-msgstr "\"동기화 완료\"를 선택하면 선택한 제품의 yum/deb 리포지터리만 동기화됩니다."
+"Selecting \"Complete Sync\" will cause only yum/deb/file repositories of the"
+" selected product to be synced."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -3287,11 +3291,9 @@ msgstr "동기화가 활성화됨 "
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
 msgid ""
 "Sync even if the upstream metadata appears to have no change. This option is"
-" only relevant for yum/deb repositories and will take longer than an "
+" only relevant for yum/deb/file repositories and will take longer than an "
 "optimized sync. Choose this option if:"
 msgstr ""
-"업스트림 메타데이터가 변경되지 않은 것처럼 보이더라도 동기화합니다. 이 옵션은 yum/deb 리포지토리에만 관련되며 최적화된 동기화보다 "
-"시간이 오래 걸립니다. 다음과 같은 경우 이 옵션을 선택합니다:"
 
 #: app/assets/javascripts/bastion_katello/products/details/partials/sync-status.html
 msgid "Sync Interval"

@@ -1344,9 +1344,6 @@
       "Clean Backend Objects": [
         ""
       ],
-      "Clear": [
-        ""
-      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -1774,6 +1771,9 @@
         ""
       ],
       "Content view version is empty or content counts are not up to date": [
+        ""
+      ],
+      "Content view versions containing this file will appear here.": [
         ""
       ],
       "Content views": [
@@ -4280,6 +4280,9 @@
       "Library lifecycle environments may not be deleted.": [
         "Ambientes de ciclo de vida de biblioteca podem não ser removidos."
       ],
+      "Library repositories": [
+        ""
+      ],
       "Library repository id to restrict comparisons to": [
         "ID de repositório de biblioteca para restringir comparações com"
       ],
@@ -4303,9 +4306,6 @@
       ],
       "Lifecycle Environments": [
         "Ambientes de ciclo de vida"
-      ],
-      "Lifecycle environment": [
-        ""
       ],
       "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
         ""
@@ -5069,6 +5069,9 @@
       "No content views available for the selected lifecycle environment": [
         ""
       ],
+      "No content views contain this file": [
+        ""
+      ],
       "No content views to add yet": [
         ""
       ],
@@ -5183,6 +5186,9 @@
       "No matching alternate content sources found": [
         ""
       ],
+      "No matching content view versions found": [
+        ""
+      ],
       "No matching content views found": [
         "Nenhuma visualização de conteúdo correspondente encontrada"
       ],
@@ -5278,9 +5284,6 @@
       ],
       "No recently synced products": [
         "Nenhum produto sincronizado recentemente"
-      ],
-      "No recurring logic tied to the sync plan.": [
-        "Nenhuma lógica recorrente ligada ao plano de sincronização."
       ],
       "No repositories added yet": [
         ""
@@ -5922,6 +5925,9 @@
         ""
       ],
       "Publish new version - ": [
+        ""
+      ],
+      "Published": [
         ""
       ],
       "Published date": [
@@ -9981,9 +9987,6 @@
         "via execução remota"
       ],
       "view content view tabs.": [
-        ""
-      ],
-      "view tasks button": [
         ""
       ],
       "waiting for %s to finish the task": [

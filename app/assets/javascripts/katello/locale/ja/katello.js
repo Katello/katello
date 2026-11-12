@@ -1340,9 +1340,6 @@
       "Clean Backend Objects": [
         "バックエンドオブジェクトのクリーニング"
       ],
-      "Clear": [
-        "消去"
-      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "以前の登録をすべてクリアし、--force を指定して subscription-manager を実行します。"
       ],
@@ -1771,6 +1768,9 @@
       ],
       "Content view version is empty or content counts are not up to date": [
         "コンテンツビューのバージョンが空であるか、コンテンツ数が最新ではありません"
+      ],
+      "Content view versions containing this file will appear here.": [
+        ""
       ],
       "Content views": [
         "コンテンツビュー"
@@ -4274,6 +4274,9 @@
       "Library lifecycle environments may not be deleted.": [
         "ライブラリーのライフサイクル環境は削除できません。"
       ],
+      "Library repositories": [
+        ""
+      ],
       "Library repository id to restrict comparisons to": [
         "比較を制限するためのライブラリーのリポジトリー ID"
       ],
@@ -4296,9 +4299,6 @@
         "ライフサイクル環境ラベル"
       ],
       "Lifecycle Environments": [
-        "ライフサイクル環境"
-      ],
-      "Lifecycle environment": [
         "ライフサイクル環境"
       ],
       "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
@@ -5063,6 +5063,9 @@
       "No content views available for the selected lifecycle environment": [
         "選択したライフサイクル環境に利用可能なコンテンツビューはありません"
       ],
+      "No content views contain this file": [
+        ""
+      ],
       "No content views to add yet": [
         "追加するコンテンツビューはまだありません"
       ],
@@ -5177,6 +5180,9 @@
       "No matching alternate content sources found": [
         "一致する代替コンテンツソースが見つかりません"
       ],
+      "No matching content view versions found": [
+        ""
+      ],
       "No matching content views found": [
         "一致するコンテンツビューが見つかりません"
       ],
@@ -5272,9 +5278,6 @@
       ],
       "No recently synced products": [
         "最近同期された製品はありません"
-      ],
-      "No recurring logic tied to the sync plan.": [
-        "同期プランに関連付けられた再帰論理はありません。"
       ],
       "No repositories added yet": [
         "追加するリポジトリーがまだありません"
@@ -5514,7 +5517,7 @@
         "孤立項目のクリーンアップで、一部の Pulp リポジトリーバージョンの削除に失敗しました。詳細はログを確認してください。"
       ],
       "Orphaned": [
-        ""
+        "孤立"
       ],
       "Orphaned Content Protection Time": [
         "単独コンテンツの保護時間"
@@ -5917,6 +5920,9 @@
       ],
       "Publish new version - ": [
         "新規バージョンの公開 - "
+      ],
+      "Published": [
+        ""
       ],
       "Published date": [
         "公開日"
@@ -9973,9 +9979,6 @@
       ],
       "view content view tabs.": [
         "コンテンツビュータブを確認してください。"
-      ],
-      "view tasks button": [
-        "タスクボタンの表示"
       ],
       "waiting for %s to finish the task": [
         "%s がタスクを終了するまで待機"
