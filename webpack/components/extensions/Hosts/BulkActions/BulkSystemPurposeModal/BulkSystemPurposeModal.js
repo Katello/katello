@@ -17,10 +17,7 @@ import { STATUS } from 'foremanReact/constants';
 import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import api from '../../../../../services/api';
-import {
-  selectOrganization,
-  selectOrganizationStatus,
-} from '../../../HostDetails/Cards/SystemPurposeCard/SystemPurposeSelectors';
+import { selectOrganization } from '../../../HostDetails/Cards/SystemPurposeCard/SystemPurposeSelectors';
 import { getOrganization } from '../../../HostDetails/Cards/SystemPurposeCard/SystemPurposeActions';
 import {
   defaultUsages,
@@ -56,7 +53,7 @@ const BulkSystemPurposeModal = ({
 
   const dispatch = useDispatch();
 
-  const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
+  const orgStatus = useSelector(state => selectAPIStatus(state, `ORGANIZATION_${orgId}`));
   const organizationDetails = useSelector(state => selectOrganization(state, orgId));
   const orgDetails = propsToCamelCase(organizationDetails ?? { systemPurposes: {} });
   const availableSyspurposeAttributes = orgDetails?.systemPurposes ?? {};
@@ -73,10 +70,10 @@ const BulkSystemPurposeModal = ({
     sysPurposeStatus === STATUS.PENDING || releaseVersionStatus === STATUS.PENDING;
 
   useEffect(() => {
-    if (orgId && orgStatus !== STATUS.RESOLVED) {
+    if (isOpen && orgId && !orgStatus) {
       dispatch(getOrganization({ orgId }));
     }
-  }, [orgId, orgStatus, dispatch]);
+  }, [isOpen, orgId, orgStatus, dispatch]);
 
   useEffect(() => {
     let canceled = false;
