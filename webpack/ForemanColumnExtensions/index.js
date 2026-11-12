@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   BugIcon,
   SecurityIcon,
@@ -10,6 +11,7 @@ import { Link } from 'react-router-dom';
 import {
   Flex,
   FlexItem,
+  Icon,
   Popover,
   Badge,
   Button,
@@ -19,60 +21,119 @@ import {
   DescriptionListTerm as Dt,
   Text,
   TextVariants,
+  Tooltip,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import RelativeDateTime from 'foremanReact/components/common/dates/RelativeDateTime';
+import { TableText } from '@patternfly/react-table';
 import { ContentViewEnvironmentDisplay } from '../components/extensions/HostDetails/Cards/ContentViewDetailsCard/ContentViewDetailsCard';
-import { truncate } from '../utils/helpers';
 import RepoIcon from '../scenes/ContentViews/Details/Repositories/RepoIcon';
 import FontAwesomeImageModeIcon from '../components/extensions/Hosts/FontAwesomeImageModeIcon';
 import './index.scss';
+
+const inactiveIconClass = 'pf-v5-u-color-200';
+
+const ErrataCount = ({
+  label, icon: CountIcon, count, activeClassName, activeColor, to,
+}) => (
+  <FlexItem>
+    <Flex
+      spaceItems={{ default: 'spaceItemsXs' }}
+      alignItems={{ default: 'alignItemsCenter' }}
+      flexWrap={{ default: 'nowrap' }}
+    >
+      <FlexItem>
+        <Tooltip content={label}>
+          <Icon
+            isInline
+            className={count > 0 ? activeClassName : inactiveIconClass}
+            style={count > 0 && activeColor ? { color: activeColor } : undefined}
+          >
+            <CountIcon />
+          </Icon>
+        </Tooltip>
+      </FlexItem>
+      <FlexItem>
+        <Link to={to}>{count}</Link>
+      </FlexItem>
+    </Flex>
+  </FlexItem>
+);
+
+ErrataCount.propTypes = {
+  label: PropTypes.string.isRequired,
+  icon: PropTypes.elementType.isRequired,
+  count: PropTypes.number,
+  activeClassName: PropTypes.string,
+  activeColor: PropTypes.string,
+  to: PropTypes.string.isRequired,
+};
+
+ErrataCount.defaultProps = {
+  count: 0,
+  activeClassName: undefined,
+  activeColor: undefined,
+};
 
 const hostsIndexColumnExtensions = [
   {
     columnName: 'bootc_booted_image',
     title: (
-      <Text title={__('Image mode / package mode')} ouiaId="image-mode-column-title" className="pf-c-table__text">{__('Type')}</Text>
+      // Text has no span variant. A heading here would widen the column.
+      <span data-ouia-component-id="image-mode-column-title">{__('Type')}</span>
     ),
+    headerTooltip: __('Image mode / package mode'),
+    headerModifier: 'fitContent',
+    className: 'hosts-index-type-column',
     wrapper: (hostDetails) => {
       const imageMode = hostDetails?.content_facet_attributes?.bootc_booted_image;
       const digest = hostDetails?.content_facet_attributes?.bootc_booted_digest;
-      return (
-        <span className={imageMode ? 'image-mode-column-td-icon' : 'package-mode-column-td-icon'}>
-          {imageMode ?
-            <Popover
-              id="image-mode-tooltip"
-              className="image-mode-tooltip"
-              maxWidth="74rem"
-              headerContent={hostDetails.display_name}
-              bodyContent={
-                <Flex direction={{ default: 'column' }}>
+      return imageMode ? (
+        <Popover
+          id="image-mode-tooltip"
+          className="image-mode-tooltip"
+          maxWidth="74rem"
+          headerContent={hostDetails.display_name}
+          bodyContent={
+            <Flex direction={{ default: 'column' }}>
+              <FlexItem>
+                <Flex direction={{ default: 'row' }} alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
                   <FlexItem>
-                    <Flex direction={{ default: 'row' }} alignItems={{ default: 'alignItemsCenter' }}>
-                      <FlexItem>
-                        <FontAwesomeImageModeIcon />
-                      </FlexItem>
-                      <Text ouiaId="image-mode-popover-h4" component={TextVariants.h4}>{__('Image-mode host')}</Text>
-                    </Flex>
+                    <FontAwesomeImageModeIcon />
                   </FlexItem>
-                  <DescriptionList isCompact isHorizontal>
-                    <DescriptionListGroup>
-                      <Dt>{__('Running image')}</Dt>
-                      <Dd>{hostDetails.content_facet_attributes.bootc_booted_image}</Dd>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <Dt>{__('Digest')}</Dt>
-                      <Dd>{digest}</Dd>
-                    </DescriptionListGroup>
-                  </DescriptionList>
+                  <FlexItem>
+                    <Text component={TextVariants.h4} ouiaId="image-mode-popover-h4">
+                      {__('Image-mode host')}
+                    </Text>
+                  </FlexItem>
                 </Flex>
-              }
-            >
-              <FontAwesomeImageModeIcon title={__('Image mode')} />
-            </Popover>
-            : <span style={{ color: 'var(--pf-v5-global--palette--black-600)' }}><RepoIcon type="yum" customTooltip={__('Package mode')} /></span>
+              </FlexItem>
+              <DescriptionList isCompact isHorizontal>
+                <DescriptionListGroup>
+                  <Dt>{__('Running image')}</Dt>
+                  <Dd>{hostDetails.content_facet_attributes.bootc_booted_image}</Dd>
+                </DescriptionListGroup>
+                <DescriptionListGroup>
+                  <Dt>{__('Digest')}</Dt>
+                  <Dd>{digest}</Dd>
+                </DescriptionListGroup>
+              </DescriptionList>
+            </Flex>
           }
-        </span>
+        >
+          <Button
+            variant="plain"
+            className="pf-m-no-padding"
+            aria-label={__('Image mode')}
+            ouiaId={`image-mode-popover-trigger-${hostDetails.id}`}
+          >
+            <FontAwesomeImageModeIcon margin="0" title={__('Image mode')} />
+          </Button>
+        </Popover>
+      ) : (
+        <Icon isInline className={inactiveIconClass}>
+          <RepoIcon type="yum" customTooltip={__('Package mode')} />
+        </Icon>
       );
     },
     weight: 35, // between power status (0) and name (50)
@@ -91,6 +152,7 @@ const hostsIndexColumnExtensions = [
   {
     columnName: 'installable_updates',
     title: __('Installable updates'),
+    cellModifier: 'nowrap',
     wrapper: (hostDetails) => {
       const errataCounts = hostDetails?.content_facet_attributes?.errata_counts;
       const registered = !!hostDetails?.subscription_facet_attributes?.uuid;
@@ -100,47 +162,48 @@ const hostsIndexColumnExtensions = [
       if (!registered) return '—';
       const hostErrataUrl = type => `hosts/${hostDetails?.name}#/Content/errata?type=${type}&show=installable`;
       return (
-        <Flex alignContent={{ default: 'alignContentSpaceBetween' }}>
+        <Flex
+          spaceItems={{ default: 'spaceItemsSm' }}
+          alignItems={{ default: 'alignItemsCenter' }}
+          flexWrap={{ default: 'nowrap' }}
+        >
           {security !== undefined &&
-            <FlexItem>
-              <span style={{ marginRight: '0.25rem' }} title={__('Security')}>
-                <SecurityIcon color={security > 0 ? 'var(--pf-v5-global--primary-color--100)' : 'var(--pf-v5-global--palette--black-600)'} />
-              </span>
-              <Link to={hostErrataUrl('security')}>{security}</Link>
-            </FlexItem>
+            <ErrataCount
+              label={__('Security')}
+              icon={SecurityIcon}
+              count={security}
+              activeClassName="pf-v5-u-primary-color-100"
+              to={hostErrataUrl('security')}
+            />
           }
           {bugfix !== undefined &&
-            <FlexItem>
-              <span style={{ marginRight: '0.25rem' }} title={__('Bugfix')}>
-                <BugIcon color={bugfix > 0 ? 'var(--pf-v5-global--palette--blue-100)' : 'var(--pf-v5-global--palette--black-600)'} />
-              </span>
-              <Link to={hostErrataUrl('bugfix')}>{bugfix}</Link>
-            </FlexItem>
+            <ErrataCount
+              label={__('Bugfix')}
+              icon={BugIcon}
+              count={bugfix}
+              activeColor="var(--pf-v5-global--palette--blue-100)"
+              to={hostErrataUrl('bugfix')}
+            />
           }
           {enhancement !== undefined &&
-            <FlexItem>
-              <span style={{ marginRight: '0.25rem' }} title={__('Enhancement')}>
-                <EnhancementIcon color={enhancement > 0 ? 'var(--pf-v5-global--palette--blue-500)' : 'var(--pf-v5-global--palette--black-600)'} />
-              </span>
-              <Link to={hostErrataUrl('enhancement')}>{enhancement}</Link>
-            </FlexItem>
+            <ErrataCount
+              label={__('Enhancement')}
+              icon={EnhancementIcon}
+              count={enhancement}
+              activeColor="var(--pf-v5-global--palette--blue-500)"
+              to={hostErrataUrl('enhancement')}
+            />
           }
           {(upgradableRpmCount !== undefined || upgradableDebCount !== undefined) &&
-            <FlexItem>
-              <span style={{ marginRight: '0.25rem' }} title={__('Packages')}>
-                <PackageIcon color={
-                  (hostDetails?.operatingsystem_family === 'Debian' ? upgradableDebCount : upgradableRpmCount) > 0
-                    ? 'var(--pf-v5-global--primary-color--100)'
-                    : 'var(--pf-v5-global--palette--black-600)'
-                }
-                />
-              </span>
-              { hostDetails?.operatingsystem_family === 'Debian' ?
-                <Link to={`hosts/${hostDetails?.name}#/Content/Debs?status=Upgradable`}>{upgradableDebCount}</Link>
-                :
-                <Link to={`hosts/${hostDetails?.name}#/Content/Packages?status=Upgradable`}>{upgradableRpmCount}</Link>
-              }
-            </FlexItem>
+            <ErrataCount
+              label={__('Packages')}
+              icon={PackageIcon}
+              count={hostDetails?.operatingsystem_family === 'Debian' ? upgradableDebCount : upgradableRpmCount}
+              activeClassName="pf-v5-u-primary-color-100"
+              to={hostDetails?.operatingsystem_family === 'Debian'
+                ? `hosts/${hostDetails?.name}#/Content/Debs?status=Upgradable`
+                : `hosts/${hostDetails?.name}#/Content/Packages?status=Upgradable`}
+            />
           }
         </Flex>
       );
@@ -162,38 +225,42 @@ const hostsIndexColumnExtensions = [
   {
     columnName: 'content_view_environments',
     title: __('Content view environments'),
+    cellModifier: 'truncate',
     wrapper: (hostDetails) => {
       const contentViewEnvironments =
         hostDetails?.content_facet_attributes?.content_view_environments ?? [];
       if (contentViewEnvironments.length === 0) return '—'; // don't show popover
+      const labels = contentViewEnvironments.map(cvEnv => cvEnv.label).join(', ');
       return (
-        <Flex>
+        <Flex className="pf-v5-u-min-width pf-v5-u-w-100" flexWrap={{ default: 'nowrap' }}>
           {contentViewEnvironments.length > 1 &&
             <FlexItem>
               <Badge isRead>{contentViewEnvironments.length}</Badge>
             </FlexItem>
           }
-          <Popover
-            id="content-view-environments-tooltip"
-            className="content-view-environments-tooltip"
-            maxWidth="34rem"
-            headerContent={hostDetails.display_name}
-            bodyContent={
-              <Flex direction={{ default: 'column' }}>
-                {contentViewEnvironments.map(env => (
-                  <ContentViewEnvironmentDisplay
-                    key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
-                    contentView={env.content_view}
-                    lifecycleEnvironment={env.lifecycle_environment}
-                  />
-                ))}
-              </Flex>
-            }
-          >
-            <Button variant="plain" style={{ padding: 0, color: 'inherit' }} ouiaId="content-view-environments-button">
-              {truncate(contentViewEnvironments.map(cvEnv => cvEnv.label).join(', '), 35)}
-            </Button>
-          </Popover>
+          <FlexItem className="pf-v5-u-min-width" flex={{ default: 'flex_1' }}>
+            <Popover
+              id="content-view-environments-tooltip"
+              className="content-view-environments-tooltip"
+              maxWidth="34rem"
+              headerContent={hostDetails.display_name}
+              bodyContent={
+                <Flex direction={{ default: 'column' }}>
+                  {contentViewEnvironments.map(env => (
+                    <ContentViewEnvironmentDisplay
+                      key={`${env.lifecycle_environment.name}-${env.content_view.name}`}
+                      contentView={env.content_view}
+                      lifecycleEnvironment={env.lifecycle_environment}
+                    />
+                  ))}
+                </Flex>
+              }
+            >
+              <Button variant="plain" className="pf-m-no-padding pf-v5-u-w-100 pf-v5-u-color-100 pf-v5-u-text-align-left" ouiaId="content-view-environments-button">
+                <TableText className="hosts-index-truncated-text" wrapModifier="truncate">{labels}</TableText>
+              </Button>
+            </Popover>
+          </FlexItem>
         </Flex>
       );
     },
@@ -203,6 +270,7 @@ const hostsIndexColumnExtensions = [
   {
     columnName: 'content_source',
     title: __('Content source'),
+    cellModifier: 'breakWord',
     wrapper: (hostDetails) => {
       const contentSource =
         hostDetails?.content_facet_attributes?.content_source_name;
@@ -224,42 +292,50 @@ const hostsIndexColumnExtensions = [
   {
     columnName: 'host_collections',
     title: __('Host collections'),
+    cellModifier: 'truncate',
     wrapper: (hostDetails) => {
       const hostCollections = hostDetails?.host_collections ?? [];
       if (hostCollections.length === 0) return '—';
 
       // Show count badge if more than one collection
       if (hostCollections.length > 1) {
+        const labels = hostCollections.map(hc => hc.name).join(', ');
         return (
-          <Flex>
+          <Flex className="pf-v5-u-min-width pf-v5-u-w-100" flexWrap={{ default: 'nowrap' }}>
             <FlexItem>
               <Badge isRead>{hostCollections.length}</Badge>
             </FlexItem>
-            <Popover
-              id="host-collections-tooltip"
-              className="host-collections-tooltip"
-              maxWidth="34rem"
-              headerContent={hostDetails.display_name}
-              bodyContent={
-                <Flex direction={{ default: 'column' }}>
-                  {hostCollections.map((hc, index) => (
-                    <FlexItem key={hc.id}>
-                      <Text component={TextVariants.p} ouiaId={`host-collection-name-${index}`}>{hc.name}</Text>
-                    </FlexItem>
-                  ))}
-                </Flex>
-              }
-            >
-              <Button variant="plain" style={{ padding: 0, color: 'inherit' }} ouiaId="host-collections-button">
-                {truncate(hostCollections.map(hc => hc.name).join(', '), 35)}
-              </Button>
-            </Popover>
+            <FlexItem className="pf-v5-u-min-width" flex={{ default: 'flex_1' }}>
+              <Popover
+                id="host-collections-tooltip"
+                className="host-collections-tooltip"
+                maxWidth="34rem"
+                headerContent={hostDetails.display_name}
+                bodyContent={
+                  <Flex direction={{ default: 'column' }}>
+                    {hostCollections.map((hc, index) => (
+                      <FlexItem key={hc.id}>
+                        <Text component={TextVariants.p} ouiaId={`host-collection-name-${index}`}>
+                          {hc.name}
+                        </Text>
+                      </FlexItem>
+                    ))}
+                  </Flex>
+                }
+              >
+                <Button variant="plain" className="pf-m-no-padding pf-v5-u-w-100 pf-v5-u-color-100 pf-v5-u-text-align-left" ouiaId="host-collections-button">
+                  <TableText className="hosts-index-truncated-text" wrapModifier="truncate">{labels}</TableText>
+                </Button>
+              </Popover>
+            </FlexItem>
           </Flex>
         );
       }
 
       // Just show the name if only one collection
-      return truncate(hostCollections[0].name, 35);
+      return (
+        <TableText wrapModifier="truncate">{hostCollections[0].name}</TableText>
+      );
     },
     weight: 2700,
     isSorted: false,
