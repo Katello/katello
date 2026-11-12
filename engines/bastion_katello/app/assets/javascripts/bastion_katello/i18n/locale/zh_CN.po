@@ -2,14 +2,14 @@
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2017
 # tim123, 2020
 # Bryan Kearney <bryan.kearney@gmail.com>, 2023
-# Amit Upadhye <aupadhye@redhat.com>, 2025
 # Ewoud Kohl van Wijngaarden <ewoud+transifex@kohlvanwijngaarden.nl>, 2025
 # Ondřej Gajdušek, 2026
+# Amit Upadhye <aupadhye@redhat.com>, 2026
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: Ondřej Gajdušek, 2026\n"
+"Last-Translator: Amit Upadhye <aupadhye@redhat.com>, 2026\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/foreman/teams/114/zh_CN/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,6 +19,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
 msgid "-- select an interval --"
 msgstr "-- 选择间隔 --"
+
+#: app/assets/javascripts/bastion_katello/products/views/products.html
+msgid "(Orphaned)"
+msgstr "（孤立）"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 msgid "{{ deb.hosts_applicable_count }} Host(s)"
@@ -89,8 +93,8 @@ msgid "{{ product.active_task_count }}"
 msgstr "{{ product.active_task_count }}"
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
-msgid "{{ product.name }}"
-msgstr "{{ product.name }}"
+msgid "{{ product.name }} <span ng-show=\"product.orphaned\">(Orphaned)</span>"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-repositories.html
 msgid "{{ repo.last_sync_words }} ago"
@@ -3066,9 +3070,9 @@ msgstr "如果 treeinfo 文件或其他 kickstart 内容无法从上游存储库
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
 msgid ""
-"Selecting \"Complete Sync\" will cause only yum/deb repositories of the "
-"selected product to be synced."
-msgstr "选择\"完成同步\"将导致仅所选产品的 yum/deb 存储库被同步。"
+"Selecting \"Complete Sync\" will cause only yum/deb/file repositories of the"
+" selected product to be synced."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -3251,9 +3255,9 @@ msgstr "已启用同步"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
 msgid ""
 "Sync even if the upstream metadata appears to have no change. This option is"
-" only relevant for yum/deb repositories and will take longer than an "
+" only relevant for yum/deb/file repositories and will take longer than an "
 "optimized sync. Choose this option if:"
-msgstr "即使上游元数据没有变化，也要同步。此选项仅与 yum/deb 仓库相关，并且比优化的同步花费的时间更长。如果出现以下情况，请选择此选项："
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/partials/sync-status.html
 msgid "Sync Interval"

@@ -1341,9 +1341,6 @@
       "Clean Backend Objects": [
         ""
       ],
-      "Clear": [
-        ""
-      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -1771,6 +1768,9 @@
         ""
       ],
       "Content view version is empty or content counts are not up to date": [
+        ""
+      ],
+      "Content view versions containing this file will appear here.": [
         ""
       ],
       "Content views": [
@@ -4277,6 +4277,9 @@
       "Library lifecycle environments may not be deleted.": [
         "不可刪除函式庫生命週期環境。"
       ],
+      "Library repositories": [
+        ""
+      ],
       "Library repository id to restrict comparisons to": [
         "欲限制比較的函式庫軟體庫 ID"
       ],
@@ -4300,9 +4303,6 @@
       ],
       "Lifecycle Environments": [
         "生命週期環境"
-      ],
-      "Lifecycle environment": [
-        ""
       ],
       "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
         ""
@@ -5066,6 +5066,9 @@
       "No content views available for the selected lifecycle environment": [
         ""
       ],
+      "No content views contain this file": [
+        ""
+      ],
       "No content views to add yet": [
         ""
       ],
@@ -5180,6 +5183,9 @@
       "No matching alternate content sources found": [
         ""
       ],
+      "No matching content view versions found": [
+        ""
+      ],
       "No matching content views found": [
         ""
       ],
@@ -5275,9 +5281,6 @@
       ],
       "No recently synced products": [
         "沒有最近同步的產品。"
-      ],
-      "No recurring logic tied to the sync plan.": [
-        ""
       ],
       "No repositories added yet": [
         ""
@@ -5919,6 +5922,9 @@
         ""
       ],
       "Publish new version - ": [
+        ""
+      ],
+      "Published": [
         ""
       ],
       "Published date": [
@@ -9978,9 +9984,6 @@
         "透過遠端執行"
       ],
       "view content view tabs.": [
-        ""
-      ],
-      "view tasks button": [
         ""
       ],
       "waiting for %s to finish the task": [

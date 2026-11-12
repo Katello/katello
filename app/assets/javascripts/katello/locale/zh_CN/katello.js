@@ -1340,9 +1340,6 @@
       "Clean Backend Objects": [
         "清理后端对象"
       ],
-      "Clear": [
-        "清除"
-      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "清除之前的所有注册，并使用 --force 运行 subscription-manager。"
       ],
@@ -1771,6 +1768,9 @@
       ],
       "Content view version is empty or content counts are not up to date": [
         "内容视图版本为空，或者内容计数不是最新的"
+      ],
+      "Content view versions containing this file will appear here.": [
+        ""
       ],
       "Content views": [
         "内容视图"
@@ -4274,6 +4274,9 @@
       "Library lifecycle environments may not be deleted.": [
         "库生命周期环境可能无法删除。"
       ],
+      "Library repositories": [
+        ""
+      ],
       "Library repository id to restrict comparisons to": [
         "欲限制比較的函式庫軟體庫 ID"
       ],
@@ -4296,9 +4299,6 @@
         "生命周期环境 ID"
       ],
       "Lifecycle Environments": [
-        "生命周期环境"
-      ],
-      "Lifecycle environment": [
         "生命周期环境"
       ],
       "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
@@ -5063,6 +5063,9 @@
       "No content views available for the selected lifecycle environment": [
         "没有可用于所选生命周期环境的内容视图"
       ],
+      "No content views contain this file": [
+        ""
+      ],
       "No content views to add yet": [
         "还没有要添加的内容视图"
       ],
@@ -5177,6 +5180,9 @@
       "No matching alternate content sources found": [
         "没有找到匹配的备用内容源"
       ],
+      "No matching content view versions found": [
+        ""
+      ],
       "No matching content views found": [
         "找不到匹配的内容视图"
       ],
@@ -5272,9 +5278,6 @@
       ],
       "No recently synced products": [
         "没有最近同步的产品"
-      ],
-      "No recurring logic tied to the sync plan.": [
-        "没有与同步计划相关的重复逻辑。"
       ],
       "No repositories added yet": [
         "还没有添加仓库"
@@ -5514,7 +5517,7 @@
         "对孤立项进行清理时无法删除一些 Pulp 仓库版本。请检查日志以了解更多详细信息。"
       ],
       "Orphaned": [
-        ""
+        "Orphaned"
       ],
       "Orphaned Content Protection Time": [
         "孤立的内容保护时间"
@@ -5917,6 +5920,9 @@
       ],
       "Publish new version - ": [
         "发布新版本 - "
+      ],
+      "Published": [
+        ""
       ],
       "Published date": [
         "发布的日期"
@@ -9973,9 +9979,6 @@
       ],
       "view content view tabs.": [
         "查看内容视图标签页。"
-      ],
-      "view tasks button": [
-        "查看任务按钮"
       ],
       "waiting for %s to finish the task": [
         "等待 %s 完成任务"

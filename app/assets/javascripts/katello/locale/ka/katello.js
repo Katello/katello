@@ -1342,9 +1342,6 @@
       "Clean Backend Objects": [
         ""
       ],
-      "Clear": [
-        ""
-      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         ""
       ],
@@ -1772,6 +1769,9 @@
         "შემცველობის ხედის ვერსია ცარიელია"
       ],
       "Content view version is empty or content counts are not up to date": [
+        ""
+      ],
+      "Content view versions containing this file will appear here.": [
         ""
       ],
       "Content views": [
@@ -4278,6 +4278,9 @@
       "Library lifecycle environments may not be deleted.": [
         "ბიბლიოთეკის სიცოცხლის ციკლის გარემოს წაშლა შეუძლებელია."
       ],
+      "Library repositories": [
+        ""
+      ],
       "Library repository id to restrict comparisons to": [
         ""
       ],
@@ -4301,9 +4304,6 @@
       ],
       "Lifecycle Environments": [
         "ცხოვრების ციკლის გარემოები"
-      ],
-      "Lifecycle environment": [
-        "ცხოვრების ციკლის გარემო"
       ],
       "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
         ""
@@ -5067,6 +5067,9 @@
       "No content views available for the selected lifecycle environment": [
         ""
       ],
+      "No content views contain this file": [
+        ""
+      ],
       "No content views to add yet": [
         "დასამატებელი შემცველობის ხედების გარეშე"
       ],
@@ -5181,6 +5184,9 @@
       "No matching alternate content sources found": [
         "შესაბამის ალტერნატიული შემცველობის წყარო ნაპოვნი არაა"
       ],
+      "No matching content view versions found": [
+        ""
+      ],
       "No matching content views found": [
         "შესაბამისი შემცველბის ხედები ნაპოვნი არაა"
       ],
@@ -5276,9 +5282,6 @@
       ],
       "No recently synced products": [
         "ახლახანს სინქრონიზებული პროდუქტების გარეშე"
-      ],
-      "No recurring logic tied to the sync plan.": [
-        "სინქრონიზაციის გეგმაზე გამეორებადი ლოგიკა მიბმული არაა."
       ],
       "No repositories added yet": [
         "ჯერ რეპოზიტორიები დამატებული არაა"
@@ -5921,6 +5924,9 @@
       ],
       "Publish new version - ": [
         "ახალი ვერსიის გამოქვეყნება - "
+      ],
+      "Published": [
+        ""
       ],
       "Published date": [
         "გამოქვეყნების დრო"
@@ -9980,9 +9986,6 @@
       ],
       "view content view tabs.": [
         "შემცველობის ხედის ჩანართების ნახვა."
-      ],
-      "view tasks button": [
-        ""
       ],
       "waiting for %s to finish the task": [
         "%s ამოცანის დასრულების მოლოდინი"

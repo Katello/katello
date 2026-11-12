@@ -1344,9 +1344,6 @@
       "Clean Backend Objects": [
         "Nettoyer les Objects Backend"
       ],
-      "Clear": [
-        "Effacer"
-      ],
       "Clear any previous registration and run subscription-manager with --force.": [
         "Effacez tout enregistrement précédent et exécutez subscription-manager avec --force."
       ],
@@ -1775,6 +1772,9 @@
       ],
       "Content view version is empty or content counts are not up to date": [
         "La version d'affichage du contenu est vide ou le nombre de contenus n'est pas à jour"
+      ],
+      "Content view versions containing this file will appear here.": [
+        ""
       ],
       "Content views": [
         "Affichages de contenu"
@@ -4282,6 +4282,9 @@
       "Library lifecycle environments may not be deleted.": [
         "Les environnements de cycle de vie de la bibliothèque ne peuvent pas être supprimés."
       ],
+      "Library repositories": [
+        ""
+      ],
       "Library repository id to restrict comparisons to": [
         "ID de référentiel de bibliothèque pour restreindre les comparaisons à"
       ],
@@ -4305,9 +4308,6 @@
       ],
       "Lifecycle Environments": [
         "Environnements de cycle de vie"
-      ],
-      "Lifecycle environment": [
-        "Environnement de cycle de vie"
       ],
       "Lifecycle environment %s has associated host groups. Please change or remove the associated host groups before trying to delete this lifecycle environment.": [
         "L,environnement du cycle de vie %s a des groupes d'hôtes associés. Veuillez les modifier ou les supprimer avant de tenter de le supprimer."
@@ -5071,6 +5071,9 @@
       "No content views available for the selected lifecycle environment": [
         "Aucune vue du contenu n'est disponible pour l'environnement de cycle de vie sélectionné"
       ],
+      "No content views contain this file": [
+        ""
+      ],
       "No content views to add yet": [
         "Aucune vue de contenu à ajouter pour l'instant"
       ],
@@ -5185,6 +5188,9 @@
       "No matching alternate content sources found": [
         "Aucune source de contenu alternatif correspondante trouvée"
       ],
+      "No matching content view versions found": [
+        ""
+      ],
       "No matching content views found": [
         "Aucun contenu correspondant n'a été trouvé"
       ],
@@ -5280,9 +5286,6 @@
       ],
       "No recently synced products": [
         "Aucun produit synchronisé récemment"
-      ],
-      "No recurring logic tied to the sync plan.": [
-        "Pas de logique récurrente liée au plan de synchronisation."
       ],
       "No repositories added yet": [
         "Aucun référentiel n'est disponible."
@@ -5522,7 +5525,7 @@
         "Orphan Cleanup n'a pas réussi à supprimer certaines versions du référentiel Pulp. Consultez les journaux pour plus de détails."
       ],
       "Orphaned": [
-        ""
+        "(Abandonné)"
       ],
       "Orphaned Content Protection Time": [
         "Temps de protection du contenu orphelin"
@@ -5925,6 +5928,9 @@
       ],
       "Publish new version - ": [
         "Nouvelle version publiée -"
+      ],
+      "Published": [
+        ""
       ],
       "Published date": [
         "Date de publication"
@@ -9987,9 +9993,6 @@
       ],
       "view content view tabs.": [
         "voir onglets d’affichage de contenu."
-      ],
-      "view tasks button": [
-        "bouton afficher les tâches"
       ],
       "waiting for %s to finish the task": [
         "en attendant que %s termine la tâche"
