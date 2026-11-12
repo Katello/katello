@@ -66,6 +66,32 @@ module Katello
       assert_includes Katello::ProductContent.enabled(@product.organization), @product_content
     end
 
+    def test_subscribable_for_includes_yum_and_excludes_docker
+      root = FactoryBot.create(:katello_root_repository, :product => @product, :content_id => @content_id)
+      FactoryBot.create(:katello_repository, :root => root, :environment_id => @product.organization.library.id,
+        :content_view_version_id => @product.organization.default_content_view.versions.first.id)
+
+      docker_content_id = 'docker-content-123'
+      docker_content = FactoryBot.create(:katello_content, :cp_content_id => docker_content_id, :organization_id => @product.organization_id)
+      docker_pc = FactoryBot.create(:katello_product_content, :content => docker_content, :product => @product)
+      FactoryBot.create(:katello_root_repository, :docker_root, :product => @product, :content_id => docker_content_id)
+
+      subscribable = Katello::ProductContent.subscribable_for(@product.organization)
+      assert_includes subscribable, @product_content
+      refute_includes subscribable, docker_pc
+    end
+
+    def test_subscribable_for_includes_deb
+      deb_content_id = 'deb-content-123'
+      deb_content = FactoryBot.create(:katello_content, :cp_content_id => deb_content_id, :organization_id => @product.organization_id)
+      deb_pc = FactoryBot.create(:katello_product_content, :content => deb_content, :product => @product)
+      deb_root = FactoryBot.create(:katello_root_repository, :deb_root, :product => @product)
+      FactoryBot.create(:deb_repository, :root => deb_root, :environment_id => @product.organization.library.id, :content_id => deb_content_id,
+        :content_view_version_id => @product.organization.default_content_view.versions.first.id)
+
+      assert_includes Katello::ProductContent.subscribable_for(@product.organization), deb_pc
+    end
+
     def test_enabled_value_from_candlepin
       ::Katello::Resources::Candlepin::Product.expects(:get).returns(
         [
