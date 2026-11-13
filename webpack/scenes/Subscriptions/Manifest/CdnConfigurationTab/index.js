@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import {
   ToggleGroup,
   ToggleGroupItem,
 } from '@patternfly/react-core';
 import { noop } from 'foremanReact/common/helpers';
+import {
+  selectOrgLoading,
+  selectUpdatingCdnConfiguration,
+} from '../../../Organizations/OrganizationSelectors';
 import CdnTypeForm from './CdnTypeForm';
 import ExportSyncForm from './ExportSyncForm';
 import NetworkSyncForm from './NetworkSyncForm';
@@ -21,6 +26,13 @@ const CdnConfigurationForm = (props) => {
   } = props;
 
   const [type, setType] = useState(cdnConfiguration.type);
+  const [lastSavedType, setLastSavedType] = useState(cdnConfiguration.type);
+  if (cdnConfiguration.type !== lastSavedType) {
+    setLastSavedType(cdnConfiguration.type);
+    setType(cdnConfiguration.type);
+  }
+  const updatingCdnConfiguration = useSelector(selectUpdatingCdnConfiguration);
+  const orgIsLoading = useSelector(selectOrgLoading);
 
   const updateType = (connectionType) => {
     if (type !== connectionType) {
@@ -30,7 +42,10 @@ const CdnConfigurationForm = (props) => {
 
   return (
     <div id="cdn-configuration">
-      <ToggleGroup aria-label="Default with multiple selectable">
+      <ToggleGroup
+        aria-label="Default with multiple selectable"
+        areAllGroupsDisabled={updatingCdnConfiguration || orgIsLoading}
+      >
         <ToggleGroupItem text={CDN_CONFIGURATION_TYPES[CDN]} key={0} buttonId="cdn" isSelected={type === CDN} onChange={() => updateType(CDN)} />
         <ToggleGroupItem
           text={CDN_CONFIGURATION_TYPES[CUSTOM_CDN]}
@@ -60,6 +75,7 @@ const CdnConfigurationForm = (props) => {
 
       { type === CDN &&
         <CdnTypeForm
+          cdnConfiguration={cdnConfiguration}
           typeChangeInProgress={type !== cdnConfiguration.type}
           onUpdate={onUpdate}
         />

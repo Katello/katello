@@ -1,6 +1,12 @@
 import { translate as __ } from 'foremanReact/common/I18n';
 
-export const CDN_URL = 'https://cdn.redhat.com';
+export const DEFAULT_CDN_URL = 'https://cdn.redhat.com';
+
+export const CDN_URLS = [
+  DEFAULT_CDN_URL,
+  'https://cdn-eu.redhat.com',
+  'https://cdn-us.redhat.com',
+];
 
 export const [CDN, NETWORK_SYNC, EXPORT_SYNC, CUSTOM_CDN] = ['redhat_cdn', 'network_sync', 'export_sync', 'custom_cdn'];
 export const CDN_CONFIGURATION_TYPES = {
