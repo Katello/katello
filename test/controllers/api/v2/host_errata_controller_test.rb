@@ -138,11 +138,12 @@ module Katello
     end
 
     def test_applicability
+      ForemanTasks.expects(:async_task)
+                  .with(::Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: [@host.id])
+
       put :applicability, params: { :host_id => @host.id }
 
       assert_response :success
-
-      assert Katello::HostQueueElement.find_by(host_id: @host.id)
     end
   end
 end
