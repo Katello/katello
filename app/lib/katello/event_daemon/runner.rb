@@ -42,41 +42,74 @@ module Katello
         end
 
         def stop
-          return unless pid == Process.pid
-          @monitor_thread.kill
+          return unless owns_lock?
+
+          @monitor_thread&.kill
+          @monitor_thread&.join
+          @monitor_thread = nil
           @cache.clear
           @services.values.each(&:close)
           FileUtils.rm_f(pid_file) if pid_file
+        ensure
+          release_lock
         end
 
         def start
           return unless runnable?
+          return unless acquire_lock
 
-          FileUtils.mkdir_p(tmp_dir)
-          FileUtils.touch(lock_file)
+          @monitor = Katello::EventDaemon::Monitor.new(@services)
+          start_monitor_thread
+          write_pid_file
 
-          File.open(lock_file, 'r') do |lockfile|
-            lockfile.flock(File::LOCK_EX)
-            return nil if started? # ensure it wasn't started while we waited for the lock
-            @monitor = Katello::EventDaemon::Monitor.new(@services)
-            start_monitor_thread
-            write_pid_file
-
-            at_exit do
-              stop
-            end
-
-            Rails.logger.info("Katello event daemon started process=#{Process.pid}")
-          ensure
-            lockfile.flock(File::LOCK_UN)
+          at_exit do
+            stop
           end
+
+          Rails.logger.info("Katello event daemon started process=#{Process.pid}")
+        rescue StandardError
+          begin
+            stop
+          rescue StandardError
+            # Preserve the startup error if cleanup also fails.
+          end
+          raise
         end
 
         def started?
-          Process.kill(0, pid)
+          return true if owns_lock?
+
+          FileUtils.mkdir_p(tmp_dir)
+          lockfile = File.open(lock_file, File::RDWR | File::CREAT, 0o644)
+          lock_acquired = lockfile.flock(File::LOCK_EX | File::LOCK_NB)
+          lockfile.flock(File::LOCK_UN) if lock_acquired
+          !lock_acquired
+        ensure
+          lockfile&.close
+        end
+
+        def owns_lock?
+          !!(@lockfile && !@lockfile.closed?)
+        end
+
+        def acquire_lock
+          return false if owns_lock?
+
+          FileUtils.mkdir_p(tmp_dir)
+          lockfile = File.open(lock_file, File::RDWR | File::CREAT, 0o644)
+          unless lockfile.flock(File::LOCK_EX | File::LOCK_NB)
+            lockfile.close
+            return false
+          end
+
+          @lockfile = lockfile
           true
-        rescue Errno::ESRCH, TypeError # process no longer exists or we had no PID cached
-          false
+        end
+
+        def release_lock
+          @lockfile&.close
+        ensure
+          @lockfile = nil
         end
 
         def start_monitor_thread
