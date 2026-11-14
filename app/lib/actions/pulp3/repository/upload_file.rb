@@ -14,10 +14,13 @@ module Actions
           uploads_api = repo_backend_service.core_api.uploads_api
           offset = 0
           response = nil
-          File.open(input[:file], "rb") do |file|
+          with_staged_file do |file, staged_file|
             total_size = File.size(file)
+            sha256 = Digest::SHA256.file(file.path).hexdigest
+            if staged_file[:sha256].present? && staged_file[:sha256] != sha256
+              fail _("Staged upload checksum does not match the original file")
+            end
             upload_href = uploads_api.create(upload_class.new(size: total_size)).pulp_href
-            sha256 = Digest::SHA256.hexdigest(File.read(file))
             until file.eof?
               chunk = file.read(upload_chunk_size)
               begin
@@ -79,6 +82,20 @@ module Actions
         end
 
         private
+
+        def with_staged_file
+          staged_file = input[:file]
+          staged_file = {:path => staged_file} if staged_file.is_a?(String)
+          staged_file = staged_file.with_indifferent_access
+          staging = ::Katello::UploadStaging.resolve(staged_file, input[:repository_id], execution_plan_id) if ::Katello::UploadStaging.supported?
+          if staging
+            staging.open do |file|
+              yield file, staging.metadata
+            end
+          else
+            File.open(staged_file[:path], 'rb') { |file| yield file, staged_file }
+          end
+        end
 
         def upload_chunk_size
           SETTINGS[:katello][:pulp][:upload_chunk_size]
