@@ -15,8 +15,9 @@ module Actions
                       dependency_solving: options[:dependency_solving],
                       incremental_update: options[:incremental_update],
                       smart_proxy_id: SmartProxy.pulp_primary.id).output
-            plan_action(Pulp3::Repository::SaveVersions, repo_map.values.pluck(:dest_repo),
-                        tasks: action_output[:pulp_tasks]).output
+            dest_repos = repo_map.values
+            plan_action(Pulp3::Repository::SaveVersions, dest_repos.pluck(:dest_repo),
+                        tasks: action_output[:pulp_tasks], index_delta: true).output
           end
         end
 
@@ -44,7 +45,7 @@ module Actions
           end
           unit_hrefs.flatten!
 
-          repo_map.each do |_source_repos, dest_repo_map|
+          repo_map.each_value do |dest_repo_map|
             dest_repo_map[:content_unit_hrefs] = unit_hrefs
           end
 

@@ -88,5 +88,32 @@ module Katello
       assert_equal 1, remaining_tags.where(name: "baz").count  # only A's baz
     end
     # rubocop:enable Metrics/AbcSize
+
+    def test_added_in_version_asks_pulp_for_the_version_delta
+      repo = katello_repositories(:fedora_17_x86_64)
+      content_type = Katello::RepositoryTypeManager.find_content_type('rpm')
+      indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: repo,
+                                                added_in_version: 'version-2')
+
+      Katello::Pulp3::Rpm.expects(:pulp_units_batch_for_repo).
+        with(repo, has_entries(:added_in_version => 'version-2')).returns([])
+
+      indexer.units_from_pulp { |units| units }
+    end
+
+    def test_base_version_asks_pulp_for_the_difference_from_it
+      repo = katello_repositories(:fedora_17_x86_64)
+      content_type = Katello::RepositoryTypeManager.find_content_type('rpm')
+      indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: repo,
+                                                added_in_version: 'version-3',
+                                                base_version: 'version-1')
+
+      Katello::Pulp3::Rpm.expects(:pulp_units_batch_for_repo).with(
+        repo,
+        has_entries(:added_in_version => 'version-3', :base_version => 'version-1')
+      ).returns([])
+
+      indexer.units_from_pulp { |units| units }
+    end
   end
 end
