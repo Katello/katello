@@ -6,6 +6,9 @@ namespace :katello do
       system("git clone -q -b develop #{template_repository} #{dir}/ct")
       Dir.chdir "#{Katello::Engine.root}/app/views/foreman"
       system("rsync -am \
+        --exclude='install_group_-_katello_ansible_default.erb' \
+        --exclude='update_group_-_katello_ansible_default.erb' \
+        --exclude='remove_group_-_katello_ansible_default.erb' \
         --include='*katello_ansible_default*' \
         --exclude='*' \
         #{dir}/ct/job_templates/* ./job_templates")

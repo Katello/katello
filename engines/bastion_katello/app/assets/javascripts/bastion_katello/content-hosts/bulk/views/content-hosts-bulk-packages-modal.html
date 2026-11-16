@@ -14,11 +14,6 @@
           Performing host package actions is disabled because Katello is not configured for Remote Execution.
           </span>
       </p>
-      <p bst-alert="warning">
-        <span translate>
-          Group package actions are being deprecated, and will be removed in a future version.
-          </span>
-      </p>
     </div>
 
     <span uib-dropdown class="input-group-btn">
@@ -52,25 +47,6 @@
     </form>
 
     <div ng-form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')" novalidate>
-      <div>
-        <label class="radio-inline" for="package">
-          <input id="package" type="radio"
-                 ng-model="content.contentType"
-                 ng-change="updatePlaceholder(content.contentType)"
-                 ng-disabled="content.confirm"
-                 value="package"/>
-          <span translate>Package</span>
-        </label>
-        <label class="radio-inline" for="package_group">
-          <input id="package_group" type="radio"
-                 ng-model="content.contentType"
-                 ng-change="updatePlaceholder(content.contentType)"
-                 ng-disabled="content.confirm"
-                 value="package_group"/>
-          <span translate>Package Group (Deprecated)</span>
-        </label>
-      </div>
-
       <div class="form-group">
         <input class="form-control"
                type="text"
@@ -107,8 +83,7 @@
                 translate
                 ng-hide="denied('edit_hosts')"
                 ng-click="confirmContentAction('update', content)"
-                ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm || !hostToolingEnabled"
-                ng-hide="content.contentType == 'errata'">
+                ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm || !hostToolingEnabled">
           Update
         </button>
         <button uib-dropdown-toggle class="btn btn-default"
@@ -126,7 +101,7 @@
       <span uib-dropdown class="input-group-btn">
         <button class="btn btn-default" type="button"
                 translate
-                ng-hide="content.contentType == 'errata' || denied('edit_hosts')"
+                ng-hide="denied('edit_hosts')"
                 ng-click="confirmContentAction('remove', content)"
                 ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm || !hostToolingEnabled">
           Remove
