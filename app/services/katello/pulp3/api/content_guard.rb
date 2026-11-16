@@ -32,7 +32,7 @@ module Katello
           found = list(name: default_name).results.first
           if found && found.ca_certificate != ca_cert
             partial_update(found.pulp_href)  # Still use pulp_href for API calls
-          else
+          elsif found.nil?
             found = create
           end
           persist_if_needed(found)

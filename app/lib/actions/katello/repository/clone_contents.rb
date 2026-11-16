@@ -2,14 +2,14 @@ module Actions
   module Katello
     module Repository
       class CloneContents < Actions::Base
-        include Actions::Katello::CheckMatchingContent
-
         def plan(source_repositories, new_repository, options)
-          filters = options.fetch(:filters, nil)
+          filters = options.fetch(:filters, [])
           rpm_filenames = options.fetch(:rpm_filenames, nil)
           generate_metadata = options.fetch(:generate_metadata, true)
           copy_contents = options.fetch(:copy_contents, true)
           solve_dependencies = options.fetch(:solve_dependencies, false)
+          assume_content_guard_exists = options.fetch(:assume_content_guard_exists, false)
+          contents_changed = options.fetch(:contents_changed, true)
 
           sequence do
             if copy_contents
@@ -20,8 +20,9 @@ module Actions
                           filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
             end
 
-            matching_content = check_matching_content(new_repository, source_repositories)
-            metadata_generate(source_repositories, new_repository, filters, rpm_filenames, matching_content) if generate_metadata
+            if generate_metadata
+              metadata_generate(source_repositories, new_repository, filters, rpm_filenames, assume_content_guard_exists, contents_changed)
+            end
 
             index_options = {id: new_repository.id, force_index: true}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
@@ -43,10 +44,11 @@ module Actions
           end
         end
 
-        def metadata_generate(source_repositories, new_repository, filters, rpm_filenames, matching_content)
+        def metadata_generate(source_repositories, new_repository, filters, rpm_filenames, assume_content_guard_exists, contents_changed)
           metadata_options = {}
 
-          metadata_options[:matching_content] = matching_content
+          metadata_options[:assume_content_guard_exists] = assume_content_guard_exists
+          metadata_options[:contents_changed] = contents_changed
 
           if source_repositories.count == 1 && filters.empty? && rpm_filenames.empty?
             metadata_options[:source_repository] = source_repositories.first

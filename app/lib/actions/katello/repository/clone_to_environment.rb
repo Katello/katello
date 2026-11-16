@@ -4,7 +4,7 @@ module Actions
       # Clones the contnet of the repository into the environment
       # effectively promotion the repository to the environment
       class CloneToEnvironment < Actions::Base
-        def plan(repository, environment)
+        def plan(repository, environment, options = {})
           clone = find_or_build_environment_clone(repository, environment)
 
           sequence do
@@ -12,7 +12,10 @@ module Actions
               plan_action(Repository::Create, clone, clone: true)
             end
 
-            plan_action(::Actions::Katello::Repository::CloneContents, [repository], clone, :copy_contents => !clone.yum?)
+            plan_action(::Actions::Katello::Repository::CloneContents, [repository], clone,
+                        :copy_contents => !clone.yum?,
+                        :contents_changed => options.fetch(:contents_changed, true),
+                        :assume_content_guard_exists => options.fetch(:assume_content_guard_exists, false))
           end
         end
 
