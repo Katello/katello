@@ -75,7 +75,7 @@ module Actions
                             source_repos,
                             new_content_view_version,
                             repository_mapping[source_repos],
-                            incremental: true)
+                            incremental: true, generate_metadata: false)
               end
 
               concurrence do
@@ -84,8 +84,8 @@ module Actions
                     extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[mapping], old_version)
                     unit_map = pulp3_content_mapping(content)
 
-                    unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
-                      sequence do
+                    sequence do
+                      unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
                         # Pre-copy content if dest_repo is a soft copy of its library instance.
                         # Don't use extended_repo_mapping because the source repositories are library instances.
                         # We want the old CV snapshot repositories here so as to not pull in excess new content.
@@ -100,10 +100,13 @@ module Actions
                         end
                         copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
                                                            dependency_solving: dep_solve).output
-                        repos_to_clone.each do |source_repos|
-                          if separated_repo_map[mapping].keys.include?(source_repos)
-                            copy_repos(repository_mapping[source_repos])
-                          end
+                      end
+                      # The clone no longer generates metadata, so every repository
+                      # in this mapping needs its metadata and index pass even when
+                      # there is nothing to copy.
+                      repos_to_clone.each do |source_repos|
+                        if separated_repo_map[mapping].keys.include?(source_repos)
+                          copy_repos(repository_mapping[source_repos])
                         end
                       end
                     end

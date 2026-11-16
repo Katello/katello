@@ -46,6 +46,21 @@ module Actions
                                 :solve_dependencies => false)
     end
 
+    it 'defers metadata generation when asked to' do
+      cloned_repo = katello_repositories(:fedora_17_x86_64)
+
+      action = create_action(action_class)
+      cloned_repo.expects(:primary?).returns(true)
+      cloned_repo.root = yum_repo.root
+
+      plan_action(action, [yum_repo], version, cloned_repo, :incremental => true, :generate_metadata => false)
+
+      assert_action_planned_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
+                                :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
+                                :copy_contents => true, :generate_metadata => false,
+                                :solve_dependencies => false)
+    end
+
     it 'plans to clone yum units with dependency solving' do
       cloned_repo = katello_repositories(:fedora_17_x86_64)
 

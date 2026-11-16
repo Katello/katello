@@ -125,6 +125,23 @@ module ::Actions::Katello::ContentViewVersion
                                   :dependency_solving => true)
         refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
       end
+
+      it 'plans metadata for the clone when the multicopy block is skipped' do
+        pulp3_cvv_setup
+        ::Katello::Repository.any_instance.stubs(:soft_copy_of_library?).returns(true)
+        ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_repo_mapping).returns({})
+
+        plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
+
+        refute_action_planned(action, ::Actions::Pulp3::Repository::MultiCopyUnits)
+        refute_action_planned(action, ::Actions::Pulp3::Repository::CopyContent)
+        assert_action_planned_with(action, ::Actions::Katello::Repository::MetadataGenerate) do |repo, _options|
+          repo == new_repo
+        end
+        assert_action_planned_with(action, ::Actions::Katello::Repository::IndexContent) do |plan_input|
+          plan_input.first[:id] == new_repo.id
+        end
+      end
     end
   end
 end
