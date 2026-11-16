@@ -7,6 +7,12 @@ module Katello
       has_many repository_association.to_sym, class_name: repository_association_class_name,
                dependent: :delete_all, inverse_of: association_name
       has_many :repositories, through: repository_association.to_sym, class_name: "Katello::Repository"
+      if (content_index_class = content_index_association_class)
+        has_many "content_index_#{association_name.pluralize}".to_sym,
+                 class_name: content_index_class.name,
+                 dependent: :delete_all,
+                 inverse_of: association_name.to_sym
+      end
       include ::Katello::Concerns::SearchByRepositoryName
     end
 
@@ -33,6 +39,11 @@ module Katello
 
       def repository_association_class
         repository_association_class_name.constantize
+      end
+
+      # nil for types whose content is not a function of the Pulp version.
+      def content_index_association_class
+        "::Katello::ContentIndex#{self.name.demodulize}".safe_constantize
       end
 
       def content_type
@@ -82,11 +93,29 @@ module Katello
       end
 
       def copy_repository_associations(source_repo, dest_repo)
-        delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
-                       #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
+        table = repository_association_class.table_name
+        columns = db_columns_copy
+        copied_values = columns.map do |column|
+          (column == :repository_id) ? dest_repo.id : "src.#{column}"
+        end
+
+        insert_columns = columns.join(', ')
+        insert_values = copied_values.join(', ')
+        if repository_association_class.column_names.include?('created_at')
+          insert_columns += ', created_at, updated_at'
+          insert_values += ', now(), now()'
+        end
+
+        delete_query = "delete from #{table} where repository_id = #{dest_repo.id} and " \
+                       "#{unit_id_field} not in (select #{unit_id_field} from #{table} where repository_id = #{source_repo.id})"
+        insert_query = "insert into #{table} (#{insert_columns}) " \
+                       "select #{insert_values} from #{table} src where src.repository_id = #{source_repo.id} " \
+                       "and not exists (select 1 from #{table} dest where dest.repository_id = #{dest_repo.id} " \
+                       "and dest.#{unit_id_field} = src.#{unit_id_field})"
+
         ActiveRecord::Base.transaction do
           ActiveRecord::Base.connection.execute(delete_query)
-          self.repository_association_class.import(db_columns_copy, db_values_copy(source_repo, dest_repo), validate: false)
+          ActiveRecord::Base.connection.execute(insert_query)
         end
       end
 
@@ -96,27 +125,6 @@ module Katello
         columns << :repository_id
         columns << prn_identifier_field if prn_identifier_field
         columns
-      end
-
-      def db_values_copy(source_repo, dest_repo)
-        db_values = []
-        existing_unit_ids = self.repository_association_class.where(repository: dest_repo).pluck(unit_id_field)
-        if existing_unit_ids.empty?
-          new_units = self.repository_association_class.where(repository: source_repo)
-        else
-          new_units = self.repository_association_class.where(repository: source_repo).where.not("#{unit_id_field} in (?) ", existing_unit_ids)
-        end
-        unit_backend_identifier_field = backend_identifier_field
-        unit_identifier_field = unit_id_field
-        unit_prn_field = prn_identifier_field
-        new_units.each do |unit|
-          values = [unit[unit_identifier_field]]
-          values << unit[unit_backend_identifier_field] if unit_backend_identifier_field
-          values << dest_repo.id
-          values << unit[unit_prn_field] if unit_prn_field
-          db_values << values
-        end
-        db_values
       end
 
       def installable_for_content_facet(facet, env = nil, content_view = nil)
@@ -151,7 +159,7 @@ module Katello
 
       def with_identifiers(ids)
         ids = [ids] unless ids.is_a?(Array)
-        ids.map!(&:to_s)
+        ids = ids.map(&:to_s)
         id_integers = ids.map { |string| Integer(string) rescue -1 }
         where("#{self.table_name}.id in (?) or #{self.table_name}.pulp_id in (?)", id_integers, ids)
       end
@@ -161,7 +169,14 @@ module Katello
       end
 
       def in_repositories(repos)
-        where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field))
+        return where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field)) if content_index_association_class.nil?
+
+        index_ids, repository_ids = ::Katello::ContentIndex.scope_for_repositories(repos)
+        scopes = []
+        scopes << where(:id => content_index_association_class.where(:content_index_id => index_ids).select(unit_id_field)) if index_ids.any?
+        scopes << where(:id => repository_association_class.where(:repository_id => repository_ids).select(unit_id_field)) if repository_ids.any?
+        return none if scopes.empty?
+        scopes.inject { |combined, scope| combined.or(scope) }
       end
 
       def pulp_data(pulp_id)

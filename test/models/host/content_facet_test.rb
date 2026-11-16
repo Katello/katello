@@ -19,6 +19,17 @@ module Katello
   end
 
   class ContentFacetTest < ContentFacetBase
+    def test_calculate_and_import_applicability_resolves_the_content_set_once
+      facet = katello_content_facets(:content_facet_one)
+      facet.stubs(:bound_repositories).returns([])
+      facet.stubs(:update_applicability_counts)
+      helper = stub(:calculate_and_import => nil)
+      ::Katello::ContentIndex.expects(:scope_for_repositories).once.returns([[], []])
+      ::Katello::Applicability::ApplicableContentHelper.expects(:new).times(4).returns(helper)
+
+      facet.calculate_and_import_applicability
+    end
+
     def test_create
       cvenv = Katello::ContentViewEnvironment.find_by_cv_and_lce!(view.id, library.id)
       empty_host.content_facet = Katello::Host::ContentFacet.create!(:content_view_environment_ids => [cvenv.id], :host => empty_host)

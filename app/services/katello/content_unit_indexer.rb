@@ -17,8 +17,16 @@ module Katello
                                                     epoch: unit[:epoch], arch: unit[:arch]).select(:id)
         if rpms_to_disassociate.any?
           ::Katello::RepositoryRpm.where(rpm_id: rpms_to_disassociate, repository_id: @repository.id).destroy_all
+          remove_index_duplicates(rpms_to_disassociate)
         end
       end
+    end
+
+    def remove_index_duplicates(rpms)
+      index = @repository.current_content_index
+      return unless index&.private_to?(@repository)
+
+      ::Katello::ContentIndexRpm.where(:content_index_id => index.id, :rpm_id => rpms).destroy_all
     end
 
     def import_all(filtered_indexing = false)
@@ -129,6 +137,15 @@ module Katello
         @final_values
       end
 
+      def content_index_values(index)
+        db_values.map do |row|
+          values = row.dup
+          values.delete(:repository_id)
+          values[:content_index_id] = index.id
+          values
+        end
+      end
+
       def pulp_href_association_name
         'erratum_pulp3_href' if @content_type.label == 'erratum'
       end
@@ -168,10 +185,48 @@ module Katello
           repo_associations_to_destroy.destroy_all
         end
       end
-      return if association_tracker.db_values.empty?
-      @model_class.repository_association_class.upsert_all(association_tracker.db_values, :unique_by => association_class_uniqueness_attributes)
+      unless association_tracker.db_values.empty?
+        @model_class.repository_association_class.upsert_all(association_tracker.db_values, :unique_by => association_class_uniqueness_attributes)
+        clean_duplicate_docker_tags if @model_class == Katello::DockerTag
+      end
+      sync_content_index(association_tracker, additive)
+    end
 
-      clean_duplicate_docker_tags if @model_class == Katello::DockerTag
+    def sync_content_index(association_tracker, additive)
+      association_class = @model_class.content_index_association_class
+      version_href = @repository&.version_href
+      return if association_class.nil? || version_href.blank?
+
+      # A filtered pass does not publish, so a pointer naming a previous version goes.
+      @repository.drop_stale_content_index_pointer
+      index = ::Katello::ContentIndex.for_version(version_href)
+      # A shared index is immutable; its owner already materialised it.
+      index.with_lock do
+        next unless index.private_to?(@repository)
+
+        rows = association_tracker.content_index_values(index)
+        copy_repository_rows_into_index(index) unless association_class.exists?(:content_index_id => index.id)
+        unless additive
+          association_class.where(:content_index_id => index.id).
+            where.not(@model_class.unit_id_field => association_tracker.unit_ids).destroy_all
+        end
+        association_class.upsert_all(rows, :unique_by => [@model_class.unit_id_field.to_sym, :content_index_id]) unless rows.empty?
+      end
+    end
+
+    # A delta pass sees only the new units, so it seeds from the repository rows.
+    def copy_repository_rows_into_index(index)
+      association_class = @model_class.content_index_association_class
+      source_table = @model_class.repository_association_class.table_name
+      columns = [@model_class.unit_id_field]
+      columns += ['erratum_pulp3_href', 'erratum_prn'] if association_class.column_names.include?('erratum_pulp3_href')
+
+      select_columns = columns.map { |column| "src.#{column}" }
+      association_class.connection.execute(
+        "insert into #{association_class.table_name} (content_index_id, #{columns.join(', ')}, created_at, updated_at) " \
+        "select #{index.id}, #{select_columns.join(', ')}, now(), now() from #{source_table} src " \
+        "where src.repository_id = #{@repository.id} on conflict do nothing"
+      )
     end
 
     def clean_filter_rules(repo_associations_to_destroy)
