@@ -18,6 +18,12 @@ module Actions
         :source_repository => nil,
         :matching_content => false,
         :force_publication => false,
+        :reuse_version => false,
+        :source_version_href => nil,
+        :source_version_prn => nil,
+        :source_publication_href => nil,
+        :source_publication_prn => nil,
+        :source_content_index_id => nil,
       }
     end
 
