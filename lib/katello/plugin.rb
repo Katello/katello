@@ -277,7 +277,8 @@ Foreman::Plugin.register :katello do
                   export_data: CsvExporter::ExportDefinition.new('content_facet_attributes.bootc_booted_image', label: 'Image Type')
       add_pagelet :hosts_table_column_content, key: :bootc_booted_image, class: common_class, callback: ->(host) { host.content_facet&.bootc_booted_image }
 
-      add_pagelet :hosts_table_column_header, key: :rhel_lifecycle_status, label: _('RHEL Lifecycle status'), sortable: true, class: common_class, width: '10%', export_key: 'rhel_lifecycle_status'
+      add_pagelet :hosts_table_column_header, key: :rhel_lifecycle_status, label: _('RHEL Lifecycle status'), sortable: true, class: common_class, width: '10%', 
+                  export_data: CsvExporter::ExportDefinition.new('rhel_lifecycle_status', label: 'RHEL Lifecycle Status', callback: ->(host) { host.rhel_lifecycle_status_label })
       add_pagelet :hosts_table_column_content, key: :rhel_lifecycle_status, class: common_class, callback: ->(host) { host_status_icon(host.rhel_lifecycle_global_status) }
 
       add_pagelet :hosts_table_column_header, key: :installable_updates, label: _('Installable updates'), class: common_class, width: '15%',
