@@ -650,7 +650,7 @@ module Katello
     def pull_manifest
       headers = {}
       env = request.env.select do |key, _value|
-        key.match("^HTTP_.*")
+        key.start_with?('HTTP_') && !key.start_with?('HTTP_SSL_CLIENT_')
       end
       env.each do |header|
         headers[header[0].split('_')[1..].join('-')] = header[1]
