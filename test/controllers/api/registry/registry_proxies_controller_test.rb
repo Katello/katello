@@ -631,21 +631,28 @@ module Katello
         assert_equal @digest, response.header['Docker-Content-Digest']
       end
 
-      it "pull manifest - HTTPS Header" do
-        #production installs include an HTTPS: 'on' header, which needs to be removed
+      it "pull manifest - excludes SSL client headers while forwarding other headers" do
         manifest = '{"mediaType":"MEDIATYPE"}'
         manifest.stubs(:headers).returns({docker_content_digest: @digest, content_length: @length, content_type: 'MEDIATYPE'})
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
 
-        request.env['HTTPS'] = 'on' #should not be passed through
-        request.env['HTTP_FOO'] = 'bar' #should be passed through
+        request.env['HTTPS'] = 'on'
+        request.env['HTTP_FOO'] = 'bar'
 
-        expected_headers = {"HOST" => "test.host", "USER-AGENT" => "Rails Testing", "AUTHORIZATION" => "Basic YXBpYWRtaW46c2VjcmV0",
-                            "ACCEPT" => "application/json", "ACCEPT-LANGUAGE" => "en-US", "FOO" => "bar", "COOKIE" => ""}
-        expected_headers['AUTHORIZATION'] = request.env['HTTP_AUTHORIZATION']
+        # simulate 10,345 byte cert header
+        request.env['HTTP_SSL_CLIENT_CERT'] = 'x' * 10_345
+        request.env['HTTP_SSL_CLIENT_VERIFY'] = 'SUCCESS'
+        request.env['HTTP_SSL_CLIENT_S_DN'] = 'CN=client'
+        request.env['HTTP_X_RHSM_SSL_CLIENT_CERT'] = "k.crt"
+        request.headers['Accept'] = 'application/vnd.oci.image.manifest.v1+json'
 
-        Resources::Registry::Proxy.stubs(:get).with('/v2/busybox/manifests/one', expected_headers).returns(manifest)
+        expected_headers = {"HOST" => "test.host", "USER-AGENT" => "Rails Testing",
+                            "AUTHORIZATION" => request.env['HTTP_AUTHORIZATION'],
+                            "ACCEPT" => "application/vnd.oci.image.manifest.v1+json",
+                            "ACCEPT-LANGUAGE" => "en-US", "FOO" => "bar", "COOKIE" => ""}
+        Resources::Registry::Proxy.expects(:get).
+          with('/v2/busybox/manifests/one', expected_headers).returns(manifest)
         DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
                                          where(repository_id: @docker_repo.id).
                                          select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
@@ -656,6 +663,34 @@ module Katello
         assert_equal response.header['Content-Length'], '0'
         assert response.header['Content-Type'] =~ /MEDIATYPE/
         assert_equal @digest, response.header['Docker-Content-Digest']
+      end
+
+      { 'missing' => nil, 'empty' => '' }.each do |description, accept|
+        it "pull manifest - #{description} Accept header" do
+          manifest = '{"mediaType":"MEDIATYPE"}'
+          manifest.stubs(:headers).returns({docker_content_digest: @digest, content_length: @length, content_type: 'MEDIATYPE'})
+          @controller.stubs(:registry_authorize).returns(true)
+          @controller.stubs(:find_readable_repository).returns(@docker_repo)
+          DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                           where(repository_id: @docker_repo.id).
+                                           select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
+
+          request.env.delete('HTTP_ACCEPT')
+          request.headers['Accept'] = accept unless accept.nil?
+          request.env['HTTP_X_RHSM_SSL_CLIENT_CERT'] = "k.crt"
+          request.env['HTTP_SSL_CLIENT_CERT'] = ''
+          expected_headers = {"HOST" => "test.host", "USER-AGENT" => "Rails Testing",
+                              "AUTHORIZATION" => request.env['HTTP_AUTHORIZATION'],
+                              "ACCEPT-LANGUAGE" => "en-US", "COOKIE" => ""}
+          expected_headers['ACCEPT'] = accept unless accept.nil?
+          Resources::Registry::Proxy.expects(:get).
+            with('/v2/busybox/manifests/one', expected_headers).returns(manifest)
+
+          get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
+
+          assert_response 200
+          assert_equal manifest, response.body
+        end
       end
 
       it "pull manifest - HTTP Header - v1+json" do
