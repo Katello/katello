@@ -35,9 +35,9 @@ const SelectSource = () => {
     }
   };
 
+  // Deb ACS is upstream Katello only. Satellite offers yum and file.
   const typeOptions = [{ value: 'yum', label: __('Yum') }];
   if (acsType !== 'rhui') {
-    typeOptions.push({ value: 'deb', label: __('Deb') });
     typeOptions.push({ value: 'file', label: __('File') });
   }
 
