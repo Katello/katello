@@ -121,6 +121,7 @@ class HostsControllerTest < ActionController::TestCase
 
       # Export registered columns and ignore removed columns in saved preferences
       assert_includes header_line, "Image Type"
+      assert_includes header_line, "RHEL Lifecycle Status"
       assert_includes header_line, "Installable Updates - Security"
       assert_includes header_line, "Installable Updates - Bugfix"
       assert_includes header_line, "Installable Updates - Enhancement"
