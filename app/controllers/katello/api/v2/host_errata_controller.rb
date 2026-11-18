@@ -2,6 +2,7 @@ module Katello
   class Api::V2::HostErrataController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
     include Katello::Concerns::Api::V2::HostErrataExtensions
+    include Katello::Concerns::Api::V2::PageDetails
 
     TYPES_FROM_PARAMS = {
       bugfix: Katello::Erratum::BUGZILLA, # ['bugfix', 'recommended']
@@ -50,13 +51,14 @@ module Katello
     def index
       validate_index_params!
 
-      collection = scoped_search(index_relation, 'updated', 'desc', :resource_class => Erratum, :includes => [:cves])
+      collection = scoped_search(index_relation, 'updated', 'desc', :resource_class => Erratum)
 
       @installable_errata_ids = []
       if @host.content_facet
         @installable_errata_ids = @host.content_facet.installable_errata.pluck("#{Katello::Erratum.table_name}.id")
       end
 
+      collection = with_page_details(collection)
       respond_for_index :collection => collection
     end
 
@@ -107,6 +109,10 @@ module Katello
     end
 
     private
+
+    def page_details_class
+      ErrataListDetails
+    end
 
     def find_content_view
       @content_view = if ::Foreman::Cast.to_bool(params[:include_applicable])

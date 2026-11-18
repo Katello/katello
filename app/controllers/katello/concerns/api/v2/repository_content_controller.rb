@@ -5,6 +5,7 @@ module Katello
 
       included do
         include Katello::Concerns::FilteredAutoCompleteSearch
+        include Katello::Concerns::Api::V2::PageDetails
 
         before_action :find_repository
         before_action :find_optional_organization, :only => [:index, :show, :auto_complete_search]
@@ -33,7 +34,8 @@ module Katello
 
       def index
         sort_by, sort_order, options = sort_options
-        respond(:collection => scoped_search(index_relation, sort_by, sort_order, options))
+        collection = scoped_search(index_relation, sort_by, sort_order, options)
+        respond(:collection => with_page_details(collection))
       end
 
       api :GET, "/:resource_id/:id", N_("Show :a_resource")
