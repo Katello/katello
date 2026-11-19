@@ -25,7 +25,7 @@ import { BulkRepositorySetsReviewFooter } from './03_ReviewFooter';
 const DEFAULT_PER_PAGE = 5;
 export const BulkRepositorySetsWizardContext = createContext({});
 export const repoSetsUrlForOrg = orgId =>
-  katelloApi.getApiUrl(`/repository_sets?per_page=${DEFAULT_PER_PAGE}&include_permissions=true&enabled=true&with_custom=true&organization_id=${orgId}`);
+  katelloApi.getApiUrl(`/repository_sets?per_page=${DEFAULT_PER_PAGE}&include_permissions=true&enabled=true&with_custom=true&subscribable=true&organization_id=${orgId}`);
 
 const BulkRepositorySetsWizard = () => {
   const { isOpen: modalOpen, close: closeModal } = useBulkModalOpen('bulk-repo-sets-wizard');
