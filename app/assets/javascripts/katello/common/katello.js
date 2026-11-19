@@ -5,7 +5,6 @@
  */
 
 var KT = KT ? KT : {};
-KT.widget = {};
 
 // Must be at the top to prevent AngularJS unnecessary digest operations
 // And to handle the hashPrefix that AngularJS adds that confuses BBQ
@@ -46,28 +45,6 @@ function log(msg) {
         throw new Error(msg);
     }, 0);
 }
-
-// Workaround for a bug in chosen
-// When a chosen select receives focus() invoked from js code
-// it ends up in an infinite loop of displaying and hiding the options.
-// 2pane gives automatically focus to a first enabled visible input on the panel.
-// Therefore we disable the inner input at the beginning and enable it
-// after 400ms.
-//
-// requires jQuery
-$.fn.delayed_chosen = function(options, delay_time) {
-    var chzn_input;
-
-    $(this).chosen(options);
-
-    delay_time = (delay_time === undefined) ? 400 : delay_time;
-    chzn_input = $(this).parent().find('.chzn-container :input');
-    chzn_input.prop('disabled', true);
-    chzn_input.delay(delay_time).queue(function() {
-        $(this).prop('disabled', false);
-        $(this).dequeue();
-    });
-};
 
 //requires jQuery
 KT.getData = function(fieldNames) {

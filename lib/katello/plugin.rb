@@ -794,12 +794,10 @@ Foreman::Plugin.register :katello do
 
   precompile = [
     'katello/katello.css',
-    'katello/containers/container.css',
     'bastion/bastion.css',
     'bastion/bastion.js',
     'bastion_katello/bastion_katello.css',
     'bastion_katello/bastion_katello.js',
-    'katello/sync_management',
     'katello/common',
   ]
 
