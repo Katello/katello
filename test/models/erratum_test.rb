@@ -182,6 +182,20 @@ module Katello
       refute_includes @bugfix.hosts_available(@host.organization), @host_without_errata
     end
 
+    def test_hosts_available_count
+      assert_equal @security.hosts_available.count, @security.hosts_available_count
+      assert_equal @security.hosts_available(@host.organization).count, @security.hosts_available_count(@host.organization)
+    end
+
+    def test_module_streams
+      streams = katello_errata(:modular).module_streams
+
+      assert_equal 1, streams.size
+      assert_equal 'three', streams.first[:name]
+      assert_equal 'noitsariver', streams.first[:stream]
+      assert_equal ['foobarmod-1.2.3'], streams.first[:packages]
+    end
+
     def test_installable_for_hosts
       errata = Erratum.installable_for_hosts([@host, @host_without_errata])
 
@@ -231,6 +245,25 @@ module Katello
       @host.content_facet.save!
     end
 
+    def test_advisory_ids_with_explicit_errata_id
+      assert_equal [@security.errata_id], @host.advisory_ids(search: "errata_id = #{@security.errata_id}")
+    end
+
+    def test_advisory_ids_resolves_bare_security_identifier
+      identifier = katello_erratum_cves(:cve).cve_id
+
+      assert_equal [@security.errata_id], @host.advisory_ids(search: identifier)
+      assert_equal [@security.errata_id], @host.advisory_ids(search: identifier.downcase)
+    end
+
+    def test_advisory_ids_resolves_bare_bugzilla_id
+      bug_id = "1234567"
+      Katello::ErratumBugzilla.create!(:erratum => @security, :bug_id => bug_id,
+                                       :href => "https://bugzilla.redhat.com/#{bug_id}")
+
+      assert_equal [@security.errata_id], @host.advisory_ids(search: bug_id)
+    end
+
     def test_returns_installable_errata_for_host_with_hostgroup
       hostgroup = ::Hostgroup.create!(name: "foo",
                                       organizations: [@host.organization],
@@ -254,6 +287,69 @@ module Katello
                                           locations: [@host.location])
       errata = Erratum.installable_for_hosts(::Host::Managed.unscoped.authorized(:view_hosts))
       assert_includes errata, @security
+    end
+  end
+
+  class ErratumSearchTest < ActiveSupport::TestCase
+    def setup
+      @security = katello_errata(:security)
+    end
+
+    def test_free_text_search_does_not_scan_security_reference_tables
+      sql = Erratum.search_for("kernel").to_sql
+
+      refute_match(/katello_erratum_cves/, sql)
+      refute_match(/katello_erratum_bugzillas/, sql)
+      assert_match(/katello_erratum_cves/, Erratum.search_for(katello_erratum_cves(:cve).cve_id).to_sql)
+    end
+
+    def test_search_for_matches_a_bare_security_identifier
+      identifier = katello_erratum_cves(:cve).cve_id
+
+      assert_includes Erratum.search_for(identifier), @security
+      assert_includes Erratum.search_for(identifier.downcase), @security
+      assert_includes Erratum.search_for("cve = #{identifier}"), @security
+    end
+
+    def test_search_for_matches_a_bare_bugzilla_id
+      Katello::ErratumBugzilla.create!(:erratum => @security, :bug_id => "1234567",
+                                       :href => "https://bugzilla.redhat.com/1234567")
+
+      assert_includes Erratum.search_for("1234567"), @security
+      assert_includes Erratum.search_for("bug = 1234567"), @security
+    end
+
+    def test_search_for_negates_identifiers
+      identifier = katello_erratum_cves(:cve).cve_id
+
+      refute_includes Erratum.search_for("-#{identifier}"), @security
+      assert_includes Erratum.search_for("-#{identifier}"), katello_errata(:bugfix)
+    end
+
+    def test_search_for_matches_identifiers_inside_a_compound_query
+      identifier = katello_erratum_cves(:cve).cve_id
+
+      assert_includes Erratum.search_for("#{identifier} and severity = #{@security.severity}"), @security
+      assert_includes Erratum.search_for("\"#{identifier}\""), @security
+      assert_includes Erratum.search_for(identifier[0, 8]), @security
+    end
+
+    def test_search_for_uses_ilike_so_the_trigram_indexes_apply
+      identifier = katello_erratum_cves(:cve).cve_id
+
+      ["kernel", identifier, identifier.downcase].each do |query|
+        sql = Erratum.search_for(query).to_sql
+        assert_match(/ILIKE/i, sql)
+        refute_match(/LOWER\s*\(/i, sql)
+      end
+    end
+
+    def test_explicit_relation_fields_are_not_rewritten
+      sql = Erratum.search_for("package_name = 1234567").to_sql
+
+      assert_match(/katello_erratum_packages/, sql)
+      refute_match(/katello_erratum_bugzillas/, sql)
+      refute_match(/katello_erratum_cves/, sql)
     end
   end
 end
