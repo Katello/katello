@@ -36,9 +36,16 @@ module Actions
 
           options[:override_components] = include_other_components(content_view, options[:override_components], options[:major], options[:minor])
 
+          source_repositories = []
+          content_view.publish_repositories(options[:override_components]) do |repositories|
+            source_repositories << repositories
+          end
+
+          library = content_view.organization.library
+          validate_distribution_paths!(content_view, source_repositories, library, options)
+
           version = version_for_publish(content_view, options)
           self.version = version
-          library = content_view.organization.library
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
@@ -47,11 +54,6 @@ module Actions
                                                           :notes => description,
                                                           :triggered_by_id => options[:triggered_by_id]
                                                          )
-          source_repositories = []
-          content_view.publish_repositories(options[:override_components]) do |repositories|
-            source_repositories += [repositories]
-          end
-
           sequence do
             plan_action(ContentView::AddToEnvironment, version, library) unless options[:skip_promotion]
             repository_mapping = plan_action(ContentViewVersion::CreateRepos, version, source_repositories).repository_mapping
@@ -182,6 +184,23 @@ module Actions
         end
 
         private
+
+        # Validate the distribution paths the new version would publish before any
+        # version or history records are created.
+        def validate_distribution_paths!(content_view, source_repositories, library, options)
+          major, minor = if options[:minor] && options[:major]
+                           [options[:major], options[:minor]]
+                         else
+                           [content_view.next_version, 0]
+                         end
+          projected_version = ::Katello::ContentViewVersion.new(content_view: content_view, major: major, minor: minor)
+          environments = options[:skip_promotion] ? [] : [library]
+          environments += find_environments(options[:environment_ids]).to_a if options[:environment_ids]&.any?
+          ::Katello::Validators::ContentViewContainerPathValidator.validate!(
+            version: projected_version, sources: source_repositories.filter_map(&:first), environments: environments.uniq,
+            include_archive: Setting[:distribute_archived_cvv], user: ::User.current
+          )
+        end
 
         # On an upgrade with component overrides, include components from the old content view version that
         # wouldn't have been carried over otherwise.

@@ -6,6 +6,7 @@ module Actions
 
         def plan(repository, smart_proxy, options = {})
           smart_proxy = SmartProxy.unscoped.find_by(id: smart_proxy) #support bulk actions
+          ::Katello::Validators::RepositoryContainerPathValidator.validate_existing!(repository, user: ::User.current)
           sequence do
             if !repository.unprotected && !options[:assume_content_guard_exists]
               plan_action(::Actions::Pulp3::ContentGuard::Refresh, smart_proxy)

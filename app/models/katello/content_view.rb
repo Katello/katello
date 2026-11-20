@@ -669,7 +669,6 @@ module Katello
         fail _("Import-only content views can not be published directly") if import_only? && !syncable
         check_repositories_blocking_publish!
         check_composite_action_allowed!(organization.library)
-        check_docker_repository_names!([organization.library])
         check_orphaned_content_facets!(environments: self.environments)
         check_scheduled_publish!
         check_component_publishes!
