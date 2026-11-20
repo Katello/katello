@@ -1,13 +1,8 @@
 import React from 'react';
-import { renderWithRedux, act } from 'react-testing-lib-wrapper';
+import { renderWithRedux } from 'react-testing-lib-wrapper';
 import HOST_DETAILS from '../../../HostDetailsConstants';
 import SystemPurposeCard from '../SystemPurposeCard';
-import katelloApi, { foremanApi } from '../../../../../../services/api';
-import { assertNockRequest, nockInstance } from '../../../../../../test-utils/nockWrapper';
 import { ACTIVATION_KEY } from '../../../../../../scenes/ActivationKeys/Details/ActivationKeyConstants';
-
-const organizationDetails = katelloApi.getApiUrl('/organizations/1');
-const availableReleaseVersions = foremanApi.getApiUrl('/hosts/1/subscriptions/available_release_versions');
 
 const baseHostDetails = {
   id: 1,
@@ -46,25 +41,16 @@ const renderOptions = (apiNamespace = HOST_DETAILS) => ({
   },
 });
 
-test('shows system purpose details for a host', async (done) => {
-  const orgScope = nockInstance
-    .get(organizationDetails)
-    .reply(200, {
-      id: 1,
-    });
-  const availableReleaseVersionsScope = nockInstance
-    .get(availableReleaseVersions)
-    .reply(200, []);
-  const { getByText }
+test('shows system purpose details for a host without fetching editor options', () => {
+  const { getByText, store }
     = renderWithRedux(<SystemPurposeCard hostDetails={baseHostDetails} />, renderOptions());
   expect(getByText('Red Hat Enterprise Linux Server')).toBeInTheDocument();
   expect(getByText('Production')).toBeInTheDocument();
   expect(getByText('Premium')).toBeInTheDocument();
   expect(getByText('8')).toBeInTheDocument();
 
-  assertNockRequest(orgScope);
-  assertNockRequest(availableReleaseVersionsScope);
-  done();
+  expect(store.getState().API.ORGANIZATION_1).toBeUndefined();
+  expect(store.getState().API.AVAILABLE_RELEASE_VERSIONS_1).toBeUndefined();
 });
 
 test('shows system purpose details for an activation key', () => {
@@ -79,35 +65,13 @@ test('shows system purpose details for an activation key', () => {
 });
 
 
-test('shows edit button for a user with edit_hosts permission', async (done) => {
-  const orgScope = nockInstance
-    .get(organizationDetails)
-    .reply(200, {
-      id: 1,
-    });
-  const availableReleaseVersionsScope = nockInstance
-    .get(availableReleaseVersions)
-    .reply(200, []);
-
+test('shows edit button for a user with edit_hosts permission', () => {
   const { queryByText }
     = renderWithRedux(<SystemPurposeCard hostDetails={baseHostDetails} />, renderOptions());
   expect(queryByText('Edit')).toBeInTheDocument();
-
-  assertNockRequest(orgScope);
-  assertNockRequest(availableReleaseVersionsScope);
-  done();
 });
 
-test('does not show edit button for a user without edit_hosts permission', (done) => {
-  const orgScope = nockInstance
-    .get(organizationDetails)
-    .reply(200, {
-      id: 1,
-    });
-  const availableReleaseVersionsScope = nockInstance
-    .get(availableReleaseVersions)
-    .reply(200, []);
-
+test('does not show edit button for a user without edit_hosts permission', () => {
   const limitedUser = {
     ...baseHostDetails,
     permissions: {
@@ -118,9 +82,4 @@ test('does not show edit button for a user without edit_hosts permission', (done
   const { queryByText }
     = renderWithRedux(<SystemPurposeCard hostDetails={limitedUser} />);
   expect(queryByText('Edit')).not.toBeInTheDocument();
-
-  assertNockRequest(orgScope);
-  assertNockRequest(availableReleaseVersionsScope);
-  done();
-  act(done);
 });
