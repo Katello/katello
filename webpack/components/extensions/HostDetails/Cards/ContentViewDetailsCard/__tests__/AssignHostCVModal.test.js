@@ -1032,13 +1032,12 @@ describe('AssignHostCVModal', () => {
         expect(getByRole('button', { name: 'Options menu' })).toBeInTheDocument();
       });
 
-      const cvSelectButton = getByRole('button', { name: 'Options menu' });
-      await act(async () => {
-        userEvent.click(cvSelectButton);
-      });
-
-      // Select a DIFFERENT CV (cv_2 instead of cv_1) in the same environment (Library)
+      // The select ignores the first click until its options have loaded.
       await patientlyWaitFor(() => {
+        const cvSelectButton = getByRole('button', { name: 'Options menu' });
+        if (cvSelectButton.getAttribute('aria-expanded') !== 'true') {
+          userEvent.click(cvSelectButton);
+        }
         expect(getByRole('option', { name: /composite_cv/ })).toBeInTheDocument();
       });
 
