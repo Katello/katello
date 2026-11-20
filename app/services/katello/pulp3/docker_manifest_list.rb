@@ -3,6 +3,7 @@ module Katello
     class DockerManifestList < PulpContentUnit
       include LazyAccessor
       PULPCORE_CONTENT_TYPE = "container.manifest".freeze
+      SPECIFIC_INDEXED_FIELDS = %w(digest schema_version annotations labels is_bootable is_flatpak type listed_manifests).freeze
 
       def self.content_api(smart_proxy = SmartProxy.pulp_primary!)
         PulpContainerClient::ContentManifestsApi.new(Katello::Pulp3::Api::Docker.new(smart_proxy).api_client)
