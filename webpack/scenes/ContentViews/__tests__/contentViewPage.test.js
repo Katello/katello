@@ -397,6 +397,33 @@ test('Nothing is shown for empty search', async (done) => {
   act(done);
 });
 
+test('Restores Content View search filter from URL query param', async (done) => {
+  const search = `name = ${firstCV.name}`;
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, {
+    organization_id: 1,
+    search,
+  });
+  const scope = nockInstance
+    .get(cvIndexPath)
+    .query(actualQuery => actualQuery.search === search)
+    .reply(200, cvIndexData);
+
+  const { getByLabelText } = renderWithRedux(<ContentViewsPage />, {
+    ...renderOptions,
+    routerParams: {
+      initialEntries: [`/content_views?search=${encodeURIComponent(search)}`],
+    },
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('Search input')).toHaveValue(search);
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  act(done);
+});
+
 test('Displays Create Content View and opens modal with Form', async () => {
   const noResults = {
     total: 0,
