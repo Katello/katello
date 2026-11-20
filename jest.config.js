@@ -36,5 +36,5 @@ module.exports = {
     'node_modules',
     'webpack/test-utils',
   ],
-  resolver: null,
+  resolver: path.join(pluginRoot, 'jest-resolver.js'),
 };

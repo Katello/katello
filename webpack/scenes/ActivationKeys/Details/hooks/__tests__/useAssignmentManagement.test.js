@@ -1,5 +1,14 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import * as rtl from '@testing-library/react';
 import useAssignmentManagement, { constructCVELabel } from '../useAssignmentManagement';
+
+// renderHook lives on @testing-library/react from v13 (React 18). Older Foreman
+// still exports it from @testing-library/react-hooks.
+const legacyHooks = rtl.renderHook
+  ? null
+  : require('@testing-library/react-hooks'); // eslint-disable-line global-require, import/no-extraneous-dependencies
+
+const renderHook = rtl.renderHook || legacyHooks.renderHook;
+const act = rtl.act || legacyHooks.act;
 
 describe('useAssignmentManagement', () => {
   describe('constructCVELabel', () => {
