@@ -30,16 +30,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
 
         $scope.content = {
             confirm: false,
-            placeholder: translate('Enter Package Name(s)...'),
-            contentType: 'package'
-        };
-
-        $scope.updatePlaceholder = function (contentType) {
-            if (contentType === "package") {
-                $scope.content.placeholder = translate('Enter Package Name(s)...');
-            } else if (contentType === "package_group") {
-                $scope.content.placeholder = translate('Enter Package Group Name(s)...');
-            }
+            placeholder: translate('Enter Package Name(s)...')
         };
 
         $scope.confirmContentAction = function (action, actionInput) {
@@ -67,11 +58,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
                 action = "update";
             }
 
-            if ($scope.content.contentType === 'package_group') {
-                $scope.packageActionFormValues.remoteAction = 'group_' + action;
-            } else if ($scope.content.contentType === 'package') {
-                $scope.packageActionFormValues.remoteAction = 'package_' + action;
-            }
+            $scope.packageActionFormValues.remoteAction = 'package_' + action;
 
             $scope.packageActionFormValues.bulkHostIds = angular.toJson(selectedHosts);
 

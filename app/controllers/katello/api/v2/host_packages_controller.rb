@@ -12,19 +12,12 @@ module Katello
     PERSISTENCE_NIL = "nil".freeze
     PERSISTENCE_TYPES = [PERSISTENCE_TRANSIENT, PERSISTENCE_PERSISTENT, PERSISTENCE_NIL].freeze
 
-    before_action :require_packages_or_groups, :only => [:install, :remove]
-    before_action :require_packages_only, :only => [:upgrade]
     before_action :find_editable_host_with_facet, :except => [:index, :installed_packages, :containerfile_install_command]
     before_action :find_host, :only => [:index, :containerfile_install_command]
 
     resource_description do
       api_version 'v2'
       api_base_url "/api"
-    end
-
-    def_param_group :packages_or_groups do
-      param :packages, Array, :desc => N_("List of package names"), :required => false
-      param :groups, Array, :desc => N_("List of package group names (Deprecated)"), :required => false
     end
 
     api :GET, "/hosts/host_packages/installed_packages", N_("Return a list of installed packages distinct by name")
@@ -147,28 +140,6 @@ module Katello
       end
 
       return packages
-    end
-
-    def require_packages_or_groups
-      if params.slice(:packages, :groups).values.size != 1
-        fail HttpErrors::BadRequest, _("Either packages or groups must be provided")
-      end
-    end
-
-    def require_packages_only
-      if params[:groups]
-        fail HttpErrors::BadRequest, _("This action doesn't support package groups")
-      end
-
-      unless params[:packages]
-        fail HttpErrors::BadRequest, _("Packages must be provided")
-      end
-    end
-
-    def extract_group_names(groups)
-      groups.map do |group|
-        group.gsub(/^@/, "")
-      end
     end
 
     def validate_index_params!
