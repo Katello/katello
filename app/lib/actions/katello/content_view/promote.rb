@@ -15,6 +15,11 @@ module Actions
 
           fail ::Katello::HttpErrors::BadRequest, _("Cannot promote environment out of sequence. Use force to bypass restriction.") if !is_force && !version.promotable?(environments)
 
+          ::Katello::Validators::ContentViewContainerPathValidator.validate!(
+            version: version, sources: version.archived_repos, environments: environments,
+            include_archive: false, user: ::User.current
+          )
+
           # Pass the environments as input in order to make them accessible to UI alerts
           plan_self(environments: environments.map(&:name))
           environments.each do |environment|

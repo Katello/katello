@@ -32,6 +32,10 @@ module Actions
                         skip_metadata_check: skip_metadata_check,
                         skip_candlepin_check: options.fetch(:skip_candlepin_check, false))
 
+          unless validate_contents
+            ::Katello::Validators::RepositoryContainerPathValidator.validate_existing!(repo, user: ::User.current)
+          end
+
           pulp_sync_options = {}
           pulp_sync_options[:download_policy] = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
 
