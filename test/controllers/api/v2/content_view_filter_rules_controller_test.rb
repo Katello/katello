@@ -34,6 +34,12 @@ module Katello
       assert_template 'api/v2/content_view_filter_rules/index'
     end
 
+    def test_index_missing_filter_does_not_expose_sql
+      get :index, params: { :content_view_filter_id => -1 }
+
+      assert_missing_filter_hides_sql
+    end
+
     def test_index_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
@@ -42,6 +48,30 @@ module Katello
       assert_protected_action(:index, allowed_perms, denied_perms, [get_organization]) do
         get :index, params: { :content_view_filter_id => @filter.id }
       end
+    end
+
+    def test_create_missing_filter_does_not_expose_sql
+      post :create, params: { :content_view_filter_id => -1, :name => "testpkg" }
+
+      assert_missing_filter_hides_sql
+    end
+
+    def test_filter_in_another_organization_does_not_expose_sql
+      foreign_filter = as_admin do
+        FactoryBot.create(:katello_content_view_package_filter, :content_view => katello_content_views(:candlepin_library_cv))
+      end
+      user = User.unscoped.find(users(:restricted).id)
+      setup_user_with_permissions([:view_content_views, :edit_content_views], user, :organizations => [get_organization])
+      login_user(user)
+      set_organization(get_organization)
+
+      get :index, params: { :content_view_filter_id => foreign_filter.id }
+
+      assert_missing_filter_hides_sql(foreign_filter.id)
+
+      post :create, params: { :content_view_filter_id => foreign_filter.id, :name => "testpkg" }
+
+      assert_missing_filter_hides_sql(foreign_filter.id)
     end
 
     def test_create
@@ -165,6 +195,17 @@ module Katello
       assert_protected_action(:destroy, allowed_perms, denied_perms, [get_organization]) do
         delete :destroy, params: { :content_view_filter_id => @filter.id, :id => @rule.id }
       end
+    end
+
+    private
+
+    def assert_missing_filter_hides_sql(filter_id = -1)
+      assert_response :not_found
+      message = "Couldn't find ContentViewFilter with id=#{filter_id}"
+      body = JSON.parse(response.body)
+      assert_equal message, body["message"]
+      assert_equal [message], body["errors"]
+      refute_match(/SELECT|WHERE/, response.body)
     end
   end
 end

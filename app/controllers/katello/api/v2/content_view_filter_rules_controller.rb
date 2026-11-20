@@ -117,12 +117,11 @@ module Katello
     private
 
     def find_filter(editable: false)
-      filter = if editable
-                 ContentViewFilter.editable
-               else
-                 ContentViewFilter.readable
-               end
-      @filter = filter.find(params[:content_view_filter_id])
+      scope = editable ? ContentViewFilter.editable : ContentViewFilter.readable
+      @filter = scope.find_by(:id => params[:content_view_filter_id])
+      return if @filter
+
+      fail HttpErrors::NotFound, _("Couldn't find ContentViewFilter with id=%s") % params[:content_view_filter_id]
     end
 
     def find_editable_filter
