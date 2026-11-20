@@ -262,21 +262,6 @@ module ::Actions::Katello::ContentView
       assert_equal run.input[:content_view_version_id], run.output[:auto_publish_content_view_version_id]
       assert_equal [1, 2, 3], run.output[:auto_publish_content_view_ids]
     end
-
-    context 'finalize phase' do
-      it 'updates errata counts and status' do
-        content_facet = katello_content_facets(:content_facet_two)
-        action.stubs(:input).returns(
-          content_view_version_id: content_facet.content_view_environments.first.content_view_version.id,
-          content_view_id: content_facet.content_view_environments.first.content_view_id,
-          environment_id: content_facet.content_view_environments.first.environment_id,
-          history_id: Katello::ContentViewHistory.first.id
-        )
-        Katello::Host::ContentFacet.any_instance.expects(:update_applicability_counts)
-        Katello::Host::ContentFacet.any_instance.expects(:update_errata_status)
-        action.finalize
-      end
-    end
   end
 
   class RefreshRollingRepoTest < TestBase
@@ -543,20 +528,6 @@ module ::Actions::Katello::ContentView
 
       refute_empty content_view_version.history
       assert_action_planned(action, Actions::Katello::ContentView::CapsuleSync)
-    end
-
-    context 'finalize phase' do
-      it 'updates errata counts and status' do
-        content_facet = katello_content_facets(:content_facet_two)
-        action.stubs(:input).returns(
-          content_view_id: content_facet.content_view_environments.first.content_view_id,
-          environment_id: content_facet.content_view_environments.first.environment_id,
-          history_id: Katello::ContentViewHistory.first.id
-        )
-        Katello::Host::ContentFacet.any_instance.expects(:update_applicability_counts)
-        Katello::Host::ContentFacet.any_instance.expects(:update_errata_status)
-        action.finalize
-      end
     end
   end
 

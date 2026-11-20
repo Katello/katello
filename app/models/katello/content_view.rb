@@ -468,15 +468,25 @@ module Katello
       end
     end
 
-    def update_host_statuses(environment)
+    def update_host_statuses(environment, bound_repos_to_delete = [])
       # update errata applicability counts for all hosts in the CV & LE
       Location.no_taxonomy_scope do
         User.as_anonymous_admin do
-          ::Katello::Host::ContentFacet.with_content_views(self).with_environments(environment).each do |facet|
-            facet.update_applicability_counts
-            facet.update_errata_status
-          rescue NoMethodError
-            Rails.logger.warn _('Errata statuses not updated for deleted content facet with UUID %s') % facet.uuid
+          bound_repo_ids_to_delete = bound_repos_to_delete.map(&:id)
+          ::Katello::Host::ContentFacet.with_content_views(self).with_environments(environment).in_batches do |facets|
+            ActiveRecord::Base.transaction do
+              if bound_repo_ids_to_delete.any?
+                facet_ids = facets.pluck(:id)
+                ::Katello::ContentFacetRepository.where(content_facet_id: facet_ids, repository_id: bound_repo_ids_to_delete).destroy_all
+              end
+
+              facets.each do |facet|
+                facet.update_applicability_counts
+                facet.update_errata_status
+              rescue NoMethodError
+                Rails.logger.warn _('Errata statuses not updated for deleted content facet with UUID %s') % facet.uuid
+              end
+            end
           end
         end
       end
