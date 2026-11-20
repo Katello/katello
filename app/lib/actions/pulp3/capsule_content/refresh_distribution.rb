@@ -6,6 +6,8 @@ module Actions
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
         def plan(repository, smart_proxy, options = {})
+          # References describe primary Pulp only; this is a conservative backstop, not a Capsule namespace check.
+          ::Katello::Validators::RepositoryContainerPathValidator.validate_existing!(repository, user: ::User.current)
           plan_self(:repository_id => repository.id,
                              :smart_proxy_id => smart_proxy.id,
                              :options => options)
