@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
@@ -30,7 +30,7 @@ beforeEach(() => {
   [firstComponent] = results;
 });
 
-test('Can call API and show components on page load', async (done) => {
+test('Can call API and show components on page load', async () => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponents)
@@ -48,10 +48,9 @@ test('Can call API and show components on page load', async (done) => {
     .toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  done();
 });
 
-test('Can call API and show unpublished components', async (done) => {
+test('Can call API and show unpublished components', async () => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponents)
@@ -73,7 +72,6 @@ test('Can call API and show unpublished components', async (done) => {
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  done();
 });
 
 test('Can link to view environment', async () => {
@@ -96,7 +94,7 @@ test('Can link to view environment', async () => {
   assertNockRequest(scope);
 });
 
-test('Can search for component content views in composite view', async (done) => {
+test('Can search for component content views in composite view', async () => {
   const lastComponent = cvComponentData.results[1];
   const { name: firstComponentName } = firstComponent.content_view;
   const { name: lastComponentName } = lastComponent.content_view;
@@ -153,10 +151,9 @@ test('Can search for component content views in composite view', async (done) =>
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvComponentsScope);
   assertNockRequest(withSearchScope);
-  done();
 });
 
-test('Can handle no components being present', async (done) => {
+test('Can handle no components being present', async () => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
 
   const noResults = {
@@ -187,10 +184,9 @@ test('Can handle no components being present', async (done) => {
   await patientlyWaitFor(() => expect(queryByText('No content views to add yet')).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
-  done();
 });
 
-test('Can add published component views to content view with modal', async (done) => {
+test('Can add published component views to content view with modal', async () => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
@@ -220,7 +216,7 @@ test('Can add published component views to content view with modal', async (done
     .reply(200, compositeCvDetails);
 
   const {
-    getByText, getByLabelText, queryByLabelText, getAllByLabelText, findAllByLabelText,
+    getByText, getByLabelText, queryByLabelText, getAllByLabelText,
   } = renderWithRedux(
     <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
@@ -228,29 +224,27 @@ test('Can add published component views to content view with modal', async (done
   await patientlyWaitFor(() => {
     expect(getAllByLabelText('Kebab toggle')[2]).toHaveAttribute('aria-expanded', 'false');
   });
-  await act(async () => {
-    await findAllByLabelText('Kebab toggle');
-    fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
-  });
+  // fireEvent already flushes updates in act(). An extra async act() overlaps it on React 18.
+  fireEvent.click(getAllByLabelText('Kebab toggle')[2]);
 
   await patientlyWaitFor(() => {
     expect(getByText('Add')).toBeInTheDocument();
   });
 
-  await act(async () => {
-    fireEvent.click(getByText('Add'));
-  });
+  fireEvent.click(getByText('Add'));
 
   await patientlyWaitFor(() => {
     expect(getByText('Add content view')).toBeInTheDocument();
   });
 
-  await act(async () => {
-    fireEvent.click(getByLabelText('add_component'));
-  });
+  fireEvent.click(getByLabelText('add_component'));
 
   await patientlyWaitFor(() => {
     expect(queryByLabelText('add_component')).not.toBeInTheDocument();
+    expect(addComponentScope.isDone()).toBe(true);
+    expect(publishedComponentVersionsScope.isDone()).toBe(true);
+    expect(returnScope.isDone()).toBe(true);
+    expect(cvDetailsScope.isDone()).toBe(true);
   });
 
   assertNockRequest(autocompleteScope);
@@ -259,10 +253,9 @@ test('Can add published component views to content view with modal', async (done
   assertNockRequest(addComponentScope);
   assertNockRequest(returnScope);
   assertNockRequest(cvDetailsScope);
-  done();
 });
 
-test('Can add unpublished component views to content view', async (done) => {
+test('Can add unpublished component views to content view', async () => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
@@ -293,21 +286,27 @@ test('Can add unpublished component views to content view', async (done) => {
   await patientlyWaitFor(() => {
     expect(getAllByLabelText('Kebab toggle').slice(-1)[0]).toHaveAttribute('aria-expanded', 'false');
   });
-  await act(async () => {
-    fireEvent.click(getAllByLabelText('Kebab toggle').slice(-1)[0]);
+  fireEvent.click(getAllByLabelText('Kebab toggle').slice(-1)[0]);
+  await patientlyWaitFor(() => {
+    expect(getAllByLabelText('Kebab toggle').slice(-1)[0]).toHaveAttribute('aria-expanded', 'true');
+    expect(getByText('Add')).toBeInTheDocument();
   });
-  expect(getAllByLabelText('Kebab toggle').slice(-1)[0]).toHaveAttribute('aria-expanded', 'true');
-  await patientlyWaitFor(() => expect(getByText('Add')).toBeInTheDocument());
   fireEvent.click(getByText('Add'));
+  // React 18 flushes the add request after the click. Wait before the test ends so
+  // afterEach does not clear nock while the XHR is still in flight.
+  await patientlyWaitFor(() => {
+    expect(addComponentScope.isDone()).toBe(true);
+    expect(returnScope.isDone()).toBe(true);
+    expect(cvDetailsScope.isDone()).toBe(true);
+  });
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(addComponentScope);
   assertNockRequest(returnScope);
   assertNockRequest(cvDetailsScope);
-  done();
 });
 
-test('Can remove component views from content view', async (done) => {
+test('Can remove component views from content view', async () => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
@@ -338,21 +337,25 @@ test('Can remove component views from content view', async (done) => {
   await patientlyWaitFor(() => {
     expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'false');
   });
-  await act(async () => {
-    fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  fireEvent.click(getAllByLabelText('Kebab toggle')[0]);
+  await patientlyWaitFor(() => {
+    expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
+    expect(getByText('Remove')).toBeInTheDocument();
   });
-  expect(getAllByLabelText('Kebab toggle')[0]).toHaveAttribute('aria-expanded', 'true');
-  await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
   fireEvent.click(getByText('Remove'));
+  await patientlyWaitFor(() => {
+    expect(removeComponentScope.isDone()).toBe(true);
+    expect(returnScope.isDone()).toBe(true);
+    expect(cvDetailsScope.isDone()).toBe(true);
+  });
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
   assertNockRequest(removeComponentScope);
   assertNockRequest(returnScope);
   assertNockRequest(cvDetailsScope);
-  done();
 });
 
-test('Can bulk add component views to content view with modal', async (done) => {
+test('Can bulk add component views to content view with modal', async () => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, autocompleteQuery);
   const scope = nockInstance
     .get(cvComponentsWithoutSearch)
@@ -386,41 +389,35 @@ test('Can bulk add component views to content view with modal', async (done) => 
     expect(getByLabelText('Select row 2')).toBeInTheDocument();
     expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'true');
   });
-  await act(async () => {
-    fireEvent.click(getByLabelText('Select row 2'));
-  });
-
-  await act(async () => {
-    fireEvent.click(getByLabelText('Select row 3'));
-  });
+  fireEvent.click(getByLabelText('Select row 2'));
+  fireEvent.click(getByLabelText('Select row 3'));
 
   await patientlyWaitFor(() => {
     expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'false');
   });
 
-  await act(async () => {
-    fireEvent.click(getByLabelText('bulk_add_components'));
-  });
+  fireEvent.click(getByLabelText('bulk_add_components'));
 
   await patientlyWaitFor(() => {
     expect(getAllByText('Add content views')[1]).toBeInTheDocument();
     expect(getAllByRole('textbox')[0]).toHaveValue('Version 4.0 (3 days ago)');
   });
 
-  await act(async () => {
-    fireEvent.click(getAllByRole('textbox')[0]);
-  });
+  fireEvent.click(getAllByRole('textbox')[0]);
 
-  await act(async () => {
-    fireEvent.click(queryByText('Version 3.0'));
+  await patientlyWaitFor(() => {
+    expect(queryByText('Version 3.0')).toBeInTheDocument();
   });
+  fireEvent.click(queryByText('Version 3.0'));
 
-  await act(async () => {
-    fireEvent.click(getByLabelText('add_components'));
-  });
+  fireEvent.click(getByLabelText('add_components'));
+  // Table reload clears selection, so the bulk add button is disabled again.
   await patientlyWaitFor(() => {
     expect(queryByText('Select available version of content views to use')).not.toBeInTheDocument();
-    expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'false');
+    expect(getByLabelText('bulk_add_components')).toBeDisabled();
+    expect(addComponentScope.isDone()).toBe(true);
+    expect(returnScope.isDone()).toBe(true);
+    expect(cvDetailsScope.isDone()).toBe(true);
   });
 
   assertNockRequest(autocompleteScope);
@@ -428,5 +425,4 @@ test('Can bulk add component views to content view with modal', async (done) => 
   assertNockRequest(addComponentScope);
   assertNockRequest(returnScope);
   assertNockRequest(cvDetailsScope);
-  done();
 });

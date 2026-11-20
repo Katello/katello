@@ -453,6 +453,12 @@ test('Can reload versions upon task completion', async (done) => {
 
 test('Shows call-to-action when there are no versions', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  // React 18 flushes the promote/task success callback's content-view refresh
+  // into this test. Accept that request when it arrives.
+  nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, cvIndexData);
   const scope = nockInstance
     .get(cvVersions)
     .query(true)

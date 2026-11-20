@@ -69,6 +69,8 @@ describe('AssignAKCVModal', () => {
   afterEach(() => {
     // Restore originals
     if (originalFetch !== undefined) global.fetch = originalFetch;
+    // eslint-disable-next-line no-unused-expressions
+    document.getElementById('ak-cve-details')?.remove();
     if (originalGetElementById !== undefined) document.getElementById = originalGetElementById;
     if (originalAngular !== undefined) {
       global.window.angular = originalAngular;
@@ -321,9 +323,13 @@ describe('AssignAKCVModal', () => {
         return { id: 1, name: 'Test AK' };
       });
 
-    // Mock DOM and Angular for refresh
-    const mockElement = { setAttribute: jest.fn() };
-    document.getElementById = jest.fn(() => mockElement);
+    // Real node: React 18 / focus-trap call hasAttribute on elements from getElementById.
+    const akDetailsNode = document.createElement('div');
+    akDetailsNode.id = 'ak-cve-details';
+    document.body.appendChild(akDetailsNode);
+    document.getElementById = jest.fn(id => (
+      id === 'ak-cve-details' ? akDetailsNode : originalGetElementById.call(document, id)
+    ));
 
     // Mock ActivationKey resource instance with $promise
     const mockActivationKeyResource = {
