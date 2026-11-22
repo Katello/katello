@@ -21,7 +21,7 @@ import ACSProducts from './Steps/ACSProducts';
 import { areSubPathsValid, isValidUrl } from '../helpers';
 
 
-const ACSCreateWizard = ({ show, setIsOpen }) => {
+const ACSCreateWizard = ({ show, setIsOpen, contentTypes }) => {
   const [acsType, setAcsType] = useState(null);
   const [contentType, setContentType] = useState('yum');
   const [name, setName] = useState('');
@@ -196,6 +196,7 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
       setDebComponents,
       debArchitectures,
       setDebArchitectures,
+      contentTypes,
     }}
     >
       <Wizard
@@ -213,11 +214,13 @@ const ACSCreateWizard = ({ show, setIsOpen }) => {
 ACSCreateWizard.propTypes = {
   show: PropTypes.bool,
   setIsOpen: PropTypes.func,
+  contentTypes: PropTypes.arrayOf(PropTypes.string),
 };
 
 ACSCreateWizard.defaultProps = {
   show: false,
   setIsOpen: null,
+  contentTypes: undefined,
 };
 
 export default ACSCreateWizard;

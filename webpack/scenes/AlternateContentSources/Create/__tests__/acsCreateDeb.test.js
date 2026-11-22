@@ -1,4 +1,5 @@
 import React from 'react';
+import * as reactRedux from 'react-redux';
 import { Route } from 'react-router-dom';
 import { act, fireEvent, patientlyWaitFor, renderWithRedux } from 'react-testing-lib-wrapper';
 import api from '../../../../services/api';
@@ -8,8 +9,10 @@ import contentCredentialResult from './contentCredentials.fixtures';
 import smartProxyResult from './smartProxy.fixtures';
 import productsResult from './products.fixtures.json';
 
+
 const withACSRoute = component => <Route path="/alternate_content_sources/">{component}</Route>;
 const ACSIndexPath = api.getApiUrl('/alternate_content_sources');
+const ACSCreatePath = api.getApiUrl('/alternate_content_sources');
 const contentCredentialPath = api.getApiUrl('/content_credentials');
 const smartProxyPath = api.getApiUrl('/capsules');
 const productsPath = api.getApiUrl('/products');
@@ -30,9 +33,25 @@ const noResults = {
   can_create: true,
 };
 
-const contentTypeValues = (select) => Array.from(select.options).map(option => option.value);
+const createDebACSDetails = {
+  upstream_username: 'username',
+  upstream_password: 'password',
+  name: 'acs_deb_test',
+  description: '',
+  base_url: 'https://deb.example.org/',
+  deb_releases: 'bookworm',
+  deb_components: 'main',
+  deb_architectures: 'amd64',
+  subpaths: [],
+  smart_proxy_names: ['centos7-katello-devel-stable.example.com'],
+  content_type: 'deb',
+  alternate_content_source_type: 'custom',
+  verify_ssl: false,
+  use_http_proxies: false,
+  ssl_ca_cert_id: '',
+};
 
-test('Satellite ACS wizard offers only yum and file', async (done) => {
+test('Can display create wizard and create custom Deb ACS', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const productScope = nockInstance
@@ -43,6 +62,7 @@ test('Satellite ACS wizard offers only yum and file', async (done) => {
   const listScope = nockInstance
     .get(ACSIndexPath)
     .query(true)
+    .times(2)
     .reply(200, noResults);
 
   const contentCredentialScope = nockInstance
@@ -55,8 +75,13 @@ test('Satellite ACS wizard offers only yum and file', async (done) => {
     .query(true)
     .reply(200, smartProxyResult);
 
+  const createScope = nockInstance
+    .post(ACSCreatePath, createDebACSDetails)
+    .reply(201, { id: 23 });
+
   const {
     getByText,
+    getAllByRole,
     getByLabelText,
     queryByText,
   } = renderWithRedux(withACSRoute(<ACSTable />), renderOptions);
@@ -68,21 +93,41 @@ test('Satellite ACS wizard offers only yum and file', async (done) => {
   await patientlyWaitFor(() =>
     expect(getByText('Add an alternate content source')).toBeInTheDocument());
 
-  const contentTypeSelect = getByLabelText('FormSelect Input');
-
   fireEvent.click(getByText('Custom'));
-  expect(contentTypeValues(contentTypeSelect)).toEqual(['yum', 'file']);
+  fireEvent.change(getByLabelText('FormSelect Input'), { target: { value: 'deb' } });
+  fireEvent.click(getByText('Next'));
 
-  fireEvent.click(getByText('Simplified'));
-  expect(contentTypeValues(contentTypeSelect)).toEqual(['yum', 'file']);
+  fireEvent.change(getByLabelText('acs_name_field'), { target: { value: 'acs_deb_test' } });
 
-  fireEvent.click(getByText('RHUI'));
-  expect(contentTypeValues(contentTypeSelect)).toEqual(['yum']);
+  const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
+  useSelectorMock
+    .mockReturnValueOnce(smartProxyResult)
+    .mockReturnValue(contentCredentialResult.results);
+  fireEvent.click(getByText('Next'));
+  await patientlyWaitFor(() =>
+    expect(getByText('centos7-katello-devel-stable.example.com')).toBeInTheDocument());
+  fireEvent.click(getByLabelText('Add all'));
+  fireEvent.click(getByText('Next'));
+
+  fireEvent.change(getByLabelText('acs_base_url_field'), { target: { value: 'https://deb.example.org/' } });
+  fireEvent.change(getByLabelText('acs_deb_releases'), { target: { value: 'bookworm' } });
+  fireEvent.change(getByLabelText('acs_deb_components'), { target: { value: 'main' } });
+  fireEvent.change(getByLabelText('acs_deb_architectures'), { target: { value: 'amd64' } });
+
+  fireEvent.click(getByText('Next'));
+  const manualAuthRadio = getAllByRole('radio', { name: 'Manual authentication' })[0];
+  fireEvent.click(manualAuthRadio);
+  fireEvent.change(getByLabelText('acs_username_field'), { target: { value: 'username' } });
+  fireEvent.change(getByLabelText('acs_password_field'), { target: { value: 'password' } });
+
+  fireEvent.click(getByText('Next'));
+  fireEvent.click(getAllByRole('button', { name: 'Add' })[0]);
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(listScope);
   assertNockRequest(contentCredentialScope);
   assertNockRequest(smartProxyScope);
+  assertNockRequest(createScope);
   assertNockRequest(productScope);
   act(done);
 });
