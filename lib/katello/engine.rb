@@ -29,9 +29,6 @@ module Katello
         ->(env) { env['PATH_INFO'] =~ /consumers/ && env['PATH_INFO'] =~ /profile|packages/ }
       )
 
-      require 'katello/middleware/event_daemon'
-      app.middleware.use(Katello::Middleware::EventDaemon)
-
       require 'katello/middleware/organization_created_enforcer'
       app.middleware.use(Katello::Middleware::OrganizationCreatedEnforcer)
     end
@@ -47,9 +44,6 @@ module Katello
         :redhat_repository_url => 'https://cdn.redhat.com',
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
         :consumer_cert_sh => 'katello-rhsm-consumer',
-        :event_daemon => {
-          enabled: true,
-        },
         :pulp => {
           :default_login => 'admin',
           :skip_checksum_validation => false,
@@ -89,6 +83,9 @@ module Katello
       if ActiveRecord::Base.connection.data_source_exists?(ForemanTasks::Task.table_name) && User.unscoped.find_by_login(User::ANONYMOUS_ADMIN).present?
         ::ForemanTasks.dynflow.config.on_init(false) do |_world|
           Katello::Engine.register_scheduled_task(Actions::Candlepin::Consumer::CleanBackendObjects, '0 0 1 * *')
+        end
+        ::ForemanTasks.dynflow.config.post_executor_init do |world|
+          Actions::Katello::Applicability::Hosts::PollQueue.start(world) unless Rails.env.test?
         end
       end
     rescue ActiveRecord::NoDatabaseError # rubocop:disable Lint/SuppressedException
@@ -160,8 +157,6 @@ module Katello
     end
 
     config.to_prepare do
-      Katello::EventDaemon::Runner.register_service(:katello_events, Katello::EventMonitor::PollerThread)
-
       # Lib Extensions
       ::Foreman::Renderer::Scope::Variables::Base.include Katello::Concerns::RendererExtensions
 
@@ -230,8 +225,6 @@ module Katello
       ::RemoteExecutionProxySelector.prepend Katello::Concerns::RemoteExecutionProxySelectorExtensions
 
       load 'katello/scheduled_jobs.rb'
-
-      Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
     end
 
     rake_tasks do
