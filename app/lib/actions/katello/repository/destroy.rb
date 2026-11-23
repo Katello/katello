@@ -16,6 +16,10 @@ module Actions
           delete_empty_repo_filters = options.fetch(:delete_empty_repo_filters, true)
           docker_cleanup = options.fetch(:docker_cleanup, true)
           action_subject(repository)
+          if repository.upload_stagings.exists?
+            fail _('Repository cannot be deleted while upload stagings exist. ' \
+                   'Resolve or cancel the owning upload tasks, then run foreman-rake katello:uploads:cleanup before retrying.')
+          end
           check_destroyable!(repository, remove_from_content_view_versions)
           remove_generated_content_views(repository)
 

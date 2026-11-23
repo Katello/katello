@@ -313,7 +313,7 @@ module ::Actions::Katello::ContentView
     it 'triggers with upload_files' do
       upload_action = create_action ::Actions::Katello::Repository::UploadFiles
       upload_action.stubs(:task).returns(success_task)
-      upload_action.stubs(:prepare_tmp_files).returns([{path: 'some/path'}])
+      upload_action.stubs(:stage_files).returns([{blob_signed_id: 'signed-id', filename: 'file.deb', sha256: 'checksum', byte_size: 1}])
 
       plan_action(upload_action, repository_deb, [{path: 'nowhere'}])
 
