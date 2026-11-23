@@ -174,6 +174,28 @@ module Katello
       assert_nil pool.hypervisor_id
     end
 
+    def test_import_data_unlimited_virt_limit_requires_virt_who
+      pool = build(:katello_pool)
+      data = CP_POOL_FIXTURE.deep_dup
+      limit = data[:productAttributes].find { |attr| attr[:name] == 'virt_limit' }
+      limit[:value] = 'unlimited'
+      pool.stubs(:backend_data).returns(data)
+      pool.import_data
+
+      assert pool.virt_who
+    end
+
+    def test_import_data_zero_virt_limit_does_not_require_virt_who
+      pool = build(:katello_pool)
+      data = CP_POOL_FIXTURE.deep_dup
+      limit = data[:productAttributes].find { |attr| attr[:name] == 'virt_limit' }
+      limit[:value] = '0'
+      pool.stubs(:backend_data).returns(data)
+      pool.import_data
+
+      refute pool.virt_who
+    end
+
     def test_import_all_destroy
       org = get_organization
       Katello::Resources::Candlepin::Pool.expects(:get_for_owner).returns([])
