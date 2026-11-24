@@ -82,11 +82,40 @@ module Katello
           assert_equal [@deb_one_new.id], deb_content_ids
         end
 
+        def test_deb_content_ids_reads_the_content_index
+          index = ::Katello::ContentIndex.create!(:version_href => '/pulp/api/v3/repositories/deb/deb/apt/versions/2/')
+          ::Katello::ContentIndexDeb.create!(:content_index_id => index.id, :deb_id => @deb_one_new.id)
+          @apt_repo.update!(:version_href => index.version_href, :content_index_id => index.id)
+
+          deb_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).fetch_content_ids
+
+          assert_equal [@deb_one_new.id], deb_content_ids
+        end
+
+        def test_deb_content_ids_ignores_repository_rows_of_an_indexed_repository
+          index = ::Katello::ContentIndex.create!(:version_href => '/pulp/api/v3/repositories/deb/deb/apt/versions/3/')
+          @apt_repo.update!(:version_href => index.version_href, :content_index_id => index.id)
+
+          deb_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).fetch_content_ids
+
+          assert_empty deb_content_ids
+        end
+
         def test_deb_content_ids_returns_nothing
           @installed_deb1.destroy!
           ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).calculate_and_import
           deb_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).fetch_content_ids
           assert_empty deb_content_ids
+        end
+
+        def test_deb_content_ids_ignore_repositories_the_host_is_not_bound_to
+          newer = ::Katello::Deb.create!(:name => @deb_one.name, :version => '9.9', :architecture => @deb_one.architecture,
+                                         :pulp_id => 'far-deb-uuid')
+          ::Katello::RepositoryDeb.create!(:repository_id => katello_repositories(:debian_10_amd64_dev).id, :deb_id => newer.id)
+
+          deb_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).fetch_content_ids
+
+          refute_includes deb_content_ids, newer.id
         end
 
         def test_applicable_differences_adds_deb_id
