@@ -37,6 +37,27 @@ module Katello
       assert_raises(ActiveRecord::RecordInvalid) { ContentIndex.for_version('/pulp/api/v3/versions/unrelated/') }
     end
 
+    def test_publishing_points_the_repository_at_the_index_of_its_version
+      version_href = '/pulp/api/v3/repositories/rpm/rpm/publish/versions/1/'
+      @repo.update_columns(:version_href => version_href, :content_index_id => nil)
+      index = ::Katello::ContentIndex.create!(:version_href => version_href)
+
+      @repo.publish_content_index_pointer
+
+      assert_equal index.id, @repo.reload.content_index_id
+    end
+
+    def test_publishing_tolerates_an_index_collected_before_the_lock
+      version_href = '/pulp/api/v3/repositories/rpm/rpm/publish-race/versions/1/'
+      @repo.update_columns(:version_href => version_href, :content_index_id => nil)
+      index = ::Katello::ContentIndex.create!(:version_href => version_href)
+      ::Katello::ContentIndex.stubs(:find_by).returns(index)
+      index.destroy!
+
+      assert_nil @repo.publish_content_index_pointer
+      assert_nil @repo.reload.content_index_id
+    end
+
     def test_private_to_a_repository_until_another_repository_uses_it
       assert @index.private_to?(@repo)
 
