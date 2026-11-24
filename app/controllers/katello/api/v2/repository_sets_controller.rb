@@ -24,6 +24,7 @@ module Katello
     param :product_id, :number, :required => false, :desc => N_("ID of a product to list repository sets from")
     param :name, String, :required => false, :desc => N_("Repository set name to search on")
     param :enabled, :bool, :required => false, :desc => N_("If true, only return repository sets that have been enabled. Defaults to false")
+    param :subscribable, :bool, :required => false, :desc => N_("If true, only return repository sets for enabled yum, deb, and ostree repositories. Takes precedence over enabled. with_active_subscription is still applied when set.")
     param :with_active_subscription, :bool, :required => false, :desc => N_("If true, only return repository sets that are associated with an active subscriptions")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param :with_custom, :bool, :required => false, :desc => N_("If true, return custom repository sets along with redhat repos. Will be ignored if repository_type is supplied.")
@@ -132,7 +133,12 @@ module Katello
         relation = relation.send(params[:repository_type].to_sym)
       end
 
-      if ::Foreman::Cast.to_bool(params[:enabled])
+      if ::Foreman::Cast.to_bool(params[:subscribable]) && @organization
+        relation = relation.subscribable_for(@organization)
+        if ::Foreman::Cast.to_bool(params[:with_active_subscription])
+          relation = relation.with_valid_subscription(@organization)
+        end
+      elsif ::Foreman::Cast.to_bool(params[:enabled])
         relation = relation.enabled(@organization)
       elsif ::Foreman::Cast.to_bool(params[:with_active_subscription])
         relation = relation.with_valid_subscription(@organization)
