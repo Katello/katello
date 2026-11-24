@@ -13,6 +13,10 @@ module Actions
           matching_content = options.fetch(:matching_content, false)
           force_publication = options.fetch(:force_publication, false)
 
+          if Setting[:distribute_archived_cvv] || repository.environment
+            ::Katello::Validators::RepositoryContainerPathValidator.validate_existing!(repository, user: ::User.current)
+          end
+
           plan_action(Pulp3::Orchestration::Repository::GenerateMetadata,
                         repository, smart_proxy,
                         :force_publication => force_publication,

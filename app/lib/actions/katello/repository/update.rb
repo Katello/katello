@@ -14,7 +14,17 @@ module Actions
 
           # Keep the old URL for RPM vs ULN remote cleanup
           old_url = root.url
+          ::Katello::Validators::RepositoryContainerPathValidator.validate_update!(root, repository, repo_params, user: ::User.current)
           root.update!(repo_params)
+
+          if repository.docker? && root.pulp_update_needed?
+            # Re-render container_repository_name only when a Pulp update will be
+            # planned below, so the serving path in Katello never moves without the
+            # distribution moving with it; reload clears the cached root association.
+            # This keeps the written path identical to the projected path the
+            # preflight validated, which uses the same pulp_update_needed? gate.
+            repository.reload.save!
+          end
 
           if update_content?(repository)
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
