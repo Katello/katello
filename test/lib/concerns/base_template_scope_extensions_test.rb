@@ -4,6 +4,8 @@ module Katello
   class BaseTemplateScopeExtensionsTest < ActiveSupport::TestCase
     def setup
       @host = hosts(:one)
+      @os = FactoryBot.create(:operatingsystem)
+      @host.update!(operatingsystem: @os)
       @errata = katello_errata(:security)
       @bugfix = katello_errata(:bugfix)
       @user = User.first
@@ -30,11 +32,25 @@ module Katello
 
       assert application.key?(:date)
       assert application.key?(:hostname)
+      assert_equal @os, application[:operating_system]
       assert application.key?(:erratum_id)
       assert application.key?(:erratum_type)
       assert application.key?(:issued)
       assert application.key?(:status)
       assert application.key?(:still_applicable)
+    end
+
+    def test_load_errata_applications_operating_system_for_missing_erratum
+      create_errata_application(@host, [@errata])
+      Katello::ErrataApplication.last.update!(errata_ids: ['MISSING-ERRATA-1'])
+      scope = ::Foreman::Renderer.get_scope
+
+      result = scope.load_errata_applications
+      application = result.first
+
+      assert_equal 'MISSING-ERRATA-1', application[:erratum_id]
+      assert_nil application[:erratum_type]
+      assert_equal @os, application[:operating_system]
     end
 
     def test_load_errata_applications_expands_multiple_errata
@@ -90,6 +106,7 @@ module Katello
       result = scope.load_errata_applications(include_last_reboot: 'yes')
 
       assert result.first.key?(:last_reboot_time)
+      assert_equal @os, result.first[:operating_system]
     end
 
     def test_load_errata_applications_include_last_reboot_no
@@ -99,6 +116,7 @@ module Katello
       result = scope.load_errata_applications(include_last_reboot: 'no')
 
       refute result.first.key?(:last_reboot_time)
+      assert_equal @os, result.first[:operating_system]
     end
 
     def test_errata_install_by_search_template_includes_magic_comment
