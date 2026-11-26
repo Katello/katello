@@ -9,7 +9,7 @@ module Actions
 
         attr_accessor :version
 
-        execution_plan_hooks.use :trigger_capsule_sync, :on => :success
+        execution_plan_hooks.use :trigger_post_tasks, :on => :success
         execution_plan_hooks.use :notify_on_failure, :on => [:failure, :paused]
 
         # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -142,20 +142,22 @@ module Actions
           version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
           version.update_content_counts!
           version.add_applied_filters!
-          # update errata applicability counts for all hosts in the CV & Library
-          unless input[:skip_promotion]
-            environment = ::Katello::KTEnvironment.find(input[:environment_id])
-            ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
-          end
 
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
         end
 
-        def trigger_capsule_sync(_execution_plan)
+        def trigger_post_tasks(_execution_plan)
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
           view = ::Katello::ContentView.find(input[:content_view_id])
+
+          # update errata applicability counts for all hosts in the CV & Library
+          unless input[:skip_promotion]
+            ForemanTasks.async_task(ContentView::UpdateHostStatus,
+                                    view, environment)
+          end
+
           if SmartProxy.sync_needed?(environment) && !input[:skip_promotion]
             ForemanTasks.async_task(ContentView::CapsuleSync,
                                     view,

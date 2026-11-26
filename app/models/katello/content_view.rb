@@ -472,9 +472,11 @@ module Katello
       # update errata applicability counts for all hosts in the CV & LE
       Location.no_taxonomy_scope do
         User.as_anonymous_admin do
-          ::Katello::Host::ContentFacet.with_content_views(self).with_environments(environment).each do |facet|
-            facet.update_applicability_counts
-            facet.update_errata_status
+          ::Katello::Host::ContentFacet.with_content_views(self).with_environments(environment).find_each(batch_size: 500) do |facet|
+            ActiveRecord::Base.transaction do
+              facet.update_applicability_counts
+              facet.update_errata_status
+            end
           rescue NoMethodError
             Rails.logger.warn _('Errata statuses not updated for deleted content facet with UUID %s') % facet.uuid
           end
