@@ -22,7 +22,7 @@ module Katello
     def_param_group :search do
       param :search, String, :desc => N_("Search string")
       param :page, :number, :desc => N_("Page number, starting at 1")
-      param :per_page, :number, :desc => N_("Number of results per page to return")
+      param :per_page, /\A([1-9]\d*|all)\Z$/, :desc => N_("Number of results per page to return, 'all' to return all results")
       param :order, String, :desc => N_("Sort field and order, eg. 'id DESC'")
       param :full_result, :bool, :desc => N_("Whether or not to show all results")
       param :sort_by, String, :desc => N_("Field to sort the results on")
@@ -80,7 +80,14 @@ module Katello
 
       query = query.select(group).group(group) if group
       subtotal = total.zero? ? 0 : scoped_search_total(query, group)
-      selectable = total.zero? ? 0 : scoped_search_total_selectable(query, group)
+      # Without an override, the selectable count is the subtotal query again.
+      selectable = if total.zero?
+                     0
+                   elsif respond_to?(:total_selectable, true)
+                     scoped_search_total_selectable(query, group)
+                   else
+                     subtotal
+                   end
 
       if options[:custom_sort]
         query = options[:custom_sort].call(query)
@@ -95,7 +102,7 @@ module Katello
         subtotal = dist_total
         selectable = dist_total
       end
-      if ::Foreman::Cast.to_bool(params[:full_result])
+      if ::Foreman::Cast.to_bool(params[:full_result]) || paginate_options[:per_page] == 'all'
         params[:per_page] = total
       else
         query = query.paginate(paginate_options)

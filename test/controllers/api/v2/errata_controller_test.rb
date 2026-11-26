@@ -24,9 +24,6 @@ module Katello
     def setup
       setup_controller_defaults_api
 
-      Katello::Erratum.any_instance.stubs(:hosts_applicable).returns([])
-      Katello::Erratum.any_instance.stubs(:hosts_available).returns([])
-
       models
       permissions
       User.current.organizations << @test_repo.organization
@@ -45,6 +42,42 @@ module Katello
       get :index, params: { :organization_id => @test_repo.organization.id }
       assert_response :success
       assert_template "katello/api/v2/errata/index"
+    end
+
+    def test_index_serializes_details_from_the_page_preload
+      get :index
+
+      assert_response :success
+      results = JSON.parse(response.body)['results']
+      refute_empty results
+      results.each do |erratum|
+        assert erratum.key?('hosts_available_count')
+        assert erratum.key?('hosts_applicable_count')
+        assert erratum.key?('packages')
+        assert erratum.key?('module_streams')
+      end
+      assert(results.any? { |erratum| erratum['hosts_applicable_count'].positive? },
+             'expected the preloaded applicable counts rather than the per-row stubs')
+    end
+
+    def test_index_serializes_cves_and_bugs
+      Katello::ErratumBugzilla.create!(:erratum => katello_errata(:security), :bug_id => "1234567",
+                                       :href => "https://bugzilla.redhat.com/1234567")
+
+      get :index, params: { :repository_id => @test_repo.id }
+
+      assert_response :success
+      security = JSON.parse(response.body)['results'].find { |row| row['errata_id'] == 'RHSA-1999-1231' }
+      identifiers = security['cves'].map { |reference| reference['cve_id'] }
+      bug_ids = security['bugs'].map { |bug| bug['bug_id'] }
+      assert_equal ['CVE-2223-0322'], identifiers
+      assert_equal ['1234567'], bug_ids
+    end
+
+    def test_index_query_count_is_independent_of_page_size
+      assert_page_query_count_constant do |per_page|
+        get :index, params: { :repository_id => @test_repo.id, :per_page => per_page }
+      end
     end
 
     def test_index_with_content_view_version
@@ -119,6 +152,25 @@ module Katello
       assert_template "katello/api/v2/errata/index"
     end
 
+    def test_index_with_bare_cve_search
+      cve = katello_erratum_cves(:cve)
+
+      get :index, params: { :repository_id => @test_repo.id, :search => cve.cve_id }
+
+      assert_response :success
+      ids = JSON.parse(response.body)['results'].map { |row| row['errata_id'] }
+      assert_includes ids, katello_errata(:security).errata_id
+    end
+
+    def test_index_with_per_page_all
+      get :index, params: { :repository_id => @test_repo.id, :per_page => 'all' }
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      assert_operator body['results'].size, :>, 0
+      assert_equal body['subtotal'], body['results'].size
+    end
+
     def test_index_protected
       assert_protected_action(:index, @auth_permissions, @unauth_permissions, [@test_repo.organization]) do
         get :index, params: { :repository_id => @test_repo.id }
@@ -148,7 +200,7 @@ module Katello
       get :index, params: { :organization_id => @test_repo.organization.id }
 
       assert_response :success
-      assert_equal_arrays((JSON.parse(response.body)['results'].map { |item| item['errata_id'] }), ["RHEA-2014-111", "RHSA-1999-1231", "RHBA-2014-013", "RHEA-2019-002", "RHEA-2022-007", "RHEA-2017-007"])
+      assert_equal_arrays(JSON.parse(response.body)['results'].map { |item| item['errata_id'] }, ["RHEA-2014-111", "RHSA-1999-1231", "RHBA-2014-013", "RHEA-2019-002", "RHEA-2022-007", "RHEA-2017-007"])
     end
 
     def test_show
@@ -163,7 +215,7 @@ module Katello
     def test_show_errata_not_found
       get :show, params: { :repository_id => @test_repo.id, :id => "not a real errata id" }
 
-      assert_response 404
+      assert_response :not_found
     end
 
     def test_compare

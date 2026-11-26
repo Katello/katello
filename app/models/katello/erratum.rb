@@ -1,6 +1,7 @@
 module Katello
   class Erratum < Katello::Model
     include Concerns::PulpDatabaseUnit
+    include Concerns::HostCounts
 
     SECURITY = ["security"].freeze
     BUGZILLA = ["bugfix", "recommended"].freeze
@@ -45,8 +46,8 @@ module Katello
     scoped_search :on => :issued, :complete_value => true
     scoped_search :on => :updated, :complete_value => true
     scoped_search :on => :reboot_suggested, :complete_value => true
-    scoped_search :relation => :cves, :on => :cve_id, :rename => :cve
-    scoped_search :relation => :bugzillas, :on => :bug_id, :rename => :bug
+    scoped_search :relation => :cves, :on => :cve_id, :rename => :cve, :only_explicit => true
+    scoped_search :relation => :bugzillas, :on => :bug_id, :rename => :bug, :only_explicit => true
     scoped_search :relation => :packages, :on => :nvrea, :rename => :package, :complete_value => true, :only_explicit => true
     scoped_search :relation => :packages, :on => :name, :rename => :package_name, :complete_value => true, :only_explicit => true
 
@@ -57,6 +58,60 @@ module Katello
                   :special_values => ['true', 'false'],
                   :validator => ->(value) { ['true', 'false'].include?(value.downcase) },
                   :operators => ["="]
+
+    # Bare identifiers are rewritten to their indexed fields; free text stays on title.
+    class << self
+      alias_method :search_for_without_identifiers, :search_for
+      private :search_for_without_identifiers
+
+      def search_for(query = '', options = {})
+        search_for_without_identifiers(identifier_query(query.to_s), options)
+      end
+
+      private
+
+      def identifier_query(search)
+        tokens = search.split(/(\s+|[()])/)
+        rewritten = tokens.each_with_index.map do |token, index|
+          next token if token.strip.empty? || token.match?(/\A[()]\z/)
+          next token if explicit_field?(tokens, index) || explicit_value?(tokens, index)
+
+          identifier_term(token)
+        end
+        rewritten.join
+      end
+
+      def explicit_field?(tokens, index)
+        following = tokens[(index + 1)..].find { |token| !token.strip.empty? }
+        following&.match?(/\A(=|~|!=|!~|<>|in\z)/i)
+      end
+
+      def explicit_value?(tokens, index)
+        previous = tokens[0...index].reverse.find { |token| !token.strip.empty? }
+        return true if previous&.match?(/[=~<>!]\z/)
+        return false unless previous == "("
+
+        field = tokens[0...index].reverse.reject { |token| token.strip.empty? }[1]
+        field&.match?(/\Ain\z/i)
+      end
+
+      def identifier_term(token)
+        prefix = token[/\A[-!]/] || ''
+        body = prefix.empty? ? token : token[1..]
+        quoted = body.match(/\A"(.*)"\z/)
+        value = quoted ? quoted[1] : body
+        bare = quoted ? %("#{value}") : value
+
+        case value
+        when /\ACVE(-|\d|$)/i
+          "#{prefix}(cve ~ #{value} or #{bare})"
+        when /\A\d{4,}\z/
+          "#{prefix}(cve ~ #{value} or bug ~ #{value} or #{bare})"
+        else
+          token
+        end
+      end
+    end
 
     def self.of_type(type, include_other = false)
       if include_other
@@ -123,20 +178,6 @@ module Katello
       where("#{self.table_name}.id in (?) or #{self.table_name}.pulp_id in (?) or #{self.table_name}.errata_id in (?)", id_integers, ids, ids)
     end
 
-    def hosts_applicable(org_id = nil)
-      if org_id.present?
-        self.content_facets_applicable.joins(:host).where("#{::Host.table_name}.organization_id" => org_id)
-      else
-        self.content_facets_applicable.joins(:host)
-      end
-    end
-
-    def hosts_available(org_id = nil)
-      self.hosts_applicable(org_id).distinct.joins("INNER JOIN #{Katello::RepositoryErratum.table_name} on \
-        #{Katello::RepositoryErratum.table_name}.erratum_id = #{self.id}").joins(:content_facet_repositories).
-        where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id")
-    end
-
     def self.ids_installable_for_hosts(hosts = nil)
       installable_for_hosts(hosts).select(:id)
     end
@@ -171,18 +212,43 @@ module Katello
     end
 
     def module_streams
-      # return something like
-      # {module_stream => [packages]}
-      module_stream_rpms = {}
-      packages.each do |pack|
-        pack.module_streams.each do |mod|
-          module_stream_rpms[mod.module_spec_hash] ||= []
-          module_stream_rpms[mod.module_spec_hash] << pack.nvrea unless module_stream_rpms[mod.module_spec_hash].include?(pack.nvrea)
-        end
+      self.class.module_streams_by_erratum([id])[id] || []
+    end
+
+    def package_nvreas
+      self.class.package_nvreas_by_erratum([id])[id] || []
+    end
+
+    def self.package_nvreas_by_erratum(erratum_ids)
+      return {} if erratum_ids.empty?
+
+      Katello::Util::IdBatches.slices(erratum_ids).each_with_object({}) do |ids, nvreas|
+        ErratumPackage.where(:erratum_id => ids).non_module_stream_packages.
+          pluck(:erratum_id, :nvrea).
+          each { |erratum_id, nvrea| (nvreas[erratum_id] ||= []) << nvrea }
       end
-      module_stream_rpms.map do |module_hash, nvreas|
-        module_hash.merge(:packages => nvreas)
+    end
+
+    def self.module_streams_by_erratum(erratum_ids)
+      return {} if erratum_ids.empty?
+
+      by_erratum = Katello::Util::IdBatches.slices(erratum_ids).each_with_object({}) do |ids, pairs|
+        ModuleStream.
+          joins(:module_stream_errata_packages => :erratum_package).
+          where(:katello_erratum_packages => { :erratum_id => ids }).
+          select("#{ModuleStream.table_name}.*",
+                 "#{ErratumPackage.table_name}.erratum_id AS page_erratum_id",
+                 "#{ErratumPackage.table_name}.nvrea AS page_nvrea").
+          each { |stream| (pairs[stream[:page_erratum_id]] ||= []) << [stream.module_spec_hash, stream[:page_nvrea]] }
       end
+      by_erratum.transform_values { |pairs| build_module_stream_specs(pairs) }
+    end
+
+    def self.build_module_stream_specs(pairs)
+      specs = pairs.each_with_object({}) do |(module_hash, nvrea), grouped|
+        (grouped[module_hash] ||= {})[nvrea] = true
+      end
+      specs.map { |module_hash, nvreas| module_hash.merge(:packages => nvreas.keys) }
     end
 
     def module_stream_specs
@@ -199,7 +265,7 @@ module Katello
     def self.find_by_modular(_key, operator, value)
       conditions = ""
       if operator == '='
-        query = value.downcase == "true" ? modular : non_modular
+        query = (value.downcase == "true") ? modular : non_modular
         conditions = "#{table_name}.id in (#{query.select(:id).to_sql})"
       else
         #failure condition. No such value so must return 0

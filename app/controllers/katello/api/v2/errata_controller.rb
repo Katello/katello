@@ -118,5 +118,9 @@ module Katello
     def default_sort
       %w(updated desc)
     end
+
+    def page_details_class
+      ErrataListDetails
+    end
   end
 end

@@ -111,6 +111,33 @@ module Katello
       assert_template 'api/v2/host_errata/index'
     end
 
+    def test_index_serializes_details_from_the_page_preload
+      bind_errata_repository
+
+      get :index, params: { :host_id => @host_dev.id }
+
+      assert_response :success
+      results = JSON.parse(response.body)['results']
+      refute_empty results
+      results.each do |erratum|
+        assert erratum.key?('hosts_available_count')
+        assert erratum.key?('hosts_applicable_count')
+        assert erratum.key?('packages')
+        assert erratum.key?('module_streams')
+        assert erratum.key?('installable')
+      end
+      assert(results.any? { |erratum| erratum['hosts_applicable_count'].positive? },
+             'expected the preloaded applicable counts rather than zeros')
+    end
+
+    def test_index_query_count_is_independent_of_page_size
+      bind_errata_repository
+
+      assert_page_query_count_constant do |per_page|
+        get :index, params: { :host_id => @host_dev.id, :per_page => per_page }
+      end
+    end
+
     def test_index_without_content_facet
       get :index, params: { :host_id => @host_without_content_facet.id }
 
@@ -143,6 +170,13 @@ module Katello
       assert_response :success
 
       assert Katello::HostQueueElement.find_by(host_id: @host.id)
+    end
+
+    private
+
+    def bind_errata_repository
+      @host_dev.content_facet.bound_repositories << katello_repositories(:rhel_6_x86_64)
+      @host_dev.content_facet.save!
     end
   end
 end
