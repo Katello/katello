@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -17,10 +17,7 @@ import { STATUS } from 'foremanReact/constants';
 import { selectAPIStatus } from 'foremanReact/redux/API/APISelectors';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import api from '../../../../../services/api';
-import {
-  selectOrganization,
-  selectOrganizationStatus,
-} from '../../../HostDetails/Cards/SystemPurposeCard/SystemPurposeSelectors';
+import { selectOrganization } from '../../../HostDetails/Cards/SystemPurposeCard/SystemPurposeSelectors';
 import { getOrganization } from '../../../HostDetails/Cards/SystemPurposeCard/SystemPurposeActions';
 import {
   defaultUsages,
@@ -53,10 +50,11 @@ const BulkSystemPurposeModal = ({
   const [isSaving, setIsSaving] = useState(false);
   const [sysPurposeDispatched, setSysPurposeDispatched] = useState(false);
   const [releaseVersionDispatched, setReleaseVersionDispatched] = useState(false);
+  const checkedOrgId = useRef(null);
 
   const dispatch = useDispatch();
 
-  const orgStatus = useSelector(state => selectOrganizationStatus(state, orgId));
+  const orgStatus = useSelector(state => selectAPIStatus(state, `ORGANIZATION_${orgId}`));
   const organizationDetails = useSelector(state => selectOrganization(state, orgId));
   const orgDetails = propsToCamelCase(organizationDetails ?? { systemPurposes: {} });
   const availableSyspurposeAttributes = orgDetails?.systemPurposes ?? {};
@@ -73,10 +71,18 @@ const BulkSystemPurposeModal = ({
     sysPurposeStatus === STATUS.PENDING || releaseVersionStatus === STATUS.PENDING;
 
   useEffect(() => {
-    if (orgId && orgStatus !== STATUS.RESOLVED) {
+    if (!isOpen) {
+      checkedOrgId.current = null;
+      return;
+    }
+    if (!orgId || checkedOrgId.current === orgId) return;
+
+    // Check once per opening, so a failed request can only retry after reopening.
+    checkedOrgId.current = orgId;
+    if (!orgStatus || orgStatus === STATUS.ERROR) {
       dispatch(getOrganization({ orgId }));
     }
-  }, [orgId, orgStatus, dispatch]);
+  }, [isOpen, orgId, orgStatus, dispatch]);
 
   useEffect(() => {
     let canceled = false;

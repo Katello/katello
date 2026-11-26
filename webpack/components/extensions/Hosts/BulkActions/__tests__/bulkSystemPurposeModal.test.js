@@ -1,7 +1,11 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, act } from 'react-testing-lib-wrapper';
 import userEvent from '@testing-library/user-event';
+import { STATUS } from 'foremanReact/constants';
+import { ForemanActionsBarContext } from 'foremanReact/components/HostDetails/ActionsBar';
 import BulkSystemPurposeModal from '../BulkSystemPurposeModal/BulkSystemPurposeModal.js';
+import BulkSystemPurposeModalScene from '../BulkSystemPurposeModal';
+import * as systemPurposeActions from '../../../HostDetails/Cards/SystemPurposeCard/SystemPurposeActions';
 import { BULK_SYSTEM_PURPOSE_KEY } from '../BulkSystemPurposeModal/actions';
 import { nockInstance, assertNockRequest } from '../../../../../test-utils/nockWrapper';
 import katelloApi from '../../../../../services/api';
@@ -27,6 +31,189 @@ const renderOptions = () => ({
       },
     },
   },
+});
+
+describe('Organization fetching', () => {
+  let getOrganizationSpy;
+
+  beforeEach(() => {
+    getOrganizationSpy = jest.spyOn(systemPurposeActions, 'getOrganization');
+  });
+
+  afterEach(() => {
+    getOrganizationSpy.mockRestore();
+  });
+
+  test('Closed host-list modal scene does not fetch when organization request status changes', async () => {
+    const context = {
+      selectedCount: 0,
+      fetchBulkParams: jest.fn(),
+      refreshTableData: jest.fn(),
+    };
+    const { store, queryByRole } = renderWithRedux(
+      <ForemanActionsBarContext.Provider value={context}>
+        <BulkSystemPurposeModalScene />
+      </ForemanActionsBarContext.Provider>,
+      { initialState: { API: {} } },
+    );
+
+    const dispatchOrganizationAction = action => act(async () => {
+      store.dispatch({
+        type: `ORGANIZATION_1_${action}`,
+        key: 'ORGANIZATION_1',
+        response: { message: 'Forbidden' },
+      });
+    });
+    await dispatchOrganizationAction('REQUEST');
+    await dispatchOrganizationAction('FAILURE');
+    await dispatchOrganizationAction('REQUEST');
+    await dispatchOrganizationAction('FAILURE');
+
+    expect(queryByRole('dialog')).not.toBeInTheDocument();
+    expect(getOrganizationSpy).not.toHaveBeenCalled();
+  });
+
+  test.each([STATUS.PENDING, STATUS.RESOLVED])('Does not fetch an organization with status %s', async (status) => {
+    const releasesScope = nockInstance
+      .get(orgReleases)
+      .reply(200, mockOrgReleases);
+    const options = renderOptions();
+    options.initialState.API.ORGANIZATION_1.status = status;
+
+    const { store } = renderWithRedux(
+      <BulkSystemPurposeModal
+        isOpen
+        closeModal={jest.fn()}
+        selectedCount={1}
+        fetchBulkParams={() => 'id ^ 1'}
+        orgId={1}
+      />,
+      options,
+    );
+
+    await patientlyWaitFor(() => expect(releasesScope.isDone()).toBe(true));
+    expect(getOrganizationSpy).not.toHaveBeenCalled();
+
+    if (status === STATUS.PENDING) {
+      await act(async () => {
+        store.dispatch({
+          type: 'ORGANIZATION_1_FAILURE',
+          key: 'ORGANIZATION_1',
+          response: { message: 'Forbidden' },
+        });
+      });
+      expect(store.getState().API.ORGANIZATION_1.status).toBe(STATUS.ERROR);
+      expect(getOrganizationSpy).not.toHaveBeenCalled();
+    }
+  });
+
+  test('Retries a previously failed organization request once when opened', async () => {
+    const scope = nockInstance
+      .get(orgReleases)
+      .reply(200, mockOrgReleases)
+      .get(katelloApi.getApiUrl('/organizations/1'))
+      .reply(403, { error: { message: 'Forbidden' } });
+    const options = renderOptions();
+    options.initialState.API.ORGANIZATION_1.status = STATUS.ERROR;
+
+    const { store } = renderWithRedux(
+      <BulkSystemPurposeModal
+        isOpen
+        closeModal={jest.fn()}
+        selectedCount={1}
+        fetchBulkParams={() => 'id ^ 1'}
+        orgId={1}
+      />,
+      options,
+    );
+
+    await patientlyWaitFor(() => {
+      expect(scope.isDone()).toBe(true);
+      expect(store.getState().API.ORGANIZATION_1.status).toBe(STATUS.ERROR);
+    });
+    expect(getOrganizationSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    [200, STATUS.RESOLVED, undefined],
+    [403, STATUS.ERROR, 403],
+    [403, STATUS.ERROR, 200],
+  ])('Handles HTTP %s (%s) with reopen response %s', async (httpStatus, status, reopenStatus) => {
+    const organization = {
+      id: 1,
+      system_purposes: {
+        roles: ['Custom organization role'],
+        usage: ['Custom organization usage'],
+      },
+      service_levels: ['Custom organization service level'],
+    };
+    const orgScope = nockInstance
+      .get(katelloApi.getApiUrl('/organizations/1'))
+      .reply(httpStatus, httpStatus === 200 ? organization : { error: { message: 'Forbidden' } });
+    const releasesScope = nockInstance
+      .get(orgReleases)
+      .reply(200, mockOrgReleases);
+
+    const ToggleModal = () => {
+      const [isOpen, setIsOpen] = React.useState(false);
+      return (
+        <>
+          <button onClick={() => setIsOpen(true)}>Open modal</button>
+          <BulkSystemPurposeModal
+            isOpen={isOpen}
+            closeModal={() => setIsOpen(false)}
+            selectedCount={1}
+            fetchBulkParams={() => 'id ^ 1'}
+            orgId={1}
+          />
+        </>
+      );
+    };
+
+    const {
+      getByText, getByLabelText, store,
+    } = renderWithRedux(<ToggleModal />, { initialState: { API: {} } });
+
+    const expectOrganizationOptions = () => {
+      expect(getByLabelText('Role')).toHaveTextContent('Custom organization role');
+      expect(getByLabelText('Usage')).toHaveTextContent('Custom organization usage');
+      expect(getByLabelText('Service level (SLA)')).toHaveTextContent('Custom organization service level');
+    };
+
+    expect(getOrganizationSpy).not.toHaveBeenCalled();
+    expect(store.getState().API.ORGANIZATION_1).toBeUndefined();
+
+    await act(async () => { userEvent.click(getByText('Open modal')); });
+    await patientlyWaitFor(() => {
+      expect(orgScope.isDone()).toBe(true);
+      expect(store.getState().API.ORGANIZATION_1.status).toBe(status);
+    });
+    expect(getOrganizationSpy).toHaveBeenCalledTimes(1);
+    expect(getOrganizationSpy).toHaveBeenCalledWith({ orgId: 1 });
+    if (httpStatus === 200) {
+      expectOrganizationOptions();
+    }
+
+    await act(async () => { userEvent.click(getByText('Cancel')); });
+    expect(getOrganizationSpy).toHaveBeenCalledTimes(1);
+    nockInstance.get(orgReleases).reply(200, mockOrgReleases);
+    if (reopenStatus) {
+      nockInstance
+        .get(katelloApi.getApiUrl('/organizations/1'))
+        .reply(reopenStatus, reopenStatus === 200 ? organization : { error: { message: 'Forbidden' } });
+    }
+    await act(async () => { userEvent.click(getByText('Open modal')); });
+
+    await patientlyWaitFor(() => {
+      expect(releasesScope.isDone()).toBe(true);
+      const expectedStatus = reopenStatus === 200 ? STATUS.RESOLVED : status;
+      expect(store.getState().API.ORGANIZATION_1.status).toBe(expectedStatus);
+    });
+    expect(getOrganizationSpy).toHaveBeenCalledTimes(reopenStatus ? 2 : 1);
+    if (httpStatus === 200 || reopenStatus === 200) {
+      expectOrganizationOptions();
+    }
+  });
 });
 
 test('Renders modal with dropdowns', async (done) => {
