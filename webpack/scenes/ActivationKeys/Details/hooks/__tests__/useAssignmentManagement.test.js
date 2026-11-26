@@ -1,5 +1,18 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import * as rtl from '@testing-library/react';
 import useAssignmentManagement, { constructCVELabel } from '../useAssignmentManagement';
+
+// === BEGIN React 16/18 dual-compat (remove after Foreman is React 18-only) ===
+// Replace this block with: import { renderHook, act } from '@testing-library/react';
+// renderHook lives on @testing-library/react from v13 (React 18). Older Foreman
+// still exports it from @testing-library/react-hooks.
+const legacyHooks = rtl.renderHook
+  ? null
+  : require('@testing-library/react-hooks'); // eslint-disable-line global-require, import/no-extraneous-dependencies
+
+const renderHook = rtl.renderHook || legacyHooks.renderHook;
+// RTL 10 exports act but not renderHook. The react-hooks renderer needs its own act.
+const act = rtl.renderHook ? rtl.act : legacyHooks.act;
+// === END React 16/18 dual-compat ===
 
 describe('useAssignmentManagement', () => {
   describe('constructCVELabel', () => {
