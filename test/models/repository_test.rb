@@ -602,9 +602,8 @@ module Katello
     end
 
     def test_packages_without_errata
-      rpms = @fedora_17_x86_64.rpms
-      errata_rpm = rpms[0]
-      non_errata_rpm = rpms[1]
+      errata_rpm = katello_rpms(:one)
+      non_errata_rpm = katello_rpms(:two)
       @fedora_17_x86_64.errata.create! do |erratum|
         erratum.pulp_id = "foo"
         erratum.packages = [ErratumPackage.new(:filename => errata_rpm.filename, :nvrea => 'foo', :name => 'foo')]
