@@ -118,9 +118,20 @@ class HostsControllerTest < ActionController::TestCase
 
       buf = response.stream.instance_variable_get(:@buf)
       header_line = buf.next
+      rows = buf.to_a
+      data_line = rows.find { |line| line.include?(@host.name) }
+      assert_not_nil data_line, "expected CSV row for host #{@host.name}"
 
       # Export registered columns and ignore removed columns in saved preferences
       assert_includes header_line, "Image Type"
+      assert_includes header_line, "RHEL Lifecycle Status"
+      headers = CSV.parse_line(header_line)
+      row = CSV.parse_line(data_line)
+      lifecycle_idx = headers.index("RHEL Lifecycle Status")
+      assert_not_nil lifecycle_idx
+      lifecycle_value = row[lifecycle_idx]
+      refute_match(/\A[0-6]\z/, lifecycle_value.to_s)
+      assert_equal @host.rhel_lifecycle_status_label, lifecycle_value
       assert_includes header_line, "Installable Updates - Security"
       assert_includes header_line, "Installable Updates - Bugfix"
       assert_includes header_line, "Installable Updates - Enhancement"
