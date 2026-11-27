@@ -14,10 +14,11 @@ import {
 import { FormattedMessage } from 'react-intl';
 import ACSCreateContext from '../ACSCreateContext';
 import WizardHeader from '../../../ContentViews/components/WizardHeader';
+import { allowedAcsContentTypes } from '../../helpers';
 
 const SelectSource = () => {
   const {
-    acsType, setAcsType, contentType, setContentType, setAuthentication,
+    acsType, setAcsType, contentType, setContentType, setAuthentication, contentTypes,
   } = useContext(ACSCreateContext);
 
   const onSelect = (event) => {
@@ -35,11 +36,15 @@ const SelectSource = () => {
     }
   };
 
-  const typeOptions = [{ value: 'yum', label: __('Yum') }];
-  if (acsType !== 'rhui') {
-    typeOptions.push({ value: 'deb', label: __('Deb') });
-    typeOptions.push({ value: 'file', label: __('File') });
-  }
+  const contentTypeLabels = {
+    yum: __('Yum'),
+    deb: __('Deb'),
+    file: __('File'),
+  };
+  const typeOptions = allowedAcsContentTypes(acsType, contentTypes).map(value => ({
+    value,
+    label: contentTypeLabels[value],
+  }));
 
   return (
     <>

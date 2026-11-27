@@ -383,6 +383,7 @@ const ACSTable = () => {
                   <ACSCreateWizard
                     show={isCreateWizardOpen}
                     setIsOpen={setIsCreateWizardOpen}
+                    contentTypes={response.content_types}
                   />
                 }
                 </>

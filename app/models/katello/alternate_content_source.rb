@@ -18,6 +18,12 @@ module Katello
     ].freeze
     AUDIT_REFRESH_ACTION = 'refresh'.freeze
 
+    # ACS types whose Pulp plugin is installed. Deb stays in CONTENT_TYPES and
+    # is omitted here when that plugin is not enabled.
+    def self.allowed_content_types
+      ::Katello::RepositoryTypeManager.enabled_repository_types.keys & CONTENT_TYPES
+    end
+
     encrypts :upstream_password
 
     belongs_to :ssl_ca_cert, inverse_of: :ssl_ca_alternate_content_sources, class_name: "Katello::ContentCredential"
@@ -59,9 +65,9 @@ module Katello
       message: ->(_, _) { _("is not a valid type. Must be one of the following: %s") % ACS_TYPES.join(',') },
     }
     validates :content_type, inclusion: {
-      in: ->(_) { RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES },
+      in: ->(_) { allowed_content_types },
       allow_blank: false,
-      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % (RepositoryTypeManager.defined_repository_types.keys & CONTENT_TYPES).sort.join(',') },
+      message: ->(_, _) { _("is not allowed for ACS. Must be one of the following: %s") % allowed_content_types.sort.join(',') },
     }
     validates :content_type, if: -> { rhui? }, inclusion: {
       in: [::Katello::Repository::YUM_TYPE],

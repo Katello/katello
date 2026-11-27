@@ -25,6 +25,22 @@ export const areSubPathsValid = (subpathsString) => {
   }
 };
 
+// Wizard order. The server list is the enabled ACS types, so Deb is absent when the deb plugin is not enabled.
+export const ACS_CONTENT_TYPE_ORDER = ['yum', 'deb', 'file'];
+
+export const allowedAcsContentTypes = (acsType, allowedContentTypes) => {
+  const allowed = allowedContentTypes ?? ACS_CONTENT_TYPE_ORDER;
+  return ACS_CONTENT_TYPE_ORDER.filter((type) => {
+    if (!allowed.includes(type)) {
+      return false;
+    }
+    if (acsType === 'rhui') {
+      return type === 'yum';
+    }
+    return true;
+  });
+};
+
 export const toList = s => (s || '').trim().split(/[,\s]+/).filter(Boolean);
 
 const spaceSep = (s, emptyValue) => {
