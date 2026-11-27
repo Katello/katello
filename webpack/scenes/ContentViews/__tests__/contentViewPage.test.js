@@ -397,7 +397,7 @@ test('Nothing is shown for empty search', async (done) => {
   act(done);
 });
 
-test('Restores Content View search filter from URL query param', async (done) => {
+test('Restores Content View search filter from URL query param', async () => {
   const search = `name = ${firstCV.name}`;
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, {
     organization_id: 1,
@@ -419,9 +419,10 @@ test('Restores Content View search filter from URL query param', async (done) =>
     expect(getByLabelText('Search input')).toHaveValue(search);
   });
 
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(scope);
-  act(done);
+  await patientlyWaitFor(() => {
+    expect(autocompleteScope.isDone()).toBe(true);
+    expect(scope.isDone()).toBe(true);
+  });
 });
 
 test('Displays Create Content View and opens modal with Form', async () => {
