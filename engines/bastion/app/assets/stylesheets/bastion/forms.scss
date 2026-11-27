@@ -1,13 +1,7 @@
 @import 'patternfly/variables';
 
-.required {
-  .control-label {
-    color: inherit;
-
-    &:after {
-      content: "\00a0 *";
-    }
-  }
+.form-group.required > label:after {
+  content: "\00a0 *";
 }
 
 .form-control {
