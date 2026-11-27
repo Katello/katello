@@ -88,6 +88,14 @@ module Katello
       end
     end
 
+    def test_blank_name_reports_one_error
+      [nil, ''].each do |name|
+        sync_plan = SyncPlan.new(valid_attributes.merge(:name => name))
+        refute sync_plan.valid?
+        assert_equal ["can't be blank"], sync_plan.errors[:name]
+      end
+    end
+
     test_attributes :pid => 'f5844526-9f58-4be3-8a96-3849a465fc02'
     def test_create_with_invalid_interval
       invalid_name_list.each do |interval|

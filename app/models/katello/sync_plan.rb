@@ -25,7 +25,8 @@ module Katello
     validate :product_enabled
     validate :custom_cron_interval_expression
     validates_associated :products
-    validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+    validates_with Validators::KatelloNameFormatValidator, :attributes => :name,
+                   :unless => proc { |plan| plan.name.blank? }
 
     before_destroy :cancel_recurring_logic
 
