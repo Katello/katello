@@ -27,7 +27,7 @@ module Katello
       param :groups, Array, :desc => N_("List of package group names (Deprecated)"), :required => false
     end
 
-    api :GET, "/host_packages/installed_packages", N_("Return a list of installed packages distinct by name")
+    api :GET, "/hosts/host_packages/installed_packages", N_("Return a list of installed packages distinct by name")
     param_group :search, ::Katello::Api::V2::ApiController
     def installed_packages
       _sort_by, _sort_order, options = sort_options
