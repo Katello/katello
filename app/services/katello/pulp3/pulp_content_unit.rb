@@ -117,8 +117,14 @@ module Katello
       def self.pulp_units_batch_for_repo(repository, options = {})
         fetch_identifiers = options.fetch(:fetch_identifiers, false)
         page_size = options.fetch(:page_size, Setting[:bulk_load_size])
-        repository_version_href = repository.version_href
-        page_opts = { "offset" => 0, repository_version: repository_version_href, limit: page_size }
+        page_opts = { "offset" => 0, limit: page_size }
+        if options[:added_in_version] && options[:base_version]
+          page_opts[:added_between] = [options[:base_version], options[:added_in_version]]
+        elsif options[:added_in_version]
+          page_opts[:repository_version_added] = options[:added_in_version]
+        else
+          page_opts[:repository_version] = repository.version_href
+        end
         page_opts[:fields] = self.const_get(:PULP_INDEXED_FIELDS).join(",") if self.constants.include?(:PULP_INDEXED_FIELDS)
         page_opts[:fields] = 'pulp_href' if fetch_identifiers
         response = {}

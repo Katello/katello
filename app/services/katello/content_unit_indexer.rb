@@ -1,6 +1,6 @@
 module Katello
   class ContentUnitIndexer
-    def initialize(content_type:, repository: nil, pulp_content_ids: nil, optimized: true)
+    def initialize(content_type:, repository: nil, pulp_content_ids: nil, optimized: true, added_in_version: nil, base_version: nil)
       @content_type = content_type
       @model_class = content_type.model_class
       @service_class = SmartProxy.pulp_primary!.content_service(content_type)
@@ -8,6 +8,8 @@ module Katello
       @content_type = content_type
       @pulp_content_ids = pulp_content_ids
       @optimized = optimized
+      @added_in_version = added_in_version
+      @base_version = base_version
     end
 
     def remove_duplicates(unit)
@@ -75,7 +77,11 @@ module Katello
       if @pulp_content_ids
         @service_class.pulp_units_batch_all(@pulp_content_ids, &block)
       elsif @repository
-        @service_class.pulp_units_batch_for_repo(@repository, fetch_identifiers: fetch_only_ids, content_type: @content_type, &block)
+        @service_class.pulp_units_batch_for_repo(@repository,
+                                                 :fetch_identifiers => fetch_only_ids,
+                                                 :content_type => @content_type,
+                                                 :added_in_version => @added_in_version,
+                                                 :base_version => @base_version, &block)
       end
     end
 
