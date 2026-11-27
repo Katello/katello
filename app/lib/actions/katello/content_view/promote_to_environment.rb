@@ -46,7 +46,9 @@ module Actions
 
         def finalize
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
-          ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
+          ::Katello::Logging.time("PROMOTE", data: { phase: 'update_host_statuses' }) do
+            ::Katello::ContentView.find(input[:content_view_id]).update_host_statuses(environment)
+          end
 
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
