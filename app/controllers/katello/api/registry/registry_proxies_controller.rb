@@ -650,7 +650,8 @@ module Katello
     def pull_manifest
       headers = {}
       env = request.env.select do |key, _value|
-        key.match("^HTTP_.*")
+        # Capsules use HTTP_X_RHSM_SSL_CLIENT_CERT which also could overflow the apache limits.
+        key.start_with?('HTTP_') && !key.start_with?('HTTP_SSL_CLIENT_') && key != 'HTTP_X_RHSM_SSL_CLIENT_CERT'
       end
       env.each do |header|
         headers[header[0].split('_')[1..].join('-')] = header[1]
