@@ -1,11 +1,44 @@
-#image-mode-column-title-icon {
-  padding: 5px;
+.hosts-index-type-column {
+  // Sortable headers use a 6ch min-width. fit-content sets a different
+  // variable, so the Type column stays as wide as that floor.
+  &.pf-v5-c-table__th.pf-v5-c-table__sort {
+    --pf-v5-c-table__sort--MinWidth: max-content;
+    --pf-v5-c-table__sort-indicator--MarginLeft: var(--pf-v5-global--spacer--xs);
+    min-width: max-content;
+  }
+
+  &.pf-v5-c-table__th .pf-v5-c-table__button {
+    padding-inline-start: 0;
+    padding-inline-end: var(--pf-v5-global--spacer--xs);
+  }
+
+  &.pf-v5-c-table__td {
+    padding-inline-start: var(--pf-v5-global--spacer--xs);
+    padding-inline-end: var(--pf-v5-global--spacer--xs);
+    // Card layout makes this cell a grid. The image-mode popover root is
+    // display: contents, so the trigger becomes the grid item and stretches
+    // across the value column. Keep the icon next to the Type label.
+    justify-items: start;
+  }
 }
 
-.image-mode-column-td-icon {
-  padding: 6px;
+// Card cells top-align the icon with the line box, which leaves it high.
+// Center the icon on the label. Shrink the image-mode button to the icon;
+// its default line-height is taller than the label.
+@media screen and (max-width: 768px) {
+  .pf-v5-c-table.pf-m-grid-md td.hosts-index-type-column[data-label] {
+    align-items: center;
+
+    .pf-v5-c-button {
+      display: inline-flex;
+      line-height: 0;
+    }
+  }
 }
 
-.package-mode-column-td-icon {
-  padding: 4px;
+// A truncated cell sets this max-width to 1px, and that variable is inherited
+// by a nested table text. Reset it so the label fills the cell and ellipsizes.
+.pf-v5-c-table .hosts-index-truncated-text.pf-v5-c-table__text {
+  --pf-v5-c-table--cell--MaxWidth: 100%;
+  --pf-v5-c-table--cell--MinWidth: 0;
 }
