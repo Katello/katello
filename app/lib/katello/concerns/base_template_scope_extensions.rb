@@ -352,11 +352,11 @@ module Katello
           applications = applications.where(host_id: ::Host.search_for(host_filter).select(:id))
         end
 
-        # Preload hosts
+        # Preload hosts and operating system for report columns
         if include_last_reboot == 'yes'
-          applications = applications.includes(host: :reported_data)
+          applications = applications.includes(host: [:reported_data, :operatingsystem])
         else
-          applications = applications.includes(:host)
+          applications = applications.includes(host: :operatingsystem)
         end
 
         # Fetch host_ids and errata_ids in a single query
@@ -393,6 +393,7 @@ module Katello
                      {
                        date: app.applied_at,
                        hostname: app.host.name,
+                       operating_system: app.host.operatingsystem,
                        erratum_id: erratum.errata_id,
                        erratum_type: erratum.errata_type,
                        issued: erratum.issued,
@@ -405,6 +406,7 @@ module Katello
                      {
                        date: app.applied_at,
                        hostname: app.host.name,
+                       operating_system: app.host.operatingsystem,
                        erratum_id: erratum_string_id,
                        erratum_type: nil,
                        issued: nil,
