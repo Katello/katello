@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { omit } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
-import { useSet } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
+import { useSet, useUrlParams } from 'foremanReact/components/PF4/TableIndexPage/Table/TableHooks';
 import { useTableSort } from 'foremanReact/components/PF4/Helpers/useTableSort';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { Button } from '@patternfly/react-core';
@@ -30,7 +30,19 @@ const ContentViewTable = () => {
   const response = useSelector(selectContentViews);
   const status = useSelector(selectContentViewStatus);
   const error = useSelector(selectContentViewError);
-  const [searchQuery, updateSearchQuery] = useState('');
+  const history = useHistory();
+  const { searchParam: searchQuery = '' } = useUrlParams();
+  // Keep search in the URL so browser Back from a CV details page restores the filter (SAT-34042)
+  const updateSearchQuery = useCallback((query) => {
+    const params = new URLSearchParams(history.location.search);
+    if (query) {
+      params.set('search', query);
+    } else {
+      params.delete('search');
+    }
+    const search = params.toString();
+    history.push({ search: search ? `?${search}` : '' });
+  }, [history]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copy, setCopy] = useState(false);
   const expandedTableRows = useSet([]);
