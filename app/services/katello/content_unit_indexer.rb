@@ -239,12 +239,12 @@ module Katello
     def association_class_uniqueness_attributes
       columns = [@model_class.unit_id_field, 'repository_id']
       found = ActiveRecord::Base.connection.indexes(@model_class.repository_association_class.table_name).find do |index|
-        index.columns.sort == columns.sort
+        index.unique && index.columns.sort == columns.sort
       end
       if found
         found.columns
       else
-        fail "Unable to find unique index for #{columns} on table #{self.repository_association_class.table_name}"
+        fail "Unable to find unique index for #{columns} on table #{@model_class.repository_association_class.table_name}"
       end
     end
   end
